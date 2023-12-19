@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/firebase_analytics_service.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -387,22 +388,29 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                           reminder.eid = chat.additionalInfoSheelaResponse
                                   ?.snoozeData?.eid ??
                               '';
-                          reminder.estart = chat.additionalInfoSheelaResponse
-                                  ?.snoozeData?.estart ??
-                              '';
+                          reminder.estart = CommonUtil()
+                              .snoozeDataFormat(DateTime.now().add(Duration(
+                              minutes: int.parse(buttonData?.payload ?? '0'))))
+                              .toString();
                           reminder.dosemeal = chat.additionalInfoSheelaResponse
                                   ?.snoozeData?.dosemeal ??
                               '';
-                          reminder.snoozeTime = CommonUtil().getTimeMillsSnooze(buttonData?.payload??'');
+                          reminder.snoozeTime = CommonUtil()
+                              .getTimeMillsSnooze(buttonData?.payload ?? '');
+                          reminder.tplanid = '0';
+                          reminder.teid_user = '0';
+                          reminder.remindin = '0';
+                          reminder.remindin_type = '0';
+                          reminder.providerid = '0';
+                          reminder.remindbefore = '0';
                           List<Reminder> data = [reminder];
                           for (var i = 0; i < data.length; i++) {
                             apiReminder = data[i];
                           }
                           if (Platform.isAndroid) {
-                            // snooze invoke to android native for locally save the reminder data
-                            snoozeMethodChannel.invokeMethod(
-                                snoozeSheela,
-                                {'data': jsonEncode(apiReminder.toMap())}).then((value) {
+                              QurPlanReminders.getTheRemindersFromAPI(
+                                  isSnooze: true,
+                                  snoozeReminderData: apiReminder);
                               if (controller.isLoading.isTrue) {
                                 return;
                               }
@@ -419,7 +427,6 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                               Future.delayed(const Duration(seconds: 3), () {
                                 buttonData?.isSelected = false;
                               });
-                            });
                           } else {
                             reminderMethodChannel.invokeMethod(snoozeReminderMethod, [apiReminder.toMap()]).then((value) {
                               if (controller.isLoading.isTrue) {

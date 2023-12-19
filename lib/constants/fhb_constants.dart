@@ -159,8 +159,6 @@ const String stop_detecting = 'StopDetecting';
 const String allowDeviceRecognition = 'allowDeviceRecognition';
 const String allowDigitRecognition = 'allowDigitRecognition';
 
-//Biometric Auth error
-const String isFromAuthError = 'isFromAuthError';
 
 const String audioFileType = 'audio/mp3';
 const String MSG_VERIFYEMAIL_VERIFIED =
@@ -924,6 +922,9 @@ const String StrUndoAll = 'Undo all';
 
 const String StrSheelaErrorMsg =
     'There is some issue with Sheela,\n Please try after some time';
+
+// Key to store information about whether manual recording of vitals is restricted in SharedPreferences
+const String KEY_IS_Vitals_ManualRecording_Restricted = 'isVitalsManualRecordingRestricted';
 
 const double tabFontTitle = 25.0;
 const double mobileFontTitle = 18.0;

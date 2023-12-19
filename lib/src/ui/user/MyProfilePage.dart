@@ -176,14 +176,19 @@ class _MyProfilePageState extends State<MyProfilePage> {
   }
 
   Widget getProfileDetailClone() {
-    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN)!;
+    var useridMain = (PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN))??'';
+    var userid = (PreferenceUtil.getStringValue(Constants.KEY_USERID))??'';
     return FutureBuilder<MyProfileModel>(
-      future: addFamilyUserInfoRepository.getMyProfileInfoNew(userid),
+      future: addFamilyUserInfoRepository.getMyProfileInfoNew(useridMain),
       builder: (BuildContext context, AsyncSnapshot<MyProfileModel> snapshot) {
         if (snapshot.hasData) {
           //* its done with fetching the data from remote
           if (snapshot.hasData && snapshot.data != null) {
             //getPreferredLanguage(snapshot.data.result);
+            if (useridMain == userid) {
+              PreferenceUtil.saveProfileData(
+                  Constants.KEY_PROFILE, snapshot.data);
+            }
             return getProfileWidget(snapshot.data, snapshot.data!.result!);
           } else {
             //todo proper error msg to users

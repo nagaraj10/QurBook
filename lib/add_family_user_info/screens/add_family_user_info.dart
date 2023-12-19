@@ -1840,7 +1840,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     final picked = await showDatePicker(
         context: context,
         initialDate: dateTime,
-        firstDate: DateTime(1940),
+        firstDate: DateTime(1900),
         lastDate: DateTime.now(),
       builder: (context,child) => Theme(
         data: ThemeData.light().copyWith(

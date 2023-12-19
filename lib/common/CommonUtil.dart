@@ -39,7 +39,6 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
 import 'package:myfhb/landing/controller/landing_screen_controller.dart';
 import 'package:myfhb/chat_socket/model/SheelaReminderResponse.dart';
 import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/more_menu/models/available_devices/TroubleShootingModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
@@ -876,20 +875,22 @@ class CommonUtil {
       var myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       final profileResult = myProfile!.result!;
 
-      await CommonUtil()
-          .sendDeviceToken(
-              PreferenceUtil.getStringValue(Constants.KEY_USERID),
-              profileResult.userContactCollection3![0]!.email,
-              profileResult.userContactCollection3![0]!.phoneNumber,
-              token,
-              false)
-          .then((value) async {
-        // if (Platform.isIOS) {
-        //   _firebaseMessaging.deleteInstanceID();
-        // }
-        await QurPlanReminders.deleteAllLocalReminders();
-        moveToLoginPage();
-      });
+      List<Future<dynamic>> apiCalls = [
+        CommonUtil().sendDeviceToken(
+            PreferenceUtil.getStringValue(Constants.KEY_USERID),
+            profileResult.userContactCollection3![0]!.email,
+            profileResult.userContactCollection3![0]!.phoneNumber,
+            token,
+            false),
+        // Record the user's last access time
+        CommonUtil().saveUserLastAccessTime()
+      ];
+
+      await Future.wait(apiCalls);
+
+      await QurPlanReminders.deleteAllLocalReminders();
+      moveToLoginPage();
+
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       // if (Platform.isIOS) {
@@ -1713,6 +1714,14 @@ class CommonUtil {
         newFormat = DateFormat('EEE, MMM d, yyyy');
       }
     }
+    updatedDate = updatedDate + newFormat.format(newDateTime);
+    return updatedDate;
+  }
+
+  snoozeDataFormat(DateTime newDateTime) {
+    DateFormat newFormat;
+    var updatedDate = '';
+    newFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
     updatedDate = updatedDate + newFormat.format(newDateTime);
     return updatedDate;
   }
@@ -5666,7 +5675,8 @@ class CommonUtil {
       {Function()? onPressManual,
       Function()? onPressCancel,
       String? title,
-      bool? isFromVital}) async {
+        // Display "Enter Manually" button only if manual recording is not restricted
+      bool? isVitalsManualRecordingRestricted}) async {
     showGeneralDialog(
       context: context,
       barrierColor: Colors.black38,
@@ -5696,7 +5706,8 @@ class CommonUtil {
                                 TextStyle(fontSize: 18.sp, color: Colors.white),
                             textAlign: TextAlign.center)),
                   ),
-                  if (!isFromVital!)
+                  // Display "Enter Manually" button only if manual recording is not restricted
+                  if (!isVitalsManualRecordingRestricted!)
                     SizedBox(
                       width: 180.w,
                       child: TextButton(
@@ -6200,6 +6211,8 @@ class CommonUtil {
           () => PDFViewController(),
         );
       }
+      // Record the user's last access time
+      saveUserLastAccessTime();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
@@ -7404,6 +7417,42 @@ class CommonUtil {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     return timeMills;
+  }
+
+  // Saves the user's last access time on the server.
+  saveUserLastAccessTime() async {
+    try {
+      // Retrieve the user's ID from preferences
+      String userId = PreferenceUtil.getStringValue(KEY_USERID) ?? '';
+
+      // Check if the user ID is not empty
+      if ((validString(userId ?? '').trim().isNotEmpty)) {
+        // Initialize the version string
+        String version = '';
+        // Initialize an empty string variable to store the app name
+        String appName = '';
+        // Fetch the app version and build number
+        await PackageInfo.fromPlatform().then((packageInfo) {
+          version = (packageInfo.version + ' + ' + packageInfo.buildNumber);
+          // Check the package name and set the corresponding app name
+          if (packageInfo.packageName == appQurbookBundleId) {
+            appName = strAppTypeQurbook;
+          } else if (packageInfo.packageName == appQurhomeBundleId) {
+            appName = strAppTypeQurhome;
+          } else if (packageInfo.packageName == appQurdayBundleId) {
+            appName = strAppTypeQurday;
+          }
+        });
+
+        // Create an instance of QurHomeApiProvider
+        final apiResponse = QurHomeApiProvider();
+        // Call saveUserLastAccessTime method on QurHomeApiProvider
+        await apiResponse.saveUserLastAccessTime(version: version,appNameTemp: appName);
+      }
+    } catch (e, stackTrace) {
+      // Log any errors using appLogs
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 }
 

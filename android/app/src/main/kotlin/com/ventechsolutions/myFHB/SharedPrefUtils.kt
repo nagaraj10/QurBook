@@ -19,23 +19,56 @@ class SharedPrefUtils {
         return notificationId
     }
 
+    fun getNotificationIdSnooze(context : Context,nsid: String): ArrayList<Int> {
+        var notificationListIds: ArrayList<Int> = ArrayList()
+        val idsAlarms: JSONArray = getAlarmIds(context)
+        var notificationId=0;
+        for (i in 0 until idsAlarms.length()) {
+            if(idsAlarms.optJSONObject(i).optString("nsid")==nsid){
+                notificationId=idsAlarms.optJSONObject(i).optInt("alarmAndNotificationId")
+                notificationListIds.add(notificationId)
+            }
+        }
+        return notificationListIds
+    }
+
      fun saveAlarmId(context : Context,nsid: String, alarmAndNotificationId : Int) :Boolean {
         val idsAlarms: JSONArray = getAlarmIds(context)
         val ids = listOf<String>()
         var presentInPref=false;
 
-        for (i in 0 until idsAlarms.length()) {
+        /*for (i in 0 until idsAlarms.length()) {
             if(idsAlarms.optJSONObject(i).optString("nsid")==nsid){
                 presentInPref=true;
             }
-        }
-        if (!presentInPref) {
+        }*/
+        //if (!presentInPref) {
             val jsonObject= JSONObject()
             jsonObject.put("nsid",nsid)
             jsonObject.put("alarmAndNotificationId",alarmAndNotificationId)
             idsAlarms.put(jsonObject);
             saveIdsInPreferences(context,idsAlarms)
-        }
+        //}
+        return presentInPref
+    }
+
+    fun saveAlarmIdSnooze(context : Context,nsid: String, alarmAndNotificationId : Int) :Boolean {
+        val idsAlarms: JSONArray = getAlarmIds(context)
+        val ids = listOf<String>()
+        var presentInPref=false;
+
+        /*for (i in 0 until idsAlarms.length()) {
+            if(idsAlarms.optJSONObject(i).optString("nsid")==nsid){
+                presentInPref=true;
+            }
+        }*/
+        //if (!presentInPref) {
+            val jsonObject= JSONObject()
+            jsonObject.put("nsid",nsid)
+            jsonObject.put("alarmAndNotificationId",alarmAndNotificationId)
+            idsAlarms.put(jsonObject);
+            saveIdsInPreferences(context,idsAlarms)
+        //}
         return presentInPref
     }
 

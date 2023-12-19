@@ -774,7 +774,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     var picked = await showDatePicker(
         context: context,
         initialDate: dateTime,
-        firstDate: DateTime(1940),
+        firstDate: DateTime(1900),
         lastDate: DateTime.now());
 
     if (picked != null) {
@@ -2472,8 +2472,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         Constants.KEY_PROFILE_MAIN, profileValue);
                   }
 
-                  PreferenceUtil.saveProfileData(
-                      Constants.KEY_PROFILE, profileValue);
+                  var useridMain = (PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN))??'';
+                  var userid = (PreferenceUtil.getStringValue(Constants.KEY_USERID))??'';
+
+                  if (useridMain == userid) {
+                    PreferenceUtil.saveProfileData(
+                        Constants.KEY_PROFILE, profileValue);
+                  }
 
                   imageURI = null;
                   Navigator.pop(dialogContext);
