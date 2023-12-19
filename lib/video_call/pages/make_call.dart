@@ -213,7 +213,7 @@ class _MakeCallPageState extends State<MakeCallPage> {
     ).users.forEach(
           (int uid) => list.add(
             RtcRemoteView.SurfaceView(
-              uid: uid,
+              uid: uid, channelId: '',
             ),
           ),
         );
