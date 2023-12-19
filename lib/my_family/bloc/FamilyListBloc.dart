@@ -107,8 +107,8 @@ class FamilyListBloc implements BaseBloc {
       familyResponseList =
           await _familyResponseListRepository.getFamilyMembersList();
       familyMemberListSink.add(ApiResponse.completed(familyResponseList));
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       familyMemberListSink.add(ApiResponse.error(e.toString()));
     }
@@ -122,8 +122,8 @@ class FamilyListBloc implements BaseBloc {
       familyResponseList =
           await _familyResponseListRepository.getFamilyMembersListNew();
       familyMemberListNewSink.add(ApiResponse.completed(familyResponseList));
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       familyMemberListNewSink.add(ApiResponse.error(e.toString()));
     }
@@ -135,8 +135,8 @@ class FamilyListBloc implements BaseBloc {
     try {
       familyResponseList =
           await _familyResponseListRepository.getFamilyMembersListNew();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       familyMemberListNewSink.add(ApiResponse.error(e.toString()));
     }
@@ -149,8 +149,8 @@ class FamilyListBloc implements BaseBloc {
       var relationShipResponseList =
           await _familyResponseListRepository.getCustomRoles();
       relationShipListSink.add(ApiResponse.completed(relationShipResponseList));
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       relationShipListSink.add(ApiResponse.error(e.toString()));
     }
@@ -164,8 +164,8 @@ class FamilyListBloc implements BaseBloc {
       userLinking =
           await _familyResponseListRepository.postUserLinking(jsonString);
 //      userLinkingSink.add(ApiResponse.completed(userLinking));
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       userLinkingSink.add(ApiResponse.error(e.toString()));
     }
@@ -182,8 +182,8 @@ class FamilyListBloc implements BaseBloc {
       userDeLinking =
           await _familyResponseListRepository.postUserDeLinking(jsonString);
 //      userLinkingSink.add(ApiResponse.completed(userLinking));
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       userDeLinkingSink.add(ApiResponse.error(e.toString()));
     }
@@ -201,12 +201,53 @@ class FamilyListBloc implements BaseBloc {
     try {
       addFamilyOTPResponse = await _familyResponseListRepository
           .postUserLinkingForPrimaryNo(jsonString);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       userLinkingForPrimaryNoSink.add(ApiResponse.error(e.toString()));
     }
 
     return addFamilyOTPResponse;
+  }
+
+/**
+ * This gives the list of family members ,which is a combined of both 
+ * sharedByUsers and sharedToUsers
+ * This method combines thelist of sharedByUser and sharedToUser together
+ * by checking if the parent id is not similar to child id 
+ */
+  List<SharedByUsers> getSharedByUsersCombinedList(FamilyMemberResult? data) {
+    List<SharedByUsers> sharedByUsersList = [];
+    List<SharedByUsers> sharedByUsersListOriginal = [];
+    List<SharedToUsers> sharedToUsersList = [];
+
+    sharedByUsersList = data?.sharedByUsers ??
+        []; // arraylist to get he combined list from sharedToUser an sharedByUserList
+    sharedToUsersList =
+        data?.sharedToUsers ?? []; // adding the existing list to this array
+    sharedByUsersListOriginal =
+        data?.sharedByUsers ?? []; // arraylist to retain the original value
+    bool? add;
+    if (sharedToUsersList.isNotEmpty ?? false) {
+      if ((sharedToUsersList.length ?? 0) > 0) {
+        if ((sharedByUsersListOriginal.isNotEmpty ?? false) &&
+            (sharedByUsersListOriginal.length ?? 0) > 0) {
+          sharedToUsersList.forEach((sharedToUsers) {
+            sharedByUsersListOriginal.any((sharedByUser) {
+              //Check if the parentid and child id is similar
+              add = (sharedToUsers.parent?.id == sharedByUser.child?.id);
+              return add ?? false;
+            });
+            //if not similar add the object to existing list
+            if (add == false) {
+              SharedByUsers sharedByUserObj =
+                  SharedByUsers.fromSharedToUsers(sharedToUsers);
+              sharedByUsersList.add(sharedByUserObj);
+            }
+          });
+        }
+      }
+    }
+    return sharedByUsersList;
   }
 }

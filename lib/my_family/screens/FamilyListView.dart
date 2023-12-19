@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +12,6 @@ import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../models/FamilyData.dart';
-import '../models/FamilyMembersRes.dart';
 import '../models/FamilyMembersResponse.dart';
 import '../models/LinkedData.dart';
 import '../models/ProfileData.dart';
@@ -34,6 +35,12 @@ class FamilyListView {
           onTextFieldtap,
       {bool removeDuplicate = false}) async {
     // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+    List<SharedByUsers> sharedByUsersList = [];
+    FamilyListBloc _familyListBloc = FamilyListBloc();
+
+// return the combine family member list
+    sharedByUsersList =
+        _familyListBloc?.getSharedByUsersCombinedList(data) ?? [];
 
     return showDialog(
         context: context,
@@ -44,7 +51,7 @@ class FamilyListView {
                 child: Column(
                   children: <Widget>[
                     if (data != null)
-                      setupAlertDialoadContainer(data.sharedByUsers!, context,
+                      setupAlertDialoadContainer(sharedByUsersList!, context,
                           onTextFieldtap, _keyLoader,
                           removeDuplicate: removeDuplicate)
                     else
@@ -157,8 +164,9 @@ class FamilyListView {
                           Navigator.of(_keyLoader.currentContext!,
                                   rootNavigator: true)
                               .pop();
-                        } catch (e,stackTrace) {
-                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                        } catch (e, stackTrace) {
+                          CommonUtil()
+                              .appLogs(message: e, stackTrace: stackTrace);
                         }
                       },
                     )
@@ -311,11 +319,14 @@ class FamilyListView {
                                                 : '${(sharedByMe[index].nickNameSelf?.capitalizeFirstofEach)}'
                                             : (sharedByMe[index].nickName !=
                                                     null
-                                                ? (sharedByMe[index]?.nickName?.toLowerCase() ==
-                                            variable.Self.toLowerCase())?'${(sharedByMe[index].nickNameSelf?.capitalizeFirstofEach)}':
-                                        (sharedByMe[index]
-                                                    .nickName
-                                                    ?.capitalizeFirstofEach)
+                                                ? (sharedByMe[index]
+                                                            ?.nickName
+                                                            ?.toLowerCase() ==
+                                                        variable.Self
+                                                            .toLowerCase())
+                                                    ? '${(sharedByMe[index].nickNameSelf?.capitalizeFirstofEach)}'
+                                                    : getName(sharedByMe[index]
+                                                        .child!)!
                                                 /* toBeginningOfSentenceCase(
                                                     sharedByMe[index]
                                                         .nickName
