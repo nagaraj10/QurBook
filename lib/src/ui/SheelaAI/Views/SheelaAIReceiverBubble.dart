@@ -1,12 +1,9 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
@@ -14,7 +11,6 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:myfhb/common/AudioWidget.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/video_player_screen.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
@@ -243,7 +239,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                               alignment: Alignment.center,
                               children: [
                                 FadeInImage.assetNetwork(
-                                  placeholder: 'assets/icons/placeholder.jpg',
+                                  placeholder: ic_placeholder,
                                   image: videoThumbnail(currentVideoLink),
                                 ),
                                 IconButton(
@@ -492,18 +488,35 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                   horizontal: 18,
                   vertical: 10,
                 ),
-                child: Text(
-                  buttonData?.title ?? '',
-                  style: TextStyle(
-                    color: (buttonData?.isPlaying.isTrue ?? false) ||
-                            (buttonData?.isSelected ?? false)
-                        ? Colors.white
-                        : PreferenceUtil.getIfQurhomeisAcive()
-                            ? Color(CommonUtil().getQurhomeGredientColor())
-                            : Color(CommonUtil().getMyPrimaryColor()),
-                    fontSize: 14.0.sp,
-                  ),
-                ),
+                child: (buttonData?.isImageWithContent ?? false) // Check if the button has both image and text content
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 1.sw,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    // Navigate to the ImageSlider page with the media content from buttonData, or an empty string if null.
+                                    navigateToImageSliderPage((buttonData?.media ?? ''));
+                                  },
+                                  child: FadeInImage.assetNetwork(
+                                    placeholder: ic_placeholder,
+                                    image: (buttonData?.media ?? ''),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5.0.h,
+                          ),
+                          getButtonTextWidget(buttonData),
+                        ],
+                      )
+                    : getButtonTextWidget(buttonData), // Display button text if there is no image content
               ),
             ),
           );
@@ -534,12 +547,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         ),
         child: InkWell(
             onTap: () {
-              Navigator.push(
-                  Get.context!,
-                  MaterialPageRoute(
-                      builder: (context) => ImageSlider(
-                            imageURl: url,
-                          )));
+              // Navigate to the ImageSlider page with the provided URL.
+              navigateToImageSliderPage(url);
             },
             child: Image.network(
               url,
@@ -642,6 +651,33 @@ class SheelaAIReceiverBubble extends StatelessWidget {
       });
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  // Returns a Text widget based on the provided buttonData, displaying the button title.
+  Widget getButtonTextWidget(Buttons? buttonData) {
+    return Text(
+      (buttonData?.title ?? ''),// Display the button title, or an empty string if null.
+      style: TextStyle(
+        color: (buttonData?.isPlaying.isTrue ?? false) ||
+            (buttonData?.isSelected ?? false)
+            ? Colors.white
+            : PreferenceUtil.getIfQurhomeisAcive()
+            ? Color(CommonUtil().getQurhomeGredientColor())
+            : Color(CommonUtil().getMyPrimaryColor()),
+        fontSize: 14.0.sp,
+      ),
+    );
+  }
+
+  // Navigates to the ImageSlider page with the provided imageLink.
+  navigateToImageSliderPage(String imageLink) {
+    try {
+      Get.to(() => ImageSlider(
+        imageURl: (imageLink ?? ''),// Pass the image link to the ImageSlider widget.
+      ));
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);// Log any errors during navigation.
     }
   }
 }
