@@ -340,6 +340,9 @@ const String ic_cart_delete = 'assets/icons/cart_delete_red.svg';
 const String ic_empty_cart = 'assets/icons/empty_cart.svg';
 const String ic_gold_member = 'assets/user/gold-member.png';
 
+// Path to the placeholder image asset.
+const String ic_placeholder = 'assets/icons/placeholder.jpg';
+
 const String enterFirstName = 'Enter First Name';
 const String enterLastName = 'Enter Last Name';
 const String selectGender = 'Select Gender';
