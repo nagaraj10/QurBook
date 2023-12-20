@@ -500,7 +500,14 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                 InkWell(
                                   onTap: () {
                                     // Navigate to the ImageSlider page with the media content from buttonData, or an empty string if null.
-                                    navigateToImageSliderPage((buttonData?.media ?? ''));
+                                    controller.stopTTS();
+                                    controller.isSheelaScreenActive = false;
+                                    Get.to(() => ImageSlider(
+                                          imageURl: (buttonData?.media ?? ''), // Pass the image link to the ImageSlider widget.
+                                        ))?.then((value) {
+                                      controller.isSheelaScreenActive = true;
+                                      controller.playPauseTTS(chat);
+                                    });
                                   },
                                   child: FadeInImage.assetNetwork(
                                     placeholder: ic_placeholder,
@@ -548,7 +555,9 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         child: InkWell(
             onTap: () {
               // Navigate to the ImageSlider page with the provided URL.
-              navigateToImageSliderPage(url);
+              Get.to(() => ImageSlider(
+                imageURl: (url ?? ''),// Pass the image link to the ImageSlider widget.
+              ));
             },
             child: Image.network(
               url,
@@ -670,14 +679,4 @@ class SheelaAIReceiverBubble extends StatelessWidget {
     );
   }
 
-  // Navigates to the ImageSlider page with the provided imageLink.
-  navigateToImageSliderPage(String imageLink) {
-    try {
-      Get.to(() => ImageSlider(
-        imageURl: (imageLink ?? ''),// Pass the image link to the ImageSlider widget.
-      ));
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);// Log any errors during navigation.
-    }
-  }
 }
