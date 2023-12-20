@@ -105,7 +105,9 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
                   width: 1.3,
                 ))),
                 height: 50,
-                width: 800,
+                width: MediaQuery.of(context)
+                    .size
+                    .width, //to extend the background width
                 margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
                 child: TabBar(
                   indicatorColor: Color(CommonUtil().getQurhomePrimaryColor()),

@@ -55,10 +55,16 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   final controller = Get.put(QurhomeDashboardController());
   final qurHomeRegimenController =
       CommonUtil().onInitQurhomeRegimenController();
-  double buttonSize = 70;
-  double textFontSize = 16;
+  /**
+       * Declared the below size to maintain UI font size similar in 
+       * Qurhome tablet ans mobile
+       */
+  double buttonSize =
+      (CommonUtil().isTablet ?? false) ? imageTabMaya : imageMobileMaya;
+  double textFontSize =
+      (CommonUtil().isTablet ?? false) ? tabHeader1 : mobileHeader1;
   int index = 0;
-  double badgeSize = 30;
+  double badgeSize = (CommonUtil().isTablet ?? false) ? 40 : 30;
   final sheelBadgeController = Get.put(SheelaAIController());
 
   //LandingViewModel landingViewModel;
@@ -103,11 +109,15 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   onInit() async {
     try {
       if (CommonUtil.isUSRegion()) {
-        Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
-        CommonUtil().initSocket();
-        CommonUtil().versionCheck(context);
-        Provider.of<LandingViewModel>(context, listen: false)
-            .getQurPlanDashBoard(needNotify: true);
+        try {
+          Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
+          CommonUtil().initSocket();
+          CommonUtil().versionCheck(context);
+          Provider.of<LandingViewModel>(context, listen: false)
+              .getQurPlanDashBoard(needNotify: true);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+        }
         moveToPateintAlert();
 
         controller.enableModuleAccess();
@@ -227,7 +237,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     double width = controller.currentSelectedIndex == 0
         ? (CommonUtil.isUSRegion())
             ? (CommonUtil().isTablet ?? false)
-                ? 117
+                ? 129
                 : 83
             : 58.0
         : 58.0;
@@ -257,6 +267,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                       ? Padding(
                           padding: const EdgeInsets.only(
                             right: 16,
+                            left: 30,
                           ),
                           child: controller.currentSelectedIndex == 2
                               ? CommonBluetoothWidget.getDisabledBluetoothIcon()
@@ -287,13 +298,13 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                             controller.currentSelectedIndex != 1)
                         ? Container(
                             margin: EdgeInsets.only(
-                              left: 8.h,
+                              left: CommonUtil().isTablet! ? 8.h : 2.h,
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 8.h,
-                                vertical: 4.h,
-                              ),
+                              padding: EdgeInsets.only(
+                                  left: CommonUtil().isTablet! ? 30 : 4.h,
+                                  top: 4.h,
+                                  bottom: 4.h),
                               child: controller.currentSelectedIndex == 2
                                   ? CommonUtil().isTablet!
                                       ? AssetImageWidget(
@@ -321,7 +332,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                       : SizedBox.shrink(),
                             ))
                         : SizedBox.shrink(),
-                    if (CommonUtil.isUSRegion()) SizedBox(width: 22.w),
+                    if (CommonUtil.isUSRegion())
+                      SizedBox(width: CommonUtil().isTablet! ? 22.w : 10.w),
                     Expanded(
                       child: Center(
                         child: (controller.forPatientList.value ?? false)
@@ -464,7 +476,14 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                               if (hubListViewController
                                   .isUserHasParedDevice.value) ...{
                                 SizedBox(width: 2.w),
-                                Expanded(child: MyBlinkingBLEIcon())
+                                Expanded(
+                                    child: CommonUtil().isTablet!
+                                        ? Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 16.0),
+                                            child: MyBlinkingBLEIcon(),
+                                          )
+                                        : MyBlinkingBLEIcon())
                               }
                             ],
                           )
