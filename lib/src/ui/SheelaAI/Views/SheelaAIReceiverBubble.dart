@@ -665,18 +665,26 @@ class SheelaAIReceiverBubble extends StatelessWidget {
 
   // Returns a Text widget based on the provided buttonData, displaying the button title.
   Widget getButtonTextWidget(Buttons? buttonData) {
+    // Determine the color to use when the button is not playing or selected
+    final playColor = PreferenceUtil.getIfQurhomeisAcive()
+        ? Color(CommonUtil()
+            .getQurhomeGredientColor()) // Qurhome gradient color when Qurhome is active
+        : Color(CommonUtil()
+            .getMyPrimaryColor()); // Default primary color otherwise
+
     return Text(
-      (buttonData?.title ?? ''),// Display the button title, or an empty string if null.
+      buttonData?.title ?? '',
+      // Display the button title, or an empty string if null.
+
       style: TextStyle(
         color: (buttonData?.isPlaying.isTrue ?? false) ||
-            (buttonData?.isSelected ?? false)
-            ? Colors.white
-            : PreferenceUtil.getIfQurhomeisAcive()
-            ? Color(CommonUtil().getQurhomeGredientColor())
-            : Color(CommonUtil().getMyPrimaryColor()),
-        fontSize: 14.0.sp,
+                (buttonData?.isSelected ?? false)
+            ? Colors
+                .white // Use white color if the button is playing or selected
+            : playColor, // Otherwise, use the determined playColor
+
+        fontSize: 14.0.sp, // Set the font size to 14 sp
       ),
     );
   }
-
 }

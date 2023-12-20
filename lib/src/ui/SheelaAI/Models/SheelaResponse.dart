@@ -302,19 +302,16 @@ class Buttons {
   getImageWithContentStatus(Map<String, dynamic> json) {
     try {
       // Extract media and mediaType from the JSON, ensuring non-null values.
-      media = CommonUtil().validString((json['media'] ?? ''));
-      mediaType = CommonUtil().validString((json['mediaType'] ?? ''));
+      media = CommonUtil().validString(json['media'])?.trim() ?? '';
+      mediaType = CommonUtil().validString(json['mediaType'])?.trim() ?? '';
 
       // Check if both media and mediaType are not empty, and mediaType is 'image'.
-      if (((media ?? '').trim().isNotEmpty) &&
-          ((mediaType ?? '').trim().isNotEmpty) &&
-          ((mediaType ?? '').trim().toLowerCase() == strImageText)) {
-        isImageWithContent = true;// Set status to true if conditions are met.
-      } else {
-        isImageWithContent = false;// Set status to false if conditions are not met.
-      }
+      isImageWithContent = (media!.isNotEmpty &&
+          mediaType!.isNotEmpty &&
+          mediaType!.toLowerCase() == strImageText);
     } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);// Log any errors during the process.
+      // Log any errors during the process.
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 }
