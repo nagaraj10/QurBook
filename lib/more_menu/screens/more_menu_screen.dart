@@ -25,6 +25,7 @@ import 'package:myfhb/src/ui/settings/AppleHealthSettings.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/src/ui/settings/NonAdheranceSettingsScreen.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/ticket_support/model/user_comments_model.dart';
 import 'package:myfhb/unit/choose_unit.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -139,7 +140,25 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   bool isProd = false;
 
   SheelaAIController? sheelaAIcontroller =
-  CommonUtil().onInitSheelaAIController();
+      CommonUtil().onInitSheelaAIController();
+  /**
+       * Declared the below size to maintain UI font size similar in 
+       * Qurhome tablet ans mobile
+       */
+
+  double iconSize = CommonUtil().isTablet!
+      ? Constants.imageCloseTab
+      : Constants.imageCloseMobile;
+
+  double title =
+      CommonUtil().isTablet! ? Constants.tabHeader1 : Constants.mobileHeader1;
+  double subtitle =
+      CommonUtil().isTablet! ? Constants.tabHeader2 : Constants.mobileHeader2;
+  double title3 =
+      CommonUtil().isTablet! ? Constants.tabHeader3 : Constants.mobileHeader3;
+
+  double arrowIcon = CommonUtil().isTablet! ? 20.0.sp : 16.0.sp;
+  double switchTrail = CommonUtil().isTablet! ? 1.0 : 0.8;
 
   @override
   void initState() {
@@ -252,8 +271,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   });
                 },
                 child: Container(
-                  width: 200,
-                  height: 50,
+                  width: CommonUtil().isTablet! ? 250 : 200,
+                  height: CommonUtil().isTablet! ? 60 : 50,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50),
                     color: Color(CommonUtil().getMyPrimaryColor()),
@@ -364,7 +383,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             ),
             trailing: Icon(
               Icons.arrow_forward_ios,
-              size: 16.0.sp,
+              size: arrowIcon,
             ),
             onTap: () {
               Navigator.pushNamed(
@@ -381,7 +400,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               style: TextStyle(fontWeight: FontWeight.w500)),
           trailing: Icon(
             Icons.arrow_forward_ios,
-            size: 16.0.sp,
+            size: arrowIcon,
           ),
           onTap: () {
             Navigator.push(
@@ -406,14 +425,16 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   iconColor: Colors.black,
                   title: Text(variable.strCareGiverCommunication,
                       style: TextStyle(
-                          fontWeight: FontWeight.w500, color: Colors.black)),
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                          fontSize: title)),
                   children: [
                     ListTile(
                       title: Text(variable.strCareGiverSettings,
                           style: TextStyle(fontWeight: FontWeight.w500)),
                       trailing: Icon(
                         Icons.arrow_forward_ios,
-                        size: 16.0.sp,
+                        size: arrowIcon,
                       ),
                       onTap: () {
                         Navigator.push(
@@ -435,7 +456,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                           style: TextStyle(fontWeight: FontWeight.w500)),
                       trailing: Icon(
                         Icons.arrow_forward_ios,
-                        size: 16.0.sp,
+                        size: arrowIcon,
                       ),
                       onTap: () {
                         Navigator.push(
@@ -517,7 +538,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         Center(
             child: Text(
           version != null ? 'v' + version : '',
-          style: TextStyle(color: Colors.grey),
+          style: TextStyle(color: Colors.grey, fontSize: subtitle),
         )),
       ],
     );
@@ -549,12 +570,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         value.result!.forEach((element) {
           devices.add(ListTile(
             title: Text(element.name!,
-                style: TextStyle(fontWeight: FontWeight.w500)),
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: title)),
             trailing: Text(
               (element.isPaired! ? 'Un Pair' : 'Pair'),
               style: TextStyle(
                   color: element.isPaired! ? Colors.red : Colors.green,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.bold,
+                  fontSize: title),
             ),
             onTap: () {
               if (element.isPaired!) {
@@ -669,10 +691,12 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     ''
             ? getDeviceSelectionModel.result![0].profileSetting!.allowDigit
             : true;
-    _isSheelaLiveReminders =
-    getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders != null &&
-        getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders !=
-            ''
+    _isSheelaLiveReminders = getDeviceSelectionModel
+                    .result![0].profileSetting!.sheelaLiveReminders !=
+                null &&
+            getDeviceSelectionModel
+                    .result![0].profileSetting!.sheelaLiveReminders !=
+                ''
         ? getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders
         : true;
     sheelaAIcontroller?.isAllowSheelaLiveReminders =
@@ -989,7 +1013,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             ),
             trailing: Icon(
               Icons.arrow_forward_ios,
-              size: 16.0.sp,
+              size: arrowIcon,
             ),
             onTap: () {
               Navigator.pushNamed(
@@ -1012,21 +1036,28 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               },
               title: Text(variable.strSkillsIntegration,
                   style: TextStyle(
-                      fontWeight: FontWeight.w500, color: Colors.black)),
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                      fontSize: title)),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: arrowIcon,
+              ),
               children: [
                 ListTile(
                     leading: ImageIcon(
                       AssetImage(variable.icon_digit_reco),
-                      //size: 30,
+                      size: iconSize,
                       color: Colors.black,
                     ),
-                    title: Text(variable.strAllowDigit),
+                    title: Text(variable.strAllowDigit,
+                        style: TextStyle(fontSize: subtitle)),
                     subtitle: Text(
                       variable.strScanDevices,
-                      style: TextStyle(fontSize: 12.0.sp),
+                      style: TextStyle(fontSize: title3),
                     ),
                     trailing: Transform.scale(
-                      scale: 0.8,
+                      scale: switchTrail,
                       child: Switch(
                         value: _isdigitRecognition!,
                         activeColor:
@@ -1053,16 +1084,19 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 ListTile(
                     leading: ImageIcon(
                       AssetImage(variable.icon_device_recon),
-                      //size: 30,
+                      size: iconSize,
                       color: Colors.black,
                     ),
-                    title: Text(variable.strAllowDevice),
+                    title: Text(variable.strAllowDevice,
+                        style: TextStyle(fontSize: subtitle)),
                     subtitle: Text(
                       variable.strScanAuto,
-                      style: TextStyle(fontSize: 12.0.sp),
+                      style: TextStyle(
+                        fontSize: title3,
+                      ),
                     ),
                     trailing: Transform.scale(
-                      scale: 0.8,
+                      scale: switchTrail,
                       child: Switch(
                         value: _isdeviceRecognition!,
                         activeColor:
@@ -1095,13 +1129,14 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                           isIntegration = value;
                         });
                       },
-                      title: const Text(variable.strIntegration,
+                      title: Text(variable.strIntegration,
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
-                              color: Colors.black)),
+                              color: Colors.black,
+                              fontSize: title)),
                       trailing: Icon(
                         Icons.arrow_forward_ios,
-                        size: 16.0.sp,
+                        size: arrowIcon,
                       ),
                       children: [
                         if (isIntegration)
@@ -1115,18 +1150,20 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                         leading: ImageIcon(
                                           AssetImage(
                                               variable.icon_digit_googleFit),
-                                          //size: 30,
+                                          size: iconSize,
                                           color: Colors.black,
                                         ),
-                                        title: Text(variable.strGoogleFit),
+                                        title: Text(variable.strGoogleFit,
+                                            style:
+                                                TextStyle(fontSize: subtitle)),
                                         subtitle: Text(
                                           variable.strAllowGoogle,
-                                          style: TextStyle(fontSize: 12.0.sp),
+                                          style: TextStyle(fontSize: title3),
                                         ),
                                         trailing: Wrap(
                                           children: <Widget>[
                                             Transform.scale(
-                                              scale: 0.8,
+                                              scale: switchTrail,
                                               child: IconButton(
                                                 icon: Icon(Icons.sync),
                                                 onPressed: () {
@@ -1136,7 +1173,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                               ),
                                             ),
                                             Transform.scale(
-                                              scale: 0.8,
+                                              scale: switchTrail,
                                               child: Switch(
                                                 value: _isGFActive!,
                                                 activeColor: Color(
@@ -1178,15 +1215,16 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                   Icons.favorite,
                                   color: Colors.pink,
                                 ),
-                                title: Text(variable.strHealthKit),
+                                title: Text(variable.strHealthKit,
+                                    style: TextStyle(fontSize: subtitle)),
                                 subtitle: Text(
                                   variable.strAllowHealth,
-                                  style: TextStyle(fontSize: 12.0.sp),
+                                  style: TextStyle(fontSize: title3),
                                 ),
                                 trailing: Wrap(
                                   children: <Widget>[
                                     Transform.scale(
-                                      scale: 0.8,
+                                      scale: switchTrail,
                                       child: IconButton(
                                         icon: Icon(Icons.sync),
                                         onPressed: () {
@@ -1195,7 +1233,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                       ),
                                     ),
                                     Transform.scale(
-                                      scale: 0.8,
+                                      scale: switchTrail,
                                       child: Switch(
                                         value: _isHKActive!,
                                         activeColor: Color(new CommonUtil()
@@ -1252,18 +1290,26 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   iconColor: Colors.black,
                   title: Text(variable.strCareGiverCommunication,
                       style: TextStyle(
-                          fontWeight: FontWeight.w500, color: Colors.black)),
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                          fontSize: title)),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    size: arrowIcon,
+                  ),
                   children: [
                     ListTile(
                       leading: ImageIcon(
-                        AssetImage(variable.notification_preference),
-                        //size: 30,
-                      ),
+                          AssetImage(
+                            variable.notification_preference,
+                          ),
+                          size: iconSize),
                       title: Text(variable.strNotificationPreference,
-                          style: TextStyle(fontWeight: FontWeight.w500)),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: subtitle)),
                       trailing: Icon(
                         Icons.arrow_forward_ios,
-                        size: 16.0.sp,
+                        size: arrowIcon,
                       ),
                       onTap: () {
                         Navigator.push(
@@ -1283,13 +1329,14 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     ListTile(
                       leading: ImageIcon(
                         AssetImage(variable.activity_non_adherance),
-                        //size: 30,
+                        size: iconSize,
                       ),
                       title: Text(variable.strNonAdherenceSettings,
-                          style: TextStyle(fontWeight: FontWeight.w500)),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: subtitle)),
                       trailing: Icon(
                         Icons.arrow_forward_ios,
-                        size: 16.0.sp,
+                        size: arrowIcon,
                       ),
                       onTap: () {
                         Navigator.push(
@@ -1320,6 +1367,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   title: Text(variable.strVitalsPreferences,
                       style: TextStyle(
                           fontWeight: FontWeight.w500, color: Colors.grey)),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    size: arrowIcon,
+                  ),
                 ),
               )
             : Theme(
@@ -1330,14 +1381,20 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   initiallyExpanded: isVitalPreferences,
                   title: Text(variable.strVitalsPreferences,
                       style: TextStyle(
-                          fontWeight: FontWeight.w500, color: Colors.black)),
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                          fontSize: title)),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    size: arrowIcon,
+                  ),
                   children: [
                     Theme(
                       data: theme,
                       child: ExpansionTile(
                         leading: ImageIcon(
                           AssetImage(variable.display_devices),
-                          //size: 30,
+                          size: iconSize,
                         ),
                         iconColor: Colors.black,
                         initiallyExpanded: isDisplayDevices,
@@ -1347,10 +1404,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                         title: Text(variable.strDisplayDevices,
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                color: Colors.black)),
+                                color: Colors.black,
+                                fontSize: subtitle)),
                         trailing: Icon(
                           Icons.arrow_forward_ios,
-                          size: 16.0.sp,
+                          size: arrowIcon,
                         ),
                         children: [
                           Padding(
@@ -1469,7 +1527,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                                       isDisplayPreference =
                                                           false;
                                                       isSheelaNotificationPref =
-                                                      false;
+                                                          false;
 
                                                       createAppColorSelection(
                                                           preColor, greColor);
@@ -1493,13 +1551,14 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     ListTile(
                       leading: ImageIcon(
                         AssetImage(variable.unit_preference),
-                        //size: 30,
+                        size: iconSize,
                       ),
                       title: Text(strUnitPreferences,
-                          style: TextStyle(fontWeight: FontWeight.w500)),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: subtitle)),
                       trailing: Icon(
                         Icons.arrow_forward_ios,
-                        size: 16.0.sp,
+                        size: arrowIcon,
                       ),
                       onTap: () {
                         Navigator.push(
@@ -1527,17 +1586,24 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               initiallyExpanded: isDisplayPreference,
               title: Text(variable.strDisplayPreferences,
                   style: TextStyle(
-                      fontWeight: FontWeight.w500, color: Colors.black)),
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                      fontSize: title)),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: arrowIcon,
+              ),
               children: [
                 ListTile(
                   leading: CommonUtil().qurHomeMainIcon(),
-                  title: Text(variable.strQurHome),
+                  title: Text(variable.strQurHome,
+                      style: TextStyle(fontSize: subtitle)),
                   subtitle: Text(
                     variable.strDefaultUI,
-                    style: TextStyle(fontSize: 12.0.sp),
+                    style: TextStyle(fontSize: title3),
                   ),
                   trailing: Transform.scale(
-                    scale: 0.8,
+                    scale: switchTrail,
                     child: Switch(
                       value: PreferenceUtil.getIfQurhomeisDefaultUI(),
                       activeColor: Color(new CommonUtil().getMyPrimaryColor()),
@@ -1642,7 +1708,15 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   },
                   title: Text(variable.strConnectedDevices,
                       style: TextStyle(
-                          fontWeight: FontWeight.w500, color: Colors.grey)),
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey,
+                          fontSize: CommonUtil().isTablet!
+                              ? Constants.tabHeader1
+                              : mobileHeader1)),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    size: arrowIcon,
+                  ),
                 ),
               )
             : Theme(
@@ -1669,7 +1743,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   },
                   title: Text(variable.strConnectedDevices,
                       style: TextStyle(
-                          fontWeight: FontWeight.w500, color: Colors.black)),
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                          fontSize: CommonUtil().isTablet!
+                              ? Constants.tabHeader1
+                              : mobileHeader1)),
                 ),
               ),
         Divider(),
@@ -1682,7 +1760,15 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             initiallyExpanded: isSheelaNotificationPref,
             title: Text(variable.strSheelaNotificationPref,
                 style: TextStyle(
-                    fontWeight: FontWeight.w500, color: Colors.black)),
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                    fontSize: CommonUtil().isTablet!
+                        ? Constants.tabHeader1
+                        : mobileHeader1)),
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: arrowIcon,
+            ),
             children: [
               ListTile(
                 leading: Image.asset(
@@ -1690,13 +1776,14 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   height: 40.h,
                   width: 40.w,
                 ),
-                title: Text(variable.strSheelaLiveReminders),
+                title: Text(variable.strSheelaLiveReminders,
+                    style: TextStyle(fontSize: subtitle)),
                 /*subtitle: Text(
                   variable.strDefaultUI,
                   style: TextStyle(fontSize: 12.0.sp),
                 ),*/
                 trailing: Transform.scale(
-                  scale: 0.8,
+                  scale: switchTrail,
                   child: Switch(
                     value: _isSheelaLiveReminders ?? false,
                     activeColor: Color(new CommonUtil().getMyPrimaryColor()),
@@ -1730,21 +1817,30 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               },
               title: Text(variable.strPrivacyAndSecurity,
                   style: TextStyle(
-                      fontWeight: FontWeight.w500, color: Colors.black)),
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                      fontSize: CommonUtil().isTablet!
+                          ? Constants.tabHeader1
+                          : mobileHeader1)),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: arrowIcon,
+              ),
               children: [
                 ListTile(
                     leading: ImageIcon(
                       AssetImage(variable.icon_lock),
-                      //size: 30,
+                      size: iconSize,
                       color: Colors.black,
                     ),
-                    title: Text(variable.strAllowBiometric),
+                    title: Text(variable.strAllowBiometric,
+                        style: TextStyle(fontSize: subtitle)),
                     subtitle: Text(
                       variable.strEnableApplock,
-                      style: TextStyle(fontSize: 12.0.sp),
+                      style: TextStyle(fontSize: title3),
                     ),
                     trailing: Transform.scale(
-                      scale: 0.8,
+                      scale: switchTrail,
                       child: Switch(
                         value: PreferenceUtil.getEnableAppLock(),
                         activeColor:
@@ -1795,7 +1891,15 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               },
               title: Text(variable.strUserAccount,
                   style: TextStyle(
-                      fontWeight: FontWeight.w500, color: Colors.black)),
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                      fontSize: CommonUtil().isTablet!
+                          ? Constants.tabHeader1
+                          : mobileHeader1)),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: arrowIcon,
+              ),
               children: [
                 InkWell(
                   onTap: () {
@@ -1804,10 +1908,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   child: ListTile(
                     leading: ImageIcon(
                       AssetImage(variable.remove_user),
-                      //size: 30,
+                      size: iconSize,
                       color: Colors.black,
                     ),
-                    title: Text(variable.strDeleteAccountTitle),
+                    title: Text(variable.strDeleteAccountTitle,
+                        style: TextStyle(fontSize: subtitle)),
                   ),
                 )
               ],

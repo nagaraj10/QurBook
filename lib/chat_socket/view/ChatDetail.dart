@@ -655,10 +655,16 @@ class ChatState extends State<ChatDetail> {
 
   @override
   Widget build(BuildContext context) {
+    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(1.sh * 0.15),
+          preferredSize: CommonUtil().isTablet!
+              ? isPortrait
+                  ? Size.fromHeight(1.sh * 0.1)
+                  : Size.fromHeight(1.sh * 0.2)
+              : Size.fromHeight(1.sh * 0.15),
           child: _patientChatBar()),
       floatingActionButton: isSearchVisible
           ? Padding(
@@ -1209,6 +1215,9 @@ class ChatState extends State<ChatDetail> {
   }
 
   Widget buildInput() {
+    //Check if the tablet is in landscape of portrait mode
+    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
     return IconTheme(
       data: IconThemeData(color: Color(new CommonUtil().getMyPrimaryColor())),
       child: Container(
@@ -1218,8 +1227,16 @@ class ChatState extends State<ChatDetail> {
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
           children: <Widget>[
+            (CommonUtil().isTablet ?? false)
+                ? SizedBox(width: 10)
+                : Container(),
             Flexible(
-              flex: (CommonUtil().isTablet ?? false) ? 8 : 4,
+              //set the flex value based on the orientation of tablet
+              flex: (CommonUtil().isTablet ?? false)
+                  ? isPortrait
+                      ? 8
+                      : 15
+                  : 4,
               child: Container(
                 height: 58.0.h,
                 child: Stack(
