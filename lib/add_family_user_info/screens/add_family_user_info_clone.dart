@@ -2984,40 +2984,29 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Future<String?> setValueLanguages() async {
-    /* for (LanguageResult languageResultObj in languageModelList.result) {
-      if (languageResultObj.referenceValueCollection.length > 0) {
-        for (ReferenceValueCollection referenceValueCollection
-            in languageResultObj.referenceValueCollection) {
-          if (myProfile?.result?.additionalInfo.language != null &&
-              myProfile?.result?.additionalInfo.language.length > 0) {
-            if (referenceValueCollection.id ==
-                myProfile?.result?.additionalInfo.language[0]) {
-              // selectedLanguage = referenceValueCollection.code;
-              String languageCode =
-                  referenceValueCollection.code.substring(0, 2).toLowerCase();
-              selectedLanguage = languageCode;
-              PreferenceUtil.saveString(SHEELA_LANG,
-                  CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
-            }
-          }
-        }
-      }
-    }*/
+    // Check if selectedLanguage is already set
     if (selectedLanguage != null && selectedLanguage != '') {
+      // Do nothing, as the language is already set
     } else {
-      if (addFamilyUserInfoBloc!
-          .myprofileObject!.result!.userProfileSettingCollection3!.isNotEmpty) {
-        var profileSetting = addFamilyUserInfoBloc!.myprofileObject?.result
-            ?.userProfileSettingCollection3![0].profileSetting;
-        if (profileSetting != null) {
-          CommonUtil.langaugeCodes.forEach((language, languageCode) {
-            if (language == profileSetting.preferred_language) {
-              selectedLanguage = language;
-            }
-          });
-        }
+      // Retrieve user collection, providing an empty list as default
+      final userCollection = addFamilyUserInfoBloc
+              ?.myprofileObject?.result?.userProfileSettingCollection3 ??
+          [];
+
+      // Check if user collection is not empty
+      if (userCollection.isNotEmpty) {
+        // Retrieve the profile setting from the first user in the collection
+        final profileSetting = userCollection[0].profileSetting;
+
+        // Set selectedLanguage based on preferred_language from profileSetting,
+        // using the CommonUtil.langaugeCodes map, or keep the current value
+        selectedLanguage =
+            CommonUtil.langaugeCodes[profileSetting?.preferred_language] ??
+                selectedLanguage;
       }
     }
+
+    // Return the selectedLanguage, which is now set or remains unchanged
     return selectedLanguage;
   }
 
