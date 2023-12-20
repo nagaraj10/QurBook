@@ -670,53 +670,11 @@ class _ChatUserListState extends State<ChatUserList> {
                   width: 1.sw * 0.12,
                   height: 1.sw * 0.12,
                   child: Row(
-                    children: [
-                      Expanded(
-                        child: ClipOval(
-                          child: userChatList.profilePicThumbnailURL != null
-                              ? CachedNetworkImage(
-                                  placeholder: (context, url) => Container(
-                                        child: CommonCircularIndicator(),
-                                        width: 50.0,
-                                        height: 50.0,
-                                        padding: EdgeInsets.all(15.0),
-                                      ),
-                                  imageUrl:
-                                      userChatList.profilePicThumbnailURL!,
-                                  width: 50.0,
-                                  height: 50.0,
-                                  fit: BoxFit.cover,
-                                  errorWidget: (context, url, error) =>
-                                      Container(
-                                        height: 50.0.h,
-                                        width: 50.0.h,
-                                        color: Colors.grey[200],
-                                        child: Center(
-                                            child: Text(
-                                          userChatList.firstName != null
-                                              ? userChatList.firstName![0]
-                                                  .toString()
-                                                  .toUpperCase()
-                                              : '',
-                                          style: TextStyle(
-                                            color: Color(new CommonUtil()
-                                                .getMyPrimaryColor()),
-                                            fontSize: 16.0.sp,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        )),
-                                      ))
-                              : Icon(
-                                  Icons.account_circle,
-                                  size: (CommonUtil().isTablet ?? false)
-                                      ? 50.0
-                                      : 40.0,
-                                  color: greyColor,
-                                ),
-                        ),
-                      ),
-                    ],
+                    children: [getIconWidget(userChatList)],
                   ),
+                ),
+                SizedBox(
+                  width: 15,
                 ),
                 Container(
                   child: Expanded(
@@ -1007,5 +965,50 @@ class _ChatUserListState extends State<ChatUserList> {
       'screenSessionTime':
           '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
+  }
+//Removed the expanded widget as the images were little stretch for tablet alone
+  getIconWidget(PayloadChat userChatList) {
+    return CommonUtil().isTablet!
+        ? getIcon(userChatList)
+        : Expanded(child: getIcon(userChatList));
+  }
+
+  getIcon(PayloadChat userChatList) {
+    return 
+        ClipOval(
+      child: userChatList.profilePicThumbnailURL != null
+          ? CachedNetworkImage(
+              placeholder: (context, url) => Container(
+                    child: CommonCircularIndicator(),
+                    width: 50.0,
+                    height: 50.0,
+                    padding: EdgeInsets.all(15.0),
+                  ),
+              imageUrl: userChatList.profilePicThumbnailURL!,
+              width: 50.0,
+              height: 50.0,
+              fit: BoxFit.cover,
+              errorWidget: (context, url, error) => Container(
+                    height: 50.0.h,
+                    width: 50.0.h,
+                    color: Colors.grey[200],
+                    child: Center(
+                        child: Text(
+                      userChatList.firstName != null
+                          ? userChatList.firstName![0].toString().toUpperCase()
+                          : '',
+                      style: TextStyle(
+                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                        fontSize: 16.0.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    )),
+                  ))
+          : Icon(
+              Icons.account_circle,
+              size: (CommonUtil().isTablet ?? false) ? 50.0 : 40.0,
+              color: greyColor,
+            ),
+    );
   }
 }

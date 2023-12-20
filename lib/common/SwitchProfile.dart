@@ -110,7 +110,7 @@ class SwitchProfile {
                                         .getProfilePicWidgeUsingUrl(myProfile,
                                             changeWhiteBg: changeWhiteBg,
                                             textSize: CommonUtil().isTablet!
-                                                ? 32
+                                                ? 10
                                                 : 28)
                                     : Container(
                                         height: CommonUtil().isTablet!
@@ -130,7 +130,7 @@ class SwitchProfile {
                                                 : '',
                                             style: TextStyle(
                                                 fontSize: CommonUtil().isTablet!
-                                                    ? Constants.tabHeader1
+                                                    ? Constants.tabHeader4
                                                     : mobileHeader1,
                                                 color: Color(CommonUtil()
                                                     .getMyPrimaryColor())),
@@ -271,7 +271,7 @@ class SwitchProfile {
                     ? myProfile.result!.profilePicThumbnailUrl != null
                         ? FHBBasicWidget().getProfilePicWidgeUsingUrl(myProfile,
                             changeWhiteBg: changeWhiteBg,
-                            textSize: CommonUtil().isTablet! ? 32 : 28)
+                            textSize: CommonUtil().isTablet! ? 10 : 28)
                         : Container(
                             height: 50,
                             width: 50,
@@ -396,7 +396,7 @@ class SwitchProfile {
                                     ? FHBBasicWidget()
                                         .getProfilePicWidgeUsingUrl(myProfile,
                                             textSize: CommonUtil().isTablet!
-                                                ? 32
+                                                ? 10
                                                 : 28)
                                     : Container(
                                         height: 50.0.h,

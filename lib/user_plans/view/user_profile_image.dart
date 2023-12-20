@@ -54,44 +54,7 @@ class UserProfileImage extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(
                       isGoldMember ? constraints.maxHeight / 20 : 0),
-                  child: ClipOval(
-                    child: (myProfile?.result != null &&
-                            myProfile?.result?.profilePicThumbnailUrl != '')
-                        ? Image.network(
-                            myProfile?.result?.profilePicThumbnailUrl ?? '',
-                            height: 50.0.h,
-                            width: 50.0.h,
-                            fit: BoxFit.cover,
-                            headers: {
-                              HttpHeaders.authorizationHeader:
-                                  PreferenceUtil.getStringValue(KEY_AUTHTOKEN)!,
-                            },
-                            errorBuilder: (context, exception, stackTrace) =>
-                                Container(
-                              height: 50.0.h,
-                              width: 50.0.h,
-                              color: circleColor ??
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                              child: Center(
-                                child: getFirstLastNameTextForProfile(
-                                  myProfile!,
-                                  textColor: textColor,
-                                ),
-                              ),
-                            ),
-                          )
-                        : Container(
-                            color: Color(bgColorContainer),
-                            height: 50.0.h,
-                            width: 50.0.h,
-                            child: Center(
-                              child: getFirstLastNameTextForProfile(
-                                myProfile!,
-                                textColor: textColor,
-                              ),
-                            ),
-                          ),
-                  ),
+                  child: ClipOval(child: getProfileImage()),
                 ),
               ),
             ),
@@ -112,4 +75,45 @@ class UserProfileImage extends StatelessWidget {
           ],
         );
       });
+
+/**
+ * Provides the widget for profile image of user
+ * If the profile object is null it should return empty container
+ */
+  getProfileImage() {
+    return (myProfile != null)
+        ? (myProfile?.result != null &&
+                myProfile?.result?.profilePicThumbnailUrl != '')
+            ? Image.network(
+                myProfile?.result?.profilePicThumbnailUrl ?? '',
+                height: 50.0.h,
+                width: 50.0.h,
+                fit: BoxFit.cover,
+                headers: {
+                  HttpHeaders.authorizationHeader:
+                      PreferenceUtil.getStringValue(KEY_AUTHTOKEN)!,
+                },
+                errorBuilder: (context, exception, stackTrace) => Container(
+                  height: 50.0.h,
+                  width: 50.0.h,
+                  color: circleColor ?? Color(CommonUtil().getMyPrimaryColor()),
+                  child: Center(
+                    child: getFirstLastNameTextForProfile(myProfile!,
+                        textColor: textColor,
+                        forNavdrawer:
+                            true), //added a bool value to check if the text is required for navigation drawer
+                  ),
+                ),
+              )
+            : Container(
+                color: Color(bgColorContainer),
+                height: 50.0.h,
+                width: 50.0.h,
+                child: Center(
+                  child: getFirstLastNameTextForProfile(myProfile!,
+                      textColor: textColor, forNavdrawer: true),
+                ),
+              )
+        : Container();
+  }
 }

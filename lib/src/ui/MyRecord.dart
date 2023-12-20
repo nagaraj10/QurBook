@@ -197,6 +197,10 @@ class _MyRecordsState extends State<MyRecords> {
               !(landingScreenController?.isSearchVisible.value ?? false)
           ? null
           : AppBar(
+              toolbarHeight: CommonUtil().isTablet!
+                  ? 80
+                  : 60, //Set width and height to maintain UI similar in tablet and mobile ,to increase the space above the tabbar
+
               elevation: 0,
               automaticallyImplyLeading: false,
               flexibleSpace: GradientAppBar(),
@@ -900,6 +904,9 @@ class _CustomTabsState extends State<CustomTabView>
                                   color: widget.isFromVideoCall!
                                       ? Colors.black38
                                       : Colors.white,
+                                  size: CommonUtil().isTablet!
+                                      ? 20.0.sp
+                                      : 30.0.sp,
                                 ),
                                 onPressed: widget.isFromVideoCall!
                                     ? null
@@ -925,6 +932,9 @@ class _CustomTabsState extends State<CustomTabView>
                                   color: widget.isFromVideoCall!
                                       ? Colors.black38
                                       : Colors.white,
+                                  size: CommonUtil().isTablet!
+                                      ? 20.0.sp
+                                      : 30.0.sp,
                                 ),
                                 onPressed: widget.isFromVideoCall!
                                     ? null
