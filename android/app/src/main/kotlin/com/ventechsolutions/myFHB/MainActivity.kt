@@ -139,7 +139,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     private val ONGOING_NS_CHANNEL = Constants.CN_ONG_NS
     private val STREAM = Constants.CN_EVE_STREAM
     private val SPEECH_TO_TEXT_STREAM = Constants.SPEECH_TO_TEXT_STREAM
-    private val SNOOZE_REMINDER_STREAM = Constants.SNOOZE_STREAM
     private val WIFICONNECT = Constants.WIFI_WORKS
     private val BLECONNECT = Constants.BLE_CONNECT
     private val DEVICES_CHANNEL = Constants.DEVICES_CHANNEL
@@ -231,7 +230,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
 
     private val REMINDER_CHANNEL = "android/notification"
     private val REMINDER_METHOD_NAME = "addReminder"
-    private val SNOOZE_SHEELA = "snoozeFromSheela"
     private val CANCEL_REMINDER_METHOD_NAME = "removeReminder"
     var alarmManager: AlarmManager? = null
 
