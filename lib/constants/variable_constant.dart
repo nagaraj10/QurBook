@@ -857,10 +857,8 @@ const String str_far = 'Fahrenheit';
 //Reminders
 //
 const reminderMethodChannel = MethodChannel('flutter.native/reminder');
-const snoozeMethodChannel = MethodChannel('snooze/stream');
 const addReminderMethod = 'addReminder';
 const snoozeReminderMethod = 'snoozeReminder';
-const snoozeSheela = 'snoozeFromSheela';
 const navigateToSheelaReminderMethod = 'navigateToSheelaReminderMethod';
 const notificationReceivedMethod = "notificationReceived";
 const removeReminderMethod = 'removeReminder';
