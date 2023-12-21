@@ -151,7 +151,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     private val ENABLE_BACKGROUND_NOTIFICATION = Constants.ENABLE_BACKGROUND_NOTIFICATION
     private val DISABLE_BACKGROUND_NOTIFICATION = Constants.DISABLE_BACKGROUND_NOTIFICATION
     private val GET_CURRENT_LOCATION = Constants.GET_CURRENT_LOCATION
-    private val APPOINTMENT_TIME = Constants.APPOINTMENT_DETAILS
     private val CLOSE_SHEELA_DIALOG = Constants.CLOSE_SHEELA_DIALOG
     private var sharedValue: String? = null
     private var username: String? = null
@@ -2607,33 +2606,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             }
         }
 
-        MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            APPOINTMENT_TIME
-        ).setMethodCallHandler { call, result ->
-            if (call.method == APPOINTMENT_TIME) {
-                Log.d("APPOINTMENT_TIME", "APPOINTMENT_TIME")
-                try {
-                    val data = call.argument<String>("data")
-                    val retMap: Map<String, Any> = Gson().fromJson(
-                        data, object : TypeToken<HashMap<String?, Any?>?>() {}.type
-                    )
-
-                    scheduleAppointment(retMap)
-                    try {
-                        appointmentId = retMap[idSheela] as String
-                        eid = retMap[eidSheela] as String
-                        sayText = retMap[sayTextSheela] as String
-                    } catch (e: Exception) {
-                    }
-
-                    result.success("success")
-
-                } catch (e: Exception) {
-                    Log.d("Catch", "" + e.toString())
-                }
-            }
-        }
+       
 
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
