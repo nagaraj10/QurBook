@@ -2421,7 +2421,12 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       if (sheelBadgeController.sheelaIconBadgeCount.value > 0) {
         sheelBadgeController.getSheelaBadgeCount();
       }
-    } catch (e, stackTrace) {}
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
 
   openFormDataDialog(
