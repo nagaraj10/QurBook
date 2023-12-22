@@ -718,11 +718,9 @@ const String strEnableApplock =
     'Allow app lock with FaceID/FingerPrint or Passcode';
 const String strAuthToUseApp = 'Please complete the authentication to proceed.';
 
-//for healthKit and googleFit activation and sync
+//for  googleFit activation and sync
 const String strGoogleFit = 'Google fit';
 const String strAllowGoogle = 'Allow app to recieve data from google Fit';
-const String strHealthKit = 'Apple health';
-const String strAllowHealth = 'Allow app to recieve data from Apple Health';
 const String strAddDevice = 'Tap to add device widgets to your home screen';
 const String strDefaultUI = 'Set QurHome as default UI';
 

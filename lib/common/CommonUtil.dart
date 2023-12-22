@@ -1478,11 +1478,9 @@ class CommonUtil {
     if (PreferenceUtil.getStringValue(Constants.activateGF) ==
             variable.strtrue &&
         PreferenceUtil.getStringValue(Constants.isFirstTym) ==
-            variable.strFalse) {
+            variable.strFalse &&
+        Platform.isAndroid) {
       await _deviceDataHelper.syncGoogleFit();
-    } else if (PreferenceUtil.getStringValue(Constants.activateHK) ==
-        variable.strtrue) {
-      await _deviceDataHelper.syncHealthKit();
     }
   }
 

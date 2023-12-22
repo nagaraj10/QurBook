@@ -418,7 +418,6 @@ const String KEY_EMAIL = 'email';
 const String asgurduserID = '49cdc4be-afd9-419e-b3f9-1bd35207c74f';
 
 const String activateGF = 'activateGF'; // activate googleFit
-const String activateHK = 'activateHK'; // activate appleHealth
 const String isFirstTym = 'FirsTym';
 const String isHealthFirstTime =
     'HealthFirstTime'; // Activating HealthKit For First Time
