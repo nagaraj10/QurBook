@@ -311,11 +311,11 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     private var langCode: String? = Locale.US.toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        try {
-            super.onCreate(savedInstanceState)
-            setAutoInitEnabled(true)
-            //OHQDeviceManager.init(applicationContext, this)
-            registerReceiver(broadcastReceiver, IntentFilter("INTERNET_LOST"));
+
+        super.onCreate(savedInstanceState)
+        setAutoInitEnabled(true)
+        //OHQDeviceManager.init(applicationContext, this)
+        registerReceiver(broadcastReceiver, IntentFilter("INTERNET_LOST"));
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
 //            val alarmManager = ContextCompat.getSystemService(context, AlarmManager::class.java)
 //            if (alarmManager?.canScheduleExactAlarms() == false) {
@@ -325,131 +325,131 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
 //                }
 //            }
 //        }
-            fullyInitialize()
-            FacebookSdk.setIsDebugEnabled(true)
-            FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
-            setAutoLogAppEventsEnabled(true)
-            AppEventsLogger.newLogger(this).logEvent("started")
-            // Get user consent
-            val target: Uri? = getIntent().getData()
-            Log.e("deeplink", "onCreate: " + target)
-            if (target != null) {
-                mEventChannel.success("facebookdeeplink&" + target.toString());
-            } else {
-                // activity was created in a normal fashion
+        fullyInitialize()
+        FacebookSdk.setIsDebugEnabled(true)
+        FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
+        setAutoLogAppEventsEnabled(true)
+        AppEventsLogger.newLogger(this).logEvent("started")
+        // Get user consent
+        val target: Uri? = getIntent().getData()
+        Log.e("deeplink", "onCreate: " + target)
+        if (target != null) {
+            mEventChannel.success("facebookdeeplink&" + target.toString());
+        } else {
+            // activity was created in a normal fashion
+        }
+        AppLinkData.fetchDeferredAppLinkData(this) { it ->
+            Log.e("deeplinks", "onCreate: " + it?.appLinkData)
+            if (::mEventChannel.isInitialized) {
+                mEventChannel.success("facebookdeeplink&" + it?.appLinkData);
             }
-            AppLinkData.fetchDeferredAppLinkData(this) { it ->
-                Log.e("deeplinks", "onCreate: " + it?.appLinkData)
-                if (::mEventChannel.isInitialized) {
-                    mEventChannel.success("facebookdeeplink&" + it?.appLinkData);
-                }
-            }
+        }
 
-            val action = intent.action
-            val type = intent.type
-            if (Intent.ACTION_SEND == action && type != null) {
-                if ((Constants.TXT_PLAIN == type) && (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0) {
-                    handleSendText(intent) // Handle text being sent
-                }
+        val action = intent.action
+        val type = intent.type
+        if (Intent.ACTION_SEND == action && type != null) {
+            if ((Constants.TXT_PLAIN == type) && (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0) {
+                handleSendText(intent) // Handle text being sent
             }
-            //registerReceiver(smsBroadcastReceiver,
-            //IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION))
+        }
+        //registerReceiver(smsBroadcastReceiver,
+        //IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION))
 
 //        builder = AlertDialog.Builder(context)
 //        builder.setCancelable(true)
-            dialog = Dialog(this)
-            countDownTimerDialog = Dialog(this)
-            customLayout = layoutInflater.inflate(R.layout.progess_dialog, null)
-            countDownTimerLayout = layoutInflater.inflate(R.layout.listen_loading, null)
-            displayText = customLayout.findViewById(R.id.displayTxt)
-            countDownTimer = countDownTimerLayout.findViewById(R.id.countDownTimer)
-            sendBtn = customLayout.findViewById(R.id.send)
-            edit_view = customLayout.findViewById(R.id.edit_view)
-            errorTxt = customLayout.findViewById(R.id.errorTxt)
-            spin_kit = customLayout.findViewById(R.id.spin_kit)
-            tryMe = customLayout.findViewById(R.id.tryMe)
-            listeningLayout = customLayout.findViewById(R.id.listeningLayout)
-            tryAgain = customLayout.findViewById(R.id.tryAgain)
-            close = customLayout.findViewById(R.id.close)
-            micOn = customLayout.findViewById(R.id.micOn)
-            //builder.setView(customLayout)
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setContentView(customLayout)
-            dialog.setCancelable(false)
-            countDownTimerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            countDownTimerDialog.setContentView(countDownTimerLayout)
-            countDownTimerDialog.setCancelable(false)
-            //dialog = builder.create()
-            //dialog.setInverseBackgroundForced(true)
-            //dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            countDownTimerDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            countDownTimerDialog.window?.setDimAmount(0.0f)
-            displayText.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    handler.removeCallbacks(runnable)
-                }
-
-                override fun afterTextChanged(p0: Editable?) {
-                }
-            })
-
-            close.setOnClickListener {
-                try {
-                    speechRecognizer?.stopListening()
-
-                    //speechRecognizer?.destroy()
-                    if (dialog.isShowing) {
-                        try {
-                            _result.let {
-                                _result?.error("", "", "")
-                            }
-                            _result = null
-                        } catch (e: Exception) {
-                            print(e.printStackTrace())
-                        }
-                        finalWords = ""
-                        dialog.dismiss()
-                        spin_kit.visibility = View.VISIBLE
-                    }
-                } catch (e: Exception) {
-                    Log.d("Catch", "" + e.toString())
-                }
+        dialog = Dialog(this)
+        countDownTimerDialog = Dialog(this)
+        customLayout = layoutInflater.inflate(R.layout.progess_dialog, null)
+        countDownTimerLayout = layoutInflater.inflate(R.layout.listen_loading, null)
+        displayText = customLayout.findViewById(R.id.displayTxt)
+        countDownTimer = countDownTimerLayout.findViewById(R.id.countDownTimer)
+        sendBtn = customLayout.findViewById(R.id.send)
+        edit_view = customLayout.findViewById(R.id.edit_view)
+        errorTxt = customLayout.findViewById(R.id.errorTxt)
+        spin_kit = customLayout.findViewById(R.id.spin_kit)
+        tryMe = customLayout.findViewById(R.id.tryMe)
+        listeningLayout = customLayout.findViewById(R.id.listeningLayout)
+        tryAgain = customLayout.findViewById(R.id.tryAgain)
+        close = customLayout.findViewById(R.id.close)
+        micOn = customLayout.findViewById(R.id.micOn)
+        //builder.setView(customLayout)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(customLayout)
+        dialog.setCancelable(false)
+        countDownTimerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        countDownTimerDialog.setContentView(countDownTimerLayout)
+        countDownTimerDialog.setCancelable(false)
+        //dialog = builder.create()
+        //dialog.setInverseBackgroundForced(true)
+        //dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        countDownTimerDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        countDownTimerDialog.window?.setDimAmount(0.0f)
+        displayText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
-            //builder.show()
-            sendBtn.setOnClickListener {
 
-                if (displayText.text.toString().trim() == "") {
-                    displayText.clearFocus()
-                    val toast = Toast.makeText(
-                        applicationContext,
-                        "Please enter a valid input",
-                        Toast.LENGTH_LONG
-                    )
-                    toast.setGravity(Gravity.CENTER, 0, 0)
-                    toast.show()
-                } else {
-                    speechRecognizer?.stopListening()
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                handler.removeCallbacks(runnable)
+            }
 
-                    //speechRecognizer?.destroy()
-                    _result?.success(displayText.text.toString())
-                    _result = null
+            override fun afterTextChanged(p0: Editable?) {
+            }
+        })
+
+        close.setOnClickListener {
+            try {
+                speechRecognizer?.stopListening()
+
+                //speechRecognizer?.destroy()
+                if (dialog.isShowing) {
+                    try {
+                        _result.let {
+                            _result?.error("", "", "")
+                        }
+                        _result = null
+                    } catch (e: Exception) {
+                        print(e.printStackTrace())
+                    }
                     finalWords = ""
                     dialog.dismiss()
                     spin_kit.visibility = View.VISIBLE
-                    displayText?.setText("")
-
                 }
+            } catch (e: Exception) {
+                Log.d("Catch", "" + e.toString())
             }
+        }
+        //builder.show()
+        sendBtn.setOnClickListener {
 
-            /*if (specifiedUserControl) {
-                    mOption[OHQSessionOptionKey.RegisterNewUserKey] = true
-                    mOption[OHQSessionOptionKey.ConsentCodeKey] =
-                        CONSENT_CODE_OHQ
-                   *//* if (null != userIndex) {
+            if (displayText.text.toString().trim() == "") {
+                displayText.clearFocus()
+                val toast = Toast.makeText(
+                    applicationContext,
+                    "Please enter a valid input",
+                    Toast.LENGTH_LONG
+                )
+                toast.setGravity(Gravity.CENTER, 0, 0)
+                toast.show()
+            } else {
+                speechRecognizer?.stopListening()
+
+                //speechRecognizer?.destroy()
+                _result?.success(displayText.text.toString())
+                _result = null
+                finalWords = ""
+                dialog.dismiss()
+                spin_kit.visibility = View.VISIBLE
+                displayText?.setText("")
+
+            }
+        }
+
+        /*if (specifiedUserControl) {
+                mOption[OHQSessionOptionKey.RegisterNewUserKey] = true
+                mOption[OHQSessionOptionKey.ConsentCodeKey] =
+                    CONSENT_CODE_OHQ
+               *//* if (null != userIndex) {
                         mOption[OHQSessionOptionKey.UserIndexKey] =
                             jp.co.ohq.blesampleomron.view.fragment.RegistrationOptionFragment.Arg.UserIndex.name
                     }
@@ -464,14 +464,9 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                     mOption[OHQSessionOptionKey.AllowControlOfReadingPositionToMeasurementRecordsKey] = true
                 }*/
 
-            //mSessionController = SessionController(this, null)
+        //mSessionController = SessionController(this, null)
 
-            stopCriticalAlertServices()
-
-
-        } catch (e: Exception) {
-            Log.e("crash", e.message.toString())
-        }
+        stopCriticalAlertServices()
 
 
     }
