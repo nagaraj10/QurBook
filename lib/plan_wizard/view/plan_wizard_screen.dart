@@ -160,7 +160,6 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                             OutlinedButton(
                               style: OutlinedButton.styleFrom(
                                 side: BorderSide(color: Colors.white),
-                                backgroundColor: Colors.white,
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(

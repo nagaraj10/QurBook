@@ -523,14 +523,8 @@ class _LandingScreenState extends State<LandingScreen> {
                     unselectedLabelStyle: const TextStyle(
                       color: Colors.black54,
                     ),
-                    selectedIconTheme: IconThemeData(
-                      color: Color(
-                        CommonUtil().getMyPrimaryColor(),
-                      ),
-                    ),
-                    unselectedIconTheme: const IconThemeData(
-                      color: Colors.black54,
-                    ),
+                    selectedItemColor: Color(CommonUtil().getMyPrimaryColor()),
+                    unselectedItemColor: Colors.black54,
                     items: [
                       BottomNavigationBarItem(
                         icon: ImageIcon(

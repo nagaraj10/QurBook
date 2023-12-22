@@ -15,10 +15,9 @@ class AppTheme {
     appBarTheme: AppBarTheme().copyWith(
       systemOverlayStyle: SystemUiOverlayStyle.light,
     ),
-    colorScheme: ColorScheme.light()
-        .copyWith(
-          primary: Color(CommonUtil().getMyPrimaryColor()),
-        )
-        .copyWith(secondary: Colors.white),
+    colorScheme: ColorScheme.light(
+      primary:Color(CommonUtil().getMyPrimaryColor()),
+      secondary:Colors.white
+    )
   );
 }
