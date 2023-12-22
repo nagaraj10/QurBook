@@ -714,9 +714,6 @@ class TranslationConstants {
   static const String strGoogleFit = 'Google Fit';
   static const String strAllowGoogle =
       'Allow app to recieve data from google Fit';
-  static const String strHealthKit = 'Apple Health';
-  static const String strAllowHealth =
-      'Allow app to recieve data from Apple Health';
   static const String strAddDevice =
       'Tap to add device widgets to your home screen';
 

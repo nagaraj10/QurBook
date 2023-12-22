@@ -1119,27 +1119,27 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       ),
                     )),
                 Divider(),
-                Theme(
-                    data: theme,
-                    child: ExpansionTile(
-                      iconColor: Colors.black,
-                      initiallyExpanded: isIntegration,
-                      onExpansionChanged: (value) {
-                        setState(() {
-                          isIntegration = value;
-                        });
-                      },
-                      title: Text(variable.strIntegration,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                              fontSize: title)),
-                      trailing: Icon(
-                        Icons.arrow_forward_ios,
-                        size: arrowIcon,
-                      ),
-                      children: [
-                        if (isIntegration)
+                if (isIntegration && Platform.isAndroid)
+                  Theme(
+                      data: theme,
+                      child: ExpansionTile(
+                        iconColor: Colors.black,
+                        initiallyExpanded: isIntegration,
+                        onExpansionChanged: (value) {
+                          setState(() {
+                            isIntegration = value;
+                          });
+                        },
+                        title: Text(variable.strIntegration,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                                fontSize: title)),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: arrowIcon,
+                        ),
+                        children: [
                           FutureBuilder(
                               future: _handleGoogleFit(),
                               builder: (context, snapshot) {
@@ -1205,80 +1205,12 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                   return Container();
                                 }
                               }),
-                        Container(
-                          height: 1,
-                          color: Colors.grey[200],
-                        ),
-                        (Platform.isIOS)
-                            ? ListTile(
-                                leading: Icon(
-                                  Icons.favorite,
-                                  color: Colors.pink,
-                                ),
-                                title: Text(variable.strHealthKit,
-                                    style: TextStyle(fontSize: subtitle)),
-                                subtitle: Text(
-                                  variable.strAllowHealth,
-                                  style: TextStyle(fontSize: title3),
-                                ),
-                                trailing: Wrap(
-                                  children: <Widget>[
-                                    Transform.scale(
-                                      scale: switchTrail,
-                                      child: IconButton(
-                                        icon: Icon(Icons.sync),
-                                        onPressed: () {
-                                          _deviceDataHelper.syncHealthKit();
-                                        },
-                                      ),
-                                    ),
-                                    Transform.scale(
-                                      scale: switchTrail,
-                                      child: Switch(
-                                        value: _isHKActive!,
-                                        activeColor: Color(new CommonUtil()
-                                            .getMyPrimaryColor()),
-                                        onChanged: (bool newValue) {
-                                          isTouched = true;
-                                          if (_isHealthFirstTime) {
-                                            _isHealthFirstTime = false;
-                                            PreferenceUtil.saveString(
-                                                Constants.isHealthFirstTime,
-                                                _isHealthFirstTime.toString());
-
-                                            newValue == true
-                                                ? _deviceDataHelper
-                                                    .activateHealthKit()
-                                                : _deviceDataHelper
-                                                    .deactivateHealthKit();
-                                          } else {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      HealthApp()),
-                                            );
-                                          }
-                                          setState(() {
-                                            _isHKActive = newValue;
-                                            isIntegration = true;
-
-                                            /*PreferenceUtil.saveString(
-                                                Constants.activateHK,
-                                                _isHKActive.toString());*/
-                                          });
-                                        },
-                                      ),
-                                    )
-                                  ],
-                                ))
-                            : SizedBox.shrink(),
-                        Container(
-                          height: 1,
-                          color: Colors.grey[200],
-                        ),
-                      ],
-                    )),
+                          Container(
+                            height: 1,
+                            color: Colors.grey[200],
+                          ),
+                        ],
+                      )),
               ],
             )),
         Divider(),
