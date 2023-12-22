@@ -243,7 +243,7 @@ class _MyPlanState extends State<MyPlanList> {
         ? ListView.builder(
             shrinkWrap: true,
             padding: EdgeInsets.only(
-              bottom: 8.0.h,
+              bottom: 85.00,
             ),
             itemBuilder: (ctx, i) {
               return i != 0

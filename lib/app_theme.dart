@@ -18,6 +18,14 @@ class AppTheme {
     colorScheme: ColorScheme.light(
       primary:Color(CommonUtil().getMyPrimaryColor()),
       secondary:Colors.white
-    )
+    ),
+    splashFactory: NoSplash.splashFactory,
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        shadowColor: Colors.transparent,
+      ),
+    ),
   );
 }
