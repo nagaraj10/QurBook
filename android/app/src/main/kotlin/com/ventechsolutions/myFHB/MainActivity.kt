@@ -13,7 +13,6 @@ import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.icu.text.SimpleDateFormat
 import android.location.Location
 import android.location.LocationManager
 import android.media.AudioAttributes
@@ -309,11 +308,14 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
 
     var sheelaTTSWordList: ArrayList<String> = arrayListOf<String>("sheila","sila","shila","shiela")
 
+    private var langCode: String? = Locale.US.toString()
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setAutoInitEnabled(true)
-        //OHQDeviceManager.init(applicationContext, this)
-        registerReceiver(broadcastReceiver, IntentFilter("INTERNET_LOST"));
+        try {
+            super.onCreate(savedInstanceState)
+            setAutoInitEnabled(true)
+            //OHQDeviceManager.init(applicationContext, this)
+            registerReceiver(broadcastReceiver, IntentFilter("INTERNET_LOST"));
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
 //            val alarmManager = ContextCompat.getSystemService(context, AlarmManager::class.java)
 //            if (alarmManager?.canScheduleExactAlarms() == false) {
@@ -323,144 +325,153 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
 //                }
 //            }
 //        }
-        fullyInitialize()
-        FacebookSdk.setIsDebugEnabled(true)
-        FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
-        setAutoLogAppEventsEnabled(true)
-        AppEventsLogger.newLogger(this).logEvent("started")
-        // Get user consent
-        val target: Uri? = getIntent().getData()
-        Log.e("deeplink", "onCreate: " + target)
-        if (target != null) {
-            mEventChannel.success("facebookdeeplink&" + target.toString());
-        } else {
-            // activity was created in a normal fashion
-        }
-        AppLinkData.fetchDeferredAppLinkData(this) { it ->
-            Log.e("deeplinks", "onCreate: " + it?.appLinkData)
-            if (::mEventChannel.isInitialized) {
-                mEventChannel.success("facebookdeeplink&" + it?.appLinkData);
+            fullyInitialize()
+            FacebookSdk.setIsDebugEnabled(true)
+            FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
+            setAutoLogAppEventsEnabled(true)
+            AppEventsLogger.newLogger(this).logEvent("started")
+            // Get user consent
+            val target: Uri? = getIntent().getData()
+            Log.e("deeplink", "onCreate: " + target)
+            if (target != null) {
+                mEventChannel.success("facebookdeeplink&" + target.toString());
+            } else {
+                // activity was created in a normal fashion
             }
-        }
+            AppLinkData.fetchDeferredAppLinkData(this) { it ->
+                Log.e("deeplinks", "onCreate: " + it?.appLinkData)
+                if (::mEventChannel.isInitialized) {
+                    mEventChannel.success("facebookdeeplink&" + it?.appLinkData);
+                }
+            }
 
-        val action = intent.action
-        val type = intent.type
-        if (Intent.ACTION_SEND == action && type != null) {
-            if ((Constants.TXT_PLAIN == type) && (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0) {
-                handleSendText(intent) // Handle text being sent
+            val action = intent.action
+            val type = intent.type
+            if (Intent.ACTION_SEND == action && type != null) {
+                if ((Constants.TXT_PLAIN == type) && (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0) {
+                    handleSendText(intent) // Handle text being sent
+                }
             }
-        }
-        //registerReceiver(smsBroadcastReceiver,
-        //IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION))
+            //registerReceiver(smsBroadcastReceiver,
+            //IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION))
 
 //        builder = AlertDialog.Builder(context)
 //        builder.setCancelable(true)
-        dialog = Dialog(this)
-        countDownTimerDialog = Dialog(this)
-        customLayout = layoutInflater.inflate(R.layout.progess_dialog, null)
-        countDownTimerLayout = layoutInflater.inflate(R.layout.listen_loading, null)
-        displayText = customLayout.findViewById(R.id.displayTxt)
-        countDownTimer = countDownTimerLayout.findViewById(R.id.countDownTimer)
-        sendBtn = customLayout.findViewById(R.id.send)
-        edit_view = customLayout.findViewById(R.id.edit_view)
-        errorTxt = customLayout.findViewById(R.id.errorTxt)
-        spin_kit = customLayout.findViewById(R.id.spin_kit)
-        tryMe = customLayout.findViewById(R.id.tryMe)
-        listeningLayout = customLayout.findViewById(R.id.listeningLayout)
-        tryAgain = customLayout.findViewById(R.id.tryAgain)
-        close = customLayout.findViewById(R.id.close)
-        micOn = customLayout.findViewById(R.id.micOn)
-        //builder.setView(customLayout)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(customLayout)
-        dialog.setCancelable(false)
-        countDownTimerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        countDownTimerDialog.setContentView(countDownTimerLayout)
-        countDownTimerDialog.setCancelable(false)
-        //dialog = builder.create()
-        //dialog.setInverseBackgroundForced(true)
-        //dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        countDownTimerDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        countDownTimerDialog.window?.setDimAmount(0.0f)
-        displayText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
+            dialog = Dialog(this)
+            countDownTimerDialog = Dialog(this)
+            customLayout = layoutInflater.inflate(R.layout.progess_dialog, null)
+            countDownTimerLayout = layoutInflater.inflate(R.layout.listen_loading, null)
+            displayText = customLayout.findViewById(R.id.displayTxt)
+            countDownTimer = countDownTimerLayout.findViewById(R.id.countDownTimer)
+            sendBtn = customLayout.findViewById(R.id.send)
+            edit_view = customLayout.findViewById(R.id.edit_view)
+            errorTxt = customLayout.findViewById(R.id.errorTxt)
+            spin_kit = customLayout.findViewById(R.id.spin_kit)
+            tryMe = customLayout.findViewById(R.id.tryMe)
+            listeningLayout = customLayout.findViewById(R.id.listeningLayout)
+            tryAgain = customLayout.findViewById(R.id.tryAgain)
+            close = customLayout.findViewById(R.id.close)
+            micOn = customLayout.findViewById(R.id.micOn)
+            //builder.setView(customLayout)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(customLayout)
+            dialog.setCancelable(false)
+            countDownTimerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            countDownTimerDialog.setContentView(countDownTimerLayout)
+            countDownTimerDialog.setCancelable(false)
+            //dialog = builder.create()
+            //dialog.setInverseBackgroundForced(true)
+            //dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            countDownTimerDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            countDownTimerDialog.window?.setDimAmount(0.0f)
+            displayText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
 
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                handler.removeCallbacks(runnable)
-            }
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    handler.removeCallbacks(runnable)
+                }
 
-            override fun afterTextChanged(p0: Editable?) {
-            }
-        })
+                override fun afterTextChanged(p0: Editable?) {
+                }
+            })
 
-        close.setOnClickListener {
-            try {
-                speechRecognizer?.stopListening()
-                speechRecognizer?.cancel()
-                speechRecognizer?.destroy()
-                if (dialog.isShowing) {
-                    try {
-                        _result.let {
-                            _result?.error("", "", "")
+            close.setOnClickListener {
+                try {
+                    speechRecognizer?.stopListening()
+
+                    //speechRecognizer?.destroy()
+                    if (dialog.isShowing) {
+                        try {
+                            _result.let {
+                                _result?.error("", "", "")
+                            }
+                            _result = null
+                        } catch (e: Exception) {
+                            print(e.printStackTrace())
                         }
-                        _result = null
-                    } catch (e: Exception) {
-                        print(e.printStackTrace())
+                        finalWords = ""
+                        dialog.dismiss()
+                        spin_kit.visibility = View.VISIBLE
                     }
+                } catch (e: Exception) {
+                    Log.d("Catch", "" + e.toString())
+                }
+            }
+            //builder.show()
+            sendBtn.setOnClickListener {
+
+                if (displayText.text.toString().trim() == "") {
+                    displayText.clearFocus()
+                    val toast = Toast.makeText(
+                        applicationContext,
+                        "Please enter a valid input",
+                        Toast.LENGTH_LONG
+                    )
+                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.show()
+                } else {
+                    speechRecognizer?.stopListening()
+
+                    //speechRecognizer?.destroy()
+                    _result?.success(displayText.text.toString())
+                    _result = null
                     finalWords = ""
                     dialog.dismiss()
                     spin_kit.visibility = View.VISIBLE
+                    displayText?.setText("")
+
                 }
-            } catch (e: Exception) {
-                Log.d("Catch", "" + e.toString())
             }
+
+            /*if (specifiedUserControl) {
+                    mOption[OHQSessionOptionKey.RegisterNewUserKey] = true
+                    mOption[OHQSessionOptionKey.ConsentCodeKey] =
+                        CONSENT_CODE_OHQ
+                   *//* if (null != userIndex) {
+                        mOption[OHQSessionOptionKey.UserIndexKey] =
+                            jp.co.ohq.blesampleomron.view.fragment.RegistrationOptionFragment.Arg.UserIndex.name
+                    }
+                    if (null != userData) {
+                        mOption[OHQSessionOptionKey.UserDataKey] = userData
+                    }*//*
+                    mOption[OHQSessionOptionKey.DatabaseChangeIncrementValueKey] = 0.toLong()
+                    mOption[OHQSessionOptionKey.UserDataUpdateFlagKey] = true
+                }
+                *//*if (Protocol.OmronExtension === protocol) {
+                    mOption[OHQSessionOptionKey.AllowAccessToOmronExtendedMeasurementRecordsKey] = true
+                    mOption[OHQSessionOptionKey.AllowControlOfReadingPositionToMeasurementRecordsKey] = true
+                }*/
+
+            //mSessionController = SessionController(this, null)
+
+            stopCriticalAlertServices()
+
+
+        } catch (e: Exception) {
+            Log.e("crash", e.message.toString())
         }
-        //builder.show()
-        sendBtn.setOnClickListener {
-            speechRecognizer?.cancel()
-            if (displayText.text.toString().trim() == "") {
-                displayText.clearFocus()
-                val toast = Toast.makeText(applicationContext, "Please enter a valid input", Toast.LENGTH_LONG)
-                toast.setGravity(Gravity.CENTER, 0, 0)
-                toast.show()
-            } else {
-                speechRecognizer?.stopListening()
-                speechRecognizer?.cancel()
-                speechRecognizer?.destroy()
-                _result?.success(displayText.text.toString())
-                _result = null
-                finalWords = ""
-                dialog.dismiss()
-                spin_kit.visibility = View.VISIBLE
-                displayText?.setText("")
-
-            }
-        }
-
-        /*if (specifiedUserControl) {
-            mOption[OHQSessionOptionKey.RegisterNewUserKey] = true
-            mOption[OHQSessionOptionKey.ConsentCodeKey] =
-                CONSENT_CODE_OHQ
-           *//* if (null != userIndex) {
-                mOption[OHQSessionOptionKey.UserIndexKey] =
-                    jp.co.ohq.blesampleomron.view.fragment.RegistrationOptionFragment.Arg.UserIndex.name
-            }
-            if (null != userData) {
-                mOption[OHQSessionOptionKey.UserDataKey] = userData
-            }*//*
-            mOption[OHQSessionOptionKey.DatabaseChangeIncrementValueKey] = 0.toLong()
-            mOption[OHQSessionOptionKey.UserDataUpdateFlagKey] = true
-        }
-        *//*if (Protocol.OmronExtension === protocol) {
-            mOption[OHQSessionOptionKey.AllowAccessToOmronExtendedMeasurementRecordsKey] = true
-            mOption[OHQSessionOptionKey.AllowControlOfReadingPositionToMeasurementRecordsKey] = true
-        }*/
-
-        //mSessionController = SessionController(this, null)
-
-        stopCriticalAlertServices()
 
 
     }
@@ -526,15 +537,15 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                 bleDeviceType = "weight"
                 if (p1 == BluetoothStatus.BLE_STATUS_CONNECTED) {
                     //if(p0?.address!=null ) {
-                        if (::BLEEventChannel.isInitialized) {
-                            /*MainThreadEventSink(BLEEventChannel).success("macid|" + bleMacId)
-                            MainThreadEventSink(BLEEventChannel).success("manufacturer|WOWGo")
-                            MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + bleDeviceType)*/
-                            MainThreadEventSink(BLEEventChannel).success("connected|" + bleName + " connected successfully!!!")
-                            stopExecutingMethods()
+                    if (::BLEEventChannel.isInitialized) {
+                        /*MainThreadEventSink(BLEEventChannel).success("macid|" + bleMacId)
+                        MainThreadEventSink(BLEEventChannel).success("manufacturer|WOWGo")
+                        MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + bleDeviceType)*/
+                        MainThreadEventSink(BLEEventChannel).success("connected|" + bleName + " connected successfully!!!")
+                        stopExecutingMethods()
 
 //                                BLEEventChannel.success("macid|" + bleMacId)
-                        }
+                    }
 //                    }
                     sendPost("Connected", DEVICE_WT, 0, 0, 0)
                 } else if (p1 == BluetoothStatus.BLE_ERROR){
@@ -637,9 +648,9 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                             runOnUiThread {
                                 Log.e("qurhealth","wowgostatus: macid")
                             }
-                           /* MainThreadEventSink(BLEEventChannel).success("macid|" + bleMacId)
-                            MainThreadEventSink(BLEEventChannel).success("manufacturer|WOWGo")
-                            MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + bleDeviceType)*/
+                            /* MainThreadEventSink(BLEEventChannel).success("macid|" + bleMacId)
+                             MainThreadEventSink(BLEEventChannel).success("manufacturer|WOWGo")
+                             MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + bleDeviceType)*/
                             MainThreadEventSink(BLEEventChannel).success("connected|" + bleName + " connected successfully!!!")
                             stopExecutingMethods()
 //                            BLEEventChannel.success("macid|" + bleMacId)
@@ -753,14 +764,14 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             if (p1 == BluetoothStatus.BLE_STATUS_CONNECTED) {
 
 //                if(p0?.address!=null ) {
-                    if (::BLEEventChannel.isInitialized && measurementNotTaken) {
-                        /*stopExecutingMethods();
+                if (::BLEEventChannel.isInitialized && measurementNotTaken) {
+                    /*stopExecutingMethods();
 
-                        MainThreadEventSink(BLEEventChannel).success("macid|" + bleMacId)
-                        MainThreadEventSink(BLEEventChannel).success("manufacturer|WOWGo")
-                        MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + bleDeviceType)*/
-                        MainThreadEventSink(BLEEventChannel).success("connected|" + bleName + " connected successfully!!!")
-                    }
+                    MainThreadEventSink(BLEEventChannel).success("macid|" + bleMacId)
+                    MainThreadEventSink(BLEEventChannel).success("manufacturer|WOWGo")
+                    MainThreadEventSink(BLEEventChannel).success("bleDeviceType|" + bleDeviceType)*/
+                    MainThreadEventSink(BLEEventChannel).success("connected|" + bleName + " connected successfully!!!")
+                }
 //                }
                 sendPost("Connected", DEVICE_SPO2, 0, 0, 0)
                 //stopExecutingMethods()
@@ -1211,7 +1222,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                         if (::BLEEventChannel.isInitialized) {
                             MainThreadEventSink(BLEEventChannel).success("measurement|" + postBleData)
                         }
-                               
+
                     }, 500)
 
 //                    LSBluetoothManager.getInstance().stopDeviceSync()
@@ -1337,17 +1348,17 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             if(lsDeviceInfo.deviceType.equals("06")) {
 
 
- //               if (p1.toString().contains("InsertStrip")) {
- //                   if (::BLEEventChannel.isInitialized) {
- //                       MainThreadEventSink(BLEEventChannel).success("update|" + "Strip inserted")
- //                   }
- //               }
- //               if (p1.toString().contains("Collecting")) {
- //                   if (::BLEEventChannel.isInitialized) {
- //                       MainThreadEventSink(BLEEventChannel).success("update|" + "Insert the blood sample on the strip.")
- //                   }
- //               } else
-                 if (p1.toString().contains("Collected")) {
+                //               if (p1.toString().contains("InsertStrip")) {
+                //                   if (::BLEEventChannel.isInitialized) {
+                //                       MainThreadEventSink(BLEEventChannel).success("update|" + "Strip inserted")
+                //                   }
+                //               }
+                //               if (p1.toString().contains("Collecting")) {
+                //                   if (::BLEEventChannel.isInitialized) {
+                //                       MainThreadEventSink(BLEEventChannel).success("update|" + "Insert the blood sample on the strip.")
+                //                   }
+                //               } else
+                if (p1.toString().contains("Collected")) {
                     if (::BLEEventChannel.isInitialized) {
                         MainThreadEventSink(BLEEventChannel).success("update|" + "Blood sample collected successfully.")
                     }
@@ -2280,11 +2291,13 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                     result.success(false)
                 }
             } else if (call.method == Constants.FUN_VOICE_ASST) {
+                close.performClick()
+                countDownTimerDialog.dismiss()
                 val lang_code =
                     call.argument<String>(Constants.PROP_LANG_CODE) //todo uncomment this line
                 _result = result
-                speakWithVoiceAssistant(lang_code!!) //todo uncomment this line
-                //speakWithVoiceAssistant()//todo line need to remove
+                langCode = lang_code!!
+                speakWithVoiceAssistant()
             } else {
                 result.notImplemented()
             }
@@ -2457,32 +2470,32 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
 
                 val temp = checkPermissionStartScan(false)*/
 
-/*                try {
-                    statusBleTimer = Timer()
-                    statusBleTimer.schedule(object : TimerTask()
-                    {
-                        override fun run() {
-                            if(postBleData?.contains("deviceConnected") == true)
-                            {
-                                result.success(bleName+" connected successfully!!!")
-                            }else if(postBleData?.contains("Disconnected") == true){
-                                result.success(bleName+" disconnected successfully!!!")
-                            }
-                        }
-                    }, 2000)
-                }catch (ex:Exception){
-                    Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
-                }
+                /*                try {
+                                    statusBleTimer = Timer()
+                                    statusBleTimer.schedule(object : TimerTask()
+                                    {
+                                        override fun run() {
+                                            if(postBleData?.contains("deviceConnected") == true)
+                                            {
+                                                result.success(bleName+" connected successfully!!!")
+                                            }else if(postBleData?.contains("Disconnected") == true){
+                                                result.success(bleName+" disconnected successfully!!!")
+                                            }
+                                        }
+                                    }, 2000)
+                                }catch (ex:Exception){
+                                    Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+                                }
 
-                Handler().postDelayed({
-                    result.success(postBleData)
-                    Handler().postDelayed({
-                        scanningBleTimer.cancel();
-                        statusBleTimer.cancel();
-                    }, 1000)
-                    //scanningBleTimer.cancel()
-                    //scanningBleTimer.purge()
-                }, 12000)*/
+                                Handler().postDelayed({
+                                    result.success(postBleData)
+                                    Handler().postDelayed({
+                                        scanningBleTimer.cancel();
+                                        statusBleTimer.cancel();
+                                    }, 1000)
+                                    //scanningBleTimer.cancel()
+                                    //scanningBleTimer.purge()
+                                }, 12000)*/
 
             }
         }
@@ -2644,8 +2657,8 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             if (call.method == CLOSE_SHEELA_DIALOG) {
                 Log.d("CLOSE_SHEELA_DIALOG", "CLOSE_SHEELA_DIALOG")
                 try {
-                    close.performClick()
-                    //countDownTimerDialog.dismiss()
+                    /*close.performClick()
+                    countDownTimerDialog.dismiss()*/
                     result.success("success")
                 } catch (e: Exception) {
                     Log.d("Catch", "" + e.toString())
@@ -3411,334 +3424,36 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     }
 
     //todo this method need to uncomment
-    private fun speakWithVoiceAssistant(langCode: String) {
-        Log.e("langs", langCode)
+    private fun speakWithVoiceAssistant() {
 
-
-        // Safely destroy the SpeechRecognizer to release resources
-        speechRecognizer?.destroy()
-
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
-
-        speechIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-//        intent.putExtra(
-//            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-//            "en-US"
-//        )
-        //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-        //GetSrcTargetLanguages()
-
-
-        speechIntent?.putExtra(
-            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-        )
-        speechIntent?.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode/*Locale.US.toString()*/)
-        speechIntent?.putExtra(
-            RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE,
-            langCode/*Locale.US.toString()*/
-        )
-        speechIntent?.putExtra(
-            RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE,
-            langCode/*Locale.US.toString()*/
-        )
-
-//        startActivityForResult(intent,140)
-//        intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
-
-//        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 10000)
-//        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
-//        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "com.example.android.voicerecognitionservice");
-//        intent.putExtra(
-//            RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,
-//            2000
-//        )
-//        intent.putExtra(
-//            RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS,
-//            2000
-//        )
-
-        //intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
-        countDownTimerDialog.show()
-
-        countDown = object : CountDownTimer(11000, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                countDownTimer.text = (millisUntilFinished / 1000).toString() + " seconds"
-            }
-
-            override fun onFinish() {
-                countDownTimerDialog.dismiss()
-                countDown?.cancel()
-                speechRecognizer?.stopListening()
-                speechRecognizer?.cancel()
-                speechRecognizer?.destroy()
-                close.performClick()
-                _result?.error("100", "no response", 100)
-                _result = null
-            }
-        }
-        countDown?.start()
-        firstTimeSpeechError=true;
-        setRecognizerListener(langCode)
-        //Timer().schedule(100){
-
-//         tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
-//             if (status != TextToSpeech.ERROR) {
-//                 tts!!.language = Locale(langDest)
-//             }
-//         })
-    }
-
-    private fun setRecognizerListener(langCode: String) {
         try {
-            //startActivityForResult(intent, REQ_CODE)
-            speechRecognizer?.setRecognitionListener(object : RecognitionListener {
-                override fun onReadyForSpeech(bundle: Bundle) {
-                    Log.e("speechreco", "onReadyForSpeech: ")
+
+            Log.e("langs", langCode!!)
+
+
+            countDownTimerDialog.show()
+
+            countDown = object : CountDownTimer(11000, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    countDownTimer.text = (millisUntilFinished / 1000).toString() + " seconds"
                 }
 
-                override fun onBeginningOfSpeech() {
-                    Log.e("speechreco", "onBeginningOfSpeech: ")
-                    countDown?.cancel()
+                override fun onFinish() {
                     countDownTimerDialog.dismiss()
-                    if (!dialog.isShowing) {
-                        this@MainActivity.runOnUiThread(
-                            object : Runnable {
-                                override fun run() {
-                                    //displayText.text = "Speak now"
-                                    micOn.visibility = View.GONE
-//                                    edit_view.visibility = View.GONE
-                                    listeningLayout.visibility = View.VISIBLE
-                                    tryMe.visibility = View.GONE
-                                }
-                            }
-                        )
-                        displayText?.setText("")
-                        edit_view.clearFocus()
-                        val imm: InputMethodManager =
-                            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-                        var view = currentFocus
-                        if (view == null) {
-                            view = View(applicationContext)
-                        }
-                        imm.hideSoftInputFromWindow(view.windowToken, 0)
-                        dialog.show()
-                    }
-                }
-
-                override fun onRmsChanged(v: Float) {
-//                    Log.e("speechreco", "onRmsChanged: " )
-                }
-
-                override fun onBufferReceived(bytes: ByteArray) {
-                    Log.e("speechreco", "onBufferReceived: ")
-                }
-
-                override fun onEndOfSpeech() {
-                    Log.e("speechreco", "onEndOfSpeech: ")
-                    if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
-                        //dialog.dismiss()
-                    } else if (finalWords == "") {
-                        //do nothing
-                    } else if (isPartialResultInvoked == true) {
-                        //do nothing
-                    } else {
-//                        this@MainActivity.runOnUiThread(
-//                            object : Runnable {
-//                                override fun run() {
-//                                    if (listeningLayout.visibility == View.VISIBLE) {
-//                                        listeningLayout.visibility = View.GONE
-//                                        tryMe.visibility = View.VISIBLE
-//                                        errorTxt.text = "Please Retry"
-//                                        customLayout.setOnClickListener {
-//                                            this@MainActivity.runOnUiThread(
-//                                                object : Runnable {
-//                                                    override fun run() {
-//                                                        //displayText.text = "Speak now"
-//                                                        micOn.visibility = View.GONE
-//                                                        edit_view.visibility = View.GONE
-//                                                        spin_kit.visibility = View.VISIBLE
-//                                                        listeningLayout.visibility = View.VISIBLE
-//                                                        tryMe.visibility = View.GONE
-//                                                        speechRecognizer!!.startListening(intent)
-//                                                    }
-//                                                }
-//                                            )
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        )
-
-                    }
-                }
-
-                override fun onError(errorCode: Int) {
-                    Log.e("speechreco", "onError: ")
-//                    handler.postDelayed(runnable, 10000);
-                    speechRecognizer?.cancel()
+                    countDown?.cancel()
                     speechRecognizer?.stopListening()
-                    speechRecognizer?.destroy()
-                    if(firstTimeSpeechError){
-                        firstTimeSpeechError=false;
-                        setRecognizerListener(langCode)
-                    }
-//                    speechRecognizer?.startListening(intent)
-                    //close.performClick()
-                    //_result?.error("100","no response",errorCode)
-                    //_result=null
-                    val message: String
-                    when (errorCode) {
-                        SpeechRecognizer.ERROR_AUDIO -> message = "Audio recording error"
-                        SpeechRecognizer.ERROR_CLIENT -> message = "Client side error"
-                        SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> message =
-                            "Insufficient permissions"
-                        SpeechRecognizer.ERROR_NETWORK -> message = "Network error"
-                        SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> message = "Network timeout"
-                        SpeechRecognizer.ERROR_NO_MATCH -> message = "No match"
-                        SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> message =
-                            "RecognitionService busy"
-                        SpeechRecognizer.ERROR_SERVER -> message = "error from server"
-                        SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> message = "No speech input"
-                        else -> {
-                            message = "Didn't understand, please try again."
-                        }
-
-                    }
-                    Log.e("speechErrorNative", "onError: " + message)
-
+                    close.performClick()
+                    _result?.error("100", "no response", 100)
+                    _result = null
                 }
-
-                override fun onResults(bundle: Bundle) {
-                    Log.e("speechreco", "onResults: ")
-
-                    val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                    Log.e("speechreco", "onResults: " + data)
-
-//                    if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
-                    if (data != null && data.size > 0) {
-                        val pattern = Regex("^[A-Za-z]+\$")
-//                        if(pattern.containsMatchIn(data[0])){
-                        finalWords += data[0] + " "
-                        if (langCode.contains("en")) {
-                            displayText.setText((prefixListFiltering()))
-                        } else {
-                            displayText.setText(finalWords)
-                        }
-//                        }
-                        speechRecognizer?.cancel()
-                        speechRecognizer?.startListening(speechIntent)
-                    }
-//                    if (data != null && data.size > 0) {
-//                        finalWords = data[0].toString()
-//                        isPartialResultInvoked = false
-//                        //_result.success(finalWords)
-//                        if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
-//                            handler.postDelayed(runnable, 1000)
-//                            //dialog.dismiss()
-//                            spin_kit.visibility = View.GONE
-//                            displayText.setText(finalWords)
-//                            finalWords = null
-//                        } else if (finalWords == "") {
-//                            //do nothing
-//                        } else {
-//                            this@MainActivity.runOnUiThread(
-//                                object : Runnable {
-//                                    override fun run() {
-//                                        if (listeningLayout.visibility == View.VISIBLE) {
-//                                            listeningLayout.visibility = View.GONE
-//                                            tryMe.visibility = View.VISIBLE
-//                                            errorTxt.text = "Please Retry"
-//                                            customLayout.setOnClickListener {
-//                                                this@MainActivity.runOnUiThread(
-//                                                    object : Runnable {
-//                                                        override fun run() {
-//                                                            //displayText.text = "Speak now"
-//                                                            micOn.visibility = View.VISIBLE
-//                                                            edit_view.visibility = View.GONE
-//                                                            listeningLayout.visibility =
-//                                                                View.VISIBLE
-//                                                            tryMe.visibility = View.GONE
-//                                                            speechRecognizer!!.startListening(intent)
-//                                                        }
-//                                                    }
-//                                                )
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            )
-//                        }
-//                    } else {
-//                        this@MainActivity.runOnUiThread(
-//                            object : Runnable {
-//                                override fun run() {
-//                                    if (listeningLayout.visibility == View.VISIBLE) {
-//                                        listeningLayout.visibility = View.GONE
-//                                        tryMe.visibility = View.VISIBLE
-//                                        errorTxt.text = "Please Retry"
-//                                        customLayout.setOnClickListener {
-//                                            this@MainActivity.runOnUiThread(
-//                                                object : Runnable {
-//                                                    override fun run() {
-//                                                        //displayText.text = "Speak now"
-//                                                        micOn.visibility = View.VISIBLE
-//                                                        edit_view.visibility = View.GONE
-//                                                        listeningLayout.visibility =
-//                                                            View.VISIBLE
-//                                                        tryMe.visibility = View.GONE
-//                                                        speechRecognizer!!.startListening(intent)
-//                                                    }
-//                                                }
-//                                            )
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        )
-//                    }
-                }
-
-                override fun onPartialResults(bundle: Bundle) {
-                    Log.e("speechreco", "onPartialResults: ")
-                    val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                    if (data != null && data.size > 0) {
-                        finalWords = data[0].toString()
-                        isPartialResultInvoked = true
-                        this@MainActivity.runOnUiThread(
-                            object : Runnable {
-                                override fun run() {
-                                    if (micOn.isShown) {
-                                        this@MainActivity.runOnUiThread(
-                                            object : Runnable {
-                                                override fun run() {
-                                                    edit_view.visibility = View.GONE
-                                                    micOn.visibility = View.GONE
-                                                }
-                                            }
-                                        )
-                                    }
-                                    if (langCode.contains("en")) {
-                                        displayText.setText((prefixListFiltering()))
-                                    } else {
-                                        displayText.setText(finalWords)
-                                    }
-                                }
-                            }
-                        )
-                    }
-                }
-
-                override fun onEvent(i: Int, bundle: Bundle) {}
-            })
-            speechRecognizer?.startListening(speechIntent)
-
-        } catch (a: ActivityNotFoundException) {
-            // Toast.makeText(applicationContext,
-            //         "Sorry your device not supported",
-            //         Toast.LENGTH_SHORT).show()
-            //CalledFromListen = false
+            }
+            countDown?.start()
+            firstTimeSpeechError=true;
+            initSpeechRecognizer()
+        } catch (e: Exception) {
+            Log.e("crash", e.message.toString())
         }
+
     }
 
     //todo this method need to remove
@@ -4544,6 +4259,92 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         } catch (e: Exception) {
             Log.e("crash", e.message.toString())
             return finalWords!!
+        }
+    }
+
+
+    private fun initSpeechRecognizer() {
+        try {
+
+            speechRecognizer?.destroy()
+
+            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this@MainActivity)
+            speechIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+
+
+            speechRecognizer?.setRecognitionListener(object : RecognitionListener {
+                override fun onReadyForSpeech(params: Bundle?) {}
+
+                override fun onBeginningOfSpeech() {
+                    Log.e("speechreco", "onBeginningOfSpeech: ")
+                    countDown?.cancel()
+                    countDownTimerDialog.dismiss()
+                    if (!dialog.isShowing) {
+                        micOn.visibility = View.GONE
+
+                        listeningLayout.visibility = View.VISIBLE
+                        tryMe.visibility = View.GONE
+                        displayText?.setText("")
+                        edit_view.clearFocus()
+                        val imm: InputMethodManager =
+                            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                        var view = currentFocus
+                        if (view == null) {
+                            view = View(applicationContext)
+                        }
+                        imm.hideSoftInputFromWindow(view.windowToken, 0)
+                        dialog.show()
+                    }
+                }
+
+                override fun onRmsChanged(rmsdB: Float) {}
+
+                override fun onBufferReceived(buffer: ByteArray?) {}
+
+                override fun onEndOfSpeech() {}
+
+                override fun onError(error: Int) {
+                    Log.e("onError ", "${error.toString()}")
+                    if(firstTimeSpeechError){
+                        firstTimeSpeechError=false;
+                        initSpeechRecognizer()
+                    }
+                }
+
+                override fun onResults(results: Bundle?) {
+                    Log.e("speechreco", "onResults: ")
+
+                    val data = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                    Log.e("speechreco", "onResults: " + data)
+
+
+                    if (data != null && data.size > 0) {
+                        val pattern = Regex("^[A-Za-z]+\$")
+
+                        finalWords += data[0] + " "
+                        if (langCode!!.contains("en")) {
+                            displayText.setText((prefixListFiltering()))
+                        } else {
+                            displayText.setText(finalWords)
+                        }
+
+                        speechRecognizer?.stopListening()
+                        speechIntent?.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode)
+                        speechRecognizer?.startListening(speechIntent)
+                    }
+                }
+
+                override fun onPartialResults(partialResults: Bundle?) {}
+
+                override fun onEvent(eventType: Int, params: Bundle?) {}
+            })
+
+            speechIntent?.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode)
+            speechRecognizer?.startListening(speechIntent)
+
+
+        } catch (e: Exception) {
+            Log.e("crash", e.message.toString())
         }
     }
 
