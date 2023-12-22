@@ -6181,7 +6181,9 @@ class CommonUtil {
         Get.put(ChatUserListController());
       }
 
-      Get.find<SheelaAIController>().getSheelaBadgeCount();
+      Get.find<SheelaAIController>().getSheelaBadgeCount(
+        makeApiRequest: true,
+      );
       await getMyProfilesetting();
       var regController = CommonUtil().onInitQurhomeRegimenController();
       regController.getRegimenList();
