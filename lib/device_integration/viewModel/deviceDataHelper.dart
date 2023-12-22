@@ -1,13 +1,11 @@
 import 'package:myfhb/common/CommonUtil.dart';
 
-import '../../Device_Integration/services/syncHealthKitData.dart';
 import '../services/syncGoogleFitData.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 
 class DeviceDataHelper {
   final SyncGoogleFitData _syncGoogleFitData = SyncGoogleFitData();
-  final SyncHealthKitData _syncHealthKitData = SyncHealthKitData();
 
   Future<bool> isGoogleFitSignedIn() async {
     return await _syncGoogleFitData.isGoogleFitSignedIn();
@@ -39,37 +37,8 @@ class DeviceDataHelper {
             msg: 'Syncing Health Data from Google Fit completed',
             backgroundColor: Colors.green);
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
-      await Fluttertoast.showToast(msg: '$e', backgroundColor: Colors.red);
-    }
-  }
-
-  Future<void> activateHealthKit() async {
-    try {
-      await _syncHealthKitData.activateHealthKit();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
-      await Fluttertoast.showToast(msg: '$e', backgroundColor: Colors.red);
-    }
-  }
-
-  Future<void> deactivateHealthKit() async {
-    //     //todo
-  }
-
-  Future<void> syncHealthKit() async {
-    try {
-      var bRet = await _syncHealthKitData.syncHealthKitData();
-      if (bRet) {
-        await Fluttertoast.showToast(
-            msg: 'Syncing Health Data from Apple Health completed',
-            backgroundColor: Colors.green);
-      }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       await Fluttertoast.showToast(msg: '$e', backgroundColor: Colors.red);
     }
