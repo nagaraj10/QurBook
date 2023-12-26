@@ -294,7 +294,8 @@ const String strBack = 'Back';
 const String strPreviewScreen = 'preview_screen';
 const String strSessionTimeoutAlert = 'Your session will expire in 60 seconds. Please return to continue the conversation.';
 
-
+// Represents a constant string for the text 'image'
+const String strImageText = 'image';
 
 void openEmail({String sub = 'App Feedback', String body = ''}) async {
   final params = Uri(

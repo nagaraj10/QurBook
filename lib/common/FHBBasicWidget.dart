@@ -1199,6 +1199,11 @@ class FHBBasicWidget {
   }
 }
 
+double nameTextSize = (CommonUtil().isTablet! ? tabHeader4 : mobileHeader1);
+double nameTextSizeForNav = (CommonUtil().isTablet!
+    ? tabHeader1
+    : mobileHeader1); //declare size of the text inside the profile image
+
 class DecimalTextInputFormatter extends TextInputFormatter {
   DecimalTextInputFormatter({this.decimalRange})
       : assert(decimalRange == null || decimalRange > 0);
@@ -1251,7 +1256,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile, {bool? changeWhiteBg}) {
         color: changeWhiteBg == true
             ? Color(CommonUtil().getMyPrimaryColor())
             : Colors.white,
-        fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
+        fontSize: nameTextSize,
         fontWeight: FontWeight.w400,
       ),
     );
@@ -1262,7 +1267,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile, {bool? changeWhiteBg}) {
         color: changeWhiteBg == true
             ? Color(CommonUtil().getMyPrimaryColor())
             : Colors.white,
-        fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
+        fontSize: nameTextSize,
         fontWeight: FontWeight.w400,
       ),
     );
@@ -1273,7 +1278,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile, {bool? changeWhiteBg}) {
         color: changeWhiteBg == true
             ? Color(CommonUtil().getMyPrimaryColor())
             : Colors.white,
-        fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
+        fontSize: nameTextSize,
         fontWeight: FontWeight.w200,
       ),
     );
@@ -1281,7 +1286,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile, {bool? changeWhiteBg}) {
 }
 
 Widget getFirstLastNameTextForProfile(MyProfileModel myProfile,
-    {Color? textColor, double? textSize}) {
+    {Color? textColor, double? textSize, bool? forNavdrawer = false}) {
   if (myProfile.result != null &&
       myProfile.result!.firstName != null &&
       myProfile.result!.lastName != null) {
@@ -1292,7 +1297,8 @@ Widget getFirstLastNameTextForProfile(MyProfileModel myProfile,
               : ''),
       style: TextStyle(
         color: textColor ?? Colors.white,
-        fontSize: textSize ?? 18.0.sp,
+        fontSize: textSize ??
+            ((forNavdrawer ?? false) ? nameTextSizeForNav : nameTextSize),
         fontWeight: FontWeight.w500,
       ),
     );
@@ -1301,7 +1307,7 @@ Widget getFirstLastNameTextForProfile(MyProfileModel myProfile,
       myProfile.result!.firstName![0].toUpperCase(),
       style: TextStyle(
         color: Colors.white,
-        fontSize: 28.0.sp,
+        fontSize: ((forNavdrawer ?? false) ? nameTextSizeForNav : nameTextSize),
         fontWeight: FontWeight.w500,
       ),
     );
@@ -1310,7 +1316,7 @@ Widget getFirstLastNameTextForProfile(MyProfileModel myProfile,
       '',
       style: TextStyle(
         color: Color(CommonUtil().getMyPrimaryColor()),
-        fontSize: 16.0.sp,
+        fontSize: ((forNavdrawer ?? false) ? nameTextSizeForNav : nameTextSize),
         fontWeight: FontWeight.w200,
       ),
     );

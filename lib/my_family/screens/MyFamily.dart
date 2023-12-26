@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/authentication/model/Country.dart';
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
 import '../../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
@@ -21,7 +22,6 @@ import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
 import '../bloc/FamilyListBloc.dart';
-import '../models/FamilyMembersRes.dart';
 import '../models/relationship_response_list.dart';
 import '../models/relationships.dart';
 import '../../my_family_detail/models/my_family_detail_arguments.dart';
@@ -157,7 +157,9 @@ class _MyFamilyState extends State<MyFamily> {
             return ErrorsWidget();
           } else {
             if (snapshot.hasData && snapshot.data?.result != null) {
-              return getMyFamilyMembers(snapshot.data?.result);
+              return getMyFamilyMembers(
+                snapshot.data?.result,
+              );
             } else {
               return refreshIndicatorWithEmptyContainer();
             }
@@ -196,7 +198,9 @@ class _MyFamilyState extends State<MyFamily> {
                             Constants.KEY_FAMILYMEMBERNEW,
                             snapshot.data.data.result); */
 
-              familyWidget = getMyFamilyMembers(snapshot.data!.data!.result);
+              familyWidget = getMyFamilyMembers(
+                snapshot.data!.data!.result,
+              );
               break;
           }
         } else {
@@ -263,8 +267,11 @@ class _MyFamilyState extends State<MyFamily> {
   }
 
   Widget getMyFamilyMembers(FamilyMemberResult? data) {
-    return data != null
-        ? data.sharedByUsers!.isNotEmpty
+    List<SharedByUsers> sharedByUsersList = [];
+    sharedByUsersList =
+        _familyListBloc?.getSharedByUsersCombinedList(data) ?? [];
+    return sharedByUsersList != null
+        ? sharedByUsersList.isNotEmpty
             ? Container(
                 color: const Color(fhbColors.bgColorContainer),
                 child: RefreshIndicator(
@@ -280,11 +287,11 @@ class _MyFamilyState extends State<MyFamily> {
                     shrinkWrap: true,
                     padding: EdgeInsets.only(bottom: 20),
                     itemBuilder: (c, i) => getCardWidgetForUser(
-                        data.sharedByUsers![i == 0 ? 0 : i - 1],
+                        sharedByUsersList[i == 0 ? 0 : i - 1],
                         i,
-                        data.sharedByUsers,
+                        sharedByUsersList,
                         userCollection: data),
-                    itemCount: data.sharedByUsers!.length + 1,
+                    itemCount: sharedByUsersList.length + 1,
                   ),
                 ))
             : refreshIndicatorWithEmptyContainer()
@@ -579,71 +586,76 @@ class _MyFamilyState extends State<MyFamily> {
                 ),
               ),
               position != 0
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        InkWell(
-                          onTap: () {
-                            FHBUtils().check().then((intenet) {
-                              if (intenet != null && intenet) {
-                                CommonUtil.showLoadingDialog(dialogContext,
-                                    _keyLoader, variable.Please_Wait);
-                                final checkDelinkData = {};
-                                checkDelinkData[variable.patientId] = userid;
-                                checkDelinkData[variable.familyMemberId] =
-                                    data.child?.id;
+                  ? Visibility(
+                      visible: data.showDelink ??
+                          true, //if showDelink then only make the widget visible
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          InkWell(
+                            onTap: () {
+                              FHBUtils().check().then((intenet) {
+                                if (intenet != null && intenet) {
+                                  CommonUtil.showLoadingDialog(dialogContext,
+                                      _keyLoader, variable.Please_Wait);
+                                  final checkDelinkData = {};
+                                  checkDelinkData[variable.patientId] = userid;
+                                  checkDelinkData[variable.familyMemberId] =
+                                      data.child?.id;
 
-                                final jsonString =
-                                    convert.jsonEncode(checkDelinkData);
-                                _familyListRespository
-                                    .checkDelink(jsonString)
-                                    .then((value) {
-                                  Navigator.of(_keyLoader.currentContext!,
-                                          rootNavigator: true)
-                                      .pop();
-                                  if (value.isSuccess!) {
-                                    Alert.displayConfirmProceed(context,
-                                        title: "ALERT", content: value.message,
-                                        onPressedConfirm: () {
-                                      Navigator.pop(context);
+                                  final jsonString =
+                                      convert.jsonEncode(checkDelinkData);
+                                  _familyListRespository
+                                      .checkDelink(jsonString)
+                                      .then((value) {
+                                    Navigator.of(_keyLoader.currentContext!,
+                                            rootNavigator: true)
+                                        .pop();
+                                    if (value.isSuccess!) {
+                                      Alert.displayConfirmProceed(context,
+                                          title: "ALERT",
+                                          content: value.message,
+                                          onPressedConfirm: () {
+                                        Navigator.pop(context);
+                                        commonMethodToDelink(data.child?.id);
+                                      }, onPressedCancel: () {
+                                        Navigator.pop(context);
+                                      });
+                                    } else {
                                       commonMethodToDelink(data.child?.id);
-                                    }, onPressedCancel: () {
-                                      Navigator.pop(context);
-                                    });
-                                  } else {
-                                    commonMethodToDelink(data.child?.id);
-                                  }
-                                });
-                              } else {
-                                FHBBasicWidget().showInSnackBar(
-                                    Constants.STR_NO_CONNECTIVITY,
-                                    scaffold_state);
-                              }
-                            });
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            margin:
-                                EdgeInsets.only(left: 10, right: 10, top: 10),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(
+                                    }
+                                  });
+                                } else {
+                                  FHBBasicWidget().showInSnackBar(
+                                      Constants.STR_NO_CONNECTIVITY,
+                                      scaffold_state);
+                                }
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              margin:
+                                  EdgeInsets.only(left: 10, right: 10, top: 10),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(5),
+                                  border: Border.all(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()))),
+                              child: Text(
+                                variable.DeLink,
+                                style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w500,
                                     color: Color(
-                                        CommonUtil().getMyPrimaryColor()))),
-                            child: Text(
-                              variable.DeLink,
-                              style: TextStyle(
-                                  fontSize: 16.0.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color:
-                                      Color(CommonUtil().getMyPrimaryColor())),
-                              softWrap: false,
-                              overflow: TextOverflow.ellipsis,
+                                        CommonUtil().getMyPrimaryColor())),
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     )
                   : Container()
             ],

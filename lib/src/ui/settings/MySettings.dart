@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -241,14 +240,14 @@ class _MySettingsState extends State<MySettings> {
 
   Future<bool> _onWillPop() {
     return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Are you sure?'),
-            content: Text('Do you want to update the changes'),
-            actions: <Widget>[
-              FlatButtonWidget(
-                        bgColor: Colors.transparent,
-                        isSelected: true,
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Are you sure?'),
+        content: Text('Do you want to update the changes'),
+        actions: <Widget>[
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
             onPress: () => closeDialog(),
             title: 'No',
           ),
@@ -258,9 +257,9 @@ class _MySettingsState extends State<MySettings> {
             onPress: () => createDeviceSelection(),
             title: 'Yes',
           ),
-            ],
-          ),
-        ).then((value) => value as bool);
+        ],
+      ),
+    ).then((value) => value as bool);
   }
 
   closeDialog() {
@@ -274,14 +273,18 @@ class _MySettingsState extends State<MySettings> {
       _isdeviceRecognition = getDeviceSelectionModel!
                       .result![0].profileSetting!.allowDevice !=
                   null &&
-              getDeviceSelectionModel.result![0].profileSetting!.allowDevice != ''
+              getDeviceSelectionModel.result![0].profileSetting!.allowDevice !=
+                  ''
           ? getDeviceSelectionModel.result![0].profileSetting!.allowDevice
           : true;
       _sheelaLiveReminders = getDeviceSelectionModel!
-          .result![0].profileSetting!.sheelaLiveReminders !=
-          null &&
-          getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders != ''
-          ? getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders
+                      .result![0].profileSetting!.sheelaLiveReminders !=
+                  null &&
+              getDeviceSelectionModel
+                      .result![0].profileSetting!.sheelaLiveReminders !=
+                  ''
+          ? getDeviceSelectionModel
+              .result![0].profileSetting!.sheelaLiveReminders
           : true;
       if (getDeviceSelectionModel.isSuccess!) {
         if (getDeviceSelectionModel
@@ -301,53 +304,58 @@ class _MySettingsState extends State<MySettings> {
         }
       }
 
-      _isdigitRecognition =
-          getDeviceSelectionModel.result![0].profileSetting!.allowDigit != null &&
-                  getDeviceSelectionModel.result![0].profileSetting!.allowDigit !=
-                      ''
-              ? getDeviceSelectionModel.result![0].profileSetting!.allowDigit
-              : true;
+      _isdigitRecognition = getDeviceSelectionModel
+                      .result![0].profileSetting!.allowDigit !=
+                  null &&
+              getDeviceSelectionModel.result![0].profileSetting!.allowDigit !=
+                  ''
+          ? getDeviceSelectionModel.result![0].profileSetting!.allowDigit
+          : true;
       /*_isGFActive =
           getDeviceSelectionModel.result[0].profileSetting.googleFit != null &&
                   getDeviceSelectionModel.result[0].profileSetting.googleFit !=
                       ''
               ? getDeviceSelectionModel.result[0].profileSetting.googleFit
               : false;*/
-      _isHKActive =
-          getDeviceSelectionModel.result![0].profileSetting!.healthFit != null &&
-                  getDeviceSelectionModel.result![0].profileSetting!.healthFit !=
-                      ''
-              ? getDeviceSelectionModel.result![0].profileSetting!.healthFit
-              : false;
-      _isBPActive =
-          getDeviceSelectionModel.result![0].profileSetting!.bpMonitor != null &&
-                  getDeviceSelectionModel.result![0].profileSetting!.bpMonitor !=
-                      ''
-              ? getDeviceSelectionModel.result![0].profileSetting!.bpMonitor
-              : true;
-      _isGLActive =
-          getDeviceSelectionModel.result![0].profileSetting!.glucoMeter != null &&
-                  getDeviceSelectionModel.result![0].profileSetting!.glucoMeter !=
-                      ''
-              ? getDeviceSelectionModel.result![0].profileSetting!.glucoMeter
-              : true;
-      _isOxyActive = getDeviceSelectionModel
-                      .result![0].profileSetting!.pulseOximeter !=
+      _isHKActive = getDeviceSelectionModel
+                      .result![0].profileSetting!.healthFit !=
                   null &&
-              getDeviceSelectionModel.result![0].profileSetting!.pulseOximeter !=
-                  ''
-          ? getDeviceSelectionModel.result![0].profileSetting!.pulseOximeter
+              getDeviceSelectionModel.result![0].profileSetting!.healthFit != ''
+          ? getDeviceSelectionModel.result![0].profileSetting!.healthFit
+          : false;
+      _isBPActive = getDeviceSelectionModel
+                      .result![0].profileSetting!.bpMonitor !=
+                  null &&
+              getDeviceSelectionModel.result![0].profileSetting!.bpMonitor != ''
+          ? getDeviceSelectionModel.result![0].profileSetting!.bpMonitor
           : true;
-      _isWSActive =
-          getDeviceSelectionModel.result![0].profileSetting!.weighScale != null &&
-                  getDeviceSelectionModel.result![0].profileSetting!.weighScale !=
+      _isGLActive = getDeviceSelectionModel
+                      .result![0].profileSetting!.glucoMeter !=
+                  null &&
+              getDeviceSelectionModel.result![0].profileSetting!.glucoMeter !=
+                  ''
+          ? getDeviceSelectionModel.result![0].profileSetting!.glucoMeter
+          : true;
+      _isOxyActive =
+          getDeviceSelectionModel.result![0].profileSetting!.pulseOximeter !=
+                      null &&
+                  getDeviceSelectionModel
+                          .result![0].profileSetting!.pulseOximeter !=
                       ''
-              ? getDeviceSelectionModel.result![0].profileSetting!.weighScale
+              ? getDeviceSelectionModel.result![0].profileSetting!.pulseOximeter
               : true;
+      _isWSActive = getDeviceSelectionModel
+                      .result![0].profileSetting!.weighScale !=
+                  null &&
+              getDeviceSelectionModel.result![0].profileSetting!.weighScale !=
+                  ''
+          ? getDeviceSelectionModel.result![0].profileSetting!.weighScale
+          : true;
       _isTHActive = getDeviceSelectionModel
                       .result![0].profileSetting!.thermoMeter !=
                   null &&
-              getDeviceSelectionModel.result![0].profileSetting!.thermoMeter != ''
+              getDeviceSelectionModel.result![0].profileSetting!.thermoMeter !=
+                  ''
           ? getDeviceSelectionModel.result![0].profileSetting!.thermoMeter
           : true;
 
@@ -357,51 +365,52 @@ class _MySettingsState extends State<MySettings> {
               getDeviceSelectionModel
                       .result![0].profileSetting!.preferred_language !=
                   ''
-          ? getDeviceSelectionModel.result![0].profileSetting!.preferred_language
+          ? getDeviceSelectionModel
+              .result![0].profileSetting!.preferred_language
           : 'undef';
 
-      qa_subscription =
-          getDeviceSelectionModel.result![0].profileSetting!.qa_subscription !=
-                      null &&
-                  getDeviceSelectionModel
-                          .result![0].profileSetting!.qa_subscription !=
-                      ''
-              ? getDeviceSelectionModel.result![0].profileSetting!.qa_subscription
-              : 'Y';
+      qa_subscription = getDeviceSelectionModel
+                      .result![0].profileSetting!.qa_subscription !=
+                  null &&
+              getDeviceSelectionModel
+                      .result![0].profileSetting!.qa_subscription !=
+                  ''
+          ? getDeviceSelectionModel.result![0].profileSetting!.qa_subscription
+          : 'Y';
 
       tagsList = getDeviceSelectionModel.result![0].tags != null &&
               getDeviceSelectionModel.result![0].tags!.length > 0
           ? getDeviceSelectionModel.result![0].tags
           : [];
 
-      allowAppointmentNotification = getDeviceSelectionModel
-                      .result![0].profileSetting!.caregiverCommunicationSetting !=
+      allowAppointmentNotification = getDeviceSelectionModel.result![0]
+                      .profileSetting!.caregiverCommunicationSetting !=
                   null &&
-              getDeviceSelectionModel
-                      .result![0].profileSetting!.caregiverCommunicationSetting !=
+              getDeviceSelectionModel.result![0].profileSetting!
+                      .caregiverCommunicationSetting !=
                   ''
           ? getDeviceSelectionModel.result![0].profileSetting!
               .caregiverCommunicationSetting?.appointments
           : true;
 
-      allowVitalNotification = getDeviceSelectionModel
-                      .result![0].profileSetting!.caregiverCommunicationSetting !=
+      allowVitalNotification = getDeviceSelectionModel.result![0]
+                      .profileSetting!.caregiverCommunicationSetting !=
                   null &&
-              getDeviceSelectionModel
-                      .result![0].profileSetting!.caregiverCommunicationSetting !=
+              getDeviceSelectionModel.result![0].profileSetting!
+                      .caregiverCommunicationSetting !=
                   ''
           ? getDeviceSelectionModel
               .result![0].profileSetting!.caregiverCommunicationSetting?.vitals
           : true;
 
-      allowSymptomsNotification = getDeviceSelectionModel
-                      .result![0].profileSetting!.caregiverCommunicationSetting !=
+      allowSymptomsNotification = getDeviceSelectionModel.result![0]
+                      .profileSetting!.caregiverCommunicationSetting !=
                   null &&
-              getDeviceSelectionModel
-                      .result![0].profileSetting!.caregiverCommunicationSetting !=
+              getDeviceSelectionModel.result![0].profileSetting!
+                      .caregiverCommunicationSetting !=
                   ''
-          ? getDeviceSelectionModel
-              .result![0].profileSetting!.caregiverCommunicationSetting?.symptoms
+          ? getDeviceSelectionModel.result![0].profileSetting!
+              .caregiverCommunicationSetting?.symptoms
           : true;
 
       preferredMeasurement =
@@ -516,123 +525,59 @@ class _MySettingsState extends State<MySettings> {
                           height: 1,
                           color: Colors.grey[200],
                         ),
-                        FutureBuilder(
-                            future: _handleGoogleFit(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return ListTile(
-                                  leading: ImageIcon(
-                                    AssetImage(variable.icon_digit_googleFit),
-                                    //size: 30,
-                                    color: Colors.black,
-                                  ),
-                                  title: Text(variable.strGoogleFit),
-                                  subtitle: Text(
-                                    variable.strAllowGoogle,
-                                    style: TextStyle(fontSize: 12.0.sp),
-                                  ),
-                                  trailing: Wrap(
-                                    children: <Widget>[
-                                      Transform.scale(
-                                        scale: 0.8,
-                                        child: IconButton(
-                                          icon: Icon(Icons.sync),
-                                          onPressed: () {
-                                            _deviceDataHelper.syncGoogleFit();
-                                          },
-                                        ),
-                                      ),
-                                      Transform.scale(
-                                        scale: 0.8,
-                                        child: Switch(
-                                          value: _isGFActive!,
-                                          activeColor: Color(CommonUtil()
-                                              .getMyPrimaryColor()),
-                                          onChanged: (bool newValue) {
-                                            setState(() {
-                                              //isTouched = true;
-                                              _isGFActive = newValue;
-                                            });
-                                          },
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                return Container();
-                              }
-                            }),
-                        Container(
-                          height: 1,
-                          color: Colors.grey[200],
-                        ),
-                        (Platform.isIOS)
-                            ? ListTile(
-                                leading: Icon(
-                                  Icons.favorite,
-                                  color: Colors.pink,
-                                ),
-                                title: Text(variable.strHealthKit),
-                                subtitle: Text(
-                                  variable.strAllowHealth,
-                                  style: TextStyle(fontSize: 12.0.sp),
-                                ),
-                                trailing: Wrap(
-                                  children: <Widget>[
-                                    Transform.scale(
-                                      scale: 0.8,
-                                      child: IconButton(
-                                        icon: Icon(Icons.sync),
-                                        onPressed: () {
-                                          _deviceDataHelper.syncHealthKit();
-                                        },
-                                      ),
+                        if (Platform.isAndroid)
+                          FutureBuilder(
+                              future: _handleGoogleFit(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return ListTile(
+                                    leading: ImageIcon(
+                                      AssetImage(variable.icon_digit_googleFit),
+                                      //size: 30,
+                                      color: Colors.black,
                                     ),
-                                    Transform.scale(
-                                      scale: 0.8,
-                                      child: Switch(
-                                        value: _isHKActive!,
-                                        activeColor: Color(CommonUtil()
-                                            .getMyPrimaryColor()),
-                                        onChanged: (bool newValue) {
-                                          isTouched = true;
-                                          if (_isHealthFirstTime) {
-                                            _isHealthFirstTime = false;
-                                            PreferenceUtil.saveString(
-                                                Constants.isHealthFirstTime,
-                                                _isHealthFirstTime.toString());
-
-                                            newValue == true
-                                                ? _deviceDataHelper
-                                                    .activateHealthKit()
-                                                : _deviceDataHelper
-                                                    .deactivateHealthKit();
-                                          } else {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      HealthApp()),
-                                            );
-                                          }
-                                          setState(() {
-                                            _isHKActive = newValue;
-
-                                            /*PreferenceUtil.saveString(
-                                                Constants.activateHK,
-                                                _isHKActive.toString());*/
-                                          });
-                                        },
-                                      ),
-                                    )
-                                  ],
-                                ))
-                            : SizedBox.shrink(),
-                        Container(
-                          height: 1,
-                          color: Colors.grey[200],
-                        ),
+                                    title: Text(variable.strGoogleFit),
+                                    subtitle: Text(
+                                      variable.strAllowGoogle,
+                                      style: TextStyle(fontSize: 12.0.sp),
+                                    ),
+                                    trailing: Wrap(
+                                      children: <Widget>[
+                                        Transform.scale(
+                                          scale: 0.8,
+                                          child: IconButton(
+                                            icon: Icon(Icons.sync),
+                                            onPressed: () {
+                                              _deviceDataHelper.syncGoogleFit();
+                                            },
+                                          ),
+                                        ),
+                                        Transform.scale(
+                                          scale: 0.8,
+                                          child: Switch(
+                                            value: _isGFActive!,
+                                            activeColor: Color(new CommonUtil()
+                                                .getMyPrimaryColor()),
+                                            onChanged: (bool newValue) {
+                                              setState(() {
+                                                //isTouched = true;
+                                                _isGFActive = newValue;
+                                              });
+                                            },
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              }),
+                        if (Platform.isAndroid)
+                          Container(
+                            height: 1,
+                            color: Colors.grey[200],
+                          ),
                         ListTile(
                           leading: CommonUtil().qurHomeMainIcon(),
                           title: Text(variable.strQurHome),
@@ -708,7 +653,7 @@ class _MySettingsState extends State<MySettings> {
                         }
                         return snapshot.hasData
                             ? Container(
-                                height: CommonUtil().isTablet!?75.h:75,
+                                height: CommonUtil().isTablet! ? 75.h : 75,
                                 color: Colors.white,
                                 child: ListView.builder(
                                   shrinkWrap: true,

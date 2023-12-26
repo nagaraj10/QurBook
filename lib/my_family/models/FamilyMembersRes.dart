@@ -1,7 +1,6 @@
 import 'package:myfhb/common/CommonUtil.dart';
-
-import 'relationships.dart';
-import '../../src/model/user/UserAddressCollection.dart';
+import 'package:myfhb/my_family/models/relationships.dart';
+import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 
 class FamilyMembers {
   bool? isSuccess;
@@ -15,10 +14,10 @@ class FamilyMembers {
       isSuccess = json['isSuccess'];
       message = json['message'];
       result = json['result'] != null
-              ? FamilyMemberResult.fromJson(json['result'])
-              : null;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          ? FamilyMemberResult.fromJson(json['result'])
+          : null;
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -36,6 +35,7 @@ class FamilyMembers {
 class FamilyMemberResult {
   List<SharedByUsers>? sharedByUsers;
   List<SharedToUsers>? sharedToUsers;
+
   VirtualUserParent? virtualUserParent;
 
   FamilyMemberResult(
@@ -44,26 +44,28 @@ class FamilyMemberResult {
   FamilyMemberResult.fromJson(Map<String, dynamic> json) {
     try {
       if (json['sharedByUsers'] != null) {
-            sharedByUsers = <SharedByUsers>[];
-            json['sharedByUsers'].forEach((v) {
-              sharedByUsers!.add(SharedByUsers.fromJson(v));
-            });
-          }
+        sharedByUsers = <SharedByUsers>[];
+        json['sharedByUsers'].forEach((v) {
+          sharedByUsers!.add(SharedByUsers.fromJson(v));
+          // sharedByUsersOriginal!.add(SharedByUsers.fromJson(v));
+        });
+      }
       if (json['sharedToUsers'] != null) {
-            sharedToUsers = <SharedToUsers>[];
-            json['sharedToUsers'].forEach((v) {
-              sharedToUsers!.add(SharedToUsers.fromJson(v));
-            });
-          }
+        sharedToUsers = <SharedToUsers>[];
+        json['sharedToUsers'].forEach((v) {
+          sharedToUsers!.add(SharedToUsers.fromJson(v));
+        });
+      }
+
       try {
-            virtualUserParent = json['virtualUserParent'] != null
-                ? VirtualUserParent.fromJson(json['virtualUserParent'])
-                : null;
-          } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-          }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        virtualUserParent = json['virtualUserParent'] != null
+            ? VirtualUserParent.fromJson(json['virtualUserParent'])
+            : null;
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -91,6 +93,7 @@ class SharedByUsers {
   String? lastModifiedOn;
   RelationsShipModel? relationship;
   Child? child;
+  Child? parent;
   String? membershipOfferedBy;
   bool? isCaregiver;
   //for Non adherance
@@ -101,6 +104,7 @@ class SharedByUsers {
   String? nonAdheranceId;
   ChatListItem? chatListItem;
   String? nickNameSelf;
+  bool? showDelink = true;
   SharedByUsers(
       {this.id,
       this.status,
@@ -117,7 +121,8 @@ class SharedByUsers {
       this.remainderMins,
       this.nonAdheranceId,
       this.remainderForId,
-      this.chatListItem,this.nickNameSelf});
+      this.chatListItem,
+      this.nickNameSelf});
 
   SharedByUsers.fromJson(Map<String, dynamic> json) {
     try {
@@ -129,18 +134,39 @@ class SharedByUsers {
       lastModifiedOn = json['lastModifiedOn'];
       isCaregiver = json['isCaregiver'] ?? false;
       if (json.containsKey('membershipOfferedBy'))
-            membershipOfferedBy = json['membershipOfferedBy'];
+        membershipOfferedBy = json['membershipOfferedBy'];
       relationship = json['relationship'] != null
-              ? RelationsShipModel.fromJson(json['relationship'])
-              : null;
+          ? RelationsShipModel.fromJson(json['relationship'])
+          : null;
       child = json['child'] != null ? Child.fromJson(json['child']) : null;
       chatListItem = json['chatListItem'] != null
-              ? ChatListItem.fromJson(json['chatListItem'])
-              : null;
+          ? new ChatListItem.fromJson(json['chatListItem'])
+          : null;
       nickNameSelf = '';
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      parent =
+          json['parent'] != null ? new Child.fromJson(json['parent']) : null;
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
+  }
+  SharedByUsers.fromSharedToUsers(SharedToUsers sharedToUsers) {
+    id = sharedToUsers.id;
+    status = sharedToUsers.status;
+    nickName = sharedToUsers.nickName;
+    isActive = sharedToUsers.isActive;
+    createdOn = sharedToUsers.createdOn;
+    lastModifiedOn = sharedToUsers.lastModifiedOn;
+    isCaregiver = sharedToUsers.isCaregiver;
+    isNewUser = sharedToUsers.isNewUser;
+    remainderForId = sharedToUsers.remainderForId;
+    remainderFor = sharedToUsers.remainderFor;
+    remainderMins = sharedToUsers.remainderMins;
+    nonAdheranceId = sharedToUsers.nonAdheranceId;
+    child = sharedToUsers.parent;
+    relationship = sharedToUsers.relationship;
+    nickName = sharedToUsers.nickName;
+    showDelink =
+        false; //for shared to users the delink button shouldnot be visible
   }
 
   Map<String, dynamic> toJson() {
@@ -165,55 +191,6 @@ class SharedByUsers {
     return data;
   }
 }
-
-/* class Relationship {
-  String id;
-  String code;
-  String name;
-  String description;
-  String sortOrder;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
-
-  Relationship(
-      {this.id,
-      this.code,
-      this.name,
-      this.description,
-      this.sortOrder,
-      this.isActive,
-      this.createdBy,
-      this.createdOn,
-      this.lastModifiedOn});
-
-  Relationship.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-    sortOrder = json['sortOrder'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = this.id;
-    data['code'] = this.code;
-    data['name'] = this.name;
-    data['description'] = this.description;
-    data['sortOrder'] = this.sortOrder;
-    data['isActive'] = this.isActive;
-    data['createdBy'] = this.createdBy;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    return data;
-  }
-} */
 
 class Child {
   String? id;
@@ -310,28 +287,28 @@ class Child {
 
       lastModifiedOn = json['lastModifiedOn'];
       if (json['userContactCollection3'] != null) {
-            userContactCollection3 = <UserContactCollectionFamily>[];
-            json['userContactCollection3'].forEach((v) {
-              userContactCollection3!.add(UserContactCollectionFamily.fromJson(v));
-            });
-          }
+        userContactCollection3 = <UserContactCollectionFamily>[];
+        json['userContactCollection3'].forEach((v) {
+          userContactCollection3!.add(UserContactCollectionFamily.fromJson(v));
+        });
+      }
       if (json['userRoleCollection3'] != null) {
-            userRoleCollection3 = <UserRoleCollection3>[];
-            json['userRoleCollection3'].forEach((v) {
-              userRoleCollection3!.add(UserRoleCollection3.fromJson(v));
-            });
-          }
+        userRoleCollection3 = <UserRoleCollection3>[];
+        json['userRoleCollection3'].forEach((v) {
+          userRoleCollection3!.add(UserRoleCollection3.fromJson(v));
+        });
+      }
       if (json['userAddressCollection3'] != null) {
-            userAddressCollection3 = <UserAddressCollection3>[];
-            json['userAddressCollection3'].forEach((v) {
-              userAddressCollection3!.add(UserAddressCollection3.fromJson(v));
-            });
-          }
+        userAddressCollection3 = <UserAddressCollection3>[];
+        json['userAddressCollection3'].forEach((v) {
+          userAddressCollection3!.add(UserAddressCollection3.fromJson(v));
+        });
+      }
       additionalInfo = json['additionalInfo'] != null
-              ? AdditionalInfo.fromJson(json['additionalInfo'])
-              : null;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          ? AdditionalInfo.fromJson(json['additionalInfo'])
+          : null;
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -382,531 +359,6 @@ class Child {
   }
 }
 
-class HeightObj {
-  String? valueFeet;
-  String? valueInches;
-
-  HeightObj({this.valueFeet, this.valueInches});
-
-  HeightObj.fromJson(Map<String, dynamic> json) {
-    try {
-      valueFeet = json['valueFeet'];
-      valueInches = json['valueInches'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['valueFeet'] = this.valueFeet;
-    data['valueInches'] = this.valueInches;
-    return data;
-  }
-}
-
-class AdditionalInfo {
-  dynamic? height;
-  dynamic? weight;
-  String? weightUnitCode;
-  HeightObj? heightObj;
-
-  AdditionalInfo({this.height, this.weight});
-
-  AdditionalInfo.fromJson(Map<String, dynamic> json) {
-    try {
-      if (json['height'].runtimeType == String) {
-        height = json['height'];
-      } else {
-        heightObj =
-            json['height'] != null ? HeightObj.fromJson(json['height']) : null;
-      }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-    }
-    if (json.containsKey('weightUnitCode')) {
-      weightUnitCode = json['weightUnitCode'];
-    }
-    try {
-      weight = json['weight'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = Map<String, dynamic>();
-    data['height'] = height;
-    data['weight'] = weight;
-    if (this.heightObj != null) {
-      data['height'] = this.heightObj!.toJson();
-    }
-    return data;
-  }
-}
-
-/* class UserAddressCollection3 {
-  //String id;
-  String addressLine1;
-  String addressLine2;
-  String pincode;
-  bool isPrimary;
-  bool isActive;
-  String createdOn;
-  String createdBy;
-  String lastModifiedOn;
-  AddressType addressType;
-  City city;
-  State state;
-
-  UserAddressCollection3(
-      {
-        //this.id,
-      this.addressLine1,
-      this.addressLine2,
-      this.pincode,
-      this.isPrimary,
-      this.isActive,
-      this.createdOn,
-      this.createdBy,
-      this.lastModifiedOn,
-      this.addressType,
-      this.city,
-      this.state});
-
-  UserAddressCollection3.fromJson(Map<String, dynamic> json) {
-    //id = json['id'];
-    addressLine1 = json['addressLine1'];
-    addressLine2 = json['addressLine2'];
-    pincode = json['pincode'];
-    isPrimary = json['isPrimary'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    createdBy = json['createdBy'];
-    lastModifiedOn = json['lastModifiedOn'];
-    addressType = json['addressType'];
-    city = json['city'];
-    state = json['state'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    //data['id'] = this.id;
-    data['addressLine1'] = this.addressLine1;
-    data['addressLine2'] = this.addressLine2;
-    data['pincode'] = this.pincode;
-    data['isPrimary'] = this.isPrimary;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['createdBy'] = this.createdBy;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    data['addressType'] = this.addressType;
-    data['city'] = this.city;
-    data['state'] = this.state;
-    return data;
-  }
-} */
-
-class UserContactCollectionFamily {
-  String? id;
-  String? phoneNumber;
-  bool? isPrimary;
-  bool? isActive;
-  String? createdOn;
-  String? lastModifiedOn;
-  String? email;
-
-  UserContactCollectionFamily(
-      {this.id,
-      this.phoneNumber,
-      this.isPrimary,
-      this.isActive,
-      this.createdOn,
-      this.lastModifiedOn,
-      this.email});
-
-  UserContactCollectionFamily.fromJson(Map<String, dynamic> json) {
-    try {
-      id = json['id'] ?? "";
-      phoneNumber = json['phoneNumber'] ?? "";
-      isPrimary = json['isPrimary'] ?? false;
-      isActive = json['isActive'] ?? false;
-      createdOn = json['createdOn'] ?? "";
-      lastModifiedOn = json['lastModifiedOn'] ?? "";
-      email = json['email'] ?? "";
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = Map<String, dynamic>();
-    data['id'] = id;
-    data['phoneNumber'] = phoneNumber;
-    data['isPrimary'] = isPrimary;
-    data['isActive'] = isActive;
-    data['createdOn'] = createdOn;
-    data['lastModifiedOn'] = lastModifiedOn;
-    data['email'] = email;
-    return data;
-  }
-}
-
-class PhoneNumberType {
-  String? id;
-  String? code;
-  String? name;
-  String? description;
-  int? sortOrder;
-  bool? isActive;
-  String? createdBy;
-  String? createdOn;
-  String? lastModifiedOn;
-
-  PhoneNumberType(
-      {this.id,
-      this.code,
-      this.name,
-      this.description,
-      this.sortOrder,
-      this.isActive,
-      this.createdBy,
-      this.createdOn,
-      this.lastModifiedOn});
-
-  PhoneNumberType.fromJson(Map<String, dynamic> json) {
-    try {
-      id = json['id'];
-      code = json['code'];
-      name = json['name'];
-      description = json['description'];
-      sortOrder = json['sortOrder'];
-      isActive = json['isActive'];
-      createdBy = json['createdBy'];
-      createdOn = json['createdOn'];
-      lastModifiedOn = json['lastModifiedOn'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = Map<String, dynamic>();
-    data['id'] = id;
-    data['code'] = code;
-    data['name'] = name;
-    data['description'] = description;
-    data['sortOrder'] = sortOrder;
-    data['isActive'] = isActive;
-    data['createdBy'] = createdBy;
-    data['createdOn'] = createdOn;
-    data['lastModifiedOn'] = lastModifiedOn;
-    return data;
-  }
-}
-
-class UserRoleCollection3 {
-  String? id;
-  bool? isActive;
-  String? createdOn;
-  String? lastModifiedOn;
-
-  UserRoleCollection3(
-      {this.id, this.isActive, this.createdOn, this.lastModifiedOn});
-
-  UserRoleCollection3.fromJson(Map<String, dynamic> json) {
-    try {
-      id = json['id'];
-      isActive = json['isActive'];
-      createdOn = json['createdOn'];
-      lastModifiedOn = json['lastModifiedOn'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = Map<String, dynamic>();
-    data['id'] = id;
-    data['isActive'] = isActive;
-    data['createdOn'] = createdOn;
-    data['lastModifiedOn'] = lastModifiedOn;
-    return data;
-  }
-}
-
-class Role {
-  String? id;
-  String? name;
-  bool? isActive;
-  String? createdOn;
-  String? lastModifiedOn;
-  String? roleCode;
-  String? description;
-  bool? isSystemRole;
-  bool? isEnabled;
-
-  Role(
-      {this.id,
-      this.name,
-      this.isActive,
-      this.createdOn,
-      this.lastModifiedOn,
-      this.roleCode,
-      this.description,
-      this.isSystemRole,
-      this.isEnabled});
-
-  Role.fromJson(Map<String, dynamic> json) {
-    try {
-      id = json['id'];
-      name = json['name'];
-      isActive = json['isActive'];
-      createdOn = json['createdOn'];
-      lastModifiedOn = json['lastModifiedOn'];
-      roleCode = json['roleCode'];
-      description = json['description'];
-      isSystemRole = json['isSystemRole'];
-      isEnabled = json['isEnabled'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = Map<String, dynamic>();
-    data['id'] = id;
-    data['name'] = name;
-    data['isActive'] = isActive;
-    data['createdOn'] = createdOn;
-    data['lastModifiedOn'] = lastModifiedOn;
-    data['roleCode'] = roleCode;
-    data['description'] = description;
-    data['isSystemRole'] = isSystemRole;
-    data['isEnabled'] = isEnabled;
-    return data;
-  }
-}
-
-class SharedToUsers {
-  String? id;
-  String? status;
-  String? nickName;
-  bool? isActive;
-  String? createdOn;
-  String? lastModifiedOn;
-  RelationsShipModel? relationship;
-  Parent? parent;
-  //non Adherance
-  bool? isCaregiver;
-  bool? isNewUser = true;
-  String? remainderForId;
-  String? remainderFor;
-  String? remainderMins;
-  String? nonAdheranceId;
-  SharedToUsers(
-      {this.id,
-      this.status,
-      this.nickName,
-      this.isActive,
-      this.createdOn,
-      this.lastModifiedOn,
-      this.relationship,
-      this.parent,
-      this.isCaregiver,
-      this.isNewUser,
-      this.remainderFor,
-      this.remainderMins,
-      this.nonAdheranceId,
-      this.remainderForId});
-
-  SharedToUsers.fromJson(Map<String, dynamic> json) {
-    try {
-      id = json['id'];
-      status = json['status'];
-      nickName = json['nickName'];
-      isActive = json['isActive'];
-      createdOn = json['createdOn'];
-      lastModifiedOn = json['lastModifiedOn'];
-      isCaregiver = json['isCaregiver'] ?? false;
-      relationship = json['relationship'] != null
-              ? RelationsShipModel.fromJson(json['relationship'])
-              : null;
-      parent = json['parent'] != null ? Parent.fromJson(json['parent']) : null;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = Map<String, dynamic>();
-    data['id'] = id;
-    data['status'] = status;
-    data['nickName'] = nickName;
-    data['isActive'] = isActive;
-    data['createdOn'] = createdOn;
-    data['lastModifiedOn'] = lastModifiedOn;
-    if (relationship != null) {
-      data['relationship'] = relationship!.toJson();
-    }
-    if (parent != null) {
-      data['parent'] = parent!.toJson();
-    }
-    return data;
-  }
-}
-
-class Parent {
-  String? id;
-  String? name;
-  String? userName;
-  String? firstName;
-  String? middleName;
-  String? lastName;
-  String? gender;
-  String? dateOfBirth;
-  String? bloodGroup;
-  String? countryCode;
-  String? profilePicUrl;
-  String? profilePicThumbnailUrl;
-  bool? isTempUser;
-  bool? isVirtualUser;
-  bool? isMigrated;
-  bool? isClaimed;
-  bool? isIeUser;
-  dynamic isEmailVerified;
-  bool? isCpUser;
-  dynamic communicationPreferences;
-  dynamic medicalPreferences;
-  bool? isSignedIn;
-  bool? isActive;
-  String? createdBy;
-  String? createdOn;
-  String? lastModifiedBy;
-  String? lastModifiedOn;
-
-  Parent(
-      {this.id,
-      this.name,
-      this.userName,
-      this.firstName,
-      this.middleName,
-      this.lastName,
-      this.gender,
-      this.dateOfBirth,
-      this.bloodGroup,
-      this.countryCode,
-      this.profilePicUrl,
-      this.profilePicThumbnailUrl,
-      this.isTempUser,
-      this.isVirtualUser,
-      this.isMigrated,
-      this.isClaimed,
-      this.isIeUser,
-      this.isEmailVerified,
-      this.isCpUser,
-      this.communicationPreferences,
-      this.medicalPreferences,
-      this.isSignedIn,
-      this.isActive,
-      this.createdBy,
-      this.createdOn,
-      this.lastModifiedBy,
-      this.lastModifiedOn});
-
-  Parent.fromJson(Map<String, dynamic> json) {
-    try {
-      id = json['id'];
-      name = json['name'];
-      userName = json['userName'];
-      firstName = json['firstName'];
-      middleName = json['middleName'];
-      lastName = json['lastName'];
-      gender = json['gender'];
-      dateOfBirth = json['dateOfBirth'];
-      bloodGroup = json['bloodGroup'];
-      countryCode = json['countryCode'];
-      profilePicUrl = json['profilePicUrl'];
-      profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
-      isTempUser = json['isTempUser'];
-      isVirtualUser = json['isVirtualUser'];
-      isMigrated = json['isMigrated'];
-      isClaimed = json['isClaimed'];
-      isIeUser = json['isIeUser'];
-      isEmailVerified = json['isEmailVerified'];
-      isCpUser = json['isCpUser'];
-      communicationPreferences = json['communicationPreferences'];
-      medicalPreferences = json['medicalPreferences'];
-      isSignedIn = json['isSignedIn'];
-      isActive = json['isActive'];
-      createdBy = json['createdBy'];
-      createdOn = json['createdOn'];
-      lastModifiedBy = json['lastModifiedBy'];
-      lastModifiedOn = json['lastModifiedOn'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = Map<String, dynamic>();
-    data['id'] = id;
-    data['name'] = name;
-    data['userName'] = userName;
-    data['firstName'] = firstName;
-    data['middleName'] = middleName;
-    data['lastName'] = lastName;
-    data['gender'] = gender;
-    data['dateOfBirth'] = dateOfBirth;
-    data['bloodGroup'] = bloodGroup;
-    data['countryCode'] = countryCode;
-    data['profilePicUrl'] = profilePicUrl;
-    data['profilePicThumbnailUrl'] = profilePicThumbnailUrl;
-    data['isTempUser'] = isTempUser;
-    data['isVirtualUser'] = isVirtualUser;
-    data['isMigrated'] = isMigrated;
-    data['isClaimed'] = isClaimed;
-    data['isIeUser'] = isIeUser;
-    data['isEmailVerified'] = isEmailVerified;
-    data['isCpUser'] = isCpUser;
-    data['communicationPreferences'] = communicationPreferences;
-    data['medicalPreferences'] = medicalPreferences;
-    data['isSignedIn'] = isSignedIn;
-    data['isActive'] = isActive;
-    data['createdBy'] = createdBy;
-    data['createdOn'] = createdOn;
-    data['lastModifiedBy'] = lastModifiedBy;
-    data['lastModifiedOn'] = lastModifiedOn;
-    return data;
-  }
-}
-
-class VirtualUserParent {
-  String? countryCode;
-  String? email;
-  String? phoneNumber;
-
-  VirtualUserParent({this.countryCode, this.email, this.phoneNumber});
-
-  VirtualUserParent.fromJson(Map<String, dynamic> json) {
-    try {
-      countryCode = json['countryCode'];
-      email = json['email'];
-      phoneNumber = json['phoneNumber'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['countryCode'] = countryCode;
-    data['email'] = email;
-    data['phoneNumber'] = phoneNumber;
-    return data;
-  }
-}
-
 class ChatListItem {
   String? id;
   String? peerId;
@@ -940,8 +392,8 @@ class ChatListItem {
       isMuted = json['isMuted'];
       unReadNotificationCount = json['unReadNotificationCount'];
       lastModifiedOn = json['lastModifiedOn'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -956,6 +408,238 @@ class ChatListItem {
     data['isMuted'] = this.isMuted;
     data['unReadNotificationCount'] = this.unReadNotificationCount;
     data['lastModifiedOn'] = this.lastModifiedOn;
+    return data;
+  }
+}
+
+class UserContactCollectionFamily {
+  String? id;
+  String? phoneNumber;
+  bool? isPrimary;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  String? email;
+
+  UserContactCollectionFamily(
+      {this.id,
+      this.phoneNumber,
+      this.isPrimary,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.email});
+
+  UserContactCollectionFamily.fromJson(Map<String, dynamic> json) {
+    try {
+      id = json['id'] ?? "";
+      phoneNumber = json['phoneNumber'] ?? "";
+      isPrimary = json['isPrimary'] ?? false;
+      isActive = json['isActive'] ?? false;
+      createdOn = json['createdOn'] ?? "";
+      lastModifiedOn = json['lastModifiedOn'] ?? "";
+      email = json['email'] ?? "";
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['phoneNumber'] = phoneNumber;
+    data['isPrimary'] = isPrimary;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
+    data['email'] = email;
+    return data;
+  }
+}
+
+class UserRoleCollection3 {
+  String? id;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+
+  UserRoleCollection3(
+      {this.id, this.isActive, this.createdOn, this.lastModifiedOn});
+
+  UserRoleCollection3.fromJson(Map<String, dynamic> json) {
+    try {
+      id = json['id'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
+    return data;
+  }
+}
+
+class AdditionalInfo {
+  dynamic? height;
+  dynamic? weight;
+  String? weightUnitCode;
+  HeightObj? heightObj;
+
+  AdditionalInfo({this.height, this.weight});
+
+  AdditionalInfo.fromJson(Map<String, dynamic> json) {
+    try {
+      if (json['height'].runtimeType == String) {
+        height = json['height'];
+      } else {
+        heightObj =
+            json['height'] != null ? HeightObj.fromJson(json['height']) : null;
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+    if (json.containsKey('weightUnitCode')) {
+      weightUnitCode = json['weightUnitCode'];
+    }
+    try {
+      weight = json['weight'];
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = Map<String, dynamic>();
+    data['height'] = height;
+    data['weight'] = weight;
+    if (this.heightObj != null) {
+      data['height'] = this.heightObj!.toJson();
+    }
+    return data;
+  }
+}
+
+class HeightObj {
+  String? valueFeet;
+  String? valueInches;
+
+  HeightObj({this.valueFeet, this.valueInches});
+
+  HeightObj.fromJson(Map<String, dynamic> json) {
+    try {
+      valueFeet = json['valueFeet'];
+      valueInches = json['valueInches'];
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['valueFeet'] = this.valueFeet;
+    data['valueInches'] = this.valueInches;
+    return data;
+  }
+}
+
+class SharedToUsers {
+  String? id;
+  String? status;
+  String? nickName;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  RelationsShipModel? relationship;
+  Child? parent;
+  //non Adherance
+  bool? isCaregiver;
+  bool? isNewUser = true;
+  String? remainderForId;
+  String? remainderFor;
+  String? remainderMins;
+  String? nonAdheranceId;
+  SharedToUsers(
+      {this.id,
+      this.status,
+      this.nickName,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.relationship,
+      this.parent,
+      this.isCaregiver,
+      this.isNewUser,
+      this.remainderFor,
+      this.remainderMins,
+      this.nonAdheranceId,
+      this.remainderForId});
+
+  SharedToUsers.fromJson(Map<String, dynamic> json) {
+    try {
+      id = json['id'];
+      status = json['status'];
+      nickName = json['nickName'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      isCaregiver = json['isCaregiver'] ?? false;
+      relationship = json['relationship'] != null
+          ? RelationsShipModel.fromJson(json['relationship'])
+          : null;
+      parent = json['parent'] != null ? Child.fromJson(json['parent']) : null;
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = Map<String, dynamic>();
+    data['id'] = id;
+    data['status'] = status;
+    data['nickName'] = nickName;
+    data['isActive'] = isActive;
+    data['createdOn'] = createdOn;
+    data['lastModifiedOn'] = lastModifiedOn;
+    if (relationship != null) {
+      data['relationship'] = relationship!.toJson();
+    }
+    if (parent != null) {
+      data['parent'] = parent!.toJson();
+    }
+    return data;
+  }
+}
+
+class VirtualUserParent {
+  String? countryCode;
+  String? email;
+  String? phoneNumber;
+
+  VirtualUserParent({this.countryCode, this.email, this.phoneNumber});
+
+  VirtualUserParent.fromJson(Map<String, dynamic> json) {
+    try {
+      countryCode = json['countryCode'];
+      email = json['email'];
+      phoneNumber = json['phoneNumber'];
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['countryCode'] = countryCode;
+    data['email'] = email;
+    data['phoneNumber'] = phoneNumber;
     return data;
   }
 }

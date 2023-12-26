@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/GoogleTTSResponseModel.dart';
@@ -224,6 +225,9 @@ class Buttons {
   String? audioUrl;
   bool? isSnoozeAction;
   List<ChatAttachments>? chatAttachments;
+  String? media;
+  String? mediaType;
+  bool? isImageWithContent;
 
   Buttons({
     this.payload,
@@ -239,6 +243,9 @@ class Buttons {
     this.videoUrl,
     this.audioUrl,
     this.isSnoozeAction = false,
+    this.media,
+    this.mediaType,
+    this.isImageWithContent = false,
   });
 
   Buttons.fromJson(Map<String, dynamic> json) {
@@ -261,7 +268,11 @@ class Buttons {
           chatAttachments!.add(ChatAttachments.fromJson(v));
         });
       }
+      // Set the 'isImageWithContent' status based on media and mediaType.
+      getImageWithContentStatus(json);
     } catch (e, stackTrace) {
+      // In case of an exception, set 'isImageWithContent' status and log the error.
+      getImageWithContentStatus(json);
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
@@ -285,6 +296,23 @@ class Buttons {
           this.chatAttachments!.map((v) => v.toJson()).toList();
     }
     return data;
+  }
+
+  // Extracts image-related information from the provided JSON and sets the status.
+  getImageWithContentStatus(Map<String, dynamic> json) {
+    try {
+      // Extract media and mediaType from the JSON, ensuring non-null values.
+      media = CommonUtil().validString(json['media'])?.trim() ?? '';
+      mediaType = CommonUtil().validString(json['mediaType'])?.trim() ?? '';
+
+      // Check if both media and mediaType are not empty, and mediaType is 'image'.
+      isImageWithContent = (media!.isNotEmpty &&
+          mediaType!.isNotEmpty &&
+          mediaType!.toLowerCase() == strImageText);
+    } catch (e, stackTrace) {
+      // Log any errors during the process.
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 }
 

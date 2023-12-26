@@ -159,7 +159,6 @@ const String stop_detecting = 'StopDetecting';
 const String allowDeviceRecognition = 'allowDeviceRecognition';
 const String allowDigitRecognition = 'allowDigitRecognition';
 
-
 const String audioFileType = 'audio/mp3';
 const String MSG_VERIFYEMAIL_VERIFIED =
     'Email is already verified by other user.';
@@ -341,6 +340,9 @@ const String ic_cart_delete = 'assets/icons/cart_delete_red.svg';
 const String ic_empty_cart = 'assets/icons/empty_cart.svg';
 const String ic_gold_member = 'assets/user/gold-member.png';
 
+// Path to the placeholder image asset.
+const String ic_placeholder = 'assets/icons/placeholder.jpg';
+
 const String enterFirstName = 'Enter First Name';
 const String enterLastName = 'Enter Last Name';
 const String selectGender = 'Select Gender';
@@ -418,7 +420,6 @@ const String KEY_EMAIL = 'email';
 const String asgurduserID = '49cdc4be-afd9-419e-b3f9-1bd35207c74f';
 
 const String activateGF = 'activateGF'; // activate googleFit
-const String activateHK = 'activateHK'; // activate appleHealth
 const String isFirstTym = 'FirsTym';
 const String isHealthFirstTime =
     'HealthFirstTime'; // Activating HealthKit For First Time
@@ -455,7 +456,7 @@ const String strReasonDiabling =
     'Are you sure you want to disable the activity?';
 const String strReasonDiablingHint = 'Reasons for disabling the activity';
 const String DISABLE = 'Disable';
-const String strDisableText='Disabled by the patient';
+const String strDisableText = 'Disabled by the patient';
 
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
@@ -832,15 +833,14 @@ const String sheelaRecepId = 'Sheela Response';
 
 const String freeTextReply = 'I heard your reply as, ';
 
-const String freeTextReplyConfirm = '. You can say redo to change your response.';
+const String freeTextReplyConfirm =
+    '. You can say redo to change your response.';
 
 const String strContinue = 'Continue';
 const String strRedo = 'Redo';
 const String strExit = 'Exit';
 
 const String strRedirectRedo = 'redirectToRedo';
-
-
 
 //fetchProfilePic
 const String FETCH_PROFILE_PIC = 'file-guard/fileData/profilePicture/';
@@ -924,7 +924,8 @@ const String StrSheelaErrorMsg =
     'There is some issue with Sheela,\n Please try after some time';
 
 // Key to store information about whether manual recording of vitals is restricted in SharedPreferences
-const String KEY_IS_Vitals_ManualRecording_Restricted = 'isVitalsManualRecordingRestricted';
+const String KEY_IS_Vitals_ManualRecording_Restricted =
+    'isVitalsManualRecordingRestricted';
 
 const double tabFontTitle = 25.0;
 const double mobileFontTitle = 18.0;
@@ -958,6 +959,10 @@ double imageCloseMobile = 30.0.sp;
 
 double dialogIconTab = 35.0.sp;
 double dialogIconMobile = 35.0.sp;
+
+//Added new values to get the maya icon
+const double imageTabMaya = 90.0;
+const double imageMobileMaya = 70.0;
 
 String doseValueless = "128";
 String doseValueHigh = "2048";

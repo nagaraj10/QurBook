@@ -1057,13 +1057,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                   child: InkWell(
                     onTap: () {
                       toast.getToastForLongTime(strSync, Colors.green);
-                      Platform.isIOS
-                          ? _deviceDataHelper.syncHealthKit().then((value) {
-                              setState(() {});
-                            })
-                          : _deviceDataHelper.syncGoogleFit().then((value) {
-                              setState(() {});
-                            });
+                      if (Platform.isAndroid)
+                       { _deviceDataHelper.syncGoogleFit().then((value) {
+                          setState(() {});
+                        });}
                     },
                     child: Image.asset(
                       icon_refresh_dash,

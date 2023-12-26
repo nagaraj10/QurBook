@@ -63,6 +63,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   String? categoryID;
   late BuildContext _context;
 
+  double iconSize = CommonUtil().isTablet! ? 32.0.sp : 28.0.sp;
+
   String? deviceName;
   @override
   void initState() {
@@ -167,8 +169,11 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               ),
               isThumbnails
                   ? Container(
-                      height: 60,
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      height: CommonUtil().isTablet!
+                          ? 100
+                          : 60, //Set width and height to maintain UI similar in tablet and mobile
+
+                      color: Color(new CommonUtil().getMyPrimaryColor()),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -181,8 +186,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                               children: <Widget>[
                                 Image.file(
                                   File(imagePaths[imagePaths.length - 1]!),
-                                  width: 30,
-                                  height: 40,
+                                  width: 50,
+                                  height: 50,
                                   fit: BoxFit.cover,
                                 ),
                                 /*  Positioned(
@@ -196,8 +201,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   constraints: BoxConstraints(
-                                    minWidth: 14,
-                                    minHeight: 14,
+                                    minWidth: 25,
+                                    minHeight: 25,
                                   ),
                                   child: Text(
                                     (imagePaths.length).toString(),
@@ -219,7 +224,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                   icon: ImageIcon(
                                     AssetImage(variable.icon_attach),
                                     color: Colors.white,
-                                    size: 32.0.sp,
+                                    size: iconSize,
                                   ),
                                   onPressed: () async {
                                     // Take the Picture in a try / catch block. If anything goes wrong,
@@ -240,8 +245,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                           imagePaths.add(image!.files[0].path);
                                         }
                                         callDisplayPictureScreen(context);
-                                      } catch (e,stackTrace) {
-                                                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                                      } catch (e, stackTrace) {
+                                        CommonUtil().appLogs(
+                                            message: e, stackTrace: stackTrace);
 
                                         // If an error occurs, log the error to the console.
                                       }
@@ -253,42 +259,40 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                             ),
                           ),
                           Expanded(
-                            child: Center(
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.camera,
-                                  color: Colors.white,
-                                  size: 40.0.sp,
-                                ),
-                                onPressed: () async {
-                                  // Take the Picture in a try / catch block. If anything goes wrong,
-                                  // catch the error.
-                                  try {
-                                    // Ensure that the camera is initialized.
-                                    await _initializeControllerFuture;
-
-                                    // Construct the path where the image should be saved using the
-                                    // pattern package.
-                                    final path = join(
-                                      // Store the picture in the temp directory.
-                                      // Find the temp directory using the `path_provider` plugin.
-                                      (await getTemporaryDirectory()).path,
-                                      setFileName()! +
-                                          '${DateTime.now().second}.jpg'.trim(),
-                                    );
-
-                                    // Attempt to take a picture and log where it's been saved.
-                                    XFile xpath =
-                                        await _controller.takePicture();
-                                    imagePaths.add(xpath.path);
-                                    setState(() {});
-                                  } catch (e,stackTrace) {
-                                                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
-                                    // If an error occurs, log the error to the console.
-                                  }
-                                },
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.camera,
+                                color: Colors.white,
+                                size: iconSize,
                               ),
+                              onPressed: () async {
+                                // Take the Picture in a try / catch block. If anything goes wrong,
+                                // catch the error.
+                                try {
+                                  // Ensure that the camera is initialized.
+                                  await _initializeControllerFuture;
+
+                                  // Construct the path where the image should be saved using the
+                                  // pattern package.
+                                  final path = join(
+                                    // Store the picture in the temp directory.
+                                    // Find the temp directory using the `path_provider` plugin.
+                                    (await getTemporaryDirectory()).path,
+                                    setFileName()! +
+                                        '${DateTime.now().second}.jpg'.trim(),
+                                  );
+
+                                  // Attempt to take a picture and log where it's been saved.
+                                  XFile xpath = await _controller.takePicture();
+                                  imagePaths.add(xpath.path);
+                                  setState(() {});
+                                } catch (e, stackTrace) {
+                                  CommonUtil().appLogs(
+                                      message: e, stackTrace: stackTrace);
+
+                                  // If an error occurs, log the error to the console.
+                                }
+                              },
                             ),
                           ),
                           Expanded(
@@ -301,7 +305,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                             icon: Icon(
                               Icons.done,
                               color: Colors.white,
-                              size: 40.0.sp,
+                              size: 32.0.sp,
                             ),
                             onPressed: () {
                               Navigator.push(
@@ -323,11 +327,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                       ),
                     )
                   : Container(
-                      height: 60,
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      height: CommonUtil().isTablet! ? 100 : 60,
+                      color: Color(new CommonUtil().getMyPrimaryColor()),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Expanded(
                             child: Center(
@@ -338,7 +341,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     icon: Icon(
                                       Icons.photo_library,
                                       color: Colors.white,
-                                      size: 32.0.sp,
+                                      size: iconSize,
                                     ),
                                     onPressed: () async {
                                       // Take the Picture in a try / catch block. If anything goes wrong,
@@ -356,8 +359,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                           filePath = image!.path;
                                           imagePaths.add(filePath);
                                           callDisplayPictureScreen(context);
-                                        } catch (e,stackTrace) {
-                                                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                                        } catch (e, stackTrace) {
+                                          CommonUtil().appLogs(
+                                              message: e,
+                                              stackTrace: stackTrace);
 
                                           // If an error occurs, log the error to the console.
                                         }
@@ -377,7 +382,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       icon: ImageIcon(
                                         AssetImage(variable.icon_attach),
                                         color: Colors.white,
-                                        size: 32.0.sp,
+                                        size: iconSize,
                                       ),
                                       onPressed: () async {
                                         // Take the Picture in a try / catch block. If anything goes wrong,
@@ -395,8 +400,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                               imagePaths
                                                   .add(image!.files[0].path);
                                             callDisplayPictureScreen(context);
-                                          } catch (e,stackTrace) {
-                                                        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                                          } catch (e, stackTrace) {
+                                            CommonUtil().appLogs(
+                                                message: e,
+                                                stackTrace: stackTrace);
 
                                             // If an error occurs, log the error to the console.
                                           }
@@ -409,56 +416,55 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                             ),
                           ),
                           Expanded(
-                            child: Center(
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.camera,
-                                  color: Colors.white,
-                                  size: 40.0.sp,
-                                ),
-                                onPressed: () async {
-                                  // Take the Picture in a try / catch block. If anything goes wrong,
-                                  // catch the error.
-                                  try {
-                                    // Ensure that the camera is initialized.
-                                    await _initializeControllerFuture;
-
-                                    // Construct the path where the image should be saved using the
-                                    // pattern package.
-                                    final path = join(
-                                      // Store the picture in the temp directory.
-                                      // Find the temp directory using the `path_provider` plugin.
-                                      (await getTemporaryDirectory()).path,
-                                      setFileName()! +
-                                          '${DateTime.now().second}.jpg'.trim(),
-                                    );
-
-                                    // Attempt to take a picture and log where it's been saved.
-                                    XFile xpath =
-                                        await _controller.takePicture();
-
-                                    if (isMultipleImages) {
-                                      isThumbnails = true;
-                                      imagePaths.add(xpath.path);
-
-                                      setState(() {});
-                                    } else {
-                                      // If the picture was taken, display it on a new screen.
-                                      imagePaths.add(xpath.path);
-                                      callDisplayPictureScreen(context);
-                                    }
-                                  } catch (e,stackTrace) {
-                                    // If an error occurs, log the error to the console.
-                                                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
-                                  }
-                                },
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.camera,
+                                color: Colors.white,
+                                size: iconSize,
                               ),
+                              onPressed: () async {
+                                // Take the Picture in a try / catch block. If anything goes wrong,
+                                // catch the error.
+                                try {
+                                  // Ensure that the camera is initialized.
+                                  await _initializeControllerFuture;
+
+                                  // Construct the path where the image should be saved using the
+                                  // pattern package.
+                                  final path = join(
+                                    // Store the picture in the temp directory.
+                                    // Find the temp directory using the `path_provider` plugin.
+                                    (await getTemporaryDirectory()).path,
+                                    setFileName()! +
+                                        '${DateTime.now().second}.jpg'.trim(),
+                                  );
+
+                                  // Attempt to take a picture and log where it's been saved.
+                                  XFile xpath = await _controller.takePicture();
+
+                                  if (isMultipleImages) {
+                                    isThumbnails = true;
+                                    imagePaths.add(xpath.path);
+
+                                    setState(() {});
+                                  } else {
+                                    // If the picture was taken, display it on a new screen.
+                                    imagePaths.add(xpath.path);
+                                    callDisplayPictureScreen(context);
+                                  }
+                                } catch (e, stackTrace) {
+                                  // If an error occurs, log the error to the console.
+                                  CommonUtil().appLogs(
+                                      message: e, stackTrace: stackTrace);
+                                }
+                              },
                             ),
                           ),
                           Expanded(
                             child: Center(
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   FHBBasicWidget.customShowCase(
                                       _singleMultiImg,
@@ -466,7 +472,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       IconButton(
                                           icon: ImageIcon(
                                             AssetImage(variable.icon_multi),
-                                            size: 24,
+                                            size: iconSize,
                                             color: isMultipleImages
                                                 ? Colors.white
                                                 : Colors.white54,
@@ -495,6 +501,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                           Expanded(
                             child: Center(
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   IconButton(
                                       icon: ImageIcon(
@@ -502,7 +510,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                         color: isMultipleImages
                                             ? Colors.white54
                                             : Colors.white,
-                                        size: 24,
+                                        size: iconSize,
                                       ),
                                       onPressed: () {
                                         isMultipleImages = false;
@@ -548,7 +556,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       //     selectCircleStrokeColor: fhbColors.colorBlack,
       //   ),
       // );
-    } on FetchException catch (e,stackTrace) {}
+    } on FetchException catch (e, stackTrace) {}
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling

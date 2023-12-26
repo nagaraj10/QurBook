@@ -378,14 +378,12 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         if (snapshot.hasData) {
           switch (snapshot.data!.status) {
             case Status.LOADING:
-              return Scaffold(
-                backgroundColor: Colors.white,
-                body: Center(
-                    child: SizedBox(
+              return Center(
+                child: SizedBox(
                   child: CommonCircularIndicator(),
                   width: 30,
                   height: 30,
-                )),
+                ),
               );
               break;
 

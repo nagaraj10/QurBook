@@ -2,8 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>NSFaceIDUsageDescription</key>
-    <string>Why is my app authenticating using face id?</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Why is my app authenticating using face id?</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Application requires access to detect and read values from your Bluetooth device</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
@@ -20,10 +20,10 @@
 	<string>QurBook</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-    <key>BGTaskSchedulerPermittedIdentifiers</key>
-        <array>
-            <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-        </array>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	</array>
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleURLTypes</key>
@@ -48,15 +48,15 @@
 				<string>com.googleusercontent.apps.588661578434-l1qvt7tl7de2hbqa5o8iqvak8tvmofkn</string>
 			</array>
 		</dict>
-        <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>com.googleusercontent.apps.69764989858-b2p2t37rgbprjajtk6m6pibehk7qg1rj</string>
-            </array>
-        </dict>
-				<dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.69764989858-b2p2t37rgbprjajtk6m6pibehk7qg1rj</string>
+			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
@@ -72,7 +72,6 @@
 				<string>com.googleusercontent.apps.69764989858-bidf0or0cv8n3nf3rjtr34o2qt4r4oo8</string>
 			</array>
 		</dict>
-
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
@@ -119,10 +118,6 @@
 	<string>Application requires access to Camera to take pictures of health records</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Application requires access to Contacts for adding family members &amp; friends from contact list</string>
-	<key>NSHealthShareUsageDescription</key>
-	<string>QurBook needs to read your heart rate monitor data for keeping a tab on your health</string>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>QurBook would like to share your workout information with other applications</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Application requires access to LocationWhenInUse for locating the address and adding a healthcare provider</string>
 	<key>NSMicrophoneUsageDescription</key>
@@ -137,9 +132,9 @@
 	<array>
 		<string>audio</string>
 		<string>fetch</string>
-        <string>processing</string>
+		<string>processing</string>
 		<string>remote-notification</string>
-        <string>voip</string>
+		<string>voip</string>
 	</array>
 	<key>UIFileSharingEnabled</key>
 	<true/>
