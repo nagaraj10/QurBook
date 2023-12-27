@@ -100,7 +100,9 @@ class SwitchProfile {
                 ? getCirleAvatarWithBorderIcon(myProfile,
                     changeWhiteBg: changeWhiteBg)
                 : CircleAvatar(
-                    radius: CommonUtil().isTablet! ? 18 : 15,
+                    radius: CommonUtil().isTablet!
+                        ? 22
+                        : 15, //increase the size of profile circle in tablet
                     child: ClipOval(
                         child: myProfile != null
                             ? myProfile.result != null
@@ -110,7 +112,7 @@ class SwitchProfile {
                                         .getProfilePicWidgeUsingUrl(myProfile,
                                             changeWhiteBg: changeWhiteBg,
                                             textSize: CommonUtil().isTablet!
-                                                ? 10
+                                                ? 16
                                                 : 28)
                                     : Container(
                                         height: CommonUtil().isTablet!
@@ -130,7 +132,7 @@ class SwitchProfile {
                                                 : '',
                                             style: TextStyle(
                                                 fontSize: CommonUtil().isTablet!
-                                                    ? Constants.tabHeader4
+                                                    ? Constants.tabHeader1
                                                     : mobileHeader1,
                                                 color: Color(CommonUtil()
                                                     .getMyPrimaryColor())),

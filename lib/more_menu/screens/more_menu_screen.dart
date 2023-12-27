@@ -1121,7 +1121,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       ),
                     )),
                 Divider(),
-                if (isIntegration && Platform.isAndroid)
+                if (Platform.isAndroid)
                   Theme(
                       data: theme,
                       child: ExpansionTile(
@@ -1142,71 +1142,72 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                           size: arrowIcon,
                         ),
                         children: [
-                          FutureBuilder(
-                              future: _handleGoogleFit(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return Column(
-                                    children: [
-                                      ListTile(
-                                        leading: ImageIcon(
-                                          AssetImage(
-                                              variable.icon_digit_googleFit),
-                                          size: iconSize,
-                                          color: Colors.black,
-                                        ),
-                                        title: Text(variable.strGoogleFit,
-                                            style:
-                                                TextStyle(fontSize: subtitle)),
-                                        subtitle: Text(
-                                          variable.strAllowGoogle,
-                                          style: TextStyle(fontSize: title3),
-                                        ),
-                                        trailing: Wrap(
-                                          children: <Widget>[
-                                            Transform.scale(
-                                              scale: switchTrail,
-                                              child: IconButton(
-                                                icon: Icon(Icons.sync),
-                                                onPressed: () {
-                                                  _deviceDataHelper
-                                                      .syncGoogleFit();
-                                                },
+                          if (isIntegration && Platform.isAndroid)
+                            FutureBuilder(
+                                future: _handleGoogleFit(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Column(
+                                      children: [
+                                        ListTile(
+                                          leading: ImageIcon(
+                                            AssetImage(
+                                                variable.icon_digit_googleFit),
+                                            size: iconSize,
+                                            color: Colors.black,
+                                          ),
+                                          title: Text(variable.strGoogleFit,
+                                              style: TextStyle(
+                                                  fontSize: subtitle)),
+                                          subtitle: Text(
+                                            variable.strAllowGoogle,
+                                            style: TextStyle(fontSize: title3),
+                                          ),
+                                          trailing: Wrap(
+                                            children: <Widget>[
+                                              Transform.scale(
+                                                scale: switchTrail,
+                                                child: IconButton(
+                                                  icon: Icon(Icons.sync),
+                                                  onPressed: () {
+                                                    _deviceDataHelper
+                                                        .syncGoogleFit();
+                                                  },
+                                                ),
                                               ),
-                                            ),
-                                            Transform.scale(
-                                              scale: switchTrail,
-                                              child: Switch(
-                                                value: _isGFActive!,
-                                                activeColor: Color(
-                                                    new CommonUtil()
-                                                        .getMyPrimaryColor()),
-                                                onChanged: (bool newValue) {
-                                                  setState(() {
-                                                    //isTouched = true;
-                                                    _isGFActive = newValue;
-                                                    isIntegration = true;
-                                                  });
-                                                },
-                                              ),
-                                            )
-                                          ],
+                                              Transform.scale(
+                                                scale: switchTrail,
+                                                child: Switch(
+                                                  value: _isGFActive!,
+                                                  activeColor: Color(
+                                                      new CommonUtil()
+                                                          .getMyPrimaryColor()),
+                                                  onChanged: (bool newValue) {
+                                                    setState(() {
+                                                      //isTouched = true;
+                                                      _isGFActive = newValue;
+                                                      isIntegration = true;
+                                                    });
+                                                  },
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      !loading
-                                          ? ListView.builder(
-                                              shrinkWrap: true,
-                                              itemCount: devices.length,
-                                              itemBuilder: (context, index) {
-                                                return devices[index];
-                                              })
-                                          : CircularProgressIndicator(),
-                                    ],
-                                  );
-                                } else {
-                                  return Container();
-                                }
-                              }),
+                                        !loading
+                                            ? ListView.builder(
+                                                shrinkWrap: true,
+                                                itemCount: devices.length,
+                                                itemBuilder: (context, index) {
+                                                  return devices[index];
+                                                })
+                                            : CircularProgressIndicator(),
+                                      ],
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
+                                }),
                           Container(
                             height: 1,
                             color: Colors.grey[200],
