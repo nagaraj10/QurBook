@@ -191,7 +191,9 @@ class _LandingScreenState extends State<LandingScreen> {
       if (CommonUtil().isTablet == true) {
         SheelaRemainderPopup.checkConditionToShowPopUp();
       } else {
-        sheelBadgeController?.getSheelaBadgeCount();
+        sheelBadgeController?.getSheelaBadgeCount(
+          makeApiRequest: true,
+        );
       }
       sheelBadgeController?.isAllowSheelaLiveReminders = true;
     } catch (e, stackTrace) {
