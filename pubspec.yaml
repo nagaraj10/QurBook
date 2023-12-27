@@ -67,7 +67,6 @@ dependencies:
   expandable: ^5.0.1
   progress_dialog_null_safe: ^1.0.7
   google_sign_in: ^5.0.4
-  health: ^3.0.0
   quiver: ^3.0.1
   agora_rtc_engine: ^4.0.6
   firebase_messaging: ^10.0.2
