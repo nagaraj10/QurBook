@@ -176,8 +176,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
   }
 
   Widget getProfileDetailClone() {
-    var useridMain = (PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN))??'';
-    var userid = (PreferenceUtil.getStringValue(Constants.KEY_USERID))??'';
+    var useridMain =
+        (PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN)) ?? '';
+    var userid = (PreferenceUtil.getStringValue(Constants.KEY_USERID)) ?? '';
     return FutureBuilder<MyProfileModel>(
       future: addFamilyUserInfoRepository.getMyProfileInfoNew(useridMain),
       builder: (BuildContext context, AsyncSnapshot<MyProfileModel> snapshot) {
@@ -921,7 +922,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           //  final mediaResultFiltered = removeUnwantedCategories(tagslist);
           setTheValuesForDropdown(tagslist);
           return Taglist(
-            isClickable: true,
+            forMyProfile: true,
             tags: addFamilyUserInfoBloc.tagsList,
             onChecked: (result) {
               addSelectedcategoriesToList(result!);
