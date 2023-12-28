@@ -67,7 +67,8 @@ class AddFamilyUserInfoScreen extends StatefulWidget {
 }
 
 class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
-  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state =
+      GlobalKey<ScaffoldMessengerState>();
   final double circleRadius = 100.0.h;
   final double circleBorderWidth = 2.0.w;
   File? imageURI;
@@ -174,20 +175,21 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   String? heightUnit = 'feet', weightUnit = 'kg';
 
   SheelaAIController? sheelaAIcontroller =
-  CommonUtil().onInitSheelaAIController();
-
+      CommonUtil().onInitSheelaAIController();
+  var isPortrait;
+  double tagTextSize =
+      CommonUtil().isTablet! ? 22 : 16; //incrase the size of text in tablet
   @override
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
-    sheelaAIcontroller!.getLanguagesFromApi().then((value){
+    sheelaAIcontroller!.getLanguagesFromApi().then((value) {
       getSupportedLanguages();
     });
     addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
     _addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
     addFamilyUserInfoBloc!.getCustomRoles();
-    _healthReportListForUserRepository =
-        HealthReportListForUserRepository();
+    _healthReportListForUserRepository = HealthReportListForUserRepository();
 
     getDefaultHeightAndWeight();
 
@@ -282,6 +284,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     dialogContext = context;
     return WillPopScope(
       onWillPop: () async {
@@ -533,14 +536,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        margin: EdgeInsets.only(left: 20,top: 12),
+                        margin: EdgeInsets.only(left: 20, top: 12),
                         child: Text(
                           CommonConstants.preferredLanguage,
                           style: TextStyle(
-                            fontSize: 12.0.sp,
-                            color: ColorUtils.myFamilyGreyColor,
-                            fontWeight: FontWeight.w400
-                          ),
+                              fontSize: 12.0.sp,
+                              color: ColorUtils.myFamilyGreyColor,
+                              fontWeight: FontWeight.w400),
                         ),
                       ),
                       getLanguageWidget()
@@ -550,19 +552,30 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   Container(),
                 if (widget.arguments!.fromClass == CommonConstants.user_update)
                   //getDropDownWithTagsdrop()
+
                   Column(
                     children: [
                       getTagsWithButton(context),
                       selectedTags != null && selectedTags!.length > 0
-                          ? Container(
+                          ? Taglist(
+                              forMyProfile: false,
+                              tags: selectedTags,
+                              onChecked: (result) {
+                                addSelectedcategoriesToList(result!);
+                              },
+                            ) /*Container(
                               child: GridView.count(
-                                  crossAxisCount: 3,
+                                  crossAxisCount: CommonUtil().isTablet!
+                                      ? isPortrait
+                                          ? 2
+                                          : 3
+                                      : 2,
                                   padding: EdgeInsets.only(
-                                      left: 20, right: 20, top: 5),
+                                      left: 10, right: 10, top: 5),
                                   mainAxisSpacing: 10.0,
                                   childAspectRatio: (itemWidth / itemHeight) > 0
                                       ? (itemWidth / itemHeight)
-                                      : 2.0,
+                                      : 4.0,
                                   crossAxisSpacing: 10.0,
                                   controller: ScrollController(
                                       keepScrollOffset: false),
@@ -591,8 +604,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                                             child: Center(
                                               child: TextWidget(
                                                 text: tagObj.name,
-                                                fontsize: 16.0.sp,
-                                                colors: Color(CommonUtil()
+                                                fontsize: tagTextSize,
+                                                colors: Color(new CommonUtil()
                                                     .getMyPrimaryColor()),
                                               ),
                                             ),
@@ -601,6 +614,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                                       ),
                                     );
                                   }).toList()))
+                          */
                           : SizedBox()
                     ],
                   )
@@ -1070,7 +1084,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     fontWeight: FontWeight.w400,
                     color: ColorUtils.myFamilyGreyColor),
                 hintStyle: TextStyle(
-                  fontSize: 16.0.sp,
+                  fontSize: tagTextSize,
                   color: ColorUtils.myFamilyGreyColor,
                   fontWeight: FontWeight.w400,
                 ),
@@ -1534,8 +1548,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   void setValuesInEditText() async {
     try {
       languageModelList = await languageBlock.getLanguage();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     //* set the user data from input
     _addressList = await doctorPersonalViewModel.getAddressTypeList();
@@ -1554,8 +1568,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     .userContactCollection3![0].email ??
                 '';
           }
-        } catch (e,stackTrace) {
-          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
           mobileNoController.text = '';
           emailController.text = '';
         }
@@ -1571,8 +1585,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       .userContactCollection3![0]!.email ??
                   '';
             }
-          } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             mobileNoController.text = '';
             emailController.text = '';
           }
@@ -1604,8 +1618,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 }
               }
             }
-          } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             if (widget.arguments!.myProfileResult!.userContactCollection3 !=
                     null &&
                 widget.arguments!.myProfileResult!.userContactCollection3!
@@ -1680,8 +1694,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               _addressResult = _addressList[0];
             });
             print('after try');
-          } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
           }
         }
 
@@ -1775,8 +1789,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       myProf.result!.userContactCollection3![0]!.email ?? '';
                 }
               }
-            } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+            } catch (e, stackTrace) {
+              CommonUtil().appLogs(message: e, stackTrace: stackTrace);
               setMobileAndEmail();
             }
 
@@ -1791,8 +1805,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
                 if (preferredMesurement != null) {}
               }
-            } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+            } catch (e, stackTrace) {
+              CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             }
           } else {
             //! this must be loook
@@ -1809,8 +1823,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               emailController.text = '';
             }
           }
-        } catch (e,stackTrace) {
-          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
           mobileNoController.text = '';
           emailController.text = '';
         }
@@ -1923,8 +1937,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             setState(() {
               _addressResult = _addressList[0];
             });
-          } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
           }
         }
 
@@ -1958,8 +1972,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 myProf!.result!.userContactCollection3![0]!.phoneNumber ?? '';
             emailController.text =
                 myProf.result!.userContactCollection3![0]!.email ?? '';
-          } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             setMobileAndEmail();
           }
         } else {
@@ -2020,8 +2034,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           setState(() {
             _addressResult = _addressList[0];
           });
-        } catch (e,stackTrace) {
-          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         }
         if (commonUtil.checkIfStringisNull(value.result!.bloodGroup)) {
           currentselectedBloodGroup = value.result!.bloodGroup!.split(' ')[0];
@@ -2301,8 +2315,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
       /*profileResult.userProfileSettingCollection3 =
           userProfileSettingCollectionClone;*/
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     /*  }*/
 
@@ -2472,8 +2486,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         Constants.KEY_PROFILE_MAIN, profileValue);
                   }
 
-                  var useridMain = (PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN))??'';
-                  var userid = (PreferenceUtil.getStringValue(Constants.KEY_USERID))??'';
+                  var useridMain = (PreferenceUtil.getStringValue(
+                          Constants.KEY_USERID_MAIN)) ??
+                      '';
+                  var userid =
+                      (PreferenceUtil.getStringValue(Constants.KEY_USERID)) ??
+                          '';
 
                   if (useridMain == userid) {
                     PreferenceUtil.saveProfileData(
@@ -3138,8 +3156,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             getUnitFromPreferredMeasurement(profileSetting);
           }
         }
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         var profileModel =
             await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
         if (profileModel!.result!.userProfileSettingCollection3 != null &&
@@ -3159,8 +3177,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             heightUnit = preferredMeasurment.height?.unitCode;
             weightUnit = preferredMeasurment.weight?.unitCode;
             setHeightAndWeightUnit();
-          } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             setUnitBasedOnRegion();
           }
         }
@@ -3209,7 +3227,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             padding: EdgeInsets.only(left: 20, right: 20, top: 5),
             child: IconButton(
               icon: Icon(Icons.add),
-              color:Color(CommonUtil().getMyPrimaryColor()),
+              color: Color(CommonUtil().getMyPrimaryColor()),
               onPressed: () {
                 showTagDialog(context);
               },
@@ -3408,8 +3426,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         weightUnit =
             await profileSetting?.preferredMeasurement?.weight?.unitCode ?? '';
         setHeightAndWeightUnit();
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         setUnitBasedOnRegion();
       }
     } else {
