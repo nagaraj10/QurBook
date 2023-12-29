@@ -340,6 +340,12 @@ const String ic_cart_delete = 'assets/icons/cart_delete_red.svg';
 const String ic_empty_cart = 'assets/icons/empty_cart.svg';
 const String ic_gold_member = 'assets/user/gold-member.png';
 
+//Voice Cloning
+const String icVoicePlay = 'assets/voice_clone/play_icon.svg';
+const String icVoiceMic= 'assets/voice_clone/mic_icon.svg';
+const String icVoicePause = 'assets/voice_clone/pause_icon.svg';
+const String icVoiceStop = 'assets/voice_clone/stop_icon.svg';
+
 // Path to the placeholder image asset.
 const String ic_placeholder = 'assets/icons/placeholder.jpg';
 
