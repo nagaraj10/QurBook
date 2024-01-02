@@ -345,6 +345,16 @@ class IosNotificationHandler {
                 eventIdViaSheela: model.eventId),
           );
           //}
+        } else if ((model.templateName ?? '').isNotEmpty &&
+            (model.templateName ==
+                    parameters.NonTeleconsultationAppointmentPreReminder5 ||
+                model.templateName == parameters.AppointmentReminder5)) {
+          await Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+              scheduleAppointment: true,
+            ),
+          );
         }
       } else if (CommonUtil.isUSRegion() &&
           model.templateName == strPatientReferralAcceptToPatient) {

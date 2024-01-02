@@ -928,6 +928,13 @@ class _MyFHBState extends State<MyFHB> {
           });
           PageNavigator.goToPermanent(Get.context!, router.rt_Landing);
         }
+      } else if (passedValArr[0] == 'sheela') {
+        if (passedValArr[1] == strAppointment) {
+          Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(scheduleAppointment: true),
+          );
+        }
       } else if (passedValArr[1] == 'appointmentList' ||
           passedValArr[1] == 'appointmentHistory') {
         fbaLog(eveParams: {
@@ -1359,6 +1366,12 @@ class _MyFHBState extends State<MyFHB> {
             return SplashScreen(
               nsRoute: parsedData[1],
             );
+          } else if (parsedData[0] == 'sheela') {
+            if (parsedData[1] == strAppointment) {
+              return SplashScreen(
+                nsRoute: strAppointment,
+              );
+            }
           } else if (parsedData[0] == 'ack') {
             final temp = parsedData[1].split('|');
             if (temp[0] == 'myRecords') {

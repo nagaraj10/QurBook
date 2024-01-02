@@ -173,8 +173,6 @@ class QurhomeRegimenController extends GetxController {
           currentIndex = regimentList.length - 1;
         }
       }
-
-      qurhomeDashboardController.getValuesNativeAppointment();
     }
 
     update(["newUpdate"]);
