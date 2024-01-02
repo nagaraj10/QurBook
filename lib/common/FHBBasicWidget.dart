@@ -201,6 +201,7 @@ class FHBBasicWidget {
   void showInSnackBar(String value, GlobalKey<ScaffoldMessengerState> scaffoldstate) {
     try {
       var snackBar = SnackBar(content: Text(value));
+      // Using ScaffoldMessenger to show a SnackBar
       ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
