@@ -1,4 +1,3 @@
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/add_address/models/AddAddressArguments.dart';
@@ -12,8 +11,11 @@ import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/claim/screen/ClaimList.dart';
 import 'package:myfhb/claim/screen/ClaimRecordCreate.dart';
 import 'package:myfhb/confirm_location/models/confirm_location_arguments.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/devices/device_dashboard_arguments.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
+import 'package:myfhb/more_menu/screens/terms_and_conditon.dart';
+import 'package:myfhb/more_menu/screens/voicecloning_introduction.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_arguments.dart';
 import 'package:myfhb/plan_wizard/view/plan_wizard_screen.dart';
@@ -83,13 +85,15 @@ setRouter(List<CameraDescription> listOfCameras) async {
 
   final fhbRouter = <String, WidgetBuilder>{
     router.rt_Sheela: (context) => SheelaAIMainScreen(
-          arguments: ModalRoute.of(context)!.settings.arguments as SheelaArgument?,
+          arguments:
+              ModalRoute.of(context)!.settings.arguments as SheelaArgument?,
         ),
     router.rt_Splash: (context) => SplashScreen(),
     router.rt_SignIn: (context) => SignInScreen(),
     router.rt_Dashboard: (context) => DevicesScreen(),
-    router.rt_Regimen: (context) =>
-        RegimentScreen(aruguments: ModalRoute.of(context)!.settings.arguments as RegimentArguments?),
+    router.rt_Regimen: (context) => RegimentScreen(
+        aruguments:
+            ModalRoute.of(context)!.settings.arguments as RegimentArguments?),
     router.rt_Landing: (context) {
       if (CommonUtil.REGION_CODE == "US") {
         // US
@@ -98,7 +102,8 @@ setRouter(List<CameraDescription> listOfCameras) async {
       } else {
         // IN
         return LandingScreen(
-          landingArguments: ModalRoute.of(context)!.settings.arguments as LandingArguments?,
+          landingArguments:
+              ModalRoute.of(context)!.settings.arguments as LandingArguments?,
         );
       }
     },
@@ -107,60 +112,82 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_Plans: (context) => PlansScreen(),
     router.rt_Diseases: (context) => DiseasesScreen(),
     router.rt_Devices: (context) => DevicesScreen(),
-    router.rt_HomeScreen: (context) =>
-        HomeScreen(arguments: ModalRoute.of(context)!.settings.arguments as HomeScreenArguments?),
-    router.rt_deviceDashboard: (context) =>
-        Devicedashboard(arguments: ModalRoute.of(context)!.settings.arguments as DeviceDashboardArguments?),
-    router.rt_UserAccounts: (context) =>
-        UserAccounts(arguments: ModalRoute.of(context)!.settings.arguments as UserAccountsArguments?),
+    router.rt_HomeScreen: (context) => HomeScreen(
+        arguments:
+            ModalRoute.of(context)!.settings.arguments as HomeScreenArguments?),
+    router.rt_deviceDashboard: (context) => Devicedashboard(
+        arguments: ModalRoute.of(context)!.settings.arguments
+            as DeviceDashboardArguments?),
+    router.rt_UserAccounts: (context) => UserAccounts(
+        arguments: ModalRoute.of(context)!.settings.arguments
+            as UserAccountsArguments?),
     router.rt_AppSettings: (context) => ChangeNotifierProvider(
           create: (context) => DevicesViewModel(),
           child: MySettings(),
         ),
     router.rt_MyRecords: (context) => MyRecords(
-          argument: ModalRoute.of(context)!.settings.arguments as MyRecordsArgument?,
+          argument:
+              ModalRoute.of(context)!.settings.arguments as MyRecordsArgument?,
         ),
     router.rt_MyFamily: (context) => MyFamily(),
     router.rt_myprovider: (context) => MyProvider(),
     router.rt_th_myprovider: (context) => MyProvidersMain(),
-    router.rt_AddProvider: (context) =>
-        AddProviders(arguments: ModalRoute.of(context)!.settings.arguments as AddProvidersArguments?),
-    router.rt_AddAddress: (context) =>
-        AddAddressScreen(arguments: ModalRoute.of(context)!.settings.arguments as AddAddressArguments?),
+    router.rt_AddProvider: (context) => AddProviders(
+        arguments: ModalRoute.of(context)!.settings.arguments
+            as AddProvidersArguments?),
+    router.rt_AddAddress: (context) => AddAddressScreen(
+        arguments:
+            ModalRoute.of(context)!.settings.arguments as AddAddressArguments?),
     router.rt_SearchProvider: (context) => SearchSpecificList(
-        arguments: ModalRoute.of(context)!.settings.arguments as SearchArguments?,
+        arguments:
+            ModalRoute.of(context)!.settings.arguments as SearchArguments?,
         toPreviousScreen: false,
         isSkipUnknown: true),
     router.rt_TakePicture: (context) => TakePictureScreen(camera: firstCamera),
     router.rt_TakePictureForDevices: (context) =>
         TakePictureScreenForDevices(cameras: listOfCameras),
     router.rt_ConfirmLocation: (context) => ConfirmLocationScreen(
-        arguments: ModalRoute.of(context)!.settings.arguments as ConfirmLocationArguments?),
+        arguments: ModalRoute.of(context)!.settings.arguments
+            as ConfirmLocationArguments?),
     router.rt_AudioScreen: (context) => AudioRecorder(),
     // "/sign_up_screen": (BuildContext context) => SignUpScreen(),
     router.rt_AddFamilyOtp: (context) => AddFamilyOTPScreen(
-        arguments: ModalRoute.of(context)!.settings.arguments as AddFamilyOTPArguments?),
+        arguments: ModalRoute.of(context)!.settings.arguments
+            as AddFamilyOTPArguments?),
     router.rt_AddFamilyUserInfo: (context) => AddFamilyUserInfoScreen(
-        arguments: ModalRoute.of(context)!.settings.arguments as AddFamilyUserInfoArguments?),
+        arguments: ModalRoute.of(context)!.settings.arguments
+            as AddFamilyUserInfoArguments?),
     router.rt_FamilyDetailScreen: (context) => MyFamilyDetailScreen(
-        arguments: ModalRoute.of(context)!.settings.arguments as MyFamilyDetailArguments?),
+        arguments: ModalRoute.of(context)!.settings.arguments
+            as MyFamilyDetailArguments?),
     router.rt_FamilyInsurance: (context) => MyFamilyDetailView(
-        arguments: ModalRoute.of(context)!.settings.arguments as MyFamilyDetailViewArguments?),
+        arguments: ModalRoute.of(context)!.settings.arguments
+            as MyFamilyDetailViewArguments?),
     router.rt_AddReminders: (context) => AddReminder(),
     router.rt_AddAppointments: (context) => AddAppointments(),
     router.rt_Feedbacks: (context) => Feedbacks(),
     router.rt_FeedbackSucess: (context) => FeedbackSuccess(),
     router.rt_TelehealthProvider: (context) => TelehealthProviders(
-        arguments: ModalRoute.of(context)!.settings.arguments as HomeScreenArguments?),
-    router.rt_CallMain: (context) =>
-        CallMain(arguments: ModalRoute.of(context)!.settings.arguments as CallArguments?),
-    router.rt_AudioScreen: (BuildContext context) =>
-        AudioRecorder(arguments: ModalRoute.of(context)!.settings.arguments as AudioScreenArguments?),
+        arguments:
+            ModalRoute.of(context)!.settings.arguments as HomeScreenArguments?),
+    router.rt_CallMain: (context) => CallMain(
+        arguments:
+            ModalRoute.of(context)!.settings.arguments as CallArguments?),
+    router.rt_AudioScreen: (BuildContext context) => AudioRecorder(
+        arguments: ModalRoute.of(context)!.settings.arguments
+            as AudioScreenArguments?),
     router.rt_PlanWizard: (BuildContext context) => PlanWizardScreen(),
     router.rt_AddProviderPlan: (BuildContext context) => AddProviderPlan(""),
     router.rt_ClaimResult: (BuildContext context) => ClaimList(),
     router.rt_ClaimCreate: (BuildContext context) => ClaimRecordCreate(),
     router.rt_chooseUnit: (BuildContext context) => ChooseUnit(),
+    router.rt_VoiceCloneTerms: (context) => TermsAndConditonWebView(
+          isLocalAsset: false,
+          selectedUrl: CommonUtil.BASE_URL_FROM_RES + voice_cloning_html,
+          title: strVoiceCloning,
+        ), //initialize router for terms and condition of voice cloning
+    router.rt_VoiceCloningIntro: (context) =>
+        VoiceCloningIntroducuton(), //initialize router for introduction page of voice cloning
   };
 
   return fhbRouter;

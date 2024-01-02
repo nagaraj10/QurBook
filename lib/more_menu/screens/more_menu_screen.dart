@@ -17,6 +17,7 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
+import 'package:myfhb/more_menu/screens/terms_and_conditon.dart';
 import 'package:myfhb/more_menu/screens/trouble_shooting.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
@@ -163,8 +164,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   double title3 =
       CommonUtil().isTablet! ? Constants.tabHeader3 : Constants.mobileHeader3;
 
+  double title4 =
+      CommonUtil().isTablet! ? Constants.tabHeader4 : Constants.mobileHeader4;
+
   double arrowIcon = CommonUtil().isTablet! ? 20.0.sp : 16.0.sp;
   double switchTrail = CommonUtil().isTablet! ? 1.0 : 0.8;
+  bool isVoiceCloningChanged =
+      false; // bool value to allow navigation when tapped
 
   @override
   void initState() {
@@ -910,6 +916,14 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       updateDeviceModel = value;
       if (updateDeviceModel!.isSuccess!) {
         // app color updated
+        if (isVoiceCloningChanged) {
+          Navigator.pushNamed(
+            context,
+            router.rt_VoiceCloneTerms,
+          ).then((value) {
+            setState(() {});
+          });
+        }
       }
     });
     return updateDeviceModel;
@@ -1162,7 +1176,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   visible: superAdminAllowedVoiceCloningModule,
                   child: ListTile(
                       leading: ImageIcon(
-                        AssetImage(variable.icon_device_recon),
+                        AssetImage(variable.icon_voice_cloning),
                         size: iconSize,
                         color: providerAllowedVoiceCloningModule
                             ? Colors.black
@@ -1178,29 +1192,22 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                         children: [
                           Text(
                             variable.strSheelaDesc,
-                            style: TextStyle(
-                                fontSize: title3,
-                                color: providerAllowedVoiceCloningModule
-                                    ? Colors.black
-                                    : Colors.grey),
+                            style:
+                                TextStyle(fontSize: title4, color: Colors.grey),
                           ),
                           Row(children: [
                             Text(
                               variable.strStatus,
                               style: TextStyle(
+                                  fontWeight: providerAllowedVoiceCloningModule
+                                      ? FontWeight.bold
+                                      : null,
                                   fontSize: title3,
-                                  color: providerAllowedVoiceCloningModule
-                                      ? Colors.black
-                                      : Colors.grey),
+                                  color: Colors.grey[600]),
                             ),
-                            Text(
-                              voiceCloningStatus,
-                              style: TextStyle(
-                                  fontSize: title3,
-                                  color: providerAllowedVoiceCloningModule
-                                      ? Colors.black
-                                      : Colors.grey),
-                            ),
+                            Text(voiceCloningStatus,
+                                style: AppBarForVoiceCloning()
+                                    .getTextStyle(voiceCloningStatus)),
                           ]),
                         ],
                       ),
@@ -1208,25 +1215,37 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                         scale: switchTrail,
                         child: Switch(
                           value: voiceCloning!,
-                          activeColor:
-                              Color(new CommonUtil().getMyPrimaryColor()),
+                          activeColor: (superAdminAllowedVoiceCloningModule &&
+                                  providerAllowedVoiceCloningModule)
+                              ? Color(new CommonUtil().getMyPrimaryColor())
+                              : (Colors.grey),
                           onChanged: (bool newValue) {
-                            setState(() {
-                              isSkillIntegration = true;
-                              isCareGiverCommunication = false;
-                              isVitalPreferences = false;
-                              isDisplayPreference = false;
-                              isSheelaNotificationPref = false;
-                              isTouched = true;
-                              voiceCloning = newValue;
-                              createAppColorSelection(preColor, greColor);
-                              /*PreferenceUtil.saveString(
+                            if (superAdminAllowedVoiceCloningModule &&
+                                providerAllowedVoiceCloningModule) {
+                              setState(() {
+                                isSkillIntegration = true;
+                                isCareGiverCommunication = false;
+                                isVitalPreferences = false;
+                                isDisplayPreference = false;
+                                isSheelaNotificationPref = false;
+                                isTouched = true;
+                                isVoiceCloningChanged = newValue;
+
+                                voiceCloning = newValue;
+                                createAppColorSelection(preColor, greColor);
+
+                                /*PreferenceUtil.saveString(
                                         Constants.allowDeviceRecognition,
                                         _isdeviceRecognition.toString());*/
-                            });
+                              });
+                            }
                           },
                         ),
-                      )),
+                      ),
+                      onTap: () {
+                        if (superAdminAllowedVoiceCloningModule &&
+                            providerAllowedVoiceCloningModule) {}
+                      }),
                 ),
                 if (Platform.isAndroid)
                   Theme(

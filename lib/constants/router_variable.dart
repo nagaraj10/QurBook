@@ -51,3 +51,7 @@ const String rt_ClaimResult = '/claim-result';
 const String rt_ClaimCreate = '/claim-create';
 
 const String rt_chooseUnit = '/choose-unit';
+const String rt_VoiceCloneTerms =
+    '/voiceclone_terms'; //router for terms andcondition of voice cloning
+const String rt_VoiceCloningIntro =
+    '/voiceclone_intro';//router for intro screen

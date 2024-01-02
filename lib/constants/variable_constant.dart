@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 
 const String strAPP_NAME = 'QurBook';
 const String strAppPackage =
@@ -187,6 +188,8 @@ const String icon_orderHistory = 'assets/navicons/orderHistory.png';
 const String icon_lock = 'assets/settings/unlock.png';
 const String lock_icon = 'assets/lock_icon.png';
 const String remove_user = 'assets/settings/remove_user.png';
+const String icon_voice_cloning =
+    'assets/settings/icon_voicecloning.png'; //path where voice clon icon is placed
 
 const String icon_records = 'assets/navicons/records.png';
 const String icon_chat = 'assets/navicons/chat.png';
@@ -283,6 +286,7 @@ const String file_terms = 'assets/help_docs/myfhb_terms_of_use.html';
 const String file_faq = 'assets/help_docs/myfhb_faq.html';
 const String file_terms_us = 'assets/help_docs/myfhb_us_terms_of_use.html';
 const String file_privacy_us = 'assets/help_docs/myfhb_us_privacy_policy.html';
+const String voice_cloning_html = 'assets/voice_clone_terms_n_condition.html';
 
 //for Family Font
 const String font_poppins = 'Poppins';
@@ -720,13 +724,15 @@ const String strAuthToUseApp = 'Please complete the authentication to proceed.';
 const String strVoiceCloning =
     'Voice Cloning'; //String declared for voice cloning
 const String strSheelaDesc =
-    'Enables sheela to speak to in your own voice'; // descrption for voice cloning
+    'enables Sheela to speak to in your own voice'; // descrption for voice cloning
 const String strStatus = 'Status : ';
 //for  googleFit activation and sync
 const String strGoogleFit = 'Google fit';
 const String strAllowGoogle = 'Allow app to recieve data from google Fit';
 const String strAddDevice = 'Tap to add device widgets to your home screen';
 const String strDefaultUI = 'Set QurHome as default UI';
+const String strVoiceCloneIntro =
+    'Activate the voice cloning \n feature  by clicking the button ,\n then read the displayed \n content  on the screen once the \n timer concludes to record your \n voice'; // Text for voice cloning introduction
 
 //for homescreen and dashboard
 const String strMyInfo = 'My Info';
