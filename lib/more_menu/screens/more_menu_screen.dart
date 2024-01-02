@@ -17,6 +17,7 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
+import 'package:myfhb/more_menu/screens/terms_and_conditon.dart';
 import 'package:myfhb/more_menu/screens/trouble_shooting.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
@@ -96,6 +97,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   String? preferred_language;
   String? qa_subscription;
 
+  bool voiceCloning = false;
+  bool providerAllowedVoiceCloningModule = false;
+  bool superAdminAllowedVoiceCloningModule = false;
+  String voiceCloningStatus = 'Inactive';
+  bool showVoiceCloningUI = true;
+  String healthOrganization = '';
+
   String selectedMaya = PreferenceUtil.getStringValue(Constants.keyMayaAsset) ??
       variable.icon_mayaMain;
 
@@ -157,8 +165,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   double title3 =
       CommonUtil().isTablet! ? Constants.tabHeader3 : Constants.mobileHeader3;
 
+  double title4 =
+      CommonUtil().isTablet! ? Constants.tabHeader4 : Constants.mobileHeader4;
+
   double arrowIcon = CommonUtil().isTablet! ? 20.0.sp : 16.0.sp;
   double switchTrail = CommonUtil().isTablet! ? 1.0 : 0.8;
+  bool isVoiceCloningChanged =
+      false; // bool value to allow navigation when tapped
 
   @override
   void initState() {
@@ -806,6 +819,47 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             ? getDeviceSelectionModel
                 .result![0].profileSetting!.preferredMeasurement
             : null;
+
+    //status of the voice cloning toggle button
+    voiceCloning =
+        getDeviceSelectionModel.result![0].profileSetting!.voiceCloning ??
+            false;
+
+    //set the bool value when provider has allowed the permssion
+    providerAllowedVoiceCloningModule = getDeviceSelectionModel
+            .result![0]
+            .primaryProvider
+            ?.additionalInfo
+            ?.providerAllowedVoiceCloningModule ??
+        false;
+
+    //set the bool value when super admin has allowed the permssion
+    superAdminAllowedVoiceCloningModule = getDeviceSelectionModel
+            .result![0]
+            .primaryProvider
+            ?.additionalInfo
+            ?.superAdminAllowedVoiceCloningModule ??
+        false;
+
+    //value of the voice cloning status
+    voiceCloningStatus = superAdminAllowedVoiceCloningModule
+        ? providerAllowedVoiceCloningModule
+            ? getDeviceSelectionModel
+                    .result![0].profileSetting!.voiceCloningStatus ??
+                strInActive
+            : strInActive
+        : strInActive;
+
+    //Conditon when to show the voice clonng UI
+    showVoiceCloningUI = superAdminAllowedVoiceCloningModule
+        ? providerAllowedVoiceCloningModule
+            ? true
+            : false
+        : false;
+
+    healthOrganization = getDeviceSelectionModel
+            .result![0].primaryProvider?.healthorganizationid ??
+        '';
   }
 
   Future<CreateDeviceSelectionModel?> createAppColorSelection(
@@ -831,7 +885,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             tagsList,
             allowAppointmentNotification,
             allowVitalNotification,
-            allowSymptomsNotification)
+            allowSymptomsNotification,
+            voiceCloning)
         .then((value) {
       createDeviceSelectionModel = value;
       if (createDeviceSelectionModel!.isSuccess!) {
@@ -868,11 +923,20 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             allowAppointmentNotification,
             allowVitalNotification,
             allowSymptomsNotification,
-            preferredMeasurement)
+            preferredMeasurement,
+            voiceCloning)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel!.isSuccess!) {
         // app color updated
+        if (isVoiceCloningChanged) {
+          Navigator.pushNamed(
+            context,
+            router.rt_VoiceCloneTerms,
+          ).then((value) {
+            setState(() {});
+          });
+        }
       }
     });
     return updateDeviceModel;
@@ -1119,6 +1183,95 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       ),
                     )),
                 Divider(),
+                if (isCareGiver) //show the voice cloning UI only when the user is caregiver
+                  Visibility(
+                    visible: superAdminAllowedVoiceCloningModule,
+                    child: ListTile(
+                        leading: ImageIcon(
+                          AssetImage(variable.icon_voice_cloning),
+                          size: iconSize,
+                          color: providerAllowedVoiceCloningModule
+                              ? Colors.black
+                              : Colors.grey,
+                        ),
+                        title: Text(variable.strVoiceCloning,
+                            style: TextStyle(
+                                fontSize: subtitle,
+                                color: providerAllowedVoiceCloningModule
+                                    ? Colors.black
+                                    : Colors.grey)),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              variable.strSheelaDesc,
+                              style: TextStyle(
+                                  fontSize: title4, color: Colors.grey),
+                            ),
+                            Row(children: [
+                              Text(
+                                variable.strStatus,
+                                style: TextStyle(
+                                    fontWeight:
+                                        providerAllowedVoiceCloningModule
+                                            ? FontWeight.bold
+                                            : null,
+                                    fontSize: title3,
+                                    color: Colors.grey[600]),
+                              ),
+                              Text(voiceCloningStatus,
+                                  style: AppBarForVoiceCloning()
+                                      .getTextStyle(voiceCloningStatus)),
+                            ]),
+                          ],
+                        ),
+                        trailing: Transform.scale(
+                          scale: switchTrail,
+                          child: Switch(
+                            value: voiceCloning!,
+                            activeColor: (superAdminAllowedVoiceCloningModule &&
+                                    providerAllowedVoiceCloningModule)
+                                ? Color(new CommonUtil().getMyPrimaryColor())
+                                : (Colors.grey),
+                            onChanged: (bool newValue) {
+                              if (superAdminAllowedVoiceCloningModule &&
+                                  providerAllowedVoiceCloningModule) {
+                                setState(() {
+                                  isSkillIntegration = true;
+                                  isCareGiverCommunication = false;
+                                  isVitalPreferences = false;
+                                  isDisplayPreference = false;
+                                  isSheelaNotificationPref = false;
+                                  isTouched = true;
+                                  isVoiceCloningChanged = newValue;
+
+                                  voiceCloning = newValue;
+                                  createAppColorSelection(preColor, greColor);
+
+                                  /*PreferenceUtil.saveString(
+                                        Constants.allowDeviceRecognition,
+                                        _isdeviceRecognition.toString());*/
+                                });
+                              }
+                            },
+                          ),
+                        ),
+                        onTap: () {
+                          if (superAdminAllowedVoiceCloningModule &&
+                              providerAllowedVoiceCloningModule) {
+                            if (voiceCloningStatus == strInActive &&
+                                voiceCloning) {
+                              Navigator.pushNamed(
+                                context,
+                                router.rt_VoiceCloneTerms,
+                              ).then((value) {
+                                setState(() {});
+                              });
+                            } else if (voiceCloningStatus != strInActive &&
+                                voiceCloning) {}
+                          }
+                        }),
+                  ),
                 if (Platform.isAndroid)
                   Theme(
                       data: theme,

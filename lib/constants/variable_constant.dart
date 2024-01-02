@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 
 const String strAPP_NAME = 'QurBook';
 const String strAppPackage =
@@ -48,8 +49,7 @@ const String strDisableTeleconsulting =
     "Provider that you selected hasn't enrolled for teleconsulting service, we will onboard your doctor shortly";
 const String unPairingHub =
     'Unmapping your QurHub router will lose connection to all your mapped devices and you\'ll not be able to connect again. Are you sure you want to do this?';
-const String unPairDevice =
-    'Are you sure you want to unpair the device?';
+const String unPairDevice = 'Are you sure you want to unpair the device?';
 //for the class add_family_user_info
 const String strFetchRoles = 'Fetching Custom Roles';
 const String strFetchProfile = 'Fetching User Profile';
@@ -188,6 +188,8 @@ const String icon_orderHistory = 'assets/navicons/orderHistory.png';
 const String icon_lock = 'assets/settings/unlock.png';
 const String lock_icon = 'assets/lock_icon.png';
 const String remove_user = 'assets/settings/remove_user.png';
+const String icon_voice_cloning =
+    'assets/settings/icon_voicecloning.png'; //path where voice clon icon is placed
 
 const String icon_records = 'assets/navicons/records.png';
 const String icon_chat = 'assets/navicons/chat.png';
@@ -284,6 +286,7 @@ const String file_terms = 'assets/help_docs/myfhb_terms_of_use.html';
 const String file_faq = 'assets/help_docs/myfhb_faq.html';
 const String file_terms_us = 'assets/help_docs/myfhb_us_terms_of_use.html';
 const String file_privacy_us = 'assets/help_docs/myfhb_us_privacy_policy.html';
+const String voice_cloning_html = 'assets/voice_clone_terms_n_condition.html';
 
 //for Family Font
 const String font_poppins = 'Poppins';
@@ -298,7 +301,8 @@ const String strUnlock = 'Unlock';
 const String strLogin = 'Login';
 const String strAuthenticationError = 'Authentication error';
 const String strPleaseGoTo = 'Please go to';
-const String strErrorAuthDescription = 'screen to set your authentication or login again to reset your security settings';
+const String strErrorAuthDescription =
+    'screen to set your authentication or login again to reset your security settings';
 const String strQurbookLockDescription =
     'For your security, you can only use Qurbook when its unlocked';
 
@@ -717,12 +721,23 @@ const String strAllowBiometric = 'Enable app lock';
 const String strEnableApplock =
     'Allow app lock with FaceID/FingerPrint or Passcode';
 const String strAuthToUseApp = 'Please complete the authentication to proceed.';
+const String strVoiceCloning =
+    'Voice Cloning'; //String declared for voice cloning
+const String strSheelaDesc =
+    'enables Sheela to speak to in your own voice'; // descrption for voice cloning
+const String strStatus = 'Status : ';
+//Create common String for voice cloning text
+const String strVoiceTerms = 'Accept And Continue';
+const String strInActive = 'InActive';
+const String strStart = 'Start';
 
 //for  googleFit activation and sync
 const String strGoogleFit = 'Google fit';
 const String strAllowGoogle = 'Allow app to recieve data from google Fit';
 const String strAddDevice = 'Tap to add device widgets to your home screen';
 const String strDefaultUI = 'Set QurHome as default UI';
+const String strVoiceCloneIntro =
+    'Activate the voice cloning \n feature  by clicking the button ,\n then read the displayed \n content  on the screen once the \n timer concludes to record your \n voice'; // Text for voice cloning introduction
 
 //for homescreen and dashboard
 const String strMyInfo = 'My Info';
