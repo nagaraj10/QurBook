@@ -284,12 +284,17 @@ class HealthReportListForUserRepository {
     } else {
       userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
+    var myProfile =
+        await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+    bool isCareGiver = myProfile?.result?.isCaregiver ?? false;
 
     final response = await _helper.getDeviceSelection(query.qr_user_profile +
         query.qr_user +
         query.qr_my_profile +
         query.qr_member_id +
-        userId);
+        userId +
+        query.qr_isCareGiver +
+        '${isCareGiver}');
     return GetDeviceSelectionModel.fromJson(response);
   }
 

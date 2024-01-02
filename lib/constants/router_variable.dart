@@ -54,4 +54,6 @@ const String rt_chooseUnit = '/choose-unit';
 const String rt_VoiceCloneTerms =
     '/voiceclone_terms'; //router for terms andcondition of voice cloning
 const String rt_VoiceCloningIntro =
-    '/voiceclone_intro';//router for intro screen
+    '/voiceclone_intro'; //router for intro screen
+const String rt_VoiceCloningStatus =
+    '/voiceclone_status';//router for status screen

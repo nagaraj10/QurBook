@@ -147,7 +147,7 @@ class AppBarForVoiceCloning {
         ]));
   }
 
-//get Text Status color based on the status value
+//get Text Status color based on the status
   getTextStyle(String voiceCloningStatus) {
     double title3 = CommonUtil().isTablet! ? tabHeader3 : mobileHeader3;
 

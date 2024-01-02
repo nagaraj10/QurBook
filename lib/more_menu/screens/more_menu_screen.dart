@@ -102,6 +102,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   bool superAdminAllowedVoiceCloningModule = false;
   String voiceCloningStatus = 'Inactive';
   bool showVoiceCloningUI = true;
+  String healthOrganization = '';
 
   String selectedMaya = PreferenceUtil.getStringValue(Constants.keyMayaAsset) ??
       variable.icon_mayaMain;
@@ -847,6 +848,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             ? true
             : false
         : false;
+
+    healthOrganization = getDeviceSelectionModel
+            .result![0].primaryProvider?.healthorganizationid ??
+        '';
   }
 
   Future<CreateDeviceSelectionModel?> createAppColorSelection(
@@ -1244,7 +1249,16 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       ),
                       onTap: () {
                         if (superAdminAllowedVoiceCloningModule &&
-                            providerAllowedVoiceCloningModule) {}
+                            providerAllowedVoiceCloningModule) {
+                          if (voiceCloningStatus == "InActive") {
+                            Navigator.pushNamed(
+                              context,
+                              router.rt_VoiceCloneTerms,
+                            ).then((value) {
+                              setState(() {});
+                            });
+                          } else {}
+                        }
                       }),
                 ),
                 if (Platform.isAndroid)

@@ -15,6 +15,7 @@ import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/devices/device_dashboard_arguments.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/more_menu/screens/terms_and_conditon.dart';
+import 'package:myfhb/more_menu/screens/voice_clone_status_screen.dart';
 import 'package:myfhb/more_menu/screens/voicecloning_introduction.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_arguments.dart';
@@ -183,11 +184,13 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_chooseUnit: (BuildContext context) => ChooseUnit(),
     router.rt_VoiceCloneTerms: (context) => TermsAndConditonWebView(
           isLocalAsset: false,
-          selectedUrl: CommonUtil.BASE_URL_FROM_RES + voice_cloning_html,
+          selectedUrl: CommonUtil.PORTAL_URL + voice_cloning_html,
           title: strVoiceCloning,
         ), //initialize router for terms and condition of voice cloning
     router.rt_VoiceCloningIntro: (context) =>
         VoiceCloningIntroducuton(), //initialize router for introduction page of voice cloning
+    router.rt_VoiceCloningStatus: (context) =>
+        VoiceCloningStatus(), //initialize router for introduction page of voice cloning
   };
 
   return fhbRouter;
