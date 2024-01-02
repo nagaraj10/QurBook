@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:get/get.dart';
-import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view/verifypatient_screen.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -54,8 +53,8 @@ import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
 import '../../src/model/user/State.dart' as stateObj;
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
-import '../../telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'dart:convert' as convert;
+import 'package:myfhb/widgets/TagsList.dart';
 
 class AddFamilyUserInfoScreen extends StatefulWidget {
   AddFamilyUserInfoArguments? arguments;
