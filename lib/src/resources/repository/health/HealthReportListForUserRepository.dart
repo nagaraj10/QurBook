@@ -1,4 +1,3 @@
-
 import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
@@ -36,7 +35,8 @@ import 'package:myfhb/src/model/TagsResult.dart';
 class HealthReportListForUserRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  Future<UserHealthResponseList> getHealthReportList({required bool condition}) async {
+  Future<UserHealthResponseList> getHealthReportList(
+      {required bool condition}) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
 
     final response = await _helper.getHealthRecordList(
@@ -76,8 +76,8 @@ class HealthReportListForUserRepository {
       } else {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
@@ -194,8 +194,8 @@ class HealthReportListForUserRepository {
       } else {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
@@ -218,8 +218,8 @@ class HealthReportListForUserRepository {
       } else {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
@@ -241,8 +241,8 @@ class HealthReportListForUserRepository {
       } else {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
@@ -264,8 +264,8 @@ class HealthReportListForUserRepository {
       } else {
         id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       }
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
@@ -330,7 +330,8 @@ class HealthReportListForUserRepository {
       List<Tags>? tags,
       bool? allowAppointmentALert,
       bool? allowVitalALerts,
-      bool? allowsymptomsAlert) async {
+      bool? allowsymptomsAlert,
+      bool? voiceCloning) async {
     var userIDMain =
         await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     var body = jsonEncode({
@@ -348,6 +349,7 @@ class HealthReportListForUserRepository {
         'weighScale': weighScale,
         "greColor": greColor,
         "priColor": priColor,
+        "voiceCloning": bpMonitor,
         'preferred_language': preferred_language,
         'qa-subscription': qa_subscription,
         'qurhome_ui': PreferenceUtil.getIfQurhomeisDefaultUI(),
@@ -366,27 +368,27 @@ class HealthReportListForUserRepository {
   }
 
   Future<UpdateDeviceModel> updateDeviceModel(
-    userMappingId,
-    bool? allowDigit,
-    bool? allowDevice,
-    bool? sheelaLiveReminders,
-    bool? googleFit,
-    bool? healthFit,
-    bool? bpMonitor,
-    bool? gluco,
-    bool? pulseOximeter,
-    bool? thermo,
-    bool? weighScale,
-    String? preferred_language,
-    String? qa_subscription,
-    int? priColor,
-    int? greColor,
-    List<Tags>? tagsList,
-    bool? allowAppointmentALert,
-    bool? allowVitalALerts,
-    bool? allowsymptomsAlert,
-    PreferredMeasurement? preferredMeasurement,
-  ) async {
+      userMappingId,
+      bool? allowDigit,
+      bool? allowDevice,
+      bool? sheelaLiveReminders,
+      bool? googleFit,
+      bool? healthFit,
+      bool? bpMonitor,
+      bool? gluco,
+      bool? pulseOximeter,
+      bool? thermo,
+      bool? weighScale,
+      String? preferred_language,
+      String? qa_subscription,
+      int? priColor,
+      int? greColor,
+      List<Tags>? tagsList,
+      bool? allowAppointmentALert,
+      bool? allowVitalALerts,
+      bool? allowsymptomsAlert,
+      PreferredMeasurement? preferredMeasurement,
+      bool? voiceCloning) async {
     var body = jsonEncode({
       'id': userMappingId,
       'profileSetting': {
@@ -404,6 +406,7 @@ class HealthReportListForUserRepository {
         "priColor": priColor,
         'preferred_language': preferred_language,
         'qa-subscription': qa_subscription,
+        'voiceCloning': voiceCloning,
         'qurhome_ui': PreferenceUtil.getIfQurhomeisDefaultUI(),
         'preferred_measurement': {
           'height': {

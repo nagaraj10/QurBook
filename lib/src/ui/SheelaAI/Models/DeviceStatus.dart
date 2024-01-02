@@ -1,33 +1,32 @@
-
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 
 import '../../../model/user/Tags.dart';
 
 class DeviceStatus {
-  DeviceStatus({
-    this.userMappingId,
-    this.isdigitRecognition,
-    this.isdeviceRecognition,
-    this.isSheelaLiveReminders,
-    this.isGFActive,
-    this.isHkActive,
-    this.firstTym,
-    this.isBpActive,
-    this.isGlActive,
-    this.isOxyActive,
-    this.isThActive,
-    this.isWsActive,
-    this.isHealthFirstTime,
-    this.allowAppointmentNotification,
-    this.allowSymptomsNotification,
-    this.allowVitalNotification,
-    this.greColor,
-    this.preColor,
-    this.preferred_language,
-    this.qa_subscription,
-    this.tagsList,
-    this.preferredMeasurement,
-  });
+  DeviceStatus(
+      {this.userMappingId,
+      this.isdigitRecognition,
+      this.isdeviceRecognition,
+      this.isSheelaLiveReminders,
+      this.isGFActive,
+      this.isHkActive,
+      this.firstTym,
+      this.isBpActive,
+      this.isGlActive,
+      this.isOxyActive,
+      this.isThActive,
+      this.isWsActive,
+      this.isHealthFirstTime,
+      this.allowAppointmentNotification,
+      this.allowSymptomsNotification,
+      this.allowVitalNotification,
+      this.greColor,
+      this.preColor,
+      this.preferred_language,
+      this.qa_subscription,
+      this.tagsList,
+      this.preferredMeasurement,
+      this.voiceCloning});
 
   String? userMappingId = '';
   bool? isdigitRecognition = true;
@@ -51,4 +50,5 @@ class DeviceStatus {
   int? greColor = 0xff753aec;
   List<Tags>? tagsList = [];
   PreferredMeasurement? preferredMeasurement;
+  bool? voiceCloning = false;
 }

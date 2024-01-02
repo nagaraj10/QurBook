@@ -96,6 +96,12 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   String? preferred_language;
   String? qa_subscription;
 
+  bool voiceCloning = false;
+  bool providerAllowedVoiceCloningModule = false;
+  bool superAdminAllowedVoiceCloningModule = false;
+  String voiceCloningStatus = 'Inactive';
+  bool showVoiceCloningUI = true;
+
   String selectedMaya = PreferenceUtil.getStringValue(Constants.keyMayaAsset) ??
       variable.icon_mayaMain;
 
@@ -806,6 +812,35 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             ? getDeviceSelectionModel
                 .result![0].profileSetting!.preferredMeasurement
             : null;
+
+    voiceCloning =
+        getDeviceSelectionModel.result![0].profileSetting!.voiceCloning ??
+            false;
+
+    providerAllowedVoiceCloningModule = getDeviceSelectionModel
+            .result![0]
+            .primaryProvider
+            ?.additionalInfo
+            ?.providerAllowedVoiceCloningModule ??
+        false;
+    superAdminAllowedVoiceCloningModule = getDeviceSelectionModel
+            .result![0]
+            .primaryProvider
+            ?.additionalInfo
+            ?.superAdminAllowedVoiceCloningModule ??
+        false;
+    voiceCloningStatus = superAdminAllowedVoiceCloningModule
+        ? providerAllowedVoiceCloningModule
+            ? getDeviceSelectionModel
+                    .result![0].profileSetting!.voiceCloningStatus ??
+                "InActive"
+            : "InActive"
+        : "InActive";
+    showVoiceCloningUI = superAdminAllowedVoiceCloningModule
+        ? providerAllowedVoiceCloningModule
+            ? true
+            : false
+        : false;
   }
 
   Future<CreateDeviceSelectionModel?> createAppColorSelection(
@@ -831,7 +866,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             tagsList,
             allowAppointmentNotification,
             allowVitalNotification,
-            allowSymptomsNotification)
+            allowSymptomsNotification,
+            voiceCloning)
         .then((value) {
       createDeviceSelectionModel = value;
       if (createDeviceSelectionModel!.isSuccess!) {
@@ -868,7 +904,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             allowAppointmentNotification,
             allowVitalNotification,
             allowSymptomsNotification,
-            preferredMeasurement)
+            preferredMeasurement,
+            voiceCloning)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel!.isSuccess!) {
@@ -1119,6 +1156,78 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       ),
                     )),
                 Divider(),
+                //   if (isCareGiver) //show the voice cloning UI only when the user is caregiver
+
+                Visibility(
+                  visible: superAdminAllowedVoiceCloningModule,
+                  child: ListTile(
+                      leading: ImageIcon(
+                        AssetImage(variable.icon_device_recon),
+                        size: iconSize,
+                        color: providerAllowedVoiceCloningModule
+                            ? Colors.black
+                            : Colors.grey,
+                      ),
+                      title: Text(variable.strVoiceCloning,
+                          style: TextStyle(
+                              fontSize: subtitle,
+                              color: providerAllowedVoiceCloningModule
+                                  ? Colors.black
+                                  : Colors.grey)),
+                      subtitle: Column(
+                        children: [
+                          Text(
+                            variable.strSheelaDesc,
+                            style: TextStyle(
+                                fontSize: title3,
+                                color: providerAllowedVoiceCloningModule
+                                    ? Colors.black
+                                    : Colors.grey),
+                          ),
+                          Row(children: [
+                            Text(
+                              variable.strStatus,
+                              style: TextStyle(
+                                  fontSize: title3,
+                                  color: providerAllowedVoiceCloningModule
+                                      ? Colors.black
+                                      : Colors.grey),
+                            ),
+                            Text(
+                              voiceCloningStatus,
+                              style: TextStyle(
+                                  fontSize: title3,
+                                  color: providerAllowedVoiceCloningModule
+                                      ? Colors.black
+                                      : Colors.grey),
+                            ),
+                          ]),
+                        ],
+                      ),
+                      trailing: Transform.scale(
+                        scale: switchTrail,
+                        child: Switch(
+                          value: voiceCloning!,
+                          activeColor:
+                              Color(new CommonUtil().getMyPrimaryColor()),
+                          onChanged: (bool newValue) {
+                            setState(() {
+                              isSkillIntegration = true;
+                              isCareGiverCommunication = false;
+                              isVitalPreferences = false;
+                              isDisplayPreference = false;
+                              isSheelaNotificationPref = false;
+                              isTouched = true;
+                              voiceCloning = newValue;
+                              createAppColorSelection(preColor, greColor);
+                              /*PreferenceUtil.saveString(
+                                        Constants.allowDeviceRecognition,
+                                        _isdeviceRecognition.toString());*/
+                            });
+                          },
+                        ),
+                      )),
+                ),
                 if (Platform.isAndroid)
                   Theme(
                       data: theme,

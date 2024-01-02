@@ -48,8 +48,7 @@ const String strDisableTeleconsulting =
     "Provider that you selected hasn't enrolled for teleconsulting service, we will onboard your doctor shortly";
 const String unPairingHub =
     'Unmapping your QurHub router will lose connection to all your mapped devices and you\'ll not be able to connect again. Are you sure you want to do this?';
-const String unPairDevice =
-    'Are you sure you want to unpair the device?';
+const String unPairDevice = 'Are you sure you want to unpair the device?';
 //for the class add_family_user_info
 const String strFetchRoles = 'Fetching Custom Roles';
 const String strFetchProfile = 'Fetching User Profile';
@@ -298,7 +297,8 @@ const String strUnlock = 'Unlock';
 const String strLogin = 'Login';
 const String strAuthenticationError = 'Authentication error';
 const String strPleaseGoTo = 'Please go to';
-const String strErrorAuthDescription = 'screen to set your authentication or login again to reset your security settings';
+const String strErrorAuthDescription =
+    'screen to set your authentication or login again to reset your security settings';
 const String strQurbookLockDescription =
     'For your security, you can only use Qurbook when its unlocked';
 
@@ -717,7 +717,11 @@ const String strAllowBiometric = 'Enable app lock';
 const String strEnableApplock =
     'Allow app lock with FaceID/FingerPrint or Passcode';
 const String strAuthToUseApp = 'Please complete the authentication to proceed.';
-
+const String strVoiceCloning =
+    'Voice Cloning'; //String declared for voice cloning
+const String strSheelaDesc =
+    'Enables sheela to speak to in your own voice'; // descrption for voice cloning
+const String strStatus = 'Status : ';
 //for  googleFit activation and sync
 const String strGoogleFit = 'Google fit';
 const String strAllowGoogle = 'Allow app to recieve data from google Fit';
