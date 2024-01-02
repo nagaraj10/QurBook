@@ -13,10 +13,8 @@ import '../../src/utils/screenutils/size_extensions.dart';
 // import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:gallery_saver/gallery_saver.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:http/http.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import '../../bookmark_record/bloc/bookmarkRecordBloc.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
@@ -30,36 +28,27 @@ import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_parameters.dart' as parameters;
 import '../../constants/variable_constant.dart' as variable;
 import '../../my_family/bloc/FamilyListBloc.dart';
-import '../../my_family/models/FamilyData.dart';
 import '../../my_family/models/FamilyMembersRes.dart';
 import '../../my_family/screens/FamilyListView.dart';
 import '../bloc/deleteRecordBloc.dart';
 import '../model/ImageDocumentResponse.dart';
-import '../model/deleteRecordResponse.dart';
 import 'record_info_card.dart';
 import '../services/downloadmultipleimages.dart';
 import '../../src/blocs/health/HealthReportListForUserBlock.dart';
-import '../../src/model/Health/MediaMasterIds.dart';
-import '../../src/model/Health/MediaMetaInfo.dart';
-import '../../src/model/Health/MetaInfo.dart';
 import '../../src/model/Health/PostImageResponse.dart';
 import '../../src/model/Health/asgard/health_record_collection.dart';
 import '../../src/model/Health/asgard/health_record_list.dart';
 import '../../src/resources/network/ApiResponse.dart';
 import '../../src/ui/audio/AudioScreenArguments.dart';
-import '../../src/ui/audio/audio_record_screen.dart';
 import '../../src/ui/imageSlider.dart';
 import '../../src/utils/FHBUtils.dart';
 import '../../widgets/GradientAppBar.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shimmer/shimmer.dart';
 
 export 'package:myfhb/my_family/models/relationship_response_list.dart';
-import 'package:myfhb/src/resources/network/api_services.dart';
 import '../../common/errors_widget.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 
@@ -1682,13 +1671,21 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     if (pdfFileName.contains('.pdf')) {
       pdfFileName = pdfFileName.replaceAll('.pdf', '');
       try {
+        var value = '';
         final spilit = pdfFileName.split('_');
-        var value = toBeginningOfSentenceCase(spilit[1])! + '_' + spilit[0];
+        // Check if there are at least two parts after splitting
+        if (spilit.length > 1) {
+          // If the condition is true, construct the value using the second part capitalized and swapped with the first part
+          value = toBeginningOfSentenceCase(spilit[1])! + '_' + spilit[0];
+        } else {
+          // If there is only one part or none after splitting, construct the value by removing '.pdf' from the original pdfFileName
+          value = pdfFileName;
+        }
         return value;
       } catch (e,stackTrace) {
               CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
-        return pdfFileName = pdfFileName.replaceAll('.pdf', '');
+        return pdfFileName;
       }
     }
   }

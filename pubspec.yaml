@@ -87,7 +87,7 @@ dependencies:
   flutter_downloader: ^1.5.2
 #  contacts_service: ^0.6.1
   group_list_view: ^1.0.5
-  advance_pdf_viewer: ^2.0.0
+  advance_pdf_viewer2: ^2.0.5
   open_filex: ^3.4.0
   local_auth:
     path: ./local_auth

@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
-import '../main.dart';
 import 'errors_widget.dart';
 import '../my_providers/models/Doctors.dart';
 import '../src/model/user/MyProfileModel.dart';
@@ -18,14 +18,12 @@ import 'PreferenceUtil.dart';
 import '../database/model/UnitsMesurement.dart';
 import '../src/model/user/ProfilePicThumbnail.dart';
 import '../src/ui/audio/AudioScreenArguments.dart';
-import '../src/ui/audio/audio_record_screen.dart';
 import '../src/utils/colors_utils.dart';
 import '../widgets/RaisedGradientButton.dart';
 import 'CommonUtil.dart';
 import 'package:showcaseview/showcaseview.dart';
 import '../colors/fhb_colors.dart' as fhbColors;
 import '../constants/variable_constant.dart' as variable;
-import '../constants/fhb_parameters.dart' as parameters;
 import '../constants/fhb_constants.dart' as Constants;
 
 import 'CommonConstants.dart';
@@ -201,8 +199,12 @@ class FHBBasicWidget {
   }
 
   void showInSnackBar(String value, GlobalKey<ScaffoldMessengerState> scaffoldstate) {
-    var snackBar = SnackBar(content: Text(value));
-    scaffoldstate.currentState!.showSnackBar(snackBar);
+    try {
+      var snackBar = SnackBar(content: Text(value));
+      ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 
   Widget getTextFieldForDate(
