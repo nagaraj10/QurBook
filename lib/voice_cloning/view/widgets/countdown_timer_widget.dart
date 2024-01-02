@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/app_strings.dart';
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/voice_cloning_controller.dart';
+import 'package:myfhb/voice_cloning/controller/voice_cloning_controller.dart';
+import 'package:provider/provider.dart';
 
 class VoiceCloningCountDownWidget extends StatefulWidget {
   @override
@@ -14,23 +16,24 @@ class VoiceCloningCountDownWidget extends StatefulWidget {
 }
 
 class _VoiceCloningCountDownWidgetState
-    extends State<VoiceCloningCountDownWidget> with TickerProviderStateMixin {
-  final VoiceCloningController _voiceCloningController =
-      CommonUtil().onInitVoiceCloningController();
-  late Timer _timer;
+    extends State<VoiceCloningCountDownWidget> {
+  late VoiceCloningController mControllerWatch;
 
   @override
   void initState() {
-    startTimer();
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      Provider.of<VoiceCloningController>(context, listen: false).startCountDownTimer();
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
+      mControllerWatch =Provider.of<VoiceCloningController>(context);
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      padding: EdgeInsets.all(6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -54,26 +57,23 @@ class _VoiceCloningCountDownWidgetState
           Stack(
             alignment: Alignment.center,
             children: [
-              Obx((){
-                return Container(
-                  height: 100.h,
-                  width: 100.h,
-                  child:CircularProgressIndicator(
-                    strokeWidth: 10,
-                    value: _voiceCloningController.progressValue.value,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        Color(CommonUtil().getMyPrimaryColor())),
-                    backgroundColor: Colors.white,
-                  ),
-                );
-              }),
-              Obx(()=>Text(
-                '${_voiceCloningController.countdown}',
+              Container(
+                height: 100.h,
+                width: 100.h,
+                child:CircularProgressIndicator(
+                  strokeWidth: 10,
+                  value: mControllerWatch.progressValue,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      Color(CommonUtil().getMyPrimaryColor())),
+                  backgroundColor: Colors.white,
+                ),
+              ),
+              Text(
+                '${mControllerWatch.countdown}',
                 style: TextStyle(
                     fontSize: 50.h,
                     fontWeight: FontWeight.w500,
                     color: Color(CommonUtil().getMyPrimaryColor())),
-              )
               )
             ],
           )
@@ -81,23 +81,9 @@ class _VoiceCloningCountDownWidgetState
       ),
     );
   }
-
-  void startTimer() {
-    _voiceCloningController.countdown.value=10;
-    _voiceCloningController.progressValue.value=0;
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (_voiceCloningController.countdown.value > 0) {
-        _voiceCloningController.countdown--;
-        _voiceCloningController.progressValue.value = (10 - _voiceCloningController.countdown.value) / 10.0;
-      } else {
-        timer.cancel();
-        Navigator.pop(context,true);
-      }
-    });
-  }
   @override
   void dispose() {
-    _timer.cancel();
+    mControllerWatch.countDownTimer?.cancel();
     super.dispose();
   }
 }

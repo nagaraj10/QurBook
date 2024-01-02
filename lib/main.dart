@@ -16,6 +16,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/app_theme.dart';
+import 'package:myfhb/voice_cloning/controller/voice_cloning_controller.dart';
 import 'package:provider/provider.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
@@ -1286,6 +1287,7 @@ class _MyFHBState extends State<MyFHB> {
         ChangeNotifierProvider<ChatSocketViewModel>(
           create: (_) => ChatSocketViewModel(),
         ),
+        ChangeNotifierProvider<VoiceCloningController>(create:(_)=>VoiceCloningController())
       ],
       child: LayoutBuilder(builder: (context, constraints) {
         return OrientationBuilder(builder: (context, orientation) {

@@ -6403,13 +6403,6 @@ class CommonUtil {
     return qurhomeRegimenController;
   }
 
-  VoiceCloningController onInitVoiceCloningController() {
-    if (!Get.isRegistered<VoiceCloningController>()) {
-      Get.put(VoiceCloningController());
-    }
-    return Get.find<VoiceCloningController>();
-  }
-
   SheelaBLEController onInitSheelaBLEController() {
     SheelaBLEController sheelaBLEController;
     if (!Get.isRegistered<SheelaBLEController>()) {
