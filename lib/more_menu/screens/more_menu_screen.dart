@@ -846,9 +846,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         ? providerAllowedVoiceCloningModule
             ? getDeviceSelectionModel
                     .result![0].profileSetting!.voiceCloningStatus ??
-                "InActive"
-            : "InActive"
-        : "InActive";
+                strInActive
+            : strInActive
+        : strInActive;
 
     //Conditon when to show the voice clonng UI
     showVoiceCloningUI = superAdminAllowedVoiceCloningModule
@@ -1201,6 +1201,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                     ? Colors.black
                                     : Colors.grey)),
                         subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               variable.strSheelaDesc,
@@ -1258,7 +1259,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                         onTap: () {
                           if (superAdminAllowedVoiceCloningModule &&
                               providerAllowedVoiceCloningModule) {
-                            if (voiceCloningStatus == "InActive" &&
+                            if (voiceCloningStatus == strInActive &&
                                 voiceCloning) {
                               Navigator.pushNamed(
                                 context,
@@ -1266,7 +1267,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                               ).then((value) {
                                 setState(() {});
                               });
-                            } else if (voiceCloningStatus != "InActive" &&
+                            } else if (voiceCloningStatus != strInActive &&
                                 voiceCloning) {}
                           }
                         }),

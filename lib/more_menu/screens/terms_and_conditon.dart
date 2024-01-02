@@ -5,6 +5,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -27,6 +28,7 @@ class TermsAndConditonWebView extends StatefulWidget {
 class _MyFhbWebViewState extends State<TermsAndConditonWebView> {
   late WebViewController _controller;
   bool isLoading = true;
+  double iconSize = CommonUtil().isTablet! ? tabFontTitle : mobileFontTitle;
 
   @override
   void initState() {
@@ -96,7 +98,10 @@ class _MyFhbWebViewState extends State<TermsAndConditonWebView> {
                   },
                   child: Padding(
                       padding: EdgeInsets.all(20.sp),
-                      child: Text('Accept And Continue')),
+                      child: Text(
+                        strVoiceTerms,
+                        style: TextStyle(fontSize: iconSize),
+                      )),
                 ),
               )),
         ],
@@ -127,6 +132,8 @@ class _MyFhbWebViewState extends State<TermsAndConditonWebView> {
 
 class AppBarForVoiceCloning {
   double iconSize = CommonUtil().isTablet! ? imageCloseTab : imageCloseMobile;
+  double fontTitle = CommonUtil().isTablet! ? tabFontTitle : mobileFontTitle;
+
   Widget getVoiceCloningAppBar() {
     return Transform(
         // you can forcefully translate values left side using Transform
@@ -142,7 +149,7 @@ class AppBarForVoiceCloning {
           ),
           Text(
             variable.strVoiceCloning,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontTitle),
           ),
         ]));
   }

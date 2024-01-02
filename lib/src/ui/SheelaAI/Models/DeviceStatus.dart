@@ -50,5 +50,5 @@ class DeviceStatus {
   int? greColor = 0xff753aec;
   List<Tags>? tagsList = [];
   PreferredMeasurement? preferredMeasurement;
-  bool? voiceCloning = false;
+  bool? voiceCloning = false; // added a parameter for voice cloning
 }

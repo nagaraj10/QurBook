@@ -76,7 +76,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                     padding: EdgeInsets.only(
                         left: 30.sp, right: 30.sp, top: 10, bottom: 10),
                     child: Text(
-                      'Start',
+                      strStart,
                       style: TextStyle(color: Colors.white),
                     )),
               ),

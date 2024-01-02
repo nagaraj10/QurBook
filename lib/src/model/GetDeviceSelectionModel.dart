@@ -178,8 +178,10 @@ class ProfileSetting {
                 ? new CaregiverCommunicationSetting.fromJson(
                     json['caregiverCommunicationSetting'])
                 : null;
-        voiceCloningStatus = json['voiceCloningStatus'];
-        voiceCloning = json['voiceCloning'];
+        voiceCloningStatus =
+            json['voiceCloningStatus']; //get the status of voice cloning
+        voiceCloning = json[
+            'voiceCloning']; // get the value if voice cloning is enabled or not
       }
 
       if (json.containsKey('preferred_measurement')) {
@@ -335,8 +337,10 @@ class AdditionalInfoModuleAccess {
       // Save the 'recordVitals' value to shared preferences
       providerAllowedVoiceCloningModule =
           json['providerAllowedVoiceCloningModule'];
+      //get the value if the superadmin has enabled permisson to health organization
       superAdminAllowedVoiceCloningModule =
           json['superAdminAllowedVoiceCloningModule'];
+      // get the value if the provider has enabled to caregiver
 
       saveIsVitalsManualRecordingRestricted(recordVitals);
     } catch (e, stackTrace) {

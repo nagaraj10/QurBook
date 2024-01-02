@@ -726,6 +726,11 @@ const String strVoiceCloning =
 const String strSheelaDesc =
     'enables Sheela to speak to in your own voice'; // descrption for voice cloning
 const String strStatus = 'Status : ';
+//Create common String for voice cloning text
+const String strVoiceTerms = 'Accept And Continue';
+const String strInActive = 'InActive';
+const String strStart = 'Start';
+
 //for  googleFit activation and sync
 const String strGoogleFit = 'Google fit';
 const String strAllowGoogle = 'Allow app to recieve data from google Fit';

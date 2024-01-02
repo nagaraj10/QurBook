@@ -55,6 +55,9 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
   String? preferred_language;
   String? qa_subscription;
 
+/**
+ * Declare variable neccessary to voice cloning 
+ */
   bool voiceCloning = false;
   bool providerAllowedVoiceCloningModule = true;
   bool superAdminAllowedVoiceCloningModule = true;

@@ -14,7 +14,8 @@ class VoiceCloningIntroducuton extends StatefulWidget {
 
 class _MyFhbWebViewState extends State<VoiceCloningIntroducuton> {
   bool isLoading = true;
-
+  double iconSize = CommonUtil().isTablet! ? tabFontTitle : mobileFontTitle;
+  //set value of text based on type of device
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -58,8 +59,8 @@ class _MyFhbWebViewState extends State<VoiceCloningIntroducuton> {
                   child: Text(
                     strVoiceCloneIntro,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.grey[600], fontSize: mobileFontTitle),
+                    style:
+                        TextStyle(color: Colors.grey[600], fontSize: iconSize),
                   ),
                 ),
               ),
@@ -75,8 +76,8 @@ class _MyFhbWebViewState extends State<VoiceCloningIntroducuton> {
                     padding: EdgeInsets.only(
                         left: 30.sp, right: 30.sp, top: 10, bottom: 10),
                     child: Text(
-                      'Start',
-                      style: TextStyle(color: Colors.white),
+                      strStart,
+                      style: TextStyle(color: Colors.white, fontSize: iconSize),
                     )),
               ),
             ),
