@@ -288,6 +288,7 @@ class HealthReportListForUserRepository {
         await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
     bool isCareGiver = myProfile?.result?.isCaregiver ?? false;
 
+// added extra query to check if the user is caregiver or not
     final response = await _helper.getDeviceSelection(query.qr_user_profile +
         query.qr_user +
         query.qr_my_profile +

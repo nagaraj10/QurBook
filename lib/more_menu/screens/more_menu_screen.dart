@@ -820,22 +820,28 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 .result![0].profileSetting!.preferredMeasurement
             : null;
 
+    //status of the voice cloning toggle button
     voiceCloning =
         getDeviceSelectionModel.result![0].profileSetting!.voiceCloning ??
             false;
 
+    //set the bool value when provider has allowed the permssion
     providerAllowedVoiceCloningModule = getDeviceSelectionModel
             .result![0]
             .primaryProvider
             ?.additionalInfo
             ?.providerAllowedVoiceCloningModule ??
         false;
+
+    //set the bool value when super admin has allowed the permssion
     superAdminAllowedVoiceCloningModule = getDeviceSelectionModel
             .result![0]
             .primaryProvider
             ?.additionalInfo
             ?.superAdminAllowedVoiceCloningModule ??
         false;
+
+    //value of the voice cloning status
     voiceCloningStatus = superAdminAllowedVoiceCloningModule
         ? providerAllowedVoiceCloningModule
             ? getDeviceSelectionModel
@@ -843,6 +849,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 "InActive"
             : "InActive"
         : "InActive";
+
+    //Conditon when to show the voice clonng UI
     showVoiceCloningUI = superAdminAllowedVoiceCloningModule
         ? providerAllowedVoiceCloningModule
             ? true
@@ -1175,92 +1183,94 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       ),
                     )),
                 Divider(),
-                //   if (isCareGiver) //show the voice cloning UI only when the user is caregiver
-
-                Visibility(
-                  visible: superAdminAllowedVoiceCloningModule,
-                  child: ListTile(
-                      leading: ImageIcon(
-                        AssetImage(variable.icon_voice_cloning),
-                        size: iconSize,
-                        color: providerAllowedVoiceCloningModule
-                            ? Colors.black
-                            : Colors.grey,
-                      ),
-                      title: Text(variable.strVoiceCloning,
-                          style: TextStyle(
-                              fontSize: subtitle,
-                              color: providerAllowedVoiceCloningModule
-                                  ? Colors.black
-                                  : Colors.grey)),
-                      subtitle: Column(
-                        children: [
-                          Text(
-                            variable.strSheelaDesc,
-                            style:
-                                TextStyle(fontSize: title4, color: Colors.grey),
-                          ),
-                          Row(children: [
+                if (isCareGiver) //show the voice cloning UI only when the user is caregiver
+                  Visibility(
+                    visible: superAdminAllowedVoiceCloningModule,
+                    child: ListTile(
+                        leading: ImageIcon(
+                          AssetImage(variable.icon_voice_cloning),
+                          size: iconSize,
+                          color: providerAllowedVoiceCloningModule
+                              ? Colors.black
+                              : Colors.grey,
+                        ),
+                        title: Text(variable.strVoiceCloning,
+                            style: TextStyle(
+                                fontSize: subtitle,
+                                color: providerAllowedVoiceCloningModule
+                                    ? Colors.black
+                                    : Colors.grey)),
+                        subtitle: Column(
+                          children: [
                             Text(
-                              variable.strStatus,
+                              variable.strSheelaDesc,
                               style: TextStyle(
-                                  fontWeight: providerAllowedVoiceCloningModule
-                                      ? FontWeight.bold
-                                      : null,
-                                  fontSize: title3,
-                                  color: Colors.grey[600]),
+                                  fontSize: title4, color: Colors.grey),
                             ),
-                            Text(voiceCloningStatus,
-                                style: AppBarForVoiceCloning()
-                                    .getTextStyle(voiceCloningStatus)),
-                          ]),
-                        ],
-                      ),
-                      trailing: Transform.scale(
-                        scale: switchTrail,
-                        child: Switch(
-                          value: voiceCloning!,
-                          activeColor: (superAdminAllowedVoiceCloningModule &&
-                                  providerAllowedVoiceCloningModule)
-                              ? Color(new CommonUtil().getMyPrimaryColor())
-                              : (Colors.grey),
-                          onChanged: (bool newValue) {
-                            if (superAdminAllowedVoiceCloningModule &&
-                                providerAllowedVoiceCloningModule) {
-                              setState(() {
-                                isSkillIntegration = true;
-                                isCareGiverCommunication = false;
-                                isVitalPreferences = false;
-                                isDisplayPreference = false;
-                                isSheelaNotificationPref = false;
-                                isTouched = true;
-                                isVoiceCloningChanged = newValue;
+                            Row(children: [
+                              Text(
+                                variable.strStatus,
+                                style: TextStyle(
+                                    fontWeight:
+                                        providerAllowedVoiceCloningModule
+                                            ? FontWeight.bold
+                                            : null,
+                                    fontSize: title3,
+                                    color: Colors.grey[600]),
+                              ),
+                              Text(voiceCloningStatus,
+                                  style: AppBarForVoiceCloning()
+                                      .getTextStyle(voiceCloningStatus)),
+                            ]),
+                          ],
+                        ),
+                        trailing: Transform.scale(
+                          scale: switchTrail,
+                          child: Switch(
+                            value: voiceCloning!,
+                            activeColor: (superAdminAllowedVoiceCloningModule &&
+                                    providerAllowedVoiceCloningModule)
+                                ? Color(new CommonUtil().getMyPrimaryColor())
+                                : (Colors.grey),
+                            onChanged: (bool newValue) {
+                              if (superAdminAllowedVoiceCloningModule &&
+                                  providerAllowedVoiceCloningModule) {
+                                setState(() {
+                                  isSkillIntegration = true;
+                                  isCareGiverCommunication = false;
+                                  isVitalPreferences = false;
+                                  isDisplayPreference = false;
+                                  isSheelaNotificationPref = false;
+                                  isTouched = true;
+                                  isVoiceCloningChanged = newValue;
 
-                                voiceCloning = newValue;
-                                createAppColorSelection(preColor, greColor);
+                                  voiceCloning = newValue;
+                                  createAppColorSelection(preColor, greColor);
 
-                                /*PreferenceUtil.saveString(
+                                  /*PreferenceUtil.saveString(
                                         Constants.allowDeviceRecognition,
                                         _isdeviceRecognition.toString());*/
-                              });
-                            }
-                          },
+                                });
+                              }
+                            },
+                          ),
                         ),
-                      ),
-                      onTap: () {
-                        if (superAdminAllowedVoiceCloningModule &&
-                            providerAllowedVoiceCloningModule) {
-                          if (voiceCloningStatus == "InActive") {
-                            Navigator.pushNamed(
-                              context,
-                              router.rt_VoiceCloneTerms,
-                            ).then((value) {
-                              setState(() {});
-                            });
-                          } else {}
-                        }
-                      }),
-                ),
+                        onTap: () {
+                          if (superAdminAllowedVoiceCloningModule &&
+                              providerAllowedVoiceCloningModule) {
+                            if (voiceCloningStatus == "InActive" &&
+                                voiceCloning) {
+                              Navigator.pushNamed(
+                                context,
+                                router.rt_VoiceCloneTerms,
+                              ).then((value) {
+                                setState(() {});
+                              });
+                            } else if (voiceCloningStatus != "InActive" &&
+                                voiceCloning) {}
+                          }
+                        }),
+                  ),
                 if (Platform.isAndroid)
                   Theme(
                       data: theme,
