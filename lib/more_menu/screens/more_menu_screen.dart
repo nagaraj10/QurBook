@@ -1119,166 +1119,99 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       ),
                     )),
                 Divider(),
-                Theme(
-                    data: theme,
-                    child: ExpansionTile(
-                      iconColor: Colors.black,
-                      initiallyExpanded: isIntegration,
-                      onExpansionChanged: (value) {
-                        setState(() {
-                          isIntegration = value;
-                        });
-                      },
-                      title: Text(variable.strIntegration,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                              fontSize: title)),
-                      trailing: Icon(
-                        Icons.arrow_forward_ios,
-                        size: arrowIcon,
-                      ),
-                      children: [
-                        if (isIntegration)
-                          FutureBuilder(
-                              future: _handleGoogleFit(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return Column(
-                                    children: [
-                                      ListTile(
-                                        leading: ImageIcon(
-                                          AssetImage(
-                                              variable.icon_digit_googleFit),
-                                          size: iconSize,
-                                          color: Colors.black,
-                                        ),
-                                        title: Text(variable.strGoogleFit,
-                                            style:
-                                                TextStyle(fontSize: subtitle)),
-                                        subtitle: Text(
-                                          variable.strAllowGoogle,
-                                          style: TextStyle(fontSize: title3),
-                                        ),
-                                        trailing: Wrap(
-                                          children: <Widget>[
-                                            Transform.scale(
-                                              scale: switchTrail,
-                                              child: IconButton(
-                                                icon: Icon(Icons.sync),
-                                                onPressed: () {
-                                                  _deviceDataHelper
-                                                      .syncGoogleFit();
-                                                },
-                                              ),
-                                            ),
-                                            Transform.scale(
-                                              scale: switchTrail,
-                                              child: Switch(
-                                                value: _isGFActive!,
-                                                activeColor: Color(
-                                                    new CommonUtil()
-                                                        .getMyPrimaryColor()),
-                                                onChanged: (bool newValue) {
-                                                  setState(() {
-                                                    //isTouched = true;
-                                                    _isGFActive = newValue;
-                                                    isIntegration = true;
-                                                  });
-                                                },
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      !loading
-                                          ? ListView.builder(
-                                              shrinkWrap: true,
-                                              itemCount: devices.length,
-                                              itemBuilder: (context, index) {
-                                                return devices[index];
-                                              })
-                                          : CircularProgressIndicator(),
-                                    ],
-                                  );
-                                } else {
-                                  return Container();
-                                }
-                              }),
-                        Container(
-                          height: 1,
-                          color: Colors.grey[200],
+                if (Platform.isAndroid)
+                  Theme(
+                      data: theme,
+                      child: ExpansionTile(
+                        iconColor: Colors.black,
+                        initiallyExpanded: isIntegration,
+                        onExpansionChanged: (value) {
+                          setState(() {
+                            isIntegration = value;
+                          });
+                        },
+                        title: Text(variable.strIntegration,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                                fontSize: title)),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: arrowIcon,
                         ),
-                        (Platform.isIOS)
-                            ? ListTile(
-                                leading: Icon(
-                                  Icons.favorite,
-                                  color: Colors.pink,
-                                ),
-                                title: Text(variable.strHealthKit,
-                                    style: TextStyle(fontSize: subtitle)),
-                                subtitle: Text(
-                                  variable.strAllowHealth,
-                                  style: TextStyle(fontSize: title3),
-                                ),
-                                trailing: Wrap(
-                                  children: <Widget>[
-                                    Transform.scale(
-                                      scale: switchTrail,
-                                      child: IconButton(
-                                        icon: Icon(Icons.sync),
-                                        onPressed: () {
-                                          _deviceDataHelper.syncHealthKit();
-                                        },
-                                      ),
-                                    ),
-                                    Transform.scale(
-                                      scale: switchTrail,
-                                      child: Switch(
-                                        value: _isHKActive!,
-                                        activeColor: Color(new CommonUtil()
-                                            .getMyPrimaryColor()),
-                                        onChanged: (bool newValue) {
-                                          isTouched = true;
-                                          if (_isHealthFirstTime) {
-                                            _isHealthFirstTime = false;
-                                            PreferenceUtil.saveString(
-                                                Constants.isHealthFirstTime,
-                                                _isHealthFirstTime.toString());
-
-                                            newValue == true
-                                                ? _deviceDataHelper
-                                                    .activateHealthKit()
-                                                : _deviceDataHelper
-                                                    .deactivateHealthKit();
-                                          } else {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      HealthApp()),
-                                            );
-                                          }
-                                          setState(() {
-                                            _isHKActive = newValue;
-                                            isIntegration = true;
-
-                                            /*PreferenceUtil.saveString(
-                                                Constants.activateHK,
-                                                _isHKActive.toString());*/
-                                          });
-                                        },
-                                      ),
-                                    )
-                                  ],
-                                ))
-                            : SizedBox.shrink(),
-                        Container(
-                          height: 1,
-                          color: Colors.grey[200],
-                        ),
-                      ],
-                    )),
+                        children: [
+                          if (isIntegration && Platform.isAndroid)
+                            FutureBuilder(
+                                future: _handleGoogleFit(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Column(
+                                      children: [
+                                        ListTile(
+                                          leading: ImageIcon(
+                                            AssetImage(
+                                                variable.icon_digit_googleFit),
+                                            size: iconSize,
+                                            color: Colors.black,
+                                          ),
+                                          title: Text(variable.strGoogleFit,
+                                              style: TextStyle(
+                                                  fontSize: subtitle)),
+                                          subtitle: Text(
+                                            variable.strAllowGoogle,
+                                            style: TextStyle(fontSize: title3),
+                                          ),
+                                          trailing: Wrap(
+                                            children: <Widget>[
+                                              Transform.scale(
+                                                scale: switchTrail,
+                                                child: IconButton(
+                                                  icon: Icon(Icons.sync),
+                                                  onPressed: () {
+                                                    _deviceDataHelper
+                                                        .syncGoogleFit();
+                                                  },
+                                                ),
+                                              ),
+                                              Transform.scale(
+                                                scale: switchTrail,
+                                                child: Switch(
+                                                  value: _isGFActive!,
+                                                  activeColor: Color(
+                                                      new CommonUtil()
+                                                          .getMyPrimaryColor()),
+                                                  onChanged: (bool newValue) {
+                                                    setState(() {
+                                                      //isTouched = true;
+                                                      _isGFActive = newValue;
+                                                      isIntegration = true;
+                                                    });
+                                                  },
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        !loading
+                                            ? ListView.builder(
+                                                shrinkWrap: true,
+                                                itemCount: devices.length,
+                                                itemBuilder: (context, index) {
+                                                  return devices[index];
+                                                })
+                                            : CircularProgressIndicator(),
+                                      ],
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
+                                }),
+                          Container(
+                            height: 1,
+                            color: Colors.grey[200],
+                          ),
+                        ],
+                      )),
               ],
             )),
         Divider(),

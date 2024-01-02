@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/chat_socket/model/SheelaBadgeModel.dart';
 import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -109,6 +110,7 @@ class SheelaAIController extends GetxController {
   List<String> sheelaTTSWordList = ["sheila", "sila", "shila", "shiela"];
 
   bool isAllowSheelaLiveReminders = true;
+  SheelaBadgeModel? _sheelaBadgeModel;
 
   @override
   void onInit() {
@@ -1132,8 +1134,10 @@ class SheelaAIController extends GetxController {
     currentDeviceStatus.greColor = prof.greColor;
     currentDeviceStatus.isdeviceRecognition = prof.allowDevice ?? true;
     currentDeviceStatus.isdigitRecognition = prof.allowDigit ?? true;
-    currentDeviceStatus.isSheelaLiveReminders = prof.sheelaLiveReminders ?? true;
-    isAllowSheelaLiveReminders = currentDeviceStatus.isSheelaLiveReminders ?? true;
+    currentDeviceStatus.isSheelaLiveReminders =
+        prof.sheelaLiveReminders ?? true;
+    isAllowSheelaLiveReminders =
+        currentDeviceStatus.isSheelaLiveReminders ?? true;
     currentDeviceStatus.isHkActive = prof.healthFit ?? false;
     currentDeviceStatus.isBpActive = prof.bpMonitor ?? true;
     currentDeviceStatus.isGFActive = prof.glucoMeter ?? true;
@@ -1254,50 +1258,70 @@ class SheelaAIController extends GetxController {
           isNeedSheelaDialog: isNeedSheelaDialog);
     }
   }
+/*
+getSheelaBadgeCount is used to get the latest Sheela Queue badge count.
+makeApiRequest is used to update the data with latest data
+*/
 
-  getSheelaBadgeCount(
-      {bool isNeedSheelaDialog = false,
-      bool isFromQurHomeRegimen = false}) async {
-    final dir = await getTemporaryDirectory();
-
-    if (!(sheelaIconBadgeCount.value > 0)) {
-      sheelaIconBadgeCount.value = 0;
-    }
+  Future<void> getSheelaBadgeCount({
+    bool isNeedSheelaDialog = false,
+    bool isFromQurHomeRegimen = false,
+    bool makeApiRequest = false,
+  }) async {
     try {
-      sheelaBadgeServices.getSheelaBadgeCount().then((value) {
-        if (value != null) {
-          if (value.isSuccess!) {
-            if (value.result != null) {
-              sheelaIconBadgeCount.value = value.result?.queueCount ?? 0;
-              if (isFromQurHomeRegimen && (isQueueDialogShowing.value)) {
-                Get.back();
-                isQueueDialogShowing.value = false;
-                isNeedSheelaDialog = true;
-              }
-              if (isNeedSheelaDialog) {
-                if ((value.result?.queueCount ?? 0) > 0 &&
-                    PreferenceUtil.getIfQurhomeisAcive()) {
-                  if (isQueueDialogShowing.value == false) {
-                    if (CommonUtil().isTablet != true) {
-                      showDialogForSheelaBox(
-                          isFromQurHomeRegimen: isFromQurHomeRegimen,
-                          isNeedSheelaDialog: isNeedSheelaDialog);
-                    }
-                  }
-                }
-              }
-            }
-          } else {
-            sheelaIconBadgeCount.value = 0;
-          }
-        } else {
-          sheelaIconBadgeCount.value = 0;
-        }
-      });
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      // Check if sheelaIconBadgeCount is not greater than 0
+      if (!(sheelaIconBadgeCount.value > 0)) {
+        // If not, set it to 0
+        sheelaIconBadgeCount.value = 0;
+      }
 
+      if (makeApiRequest || _sheelaBadgeModel == null) {
+// Retrieve sheela badge count asynchronously
+        _sheelaBadgeModel = await sheelaBadgeServices.getSheelaBadgeCount();
+      }
+
+      // Check if the response is successful and contains a valid result
+      if (_sheelaBadgeModel?.isSuccess == true &&
+          _sheelaBadgeModel?.result != null) {
+        // Update sheelaIconBadgeCount with the queue count from the result
+        sheelaIconBadgeCount.value = _sheelaBadgeModel?.result?.queueCount ?? 0;
+
+        // Check conditions for showing the dialog
+        if (isFromQurHomeRegimen && isQueueDialogShowing.value) {
+          // Close existing dialog and update flags
+          Get.back();
+          isQueueDialogShowing.value = false;
+          isNeedSheelaDialog = true;
+        }
+
+        // Extract conditions for showing the sheela dialog
+        final hasQueueCount = (_sheelaBadgeModel?.result!.queueCount ?? 0) > 0;
+        final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
+        final isTablet = CommonUtil().isTablet ?? false;
+        final isQueueDialogShowen = !isQueueDialogShowing.value;
+
+        // Check if all conditions are met to show the dialog
+        if (isNeedSheelaDialog &&
+            hasQueueCount &&
+            isQurhomeActive &&
+            isQueueDialogShowen &&
+            !isTablet) {
+          showDialogForSheelaBox(
+            isFromQurHomeRegimen: isFromQurHomeRegimen,
+            isNeedSheelaDialog: isNeedSheelaDialog,
+          );
+        }
+      } else {
+        // If response is not successful or result is null,
+        // set sheelaIconBadgeCount to 0
+        sheelaIconBadgeCount.value = 0;
+        _sheelaBadgeModel = null;
+      }
+    } catch (e, stackTrace) {
+      // Handle exceptions, log the error, and set sheelaIconBadgeCount to 0
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       sheelaIconBadgeCount.value = 0;
+      _sheelaBadgeModel = null;
     }
   }
 
