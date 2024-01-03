@@ -749,6 +749,7 @@ const String strPreferredDoctors = 'Preferred Doctors';
 //Voice cloning
 const String makeSureNotInNoiseDescription ='Make sure your are not in a noisy environment.';
 const String rec ='REC';
+const String fileShouldLess ='Error file should be less than 100 Mb';
 const String reRecord ='Re-Record';
 const String readTheDisplayContentDescription ='Read the displayed content on the screen once the timer concludes to record your voice';
 

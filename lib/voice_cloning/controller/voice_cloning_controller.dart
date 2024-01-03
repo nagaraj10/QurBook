@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/voice_cloning/services/voice_clone_services.dart';
@@ -81,6 +82,8 @@ class VoiceCloningController extends ChangeNotifier{
   }
 
   void stopRecording()async{
+    /// Clears WaveData and labels from the list. This will effectively remove
+    /// waves and labels from the UI.
     recorderController.reset();
     recorderController.refresh();
     _mPath = (await recorderController.stop(false))!;
@@ -98,14 +101,28 @@ class VoiceCloningController extends ChangeNotifier{
 
   void submitRecording()async{
     setPlayerLoading(true);
-   var data = await voiceCloneServices.uploadVoiceClone(_mPath);
-    setPlayerLoading(false);
-   if(data.isSuccess==true){
-     FlutterToast().getToast('success', Colors.green);
-     Navigator.pop(Get.context!);
+    ///Checking the Recorded file is less than 100 MB.
+   var fileInMb =await  getFileSizeInMB(_mPath);
+   if(fileInMb<=100){
+     var data = await voiceCloneServices.uploadVoiceClone(_mPath);
+     setPlayerLoading(false);
+     if(data.isSuccess==true){
+       FlutterToast().getToast('success', Colors.green);
+       Navigator.pop(Get.context!);
+     }else{
+       FlutterToast().getToast(data.message.toString(), Colors.red);
+     }
    }else{
-     FlutterToast().getToast(data.message.toString(), Colors.red);
+     setPlayerLoading(false);
+     FlutterToast().getToast(fileShouldLess, Colors.red);
    }
+
+  }
+  Future<int> getFileSizeInMB(String filePath) async {
+    File file = File(filePath);
+    int sizeInBytes = await file.length();
+    double sizeInMB = sizeInBytes / (1024 * 1024); // Convert bytes to megabytes
+    return sizeInMB.round();
   }
 
   showCountdownDialog() {
@@ -181,6 +198,7 @@ class VoiceCloningController extends ChangeNotifier{
     );
     maxPlayerDuration= (await playerController.getDuration(DurationType.max)).toDouble();
     setPlayerLoading(false);
+    ///When using Finish mode pause it will allow to play and pause for every time.
     await playerController.startPlayer(finishMode: FinishMode.pause);
     playerController.onCompletion.listen((event) {
       playPosition =0.0;
