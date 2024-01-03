@@ -186,6 +186,8 @@ class CommonUtil {
   static String BASE_URL_QURHUB = '';
   static String TRUE_DESK_URL = '';
   static String WEB_URL = '';
+  static String PORTAL_URL = '';
+
   static String UNIT_CONFIGURATION_URL =
       'system-configuration/unit-configuration';
   static String PUSH_KIT_TOKEN = '';

@@ -1014,7 +1014,6 @@ class SheelaAIController extends GetxController {
                             apiReminder = data[i];
                           }
                           if (Platform.isAndroid) {
-
                             // snooze invoke to android native for locally save the reminder data
                             QurPlanReminders.getTheRemindersFromAPI(
                                 isSnooze: true,
@@ -1025,7 +1024,6 @@ class SheelaAIController extends GetxController {
                                 buttonText: button.title,
                                 payload: button.payload,
                                 buttons: button);
-
                           } else {
                             reminderMethodChannel.invokeMethod(
                                 snoozeReminderMethod,
@@ -1154,6 +1152,7 @@ class SheelaAIController extends GetxController {
         prof.caregiverCommunicationSetting?.vitals ?? true;
     currentDeviceStatus.allowSymptomsNotification =
         prof.caregiverCommunicationSetting?.symptoms ?? true;
+    currentDeviceStatus.voiceCloning = prof.voiceCloning ?? false;
 
     if (savePrefLang) {
       PreferenceUtil.saveString(
@@ -1183,7 +1182,8 @@ class SheelaAIController extends GetxController {
               currentDeviceStatus.tagsList,
               currentDeviceStatus.allowAppointmentNotification,
               currentDeviceStatus.allowVitalNotification,
-              currentDeviceStatus.allowSymptomsNotification);
+              currentDeviceStatus.allowSymptomsNotification,
+              currentDeviceStatus.voiceCloning);
       return data;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -1235,7 +1235,8 @@ class SheelaAIController extends GetxController {
         currentDeviceStatus.allowAppointmentNotification,
         currentDeviceStatus.allowVitalNotification,
         currentDeviceStatus.allowSymptomsNotification,
-        currentDeviceStatus.preferredMeasurement);
+        currentDeviceStatus.preferredMeasurement,
+        currentDeviceStatus.voiceCloning);
     if (value.isSuccess ?? false) {
       //updated
 

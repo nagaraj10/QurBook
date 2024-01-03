@@ -125,27 +125,33 @@ class ProfileSetting {
   int? greColor;
   String? preferred_language;
   String? qa_subscription;
+  String? voiceCloningStatus;
+  bool? voiceCloning;
+
   PreferredMeasurement? preferredMeasurement;
 
   CaregiverCommunicationSetting? caregiverCommunicationSetting;
 
-  ProfileSetting(
-      {this.bpMonitor,
-      this.googleFit,
-      this.healthFit,
-      this.allowDigit,
-      this.sheelaLiveReminders,
-      this.glucoMeter,
-      this.weighScale,
-      this.allowDevice,
-      this.thermoMeter,
-      this.pulseOximeter,
-      this.preColor,
-      this.greColor,
-      this.preferred_language,
-      this.qa_subscription,
-      this.caregiverCommunicationSetting,
-      this.preferredMeasurement});
+  ProfileSetting({
+    this.bpMonitor,
+    this.googleFit,
+    this.healthFit,
+    this.allowDigit,
+    this.sheelaLiveReminders,
+    this.glucoMeter,
+    this.weighScale,
+    this.allowDevice,
+    this.thermoMeter,
+    this.pulseOximeter,
+    this.preColor,
+    this.greColor,
+    this.preferred_language,
+    this.qa_subscription,
+    this.caregiverCommunicationSetting,
+    this.preferredMeasurement,
+    this.voiceCloningStatus,
+    this.voiceCloning,
+  });
 
   ProfileSetting.fromJson(Map<String, dynamic> json) {
     try {
@@ -173,6 +179,10 @@ class ProfileSetting {
                 ? new CaregiverCommunicationSetting.fromJson(
                     json['caregiverCommunicationSetting'])
                 : null;
+        voiceCloningStatus =
+            json['voiceCloningStatus']; //get the status of voice cloning
+        voiceCloning = json[
+            'voiceCloning']; // get the value if voice cloning is enabled or not
       }
 
       if (json.containsKey('preferred_measurement')) {
@@ -212,6 +222,9 @@ class ProfileSetting {
     if (this.preferredMeasurement != null) {
       data['preferred_measurement'] = this.preferredMeasurement!.toJson();
     }
+    data['voiceCloningStatus'] = this.voiceCloningStatus;
+    data['voiceCloning'] = this.voiceCloning;
+
     return data;
   }
 }
@@ -306,8 +319,14 @@ class AdditionalInfoModuleAccess {
   List<ModuleAccess>? moduleAccess;
   //boolean variable to indicate whether vitals should be recorded
   bool? recordVitals;
+  bool? providerAllowedVoiceCloningModule;
+  bool? superAdminAllowedVoiceCloningModule;
 
-  AdditionalInfoModuleAccess({this.moduleAccess, this.recordVitals});
+  AdditionalInfoModuleAccess(
+      {this.moduleAccess,
+      this.recordVitals,
+      this.providerAllowedVoiceCloningModule,
+      this.superAdminAllowedVoiceCloningModule});
 
   AdditionalInfoModuleAccess.fromJson(Map<String, dynamic> json) {
     try {
@@ -320,6 +339,13 @@ class AdditionalInfoModuleAccess {
       // Extract and assign the 'record_vitals' value from JSON, default to false if not present
       recordVitals = (json['record_vitals'] ?? false);
       // Save the 'recordVitals' value to shared preferences
+      providerAllowedVoiceCloningModule =
+          json['providerAllowedVoiceCloningModule'];
+      //get the value if the superadmin has enabled permisson to health organization
+      superAdminAllowedVoiceCloningModule =
+          json['superAdminAllowedVoiceCloningModule'];
+      // get the value if the provider has enabled to caregiver
+
       saveIsVitalsManualRecordingRestricted(recordVitals);
     } catch (e, stackTrace) {
       // Handle exceptions by saving the 'recordVitals' value and logging the error
@@ -335,6 +361,10 @@ class AdditionalInfoModuleAccess {
           this.moduleAccess?.map((v) => v.toJson()).toList();
     }
     data['record_vitals'] = this.recordVitals;
+    data['providerAllowedVoiceCloningModule'] =
+        this.providerAllowedVoiceCloningModule;
+    data['superAdminAllowedVoiceCloningModule'] =
+        this.superAdminAllowedVoiceCloningModule;
     return data;
   }
 
