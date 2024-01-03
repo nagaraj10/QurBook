@@ -3137,6 +3137,11 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                 "${Constants.PROP_ACK}&$sharedValue&${senderId}&${senderName}&${senderProfile}&${groupId}"
         } else if (redirect_to == "claimList") {
             sharedValue = "${redirect_to}&${message}&$rawBody"
+        } else if ((templateName != null) && (templateName.equals("NonTeleconsultationAppointmentPreReminder5")) || (templateName.equals(
+                "AppointmentReminder5"
+            ))
+        ) {
+            sharedValue = "sheela&Appointments"
         } else if (redirect_to == "sheela|pushMessage") {
             sharedValue = "isSheelaFollowup&${message}&$rawBody&$audioURL&$EVEId"
         } else if (redirect_to == "isSheelaFollowup") {
@@ -3346,7 +3351,15 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     private val badgeListener = object : BroadcastReceiver() {
         override fun onReceive(ctx: Context, data: Intent) {
             val redirectTo = data.getStringExtra(Constants.PROP_REDIRECT_TO)
-            if (redirectTo != null && redirectTo.equals("isSheelaFollowup")) {
+            val templateName = data.getStringExtra(Constants.PROP_TEMP_NAME)
+             if ((templateName != null) && (templateName.equals("NonTeleconsultationAppointmentPreReminder5")) || (templateName.equals(
+                    "AppointmentReminder5"
+                ))) {
+                val message = data.getStringExtra("message")
+                val rawMessage = data.getStringExtra("rawMessage")
+                mEventChannel.success("sheela&Appointments")
+            }
+            else if (redirectTo != null && redirectTo.equals("isSheelaFollowup")) {
                 val message = data.getStringExtra("message")
                 val rawMessage = data.getStringExtra("rawMessage")
                 val sheelaAudioMsgUrl = data.getStringExtra("sheelaAudioMsgUrl")

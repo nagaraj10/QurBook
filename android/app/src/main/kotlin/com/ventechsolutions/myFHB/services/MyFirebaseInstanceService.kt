@@ -22,6 +22,7 @@ import com.ventechsolutions.myFHB.MyApp
 import com.ventechsolutions.myFHB.NotificationActivity
 import com.ventechsolutions.myFHB.R
 import com.ventechsolutions.myFHB.constants.Constants
+import com.ventechsolutions.myFHB.constants.Constants.PROP_TEMP_NAME
 
 
 class MyFirebaseInstanceService : FirebaseMessagingService() {
@@ -375,6 +376,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             }else {
                 intent.putExtra(Constants.PROP_REDIRECT_TO, "isSheelaFollowup")
                 intent.putExtra("message", data[getString(R.string.pro_ns_body)])
+                intent.putExtra("templateName", data[PROP_TEMP_NAME])
                 intent.putExtra("rawMessage", data[getString(R.string.pro_ns_raw)])
                 intent.putExtra("sheelaAudioMsgUrl", data[getString(R.string.pro_ns_audioURL)])
                 intent.putExtra("eventId", data[getString(R.string.eventId)])
@@ -441,6 +443,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(Constants.PROP_DATA, data[Constants.PROP_DATA])
         //onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
         onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
+        onTapNS.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
 
         onTapNS.putExtra(Constants.PROP_HRMID, data[Constants.PROP_HRMID])
         onTapNS.putExtra(Constants.PROP_RAWBODY, data[Constants.PROP_RAWBODY])
