@@ -1263,12 +1263,19 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                 voiceCloning) {
                               Navigator.pushNamed(
                                 context,
-                                router.rt_VoiceCloneTerms,
+                                router.rt_VoiceCloningStatus,
                               ).then((value) {
                                 setState(() {});
                               });
                             } else if (voiceCloningStatus != strInActive &&
-                                voiceCloning) {}
+                                voiceCloning) {
+                              Navigator.pushNamed(
+                                context,
+                                router.rt_VoiceCloningStatus,
+                              ).then((value) {
+                                setState(() {});
+                              });
+                            }
                           }
                         }),
                   ),
