@@ -52,6 +52,7 @@ dependencies:
   multi_image_picker: ^4.7.10
   flutter_absolute_path:
     path: ./flutter_absolute_path
+    #audio_waveforms package was added locally because of Compatibility  issue.
   audio_waveforms:
     path: ./audio_waveforms
   provider: ^5.0.0
