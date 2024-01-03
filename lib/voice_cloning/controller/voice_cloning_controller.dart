@@ -4,11 +4,7 @@ import 'dart:io';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart';
-import 'package:flutter_sound/flutter_sound.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/voice_cloning/services/voice_clone_services.dart';
 import 'package:myfhb/voice_cloning/view/widgets/countdown_timer_widget.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -22,17 +18,19 @@ class VoiceCloningController extends ChangeNotifier{
   bool isLoading =false;
   bool isRecording = false;
   String _mPath = 'recorder.m4a';
-  List<double> audioData = [];
+  List<double> audioWaveData = [];
   Timer? countDownTimer;
 
   double playPosition=0.0;
 
   double maxPlayerDuration=1.0;
+  ///Audio And recorder Controllers
   late  RecorderController recorderController;
   late PlayerController playerController;
-
+  VoiceCloneServices voiceCloneServices = VoiceCloneServices();
   void disposeRecorder(){
     isRecorderView =true;
+     isRecording =false;
      recorderController.dispose();
     playerController.dispose();
   }
@@ -84,7 +82,6 @@ class VoiceCloningController extends ChangeNotifier{
     print('888:on stopRecoring  file:$_mPath');
     if (_mPath != null) {
       debugPrint(_mPath);
-      debugPrint("Recorded file size: ${File(_mPath).lengthSync()}");
     }
     recordingDurationTxt = '0:00:00';
     isRecorderView =false;
@@ -95,8 +92,9 @@ class VoiceCloningController extends ChangeNotifier{
     startPlayer();
   }
 
-  void submitRecording(){
+  void submitRecording()async{
     print('888: filepath submit ${_mPath}');
+   var data = await voiceCloneServices.uploadVoiceClone(_mPath);
   }
 
   showCountdownDialog() {
@@ -126,7 +124,7 @@ class VoiceCloningController extends ChangeNotifier{
     progressValue=0;
     isRecorderView =true;
     recordingDurationTxt ='0:00:00';
-    audioData.clear();
+    audioWaveData.clear();
     notifyListeners();
     countDownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (countdown > 0) {
@@ -163,7 +161,7 @@ class VoiceCloningController extends ChangeNotifier{
 
   Future<void> startPlayer() async {
     setPlayerLoading(true);
-    audioData = await playerController.extractWaveformData(
+    audioWaveData = await playerController.extractWaveformData(
       path: _mPath,
       noOfSamples: 100,
     );
@@ -207,13 +205,19 @@ class VoiceCloningController extends ChangeNotifier{
       formattedDuration +=
       '${duration.inHours.toString().padLeft(2, '0')}:';
     }
-
     formattedDuration +=
     '${duration.inMinutes.remainder(60).toString().padLeft(2, '0')}:';
     formattedDuration +=
-    '${(duration.inSeconds.remainder(60)).toString().padLeft(2, '0')}';
+    (duration.inSeconds.remainder(60)).toString().padLeft(2, '0');
 
     return formattedDuration;
+  }
+
+
+  @override
+  void dispose() {
+    audioWaveData.clear();
+    super.dispose();
   }
 
 

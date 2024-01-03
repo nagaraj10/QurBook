@@ -1,31 +1,17 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
-import 'package:flutter_sound/flutter_sound.dart';
-import 'package:flutter_sound/public/flutter_sound_player.dart';
-import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/state_manager.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/voice_cloning/controller/voice_cloning_controller.dart';
 import 'package:myfhb/widgets/app_primary_button.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../common/CommonUtil.dart';
-import '../widgets/countdown_timer_widget.dart';
 
 class VoiceRecordingScreen extends StatefulWidget {
   @override
@@ -199,7 +185,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
   playerController: _voiceCloningController.playerController,
   enableSeekGesture: false,
   waveformType: WaveformType.long,
-  waveformData:_voiceCloningController.audioData,
+  waveformData:_voiceCloningController.audioWaveData,
   playerWaveStyle: PlayerWaveStyle(
   fixedWaveColor: Colors.white,
   liveWaveColor:Color(CommonUtil().getMyPrimaryColor()),

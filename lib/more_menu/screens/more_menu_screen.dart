@@ -16,7 +16,6 @@ import 'package:myfhb/common/DeleteAccountWebScreen.dart';
 import 'package:myfhb/common/DexComWebScreen.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/countdown_timer_widget.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/more_menu/screens/trouble_shooting.dart';
