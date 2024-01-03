@@ -183,7 +183,12 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                 data: mediaMetaInfo,
               ),
             ),
-          );
+          ).then((value) async {
+            if (value ?? false) {
+              await Future.delayed(Duration(milliseconds: 100));
+              widget.callBackToRefresh();
+            }
+          });
         }
       },
       child: Container(

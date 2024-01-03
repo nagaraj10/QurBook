@@ -2123,7 +2123,7 @@ class CommonDialogBox {
 
               Navigator.of(context).pop();
               Navigator.of(context).pop();
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(true);
             });
           } else {
             Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
@@ -2135,6 +2135,10 @@ class CommonDialogBox {
             .createHealtRecords(params.toString(), imagePath, audioPathMain)
             .then((value) {
           if (value != null && value.isSuccess!) {
+            var landingScreenController =
+                CommonUtil().onInitLandingScreenController();
+            landingScreenController.ishealthRecordsScreenRefreshNeeded.value =
+                true;
             _healthReportListForUserBlock
                 .getHelthReportLists()
                 .then((value) async {
@@ -2203,7 +2207,7 @@ class CommonDialogBox {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(true);
               }
             });
           } else {
