@@ -1,12 +1,19 @@
 
+import 'dart:async';
+
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/more_menu/screens/terms_and_conditon.dart';
+import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/voice_cloning/controller/voice_cloning_controller.dart';
+import 'package:myfhb/voice_cloning/view/widgets/webcontent_widget.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/app_primary_button.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -38,6 +45,19 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
   Widget build(BuildContext context) {
     _voiceCloningController = Provider.of<VoiceCloningController>(context,listen: true);
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: 24.0.sp,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        flexibleSpace: GradientAppBar(),
+        title: Text(strVoiceCloning),
+      ),
       body: SafeArea(
         child:Column(
           mainAxisSize: MainAxisSize.max,
@@ -45,10 +65,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
             Expanded(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 5),
-                child: WebView(
-                  initialUrl: 'https://portal.dev-efhb.vsolgmi.com/assets/voice_transcript.html',
-                  javascriptMode: JavascriptMode.unrestricted,
-                ),
+                child: WebContentWidget(selectedUrl:CommonUtil.PORTAL_URL + voice_transcript_html, isLocalAsset: false)
               ),
             ),
             if (_voiceCloningController.isRecorderView) ...{
@@ -105,7 +122,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
                           color: Colors.red, shape: BoxShape.circle),
                     ),
                     Text(
-                      'REC',
+                      rec,
                       style: TextStyle(
                           color: Colors.white,
                           letterSpacing: 1,
@@ -149,12 +166,11 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
               width: 40,
             ),
             InkWell(
-              onTap: () {
-                _voiceCloningController.stopRecording();
-              },
+              onTap: ()=>_voiceCloningController.canStopRecording?
+              _voiceCloningController.stopRecording():null,
               child: SvgPicture.asset(
                 icVoiceStop,
-                color: Colors.red,
+                color: Colors.red.withOpacity(_voiceCloningController.canStopRecording?1:0.4),
                 height: 50,
                 width: 50,
               ),
@@ -243,7 +259,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
               children: [
                 Expanded(
                   child: AppPrimaryButton(
-                    text: 'Re-Record',
+                    text: reRecord,
                       textSize:12,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(25),
@@ -275,15 +291,6 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
       ),
     );
 
-
-  Widget _loader(){
-  return  Container(
-      height: double.infinity,
-      width: double.infinity,
-      alignment: Alignment.center,
-      child:CircularProgressIndicator(color: Color(CommonUtil().getMyPrimaryColor()),),
-    );
-  }
 
 
   @override

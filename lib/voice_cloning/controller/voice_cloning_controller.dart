@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/voice_cloning/services/voice_clone_services.dart';
 import 'package:myfhb/voice_cloning/view/widgets/countdown_timer_widget.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,7 +18,7 @@ class VoiceCloningController extends ChangeNotifier{
   var recordingDurationTxt = '0:00:00';
   bool isRecorderView = true;
   bool isPlayerLoading =false;
-  bool isLoading =false;
+  bool canStopRecording =false;
   bool isRecording = false;
   String _mPath = 'recorder.m4a';
   List<double> audioWaveData = [];
@@ -42,6 +45,7 @@ class VoiceCloningController extends ChangeNotifier{
   }
 
   void initialiseControllers() {
+    canStopRecording =false;
    playerController = PlayerController();
     recorderController = RecorderController()
       ..androidEncoder = AndroidEncoder.aac
@@ -49,6 +53,7 @@ class VoiceCloningController extends ChangeNotifier{
       ..iosEncoder = IosEncoder.kAudioFormatMPEG4AAC
       ..sampleRate = 44100;
     recorderController.onCurrentDuration.listen((duration){
+      canStopRecording =true;
       recordingDurationTxt =duration.toHHMMSS();
       notifyListeners();
     });
@@ -71,15 +76,14 @@ class VoiceCloningController extends ChangeNotifier{
       isRecording = true;
       notifyListeners();
     }catch(e){
-      print('888:exception${e}');
+
     }
   }
 
   void stopRecording()async{
     recorderController.reset();
     recorderController.refresh();
-     _mPath = (await recorderController.stop(false))!;
-    print('888:on stopRecoring  file:$_mPath');
+    _mPath = (await recorderController.stop(false))!;
     if (_mPath != null) {
       debugPrint(_mPath);
     }
@@ -93,8 +97,15 @@ class VoiceCloningController extends ChangeNotifier{
   }
 
   void submitRecording()async{
-    print('888: filepath submit ${_mPath}');
+    setPlayerLoading(true);
    var data = await voiceCloneServices.uploadVoiceClone(_mPath);
+    setPlayerLoading(false);
+   if(data.isSuccess==true){
+     FlutterToast().getToast('success', Colors.green);
+     Navigator.pop(Get.context!);
+   }else{
+     FlutterToast().getToast(data.message.toString(), Colors.red);
+   }
   }
 
   showCountdownDialog() {
@@ -142,15 +153,12 @@ class VoiceCloningController extends ChangeNotifier{
     this.isPlayerLoading = value;
     notifyListeners();
   }
-  void setLoader(bool value){
-    this.isLoading = value;
-    notifyListeners();
-  }
 
 
   void reRecord(){
     playerController.stopPlayer();
     isRecorderView =true;
+    canStopRecording =false;
     recordingDurationTxt ='00:00:00';
     showCountdownDialog();
     notifyListeners();
@@ -187,7 +195,6 @@ class VoiceCloningController extends ChangeNotifier{
   }
 
   Future<void> playPausePlayer() async {
-    print('8888: state:${playerController.playerState.isStopped}');
     if(playerController.playerState.isPlaying){
       await playerController.pausePlayer();
     }else{

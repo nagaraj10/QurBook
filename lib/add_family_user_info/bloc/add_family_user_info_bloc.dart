@@ -148,7 +148,13 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   PreferredMeasurement? preferredMeasurement;
 
   SheelaAIController? sheelaAIcontroller =
-  CommonUtil().onInitSheelaAIController();
+      CommonUtil().onInitSheelaAIController();
+
+  bool voiceCloning = false;
+  bool providerAllowedVoiceCloningModule = true;
+  bool superAdminAllowedVoiceCloningModule = true;
+  String voiceCloningStatus = 'Inactive';
+  bool showVoiceCloningUI = true;
 
   @override
   void dispose() {
@@ -184,8 +190,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       var relationShipResponseList =
           await addFamilyUserInfoRepository.getCustomRoles();
       relationShipListSink.add(ApiResponse.completed(relationShipResponseList));
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       relationShipListSink.add(ApiResponse.error(e.toString()));
     }
   }
@@ -198,8 +204,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       myProfile =
           await addFamilyUserInfoRepository.getMyProfileInfoNew(userId!);
       myprofileObject = myProfile;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       myProfileSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -231,8 +237,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
               zipcode,
               fromFamily);
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       userProfileSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -248,8 +254,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       updateAddFamilyRelationInfo = await addFamilyUserInfoRepository
           .updateRelationShip(relationshipJsonString);
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       updateRelationshipSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -299,8 +305,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       //userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
 
       await updateDeviceSelectionModel(preferredLanguage: preferred_language);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       userProfileSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -314,8 +320,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     try {
       verifyEmailResponse = await addFamilyUserInfoRepository.verifyEmail();
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       verifyEmailSink.add(ApiResponse.error(e.toString()));
     }
 
@@ -404,7 +410,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                 tagsList,
                 allowAppointmentNotification,
                 allowVitalNotification,
-                allowSymptomsNotification)
+                allowSymptomsNotification,
+                voiceCloning)
             .then((value) {
           createDeviceSelectionModel = value;
           if (createDeviceSelectionModel?.isSuccess ?? false) {
@@ -431,7 +438,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                     tagsList,
                     allowAppointmentNotification,
                     allowVitalNotification,
-                    allowSymptomsNotification)
+                    allowSymptomsNotification,
+                    voiceCloning)
                 .then((value) {
               createDeviceSelectionModel = value;
               if (createDeviceSelectionModel!.isSuccess!) {
@@ -461,10 +469,12 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                     ''
             ? getDeviceSelectionModel.result![0].profileSetting!.allowDigit
             : true;
-    _sheelaLiveReminders =
-    getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders != null &&
-        getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders !=
-            ''
+    _sheelaLiveReminders = getDeviceSelectionModel
+                    .result![0].profileSetting!.sheelaLiveReminders !=
+                null &&
+            getDeviceSelectionModel
+                    .result![0].profileSetting!.sheelaLiveReminders !=
+                ''
         ? getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders
         : true;
     sheelaAIcontroller?.isAllowSheelaLiveReminders =
@@ -571,6 +581,35 @@ class AddFamilyUserInfoBloc extends BaseBloc {
             ? getDeviceSelectionModel
                 .result![0].profileSetting!.preferredMeasurement
             : null;
+
+    voiceCloning =
+        getDeviceSelectionModel.result![0].profileSetting!.voiceCloning ??
+            false;
+
+    providerAllowedVoiceCloningModule = getDeviceSelectionModel
+            .result![0]
+            .primaryProvider
+            ?.additionalInfo
+            ?.providerAllowedVoiceCloningModule ??
+        true;
+    superAdminAllowedVoiceCloningModule = getDeviceSelectionModel
+            .result![0]
+            .primaryProvider
+            ?.additionalInfo
+            ?.superAdminAllowedVoiceCloningModule ??
+        true;
+    voiceCloningStatus = superAdminAllowedVoiceCloningModule
+        ? providerAllowedVoiceCloningModule
+            ? getDeviceSelectionModel
+                    .result![0].profileSetting!.voiceCloningStatus ??
+                "InActive"
+            : "InActive"
+        : "InActive";
+    showVoiceCloningUI = superAdminAllowedVoiceCloningModule
+        ? providerAllowedVoiceCloningModule
+            ? true
+            : false
+        : false;
   }
 
   Future<UpdateDeviceModel?> updateDeviceSelectionModel(
@@ -597,7 +636,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
             allowAppointmentNotification,
             allowVitalNotification,
             allowSymptomsNotification,
-            preferredMeasurement)
+            preferredMeasurement,
+            voiceCloning)
         .then(
       (value) {
         if (value.isSuccess ?? false) {
@@ -624,7 +664,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                   tagsList,
                   allowAppointmentNotification,
                   allowVitalNotification,
-                  allowSymptomsNotification)
+                  allowSymptomsNotification,
+                  voiceCloning)
               .then((value) {
             createDeviceSelectionModel = value;
             if (createDeviceSelectionModel!.isSuccess!) {

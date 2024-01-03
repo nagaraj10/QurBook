@@ -268,6 +268,7 @@ void setValues(List<dynamic> values) {
   CommonUtil.BASE_URL_QURHUB = values[12];
   CommonUtil.TRUE_DESK_URL = values[13];
   CommonUtil.WEB_URL = values[14];
+  CommonUtil.PORTAL_URL = values[15];
 }
 
 Widget buildError(BuildContext context, FlutterErrorDetails error) {
@@ -496,7 +497,6 @@ class _MyFHBState extends State<MyFHB> {
             //}
           }
         }
-
       }
       if (passedValArr[0] == 'ack') {
         final temp = passedValArr[1].split('|');
@@ -1147,7 +1147,9 @@ class _MyFHBState extends State<MyFHB> {
     }
   }
 
-  getToSheelaNavigate(var passedValArr, {bool isFromAudio = false,bool isFromActivityRemainderInvokeSheela = false}) {
+  getToSheelaNavigate(var passedValArr,
+      {bool isFromAudio = false,
+      bool isFromActivityRemainderInvokeSheela = false}) {
     if (isFromActivityRemainderInvokeSheela) {
       Get.toNamed(
         rt_Sheela,
