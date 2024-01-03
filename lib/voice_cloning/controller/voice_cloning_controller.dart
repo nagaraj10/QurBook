@@ -54,7 +54,11 @@ class VoiceCloningController extends ChangeNotifier{
       ..iosEncoder = IosEncoder.kAudioFormatMPEG4AAC
       ..sampleRate = 44100;
     recorderController.onCurrentDuration.listen((duration){
-      canStopRecording =true;
+      ///Added this condition because min player duration should be 1 sec
+      ///so enabling the stop button after one sec
+      if(duration >= Duration(seconds: 1)){
+        canStopRecording =true;
+      }
       recordingDurationTxt =duration.toHHMMSS();
       notifyListeners();
     });
@@ -154,9 +158,11 @@ class VoiceCloningController extends ChangeNotifier{
     recordingDurationTxt ='0:00:00';
     audioWaveData.clear();
     notifyListeners();
-    countDownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+    countDownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (countdown > 0) {
         countdown--;
+        ///progress value supports only 0.1 to 1 so added logic
+        /// to achieve from countdown timer.
         progressValue = (10 - countdown) / 10.0;
         notifyListeners();
       } else {
@@ -188,13 +194,9 @@ class VoiceCloningController extends ChangeNotifier{
     setPlayerLoading(true);
     audioWaveData = await playerController.extractWaveformData(
       path: _mPath,
-      noOfSamples: 100,
     );
     await playerController.preparePlayer(
-      path: _mPath,
-      shouldExtractWaveform: true,
-      noOfSamples: 100,
-      volume: 1.0,
+      path: _mPath
     );
     maxPlayerDuration= (await playerController.getDuration(DurationType.max)).toDouble();
     setPlayerLoading(false);
@@ -223,6 +225,7 @@ class VoiceCloningController extends ChangeNotifier{
   }
 
   String formatPlayerDuration(double seconds) {
+    ///This function will give the duration to hh:mm:ss from double value.
     Duration duration = Duration(milliseconds: seconds.toInt());
     String formattedDuration = '';
 

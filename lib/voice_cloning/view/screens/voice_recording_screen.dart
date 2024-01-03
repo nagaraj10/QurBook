@@ -30,6 +30,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
 
   @override
   void initState() {
+    ///Initializing the audio and player controllers
     Provider.of<VoiceCloningController>(context, listen: false)
         .initialiseControllers();
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
@@ -45,7 +46,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
   Widget build(BuildContext context) {
     _voiceCloningController = Provider.of<VoiceCloningController>(context,listen: true);
     return Scaffold(
-      appBar: AppBar(
+      appBar:AppBar(
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
@@ -55,8 +56,8 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
             Navigator.of(context).pop();
           },
         ),
-        flexibleSpace: GradientAppBar(),
-        title: Text(strVoiceCloning),
+        title: AppBarForVoiceCloning().getVoiceCloningAppBar(),
+        centerTitle: false,
       ),
       body: SafeArea(
         child:Column(
