@@ -52,6 +52,15 @@ class _MySettingsState extends State<MySettings> {
   String? preferred_language;
   String? qa_subscription;
 
+/**
+ * Declare variable neccessary to voice cloning 
+ */
+  bool voiceCloning = false;
+  bool providerAllowedVoiceCloningModule = true;
+  bool superAdminAllowedVoiceCloningModule = true;
+  String voiceCloningStatus = 'Inactive';
+  bool showVoiceCloningUI = true;
+
   int? priColor;
   int? greColor;
 
@@ -189,7 +198,8 @@ class _MySettingsState extends State<MySettings> {
             tagsList,
             allowAppointmentNotification,
             allowVitalNotification,
-            allowSymptomsNotification)
+            allowSymptomsNotification,
+            voiceCloning)
         .then((value) {
       Provider.of<LandingViewModel>(context, listen: false)
           .getQurPlanDashBoard();
@@ -228,7 +238,8 @@ class _MySettingsState extends State<MySettings> {
             allowAppointmentNotification,
             allowVitalNotification,
             allowSymptomsNotification,
-            preferredMeasurement)
+            preferredMeasurement,
+            voiceCloning)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel!.isSuccess!) {
@@ -418,6 +429,35 @@ class _MySettingsState extends State<MySettings> {
               ? getDeviceSelectionModel
                   .result![0].profileSetting!.preferredMeasurement
               : null;
+
+      voiceCloning =
+          getDeviceSelectionModel.result![0].profileSetting!.voiceCloning ??
+              false;
+
+      providerAllowedVoiceCloningModule = getDeviceSelectionModel
+              .result![0]
+              .primaryProvider
+              ?.additionalInfo
+              ?.providerAllowedVoiceCloningModule ??
+          true;
+      superAdminAllowedVoiceCloningModule = getDeviceSelectionModel
+              .result![0]
+              .primaryProvider
+              ?.additionalInfo
+              ?.superAdminAllowedVoiceCloningModule ??
+          true;
+      voiceCloningStatus = superAdminAllowedVoiceCloningModule
+          ? providerAllowedVoiceCloningModule
+              ? getDeviceSelectionModel
+                      .result![0].profileSetting!.voiceCloningStatus ??
+                  "InActive"
+              : "InActive"
+          : "InActive";
+      showVoiceCloningUI = superAdminAllowedVoiceCloningModule
+          ? providerAllowedVoiceCloningModule
+              ? true
+              : false
+          : false;
     });
   }
 

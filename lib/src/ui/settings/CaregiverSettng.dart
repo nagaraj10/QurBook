@@ -51,6 +51,15 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
   String? preferred_language;
   String? qa_subscription;
 
+/**
+ * Declare variable neccessary to voice cloning 
+ */
+  bool voiceCloning = false;
+  bool providerAllowedVoiceCloningModule = true;
+  bool superAdminAllowedVoiceCloningModule = true;
+  String voiceCloningStatus = 'Inactive';
+  bool showVoiceCloningUI = true;
+
   int? priColor;
   int? greColor;
 
@@ -73,7 +82,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
   PreferredMeasurement? preferredMeasurement;
 
   SheelaAIController? sheelaAIcontroller =
-  CommonUtil().onInitSheelaAIController();
+      CommonUtil().onInitSheelaAIController();
 
   @override
   void initState() {
@@ -196,7 +205,8 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
             tagsList,
             allowAppointmentNotification,
             allowVitalNotification,
-            allowSymptomsNotification)
+            allowSymptomsNotification,
+            voiceCloning)
         .then((value) {
       Provider.of<LandingViewModel>(context, listen: false)
           .getQurPlanDashBoard();
@@ -235,7 +245,8 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
             allowAppointmentNotification,
             allowVitalNotification,
             allowSymptomsNotification,
-            preferredMeasurement)
+            preferredMeasurement,
+            voiceCloning)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel!.isSuccess!) {
@@ -292,11 +303,13 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
           ? getDeviceSelectionModel.result![0].profileSetting!.allowDigit
           : true;
       _sheelaLiveReminders = getDeviceSelectionModel
-          .result![0].profileSetting!.sheelaLiveReminders !=
-          null &&
-          getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders !=
-              ''
-          ? getDeviceSelectionModel.result![0].profileSetting!.sheelaLiveReminders
+                      .result![0].profileSetting!.sheelaLiveReminders !=
+                  null &&
+              getDeviceSelectionModel
+                      .result![0].profileSetting!.sheelaLiveReminders !=
+                  ''
+          ? getDeviceSelectionModel
+              .result![0].profileSetting!.sheelaLiveReminders
           : true;
       sheelaAIcontroller?.isAllowSheelaLiveReminders =
           _sheelaLiveReminders ?? false;
@@ -407,6 +420,35 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
               ? getDeviceSelectionModel
                   .result![0].profileSetting!.preferredMeasurement
               : null;
+
+      voiceCloning =
+          getDeviceSelectionModel.result![0].profileSetting!.voiceCloning ??
+              false;
+
+      providerAllowedVoiceCloningModule = getDeviceSelectionModel
+              .result![0]
+              .primaryProvider
+              ?.additionalInfo
+              ?.providerAllowedVoiceCloningModule ??
+          true;
+      superAdminAllowedVoiceCloningModule = getDeviceSelectionModel
+              .result![0]
+              .primaryProvider
+              ?.additionalInfo
+              ?.superAdminAllowedVoiceCloningModule ??
+          true;
+      voiceCloningStatus = superAdminAllowedVoiceCloningModule
+          ? providerAllowedVoiceCloningModule
+              ? getDeviceSelectionModel
+                      .result![0].profileSetting!.voiceCloningStatus ??
+                  "InActive"
+              : "InActive"
+          : "InActive";
+      showVoiceCloningUI = superAdminAllowedVoiceCloningModule
+          ? providerAllowedVoiceCloningModule
+              ? true
+              : false
+          : false;
     });
   }
 
