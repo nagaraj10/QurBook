@@ -377,6 +377,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 intent.putExtra(Constants.PROP_REDIRECT_TO, "isSheelaFollowup")
                 intent.putExtra("message", data[getString(R.string.pro_ns_body)])
                 intent.putExtra("templateName", data[PROP_TEMP_NAME])
+                intent.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
+                intent.putExtra(Constants.eidSheela, data[Constants.eidSheela])
                 intent.putExtra("rawMessage", data[getString(R.string.pro_ns_raw)])
                 intent.putExtra("sheelaAudioMsgUrl", data[getString(R.string.pro_ns_audioURL)])
                 intent.putExtra("eventId", data[getString(R.string.eventId)])
@@ -454,6 +456,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(Constants.OTHERS, data[Constants.OTHERS])
         onTapNS.putExtra(Constants.EVENT_TYPE, data[Constants.EVENT_TYPE])
         onTapNS.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
+        onTapNS.putExtra(Constants.eidSheela, data[Constants.eidSheela])
 
 //            onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
 //            onTapNS.putExtra(getString(R.string.pat_name), PAT_NAME)

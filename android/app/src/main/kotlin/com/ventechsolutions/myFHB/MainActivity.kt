@@ -3141,7 +3141,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                 "AppointmentReminder5"
             ))
         ) {
-            sharedValue = "sheela&Appointments"
+            sharedValue = "sheela&Appointments&$appointmentID&$eid"
         } else if (redirect_to == "sheela|pushMessage") {
             sharedValue = "isSheelaFollowup&${message}&$rawBody&$audioURL&$EVEId"
         } else if (redirect_to == "isSheelaFollowup") {
@@ -3355,9 +3355,11 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
              if ((templateName != null) && (templateName.equals("NonTeleconsultationAppointmentPreReminder5")) || (templateName.equals(
                     "AppointmentReminder5"
                 ))) {
-                val message = data.getStringExtra("message")
-                val rawMessage = data.getStringExtra("rawMessage")
-                mEventChannel.success("sheela&Appointments")
+                 val message = data.getStringExtra("message")
+                 val rawMessage = data.getStringExtra("rawMessage")
+                 val appointmentId = data.getStringExtra("appointmentId")
+                 val eid = data.getStringExtra("eid")
+                 mEventChannel.success("sheela&Appointments&$appointmentId&$eid")
             }
             else if (redirectTo != null && redirectTo.equals("isSheelaFollowup")) {
                 val message = data.getStringExtra("message")
