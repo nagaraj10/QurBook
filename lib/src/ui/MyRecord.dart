@@ -727,6 +727,7 @@ class _CustomTabsState extends State<CustomTabView>
   late CommonUtil commonUtil;
 
   final qurhomeDashboardController = Get.put(QurhomeDashboardController());
+  var landingScreenController = CommonUtil().onInitLandingScreenController();
 
   @override
   void initState() {
@@ -1657,10 +1658,14 @@ class _CustomTabsState extends State<CustomTabView>
                     Constants.stop_detecting, variable.strNO);
 
                 Navigator.pushNamed(context, router.rt_TakePictureForDevices)
-                    .then((value) {});
+                    .then((value) {
+                  onRefreshWidgets();
+                });
               } else {
                 Navigator.pushNamed(context, router.rt_TakePictureScreen)
-                    .then((value) {});
+                    .then((value) {
+                  onRefreshWidgets();
+                });
               }
             });
           });
@@ -1717,13 +1722,17 @@ class _CustomTabsState extends State<CustomTabView>
                         ? ''
                         : widget.argument!.fromClass ?? 'audio'),
               ),
-            );
+            )!.then((results) {
+              onRefreshWidgets();
+            });
           } else {
             Navigator.pushNamed(context, router.rt_AudioScreen,
                     arguments: AudioScreenArguments(
                         fromVoice: true,
                         fromClass: widget.argument!.fromClass ?? 'audio'))
-                .then((results) {});
+                .then((results) {
+                  onRefreshWidgets();
+            });
           }
         });
       });
@@ -1736,6 +1745,13 @@ class _CustomTabsState extends State<CustomTabView>
       categoryName =
           widget.categoryData!.elementAt(_currentPosition!).categoryName;
       categoryID = widget.categoryData!.elementAt(_currentPosition!).id;
+    }
+  }
+
+  onRefreshWidgets() {
+    if (landingScreenController.ishealthRecordsScreenRefreshNeeded.value) {
+      landingScreenController.ishealthRecordsScreenRefreshNeeded.value = false;
+      setState(() {});
     }
   }
 }

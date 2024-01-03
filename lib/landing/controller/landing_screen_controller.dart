@@ -7,6 +7,7 @@ class LandingScreenController extends GetxController {
   var isSearchVisible = false.obs;
   var appBarTitle = constants.strMyDashboard.obs;
   var currentTabIndex = 0.obs;
+  var ishealthRecordsScreenRefreshNeeded = false.obs;
 
 
   void changeSearchBar({bool isEnabled = false, bool needNotify = true}) {

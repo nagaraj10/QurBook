@@ -689,7 +689,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         _healthReportListForUserBlock!.getHelthReportLists().then((value) {
           PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
           Navigator.of(context).pop();
-          Navigator.of(context).pop();
+          Navigator.of(context).pop(true);
           toast.getToast(
               isDeviceReadings
                   ? 'Record deleted successfully. Latest record added through Sheela can be updated/deleted through Sheela itself'
@@ -711,10 +711,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       if (deleteRecordResponse!.success!) {
         _healthReportListForUserBlock!.getHelthReportLists().then((value) {
           PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
-          Navigator.of(context).pop();
+          Navigator.of(context).pop(true);
           widget.data.metadata!.hasVoiceNotes = false;
           toast.getToast('Record deleted successfully', Colors.green);
-          setState(() {});
+          //setState(() {});
         });
       } else {
         toast.getToast('Failed to delete the record', Colors.red);

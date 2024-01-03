@@ -181,7 +181,12 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                   data: data,
                 ),
               ),
-            );
+            ).then((value) async {
+              if (value ?? false) {
+                await Future.delayed(Duration(milliseconds: 100));
+                widget.callBackToRefresh();
+              }
+            });
           }
         },
         child: Container(

@@ -2523,6 +2523,8 @@ class ChatState extends State<ChatDetail> {
             onPress: () => closeDialog(),
             title: 'Cancel',
             fontSize: fontSizeOne,
+            bgColor: Colors.transparent,
+            isSelected: true,
             /*child: Text(
               'Cancel',
               style: TextStyle(
