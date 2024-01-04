@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:myfhb/voice_cloning/services/voice_clone_services.dart';
 import 'package:myfhb/voice_cloning/view/widgets/countdown_timer_widget.dart';
 import 'package:path_provider/path_provider.dart';
@@ -108,10 +109,9 @@ class VoiceCloningController extends ChangeNotifier {
       setPlayerLoading(false);
       if (data.isSuccess == true) {
         Navigator.pop(Get.context!);
-        Navigator.pushNamed(
-          Get.context!,
-          rt_VoiceCloningStatus,
-        ).then((value) {});
+        Navigator.pushNamed(Get.context!, rt_VoiceCloningStatus,
+                arguments: VoiceCloneStatusArguments(fromMenu: false))
+            .then((value) {});
       } else {
         FlutterToast().getToast(data.message.toString(), Colors.red);
       }

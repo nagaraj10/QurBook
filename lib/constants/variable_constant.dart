@@ -730,6 +730,9 @@ const String strStatus = 'Status : ';
 //Create common String for voice cloning text
 const String strVoiceTerms = 'Accept And Continue';
 const String strInActive = 'InActive';
+const String strSubmit = 'Submit';
+const String strVoiceCloningExistingMembersHeader = 'Your cloned voice is in use for the following members:';
+const String strVoiceCloningAddMembersHeader = 'Choose the list of members, to apply the cloned voice';
 const String strApproved = 'Approved'; //status text for approved
 const String strDeclined = 'Declined'; //status text for declined
 const String strReason = 'Reason : '; //status text for reason,include spacing

@@ -88,8 +88,12 @@ class _MyFhbWebViewState extends State<TermsAndConditonWebView> {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(
+                      CommonUtil().getMyPrimaryColor(),
+                    ),
+                  ),
                   onPressed: () {
-                    Navigator.pop(context); //to pop up this page
                     Navigator.pushNamed(
                       context,
                       rt_VoiceCloningIntro,
