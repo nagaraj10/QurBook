@@ -240,7 +240,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
                     },
                     child: SvgPicture.asset(_voiceCloningController.playerController.playerState.isPlaying?icVoicePause:icVoicePlay,
                       color: Colors.white,
-                      height: 40,),
+                      height: 45,),
                   ),
                 ),
                 Expanded(
@@ -262,7 +262,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
                 Expanded(
                   child: AppPrimaryButton(
                     text: reRecord,
-                      textSize:12,
+                      textSize:14.0.sp,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(25),
                         color: Colors.white
@@ -276,7 +276,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
                 Expanded(
                   child: AppPrimaryButton(
                       text: SUBMIT,
-                      textSize:12,
+                      textSize:14.0.sp,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(25),
                           color: Color(CommonUtil().getMyPrimaryColor())
