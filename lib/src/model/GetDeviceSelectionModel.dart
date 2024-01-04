@@ -15,13 +15,13 @@ class GetDeviceSelectionModel {
     try {
       isSuccess = json['isSuccess'];
       if (json['result'] != null) {
-            result = <SelectionResult>[];
-            json['result'].forEach((v) {
-              result!.add(SelectionResult.fromJson(v));
-            });
-          }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        result = <SelectionResult>[];
+        json['result'].forEach((v) {
+          result!.add(SelectionResult.fromJson(v));
+        });
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -60,22 +60,22 @@ class SelectionResult {
       id = json['id'];
       userId = json['userId'];
       profileSetting = json['profileSetting'] != null
-              ? ProfileSetting.fromJson(json['profileSetting'])
-              : null;
+          ? ProfileSetting.fromJson(json['profileSetting'])
+          : null;
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       if (json['tags'] != null) {
-            tags = <Tags>[];
-            json['tags'].forEach((v) {
-              tags!.add(new Tags.fromJson(v));
-            });
-          }
+        tags = <Tags>[];
+        json['tags'].forEach((v) {
+          tags!.add(new Tags.fromJson(v));
+        });
+      }
       primaryProvider = json['primaryProvider'] != null
-              ? new PrimaryProvider.fromJson(json['primaryProvider'])
-              : null;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          ? new PrimaryProvider.fromJson(json['primaryProvider'])
+          : null;
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -125,27 +125,33 @@ class ProfileSetting {
   int? greColor;
   String? preferred_language;
   String? qa_subscription;
+  String? voiceCloningStatus;
+  bool? voiceCloning;
+
   PreferredMeasurement? preferredMeasurement;
 
   CaregiverCommunicationSetting? caregiverCommunicationSetting;
 
-  ProfileSetting(
-      {this.bpMonitor,
-      this.googleFit,
-      this.healthFit,
-      this.allowDigit,
-      this.sheelaLiveReminders,
-      this.glucoMeter,
-      this.weighScale,
-      this.allowDevice,
-      this.thermoMeter,
-      this.pulseOximeter,
-      this.preColor,
-      this.greColor,
-      this.preferred_language,
-      this.qa_subscription,
-      this.caregiverCommunicationSetting,
-      this.preferredMeasurement});
+  ProfileSetting({
+    this.bpMonitor,
+    this.googleFit,
+    this.healthFit,
+    this.allowDigit,
+    this.sheelaLiveReminders,
+    this.glucoMeter,
+    this.weighScale,
+    this.allowDevice,
+    this.thermoMeter,
+    this.pulseOximeter,
+    this.preColor,
+    this.greColor,
+    this.preferred_language,
+    this.qa_subscription,
+    this.caregiverCommunicationSetting,
+    this.preferredMeasurement,
+    this.voiceCloningStatus,
+    this.voiceCloning,
+  });
 
   ProfileSetting.fromJson(Map<String, dynamic> json) {
     try {
@@ -165,23 +171,27 @@ class ProfileSetting {
       preferred_language = json['preferred_language'];
       qa_subscription = json['qa-subscription'];
       preferredMeasurement = json['preferred_measurement'] != null
-              ? new PreferredMeasurement.fromJson(json['preferred_measurement'])
-              : null;
+          ? new PreferredMeasurement.fromJson(json['preferred_measurement'])
+          : null;
       if (json.containsKey('caregiverCommunicationSetting')) {
-            caregiverCommunicationSetting =
-                json['caregiverCommunicationSetting'] != null
-                    ? new CaregiverCommunicationSetting.fromJson(
-                        json['caregiverCommunicationSetting'])
-                    : null;
-          }
+        caregiverCommunicationSetting =
+            json['caregiverCommunicationSetting'] != null
+                ? new CaregiverCommunicationSetting.fromJson(
+                    json['caregiverCommunicationSetting'])
+                : null;
+        voiceCloningStatus =
+            json['voiceCloningStatus']; //get the status of voice cloning
+        voiceCloning = json[
+            'voiceCloning']; // get the value if voice cloning is enabled or not
+      }
 
       if (json.containsKey('preferred_measurement')) {
-            preferredMeasurement = json['preferred_measurement'] != null
-                ? new PreferredMeasurement.fromJson(json['preferred_measurement'])
-                : null;
-          }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        preferredMeasurement = json['preferred_measurement'] != null
+            ? new PreferredMeasurement.fromJson(json['preferred_measurement'])
+            : null;
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -209,6 +219,9 @@ class ProfileSetting {
     if (this.preferredMeasurement != null) {
       data['preferred_measurement'] = this.preferredMeasurement!.toJson();
     }
+    data['voiceCloningStatus'] = this.voiceCloningStatus;
+    data['voiceCloning'] = this.voiceCloning;
+
     return data;
   }
 }
@@ -223,14 +236,14 @@ class PreferredMeasurement {
   PreferredMeasurement.fromJson(Map<String, dynamic> json) {
     try {
       height =
-              json['height'] != null ? new Height.fromJson(json['height']) : null;
+          json['height'] != null ? new Height.fromJson(json['height']) : null;
       weight =
-              json['weight'] != null ? new Height.fromJson(json['weight']) : null;
+          json['weight'] != null ? new Height.fromJson(json['weight']) : null;
       temperature = json['temperature'] != null
-              ? new Height.fromJson(json['temperature'])
-              : null;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          ? new Height.fromJson(json['temperature'])
+          : null;
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -259,8 +272,8 @@ class Height {
     try {
       unitCode = json['unitCode'];
       unitName = json['unitName'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -280,12 +293,12 @@ class PrimaryProvider {
 
   PrimaryProvider.fromJson(Map<String, dynamic> json) {
     try {
-      healthorganizationid = json['healthorganizationid'];
+      healthorganizationid = json['healthorganizationid']??json['healthOrganizationId'];
       additionalInfo = json['additionalInfo'] != null
-              ? new AdditionalInfoModuleAccess.fromJson(json['additionalInfo'])
-              : null;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          ? new AdditionalInfoModuleAccess.fromJson(json['additionalInfo'])
+          : null;
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -303,34 +316,52 @@ class AdditionalInfoModuleAccess {
   List<ModuleAccess>? moduleAccess;
   //boolean variable to indicate whether vitals should be recorded
   bool? recordVitals;
+  bool? providerAllowedVoiceCloningModule;
+  bool? superAdminAllowedVoiceCloningModule;
 
-  AdditionalInfoModuleAccess({this.moduleAccess,this.recordVitals});
+  AdditionalInfoModuleAccess(
+      {this.moduleAccess,
+      this.recordVitals,
+      this.providerAllowedVoiceCloningModule,
+      this.superAdminAllowedVoiceCloningModule});
 
   AdditionalInfoModuleAccess.fromJson(Map<String, dynamic> json) {
     try {
       if (json['module-access'] != null) {
-            moduleAccess = <ModuleAccess>[];
-            json['module-access'].forEach((v) {
-              moduleAccess?.add(new ModuleAccess.fromJson(v));
-            });
-          }
+        moduleAccess = <ModuleAccess>[];
+        json['module-access'].forEach((v) {
+          moduleAccess?.add(new ModuleAccess.fromJson(v));
+        });
+      }
       // Extract and assign the 'record_vitals' value from JSON, default to false if not present
-      recordVitals = (json['record_vitals']??false);
+      recordVitals = (json['record_vitals'] ?? false);
       // Save the 'recordVitals' value to shared preferences
+      providerAllowedVoiceCloningModule =
+          json['providerAllowedVoiceCloningModule'];
+      //get the value if the superadmin has enabled permisson to health organization
+      superAdminAllowedVoiceCloningModule =
+          json['superAdminAllowedVoiceCloningModule'];
+      // get the value if the provider has enabled to caregiver
+
       saveIsVitalsManualRecordingRestricted(recordVitals);
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       // Handle exceptions by saving the 'recordVitals' value and logging the error
       saveIsVitalsManualRecordingRestricted(recordVitals);
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.moduleAccess != null) {
-      data['module-access'] = this.moduleAccess?.map((v) => v.toJson()).toList();
+      data['module-access'] =
+          this.moduleAccess?.map((v) => v.toJson()).toList();
     }
     data['record_vitals'] = this.recordVitals;
+    data['providerAllowedVoiceCloningModule'] =
+        this.providerAllowedVoiceCloningModule;
+    data['superAdminAllowedVoiceCloningModule'] =
+        this.superAdminAllowedVoiceCloningModule;
     return data;
   }
 
@@ -357,8 +388,8 @@ class ModuleAccess {
       id = json['id'];
       name = json['name'];
       access = json['access'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
