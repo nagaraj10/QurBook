@@ -50,6 +50,9 @@ dependencies:
   flutter_absolute_path:
     path: ./flutter_absolute_path
   provider: ^6.0.0
+    #audio_waveforms package was added locally because of Compatibility  issue.
+  audio_waveforms:
+    path: ./audio_waveforms
   get: ^4.1.4
   sqflite: ^2.0.0+3
   devicelocale: ^0.4.1
@@ -104,6 +107,7 @@ dependencies:
   #This Package used to navigate to device settings
   app_settings: ^4.1.6
 
+
   audioplayers: 0.20.1
   mime_type: ^1.0.0
   pin_input_text_field: 4.1.1
@@ -139,6 +143,7 @@ flutter:
     - assets/Qurhome/Qurhome.png
     - assets/Qurhome/
     - assets/navicons/
+    - assets/voice_clone/
     - assets/maya/
     - assets/settings/
     - assets/devices/

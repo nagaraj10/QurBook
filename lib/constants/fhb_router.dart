@@ -31,6 +31,7 @@ import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
 import 'package:myfhb/unit/choose_unit.dart';
 import 'package:myfhb/video_call/model/CallArguments.dart';
 import '../add_family_user_info/screens/add_family_user_info_clone.dart';
+import '../voice_cloning/view/screens/voice_recording_screen.dart';
 import 'router_variable.dart' as router;
 import '../device_integration/viewModel/Device_model.dart';
 import '../devices/device_dashboard.dart';
@@ -190,6 +191,7 @@ setRouter(List<CameraDescription> listOfCameras) async {
         VoiceCloningIntroducuton(), //initialize router for introduction page of voice cloning
     router.rt_VoiceCloningStatus: (context) =>
         VoiceCloningStatus(), //initialize router for introduction page of voice cloning
+    router.rt_record_submission:(BuildContext context)=>VoiceRecordingScreen(),
   };
 
   return fhbRouter;
