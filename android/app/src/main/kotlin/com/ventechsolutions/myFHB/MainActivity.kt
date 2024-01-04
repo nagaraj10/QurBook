@@ -3351,7 +3351,10 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     private val badgeListener = object : BroadcastReceiver() {
         override fun onReceive(ctx: Context, data: Intent) {
             val redirectTo = data.getStringExtra(Constants.PROP_REDIRECT_TO)
+
+            // templateName is for appointment 5 mins before from api
             val templateName = data.getStringExtra(Constants.PROP_TEMP_NAME)
+            // templateName condition is for appointment reminder in 5 mins
              if ((templateName != null) && (templateName.equals("NonTeleconsultationAppointmentPreReminder5")) || (templateName.equals(
                     "AppointmentReminder5"
                 ))) {
@@ -4025,7 +4028,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    /*@RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun scheduleAppointment(data: Map<String, Any>) {
 
         val remindBefore = "5"
@@ -4064,7 +4067,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             )
         }
 
-    }
+    }*/
 
     @SuppressLint("LaunchActivityFromNotification")
     private fun createNotifiationBuilder(
@@ -4227,7 +4230,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         }
     }
 
-    @SuppressLint("LaunchActivityFromNotification")
+    /*@SuppressLint("LaunchActivityFromNotification")
     private fun createScheduleAppointment(
         nsId: Int,
         currentMillis: Long,
@@ -4268,7 +4271,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         } catch (e: Exception) {
             Log.e("crash", e.message.toString())
         }
-    }
+    }*/
 
     private fun createNotificationChannel(importanceChannel: String) {
         // Create the NotificationChannel, but only on API 26+ because
