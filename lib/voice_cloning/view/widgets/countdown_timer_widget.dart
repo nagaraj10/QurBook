@@ -53,7 +53,9 @@ class _VoiceCloningCountDownWidgetState
                 Text(
                   makeSureNotInNoiseDescription,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                  style: TextStyle(color: Colors.white,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600),
                 ),
                 SizedBox(
                   height: 20.h,
@@ -61,7 +63,9 @@ class _VoiceCloningCountDownWidgetState
                 Text(
                   readTheDisplayContentDescription,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                  style: TextStyle(color: Colors.white,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600),
                 ),
                 SizedBox(
                   height: 40.h,
