@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 
 import '../../../colors/fhb_colors.dart' as fhb_colors;
 import '../../../common/CommonUtil.dart';
@@ -55,8 +56,8 @@ class _VoiceCloneFamilyMembersListState
                       ? variable.strVoiceCloningExistingMembersHeader
                       : variable.strVoiceCloningAddMembersHeader,
                   style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 18.0.sp,
+                    color: Colors.grey[600],
+                    fontSize: mobileFontTitle,
                   ),
                   textAlign: TextAlign.center,
                 ),

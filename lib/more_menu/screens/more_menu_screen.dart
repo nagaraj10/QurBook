@@ -2126,6 +2126,15 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         ).then((value) {
           setState(() {});
         });
+      } else if (voiceCloningStatus == strApproved && voiceCloning) {
+        Navigator.pop(
+            context); //removing the router from screen to refresh the screen when returned
+        Navigator.pushNamed(
+          context,
+          router.rt_VoiceCloningStatus,
+        ).then((value) {
+          setState(() {});
+        });
       }
     }
   }

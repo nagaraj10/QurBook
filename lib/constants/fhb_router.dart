@@ -30,6 +30,7 @@ import 'package:myfhb/src/ui/SheelaAI/Views/SheelaAIMainScreen.dart';
 import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
 import 'package:myfhb/unit/choose_unit.dart';
 import 'package:myfhb/video_call/model/CallArguments.dart';
+import 'package:myfhb/voice_cloning/model/voice_cloning_choose_member_arguments.dart';
 import 'package:myfhb/voice_cloning/view/screens/voice_clone_choose_members.dart';
 import '../add_family_user_info/screens/add_family_user_info_clone.dart';
 import '../voice_cloning/view/screens/voice_recording_screen.dart';
@@ -190,15 +191,14 @@ setRouter(List<CameraDescription> listOfCameras) async {
           title: strVoiceCloning,
         ), //initialize router for terms and condition of voice cloning
     router.rt_VoiceCloningIntro: (context) =>
-        VoiceCloningStatus(), //initialize router for introduction page of voice cloning
+        VoiceCloningIntroducuton(), //initialize router for introduction page of voice cloning
     router.rt_VoiceCloningStatus: (context) =>
         VoiceCloningStatus(), //initialize router for introduction page of voice cloning
-    router.rt_record_submission:(BuildContext context)=>VoiceRecordingScreen(),
+    router.rt_record_submission: (BuildContext context) =>
+        VoiceRecordingScreen(),
     router.rt_VoiceCloningChooseMemberSubmit: (context) => VoiceCloningChooseMember(
-          selectedFamilyMembers:
-              ModalRoute.of(context)?.settings.arguments as List<String>?,
-          voiceCloneId: '09144300-f277-4df9-b47a-bc0a2788ce4c',
-        ) //initialize router for Choose and Submit Caregiver Voice Assignment of voice cloning
+        arguments: ModalRoute.of(context)!.settings.arguments
+            as VoiceCloningChooseMemberArguments?) //initialize router for Choose and Submit Caregiver Voice Assignment of voice cloning
   };
 
   return fhbRouter;

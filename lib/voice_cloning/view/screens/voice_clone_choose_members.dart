@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
+import 'package:myfhb/voice_cloning/model/voice_cloning_choose_member_arguments.dart';
 
 import '../../../../colors/fhb_colors.dart' as fhb_colors;
 import '../../../../common/CommonUtil.dart';
@@ -15,12 +19,10 @@ import '../../services/voice_clone_members_services.dart';
 import '../widgets/voice_clone_family_members_list.dart';
 
 class VoiceCloningChooseMember extends StatefulWidget {
-  final List<String>? selectedFamilyMembers;
-  final String voiceCloneId;
+  final VoiceCloningChooseMemberArguments? arguments;
 
   const VoiceCloningChooseMember({
-    required this.voiceCloneId,
-    this.selectedFamilyMembers = const [],
+    required this.arguments,
   });
 
   @override
@@ -51,7 +53,7 @@ class _VoiceCloningChooseMemberState extends State<VoiceCloningChooseMember> {
     final listFamilyMembers =
         await _voiceCloneMembersServices.getFamilyMembersListNew();
     listFamilyMembers.result?.sharedByUsers?.forEach((sharedByUser) {
-      final isSelected = widget.selectedFamilyMembers?.contains(
+      final isSelected = widget.arguments?.selectedFamilyMembers?.contains(
             sharedByUser.id ?? '',
           ) ??
           false;
@@ -134,6 +136,7 @@ class _VoiceCloningChooseMemberState extends State<VoiceCloningChooseMember> {
                             padding: const EdgeInsets.all(8),
                             child: VoiceCloneFamilyMembersList(
                               familyMembers: _listOfFamilyMembers,
+                              isShowcaseExisting: false,
                               onValueSelected: (index) {
                                 setState(() {
                                   _listOfFamilyMembers[index].isSelected =
@@ -158,7 +161,7 @@ class _VoiceCloningChooseMemberState extends State<VoiceCloningChooseMember> {
                       )
                       .toList();
                   final voiceClone = VoiceCloneBaseRequest(
-                    id: widget.voiceCloneId,
+                    id: widget.arguments?.voiceCloneId,
                   );
                   final request =
                       VoiceCloneRequest(user: users, voiceClone: voiceClone);
@@ -171,7 +174,9 @@ class _VoiceCloningChooseMemberState extends State<VoiceCloningChooseMember> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color: isFamilyMembersSelected()
-                        ? Color(CommonUtil().getMyPrimaryColor(),)
+                        ? Color(
+                            CommonUtil().getMyPrimaryColor(),
+                          )
                         : ColorUtils.greycolor,
                   ),
                   child: Padding(
