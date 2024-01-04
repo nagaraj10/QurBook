@@ -60,18 +60,21 @@ class Result {
 class AdditionalInfo {
   int? fileSize;
   String? fileType;
+  String? reason;
 
   AdditionalInfo({this.fileSize, this.fileType});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
     fileSize = json['fileSize'];
     fileType = json['fileType'];
+    reason = json['declineReason'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['fileSize'] = this.fileSize;
     data['fileType'] = this.fileType;
+    data['declineReason'] = this.reason;
     return data;
   }
 }

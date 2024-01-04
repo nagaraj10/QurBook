@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/more_menu/models/voice_clone_status_model.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
@@ -48,10 +51,31 @@ class VoiceCloneStatusController extends GetxController {
 
   getStatusFromApi() async {
     final userId = await PreferenceUtil.getStringValue(KEY_USERID_MAIN);
-    final url = userId! + qr_organizationid + healthOrganizationId.value;
+    final url = strURLVoiceCloneStatus +
+        qr_userId +
+        userId! +
+        qr_organizationid +
+        healthOrganizationId.value;
 
     var response = await _helper.getStatusOfVoiceCloning(url);
     voiceCloneStatusModel = VoiceCloneStatusModel.fromJson(response ?? '');
+    loadingData.value = false;
+  }
+
+  revokeSubmission() async {
+    loadingData.value = true;
+    final body = {
+      'id': voiceCloneStatusModel?.result?.id,
+      'statusCode': 'VCREVOKE',
+    };
+    final jsonData = json.encode(body);
+    final req = await _helper.revokeVoiceClone(
+      strVoiceRevoke,
+      jsonData,
+    );
+    if (req != null) {
+      loadingData.value = false;
+    }
     loadingData.value = false;
   }
 }

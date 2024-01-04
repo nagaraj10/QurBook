@@ -729,11 +729,16 @@ const String strStatus = 'Status : ';
 //Create common String for voice cloning text
 const String strVoiceTerms = 'Accept And Continue';
 const String strInActive = 'InActive';
+const String strApproved = 'Approved'; //status text for approved
+const String strDeclined = 'Declined'; //status text for declined
+const String strReason = 'Reason :'; //status text for reason
+
 const String strStart = 'Start';
 const String strDOS = 'Date of submission : ';
 const String strDescStatus =
     'Your voice sample for voice cloning has been approved and being processed,and you will be notified once it has been processed';
-
+const String strURLVoiceCloneStatus = 'voice-clone/status?';
+const String strVoiceRevoke = 'voice-clone';
 //for  googleFit activation and sync
 const String strGoogleFit = 'Google fit';
 const String strAllowGoogle = 'Allow app to recieve data from google Fit';

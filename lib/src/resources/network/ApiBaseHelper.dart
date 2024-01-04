@@ -3014,6 +3014,20 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
+  Future<dynamic> revokeVoiceClone(String url, String jsonData) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.put(_baseUrl + url,
+          body: jsonData,
+          headers: await headerRequest.getRequestHeadersAuthContent());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
 }
 
 void exitFromApp() async {
