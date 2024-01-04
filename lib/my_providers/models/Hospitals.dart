@@ -67,7 +67,7 @@ class Hospitals {
             sharedCategories = json['sharedCategories'].cast<String>();
           }
       createdBy = json['createdBy'] != null
-              ? new CreatedBy.fromJson(json['createdBy'])
+              ? CreatedBy.fromJson(json['createdBy'])
               : null;
       isPrimaryProvider =
               json['isPrimaryProvider'] != null ? json['isPrimaryProvider'] : false;
@@ -444,7 +444,7 @@ class CreatedBy {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
     data['userName'] = this.userName;

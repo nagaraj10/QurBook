@@ -4,7 +4,6 @@ import 'package:myfhb/feedback/Model/FeedbackTypeModel.dart';
 import 'package:myfhb/feedback/Provider/FeedbackApiProvider.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'dart:async';
 
 class FeedbackController extends GetxController {
   final _apiProvider = FeedbackApiProvider();

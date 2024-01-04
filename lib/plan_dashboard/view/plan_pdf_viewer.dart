@@ -1,5 +1,5 @@
 
-import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
+import 'package:advance_pdf_viewer2/advance_pdf_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -14,7 +14,7 @@ class PlanPdfViewer extends StatelessWidget {
   });
 
   final String? url;
-  final GlobalKey<ScaffoldState>? scaffoldKey;
+  final GlobalKey<ScaffoldMessengerState>? scaffoldKey;
 
   @override
   Widget build(BuildContext context) => Builder(

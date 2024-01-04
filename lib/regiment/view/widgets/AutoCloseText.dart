@@ -43,7 +43,7 @@ class _AutoCloseTextState extends State<AutoCloseText> {
 
   void startTimer() {
     const oneSec = const Duration(seconds: 1);
-    timerRun = new Timer.periodic(
+    timerRun = Timer.periodic(
       oneSec,
       (Timer timer) async {
         if (start == 0) {

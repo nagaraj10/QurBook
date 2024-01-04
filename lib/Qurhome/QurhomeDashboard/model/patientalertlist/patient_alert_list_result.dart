@@ -20,7 +20,7 @@ class PatientAlertListResult {
       if (json['data'] != null) {
             data = <PatientAlertData>[];
             json['data'].forEach((v) {
-              data!.add(new PatientAlertData.fromJson(v));
+              data!.add(PatientAlertData.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -29,7 +29,7 @@ class PatientAlertListResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['totalRecord'] = this.totalRecord;
     data['currentPage'] = this.currentPage;
     data['totalPage'] = this.totalPage;

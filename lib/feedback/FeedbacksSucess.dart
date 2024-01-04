@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../common/CommonUtil.dart';
 import '../common/PreferenceUtil.dart';
-import '../src/utils/PageNavigator.dart';
 import '../constants/variable_constant.dart' as variable;
 import '../src/utils/screenutils/size_extensions.dart';
 

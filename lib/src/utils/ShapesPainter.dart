@@ -29,10 +29,10 @@ class ShapesPainter extends CustomPainter {
     // set the color property of the paint
     paint.color = Colors.deepOrange;
 
-    final Gradient gradient = new LinearGradient(colors: <Color>[
+    final Gradient gradient = LinearGradient(colors: <Color>[
       //Colors.deepPurple[600],
-      Color(new CommonUtil().getMyPrimaryColor()),
-      Color(new CommonUtil().getMyGredientColor()),
+      Color(CommonUtil().getMyPrimaryColor()),
+      Color(CommonUtil().getMyGredientColor()),
     ], stops: [
       0.5,
       1.0
@@ -40,7 +40,7 @@ class ShapesPainter extends CustomPainter {
 
     var rect = Rect.fromLTWH(0, 0, size.width, size.height);
 
-    final Paint paint1 = new Paint()..shader = gradient.createShader(rect);
+    final Paint paint1 = Paint()..shader = gradient.createShader(rect);
 
     // center of the canvas is (x,y) => (width/2, height/2)
     var bottomRight = Offset(size.width / 2, size.height + 60);

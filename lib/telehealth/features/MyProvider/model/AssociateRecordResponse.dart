@@ -16,7 +16,7 @@ class AssociateRecordsResponse {
       success = json['success'];
       message = json['message'];
       response = json['response'] != null
-              ? new Response.fromJson(json['response'])
+              ? Response.fromJson(json['response'])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -24,7 +24,7 @@ class AssociateRecordsResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['status'] = this.status;
     data['success'] = this.success;
     data['message'] = this.message;
@@ -47,7 +47,7 @@ class Response {
       if (json['data'] != null) {
             data = <Data>[];
             json['data'].forEach((v) {
-              data!.add(new Data.fromJson(v));
+              data!.add(Data.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -56,7 +56,7 @@ class Response {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['count'] = this.count;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
@@ -77,14 +77,14 @@ class Data {
       mediaMetaId = json['mediaMetaId'];
       success = json['success'];
       data =
-              json['data'] != null ? new AssociateData.fromJson(json['data']) : null;
+              json['data'] != null ? AssociateData.fromJson(json['data']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['mediaMetaId'] = this.mediaMetaId;
     data['success'] = this.success;
     if (this.data != null) {
@@ -112,7 +112,7 @@ class AssociateData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['isActive'] = this.isActive;
     data['approvedOn'] = this.approvedOn;

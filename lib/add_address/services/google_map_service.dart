@@ -6,10 +6,8 @@ import '../models/place.dart';
 import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 
-import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/webservice_call.dart';
 import '../../constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/src/resources/network/api_services.dart';
 
 class GoogleMapServices {
   final String? sessionToken;

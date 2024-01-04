@@ -41,11 +41,11 @@ class Refund {
       createdOn = json[parameters.strCreatedOn];
       isActive = json[parameters.strIsActive];
       paymentMode = json[parameters.strPaymentMode] != null
-              ? new PaymentMode.fromJson(json[parameters.strPaymentMode])
+              ? PaymentMode.fromJson(json[parameters.strPaymentMode])
               : null;
       refundAmount = json[parameters.strRefundAmount];
       refundStatus = json[parameters.strRefundStatus] != null
-              ? new RefundStatus.fromJson(json[parameters.strRefundStatus])
+              ? RefundStatus.fromJson(json[parameters.strRefundStatus])
               : null;
       totalAmount = json[parameters.strTotalAmount];
       transactionDateTime = json[parameters.strTransactionDateTime];
@@ -62,7 +62,7 @@ class Refund {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strCreatedOn] = this.createdOn;
     data[parameters.strIsActive] = this.isActive;
     if (this.paymentMode != null) {

@@ -1,11 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/add_provider_plan/model/ProviderOrganizationResponse.dart';
 import 'package:myfhb/add_provider_plan/service/PlanProviderViewModel.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/claim/model/credit/CreditBalance.dart';
 import 'package:myfhb/claim/model/credit/CreditBalanceResult.dart';
 import 'package:myfhb/claim/service/ClaimListRepository.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -19,12 +18,11 @@ import 'package:myfhb/plan_wizard/services/PlanWizardService.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:myfhb/widgets/checkout_page_provider.dart';
-import 'package:myfhb/widgets/common_components.dart';
 import 'package:myfhb/widgets/fetching_cart_items_model.dart';
 import 'package:provider/provider.dart';
 
 class PlanWizardViewModel extends ChangeNotifier {
-  PlanWizardService planWizardService = new PlanWizardService();
+  PlanWizardService planWizardService = PlanWizardService();
   final PageController pageController = PageController();
   int currentPage = 0;
   int currentTab = 0;
@@ -690,7 +688,7 @@ class PlanWizardViewModel extends ChangeNotifier {
   }
 
   Future<void> getCreditBalance() async {
-    ClaimListRepository claimListRepository = new ClaimListRepository();
+    ClaimListRepository claimListRepository = ClaimListRepository();
     await claimListRepository.getCreditBalance().then((creditBalance) {
       if (creditBalance.isSuccess! && creditBalance.result != null) {
         creditBalanceResult = creditBalance.result;
@@ -881,15 +879,19 @@ class PlanWizardViewModel extends ChangeNotifier {
             content: Text(
                 'Membership plans cannot be subscribed together with other plans. Clear cart to proceed?'),
             actions: <Widget>[
-              FlatButton(
-                onPressed: () {
+              FlatButtonWidget(
+                bgColor: Colors.transparent,
+                isSelected: true,
+                onPress: () {
                   canProceed = false;
                   Navigator.pop(context);
                 },
-                child: Text('Cancel'),
+                title: 'Cancel',
               ),
-              FlatButton(
-                onPressed: () async {
+              FlatButtonWidget(
+                bgColor: Colors.transparent,
+                isSelected: true,
+                onPress: () async {
                   canProceed = true;
                   await Provider.of<CheckoutPageProvider>(Get.context!,
                           listen: false)
@@ -899,7 +901,7 @@ class PlanWizardViewModel extends ChangeNotifier {
 
                   Navigator.pop(context);
                 },
-                child: Text('Clear Cart'),
+                title: 'Clear Cart',
               ),
             ],
           ),

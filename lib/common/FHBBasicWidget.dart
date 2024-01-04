@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
-import '../main.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'errors_widget.dart';
 import '../my_providers/models/Doctors.dart';
 import '../src/model/user/MyProfileModel.dart';
@@ -17,14 +18,12 @@ import 'PreferenceUtil.dart';
 import '../database/model/UnitsMesurement.dart';
 import '../src/model/user/ProfilePicThumbnail.dart';
 import '../src/ui/audio/AudioScreenArguments.dart';
-import '../src/ui/audio/audio_record_screen.dart';
 import '../src/utils/colors_utils.dart';
 import '../widgets/RaisedGradientButton.dart';
 import 'CommonUtil.dart';
 import 'package:showcaseview/showcaseview.dart';
 import '../colors/fhb_colors.dart' as fhbColors;
 import '../constants/variable_constant.dart' as variable;
-import '../constants/fhb_parameters.dart' as parameters;
 import '../constants/fhb_constants.dart' as Constants;
 
 import 'CommonConstants.dart';
@@ -199,9 +198,14 @@ class FHBBasicWidget {
             )));
   }
 
-  void showInSnackBar(String value, GlobalKey<ScaffoldState> scaffoldstate) {
-    var snackBar = SnackBar(content: Text(value));
-    scaffoldstate.currentState!.showSnackBar(snackBar);
+  void showInSnackBar(String value, GlobalKey<ScaffoldMessengerState> scaffoldstate) {
+    try {
+      var snackBar = SnackBar(content: Text(value));
+      // Using ScaffoldMessenger to show a SnackBar
+      ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 
   Widget getTextFieldForDate(
@@ -266,7 +270,7 @@ class FHBBasicWidget {
     return Text(textTitle,
         textAlign: TextAlign.center,
         style: TextStyle(
-            color: Color(new CommonUtil().getMyPrimaryColor()),
+            color: Color(CommonUtil().getMyPrimaryColor()),
             fontSize: fontSize ?? 20.0));
   }
 
@@ -606,21 +610,23 @@ class FHBBasicWidget {
           style: TextStyle(fontSize: 16.0.sp),
         ),
         actions: <Widget>[
-          FlatButton(
-            onPressed: () {
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () {
               Navigator.of(context).pop(false);
             },
-            child: Text(variable.Cancel,
-                style:
-                    TextStyle(color: Color(CommonUtil().getMyPrimaryColor()))),
+            title: variable.Cancel,
+            titleColor: Color(CommonUtil().getMyPrimaryColor()),
           ),
-          FlatButton(
-            onPressed: () {
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () {
               logout();
             },
-            child: Text(variable.strYes,
-                style:
-                    TextStyle(color: Color(CommonUtil().getMyPrimaryColor()))),
+            title: variable.strYes,
+            titleColor: Color(CommonUtil().getMyPrimaryColor()),
           ),
         ],
       ),
@@ -822,21 +828,23 @@ class FHBBasicWidget {
           style: TextStyle(fontSize: 16.0.sp),
         ),
         actions: <Widget>[
-          FlatButton(
-            onPressed: () {
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () {
               Navigator.of(context).pop(false);
             },
-            child: Text(variable.Cancel,
-                style:
-                    TextStyle(color: Color(CommonUtil().getMyPrimaryColor()))),
+            title: variable.Cancel,
+            titleColor: Color(CommonUtil().getMyPrimaryColor()),
           ),
-          FlatButton(
-            onPressed: () {
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () {
               logout();
             },
-            child: Text(variable.strYes,
-                style:
-                    TextStyle(color: Color(CommonUtil().getMyPrimaryColor()))),
+            title: variable.strYes,
+            titleColor: Color(CommonUtil().getMyPrimaryColor()),
           ),
         ],
       ),

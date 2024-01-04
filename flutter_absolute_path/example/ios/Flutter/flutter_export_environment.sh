@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=/Users/qhnmaalap187/fvm/versions/3.10.0"
-export "FLUTTER_APPLICATION_PATH=/Users/qhnmaalap187/Documents/QurHealth/myfhb_mobile_flutter/local_auth/example"
+export "FLUTTER_APPLICATION_PATH=/Users/qhnmaalap187/Documents/QurHealth/myfhb_mobile_flutter/flutter_absolute_path/example"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_TARGET=lib/main.dart"
 export "FLUTTER_BUILD_DIR=build"

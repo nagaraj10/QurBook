@@ -112,7 +112,7 @@ class Past {
               ? null
               : HealthRecord.fromJson(json[parameters.strHealthRecord]);
       feeDetails = json[parameters.strFeeDetails] != null
-              ? new FeeDetails.fromJson(json[parameters.strFeeDetails])
+              ? FeeDetails.fromJson(json[parameters.strFeeDetails])
               : null;
       doctorFollowUpFee = json[parameters.strDoctorFollowUpFee] == null
               ? null
@@ -121,7 +121,7 @@ class Past {
               ? null
               : Doctor.fromJson(json[parameters.strdoctor]);
       healthOrganization = json[parameters.strHealthOrganization] != null
-              ? new City.fromJson(json[parameters.strHealthOrganization])
+              ? City.fromJson(json[parameters.strHealthOrganization])
               : null;
       isFollowUpTaken = json[parameters.strIsFollowUpTaken] != null
               ? json[parameters.strIsFollowUpTaken]
@@ -147,7 +147,7 @@ class Past {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strId] = id;
     data[parameters.strBookingId] = bookingId;
     data[parameters.strDoctorSessionId] = doctorSessionId;
@@ -247,7 +247,7 @@ class AdditionalInfo {
     }
   }
   Map<String, dynamic>? toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['title'] = title;
     data['Address'] = Address;
     data['description'] = description;

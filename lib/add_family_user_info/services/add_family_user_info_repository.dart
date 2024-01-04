@@ -21,24 +21,6 @@ import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/city_list_model.dart';
 import 'package:myfhb/src/model/user/state_list_model.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import '../models/CityListModel.dart';
-import '../models/address_type_list.dart';
-import '../models/update_add_family_info.dart';
-import '../models/update_relatiosnship_model.dart';
-import '../models/update_self_profile_model.dart';
-import '../models/updated_add_family_relation_info.dart';
-import '../models/verify_email_response.dart';
-import '../../common/CommonConstants.dart';
-import '../../common/PreferenceUtil.dart';
-import '../../constants/fhb_constants.dart' as Constants;
-import '../../constants/fhb_query.dart' as query;
-import '../../constants/webservice_call.dart';
-import '../../my_family/models/relationship_response_list.dart';
-import '../../src/model/common_response.dart';
-import '../../src/model/user/MyProfileModel.dart';
-import '../../src/model/user/city_list_model.dart';
-import '../../src/model/user/state_list_model.dart';
-import '../../src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/chat_socket/model/UploadDocumentModel.dart';
 
 class AddFamilyUserInfoRepository {

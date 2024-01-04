@@ -53,9 +53,9 @@ class DisplayPictureScreen extends StatefulWidget {
 }
 
 class DisplayPictureScreenState extends State<DisplayPictureScreen> {
-  TextEditingController doctorsName = new TextEditingController();
-  TextEditingController hospitalName = new TextEditingController();
-  TextEditingController labName = new TextEditingController();
+  TextEditingController doctorsName = TextEditingController();
+  TextEditingController hospitalName = TextEditingController();
+  TextEditingController labName = TextEditingController();
 
   late TextEditingController fileName;
   late TextEditingController dateOfVisit;
@@ -80,15 +80,15 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   String? categoryID;
   bool firstTym = false;
 
-  GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   late HealthReportListForUserBlock _healthReportListForUserBlock;
 
-  FHBBasicWidget fhbBasicWidget = new FHBBasicWidget();
+  FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
-  MediaResult mediaDataObj = new MediaResult();
+  MediaResult mediaDataObj = MediaResult();
 
-  CategoryResult categoryDataObj = new CategoryResult();
+  CategoryResult categoryDataObj = CategoryResult();
 
   var doctorsData, hospitalData, labData;
 
@@ -120,7 +120,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     return result;
   }
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+      GlobalKey<ScaffoldMessengerState>();
 
   CarouselController? carouselSlider;
   int _current = 0;
@@ -128,7 +129,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    _healthReportListForUserBlock = HealthReportListForUserBlock();
 
     PreferenceUtil.init();
 
@@ -179,8 +180,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     ),
                     gradient: LinearGradient(
                       colors: <Color>[
-                        Color(new CommonUtil().getMyPrimaryColor()),
-                        Color(new CommonUtil().getMyGredientColor())
+                        Color(CommonUtil().getMyPrimaryColor()),
+                        Color(CommonUtil().getMyGredientColor())
                       ],
                     ),
                     onPressed: () {
@@ -227,7 +228,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     if (categoryName != Constants.STR_DEVICES) {
       switch (categoryName) {
         case AppConstants.prescription:
-          new CommonDialogBox().getDialogBoxForPrescription(
+          CommonDialogBox().getDialogBoxForPrescription(
               context,
               hospitalName,
               doctorsName,
@@ -249,7 +250,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
           break;
         case AppConstants.bills:
-          new CommonDialogBox().getDialogBoxForBillsAndOthers(
+          CommonDialogBox().getDialogBoxForBillsAndOthers(
               context,
               containsAudio,
               audioPath,
@@ -271,7 +272,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               fileName);
           break;
         case Constants.STR_OTHERS:
-          new CommonDialogBox().getDialogBoxForBillsAndOthers(
+          CommonDialogBox().getDialogBoxForBillsAndOthers(
               context,
               containsAudio,
               audioPath,
@@ -294,7 +295,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
           break;
         case Constants.STR_MEDICALREPORT:
-          new CommonDialogBox().getDialogBoxForPrescription(
+          CommonDialogBox().getDialogBoxForPrescription(
               context,
               hospitalName,
               doctorsName,
@@ -315,7 +316,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           }, widget.imagePath, null, false, fileName);
           break;
         case Constants.STR_LABREPORT:
-          new CommonDialogBox().getDialogBoxForLabReport(
+          CommonDialogBox().getDialogBoxForLabReport(
               context,
               labName,
               doctorsName,
@@ -336,7 +337,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           }, widget.imagePath, null, false, fileName);
           break;
         case Constants.STR_IDDOCS:
-          new CommonDialogBox().getDialogForIDDocs(
+          CommonDialogBox().getDialogForIDDocs(
               context,
               containsAudio,
               audioPath,
@@ -393,9 +394,9 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   readingDeviceDetails(String? device) {
-    _scaffoldKey.currentState!.showSnackBar(new SnackBar(
-        backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
-        content: new Container(
+    _scaffoldKey.currentState!.showSnackBar(SnackBar(
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        content: Container(
             height: 50,
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -415,16 +416,16 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   Widget _showSkipButton(BuildContext context, String? device) {
-    final GestureDetector skipButtonWithGesture = new GestureDetector(
+    final GestureDetector skipButtonWithGesture = GestureDetector(
       onTap: () {
         _skipBtnTapped(device!);
       },
-      child: new Container(
+      child: Container(
         width: 100,
         height: 40.0,
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          borderRadius: new BorderRadius.all(Radius.circular(25.0)),
+          borderRadius: BorderRadius.all(Radius.circular(25.0)),
           border: Border.all(color: Colors.white),
           boxShadow: <BoxShadow>[
             BoxShadow(
@@ -434,10 +435,10 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             ),
           ],
         ),
-        child: new Center(
-          child: new Text(
+        child: Center(
+          child: Text(
             variable.strSkip,
-            style: new TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
@@ -447,7 +448,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       ),
     );
 
-    return new Padding(
+    return Padding(
         padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 0.0),
         child: skipButtonWithGesture);
   }
@@ -472,7 +473,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           }
         }
 
-        new CommonDialogBox().getDialogBoxForGlucometer(
+        CommonDialogBox().getDialogBoxForGlucometer(
             context,
             Constants.STR_GLUCOMETER,
             containsAudio,
@@ -508,7 +509,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           }
         }
 
-        new CommonDialogBox().getDialogBoxForTemperature(
+        CommonDialogBox().getDialogBoxForTemperature(
             context,
             Constants.STR_THERMOMETER,
             containsAudio,
@@ -548,7 +549,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           }
         }
 
-        new CommonDialogBox().getDialogBoxForWeightingScale(
+        CommonDialogBox().getDialogBoxForWeightingScale(
             context,
             Constants.STR_WEIGHING_SCALE,
             containsAudio,
@@ -591,7 +592,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           }
         }
 
-        new CommonDialogBox().getDialogBoxForPulseOxidometer(
+        CommonDialogBox().getDialogBoxForPulseOxidometer(
             context,
             Constants.STR_PULSE_OXIMETER,
             containsAudio,
@@ -631,7 +632,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           }
         }
 
-        new CommonDialogBox().getDialogBoxForBPMonitor(
+        CommonDialogBox().getDialogBoxForBPMonitor(
             context,
             Constants.STR_BP_MONITOR,
             containsAudio,
@@ -697,28 +698,28 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     setFileName();
 
     isSelected = [true, false];
-    deviceController = new TextEditingController(text: '');
-    memoController = new TextEditingController(text: '');
+    deviceController = TextEditingController(text: '');
+    memoController = TextEditingController(text: '');
 
-    pulse = new TextEditingController(text: '');
-    diaStolicPressure = new TextEditingController(text: '');
+    pulse = TextEditingController(text: '');
+    diaStolicPressure = TextEditingController(text: '');
 
     List<CategoryResult> catgoryDataList = PreferenceUtil.getCategoryType()!;
 
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
 
     if (categoryName != Constants.STR_IDDOCS) {
-      dateOfVisit = new TextEditingController(
+      dateOfVisit = TextEditingController(
           text: FHBUtils().getFormattedDateOnly(dateTime.toString()));
     } else {
-      dateOfVisit = new TextEditingController(text: '');
+      dateOfVisit = TextEditingController(text: '');
     }
 
     isCategoryNameDevices =
         categoryName == Constants.IS_CATEGORYNAME_DEVICES ? true : false;
     categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
 
-    categoryDataObj = new CommonUtil()
+    categoryDataObj = CommonUtil()
         .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
   }
 
@@ -756,8 +757,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       borderColor: Colors.black,
       fillColor: Colors.grey[100],
       borderWidth: 2,
-      selectedBorderColor: Color(new CommonUtil().getMyPrimaryColor()),
-      selectedColor: Color(new CommonUtil().getMyPrimaryColor()),
+      selectedBorderColor: Color(CommonUtil().getMyPrimaryColor()),
+      selectedColor: Color(CommonUtil().getMyPrimaryColor()),
       borderRadius: BorderRadius.circular(10),
       children: <Widget>[
         Padding(
@@ -790,11 +791,11 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   void setFileName() {
     if (categoryName == variable.strDevices) {
-      fileName = new TextEditingController(
+      fileName = TextEditingController(
           text: deviceName! +
               '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     } else {
-      fileName = new TextEditingController(
+      fileName = TextEditingController(
           text: categoryName! +
               '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     }
@@ -835,7 +836,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                         child: Container(
                           height: double.infinity,
                           child: imgUrl!.contains(variable.strpdf)
-                              ? new CommonUtil().showPDFInWidget(imgUrl)
+                              ? CommonUtil().showPDFInWidget(imgUrl)
                               : Image.file(
                                   File(imgUrl),
                                   fit: BoxFit.scaleDown,
@@ -896,31 +897,31 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   onPostDeviceImageData(String? deviceName) async {
-    Map<String, dynamic> postMainData = new Map();
-    Map<String, dynamic> postMediaData = new Map();
+    Map<String, dynamic> postMainData = Map();
+    Map<String, dynamic> postMediaData = Map();
     // String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     //postMainData[parameters.struserId] = userID;
 
     List<CategoryResult> catgoryDataList = PreferenceUtil.getCategoryType()!;
 
-    categoryDataObj = new CommonUtil()
+    categoryDataObj = CommonUtil()
         .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
     postMediaData[parameters.strhealthRecordCategory] =
         categoryDataObj.toJson();
 
     //postMediaData[parameters.strHealthRecordCategory] = categoryDataObj.toJson();
-    MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
+    MediaTypeBlock _mediaTypeBlock = MediaTypeBlock();
 
     MediaDataList mediaTypesResponse =
         await (_mediaTypeBlock.getMediTypesList() as Future<MediaDataList>);
 
     List<MediaResult>? metaDataFromSharedPrefernce = mediaTypesResponse.result;
     if (categoryName != Constants.STR_DEVICES) {
-      mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularLabel(
+      mediaDataObj = CommonUtil().getMediaTypeInfoForParticularLabel(
           categoryID, metaDataFromSharedPrefernce!, categoryName);
     } else {
-      mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularDevice(
+      mediaDataObj = CommonUtil().getMediaTypeInfoForParticularDevice(
           deviceName, metaDataFromSharedPrefernce!);
     }
 
@@ -963,7 +964,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             },
           ),
         ),
-        new SwitchProfile()
+        SwitchProfile()
             .buildActions(context, _keyLoader, callBackToRefresh, false)
       ],
     );

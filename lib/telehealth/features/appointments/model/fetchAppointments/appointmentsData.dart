@@ -28,7 +28,7 @@ class AppointmentsData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strUpcoming] =
         List<dynamic>.from(upcoming!.map((x) => x.toJson()));
     data[parameters.strPast] = List<dynamic>.from(past!.map((x) => x));

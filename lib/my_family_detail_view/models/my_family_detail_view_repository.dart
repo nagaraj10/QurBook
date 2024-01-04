@@ -1,10 +1,8 @@
-import '../../common/PreferenceUtil.dart';
 import '../../src/model/Category/CategoryResponseList.dart';
 import '../../src/model/Category/catergory_data_list.dart';
 import '../../src/model/Health/UserHealthResponseList.dart';
 import '../../src/model/Health/asgard/health_record_list.dart';
 import '../../src/resources/network/ApiBaseHelper.dart';
-import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_query.dart' as query;
 import 'dart:convert' as convert;
 

@@ -70,29 +70,34 @@ class ButtonGroup extends StatelessWidget {
       return _inActiveButton(title, index);
   }
 
-  Widget _activeButton(String title) => FlatButton(
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        disabledColor: secondaryColor,
-        disabledTextColor: color,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.zero,
-        ),
+  Widget _activeButton(String title) => TextButton(
         child: Text(title),
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero,
+          ),
+          backgroundColor: secondaryColor,
+          foregroundColor: color,
+        ),
         onPressed: null,
       );
 
-  Widget _inActiveButton(String title, int index) => FlatButton(
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        color: Colors.transparent,
-        textColor: Colors.white,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.zero,
-        ),
-        child: Text(title,
-            style:
-                TextStyle(color: Color(CommonUtil().getQurhomePrimaryColor()))),
+  Widget _inActiveButton(String title, int index) => TextButton(
         onPressed: () {
           if (onTab != null) onTab!(index);
         },
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero,
+          shape: const RoundedRectangleBorder(),
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+            color: Color(CommonUtil().getQurhomePrimaryColor()),
+          ),
+        ),
       );
 }

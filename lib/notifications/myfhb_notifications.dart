@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../src/utils/FHBUtils.dart';
 import '../widgets/GradientAppBar.dart';
 
 import '../constants/variable_constant.dart' as variable;

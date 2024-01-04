@@ -8,6 +8,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
@@ -62,7 +63,7 @@ class _WebViewExampleState extends State<PaymentPage> {
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    updatePaymentViewModel = new UpdatePaymentViewModel();
+    updatePaymentViewModel = UpdatePaymentViewModel();
     PAYMENT_URL = widget.redirectUrl;
     paymentId = widget.paymentId;
     appointmentId = widget.appointmentId;
@@ -90,8 +91,8 @@ class _WebViewExampleState extends State<PaymentPage> {
       child: Scaffold(
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
-          leading: new IconButton(
-            icon: new Icon(
+          leading: IconButton(
+            icon: Icon(
               Icons.arrow_back_ios,
               size: 24.0.sp,
             ),
@@ -333,11 +334,11 @@ class _WebViewExampleState extends State<PaymentPage> {
             title: Text(STR_ARE_SURE),
             content: Text(STR_SURE_CANCEL_PAY),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text('No'),
               ),
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   if (!isFromSubscribe) {
                     widget.closePage!(STR_FAILED);
@@ -381,7 +382,7 @@ class _WebViewExampleState extends State<PaymentPage> {
     return JavascriptChannel(
         name: 'Toaster',
         onMessageReceived: (JavascriptMessage message) {
-          Scaffold.of(context).showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(message.message)),
           );
         });

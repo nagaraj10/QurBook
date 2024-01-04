@@ -26,8 +26,8 @@ class _MyTicketsListScreenState extends State<MyTicketsListScreen> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-                  Color(new CommonUtil().getMyPrimaryColor()),
-                  Color(new CommonUtil().getMyGredientColor())
+                  Color(CommonUtil().getMyPrimaryColor()),
+                  Color(CommonUtil().getMyGredientColor())
                 ]),
           boxShadow: [
           BoxShadow(

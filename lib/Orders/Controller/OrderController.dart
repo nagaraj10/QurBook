@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Orders/Model/OrderModel.dart';
-import 'package:http/http.dart' as http;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart';

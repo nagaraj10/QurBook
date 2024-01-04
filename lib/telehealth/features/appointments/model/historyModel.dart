@@ -97,7 +97,7 @@ class History {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strAppointmentId] = this.appointmentId;
     data[parameters.strCreatedOn] = this.createdOn;
     data[parameters.strCreatedBy] = this.createdBy;

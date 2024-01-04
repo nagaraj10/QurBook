@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -85,7 +86,7 @@ class _MySettingsState extends State<MySettings> {
   void initState() {
     mInitialTime = DateTime.now();
     selectedList = [];
-    _deviceModel = new DevicesViewModel();
+    _deviceModel = DevicesViewModel();
     super.initState();
 
     getDeviceSelectionValues();
@@ -255,13 +256,17 @@ class _MySettingsState extends State<MySettings> {
         title: Text('Are you sure?'),
         content: Text('Do you want to update the changes'),
         actions: <Widget>[
-          FlatButton(
-            onPressed: () => closeDialog(),
-            child: Text('No'),
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () => closeDialog(),
+            title: 'No',
           ),
-          FlatButton(
-            onPressed: () => createDeviceSelection(),
-            child: Text('Yes'),
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () => createDeviceSelection(),
+            title: 'Yes',
           ),
         ],
       ),
@@ -510,7 +515,7 @@ class _MySettingsState extends State<MySettings> {
                               child: Switch(
                                 value: _isdigitRecognition!,
                                 activeColor:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(CommonUtil().getMyPrimaryColor()),
                                 onChanged: (bool newValue) {
                                   setState(() {
                                     isTouched = true;
@@ -543,7 +548,7 @@ class _MySettingsState extends State<MySettings> {
                               child: Switch(
                                 value: _isdeviceRecognition!,
                                 activeColor:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(CommonUtil().getMyPrimaryColor()),
                                 onChanged: (bool newValue) {
                                   setState(() {
                                     isTouched = true;
@@ -625,7 +630,7 @@ class _MySettingsState extends State<MySettings> {
                             child: Switch(
                               value: PreferenceUtil.getIfQurhomeisDefaultUI(),
                               activeColor:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
+                                  Color(CommonUtil().getMyPrimaryColor()),
                               onChanged: (bool newValue) {
                                 setState(
                                   () {

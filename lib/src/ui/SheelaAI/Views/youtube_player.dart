@@ -138,7 +138,7 @@ class _YoutubePlayerState extends State<MyYoutubePlayer> {
             player: YoutubePlayer(
               controller: _controller!,
               showVideoProgressIndicator: false,
-              progressIndicatorColor: Color(new CommonUtil().getMyPrimaryColor()),
+              progressIndicatorColor: Color(CommonUtil().getMyPrimaryColor()),
               topActions: <Widget>[
                 SizedBox(width: 8.0.w),
 

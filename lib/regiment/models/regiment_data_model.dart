@@ -223,10 +223,10 @@ class RegimentDataModel {
         doctorSessionId:
             json.containsKey('doctorSessionId') ? json['doctorSessionId'] : '',
         serviceCategory: json['serviceCategory'] != null
-            ? new ServiceCategory.fromJson(json['serviceCategory'])
+            ? ServiceCategory.fromJson(json['serviceCategory'])
             : null,
         modeOfService: json['modeOfService'] != null
-            ? new ServiceCategory.fromJson(json['modeOfService'])
+            ? ServiceCategory.fromJson(json['modeOfService'])
             : null,
         dayrepeat: json['hour_repeat'],
         activityThreshold: json.containsKey('activityThreshold')
@@ -289,7 +289,7 @@ class RegimentDataModel {
         'hour_repeat': dayrepeat,
         'activityThreshold': activityThreshold,
         'additionalInfo':
-            additionalInfo?.toJson() ?? new Map<String, dynamic>(),
+            additionalInfo?.toJson() ?? Map<String, dynamic>(),
       };
 }
 
@@ -475,7 +475,7 @@ class EnumValues<T> {
   EnumValues(this.map);
 
   Map<T, String>? get reverse {
-    reverseMap ??= map.map((k, v) => new MapEntry(v, k));
+    reverseMap ??= map.map((k, v) => MapEntry(v, k));
     return reverseMap;
   }
 }

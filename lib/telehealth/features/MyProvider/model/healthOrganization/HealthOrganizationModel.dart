@@ -16,7 +16,7 @@ class HealthOrganizationModel {
       if (json['result'] != null) {
             result = <HealthOrganizationResult>[];
             json['result'].forEach((v) {
-              result!.add(new HealthOrganizationResult.fromJson(v));
+              result!.add(HealthOrganizationResult.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -25,7 +25,7 @@ class HealthOrganizationModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
     if (this.result != null) {

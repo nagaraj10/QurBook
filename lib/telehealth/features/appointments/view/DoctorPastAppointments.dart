@@ -48,13 +48,13 @@ class DoctorPastAppointments extends StatefulWidget {
 class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
   AppointmentsCommonWidget commonWidget = AppointmentsCommonWidget();
   CommonWidgets providerCommonWidget = CommonWidgets();
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
   List<String> bookingIds = [];
   AppointmentsListViewModel? appointmentsViewModel;
   SharedPreferences? prefs;
   ChatViewModel chatViewModel = ChatViewModel();
   List<CategoryResult> filteredCategoryData = [];
-  CategoryListBlock _categoryListBlock = new CategoryListBlock();
+  CategoryListBlock _categoryListBlock = CategoryListBlock();
 
   AppointmentDetailsController appointmentDetailsController= CommonUtil().onInitAppointmentDetailsController();
 
@@ -247,7 +247,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                                   .toString(),
                                       fontWeight: FontWeight.w600,
                                       colors: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
+                                          CommonUtil().getMyPrimaryColor()),
                                     )
                                   : TextWidget(
                                       fontsize: 11.0.sp,
@@ -282,7 +282,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                                 doc.doctorFollowUpFee),
                                 fontWeight: FontWeight.w600,
                                 overflow: TextOverflow.visible,
-                                colors: Color(new CommonUtil().getMyPrimaryColor()),
+                                colors: Color(CommonUtil().getMyPrimaryColor()),
                               ),
                             ],
                           ),
@@ -532,14 +532,14 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
     }
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
-        filteredCategoryData = new CommonUtil().fliterCategories(value!.result!);
+        filteredCategoryData = CommonUtil().fliterCategories(value!.result!);
 
         //filteredCategoryData.add(categoryDataObjClone);
         return filteredCategoryData;
       });
     } else {
       filteredCategoryData =
-          new CommonUtil().fliterCategories(filteredCategoryData);
+          CommonUtil().fliterCategories(filteredCategoryData);
       return filteredCategoryData;
     }
   }

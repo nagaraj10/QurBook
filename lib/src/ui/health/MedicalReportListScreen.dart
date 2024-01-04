@@ -49,23 +49,23 @@ class MedicalReportListScreen extends StatefulWidget {
 
   @override
   _MedicalReportListScreenState createState() =>
-      new _MedicalReportListScreenState();
+      _MedicalReportListScreenState();
 }
 
 class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
   late HealthReportListForUserBlock _healthReportListForUserBlock;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   List<HealthRecordCollection> mediMasterId = [];
 
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    _healthReportListForUserBlock = HealthReportListForUserBlock();
 
     super.initState();
   }
@@ -89,7 +89,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
   Widget _getWidgetToDisplayMedicalrecords(HealthRecordList completeData) {
     List<HealthResult> mediaMetaInfoObj = [];
 
-    mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
+    mediaMetaInfoObj = CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionMedicalReport);
     return RefreshIndicator(
       key: _refreshIndicatorKey,
@@ -151,7 +151,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
               data.isSelected = !data.isSelected!;
               if (data != null &&
                   (data.healthRecordCollection?.length ?? 0) > 0) {
-                mediMasterId = new CommonUtil().getMetaMasterIdListNew(data);
+                mediMasterId = CommonUtil().getMetaMasterIdListNew(data);
                 if (mediMasterId.length > 0) {
                   widget.healthRecordSelected(data.id, mediMasterId, condition);
                 } else {
@@ -180,7 +180,12 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                   data: data,
                 ),
               ),
-            );
+            ).then((value) async {
+              if (value ?? false) {
+                await Future.delayed(Duration(milliseconds: 100));
+                widget.callBackToRefresh();
+              }
+            });
           }
         },
         child: Container(
@@ -269,7 +274,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                               : mobileHeader2),
                     ),
                     Text(
-                      new FHBUtils().getFormattedDateString(data.createdOn),
+                      FHBUtils().getFormattedDateString(data.createdOn),
                       style: TextStyle(
                           color: Colors.grey[400],
                           fontWeight: FontWeight.w200,
@@ -292,7 +297,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                                 AssetImage(variable.icon_record_fav_active),
                                 //TODO chnage theme
                                 color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(CommonUtil().getMyPrimaryColor()),
                                 size: CommonUtil().isTablet!
                                     ? tabHeader2
                                     : mobileHeader2,
@@ -305,7 +310,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                                     : mobileHeader2,
                               ),
                         onPressed: () {
-                          new CommonUtil().bookMarkRecord(data, _refresh);
+                          CommonUtil().bookMarkRecord(data, _refresh);
                         }),
                     (data.metadata!.hasVoiceNotes != null &&
                             data.metadata!.hasVoiceNotes!)
@@ -317,7 +322,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                     widget.mediaMeta!.contains(data.id)
                         ? Icon(
                             Icons.done,
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
                           )
                         : SizedBox(),
                   ],
@@ -341,7 +346,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
             fit: BoxFit.cover,
           );
         } else {
-          return new SizedBox(
+          return SizedBox(
             width: 50.0,
             height: 50.0,
             child: Shimmer.fromColors(
@@ -358,12 +363,12 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
   getDocumentImageWidget(MediaMetaInfo data) {
     return FutureBuilder(
       future: _healthReportListForUserBlock
-          .getDocumentImage(new CommonUtil().getMetaMasterId(data)!),
+          .getDocumentImage(CommonUtil().getMetaMasterId(data)!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Image.memory(snapshot.data);
         } else {
-          return new SizedBox(
+          return SizedBox(
             width: 50.0,
             height: 50.0,
             child: Shimmer.fromColors(

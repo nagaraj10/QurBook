@@ -12,7 +12,7 @@ class CityListModel {
       if (json['result'] != null) {
             result = <CityListData>[];
             json['result'].forEach((v) {
-              result!.add(new CityListData.fromJson(v));
+              result!.add(CityListData.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -22,7 +22,7 @@ class CityListModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['isSuccess'] = this.isSuccess;
       if (this.result != null) {
@@ -58,7 +58,7 @@ class CityListData {
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
-      state = json['state'] != null ? new State.fromJson(json['state']) : null;
+      state = json['state'] != null ? State.fromJson(json['state']) : null;
     } catch (e,stackTrace) {
                   CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
@@ -66,7 +66,7 @@ class CityListData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['id'] = this.id;
       data['name'] = this.name;
@@ -115,7 +115,7 @@ class State {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['id'] = this.id;
       data['name'] = this.name;

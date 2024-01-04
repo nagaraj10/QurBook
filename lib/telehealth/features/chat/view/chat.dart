@@ -1,7 +1,6 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data' show Uint8List;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,13 +11,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
-import 'package:http/http.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -32,9 +28,7 @@ import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
 import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
-import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/model/AppointmentDetailModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
@@ -44,7 +38,6 @@ import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/notificationController.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/ShowImage.dart';
 import 'package:open_filex/open_filex.dart';
 //import 'package:open_file/open_file.dart'; FU2.5
@@ -203,7 +196,7 @@ class ChatScreenState extends State<ChatScreen> {
   final FocusNode focusNode = FocusNode();
   var healthRecordList;
   List<String> recordIds = [];
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
 
   var isSearchVisible = false;
 
@@ -217,7 +210,7 @@ class ChatScreenState extends State<ChatScreen> {
   FlutterSoundPlayer? _mPlayer = FlutterSoundPlayer();
 
   bool isPlaying = false;
-  ChatViewModel chatViewModel = new ChatViewModel();
+  ChatViewModel chatViewModel = ChatViewModel();
 
   String textValue = '';
   AppointmentResult? appointmentResult;
@@ -460,7 +453,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   /*Future getImage() async {
     PickedFile pickedfile;
-    ImagePicker imagepicker = new ImagePicker();
+    ImagePicker imagepicker = ImagePicker();
     pickedfile = await imagepicker.getImage(source: ImageSource.gallery);
     imageFile = File(pickedfile.path);
     if (imageFile != null) {
@@ -676,7 +669,7 @@ class ChatScreenState extends State<ChatScreen> {
             ),
           ),
           actions: <Widget>[
-            FlatButton(
+            ElevatedButton(
               onPressed: () {
                 saveImageToGallery(fileUrl, contxt, isPdf, type);
                 Navigator.pop(context);
@@ -710,7 +703,7 @@ class ChatScreenState extends State<ChatScreen> {
     }
 
     String? _currentImage;
-    Scaffold.of(contxt).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(contxt).showSnackBar(SnackBar(
       content: Text(
         variable.strDownloadStart,
         style: TextStyle(
@@ -723,7 +716,7 @@ class ChatScreenState extends State<ChatScreen> {
     if (isPdfPresent) {
       if (Platform.isIOS) {
         final file = await CommonUtil.downloadFile(fileUrl!, fileType);
-        Scaffold.of(contxt).showSnackBar(
+        ScaffoldMessenger.of(contxt).showSnackBar(
           SnackBar(
             content: Text(
               variable.strFileDownloaded,
@@ -753,7 +746,7 @@ class ChatScreenState extends State<ChatScreen> {
             downloadStatus = true;
           });
         });
-        Scaffold.of(contxt).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(contxt).showSnackBar(SnackBar(
           content: const Text(
             variable.strFileDownloaded,
           ),
@@ -775,7 +768,7 @@ class ChatScreenState extends State<ChatScreen> {
         await downloadFile(fileType, fileUrl!);
         //final file = await CommonUtil.downloadFile(fileUrl, fileType);
         if (Platform.isAndroid) {
-          Scaffold.of(contxt).showSnackBar(SnackBar(
+          ScaffoldMessenger.of(contxt).showSnackBar(SnackBar(
             content: Text(
               variable.strFileDownloaded,
               style: TextStyle(
@@ -896,7 +889,7 @@ class ChatScreenState extends State<ChatScreen> {
               : document[STR_TYPE] == 1
                   // Image
                   ? Container(
-                      child: FlatButton(
+                      child: ElevatedButton(
                         child: Material(
                           child: CachedNetworkImage(
                             placeholder: (context, url) => Container(
@@ -941,8 +934,8 @@ class ChatScreenState extends State<ChatScreen> {
                         onLongPress: () {
                           openDownloadAlert(
                               document[STR_CONTENT], context, false, '.jpg');
-                        },
-                        padding: EdgeInsets.all(0),
+                        },style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.all(0),),
                       ),
                       margin: EdgeInsets.only(
                           bottom: isLastMessageRight(index) ? 20.0 : 10.0,
@@ -1082,7 +1075,7 @@ class ChatScreenState extends State<ChatScreen> {
                                         : '',
                                     style: TextStyle(
                                       color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
+                                          CommonUtil().getMyPrimaryColor()),
                                       fontSize: 16.0.sp,
                                       fontWeight: FontWeight.w400,
                                     ),
@@ -1108,7 +1101,7 @@ class ChatScreenState extends State<ChatScreen> {
                           ),
                           padding: const EdgeInsets.all(15.0),
                           decoration: BoxDecoration(
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(25),
                               bottomLeft: Radius.circular(25),
@@ -1127,7 +1120,7 @@ class ChatScreenState extends State<ChatScreen> {
                       )
                     : document[STR_TYPE] == 1
                         ? Container(
-                            child: FlatButton(
+                            child: ElevatedButton(
                               child: Material(
                                 child: CachedNetworkImage(
                                   placeholder: (context, url) => Container(
@@ -1174,8 +1167,8 @@ class ChatScreenState extends State<ChatScreen> {
                               onLongPress: () {
                                 openDownloadAlert(document[STR_CONTENT],
                                     context, false, '.jpg');
-                              },
-                              padding: EdgeInsets.all(0),
+                              },style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.all(0),),
                             ),
                             margin: EdgeInsets.only(left: 10.0),
                           )
@@ -1203,7 +1196,7 @@ class ChatScreenState extends State<ChatScreen> {
                                     padding: const EdgeInsets.all(15.0),
                                     decoration: BoxDecoration(
                                       color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
+                                          CommonUtil().getMyPrimaryColor()),
                                       borderRadius: BorderRadius.only(
                                         topRight: Radius.circular(25),
                                         bottomLeft: Radius.circular(25),
@@ -1237,7 +1230,7 @@ class ChatScreenState extends State<ChatScreen> {
                                     child: Material(
                                       borderRadius: BorderRadius.circular(10.0),
                                       color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
+                                          CommonUtil().getMyPrimaryColor()),
                                       elevation: 2.0,
                                       child: Container(
                                         padding: EdgeInsets.all(10.0),
@@ -1408,8 +1401,8 @@ class ChatScreenState extends State<ChatScreen> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: <Color>[
-              Color(new CommonUtil().getMyPrimaryColor()),
-              Color(new CommonUtil().getMyGredientColor())
+              Color(CommonUtil().getMyPrimaryColor()),
+              Color(CommonUtil().getMyGredientColor())
             ],
                 stops: [
               0.3,
@@ -1640,7 +1633,7 @@ class ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   filled: true,
-                  hintStyle: new TextStyle(
+                  hintStyle: TextStyle(
                     color: Colors.grey[800],
                     fontSize: 16.0.sp,
                   ),
@@ -1670,7 +1663,7 @@ class ChatScreenState extends State<ChatScreen> {
                           ? widget.peerName![0].toString().toUpperCase()
                           : '',
                       style: TextStyle(
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                        color: Color(CommonUtil().getMyPrimaryColor()),
                         fontSize: 16.0.sp,
                         fontWeight: FontWeight.w400,
                       ),
@@ -1774,14 +1767,14 @@ class ChatScreenState extends State<ChatScreen> {
               child: Column(
                 children: <Widget>[
                   // SpeedDial
-                  new Theme(
-                    data: new ThemeData(
-                      accentColor: Colors.transparent,
+                  Theme(
+                    data: ThemeData(
+                      colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.transparent),
                     ),
                     child: Container(
                       height: 1.sw * 0.1,
                       width: 1.sw * 0.1,
-                      child: new FloatingActionButton(
+                      child: FloatingActionButton(
                         heroTag: null,
                         onPressed: () async {
                           firstTime = false;
@@ -1801,14 +1794,14 @@ class ChatScreenState extends State<ChatScreen> {
                   SizedBoxWidget(
                     height: 5.0.h,
                   ),
-                  new Theme(
-                    data: new ThemeData(
-                      accentColor: Colors.transparent,
+                  Theme(
+                    data: ThemeData(
+                      colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.transparent),
                     ),
                     child: Container(
                       height: 1.sw * 0.1,
                       width: 1.sw * 0.1,
-                      child: new FloatingActionButton(
+                      child: FloatingActionButton(
                         heroTag: null,
                         onPressed: () async {
                           firstTime = false;
@@ -1869,7 +1862,7 @@ class ChatScreenState extends State<ChatScreen> {
         children: <Widget>[
           Row(
             children: <Widget>[
-              FlatButton(
+              ElevatedButton(
                 onPressed: () => onSendMessage('mimi1', 2),
                 child: Image.asset(
                   'images/mimi1.gif',
@@ -1878,7 +1871,7 @@ class ChatScreenState extends State<ChatScreen> {
                   fit: BoxFit.cover,
                 ),
               ),
-              FlatButton(
+              ElevatedButton(
                 onPressed: () => onSendMessage('mimi2', 2),
                 child: Image.asset(
                   'images/mimi2.gif',
@@ -1887,7 +1880,7 @@ class ChatScreenState extends State<ChatScreen> {
                   fit: BoxFit.cover,
                 ),
               ),
-              FlatButton(
+              ElevatedButton(
                 onPressed: () => onSendMessage('mimi3', 2),
                 child: Image.asset(
                   'images/mimi3.gif',
@@ -1901,7 +1894,7 @@ class ChatScreenState extends State<ChatScreen> {
           ),
           Row(
             children: <Widget>[
-              FlatButton(
+              ElevatedButton(
                 onPressed: () => onSendMessage('mimi4', 2),
                 child: Image.asset(
                   'images/mimi4.gif',
@@ -1910,7 +1903,7 @@ class ChatScreenState extends State<ChatScreen> {
                   fit: BoxFit.cover,
                 ),
               ),
-              FlatButton(
+              ElevatedButton(
                 onPressed: () => onSendMessage('mimi5', 2),
                 child: Image.asset(
                   'images/mimi5.gif',
@@ -1919,7 +1912,7 @@ class ChatScreenState extends State<ChatScreen> {
                   fit: BoxFit.cover,
                 ),
               ),
-              FlatButton(
+              ElevatedButton(
                 onPressed: () => onSendMessage('mimi6', 2),
                 child: Image.asset(
                   'images/mimi6.gif',
@@ -1933,7 +1926,7 @@ class ChatScreenState extends State<ChatScreen> {
           ),
           Row(
             children: <Widget>[
-              FlatButton(
+              ElevatedButton(
                 onPressed: () => onSendMessage('mimi7', 2),
                 child: Image.asset(
                   'images/mimi7.gif',
@@ -1942,7 +1935,7 @@ class ChatScreenState extends State<ChatScreen> {
                   fit: BoxFit.cover,
                 ),
               ),
-              FlatButton(
+              ElevatedButton(
                 onPressed: () => onSendMessage('mimi8', 2),
                 child: Image.asset(
                   'images/mimi8.gif',
@@ -1951,7 +1944,7 @@ class ChatScreenState extends State<ChatScreen> {
                   fit: BoxFit.cover,
                 ),
               ),
-              FlatButton(
+              ElevatedButton(
                 onPressed: () => onSendMessage('mimi9', 2),
                 child: Image.asset(
                   'images/mimi9.gif',
@@ -1985,7 +1978,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   Widget buildInput() {
     return IconTheme(
-      data: IconThemeData(color: Color(new CommonUtil().getMyPrimaryColor())),
+      data: IconThemeData(color: Color(CommonUtil().getMyPrimaryColor())),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
@@ -2045,13 +2038,13 @@ class ChatScreenState extends State<ChatScreen> {
                           child:
                               /*!isDateIconShown
                             ?*/
-                              FlatButton(
+                              ElevatedButton(
                                   onPressed: () {
                                     recordIds.clear();
                                     FetchRecords(
                                         0, true, true, false, recordIds);
                                   },
-                                  child: new Icon(
+                                  child: Icon(
                                     Icons.attach_file,
                                     color:
                                         Color(CommonUtil().getMyPrimaryColor()),
@@ -2075,7 +2068,7 @@ class ChatScreenState extends State<ChatScreen> {
             ),
             Flexible(
               flex: 1,
-              child: new Container(
+              child: Container(
                 child: RawMaterialButton(
                   onPressed: () {
                     onSendMessage(
@@ -2094,7 +2087,7 @@ class ChatScreenState extends State<ChatScreen> {
             !isFromVideoCall!
                 ? Flexible(
                     flex: 1,
-                    child: new Container(
+                    child: Container(
                       child: RawMaterialButton(
                         onPressed: () {
                           Navigator.of(context)
@@ -2242,7 +2235,7 @@ class ChatScreenState extends State<ChatScreen> {
           ),
         ),
         actions: <Widget>[
-          FlatButton(
+          ElevatedButton(
             onPressed: () => closeDialog(),
             child: Text(
               'Cancel',
@@ -2251,7 +2244,7 @@ class ChatScreenState extends State<ChatScreen> {
               ),
             ),
           ),
-          FlatButton(
+          ElevatedButton(
             onPressed: () {
               closeDialog();
               getMediaURL(healthRecordList);

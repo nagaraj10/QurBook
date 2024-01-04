@@ -23,7 +23,7 @@ class SlotsResultModel {
       if (json['sessions'] != null) {
             sessions = <SlotSessionsModel>[];
             json['sessions'].forEach((v) {
-              sessions!.add(new SlotSessionsModel.fromJson(v));
+              sessions!.add(SlotSessionsModel.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -32,7 +32,7 @@ class SlotsResultModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['healthOrganizationId'] = this.healthOrganizationId;
     data['doctorId'] = this.doctorId;
     data['date'] = this.date;

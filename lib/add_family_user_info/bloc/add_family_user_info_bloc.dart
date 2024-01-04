@@ -27,7 +27,6 @@ import '../models/verify_email_response.dart';
 import '../../constants/variable_constant.dart' as variable;
 import '../../src/resources/repository/health/HealthReportListForUserRepository.dart';
 import '../../constants/fhb_constants.dart';
-import '../../constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/user/Tags.dart';
 
 class AddFamilyUserInfoBloc extends BaseBloc {

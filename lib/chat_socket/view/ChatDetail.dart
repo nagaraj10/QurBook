@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
@@ -104,7 +105,7 @@ class ChatState extends State<ChatDetail> {
 
   Future<ChatHistoryModel?>? chatHistoryModel;
 
-  ChatViewModel chatViewModel = new ChatViewModel();
+  ChatViewModel chatViewModel = ChatViewModel();
   AppointmentResult? appointmentResult;
 
   final AddFamilyUserInfoRepository _addFamilyUserInfoRepository =
@@ -125,7 +126,7 @@ class ChatState extends State<ChatDetail> {
   final FocusNode focusNode = FocusNode();
   var healthRecordList;
   List<String> recordIds = [];
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
 
   //List<String> wordsList = [];
   //List<String> filteredWordsList = [];
@@ -201,7 +202,7 @@ class ChatState extends State<ChatDetail> {
 
   String isNormalChatUserList = 'false';
 
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
@@ -547,14 +548,14 @@ class ChatState extends State<ChatDetail> {
   }
 
   Widget getChatHistoryList() {
-    return new FutureBuilder<ChatHistoryModel?>(
+    return FutureBuilder<ChatHistoryModel?>(
       future: chatHistoryModel,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 1.4,
-              child: new Center(
+              child: Center(
                 child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,
@@ -677,14 +678,15 @@ class ChatState extends State<ChatDetail> {
                 child: Column(
                   children: <Widget>[
                     // SpeedDial
-                    new Theme(
-                      data: new ThemeData(
-                        accentColor: Colors.transparent,
+                    Theme(
+                      data: ThemeData(
+                        colorScheme: ColorScheme.fromSwatch()
+                            .copyWith(secondary: Colors.transparent),
                       ),
                       child: Container(
                         height: 1.sw * 0.1,
                         width: 1.sw * 0.1,
-                        child: new FloatingActionButton(
+                        child: FloatingActionButton(
                           heroTag: null,
                           onPressed: () async {
                             //firstTime = false;
@@ -713,14 +715,15 @@ class ChatState extends State<ChatDetail> {
                     SizedBoxWidget(
                       height: 5.0.h,
                     ),
-                    new Theme(
-                      data: new ThemeData(
-                        accentColor: Colors.transparent,
+                    Theme(
+                      data: ThemeData(
+                        colorScheme: ColorScheme.fromSwatch()
+                            .copyWith(secondary: Colors.transparent),
                       ),
                       child: Container(
                         height: 1.sw * 0.1,
                         width: 1.sw * 0.1,
-                        child: new FloatingActionButton(
+                        child: FloatingActionButton(
                           heroTag: null,
                           onPressed: () async {
                             //firstTime = false;
@@ -802,8 +805,8 @@ class ChatState extends State<ChatDetail> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: <Color>[
-              Color(new CommonUtil().getMyPrimaryColor()),
-              Color(new CommonUtil().getMyGredientColor())
+              Color(CommonUtil().getMyPrimaryColor()),
+              Color(CommonUtil().getMyGredientColor())
             ],
                 stops: [
               0.3,
@@ -849,7 +852,7 @@ class ChatState extends State<ChatDetail> {
                                 height: 24.0.h,
                                 width: 24.0.w,
                                 child: IconButton(
-                                  padding: new EdgeInsets.all(0.0),
+                                  padding: EdgeInsets.all(0.0),
                                   onPressed: () {
                                     CommonUtil()
                                         .CallbackAPIFromChat(
@@ -1033,7 +1036,7 @@ class ChatState extends State<ChatDetail> {
                     ),
                   ),
                   filled: true,
-                  hintStyle: new TextStyle(
+                  hintStyle: TextStyle(
                     color: Colors.grey[800],
                     fontSize: 16.0.sp,
                   ),
@@ -1219,7 +1222,7 @@ class ChatState extends State<ChatDetail> {
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return IconTheme(
-      data: IconThemeData(color: Color(new CommonUtil().getMyPrimaryColor())),
+      data: IconThemeData(color: Color(CommonUtil().getMyPrimaryColor())),
       child: Container(
         width: (CommonUtil().isTablet ?? false)
             ? MediaQuery.of(context).size.width
@@ -1285,24 +1288,23 @@ class ChatState extends State<ChatDetail> {
                     ),
                     Container(
                       child: SizedBoxWithChild(
-                          width: 46.0.h,
-                          height: 46.0.h,
-                          child:
-                              /*!isDateIconShown
+                        width: 46.0.h,
+                        height: 46.0.h,
+                        child:
+                            /*!isDateIconShown
                             ?*/
-                              FlatButton(
-                                  onPressed: () {
-                                    recordIds.clear();
-                                    FetchRecords(
-                                        0, true, true, false, recordIds);
-                                  },
-                                  child: new Icon(
-                                    Icons.attach_file,
-                                    color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
-                                    size: 22,
-                                  ))
-                          /*: FlatButton(
+                            TextButton(
+                          onPressed: () {
+                            recordIds.clear();
+                            FetchRecords(0, true, true, false, recordIds);
+                          },
+                          child: Icon(
+                            Icons.attach_file,
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            size: 22,
+                          ),
+                        ),
+                        /*: FlatButton(
                                 onPressed: () {
                                   tapDatePicker();
                                 },
@@ -1312,7 +1314,7 @@ class ChatState extends State<ChatDetail> {
                                       Color(CommonUtil().getMyPrimaryColor()),
                                   size: 22,
                                 )),*/
-                          ),
+                      ),
                     )
                   ],
                 ),
@@ -1320,7 +1322,7 @@ class ChatState extends State<ChatDetail> {
             ),
             Flexible(
               flex: 1,
-              child: new Container(
+              child: Container(
                 child: RawMaterialButton(
                   onPressed: () {
                     onSendMessage(textEditingController.text, 0, null, true);
@@ -1338,7 +1340,7 @@ class ChatState extends State<ChatDetail> {
             !isFromVideoCall
                 ? Flexible(
                     flex: 1,
-                    child: new Container(
+                    child: Container(
                       child: RawMaterialButton(
                         onPressed: () {
                           Navigator.of(context)
@@ -1462,7 +1464,7 @@ class ChatState extends State<ChatDetail> {
               : chatList.messages?.type == 1
                   // Image
                   ? Container(
-                      child: FlatButton(
+                      child: TextButton(
                         child: Material(
                           child: CachedNetworkImage(
                             placeholder: (context, url) => Container(
@@ -1508,7 +1510,6 @@ class ChatState extends State<ChatDetail> {
                           openDownloadAlert(chatList.messages?.content, context,
                               false, '.jpg');
                         },
-                        padding: EdgeInsets.all(0),
                       ),
                       margin: EdgeInsets.only(
                           bottom: isIconNeed ? 20.0 : 10.0, right: 10.0),
@@ -1664,7 +1665,7 @@ class ChatState extends State<ChatDetail> {
                                                   .toUpperCase()
                                               : '',
                                           style: TextStyle(
-                                            color: Color(new CommonUtil()
+                                            color: Color(CommonUtil()
                                                 .getMyPrimaryColor()),
                                             fontSize: fontSizeOne,
                                             fontWeight: FontWeight.w400,
@@ -1693,8 +1694,8 @@ class ChatState extends State<ChatDetail> {
                                 ),
                                 padding: const EdgeInsets.all(15.0),
                                 decoration: BoxDecoration(
-                                  color: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor()),
                                   borderRadius: BorderRadius.only(
                                     topRight: Radius.circular(25),
                                     bottomLeft: Radius.circular(25),
@@ -1720,7 +1721,7 @@ class ChatState extends State<ChatDetail> {
                             )
                           : chatList.messages?.type == 1
                               ? Container(
-                                  child: FlatButton(
+                                  child: TextButton(
                                     child: Material(
                                       child: CachedNetworkImage(
                                         placeholder: (context, url) =>
@@ -1774,7 +1775,6 @@ class ChatState extends State<ChatDetail> {
                                           false,
                                           '.jpg');
                                     },
-                                    padding: EdgeInsets.all(0),
                                   ),
                                   margin: EdgeInsets.only(left: 10.0),
                                 )
@@ -1805,7 +1805,7 @@ class ChatState extends State<ChatDetail> {
                                           ),
                                           padding: const EdgeInsets.all(15.0),
                                           decoration: BoxDecoration(
-                                            color: Color(new CommonUtil()
+                                            color: Color(CommonUtil()
                                                 .getMyPrimaryColor()),
                                             borderRadius: BorderRadius.only(
                                               topRight: Radius.circular(25),
@@ -2288,17 +2288,21 @@ class ChatState extends State<ChatDetail> {
             ),
           ),
           actions: <Widget>[
-            FlatButton(
-              onPressed: () {
+            FlatButtonWidget(
+              bgColor: Colors.transparent,
+              isSelected: true,
+              onPress: () {
                 saveImageToGallery(fileUrl, contxt, isPdf, type);
                 Navigator.pop(context);
               },
-              child: Text(
+              title: 'Download',
+              fontSize: fontSizeOne,
+              /*child: Text(
                 'Download',
                 style: TextStyle(
                   fontSize: fontSizeOne,
                 ),
-              ),
+              ),*/
             ),
           ],
         );
@@ -2361,14 +2365,14 @@ class ChatState extends State<ChatDetail> {
       backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
     );
 
-    //Scaffold.of(contxt).showSnackBar();
+    //ScaffoldMessenger.of(contxt).showSnackBar();
 
     _scaffoldKey.currentState!.showSnackBar(snackBar);
 
     if (isPdfPresent) {
       if (Platform.isIOS) {
         final file = await CommonUtil.downloadFile(fileUrl!, fileType);
-        /*Scaffold.of(contxt).showSnackBar(
+        /*ScaffoldMessenger.of(contxt).showSnackBar(
           ,
         );*/
 
@@ -2408,7 +2412,7 @@ class ChatState extends State<ChatDetail> {
         CommonUtil.downloadFile(_currentImage!, fileType)
             .then((filePath) async {
           if (Platform.isAndroid) {
-            //Scaffold.of(contxt).showSnackBar();
+            //ScaffoldMessenger.of(contxt).showSnackBar();
 
             final snackBar = SnackBar(
               content: Text(
@@ -2515,26 +2519,34 @@ class ChatState extends State<ChatDetail> {
           ),
         ),
         actions: <Widget>[
-          FlatButton(
-            onPressed: () => closeDialog(),
-            child: Text(
+          FlatButtonWidget(
+            onPress: () => closeDialog(),
+            title: 'Cancel',
+            fontSize: fontSizeOne,
+            bgColor: Colors.transparent,
+            isSelected: true,
+            /*child: Text(
               'Cancel',
               style: TextStyle(
                 fontSize: fontSizeOne,
               ),
-            ),
+            ),*/
           ),
-          FlatButton(
-            onPressed: () {
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            title: 'Send',
+            fontSize: fontSizeOne,
+            onPress: () {
               closeDialog();
               getMediaURL(healthRecordList);
             },
-            child: Text(
+            /*child: Text(
               'Send',
               style: TextStyle(
                 fontSize: fontSizeOne,
               ),
-            ),
+            ),*/
           ),
         ],
       ),
@@ -2604,7 +2616,7 @@ class ChatState extends State<ChatDetail> {
   }
 
   Widget getLastReceivedDateWidget() {
-    return new FutureBuilder<String>(
+    return FutureBuilder<String>(
       future: getLastReceivedDate(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {

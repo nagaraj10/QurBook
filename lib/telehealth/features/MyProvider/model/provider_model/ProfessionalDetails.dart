@@ -37,16 +37,16 @@ class ProfessionalDetails {
       doctorId = json[parameters.strDoctorId];
       aboutMe = json[parameters.straboutMe];
       qualificationInfo = json[parameters.strqualificationInfo] != null
-              ? new QualificationInfo.fromJson(json[parameters.strqualificationInfo])
+              ? QualificationInfo.fromJson(json[parameters.strqualificationInfo])
               : null;
       medicalCouncilInfo = json[parameters.strmedicalCouncilInfo] != null
-              ? new MedicalCouncilInfo.fromJson(json[parameters.strmedicalCouncilInfo])
+              ? MedicalCouncilInfo.fromJson(json[parameters.strmedicalCouncilInfo])
               : null;
       specialty = json[parameters.strspecialty] != null
-              ? new Specialty.fromJson(json[parameters.strspecialty])
+              ? Specialty.fromJson(json[parameters.strspecialty])
               : null;
       clinicName = json[parameters.strclinicName] != null
-              ? new Specialty.fromJson(json[parameters.strclinicName])
+              ? Specialty.fromJson(json[parameters.strclinicName])
               : null;
       isActive = json[parameters.strIsActive];
       createdOn = json[parameters.strCreatedOn];
@@ -58,7 +58,7 @@ class ProfessionalDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strId] = this.id;
     data[parameters.strDoctorId] = this.doctorId;
     data[parameters.straboutMe] = this.aboutMe;

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonCircularQurHome.dart';
-import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 
 class LoaderQurHome {
   static showLoadingDialog(

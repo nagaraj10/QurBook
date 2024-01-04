@@ -13,14 +13,14 @@ class GetUserIdModel {
       isSuccess = json['isSuccess'];
       message = json['message'];
       result =
-              json['result'] != null ? new UserIdResult.fromJson(json['result']) : null;
+              json['result'] != null ? UserIdResult.fromJson(json['result']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
     if (this.result != null) {
@@ -68,14 +68,14 @@ class UserIdResult {
       lastModifiedBy = json['lastModifiedBy'];
       lastModifiedOn = json['lastModifiedOn'];
       isResident = json['isResident'];
-      user = json['user'] != null ? new User.fromJson(json['user']) : null;
+      user = json['user'] != null ? User.fromJson(json['user']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['specialization'] = this.specialization;
     data['isTelehealthEnabled'] = this.isTelehealthEnabled;
@@ -114,7 +114,7 @@ class Documents {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['code'] = this.code;
     data['documentId'] = this.documentId;
     data['documentName'] = this.documentName;
@@ -139,7 +139,7 @@ class Specialty {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
     return data;
@@ -161,7 +161,7 @@ class User {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     return data;
   }

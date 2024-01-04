@@ -19,7 +19,7 @@ class AppointmentStatus {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['code'] = this.code;
     data['name'] = this.name;
     data['description'] = this.description;

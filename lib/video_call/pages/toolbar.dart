@@ -2,6 +2,7 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
@@ -62,7 +63,7 @@ class _ToolbarState extends State<Toolbar> {
   String doctorId = '';
   String doctorName = '';
   String doctorPicUrl = '';
-  PreferenceUtil prefs = new PreferenceUtil();
+  PreferenceUtil prefs = PreferenceUtil();
 
   static const platform = const MethodChannel('ongoing_ns.channel');
   String callStartTime = '';
@@ -448,7 +449,7 @@ class _ToolbarState extends State<Toolbar> {
   callApiToUpdateNonAppointment() async {
     try {
       final apiResponse = QurHomeApiProvider();
-      Map<String, dynamic> body = new Map();
+      Map<String, dynamic> body = Map();
       final now = DateTime.now();
       String endTime =
           '${DateFormat('yyyy-MM-dd HH:mm:ss', 'en_US').format(now)}';
@@ -535,7 +536,7 @@ class _ToolbarState extends State<Toolbar> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  FlatButton(
+                  TextButton(
                       child: Text('Cancel'),
                       onPressed: () async {
                         try {

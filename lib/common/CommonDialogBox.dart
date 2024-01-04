@@ -9,7 +9,6 @@ import 'package:myfhb/unit/choose_unit.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/unit/choose_unit.dart';
-import '../main.dart';
 import 'CommonConstants.dart';
 import 'CommonUtil.dart';
 import 'FHBBasicWidget.dart';
@@ -30,19 +29,14 @@ import '../search_providers/screens/search_specific_list.dart';
 import '../src/blocs/Category/CategoryListBlock.dart';
 import '../src/blocs/Media/MediaTypeBlock.dart';
 import '../src/blocs/health/HealthReportListForUserBlock.dart';
-import '../src/model/Category/CategoryData.dart';
 import '../src/model/Category/catergory_result.dart';
 import '../src/model/Health/MediaMetaInfo.dart';
 import '../src/model/Health/asgard/health_record_list.dart';
-import '../src/model/Media/MediaData.dart';
-import '../src/model/Media/media_data_list.dart';
 import '../src/model/Media/media_result.dart';
-import '../src/model/common_response.dart';
 import '../src/resources/network/ApiResponse.dart';
 import '../src/ui/MyRecord.dart';
 import '../src/ui/MyRecordsArguments.dart';
 import '../src/ui/audio/AudioScreenArguments.dart';
-import '../src/ui/audio/audio_record_screen.dart';
 import '../src/utils/FHBUtils.dart';
 import '../src/utils/colors_utils.dart';
 import '../src/utils/screenutils/size_extensions.dart';
@@ -870,9 +864,9 @@ class CommonDialogBox {
                 items: mediaDataAry.map((idType) {
                   return DropdownMenuItem(
                     value: idType,
-                    child: new Text(
+                    child: Text(
                       idType.name!,
-                      style: new TextStyle(color: Colors.black),
+                      style: TextStyle(color: Colors.black),
                     ),
                   );
                 }).toList(),
@@ -2132,7 +2126,7 @@ class CommonDialogBox {
 
               Navigator.of(context).pop();
               Navigator.of(context).pop();
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(true);
             });
           } else {
             Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
@@ -2144,6 +2138,10 @@ class CommonDialogBox {
             .createHealtRecords(params.toString(), imagePath, audioPathMain)
             .then((value) {
           if (value != null && value.isSuccess!) {
+            var landingScreenController =
+                CommonUtil().onInitLandingScreenController();
+            landingScreenController.ishealthRecordsScreenRefreshNeeded.value =
+                true;
             _healthReportListForUserBlock
                 .getHelthReportLists()
                 .then((value) async {
@@ -2212,7 +2210,7 @@ class CommonDialogBox {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(true);
               }
             });
           } else {
@@ -3039,7 +3037,7 @@ class CommonDialogBox {
                               padding: EdgeInsets.symmetric(vertical: 10),
                               width: 0.5.sw,
                               child: Text(element!.user != null
-                                  ? new CommonUtil()
+                                  ? CommonUtil()
                                       .getDoctorName(element.user!)!
                                   : ''),
                             ),
@@ -3055,7 +3053,7 @@ class CommonDialogBox {
                         child: Container(
                           width: 0.5.sw,
                           child: Text(element!.user != null
-                              ? new CommonUtil().getDoctorName(element.user!)!
+                              ? CommonUtil().getDoctorName(element.user!)!
                               : ''),
                         ),
                       ))

@@ -2,36 +2,26 @@
 // import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
-import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/DoctorSessionTimeSlot.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
-import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
-    as Constants;
 import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:provider/provider.dart';
 
-import 'package:myfhb/constants/fhb_constants.dart' as prefKey;
 import 'package:myfhb/common/errors_widget.dart';
 
 class ResheduleAppointments extends StatefulWidget {
@@ -122,8 +112,8 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: <Color>[
-                  Color(new CommonUtil().getMyPrimaryColor()),
-                  Color(new CommonUtil().getMyGredientColor())
+                  Color(CommonUtil().getMyPrimaryColor()),
+                  Color(CommonUtil().getMyGredientColor())
                 ],
                     stops: [
                   0.3,
@@ -220,7 +210,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
 
   Widget providerListWidget(List<HealthOrganizationResult> hospitalList) {
     return (hospitalList != null && hospitalList.length > 0)
-        ? new ListView.builder(
+        ? ListView.builder(
             itemBuilder: (BuildContext ctx, int i) =>
                 hospitalListItem(ctx, i, hospitalList),
             itemCount: hospitalList.length,
@@ -451,7 +441,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
 //                                              : getFees(eachHospitalModel[i])),
                           fontsize: 16.0.sp,
                           fontWeight: FontWeight.w400,
-                          colors: Color(new CommonUtil().getMyPrimaryColor())),
+                          colors: Color(CommonUtil().getMyPrimaryColor())),
                     ),
                   ),
                   SizedBox(height: 5),
@@ -470,7 +460,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
     if (fees != null && fees != '') {
       if (fees != '0.00' && fees != '0') {
         try {
-          fees = new CommonUtil()
+          fees = CommonUtil()
               .doubleWithoutDecimalToInt(double.parse(fees))
               .toString();
         } catch (e,stackTrace) {
@@ -572,7 +562,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   }
 
   Widget getHospitalProviderList(String doctorId) {
-    return new FutureBuilder<HealthOrganizationModel?>(
+    return FutureBuilder<HealthOrganizationModel?>(
       future: providerViewModel.getHealthOrgFromDoctor(doctorId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasData) {

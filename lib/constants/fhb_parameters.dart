@@ -1,7 +1,5 @@
 library fhb_parmeters;
 
-import '../telehealth/features/appointments/view/appointments.dart';
-
 const String strStatus = 'status';
 const String strSuccess = 'isSuccess';
 const String strMessage = 'message';

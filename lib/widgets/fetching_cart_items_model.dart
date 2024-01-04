@@ -18,11 +18,11 @@ class FetchingCartItemsModel {
           }
       if (json.containsKey('result')) {
             result =
-                json['result'] != null ? new Result.fromJson(json['result']) : null;
+                json['result'] != null ? Result.fromJson(json['result']) : null;
           }
       if (json.containsKey('diagnostics')) {
             diagnostics = json['diagnostics'] != null
-                ? new Diagnostics.fromJson(json['diagnostics'])
+                ? Diagnostics.fromJson(json['diagnostics'])
                 : null;
           }
     } catch (e,stackTrace) {
@@ -31,7 +31,7 @@ class FetchingCartItemsModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
     if (this.result != null) {
@@ -55,14 +55,14 @@ class Result {
     try {
       productsCount = json['productsCount'];
       totalCartAmount = json['totalCartAmount'];
-      cart = json['cart'] != null ? new Cart.fromJson(json['cart']) : null;
+      cart = json['cart'] != null ? Cart.fromJson(json['cart']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['productsCount'] = this.productsCount;
     data['totalCartAmount'] = this.totalCartAmount;
     if (this.cart != null) {
@@ -88,7 +88,7 @@ class Cart {
       if (json['productList'] != null) {
             productList = <ProductList>[];
             json['productList'].forEach((v) {
-              productList!.add(new ProductList.fromJson(v));
+              productList!.add(ProductList.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -97,7 +97,7 @@ class Cart {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
@@ -127,13 +127,13 @@ class ProductList {
   ProductList.fromJson(Map<String, dynamic> json) {
     try {
       productDetail = json['productDetail'] != null
-              ? new ProductDetail.fromJson(json['productDetail'])
+              ? ProductDetail.fromJson(json['productDetail'])
               : null;
       isActive = json['isActive'];
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       additionalInfo = json['additionalInfo'] != null
-              ? new AdditionalInfo.fromJson(json['additionalInfo'])
+              ? AdditionalInfo.fromJson(json['additionalInfo'])
               : null;
       if (json.containsKey("paidAmount")) {
             paidAmount = json["paidAmount"];
@@ -144,7 +144,7 @@ class ProductList {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.productDetail != null) {
       data['productDetail'] = this.productDetail!.toJson();
     }
@@ -186,7 +186,7 @@ class ProductDetail {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['planName'] = this.planName;
     data['planSubscriptionFee'] = this.planSubscriptionFee;
@@ -207,7 +207,7 @@ class Diagnostics {
     try {
       message = json['message'];
       errorData = json['errorData'] != null
-              ? new ErrorData.fromJson(json['errorData'])
+              ? ErrorData.fromJson(json['errorData'])
               : null;
       includeErrorDataInResponse = json['includeErrorDataInResponse'];
     } catch (e,stackTrace) {
@@ -216,7 +216,7 @@ class Diagnostics {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['message'] = this.message;
     if (this.errorData != null) {
       data['errorData'] = this.errorData!.toJson();
@@ -240,7 +240,7 @@ class ErrorData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['productsCount'] = this.productsCount;
     return data;
   }
@@ -287,7 +287,7 @@ class AdditionalInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['tag'] = this.tag;
     data['remarks'] = this.remarks;
     data['PlanType'] = this.planType;

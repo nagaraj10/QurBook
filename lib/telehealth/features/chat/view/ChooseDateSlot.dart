@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -33,8 +34,8 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        leading: new IconButton(
-          icon: new Icon(
+        leading: IconButton(
+          icon: Icon(
             Icons.arrow_back_ios,
             size: 24.0.sp,
           ),
@@ -61,7 +62,7 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
             )),
             //if (CommonUtil.isUSRegion())
               Container(
-                padding: new EdgeInsets.all(10.sp),
+                padding: EdgeInsets.all(10.sp),
                 margin: EdgeInsets.only(
                     top: 15.sp, bottom: 15.sp, left: 12.sp, right: 12.sp),
                 decoration: ShapeDecoration(
@@ -306,9 +307,11 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
                           );
                         }),
                   ),
-                  FlatButton(
-                    child: Text("Select"),
-                    onPressed: () {
+                  FlatButtonWidget(
+                    bgColor: Colors.transparent,
+                    isSelected: true,
+                    title: 'Select',
+                    onPress: () {
                       dateList[0]["selectedTime"] = selectedTime;
                       print(dateList);
                       Navigator.of(context).pop();

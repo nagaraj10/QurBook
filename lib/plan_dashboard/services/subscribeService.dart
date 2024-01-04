@@ -5,7 +5,6 @@ import '../model/CreateSubscribeModel.dart';
 import '../model/subscribeModel.dart';
 import '../../src/resources/network/ApiBaseHelper.dart';
 import 'dart:convert' as convert;
-import 'package:intl/intl.dart';
 
 class SubscribeService {
   final ApiBaseHelper _helper = ApiBaseHelper();

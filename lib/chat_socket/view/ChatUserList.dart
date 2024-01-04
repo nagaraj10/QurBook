@@ -66,12 +66,12 @@ class _ChatUserListState extends State<ChatUserList> {
   String? patientId = '';
   String patientName = '';
 
-  ChatSocketService chocketService = new ChatSocketService();
+  ChatSocketService chocketService = ChatSocketService();
 
-  FamilyMembers familyMembersModel = new FamilyMembers();
+  FamilyMembers familyMembersModel = FamilyMembers();
   List<SharedByUsers> sharedbyme = [];
 
-  FamilyMembers familyData = new FamilyMembers();
+  FamilyMembers familyData = FamilyMembers();
 
   CaregiverPatientChatModel? familyListModel;
 
@@ -217,7 +217,7 @@ class _ChatUserListState extends State<ChatUserList> {
                   ),
                 ),
                 actions: [
-                  Center(child: new CommonUtil().getNotificationIcon(context)),
+                  Center(child: CommonUtil().getNotificationIcon(context)),
                   SizedBoxWidget(
                     width: 10,
                   ),
@@ -556,11 +556,11 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   Widget checkIfDoctorIdExist() {
-    return new FutureBuilder<String?>(
+    return FutureBuilder<String?>(
       future: getPatientDetails(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return new Scaffold(
+          return Scaffold(
             body: CommonCircularIndicator(),
           );
         } else if (snapshot.hasError) {
@@ -966,6 +966,7 @@ class _ChatUserListState extends State<ChatUserList> {
           '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
+
 //Removed the expanded widget as the images were little stretch for tablet alone
   getIconWidget(PayloadChat userChatList) {
     return CommonUtil().isTablet!
@@ -974,8 +975,7 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   getIcon(PayloadChat userChatList) {
-    return 
-        ClipOval(
+    return ClipOval(
       child: userChatList.profilePicThumbnailURL != null
           ? CachedNetworkImage(
               placeholder: (context, url) => Container(

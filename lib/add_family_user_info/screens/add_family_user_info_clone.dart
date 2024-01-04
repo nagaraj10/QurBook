@@ -2,20 +2,16 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:get/get.dart';
-import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view/verifypatient_screen.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/main.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/widgets/DropdownWithTags.dart';
-import 'package:myfhb/widgets/TagsList.dart';
 import '../../constants/fhb_constants.dart';
-import '../../language/blocks/LanguageBlock.dart';
 import '../../language/model/Language.dart';
 import '../../language/repository/LanguageRepository.dart';
 import '../../src/model/GetDeviceSelectionModel.dart';
@@ -27,7 +23,6 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import '../../add_family_otp/models/add_family_otp_response.dart';
 import '../bloc/add_family_user_info_bloc.dart';
 import '../models/add_family_user_info_arguments.dart';
 import '../models/address_result.dart';
@@ -49,7 +44,6 @@ import '../../src/model/user/City.dart';
 import '../../src/model/user/MyProfileModel.dart';
 import '../../src/model/user/MyProfileResult.dart';
 import '../../src/model/user/UserAddressCollection.dart';
-import '../../src/model/user/userrelationshipcollection.dart';
 import '../../src/resources/network/ApiResponse.dart';
 import '../../src/ui/authentication/OtpVerifyScreen.dart';
 import '../../src/utils/FHBUtils.dart';
@@ -58,14 +52,9 @@ import '../../src/utils/colors_utils.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
 import '../../src/model/user/State.dart' as stateObj;
-import '../../my_family/models/FamilyMembersRes.dart' as contactObj;
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
-import 'package:myfhb/widgets/checkoutpage_genric_widget.dart';
-import '../../constants/fhb_parameters.dart';
-import '../../telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'dart:convert' as convert;
+import 'package:myfhb/widgets/TagsList.dart';
 
 class AddFamilyUserInfoScreen extends StatefulWidget {
   AddFamilyUserInfoArguments? arguments;
@@ -77,7 +66,8 @@ class AddFamilyUserInfoScreen extends StatefulWidget {
 }
 
 class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
-  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state =
+      GlobalKey<ScaffoldMessengerState>();
   final double circleRadius = 100.0.h;
   final double circleBorderWidth = 2.0.w;
   File? imageURI;
@@ -198,8 +188,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
     _addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
     addFamilyUserInfoBloc!.getCustomRoles();
-    _healthReportListForUserRepository =
-        new HealthReportListForUserRepository();
+    _healthReportListForUserRepository = HealthReportListForUserRepository();
 
     getDefaultHeightAndWeight();
 
@@ -541,14 +530,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                                       ? (itemWidth / itemHeight)
                                       : 4.0,
                                   crossAxisSpacing: 10.0,
-                                  controller: new ScrollController(
+                                  controller: ScrollController(
                                       keepScrollOffset: false),
                                   shrinkWrap: true,
                                   scrollDirection: Axis.vertical,
                                   children: selectedTags!.map((Tags tagObj) {
                                     return Container(
                                       height: 60.0.h,
-                                      margin: new EdgeInsets.all(
+                                      margin: EdgeInsets.all(
                                         1.0.sp,
                                       ),
                                       padding: EdgeInsets.all(
@@ -556,17 +545,17 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                                       ),
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                            color: Color(new CommonUtil()
+                                            color: Color(CommonUtil()
                                                 .getMyPrimaryColor())),
                                         borderRadius: BorderRadius.circular(
                                           10.0.sp,
                                         ),
                                       ),
-                                      child: new Row(
+                                      child: Row(
                                         children: [
                                           Expanded(
                                             child: Center(
-                                              child: new TextWidget(
+                                              child: TextWidget(
                                                 text: tagObj.name,
                                                 fontsize: tagTextSize,
                                                 colors: Color(new CommonUtil()
@@ -584,7 +573,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   )
                 else
                   Container(),
-
                 CommonUtil.isUSRegion()
                     ? _showDateOfBirthTextField()
                     : _showDateOfBirthTextFieldNew(),
@@ -831,7 +819,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           inputFormatters: (textEditingController == firstNameController ||
                   textEditingController == lastNameController ||
                   textEditingController == middleNameController)
-              ? [WhitelistingTextInputFormatter(RegExp('[a-zA-Z ]*'))]
+              ? [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z ]*'))]
               : [],
         ));
   }
@@ -1315,8 +1303,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           items: variable.bloodGroupArray.map((eachBloodGroup) {
             return DropdownMenuItem<String>(
               value: eachBloodGroup,
-              child: new Text(eachBloodGroup,
-                  style: new TextStyle(
+              child: Text(eachBloodGroup,
+                  style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16.0.sp,
                       color: ColorUtils.blackcolor)),
@@ -1349,8 +1337,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           items: variable.bloodRangeArray.map((eachBloodGroup) {
             return DropdownMenuItem<String>(
               value: eachBloodGroup,
-              child: new Text(eachBloodGroup,
-                  style: new TextStyle(
+              child: Text(eachBloodGroup,
+                  style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16.0.sp,
                       color: ColorUtils.blackcolor)),
@@ -1376,8 +1364,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 value: selectedBloodRange,
                 items: variable.bloodRangeArray.map((eachBloodGroup) {
                   return DropdownMenuItem(
-                    child: new Text(eachBloodGroup,
-                        style: new TextStyle(
+                    child: Text(eachBloodGroup,
+                        style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0.sp,
                             color: ColorUtils.blackcolor)),
@@ -2071,7 +2059,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     AdditionalInfo? additionalInfo = AdditionalInfo();
     if (widget.arguments!.myProfileResult?.additionalInfo != null) {
       additionalInfo = widget.arguments!.myProfileResult!.additionalInfo;
-      var heightObj = new HeightObj();
+      var heightObj = HeightObj();
       if (isFeetOrInches) {
         heightObj.valueFeet = heightController.text;
         heightObj.valueInches = heightInchController.text;
@@ -2082,7 +2070,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
       additionalInfo.weight = weightController.text;
     } else {
-      var heightObj = new HeightObj();
+      var heightObj = HeightObj();
       if (isFeetOrInches) {
         heightObj.valueFeet = heightController.text;
         heightObj.valueInches = heightInchController.text;
@@ -2122,17 +2110,17 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               profileSettingClone.preferredMeasurement;
 
           if (preferredMeasuremntClone != null) {
-            var heightObj = new Height(
+            var heightObj = Height(
                 unitCode: preferredMeasuremntClone.height?.unitCode,
                 unitName: preferredMeasuremntClone.height?.unitName);
-            var weightObj = new Height(
+            var weightObj = Height(
                 unitCode: preferredMeasuremntClone.weight?.unitCode,
                 unitName: preferredMeasuremntClone.weight?.unitName);
-            var tempObj = new Height(
+            var tempObj = Height(
                 unitCode: preferredMeasuremntClone.temperature?.unitCode,
                 unitName: preferredMeasuremntClone.temperature?.unitName);
 
-            var preferredMeasurementNew = new PreferredMeasurement(
+            var preferredMeasurementNew = PreferredMeasurement(
                 height: heightObj, weight: weightObj, temperature: tempObj);
 
             profileSetting.preferredMeasurement = preferredMeasurementNew;
@@ -2151,29 +2139,29 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 profileSettingClone.qurhomeDefaultUI;
           } else {
             if (CommonUtil.REGION_CODE == 'IN') {
-              var heightObj = new Height(
+              var heightObj = Height(
                   unitCode: Constants.STR_VAL_HEIGHT_IND,
                   unitName: 'feet/Inches');
-              var weightObj = new Height(
+              var weightObj = Height(
                   unitCode: Constants.STR_VAL_WEIGHT_IND,
                   unitName: 'kilograms');
-              var tempObj = new Height(
+              var tempObj = Height(
                   unitCode: Constants.STR_VAL_TEMP_IND,
                   unitName: variable.str_far.toLowerCase());
 
-              var preferredMeasurementNew = new PreferredMeasurement(
+              var preferredMeasurementNew = PreferredMeasurement(
                   height: heightObj, weight: weightObj, temperature: tempObj);
               profileSetting.preferredMeasurement = preferredMeasurementNew;
             } else {
-              var heightObj = new Height(
+              var heightObj = Height(
                   unitCode: Constants.STR_VAL_HEIGHT_US,
                   unitName: 'centimeters');
-              var weightObj = new Height(
+              var weightObj = Height(
                   unitCode: Constants.STR_VAL_WEIGHT_US, unitName: 'pounds');
-              var tempObj = new Height(
+              var tempObj = Height(
                   unitCode: Constants.STR_VAL_TEMP_US, unitName: 'celsius');
 
-              var preferredMeasurementNew = new PreferredMeasurement(
+              var preferredMeasurementNew = PreferredMeasurement(
                   height: heightObj, weight: weightObj, temperature: tempObj);
               profileSetting.preferredMeasurement = preferredMeasurementNew;
             }
@@ -2197,31 +2185,31 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }*/
         } else {
           if (CommonUtil.REGION_CODE == 'IN') {
-            var heightObj = new Height(
+            var heightObj = Height(
                 unitCode: Constants.STR_VAL_HEIGHT_IND,
                 unitName: 'feet/Inches');
-            var weightObj = new Height(
+            var weightObj = Height(
                 unitCode: Constants.STR_VAL_WEIGHT_IND,
                 unitName: variable.str_Kilogram.toLowerCase());
-            var tempObj = new Height(
+            var tempObj = Height(
                 unitCode: Constants.STR_VAL_TEMP_IND,
                 unitName: variable.str_far.toLowerCase());
 
-            var preferredMeasurementNew = new PreferredMeasurement(
+            var preferredMeasurementNew = PreferredMeasurement(
                 height: heightObj, weight: weightObj, temperature: tempObj);
             profileSetting.preferredMeasurement = preferredMeasurementNew;
           } else {
-            var heightObj = new Height(
+            var heightObj = Height(
                 unitCode: Constants.STR_VAL_HEIGHT_US,
                 unitName: variable.str_centi.toLowerCase());
-            var weightObj = new Height(
+            var weightObj = Height(
                 unitCode: Constants.STR_VAL_WEIGHT_US,
                 unitName: variable.str_Pounds.toLowerCase());
-            var tempObj = new Height(
+            var tempObj = Height(
                 unitCode: Constants.STR_VAL_TEMP_US,
                 unitName: variable.str_celesius.toLowerCase());
 
-            var preferredMeasurementNew = new PreferredMeasurement(
+            var preferredMeasurementNew = PreferredMeasurement(
                 height: heightObj, weight: weightObj, temperature: tempObj);
             profileSetting.preferredMeasurement = preferredMeasurementNew;
           }
@@ -2234,31 +2222,31 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (widget.arguments!.fromClass == CommonConstants.user_update ||
             widget.arguments!.fromClass == CommonConstants.my_family) {
           if (CommonUtil.REGION_CODE == 'IN') {
-            var heightObj = new Height(
+            var heightObj = Height(
                 unitCode: Constants.STR_VAL_HEIGHT_IND,
                 unitName: 'feet/Inches');
-            var weightObj = new Height(
+            var weightObj = Height(
                 unitCode: Constants.STR_VAL_WEIGHT_IND,
                 unitName: variable.str_Kilogram.toLowerCase());
-            var tempObj = new Height(
+            var tempObj = Height(
                 unitCode: Constants.STR_VAL_TEMP_IND,
                 unitName: variable.str_far.toLowerCase());
 
-            var preferredMeasurementNew = new PreferredMeasurement(
+            var preferredMeasurementNew = PreferredMeasurement(
                 height: heightObj, weight: weightObj, temperature: tempObj);
             profileSetting.preferredMeasurement = preferredMeasurementNew;
           } else {
-            var heightObj = new Height(
+            var heightObj = Height(
                 unitCode: Constants.STR_VAL_HEIGHT_US,
                 unitName: variable.str_centi.toLowerCase());
-            var weightObj = new Height(
+            var weightObj = Height(
                 unitCode: Constants.STR_VAL_WEIGHT_US,
                 unitName: variable.str_Pounds.toLowerCase());
-            var tempObj = new Height(
+            var tempObj = Height(
                 unitCode: Constants.STR_VAL_TEMP_US,
                 unitName: variable.str_celesius.toLowerCase());
 
-            var preferredMeasurementNew = new PreferredMeasurement(
+            var preferredMeasurementNew = PreferredMeasurement(
                 height: heightObj, weight: weightObj, temperature: tempObj);
             profileSetting.preferredMeasurement = preferredMeasurementNew;
           }
@@ -3301,7 +3289,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   void methodToAddFamilyFromNotification() async {
-    FamilyListBloc _familyListBloc = new FamilyListBloc();
+    FamilyListBloc _familyListBloc = FamilyListBloc();
 
     var mobileNo = '${mobileNoController.text}';
     var addFamilyMemberRequest = {};
@@ -3344,7 +3332,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           Navigator.pop(_keyLoader.currentContext!);
           Navigator.pop(context);
           MyProfileModel myProfileModel =
-              new MyProfileModel(isSuccess: true, message: userLinking.message);
+              MyProfileModel(isSuccess: true, message: userLinking.message);
           Navigator.of(context)
               .pop({"myProfileData": convert.jsonEncode(myProfileModel)});
         }

@@ -18,7 +18,7 @@ class Languages {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strlanguageId] = this.languageId;
     data[parameters.strName] = this.name;
     return data;

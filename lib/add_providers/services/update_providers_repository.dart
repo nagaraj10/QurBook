@@ -2,7 +2,6 @@
 import 'dart:convert' as convert;
 
 import '../models/update_providers_id.dart';
-import '../../common/CommonConstants.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_parameters.dart' as parameters;

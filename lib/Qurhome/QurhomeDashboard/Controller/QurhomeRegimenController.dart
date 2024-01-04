@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:http/http.dart' as http;
@@ -93,7 +92,7 @@ class QurhomeRegimenController extends GetxController {
   startUpdateUITimer() {
     updateUITimer = Timer.periodic(const Duration(seconds: 30), (timer) {
       var regimentList = qurHomeRegimenResponseModel?.regimentsList ?? [];
-      refreshTheNextActivity(regimentList,null);
+      refreshTheNextActivity(regimentList, null);
     });
   }
 
@@ -115,7 +114,7 @@ class QurhomeRegimenController extends GetxController {
       qurHomeRegimenResponseModel =
           await _apiProvider.getRegimenList(date, patientId: patientId);
       var regimentList = qurHomeRegimenResponseModel?.regimentsList ?? [];
-      refreshTheNextActivity(regimentList,patientId);
+      refreshTheNextActivity(regimentList, patientId);
       loadingData.value = false;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -126,7 +125,7 @@ class QurhomeRegimenController extends GetxController {
     }
   }
 
-  refreshTheNextActivity(List<RegimentDataModel> regimentList,var userId) {
+  refreshTheNextActivity(List<RegimentDataModel> regimentList, var userId) {
     if (regimentList.length > 0) {
       regimentList.removeWhere((element) {
         bool isOnceInplan = element.dayrepeat?.trim().toLowerCase() ==

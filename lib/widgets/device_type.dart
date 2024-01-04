@@ -9,7 +9,7 @@ class Device {
   static double height = size.height;
   static double screenWidth = width / devicePixelRatio;
   static double screenHeight = height / devicePixelRatio;
-  static ui.Size screenSize = new ui.Size(screenWidth, screenHeight);
+  static ui.Size screenSize = ui.Size(screenWidth, screenHeight);
   final bool? isTablet, isPhone, isIos, isAndroid, isIphoneX, hasNotch;
   static Device? _device;
   static Function? onMetricsChange;
@@ -35,7 +35,7 @@ class Device {
         height = size.height;
         screenWidth = width / devicePixelRatio;
         screenHeight = height / devicePixelRatio;
-        screenSize = new ui.Size(screenWidth, screenHeight);
+        screenSize = ui.Size(screenWidth, screenHeight);
 
         onMetricsChange!();
       };
@@ -93,7 +93,7 @@ class Device {
 
     if (_hasTopOrBottomPadding()) hasNotch = true;
 
-    return _device = new Device(
+    return _device = Device(
         isTablet: isTablet,
         isPhone: isPhone,
         isAndroid: isAndroid,

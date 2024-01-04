@@ -56,7 +56,7 @@
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <service android:exported="false" android:name="com.gsh.api.BLEManager" />
+        <service android:exported="false" android:name="com.gsh.api.BLEManager" tools:replace="android:exported" />
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
         <meta-data android:name="com.facebook.sdk.AutoLogAppEventsEnabled" android:value="true"/>
@@ -126,10 +126,10 @@
             android:showOnLockScreen="true"
             android:theme="@style/FullScreenTheme" />
 
-        <receiver android:exported="false" tools:node="merge" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
+        <receiver android:exported="false" tools:node="merge" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" tools:replace="android:exported" />
         <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
             android:exported="false"
-            tools:node="merge" >
+            tools:node="merge" tools:replace="android:exported" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -137,72 +137,72 @@
         <receiver
             android:name=".SMSBroadcastReceiver"
             android:permission="com.google.android.gms.auth.api.phone.permission.SEND"
-            android:exported="false">
+            android:exported="false" tools:replace="android:exported">
             <intent-filter>
                 <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
             </intent-filter>
         </receiver>
         <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver"
             tools:node="merge"
-            android:exported="false">
+            android:exported="false" tools:replace="android:exported">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-        <receiver android:exported="false" android:name=".services.AcceptTransportationAppointment" />
-        <receiver android:exported="false" android:name=".services.RejectTransportationAppointment" />
-        <receiver android:exported="false" android:name=".services.DeclineReciver" />
-        <receiver android:exported="false" android:name=".services.AcceptReceiver" />
-        <receiver android:exported="false" android:name=".services.CancelAppointment" />
-        <receiver android:exported="false" android:name=".services.RescheduleAppointment" />
-        <receiver android:exported="false" android:name=".services.OnTapNotification" />
-        <receiver android:exported="false" android:name=".services.ChatwithCC" />
-        <receiver android:exported="false" android:name=".services.OnTapNotificationBackground" />
-        <receiver android:exported="false" android:name=".services.Accept" />
-        <receiver android:exported="false" android:name=".services.EscalateCareGiver" />
-        <receiver android:exported="false" android:name=".services.AppointmentPaymentNotification" />
-        <receiver android:exported="false" android:name=".services.PlanPaymentNotification" />
-        <receiver android:exported="false" android:name=".services.FamilyAdditionNotification" />
-        <receiver android:exported="false" android:name=".services.ReferrelPatientAccept" />
+        <receiver android:exported="false" android:name=".services.AcceptTransportationAppointment" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.RejectTransportationAppointment" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.DeclineReciver" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.AcceptReceiver" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.CancelAppointment" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.RescheduleAppointment" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.OnTapNotification" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.ChatwithCC" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.OnTapNotificationBackground" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.Accept" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.EscalateCareGiver" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.AppointmentPaymentNotification" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.PlanPaymentNotification" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.FamilyAdditionNotification" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.ReferrelPatientAccept" tools:replace="android:exported" />
 
-                <receiver android:exported="false" android:name=".services.PartnerServiceTicket" />
-        <receiver android:exported="false" android:name="androidx.media.session.MediaButtonReceiver" >
+                <receiver android:exported="false" android:name=".services.PartnerServiceTicket" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name="androidx.media.session.MediaButtonReceiver" tools:replace="android:exported" >
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
 
-        <receiver android:exported="false" android:name=".services.SheelaFollowReceiver" />
+        <receiver android:exported="false" android:name=".services.SheelaFollowReceiver" tools:replace="android:exported" />
 
-        <receiver android:exported="false" android:name=".services.Renew" />
-        <receiver android:exported="false" android:name=".services.Callback" />
-        <receiver android:exported="false" android:name=".services.Decline" />
-        <receiver android:exported="false" android:name=".services.AcceptCareGiver" />
-        <receiver android:exported="false" android:name=".services.RejectCareGiver" />
+        <receiver android:exported="false" android:name=".services.Renew" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.Callback" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.Decline" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.AcceptCareGiver" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.RejectCareGiver" tools:replace="android:exported" />
 
-        <service android:exported="false" android:name=".services.AVServices" />
+        <service android:exported="false" android:name=".services.AVServices" tools:replace="android:exported" />
 
-        <service android:exported="false" android:name=".services.CriticalAlertServices" />
+        <service android:exported="false" android:name=".services.CriticalAlertServices" tools:replace="android:exported" />
 
-        <receiver android:exported="false" android:name=".services.DismissReceiver" />
-        <receiver  android:exported="false" android:name=".services.NoReceiver" />
-        <receiver android:exported="false" android:name=".services.SnoozeReceiver" />
-        <receiver android:exported="false" android:name=".services.ViewMemberReceiver" />
-        <receiver android:exported="false" android:name=".services.CommunicationSettingReceiver" />
+        <receiver android:exported="false" android:name=".services.DismissReceiver" tools:replace="android:exported" />
+        <receiver  android:exported="false" android:name=".services.NoReceiver" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.SnoozeReceiver" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.ViewMemberReceiver" tools:replace="android:exported" />
+        <receiver android:exported="false" android:name=".services.CommunicationSettingReceiver" tools:replace="android:exported" />
         <receiver
             android:exported="false"
         android:name=".services.ReminderBroadcaster"
-        android:process=":remote" />
+        android:process=":remote" tools:replace="android:exported" />
 
         <receiver
             android:exported="false"
             android:name=".services.ScheduleAppointment"
-            android:process=":remote" />
+            android:process=":remote" tools:replace="android:exported" />
 
         <service
             android:name=".services.MyFirebaseInstanceService"
             android:enabled="true"
-            android:exported="false">
+            android:exported="false" tools:replace="android:exported">
             <intent-filter>
                 <!--<action android:name="com.google.firebase.INSTANCE_ID_EVENT" />-->
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -224,7 +224,7 @@
 
         <service
             android:exported="false"
-            android:name="com.dooboolab.TauEngine.FlautoBackgroundAudioService" >
+            android:name="com.dooboolab.TauEngine.FlautoBackgroundAudioService" tools:replace="android:exported" >
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />

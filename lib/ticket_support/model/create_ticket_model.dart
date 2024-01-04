@@ -34,7 +34,7 @@ class CreateTicketModel {
     try {
       isSuccess = json['isSuccess'];
       message = json['message'];
-      result = json['result'] != null ? new Result.fromJson(json['result']) : null;
+      result = json['result'] != null ? Result.fromJson(json['result']) : null;
     } catch (e,stackTrace) {
                   CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
@@ -411,7 +411,7 @@ class EnumValues<T> {
 
   Map<T, String>? get reverse {
     if (reverseMap == null) {
-      reverseMap = map.map((k, v) => new MapEntry(v, k));
+      reverseMap = map.map((k, v) => MapEntry(v, k));
     }
     return reverseMap;
   }

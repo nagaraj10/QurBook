@@ -11,10 +11,10 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/regiment/models/GetEventIdModel.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
-import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/models/save_response_model.dart';
 import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
+
 
 class SymptomService {
 

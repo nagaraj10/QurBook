@@ -1,12 +1,8 @@
-
-import 'dart:convert';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class FirebaseAnalyticsService {
-  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   static FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: analytics);
 
@@ -26,7 +22,7 @@ class FirebaseAnalyticsService {
   }
 
   Future<void> setUserId(String? uId) async {
-    await analytics.setUserId(uId);
+    await analytics.setUserId(id: uId);
   }
 
   Future<void> trackEvent(

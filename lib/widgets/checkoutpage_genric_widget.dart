@@ -14,7 +14,6 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/plan_dashboard/model/CreateSubscribeModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
@@ -22,16 +21,14 @@ import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
 import 'package:myfhb/widgets/checkout_page_provider.dart';
 import 'package:myfhb/widgets/fetching_cart_items_model.dart';
 import 'package:myfhb/widgets/payment_gatway.dart';
-import 'package:myfhb/widgets/result_page_new.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 
 class CheckoutPageWidgets {
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
   MyProfileModel? myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
@@ -84,17 +81,19 @@ class CheckoutPageWidgets {
                                   SizedBoxWithChild(
                                     width: 90,
                                     height: 40,
-                                    child: FlatButton(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                          side: BorderSide(
-                                              color: Color(commonUtil
-                                                  .getMyPrimaryColor()))),
-                                      color: Colors.transparent,
-                                      textColor:
-                                          Color(commonUtil.getMyPrimaryColor()),
-                                      padding: EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                            side: BorderSide(
+                                                color: Color(commonUtil
+                                                    .getMyPrimaryColor()))),
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor: Color(
+                                            commonUtil.getMyPrimaryColor()),
+                                        padding: EdgeInsets.all(8.0),
+                                      ),
                                       onPressed: () {
                                         Provider.of<CheckoutPageProvider>(
                                                 context,
@@ -111,17 +110,19 @@ class CheckoutPageWidgets {
                                   SizedBoxWithChild(
                                     width: 90,
                                     height: 40,
-                                    child: FlatButton(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                          side: BorderSide(
-                                              color: Color(commonUtil
-                                                  .getMyPrimaryColor()))),
-                                      color: Colors.transparent,
-                                      textColor:
-                                          Color(commonUtil.getMyPrimaryColor()),
-                                      padding: EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                            side: BorderSide(
+                                                color: Color(commonUtil
+                                                    .getMyPrimaryColor()))),
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor: Color(
+                                            commonUtil.getMyPrimaryColor()),
+                                        padding: EdgeInsets.all(8.0),
+                                      ),
                                       onPressed: () {
                                         Navigator.pop(context);
                                         CommonUtil.showLoadingDialog(context,
@@ -540,7 +541,7 @@ class CheckoutPageWidgets {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return new WillPopScope(
+          return WillPopScope(
             onWillPop: () async => false,
             child: SimpleDialog(children: <Widget>[
               Container(
@@ -565,7 +566,7 @@ class CheckoutPageWidgets {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        OutlineButton(
+                        OutlinedButton(
                           child: Text(
                             'cancel'.toUpperCase(),
                             style: TextStyle(
@@ -580,18 +581,19 @@ class CheckoutPageWidgets {
                             Navigator.of(context).pop();
                             isAccepted = false;
                           },
-                          borderSide: BorderSide(
+                          style: OutlinedButton.styleFrom(
+                          side: BorderSide(
                             color: Color(
                               commonUtil.getMyPrimaryColor(),
                             ),
                             style: BorderStyle.solid,
                             width: 1,
-                          ),
+                          ),),
                         ),
                         SizedBox(
                           width: 10.0.h,
                         ),
-                        OutlineButton(
+                        OutlinedButton(
                           //hoverColor: Color(getMyPrimaryColor()),
                           child: Text(
                             'complete profile'.toUpperCase(),
@@ -621,14 +623,14 @@ class CheckoutPageWidgets {
                                   isForFamily: false,
                                 ));
                             isAccepted = true;
-                          },
-                          borderSide: BorderSide(
+                          },style: OutlinedButton.styleFrom(
+                          side: BorderSide(
                             color: Color(
                               commonUtil.getMyPrimaryColor(),
                             ),
                             style: BorderStyle.solid,
                             width: 1,
-                          ),
+                          ),),
                         ),
                       ],
                     ),
@@ -700,7 +702,7 @@ class CheckoutPageWidgets {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                OutlineButton(
+                OutlinedButton(
                   //hoverColor: Color(getMyPrimaryColor()),
                   child: Text(
                     'accept'.toUpperCase(),
@@ -725,18 +727,20 @@ class CheckoutPageWidgets {
                           isAutoDismiss: true);
                     }
                   },
-                  borderSide: BorderSide(
-                    color: Color(
-                      commonUtil.getMyPrimaryColor(),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      color: Color(
+                        commonUtil.getMyPrimaryColor(),
+                      ),
+                      style: BorderStyle.solid,
+                      width: 1,
                     ),
-                    style: BorderStyle.solid,
-                    width: 1,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
-                OutlineButton(
+                OutlinedButton(
                   child: Text(
                     'Reject'.toUpperCase(),
                     style: TextStyle(
@@ -749,14 +753,14 @@ class CheckoutPageWidgets {
                   onPressed: () async {
                     Get.back();
                     isAccpted = false;
-                  },
-                  borderSide: BorderSide(
+                  },style: OutlinedButton.styleFrom(
+                  side: BorderSide(
                     color: Color(
                       commonUtil.getMyPrimaryColor(),
                     ),
                     style: BorderStyle.solid,
                     width: 1,
-                  ),
+                  ),),
                 ),
               ],
             ),

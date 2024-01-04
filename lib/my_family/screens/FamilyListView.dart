@@ -1,10 +1,8 @@
-import 'dart:typed_data';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 
 import '../../src/utils/screenutils/size_extensions.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
@@ -15,11 +13,9 @@ import '../models/FamilyData.dart';
 import '../models/FamilyMembersResponse.dart';
 import '../models/LinkedData.dart';
 import '../models/ProfileData.dart';
-import '../models/Sharedbyme.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/variable_constant.dart' as variable;
 import '../models/relationships.dart';
-import '../../src/model/user/MyProfileModel.dart';
 
 class FamilyListView {
   FamilyMemberResult? familyData;
@@ -120,9 +116,9 @@ class FamilyListView {
     }
 
     /* if (sharedByMeList == null) {
-      sharedByMeList = new List();
+      sharedByMeList = List();
       sharedByMeList.add(
-          new SharedByUsers(profileData: profileData, linkedData: linkedData));
+          SharedByUsers(profileData: profileData, linkedData: linkedData));
     } else {
       if (!sharedByMeList.contains(
           new Sharedbyme(profileData: profileData, linkedData: linkedData))) {

@@ -105,7 +105,7 @@ class LaboratoryIds {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strId] = this.id;
     data[parameters.strCreatedBy] = this.createdBy;
     data[parameters.strName] = this.name;

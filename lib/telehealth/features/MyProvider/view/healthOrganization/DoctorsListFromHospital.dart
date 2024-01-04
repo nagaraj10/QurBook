@@ -48,13 +48,13 @@ class DoctorListFromHospital extends StatefulWidget {
 }
 
 class _HealthOrganizationState extends State<DoctorListFromHospital> {
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
   late MyProviderViewModel providerViewModel;
   DateTime _selectedValue = DateTime.now();
   int selectedPosition = 0;
   bool firstTym = false;
   String? doctorsName;
-  CommonWidgets commonWidgets = new CommonWidgets();
+  CommonWidgets commonWidgets = CommonWidgets();
 
   List<AvailableTimeSlotsModel> doctorTimeSlotsModel =
       <AvailableTimeSlotsModel>[];
@@ -71,7 +71,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
     mInitialTime = DateTime.now();
     super.initState();
     getDataForProvider();
-    _providersBloc = new ProvidersBloc();
+    _providersBloc = ProvidersBloc();
   }
 
   @override
@@ -118,8 +118,8 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: <Color>[
-                Color(new CommonUtil().getMyPrimaryColor()),
-                Color(new CommonUtil().getMyGredientColor())
+                Color(CommonUtil().getMyPrimaryColor()),
+                Color(CommonUtil().getMyGredientColor())
               ],
                   stops: [
                 0.3,
@@ -332,14 +332,14 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        new Stack(
-          overflow: Overflow.visible,
+        Stack(
+          clipBehavior: Clip.none,
           children: <Widget>[
             Container(
               alignment: Alignment.center,
               child: commonWidgets.getClipOvalImageForHos(docs[i].doctor!),
             ),
-            new Positioned(
+            Positioned(
               bottom: 0.0,
               right: 2.0,
               child: commonWidgets.getDoctorStatusWidgetNewForHos(
@@ -399,7 +399,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                                 fontsize: 16.0.sp,
                                 fontWeight: FontWeight.w400,
                                 colors: Color(
-                                    new CommonUtil().getMyPrimaryColor())),
+                                    CommonUtil().getMyPrimaryColor())),
                           ),
                         ),
                       ],
@@ -482,7 +482,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
   void getDataForProvider() async {
     if (firstTym == false) {
       firstTym = true;
-      providerViewModel = new MyProviderViewModel();
+      providerViewModel = MyProviderViewModel();
     }
   }
 
@@ -491,7 +491,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
     if (fees != null && fees != '') {
       if (fees != '0.00' && fees != '0') {
         try {
-          fees = new CommonUtil()
+          fees = CommonUtil()
               .doubleWithoutDecimalToInt(double.parse(fees))
               .toString();
         } catch (e,stackTrace) {
@@ -546,7 +546,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
   }
 
   Widget getHospitalProviderList(String healthOrgId) {
-    return new FutureBuilder<List<ResultFromHospital>?>(
+    return FutureBuilder<List<ResultFromHospital>?>(
       future: providerViewModel.getDoctorsFromHospital(healthOrgId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -565,7 +565,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
 
   Widget providerListWidget(List<ResultFromHospital>? doctorList) {
     return (doctorList != null && doctorList.length > 0)
-        ? new ListView.builder(
+        ? ListView.builder(
             itemBuilder: (BuildContext ctx, int i) =>
                 doctorListItem(ctx, i, doctorList),
             itemCount: doctorList.length,

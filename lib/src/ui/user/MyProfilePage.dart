@@ -44,8 +44,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
   //MyProfileBloc _myProfileBloc;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
-  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
-  FlutterToast toast = new FlutterToast();
+  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
+  FlutterToast toast = FlutterToast();
   var mobile = TextEditingController();
   var name = TextEditingController();
   var email = TextEditingController();
@@ -73,7 +73,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
   var cntrlr_corp_name = TextEditingController(text: '');
 
   LanguageModel? languageModelList;
-  LanguageRepository languageBlock = new LanguageRepository();
+  LanguageRepository languageBlock = LanguageRepository();
 
   bool _isEditable = false;
   double sliverBarHeight = 220;
@@ -92,10 +92,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
     PreferenceUtil.init();
     // getPreferredLanguage();
     super.initState();
-    languageBlock = new LanguageRepository();
-    addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
+    languageBlock = LanguageRepository();
+    addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
     _healthReportListForUserRepository =
-        new HealthReportListForUserRepository();
+        HealthReportListForUserRepository();
     addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
 
     if (_mediaTypeBlock == null) {
@@ -308,9 +308,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
       if (data.dateOfBirth != null) {
         if (CommonUtil.isUSRegion()) {
           dob.text =
-              new FHBUtils().getFormattedDateOnly(data.dateOfBirth ?? "");
+              FHBUtils().getFormattedDateOnly(data.dateOfBirth ?? "");
         } else {
-          dob.text = new FHBUtils().getFormattedDateOnlyNew(data.dateOfBirth)!;
+          dob.text = FHBUtils().getFormattedDateOnlyNew(data.dateOfBirth)!;
         }
       }
       if (data != null) {
@@ -379,7 +379,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                                       (Provider.of<UserPlansViewModel>(context)
                                               .isGoldMember)
                                           ? Colors.transparent
-                                          : Color(new CommonUtil()
+                                          : Color(CommonUtil()
                                               .getMyPrimaryColor()))),
                         ),
                         child: data.profilePicThumbnailUrl != null
@@ -514,14 +514,14 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     //                 style: TextStyle(
                     //                     fontSize: 15.0.sp,
                     //                     fontWeight: FontWeight.w400,
-                    //                     color: Color(new CommonUtil()
+                    //                     color: Color(CommonUtil()
                     //                         .getMyPrimaryColor())))),
                     //         onTap: () {
-                    //           new FHBUtils().check().then((intenet) {
+                    //           FHBUtils().check().then((intenet) {
                     //             if (intenet != null && intenet) {
                     //               verifyEmail();
                     //             } else {
-                    //               new FHBBasicWidget().showInSnackBar(
+                    //               FHBBasicWidget().showInSnackBar(
                     //                   Constants.STR_NO_CONNECTIVITY,
                     //                   scaffold_state);
                     //             }
@@ -798,11 +798,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
   }
 
   void verifyEmail() {
-    AddFamilyUserInfoBloc addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
+    AddFamilyUserInfoBloc addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
     addFamilyUserInfoBloc.verifyEmail().then((value) {
       if (value!.success! &&
           value.message!.contains(Constants.MSG_VERIFYEMAIL_VERIFIED)) {
-        new FHBBasicWidget().showInSnackBar(value.message!, scaffold_state);
+        FHBBasicWidget().showInSnackBar(value.message!, scaffold_state);
       } else {
         PreferenceUtil.saveString(Constants.PROFILE_EMAIL, email.text);
 
