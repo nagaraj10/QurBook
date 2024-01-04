@@ -44,6 +44,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /// Retrieving and Listening to VoiceCloningController reference from the Provider
     _voiceCloningController = Provider.of<VoiceCloningController>(context,listen: true);
     return Scaffold(
       appBar:AppBar(
@@ -79,7 +80,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
       ),
     );
   }
-
+///Widget for the Recorder
   _recorderControllerWidget() {
     return Container(
       width: double.infinity,
@@ -181,7 +182,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
       ),
     );
   }
-
+///Widget for Player controller
   _playerControllerWidget() => Container(
       width: double.infinity,
       color: Color(0xFF333232),
@@ -296,6 +297,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
 
   @override
   void dispose() {
+    ///Dispose the player and recorder to avoid  memory leaks.
     _voiceCloningController.disposeRecorder();
     super.dispose();
   }

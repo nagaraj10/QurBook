@@ -20,6 +20,7 @@ class _VoiceCloningCountDownWidgetState
   @override
   void initState() {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      ///Starting the countdown timer once  dialog has visible.
       Provider.of<VoiceCloningController>(context, listen: false).startCountDownTimer();
     });
     super.initState();
@@ -27,6 +28,7 @@ class _VoiceCloningCountDownWidgetState
 
   @override
   Widget build(BuildContext context) {
+    /// Retrieving and Listening to VoiceCloningController reference from the Provider
       mControllerWatch =Provider.of<VoiceCloningController>(context);
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -96,6 +98,7 @@ class _VoiceCloningCountDownWidgetState
   }
   @override
   void dispose() {
+    ///cancelling the countdown timer if dialog as disappears.
     mControllerWatch.countDownTimer?.cancel();
     super.dispose();
   }
