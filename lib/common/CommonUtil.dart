@@ -1798,6 +1798,7 @@ class CommonUtil {
       {bool forNotification = false}) {
     try {
       if (string != "" && string != null) {
+        //check if date is empty or not
         var dateTime = DateTime.tryParse(string);
         if (dateTime != null) {
           return dateConversionToApiFormat(dateTime,
@@ -1816,7 +1817,8 @@ class CommonUtil {
         DateFormat format = DateFormat(
             CommonUtil.REGION_CODE == 'IN' ? "dd-MM-yyyy" : "MM-dd-yyyy");
 
-        var now = DateTime.now();
+        var now =
+            DateTime.now(); //when date is empty use the current date to fomat
         final df = new DateFormat(
             CommonUtil.REGION_CODE == 'IN' ? 'dd-MMM-yyyy' : 'MMM-dd-yyyy');
 
