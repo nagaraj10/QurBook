@@ -746,6 +746,9 @@ const String ongoing_channel = 'ongoing_ns.channel';
 const String startOnGoingNS = 'startOnGoingNS';
 const String notifyCaregiverForMedicalRecord =
     'notifyCaregiverForMedicalRecord';
+const String NonTeleconsultationAppointmentPreReminder5 =
+    'NonTeleconsultationAppointmentPreReminder5';
+const String AppointmentReminder5 = 'AppointmentReminder5';
 const String mode = 'mode';
 const String start = 'start';
 const String stop = 'stop';

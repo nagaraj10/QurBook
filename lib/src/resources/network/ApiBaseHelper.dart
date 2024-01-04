@@ -2983,13 +2983,44 @@ class ApiBaseHelper {
     return responseJson;
   }
 
- Future<dynamic> getSheelaConfig(String url) async {
+  Future<dynamic> getSheelaConfig(String url) async {
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
       var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAccept());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> getStatusOfVoiceCloning(String url) async {
+    var headers = headerRequest.getAuths();
+    var responseJson;
+    try {
+      var response = await ApiServices.get(
+        _baseUrl + url,
+        headers: await headerRequest.getAuths(),
+      );
+      responseJson = _returnResponse(response);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+
+      print(e);
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> revokeVoiceClone(String url, String jsonData) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.put(_baseUrl + url,
+          body: jsonData,
+          headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);

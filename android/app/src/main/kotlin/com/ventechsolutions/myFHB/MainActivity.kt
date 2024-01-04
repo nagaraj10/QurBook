@@ -150,7 +150,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     private val ENABLE_BACKGROUND_NOTIFICATION = Constants.ENABLE_BACKGROUND_NOTIFICATION
     private val DISABLE_BACKGROUND_NOTIFICATION = Constants.DISABLE_BACKGROUND_NOTIFICATION
     private val GET_CURRENT_LOCATION = Constants.GET_CURRENT_LOCATION
-    private val APPOINTMENT_TIME = Constants.APPOINTMENT_DETAILS
     private val CLOSE_SHEELA_DIALOG = Constants.CLOSE_SHEELA_DIALOG
     private var sharedValue: String? = null
     private var username: String? = null
@@ -2615,33 +2614,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             }
         }
 
-        MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            APPOINTMENT_TIME
-        ).setMethodCallHandler { call, result ->
-            if (call.method == APPOINTMENT_TIME) {
-                Log.d("APPOINTMENT_TIME", "APPOINTMENT_TIME")
-                try {
-                    val data = call.argument<String>("data")
-                    val retMap: Map<String, Any> = Gson().fromJson(
-                        data, object : TypeToken<HashMap<String?, Any?>?>() {}.type
-                    )
-
-                    scheduleAppointment(retMap)
-                    try {
-                        appointmentId = retMap[idSheela] as String
-                        eid = retMap[eidSheela] as String
-                        sayText = retMap[sayTextSheela] as String
-                    } catch (e: Exception) {
-                    }
-
-                    result.success("success")
-
-                } catch (e: Exception) {
-                    Log.d("Catch", "" + e.toString())
-                }
-            }
-        }
+       
 
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
@@ -3172,6 +3145,14 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                 "${Constants.PROP_ACK}&$sharedValue&${senderId}&${senderName}&${senderProfile}&${groupId}"
         } else if (redirect_to == "claimList") {
             sharedValue = "${redirect_to}&${message}&$rawBody"
+        }
+        // templateName condition is for appointment reminder in 5 mins from api
+        else if ((templateName != null) && (templateName.equals("NonTeleconsultationAppointmentPreReminder5")) || (templateName.equals(
+                "AppointmentReminder5"
+            ))
+        ) {
+            // this sheela&Appointments is for receving in flutter with appointmentID & eid
+            sharedValue = "sheela&Appointments&$appointmentID&$eid"
         } else if (redirect_to == "sheela|pushMessage") {
             sharedValue = "isSheelaFollowup&${message}&$rawBody&$audioURL&$EVEId"
         } else if (redirect_to == "isSheelaFollowup") {
@@ -3381,7 +3362,20 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     private val badgeListener = object : BroadcastReceiver() {
         override fun onReceive(ctx: Context, data: Intent) {
             val redirectTo = data.getStringExtra(Constants.PROP_REDIRECT_TO)
-            if (redirectTo != null && redirectTo.equals("isSheelaFollowup")) {
+
+            // templateName is for appointment 5 mins before from api
+            val templateName = data.getStringExtra(Constants.PROP_TEMP_NAME)
+            // templateName condition is for appointment reminder in 5 mins
+             if ((templateName != null) && (templateName.equals("NonTeleconsultationAppointmentPreReminder5")) || (templateName.equals(
+                    "AppointmentReminder5"
+                ))) {
+                 val message = data.getStringExtra("message")
+                 val rawMessage = data.getStringExtra("rawMessage")
+                 val appointmentId = data.getStringExtra("appointmentId")
+                 val eid = data.getStringExtra("eid")
+                 mEventChannel.success("sheela&Appointments&$appointmentId&$eid")
+            }
+            else if (redirectTo != null && redirectTo.equals("isSheelaFollowup")) {
                 val message = data.getStringExtra("message")
                 val rawMessage = data.getStringExtra("rawMessage")
                 val sheelaAudioMsgUrl = data.getStringExtra("sheelaAudioMsgUrl")
@@ -3752,47 +3746,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
-    private fun scheduleAppointment(data: Map<String, Any>) {
-
-        val remindBefore = "5"
-        val nsId = data["eid"] as String
-        val eDateTime: String = data["estart"] as String
-        val eDateReplace: String = eDateTime.replace("T", " ")
-        val date: String = eDateReplace.split(" ")[0]
-        val time: String = eDateReplace.split(" ")[1]
-        val alarmHour = time.split(":")[0].toInt()
-        val alarmMin = time.split(":")[1].toInt()
-        val alarmDate = date.split("-")[2].toInt()
-        val alarmMonth = date.split("-")[1].toInt()
-        val alarmYear = date.split("-")[0].toInt()
-
-        // Set the alarm to start for specific time
-        val calendar: Calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            set(Calendar.YEAR, alarmYear)
-            set(Calendar.MONTH, alarmMonth - 1)
-            set(Calendar.DAY_OF_MONTH, alarmDate)
-            set(Calendar.HOUR_OF_DAY, alarmHour)
-            set(Calendar.MINUTE, alarmMin)
-            set(Calendar.SECOND, 0)
-        }
-
-        calendar.add(Calendar.MINUTE, -remindBefore.toInt())
-
-        //check the reminder time with current time if its true allow user to create alaram
-        if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
-            val eIdAppend = "${nsId}${"000"}"
-            val notificationAndAlarmId = NotificationID.currentMillis
-            SharedPrefUtils().saveAlarmId(this, eIdAppend, notificationAndAlarmId)
-            createScheduleAppointment(
-                notificationAndAlarmId,
-                calendar.timeInMillis,
-            )
-        }
-
-    }
-
     @SuppressLint("LaunchActivityFromNotification")
     private fun createNotifiationBuilder(
         title: String,
@@ -3938,49 +3891,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             Log.e("title------------------", title)
             Log.e("mills------------------", currentMillis.toString())
             Log.e("alramId------------------", nsId.toString())
-            val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    currentMillis,
-                    pendingIntent
-                )
-            } else {
-                alarmManager.set(AlarmManager.RTC_WAKEUP, currentMillis, pendingIntent)
-            }
-
-        } catch (e: Exception) {
-            Log.e("crash", e.message.toString())
-        }
-    }
-
-    @SuppressLint("LaunchActivityFromNotification")
-    private fun createScheduleAppointment(
-        nsId: Int,
-        currentMillis: Long,
-    ) {
-        try {
-
-            val notificationIntent = Intent(this, ScheduleAppointment::class.java)
-            notificationIntent.putExtra(ScheduleAppointment.NOTIFICATION_ID, nsId)
-
-            val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.getBroadcast(
-                    this,
-                    nsId,
-                    notificationIntent,
-                    PendingIntent.FLAG_IMMUTABLE
-                )
-            } else {
-                PendingIntent.getBroadcast(
-                    this,
-                    nsId,
-                    notificationIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT
-                )
-            }
-
-
             val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 alarmManager.setExactAndAllowWhileIdle(

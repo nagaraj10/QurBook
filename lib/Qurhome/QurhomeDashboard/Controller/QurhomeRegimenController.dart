@@ -172,10 +172,6 @@ class QurhomeRegimenController extends GetxController {
           currentIndex = regimentList.length - 1;
         }
       }
-      if (userId == null) {
-        updateAppointments(regimentList);
-      }
-      qurhomeDashboardController.getValuesNativeAppointment();
     }
 
     update(["newUpdate"]);
@@ -183,36 +179,6 @@ class QurhomeRegimenController extends GetxController {
       isFirstTime.value = false;
       getUserDetails();
       getCareCoordinatorId();
-    }
-  }
-
-  updateAppointments(List<RegimentDataModel> regimentList) async {
-    for (int i = 0; i < regimentList.length; i++) {
-      if (regimentList[i].activityOrgin != null) {
-        if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin ==
-            'Appointment') {
-          if (regimentList[i].estart != null && regimentList[i].estart != '') {
-            if (regimentList[i].eid != null && regimentList[i].eid != '') {
-              var apiReminder = regimentList[i];
-              const platform = MethodChannel(APPOINTMENT_DETAILS);
-              try {
-                if (Platform.isIOS) {
-                  platform.invokeMethod(
-                      APPOINTMENT_DETAILS, apiReminder.toJson());
-                } else {
-                  await platform.invokeMethod(APPOINTMENT_DETAILS,
-                      {'data': jsonEncode(apiReminder.toJson())});
-                }
-              } catch (e, stackTrace) {
-                CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-                if (kDebugMode) {
-                  print(e);
-                }
-              }
-            }
-          }
-        }
-      }
     }
   }
 
