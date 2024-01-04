@@ -6,12 +6,13 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+// Widget for displaying web content in a WebView
 class WebContentWidget extends StatefulWidget {
   final String? selectedUrl;
 
-  const WebContentWidget(
-      {
-        required this.selectedUrl});
+  const WebContentWidget({
+    required this.selectedUrl,
+  });
 
   @override
   _MyWebContentWidget createState() => _MyWebContentWidget();
@@ -20,6 +21,7 @@ class WebContentWidget extends StatefulWidget {
 class _MyWebContentWidget extends State<WebContentWidget> {
   late WebViewController _controller;
   bool isLoading = true;
+
   @override
   void dispose() {
     super.dispose();
@@ -27,21 +29,24 @@ class _MyWebContentWidget extends State<WebContentWidget> {
 
   @override
   Widget build(BuildContext context) => Stack(
-      children: <Widget>[
-        WebView(
-          initialUrl: widget.selectedUrl,
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (webViewController) {
-            _controller = webViewController;
-            _controller.loadUrl(widget.selectedUrl!);
-          },
-          onPageFinished: (_) {
-            setState(() {
-              isLoading = false;
-            });
-          },
-        ),
-        if (isLoading) CommonCircularIndicator() else Container(),
-      ],
-    );
+    children: <Widget>[
+      // WebView widget to display the web content
+      WebView(
+        initialUrl: widget.selectedUrl,
+        javascriptMode: JavascriptMode.unrestricted,
+        onWebViewCreated: (webViewController) {
+          _controller = webViewController;
+          _controller.loadUrl(widget.selectedUrl!);
+        },
+        // Callback when the web page finishes loading
+        onPageFinished: (_) {
+          setState(() {
+            isLoading = false; // Update isLoading when the page finishes loading
+          });
+        },
+      ),
+      // Display a circular indicator while the page is loading
+      if (isLoading) CommonCircularIndicator() else Container(),
+    ],
+  );
 }
