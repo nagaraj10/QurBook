@@ -367,9 +367,9 @@ class _NotificationScreen extends State<NotificationScreen> {
   }
 
   Widget listView(List<NotificationResult>? notification) {
-    // List<NotificationResult> pendingNotification = new List();
-    // List<NotificationResult> readNotification = new List();
-    // List<NotificationResult> mainNotificationList = new List();
+    // List<NotificationResult> pendingNotification = List();
+    // List<NotificationResult> readNotification = List();
+    // List<NotificationResult> mainNotificationList = List();
 
     // notification.result.sort((a, b) => b.createdOn.compareTo(a.createdOn));
 
@@ -761,7 +761,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                           padding: EdgeInsets.only(left: 20, right: 20),
                           child: Row(
                             children: [
-                              OutlineButton(
+                              OutlinedButton(
                                 onPressed: !notification
                                         ?.result[index]?.isActionDone
                                     ? () {
@@ -804,7 +804,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                               SizedBox(
                                 width: 15.0.w,
                               ),
-                              OutlineButton(
+                              OutlinedButton(
                                 onPressed: !notification
                                         ?.result[index]?.isActionDone
                                     ? () {
@@ -934,17 +934,19 @@ class _NotificationScreen extends State<NotificationScreen> {
                                   SizedBoxWithChild(
                                     width: 90.0.w,
                                     height: 40.0.h,
-                                    child: FlatButton(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                          side: BorderSide(
-                                              color: Color(CommonUtil()
-                                                  .getMyPrimaryColor()))),
-                                      color: Colors.transparent,
-                                      textColor: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                      padding: EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                            side: BorderSide(
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor()))),
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                        padding: EdgeInsets.all(8.0),
+                                      ),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
@@ -957,17 +959,19 @@ class _NotificationScreen extends State<NotificationScreen> {
                                   SizedBoxWithChild(
                                     width: 90.0.w,
                                     height: 40.0.h,
-                                    child: FlatButton(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                          side: BorderSide(
-                                              color: Color(new CommonUtil()
-                                                  .getMyPrimaryColor()))),
-                                      color: Colors.transparent,
-                                      textColor: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      padding: EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                            side: BorderSide(
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor()))),
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor: Color(CommonUtil()
+                                            .getMyPrimaryColor()),
+                                        padding: EdgeInsets.all(8.0),
+                                      ),
                                       onPressed: () {
                                         Navigator.pop(
                                             context,
@@ -1438,7 +1442,7 @@ class _NotificationScreen extends State<NotificationScreen> {
 
   void getProfileData() async {
     try {
-      await new CommonUtil().getUserProfileData();
+      await CommonUtil().getUserProfileData();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -1455,7 +1459,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           padding: EdgeInsets.only(left: 0, right: 0),
           child: Row(
             children: [
-              OutlineButton(
+              OutlinedButton(
                 onPressed: !notification.isActionDone!
                     ? () {
                         //Reschedule
@@ -1510,10 +1514,10 @@ class _NotificationScreen extends State<NotificationScreen> {
                           }
                         });
                       }
-                    : null,
-                borderSide: !notification.isActionDone!
+                    : null,style: OutlinedButton.styleFrom(
+                side: !notification.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),
+                    : BorderSide(color: Colors.grey),),
                 child: TextWidget(
                   text: TranslationConstants.reschedule.t(),
                   colors: !notification.isActionDone!
@@ -1527,7 +1531,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               SizedBox(
                 width: 15.0.w,
               ),
-              OutlineButton(
+              OutlinedButton(
                 onPressed: !notification.isActionDone!
                     ? () {
                         var body = {};
@@ -1547,10 +1551,10 @@ class _NotificationScreen extends State<NotificationScreen> {
                             body,
                             notification);
                       }
-                    : null,
-                borderSide: !notification.isActionDone!
+                    : null,style: OutlinedButton.styleFrom(
+                side: !notification.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),
+                    : BorderSide(color: Colors.grey),),
                 child: TextWidget(
                   text: TranslationConstants.cancel.t(),
                   colors: !notification.isActionDone!
@@ -1576,7 +1580,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           padding: EdgeInsets.only(left: 0, right: 0),
           child: Row(
             children: [
-              OutlineButton(
+              OutlinedButton(
                 onPressed: !notification.isActionDone!
                     ? () {
                         final currentUserId =
@@ -1624,10 +1628,10 @@ class _NotificationScreen extends State<NotificationScreen> {
                             });
                           } */
                       }
-                    : null,
-                borderSide: !notification.isActionDone!
+                    : null,style: OutlinedButton.styleFrom(
+                side: !notification.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),
+                    : BorderSide(color: Colors.grey),),
                 child: TextWidget(
                   text: TranslationConstants.renew.t(),
                   colors: !notification.isActionDone!
@@ -1641,7 +1645,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               SizedBox(
                 width: 15.0.w,
               ),
-              OutlineButton(
+              OutlinedButton(
                 onPressed: !notification.isActionDone!
                     ? () {
                         CommonUtil().CallbackAPI(
@@ -1673,10 +1677,10 @@ class _NotificationScreen extends State<NotificationScreen> {
                           });
                         });
                       }
-                    : null,
-                borderSide: !notification.isActionDone!
+                    : null,style: OutlinedButton.styleFrom(
+                side: !notification.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),
+                    : BorderSide(color: Colors.grey),),
                 child: TextWidget(
                   text: TranslationConstants.callback.t(),
                   colors: !notification.isActionDone!
@@ -1696,7 +1700,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           padding: const EdgeInsets.all(0),
           child: Row(
             children: [
-              OutlineButton(
+              OutlinedButton(
                 onPressed: () async {
                   if ((notification.messageDetails?.payload
                                   ?.patientPhoneNumber ??
@@ -1715,12 +1719,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                   Provider.of<FetchNotificationViewModel>(context,
                           listen: false)
                       .fetchNotifications();
-                },
-                borderSide: BorderSide(
+                },style: OutlinedButton.styleFrom(
+                side: BorderSide(
                   color: Color(
                     CommonUtil().getMyPrimaryColor(),
                   ),
-                ),
+                ),),
                 child: TextWidget(
                   text: parameters.accept,
                   colors: Color(CommonUtil().getMyPrimaryColor()),
@@ -1732,7 +1736,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               SizedBox(
                 width: 15.0.w,
               ),
-              OutlineButton(
+              OutlinedButton(
                 onPressed: () async {
                   if ((notification
                                   .messageDetails?.payload?.caregiverReceiver ??
@@ -1752,12 +1756,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                   Provider.of<FetchNotificationViewModel>(context,
                           listen: false)
                       .fetchNotifications();
-                },
-                borderSide: BorderSide(
+                },style: OutlinedButton.styleFrom(
+                side: BorderSide(
                   color: Color(
                     CommonUtil().getMyPrimaryColor(),
                   ),
-                ),
+                ),),
                 child: TextWidget(
                   text: parameters.reject,
                   colors: Color(
@@ -1777,7 +1781,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           padding: const EdgeInsets.all(0),
           child: Row(
             children: [
-              OutlineButton(
+              OutlinedButton(
                 onPressed: () async {
                   if ((notification
                               .messageDetails?.payload?.caregiverRequestor ??
@@ -1792,12 +1796,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                               ''),
                     );
                   }
-                },
-                borderSide: BorderSide(
+                },style: OutlinedButton.styleFrom(
+                side: BorderSide(
                   color: Color(
                     CommonUtil().getMyPrimaryColor(),
                   ),
-                ),
+                ),),
                 child: TextWidget(
                   text: parameters.viewMember,
                   colors: Color(CommonUtil().getMyPrimaryColor()),
@@ -1810,7 +1814,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                 width: 15.0.w,
               ),
               Flexible(
-                child: OutlineButton(
+                child: OutlinedButton(
                   onPressed: () async {
                     Navigator.push(
                       context,
@@ -1818,12 +1822,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                         builder: (context) => CareGiverSettings(),
                       ),
                     );
-                  },
-                  borderSide: BorderSide(
+                  },style: OutlinedButton.styleFrom(
+                  side: BorderSide(
                     color: Color(
                       CommonUtil().getMyPrimaryColor(),
                     ),
-                  ),
+                  ),),
                   child: SizedBox(
                     child: TextWidget(
                       text: parameters.communicationSetting,
@@ -1846,7 +1850,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           padding: const EdgeInsets.all(0),
           child: Row(
             children: [
-              OutlineButton(
+              OutlinedButton(
                 onPressed: () async {
                   //await readUnreadAction(notification, isRead: true);
 
@@ -1875,10 +1879,10 @@ class _NotificationScreen extends State<NotificationScreen> {
                           'Payment Link Expired', Colors.red, context);
                     }
                   });
-                },
-                borderSide: !notification.isActionDone!
+                },style: OutlinedButton.styleFrom(
+                side: !notification.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),
+                    : BorderSide(color: Colors.grey),),
                 child: TextWidget(
                   text: 'Pay Now',
                   colors: !notification.isActionDone!
@@ -1902,7 +1906,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           padding: const EdgeInsets.all(0),
           child: Row(
             children: [
-              OutlineButton(
+              OutlinedButton(
                 onPressed: () async {
                   //await readUnreadAction(notification, isRead: true);
 
@@ -1929,10 +1933,10 @@ class _NotificationScreen extends State<NotificationScreen> {
                         notification.messageDetails?.payload?.patientName,
                   ))!
                       .then((value) {});
-                },
-                borderSide: !notification.isActionDone!
+                },style: OutlinedButton.styleFrom(
+                side: !notification.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),
+                    : BorderSide(color: Colors.grey),),
                 child: TextWidget(
                   text: 'Pay Now',
                   colors: !notification.isActionDone!
@@ -1955,7 +1959,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           padding: EdgeInsets.only(left: 0, right: 0),
           child: Row(
             children: [
-              OutlineButton(
+              OutlinedButton(
                 onPressed: () {
                   readUnreadAction(notification);
                   Navigator.push(
@@ -1979,10 +1983,10 @@ class _NotificationScreen extends State<NotificationScreen> {
                             groupId: '',
                             lastDate: payload.deliveredDateTime)),
                   ).then((value) {});
-                },
-                borderSide: notification.isUnread!
+                },style: OutlinedButton.styleFrom(
+                side: notification.isUnread!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),
+                    : BorderSide(color: Colors.grey),),
                 child: TextWidget(
                   text: TranslationConstants.chatwithcc,
                   colors: notification.isUnread!
@@ -1996,7 +2000,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               SizedBox(
                 width: 15.0.w,
               ),
-              OutlineButton(
+              OutlinedButton(
                 onPressed: () {
                   readUnreadAction(notification);
 
@@ -2018,10 +2022,10 @@ class _NotificationScreen extends State<NotificationScreen> {
                       );
                     }
                   }
-                },
-                borderSide: notification.isUnread!
+                },style: OutlinedButton.styleFrom(
+                side: notification.isUnread!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),
+                    : BorderSide(color: Colors.grey),),
                 child: TextWidget(
                   text: TranslationConstants.viewrecord,
                   colors: notification.isUnread!
@@ -2041,16 +2045,16 @@ class _NotificationScreen extends State<NotificationScreen> {
           padding: const EdgeInsets.all(0),
           child: Row(
             children: [
-              OutlineButton(
+              OutlinedButton(
                 onPressed: () async {
                   readUnreadAction(notification, isRead: true);
 
-                  new CommonUtil().getDetailsOfAddedFamilyMember(
+                  CommonUtil().getDetailsOfAddedFamilyMember(
                       context, notification.messageDetails!.payload!.userId!);
-                },
-                borderSide: !notification.isActionDone!
+                },style: OutlinedButton.styleFrom(
+                side: !notification.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),
+                    : BorderSide(color: Colors.grey),),
                 child: TextWidget(
                   text: 'View Details',
                   colors: !notification.isActionDone!
@@ -2089,9 +2093,9 @@ class _NotificationScreen extends State<NotificationScreen> {
       padding: const EdgeInsets.all(0),
       child: Row(
         children: [
-          OutlineButton(
+          OutlinedButton(
             onPressed: () async {
-              new CommonUtil()
+              CommonUtil()
                   .acceptCareGiverTransportRequestReminder(
                       context,
                       notification.messageDetails?.payload?.appointmentId ?? '',
@@ -2101,10 +2105,10 @@ class _NotificationScreen extends State<NotificationScreen> {
                 readUnreadAction(notification, isRead: true);
                 notification.messageDetails?.setAccepted(true);
               });
-            },
-            borderSide: !notification.isActionDone!
+            },style: OutlinedButton.styleFrom(
+            side: !notification.isActionDone!
                 ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                : BorderSide(color: Colors.grey),
+                : BorderSide(color: Colors.grey),),
             child: TextWidget(
               text: 'Accept',
               colors: !notification.isActionDone!
@@ -2118,9 +2122,9 @@ class _NotificationScreen extends State<NotificationScreen> {
           SizedBox(
             width: 15.0.w,
           ),
-          OutlineButton(
+          OutlinedButton(
             onPressed: () async {
-              new CommonUtil()
+              CommonUtil()
                   .acceptCareGiverTransportRequestReminder(
                       context,
                       notification.messageDetails?.payload?.appointmentId ?? '',
@@ -2130,10 +2134,10 @@ class _NotificationScreen extends State<NotificationScreen> {
                 readUnreadAction(notification, isRead: true);
                 notification.messageDetails?.setAccepted(true);
               });
-            },
-            borderSide: !notification.isActionDone!
+            },style: OutlinedButton.styleFrom(
+            side: !notification.isActionDone!
                 ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                : BorderSide(color: Colors.grey),
+                : BorderSide(color: Colors.grey),),
             child: TextWidget(
               text: 'Decline',
               colors: !notification.isActionDone!
@@ -2173,7 +2177,7 @@ class _NotificationScreen extends State<NotificationScreen> {
   Future<bool> checkIfPaymentLinkIsExpired(String appointmentId) async {
     bool paymentStatus = false;
     CreateAppointMentViewModel createAppointMentViewModel =
-        new CreateAppointMentViewModel();
+        CreateAppointMentViewModel();
     AppointmentNotificationPayment? appointmentNotificationPayment =
         await createAppointMentViewModel
             .getAppointmentDetailsUsingId(appointmentId);

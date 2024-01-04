@@ -27,16 +27,13 @@ class DynamicLinks {
     final Uri? deepLink = data?.link;
     await processDynamicLink(deepLink);
 
-    FirebaseDynamicLinks.instance.onLink(
-      onSuccess: (PendingDynamicLinkData? dynamicLink) async {
-        final Uri? deepLink = dynamicLink?.link;
-        await processDynamicLink(deepLink);
-      },
-      onError: (OnLinkErrorException e) async {
-        print('onLinkError');
-        print(e.message);
-      },
-    );
+    FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) async {
+      final Uri? deepLink = dynamicLinkData?.link;
+      await processDynamicLink(deepLink);
+    }).onError((error) {
+      print('onLink error');
+      print(error.message);
+    });
   }
 
   static Future<void> processDynamicLink(Uri? deepLink) async {

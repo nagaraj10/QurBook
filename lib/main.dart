@@ -898,7 +898,7 @@ class _MyFHBState extends State<MyFHB> {
           if (passedValArr[2] != null) {
             try {
               if (passedValArr[3] != null) {
-                new CommonUtil().acceptCareGiverTransportRequestReminder(
+                CommonUtil().acceptCareGiverTransportRequestReminder(
                     context,
                     passedValArr[2],
                     passedValArr[3],

@@ -24,7 +24,7 @@ class FeeDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strPaidAmount] = this.paidAmount;
     data[parameters.strDoctorCancellationCharges] = this.doctorCancellationCharge;
     data[parameters.strFinalRefundAmount] = this.finalRefundAmount;

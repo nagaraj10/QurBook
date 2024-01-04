@@ -33,7 +33,7 @@ class City {
               : json[parameters.strCountryCode];
       if (json['healthOrganizationAddressCollection'] != null) {
             healthOrganizationAddressCollection = <HealthOrganizationAddressCollection>[];
-            json['healthOrganizationAddressCollection'].forEach((v) { healthOrganizationAddressCollection!.add(new HealthOrganizationAddressCollection.fromJson(v)); });
+            json['healthOrganizationAddressCollection'].forEach((v) { healthOrganizationAddressCollection!.add(HealthOrganizationAddressCollection.fromJson(v)); });
           }
     } catch (e,stackTrace) {
                   CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -42,7 +42,7 @@ class City {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data[parameters.strId] = id;
       data[parameters.strName] = name;
@@ -87,10 +87,10 @@ class HealthOrganizationAddressCollection {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       state = json['state'] != null
-          ? new StateDetails.fromJson(json['state'])
+          ? StateDetails.fromJson(json['state'])
           : null;
       city =
-          json['city'] != null ? new CityDetails.fromJson(json['city']) : null;
+          json['city'] != null ? CityDetails.fromJson(json['city']) : null;
     } catch (e,stackTrace) {
 
                   CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -99,7 +99,7 @@ class HealthOrganizationAddressCollection {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['id'] = this.id;
       data['addressLine1'] = this.addressLine1;
@@ -150,7 +150,7 @@ class StateDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['id'] = this.id;
       data['name'] = this.name;
@@ -190,7 +190,7 @@ class CityDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['id'] = this.id;
       data['name'] = this.name;

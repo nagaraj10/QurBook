@@ -13,7 +13,7 @@ class CaregiverPatientChatModel {
       if (json['result'] != null) {
             result = <Result>[];
             json['result'].forEach((v) {
-              result!.add(new Result.fromJson(v));
+              result!.add(Result.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -22,7 +22,7 @@ class CaregiverPatientChatModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.map((v) => v.toJson()).toList();
@@ -73,7 +73,7 @@ class Result {
       carecoordinatorProfilePicThumbnailUrl = json['carecoordinatorProfilePicThumbnailUrl'];
       carecoordinatorId = json['carecoordinatorId'];
       chatListItem = json['chatListItem'] != null
-              ? new ChatListItem.fromJson(json['chatListItem'])
+              ? ChatListItem.fromJson(json['chatListItem'])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -81,7 +81,7 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['firstName'] = this.firstName;
     data['middleName'] = this.middleName;
@@ -141,7 +141,7 @@ class ChatListItem {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['peerId'] = this.peerId;
     data['userId'] = this.userId;

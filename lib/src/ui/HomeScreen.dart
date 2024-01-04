@@ -357,7 +357,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
           color: Colors.white,
           buttonBackgroundColor: widget.selectedPageIndex == 2
               ? Colors.white
-              : Color(new CommonUtil().getMyPrimaryColor()),
+              : Color(CommonUtil().getMyPrimaryColor()),
           backgroundColor: Colors.transparent,
           animationCurve: Curves.linearToEaseOut,
           animationDuration: Duration(milliseconds: 450),

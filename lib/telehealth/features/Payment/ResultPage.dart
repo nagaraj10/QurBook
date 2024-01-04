@@ -1,19 +1,16 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/PaymentFailureRetryModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/UpdatePaymentViewModel.dart';
-import 'package:provider/provider.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import '../../../../landing/view/landing_arguments.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
@@ -59,7 +56,7 @@ class _ResultPage extends State<ResultPage> {
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    updatePaymentViewModel = new UpdatePaymentViewModel();
+    updatePaymentViewModel = UpdatePaymentViewModel();
     status = widget.status;
     isFromSubscribe = widget.isFromSubscribe;
 
@@ -107,7 +104,7 @@ class _ResultPage extends State<ResultPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       body: Container(
         child: Center(
           child: Container(
@@ -156,13 +153,13 @@ class _ResultPage extends State<ResultPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        FlatButton(
+                        ElevatedButton(style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                               side: BorderSide(color: Colors.white)),
-                          color: Color(new CommonUtil().getMyPrimaryColor()),
-                          textColor: Colors.white,
-                          padding: EdgeInsets.all(12.0),
+                          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.all(12.0),),
                           onPressed: () {
                             status
                                 ? widget.closePage!(STR_SUCCESS)
@@ -210,13 +207,15 @@ class _ResultPage extends State<ResultPage> {
 
   Widget getRetryButton() {
     if (!status) {
-      return FlatButton(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            side: BorderSide(color: Colors.white)),
-        color: Color(new CommonUtil().getMyPrimaryColor()),
-        textColor: Colors.white,
-        padding: EdgeInsets.all(12.0),
+      return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+              side: BorderSide(color: Colors.white)),
+          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          foregroundColor: Colors.white,
+          padding: EdgeInsets.all(12.0),
+        ),
         onPressed: () {
           if (widget.appointmentId != null && widget.appointmentId != '') {
             checkSlotsRetry(widget.appointmentId!).then((value) {

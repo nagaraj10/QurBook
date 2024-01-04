@@ -16,7 +16,7 @@ class QurHomeRegimenResponseModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.toJson();
@@ -39,13 +39,13 @@ class Result {
     if (json['upcomingActivities'] != null) {
       upcomingActivities = [];
       json['upcomingActivities'].forEach((v) {
-        upcomingActivities!.add(new UpcomingActivities.fromJson(v));
+        upcomingActivities!.add(UpcomingActivities.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['date'] = this.date;
 
     if (this.upcomingActivities != null) {
@@ -93,7 +93,7 @@ class UpcomingActivities {
 
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['eid'] = this.eid;
     data['description'] = this.description;
     data['title'] = this.title;

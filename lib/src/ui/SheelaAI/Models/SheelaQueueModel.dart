@@ -13,14 +13,14 @@ class SheelaQueueModel {
       isSuccess = json['isSuccess'];
       message = json['message'];
       result =
-          json['result'] != null ? new SheelaInsertResult.fromJson(json['result']) : null;
+          json['result'] != null ? SheelaInsertResult.fromJson(json['result']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
     if (this.result != null) {
@@ -46,7 +46,7 @@ class SheelaInsertResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['sheelaQueueId'] = this.sheelaQueueId;
     data['queueCount'] = this.queueCount;
     return data;

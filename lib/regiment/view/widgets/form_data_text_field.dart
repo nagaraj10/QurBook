@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
-import 'package:flutter/services.dart';
 import '../../models/field_response_model.dart';
 
 class FormDataTextField extends StatelessWidget {

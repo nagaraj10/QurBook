@@ -13,14 +13,14 @@ class SymptomsListModel {
     try {
       isSuccess = json['isSuccess'];
       result =
-          json['result'] != null ? new Result.fromJson(json['result']) : null;
+          json['result'] != null ? Result.fromJson(json['result']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.toJson();
@@ -45,7 +45,7 @@ class Result {
       if (json['data'] != null) {
             data = <SymptomListData>[];
             json['data'].forEach((v) {
-              data!.add(new SymptomListData.fromJson(v));
+              data!.add(SymptomListData.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -54,7 +54,7 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['totalRecord'] = this.totalRecord;
     data['currentPage'] = this.currentPage;
     data['totalPage'] = this.totalPage;
@@ -195,7 +195,7 @@ class SymptomListData {
       eend = json['eend'];
       html = json['html'];
       otherinfo = json['otherinfo'] != null
-              ? new OtherinfoSymptom.fromJson(jsonDecode(json['otherinfo']))
+              ? OtherinfoSymptom.fromJson(jsonDecode(json['otherinfo']))
               : null;
       remindin = json['remindin'];
       remindinType = json['remindinType'];
@@ -226,32 +226,32 @@ class SymptomListData {
       uform = json['uform'];
       alertdata = json['alertdata'];
       providers = json['providers'] != null
-              ? new Providers.fromJson(json['providers'])
+              ? Providers.fromJson(json['providers'])
               : null;
       planTemplate = json['planTemplate'];
       if (json['fields'] != null) {
             fields = <Fields>[];
             json['fields'].forEach((v) {
-              fields!.add(new Fields.fromJson(v));
+              fields!.add(Fields.fromJson(v));
             });
           }
       if (json['doneevents'] != null) {
             doneevents = <Doneevents>[];
             json['doneevents'].forEach((v) {
-              doneevents!.add(new Doneevents.fromJson(v));
+              doneevents!.add(Doneevents.fromJson(v));
             });
           }
       doeventUserTemplateCustform = json['doevent_userTemplate_custform'];
       doeventUserTemplateHtml = json['doevent_userTemplate_html'];
       personalPlanCollection = json['personalPlanCollection'] != null
-              ? new PersonalPlanCollection.fromJson(json['personalPlanCollection'])
+              ? PersonalPlanCollection.fromJson(json['personalPlanCollection'])
               : null;
       isCustomized = json['isCustomized'];
       doeventsTemplateUserTs = json['doeventsTemplateUserTs'];
       if (json['forms'] != null) {
             forms = <Forms>[];
             json['forms'].forEach((v) {
-              forms!.add(new Forms.fromJson(v));
+              forms!.add(Forms.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -260,7 +260,7 @@ class SymptomListData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['eid'] = this.eid;
     data['providerid'] = this.providerid;
     data['uid'] = this.uid;
@@ -370,7 +370,7 @@ class Providers {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['providerid'] = this.providerid;
     data['title'] = this.title;
     data['description'] = this.description;
@@ -447,7 +447,7 @@ class Fields {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['fieldid'] = this.fieldid;
     data['providerid'] = this.providerid;
     data['formid'] = this.formid;
@@ -598,7 +598,7 @@ class Doneevents {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['doneid'] = this.doneid;
     data['eid'] = this.eid;
     data['tplanid'] = this.tplanid;
@@ -690,7 +690,7 @@ class PersonalPlanCollection {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['pplanid'] = this.pplanid;
     data['providerid'] = this.providerid;
     data['title'] = this.title;
@@ -758,7 +758,7 @@ class Forms {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['formid'] = this.formid;
     data['providerid'] = this.providerid;
     data['title'] = this.title;

@@ -55,7 +55,7 @@ class LocationDataModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['status'] = this.status;
       data['country'] = this.country;
@@ -129,7 +129,7 @@ class Location {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['latitude'] = this.latitude;
       data['longitude'] = this.longitude;

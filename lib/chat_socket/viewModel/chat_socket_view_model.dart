@@ -14,7 +14,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:socket_io_client/socket_io_client.dart';
 
 class ChatSocketViewModel extends ChangeNotifier {
-  ChatSocketService? chocketService = new ChatSocketService();
+  ChatSocketService? chocketService = ChatSocketService();
 
   final String _baseUrl = BASE_URL;
 
@@ -50,7 +50,7 @@ class ChatSocketViewModel extends ChangeNotifier {
               .build());
 
       //socket.io.options['extraHeaders'] = {'Authorization': 'Bearer ' + token,'userId': userId};
-      socket?.io.options['query'] = 'userId=' + userId.toString();
+      socket?.io.options?['query'] = 'userId=' + userId.toString();
 
       socket?.connect();
 
@@ -118,7 +118,7 @@ class ChatSocketViewModel extends ChangeNotifier {
   }
 
   void updateChatHistoryList(List<ChatHistoryResult?>? list,
-      {bool shouldUpdate: true}) {
+      {bool shouldUpdate = true}) {
     chatHistoryList = list;
 
     if (shouldUpdate) {

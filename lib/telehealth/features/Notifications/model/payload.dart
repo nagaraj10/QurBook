@@ -162,7 +162,7 @@ class Payload {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['type'] = this.type;
     data['priority'] = this.priority;
     data['appointmentDate'] = this.appointmentDate;

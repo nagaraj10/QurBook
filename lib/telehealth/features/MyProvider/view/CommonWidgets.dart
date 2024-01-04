@@ -22,7 +22,7 @@ import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Langua
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class CommonWidgets {
-  CommonUtil commonUtil = new CommonUtil();
+  CommonUtil commonUtil = CommonUtil();
   int? rowPosition;
   int? itemPosition;
 
@@ -303,7 +303,7 @@ class CommonWidgets {
       child: Icon(
         Icons.keyboard_arrow_down,
         size: 24.0.sp,
-        color: Color(new CommonUtil().getMyPrimaryColor()),
+        color: Color(CommonUtil().getMyPrimaryColor()),
       ),
     );
   }
@@ -316,7 +316,7 @@ class CommonWidgets {
         child: docs.isDefault!
             ? ImageIcon(
                 AssetImage('assets/icons/record_fav_active.png'),
-                color: Color(new CommonUtil().getMyPrimaryColor()),
+                color: Color(CommonUtil().getMyPrimaryColor()),
                 size: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
               )
             : ImageIcon(
@@ -334,7 +334,7 @@ class CommonWidgets {
         child: docs.isDefault ?? false
             ? ImageIcon(
                 AssetImage('assets/icons/record_fav_active.png'),
-                color: Color(new CommonUtil().getMyPrimaryColor()),
+                color: Color(CommonUtil().getMyPrimaryColor()),
                 size: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
               )
             : ImageIcon(
@@ -352,7 +352,7 @@ class CommonWidgets {
         child: docs.isDefault!
             ? ImageIcon(
                 AssetImage('assets/icons/record_fav_active.png'),
-                color: Color(new CommonUtil().getMyPrimaryColor()),
+                color: Color(CommonUtil().getMyPrimaryColor()),
                 size: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
               )
             : ImageIcon(
@@ -391,7 +391,7 @@ class CommonWidgets {
       child: GestureDetector(
         child: Icon(
           icon,
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           size: width,
         ),
         onTap: onTap as void Function()?,
@@ -567,7 +567,7 @@ class CommonWidgets {
             content: Container(
               width: 1.sw - 20,
               child: Stack(
-                overflow: Overflow.visible,
+                clipBehavior: Clip.none,
                 children: <Widget>[
                   Positioned(
                     top: -1.0,
@@ -650,7 +650,7 @@ class CommonWidgets {
     return Text(
       textSlotTime,
       style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: fhbStyles.fnt_sessionTime),
     );
   }
@@ -873,7 +873,7 @@ class CommonWidgets {
             content: Container(
               width: 1.sw - 20,
               child: Stack(
-                overflow: Overflow.visible,
+                clipBehavior: Clip.none,
                 children: <Widget>[
                   /*Positioned(
                     top: -1.0,
@@ -987,7 +987,7 @@ class CommonWidgets {
             content: Container(
               width: 1.sw - 20,
               child: Stack(
-                overflow: Overflow.visible,
+                clipBehavior: Clip.none,
                 children: <Widget>[
                   /*Positioned(
                     top: -1.0,
@@ -1101,7 +1101,7 @@ class CommonWidgets {
             content: Container(
               width: 1.sw - 20,
               child: Stack(
-                overflow: Overflow.visible,
+                clipBehavior: Clip.none,
                 children: <Widget>[
                   /*Positioned(
                     top: -1.0,
@@ -1225,7 +1225,7 @@ class CommonWidgets {
         child: docs.isTelehealthEnabled!
             ? ImageIcon(
                 AssetImage('assets/providers/bookmarked.png'),
-                color: Color(new CommonUtil().getMyPrimaryColor()),
+                color: Color(CommonUtil().getMyPrimaryColor()),
                 size: 14.0,
               )
             : ImageIcon(
@@ -1393,7 +1393,7 @@ class CommonWidgets {
       return Text(
         firstName![0].toUpperCase() + lastName![0].toUpperCase(),
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -1402,7 +1402,7 @@ class CommonWidgets {
       return Text(
         myProfile.user!.firstName![0].toUpperCase(),
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -1411,7 +1411,7 @@ class CommonWidgets {
       return Text(
         '',
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w200,
         ),
@@ -1427,7 +1427,7 @@ class CommonWidgets {
         myProfile.user!.firstName![0].toUpperCase() +
             myProfile.user!.lastName![0].toUpperCase(),
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -1436,7 +1436,7 @@ class CommonWidgets {
       return Text(
         myProfile.user!.firstName![0].toUpperCase(),
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -1445,7 +1445,7 @@ class CommonWidgets {
       return Text(
         '',
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w200,
         ),
@@ -1461,7 +1461,7 @@ class CommonWidgets {
         myProfile.firstName![0].toUpperCase() +
             myProfile.lastName![0].toUpperCase(),
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -1470,7 +1470,7 @@ class CommonWidgets {
       return Text(
         myProfile.firstName![0].toUpperCase(),
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -1479,7 +1479,7 @@ class CommonWidgets {
       return Text(
         '',
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w200,
         ),
@@ -1495,7 +1495,7 @@ class CommonWidgets {
         myProfile.user!.firstName![0].toUpperCase() +
             myProfile.user!.lastName![0].toUpperCase(),
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -1504,7 +1504,7 @@ class CommonWidgets {
       return Text(
         myProfile.user!.firstName![0].toUpperCase(),
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -1513,7 +1513,7 @@ class CommonWidgets {
       return Text(
         '',
         style: TextStyle(
-          color: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w200,
         ),

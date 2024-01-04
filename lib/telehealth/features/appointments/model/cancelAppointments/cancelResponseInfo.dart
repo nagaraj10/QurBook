@@ -12,7 +12,7 @@ class CancelResponseInfo {
   CancelResponseInfo.fromJson(Map<String, dynamic> json) {
     try {
       result =
-          json[parameters.dataResult] != null ? new ResponseInfoResult.fromJson(json[parameters.dataResult]) : null;
+          json[parameters.dataResult] != null ? ResponseInfoResult.fromJson(json[parameters.dataResult]) : null;
       isSuccess = json[parameters.strIsSuccess];
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -20,7 +20,7 @@ class CancelResponseInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.result != null) {
       data[parameters.dataResult] = this.result!.toJson();
     }

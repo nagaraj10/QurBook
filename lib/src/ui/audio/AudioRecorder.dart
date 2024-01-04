@@ -148,7 +148,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
             Constants.KEY_CATEGORYNAME, AppConstants.voiceRecords);
         await PreferenceUtil.saveString(Constants.KEY_CATEGORYID,
             PreferenceUtil.getStringValue(Constants.KEY_VOICE_ID)!);
-        TextEditingController fileName = new TextEditingController(
+        TextEditingController fileName = TextEditingController(
             text: AppConstants.voiceRecords +
                 '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
         CommonDialogBox().getDialogForVoicerecords(
@@ -256,7 +256,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
                     child: AvatarGlow(
                       startDelay: Duration(milliseconds: 200),
                       glowColor: Color(
-                        new CommonUtil().getMyPrimaryColor(),
+                        CommonUtil().getMyPrimaryColor(),
                       ),
                       endRadius: 100.0,
                       duration: Duration(milliseconds: 2000),
@@ -328,11 +328,13 @@ class _AudioRecorderState extends State<AudioRecorder> {
                     color: _isRecording ? Colors.red : Colors.green,
                     borderRadius: BorderRadius.circular(30)),
                 child: ClipOval(
-                  child: FlatButton(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(8.0),
+                    ),
                     onPressed: () {
                       _mRecorder!.isRecording ? stopRecorder() : record();
                     },
-                    padding: EdgeInsets.all(8.0),
                     child: recorderAssetImage(),
                   ),
                 ),

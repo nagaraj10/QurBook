@@ -50,23 +50,23 @@ class HospitalDocuments extends StatefulWidget {
       this.healthRecordSelected);
 
   @override
-  _HospitalDocumentsState createState() => new _HospitalDocumentsState();
+  _HospitalDocumentsState createState() => _HospitalDocumentsState();
 }
 
 class _HospitalDocumentsState extends State<HospitalDocuments> {
   late HealthReportListForUserBlock _healthReportListForUserBlock;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   List<HealthRecordCollection> mediMasterId = [];
 
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    _healthReportListForUserBlock = HealthReportListForUserBlock();
 
     super.initState();
   }
@@ -90,7 +90,7 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
   Widget _getWidgetToDisplayMedicalrecords(HealthRecordList completeData) {
     List<HealthResult> mediaMetaInfoObj = [];
 
-    mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
+    mediaMetaInfoObj = CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionHospitalDocument);
     return RefreshIndicator(
       key: _refreshIndicatorKey,
@@ -152,7 +152,7 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
               data.isSelected = !data.isSelected!;
               if (data != null &&
                   (data.healthRecordCollection?.length ?? 0) > 0) {
-                mediMasterId = new CommonUtil().getMetaMasterIdListNew(data);
+                mediMasterId = CommonUtil().getMetaMasterIdListNew(data);
                 if (mediMasterId.length > 0) {
                   widget.healthRecordSelected(data.id, mediMasterId, condition);
                 } else {
@@ -181,7 +181,12 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                   data: data,
                 ),
               ),
-            );
+            ).then((value) async {
+              if (value ?? false) {
+                await Future.delayed(Duration(milliseconds: 100));
+                widget.callBackToRefresh();
+              }
+            });
           }
         },
         child: Container(
@@ -268,7 +273,7 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                       ),
                     ),
                     Text(
-                      new FHBUtils().getFormattedDateString(data.createdOn),
+                      FHBUtils().getFormattedDateString(data.createdOn),
                       style: TextStyle(
                           color: Colors.grey[400],
                           fontWeight: FontWeight.w200,
@@ -291,7 +296,7 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                                 AssetImage(variable.icon_record_fav_active),
                                 //TODO chnage theme
                                 color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(CommonUtil().getMyPrimaryColor()),
                                 size: CommonUtil().isTablet!
                                     ? tabHeader2
                                     : mobileHeader2,
@@ -304,7 +309,7 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                                     : mobileHeader2,
                               ),
                         onPressed: () {
-                          new CommonUtil().bookMarkRecord(data, _refresh);
+                          CommonUtil().bookMarkRecord(data, _refresh);
                         }),
                     (data.metadata!.hasVoiceNotes != null &&
                             data.metadata!.hasVoiceNotes!)
@@ -316,7 +321,7 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                     widget.mediaMeta!.contains(data.id)
                         ? Icon(
                             Icons.done,
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
                           )
                         : SizedBox(),
                   ],
@@ -340,7 +345,7 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
             fit: BoxFit.cover,
           );
         } else {
-          return new SizedBox(
+          return SizedBox(
             width: 50.0.h,
             height: 50.0.h,
             child: Shimmer.fromColors(
@@ -357,12 +362,12 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
   getDocumentImageWidget(MediaMetaInfo data) {
     return FutureBuilder(
       future: _healthReportListForUserBlock
-          .getDocumentImage(new CommonUtil().getMetaMasterId(data)!),
+          .getDocumentImage(CommonUtil().getMetaMasterId(data)!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Image.memory(snapshot.data);
         } else {
-          return new SizedBox(
+          return SizedBox(
             width: 50.0.h,
             height: 50.0.h,
             child: Shimmer.fromColors(

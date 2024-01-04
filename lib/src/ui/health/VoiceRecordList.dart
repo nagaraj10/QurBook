@@ -45,19 +45,19 @@ class VoiceRecordList extends StatefulWidget {
       this.showDetails);
 
   @override
-  _VoiceRecordListState createState() => new _VoiceRecordListState();
+  _VoiceRecordListState createState() => _VoiceRecordListState();
 }
 
 class _VoiceRecordListState extends State<VoiceRecordList> {
   late HealthReportListForUserBlock _healthReportListForUserBlock;
 
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    _healthReportListForUserBlock = HealthReportListForUserBlock();
 
     super.initState();
   }
@@ -81,7 +81,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
   Widget getWidgetToDisplayVoiceRecords(HealthRecordList completeData) {
     List<HealthResult> mediaMetaInfoObj = [];
 
-    mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
+    mediaMetaInfoObj = CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionVoiceRecord);
     return RefreshIndicator(
       key: _refreshIndicatorKey,
@@ -151,7 +151,12 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                   data: mediaMetaInfoObj,
                 ),
               ),
-            );
+            ).then((value) async {
+              if (value ?? false) {
+                await Future.delayed(Duration(milliseconds: 100));
+                widget.callBackToRefresh();
+              }
+            });
           }
         },
         child: Container(
@@ -182,7 +187,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                       mediaMetaInfoObj.metadata!.healthRecordCategory!.logo!,
                       height: 25.0.h,
                       width: 25.0.h,
-                      color: Color(new CommonUtil().getMyPrimaryColor()),
+                      color: Color(CommonUtil().getMyPrimaryColor()),
                       errorBuilder: (context, error, stackTrace) => SizedBox(),
                     )),
                 SizedBox(width: 20),
@@ -208,7 +213,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        new FHBUtils()
+                        FHBUtils()
                             .getFormattedDateString(mediaMetaInfoObj.createdOn),
                         style: TextStyle(
                             color: Colors.grey[400],
@@ -230,7 +235,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                               ? ImageIcon(
                                   AssetImage(variable.icon_record_fav_active),
                                   color: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
+                                      CommonUtil().getMyPrimaryColor()),
                                   size: CommonUtil().isTablet!
                                       ? tabHeader2
                                       : mobileHeader2,
@@ -243,7 +248,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                                       : mobileHeader2,
                                 ),
                           onPressed: () {
-                            new CommonUtil()
+                            CommonUtil()
                                 .bookMarkRecord(mediaMetaInfoObj, _refresh);
                           }),
                       (mediaMetaInfoObj.metadata!.hasVoiceNotes != null &&
@@ -264,12 +269,12 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
   getDocumentImagegetDocumentImageWidget(MediaMetaInfo data) {
     return FutureBuilder(
       future: _healthReportListForUserBlock
-          .getDocumentImage(new CommonUtil().getMetaMasterId(data)!),
+          .getDocumentImage(CommonUtil().getMetaMasterId(data)!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Image.memory(snapshot.data);
         } else {
-          return new SizedBox(
+          return SizedBox(
             width: 50.0.h,
             height: 50.0.h,
             child: Shimmer.fromColors(
@@ -290,12 +295,12 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
       CommonUtil.audioPage = false;
       return Icon(
         Icons.done,
-        color: Color(new CommonUtil().getMyPrimaryColor()),
+        color: Color(CommonUtil().getMyPrimaryColor()),
       );
     } else if (widget.mediaMeta!.contains(mediaMetaInfoObj.id)) {
       return Icon(
         Icons.done,
-        color: Color(new CommonUtil().getMyPrimaryColor()),
+        color: Color(CommonUtil().getMyPrimaryColor()),
       );
     } else {
       return SizedBox();

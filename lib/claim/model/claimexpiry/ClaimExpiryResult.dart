@@ -55,7 +55,7 @@ class ClaimExpiryResult {
       planEndDate = json['planEndDate'];
       planSubscriptionInfoId = json['planSubscriptionInfoId'];
       additionalInfo = json['additionalInfo'] != null ?
-          new ClaimExpiryAdditionalInfo.fromJson(json['additionalInfo'])
+          ClaimExpiryAdditionalInfo.fromJson(json['additionalInfo'])
               : null;
       membershipStatus = json['membershipStatus'];
     } catch (e,stackTrace) {
@@ -64,7 +64,7 @@ class ClaimExpiryResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['userId'] = this.userId;
     data['balanceAmount'] = this.balanceAmount;
     data['balanceDoctorAppointments'] = this.balanceDoctorAppointments;

@@ -52,10 +52,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String? devicevalue2;
 
   bool noInternet = true;
-  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
 
   //ChatViewModel chatViewModel = new ChatViewModel();
-  CommonUtil commonUtil = new CommonUtil();
+  CommonUtil commonUtil = CommonUtil();
 
   @override
   void initState() {
@@ -146,7 +146,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       getProfileData();
       navigateToHomeScreen(position);
     } else if (noInternet == false) {
-      new FHBBasicWidget()
+      FHBBasicWidget()
           .showInSnackBar(Constants.STR_NO_CONNECTIVITY, scaffold_state);
     } else {
       getProfileData();
@@ -185,7 +185,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             null) {
           condition = true;
         } else {
-          new FHBUtils().check().then((intenet) {
+          FHBUtils().check().then((intenet) {
             if (intenet != null && intenet) {
               condition = true;
               noInternet = true;
@@ -209,7 +209,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         if (PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER) != null) {
           condition = true;
         } else {
-          new FHBUtils().check().then((intenet) {
+          FHBUtils().check().then((intenet) {
             if (intenet != null && intenet) {
               condition = true;
               noInternet = true;
@@ -225,7 +225,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void dbInitialize() {
-    var commonConstants = new CommonConstants();
+    var commonConstants = CommonConstants();
     commonConstants.getCountryMetrics();
   }
 
@@ -250,14 +250,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
     try {
-      await new CommonUtil().getMedicalPreference();
+      await CommonUtil().getMedicalPreference();
     } catch (e,stackTrace) {
                   CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
 
     try {
-      new CommonDialogBox().getCategoryList();
+      CommonDialogBox().getCategoryList();
       getFamilyRelationAndMediaType();
     } catch (e,stackTrace) {
                   CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -265,7 +265,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
     try {
-      AddFamilyUserInfoBloc addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
+      AddFamilyUserInfoBloc addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
       addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
     } catch (e,stackTrace) {
                   CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -275,13 +275,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void getFamilyRelationAndMediaType() async {
     try {
-      await new CommonUtil().getAllCustomRoles();
+      await CommonUtil().getAllCustomRoles();
     } catch (e,stackTrace) {
                   CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
     }
     try {
-      await new CommonUtil().getMediaTypes();
+      await CommonUtil().getMediaTypes();
     } catch (e,stackTrace) {
                   CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
@@ -290,7 +290,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void getProfileData() async {
     try {
-      await new CommonUtil().getUserProfileData();
+      await CommonUtil().getUserProfileData();
     } catch (e,stackTrace) {
                   CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
@@ -298,7 +298,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void syncDevices() async {
-    await new CommonUtil().syncDevices();
+    await CommonUtil().syncDevices();
   }
 
   Future<void> _handleCameraAndMic() async {

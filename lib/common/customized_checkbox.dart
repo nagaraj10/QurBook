@@ -1,5 +1,3 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MyCheckbox extends StatefulWidget {
@@ -73,6 +71,8 @@ class _MyCheckboxState extends State<MyCheckbox> {
         /* fillColor = widget.uncheckedFillColor;
         iconColor = widget.uncheckedIconColor;
         iconData = widget.uncheckedIcon;*/
+        break;
+      default:
         break;
     }
 

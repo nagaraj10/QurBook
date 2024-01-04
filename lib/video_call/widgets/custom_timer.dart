@@ -127,7 +127,7 @@ class CustomTimer extends StatelessWidget {
             ///to convert the total seconds into hour, minute and second
             ///60 => 1 minute 0 second
             ///3601 => 1 hour 0 minute 1 second
-            Map<String, int> time = new Map();
+            Map<String, int> time = Map();
             time = _timerProvider.findHMS(DateTime.now()
                 .difference(_timerProvider.getInitialDate)
                 .inSeconds);
@@ -170,7 +170,7 @@ class CustomTimer extends StatelessWidget {
               child: Text('$minute:$second',
                   style: timerTextStyle != null
                       ? timerTextStyle
-                      : new TextStyle(
+                      : TextStyle(
                           color: Colors.grey[200],
                           fontWeight: FontWeight.bold,
                           fontSize: 18.0.sp,

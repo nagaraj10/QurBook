@@ -1,10 +1,8 @@
-
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
@@ -12,7 +10,6 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/main.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
@@ -46,7 +43,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
       HealthReportListForUserRepository();
 
   Height? heightObj, weightObj, tempObj;
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
   String? userMappingId = '';
 
   bool isSettingChanged = false;
@@ -107,14 +104,18 @@ class _ChooseUnitState extends State<ChooseUnit> {
             title: Text('Are you sure?'),
             content: Text('Do you want to update the changes'),
             actions: <Widget>[
-              FlatButton(
-                onPressed: () => closeDialog(),
-                child: Text('No'),
-              ),
-              FlatButton(
-                onPressed: () => applyUnitSelection(),
-                child: Text('Yes'),
-              ),
+              FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () => closeDialog(),
+            title: 'No',
+          ),
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () => applyUnitSelection(),
+            title: 'Yes',
+          ),
             ],
           ),
         ).then((value) => value as bool);
@@ -126,7 +127,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
   }
 
   applyUnitSelection() async {
-    var preferredMeasurementNew = new PreferredMeasurement(
+    var preferredMeasurementNew = PreferredMeasurement(
         height: heightObj, weight: weightObj, temperature: tempObj);
     profileSetting!.preferredMeasurement = preferredMeasurement;
     var body =
@@ -177,7 +178,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                           setState(() {
                             isPounds = true;
                             isKg = false;
-                            weightObj = new Height(
+                            weightObj = Height(
                                 unitCode: Constants.STR_VAL_WEIGHT_US,
                                 unitName: 'pounds');
                           });
@@ -233,7 +234,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                           setState(() {
                             isPounds = false;
                             isKg = true;
-                            weightObj = new Height(
+                            weightObj = Height(
                                 unitCode: Constants.STR_VAL_WEIGHT_IND,
                                 unitName: 'kilograms');
                           });
@@ -262,7 +263,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                           setState(() {
                             isCenti = false;
                             isInchFeet = true;
-                            heightObj = new Height(
+                            heightObj = Height(
                                 unitCode: Constants.STR_VAL_HEIGHT_IND,
                                 unitName: 'feet/Inches');
                           });
@@ -318,7 +319,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                           setState(() {
                             isInchFeet = false;
                             isCenti = true;
-                            heightObj = new Height(
+                            heightObj = Height(
                                 unitCode: Constants.STR_VAL_HEIGHT_US,
                                 unitName: 'centimeters');
                           });
@@ -347,7 +348,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                           setState(() {
                             isFaren = false;
                             isCele = true;
-                            tempObj = new Height(
+                            tempObj = Height(
                                 unitCode: Constants.STR_VAL_TEMP_US,
                                 unitName: 'celsius');
                           });
@@ -402,7 +403,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                           setState(() {
                             isCele = false;
                             isFaren = true;
-                            tempObj = new Height(
+                            tempObj = Height(
                                 unitCode: Constants.STR_VAL_TEMP_IND,
                                 unitName: variable.str_far.toLowerCase());
                           });
@@ -483,13 +484,13 @@ class _ChooseUnitState extends State<ChooseUnit> {
                   if (CommonUtil.REGION_CODE != "IN") {
                     isKg = false;
                     isPounds = true;
-                    weightObj = new Height(
+                    weightObj = Height(
                         unitCode: Constants.STR_VAL_WEIGHT_US,
                         unitName: variable.str_Pounds.toLowerCase());
                   } else {
                     isKg = true;
                     isPounds = false;
-                    weightObj = new Height(
+                    weightObj = Height(
                         unitCode: Constants.STR_VAL_WEIGHT_IND,
                         unitName: variable.str_Kilogram.toLowerCase());
                   }
@@ -520,13 +521,13 @@ class _ChooseUnitState extends State<ChooseUnit> {
                   if (CommonUtil.REGION_CODE != "IN") {
                     isInchFeet = false;
                     isCenti = true;
-                    heightObj = new Height(
+                    heightObj = Height(
                         unitCode: Constants.STR_VAL_HEIGHT_IND,
                         unitName: variable.str_Feet.toLowerCase());
                   } else {
                     isInchFeet = true;
                     isCenti = false;
-                    heightObj = new Height(
+                    heightObj = Height(
                         unitCode: Constants.STR_VAL_HEIGHT_US,
                         unitName: variable.str_centi.toLowerCase());
                   }
@@ -557,13 +558,13 @@ class _ChooseUnitState extends State<ChooseUnit> {
                   if (CommonUtil.REGION_CODE != "IN") {
                     isFaren = false;
                     isCele = true;
-                    tempObj = new Height(
+                    tempObj = Height(
                         unitCode: Constants.STR_VAL_TEMP_US,
                         unitName: variable.str_celesius.toLowerCase());
                   } else {
                     isFaren = true;
                     isCele = false;
-                    tempObj = new Height(
+                    tempObj = Height(
                         unitCode: Constants.STR_VAL_TEMP_IND,
                         unitName: variable.str_far.toLowerCase());
                   }
@@ -591,13 +592,13 @@ class _ChooseUnitState extends State<ChooseUnit> {
       await PreferenceUtil.saveString(
           Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_US);
 
-      heightObj = new Height(
+      heightObj = Height(
           unitCode: Constants.STR_VAL_HEIGHT_US,
           unitName: variable.str_centi.toLowerCase());
-      weightObj = new Height(
+      weightObj = Height(
           unitCode: Constants.STR_VAL_WEIGHT_US,
           unitName: variable.str_Pounds.toLowerCase());
-      tempObj = new Height(
+      tempObj = Height(
           unitCode: Constants.STR_VAL_TEMP_US,
           unitName: variable.str_celesius.toLowerCase());
       isKg = true;
@@ -616,13 +617,13 @@ class _ChooseUnitState extends State<ChooseUnit> {
       await PreferenceUtil.saveString(
           Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_IND);
 
-      heightObj = new Height(
+      heightObj = Height(
           unitCode: Constants.STR_VAL_HEIGHT_IND,
           unitName: variable.str_Feet.toLowerCase());
-      weightObj = new Height(
+      weightObj = Height(
           unitCode: Constants.STR_VAL_WEIGHT_IND,
           unitName: variable.str_Kilogram.toLowerCase());
-      tempObj = new Height(
+      tempObj = Height(
           unitCode: Constants.STR_VAL_TEMP_IND,
           unitName: variable.str_far.toLowerCase());
       isKg = false;

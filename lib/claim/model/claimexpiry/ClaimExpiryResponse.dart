@@ -19,7 +19,7 @@ class ClaimExpiryResponse {
             if (json['result'] != null) {
               result = <ClaimExpiryResult>[];
               json['result'].forEach((v) {
-                result!.add(new ClaimExpiryResult.fromJson(v));
+                result!.add(ClaimExpiryResult.fromJson(v));
               });
             }
           }
@@ -29,7 +29,7 @@ class ClaimExpiryResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
 

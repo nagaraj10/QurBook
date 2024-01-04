@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -103,7 +104,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   ValueNotifier isUploading = ValueNotifier(false);
 
   String timeText = '';
-  TimeOfDay? _currentTime = new TimeOfDay.now();
+  TimeOfDay? _currentTime = TimeOfDay.now();
 
   DateTime? initDate;
   String? providerId;
@@ -702,22 +703,26 @@ class FormDataDialogState extends State<FormDataDialog> {
           ValueListenableBuilder(
               valueListenable: isUploading,
               builder: (contxt, val, child) {
-                return RaisedButton(
+                return ElevatedButton(
                     onPressed: val == false
                         ? () async {
                             commonSaveMethod();
                           }
                         : null,
-                    color: widget.fromView!
-                        ? Colors.grey
-                        : widget.isFromQurHomeSymptom ||
-                                widget.isFromQurHomeRegimen
-                            ? Color(CommonUtil().getQurhomePrimaryColor())
-                            : Color(CommonUtil().getMyPrimaryColor()),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(
-                        5.0.sp,
-                      )),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: widget.fromView!
+                          ? Colors.grey
+                          : widget.isFromQurHomeSymptom ||
+                                  widget.isFromQurHomeRegimen
+                              ? Color(CommonUtil().getQurhomePrimaryColor())
+                              : Color(CommonUtil().getMyPrimaryColor()),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            5.0.sp,
+                          ),
+                        ),
+                      ),
                     ),
                     child: Text(
                       saveButton,
@@ -875,7 +880,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          RaisedButton(
+                          ElevatedButton(
                             onPressed: () {
                               if (returnAction?.eid != null &&
                                   (returnAction?.action ?? '') ==
@@ -898,14 +903,16 @@ class FormDataDialogState extends State<FormDataDialog> {
                                 Get.back();
                               }
                             },
-                            color: widget.isFromQurHomeSymptom ||
-                                    widget.isFromQurHomeRegimen
-                                ? Color(CommonUtil().getQurhomePrimaryColor())
-                                : Color(CommonUtil().getMyPrimaryColor()),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                  5.0.sp,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: widget.isFromQurHomeSymptom ||
+                                      widget.isFromQurHomeRegimen
+                                  ? Color(CommonUtil().getQurhomePrimaryColor())
+                                  : Color(CommonUtil().getMyPrimaryColor()),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    5.0.sp,
+                                  ),
                                 ),
                               ),
                             ),
@@ -949,19 +956,22 @@ class FormDataDialogState extends State<FormDataDialog> {
           padding: EdgeInsets.only(
             left: 20.0.w,
           ),
-          child: RaisedButton(
+          child: ElevatedButton(
             onPressed: () {
               Provider.of<RegimentViewModel>(Get.context!, listen: false)
                   .cachedEvents = [];
               Get.back();
             },
-            color: widget.isFromQurHomeSymptom || widget.isFromQurHomeRegimen
-                ? Color(CommonUtil().getQurhomePrimaryColor())
-                : Color(CommonUtil().getMyPrimaryColor()),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(
-                  5.0.sp,
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  widget.isFromQurHomeSymptom || widget.isFromQurHomeRegimen
+                      ? Color(CommonUtil().getQurhomePrimaryColor())
+                      : Color(CommonUtil().getMyPrimaryColor()),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    5.0.sp,
+                  ),
                 ),
               ),
             ),
@@ -1157,7 +1167,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   }
 
   void setCurrentTime() {
-    TimeOfDay selectedTime = new TimeOfDay.now();
+    TimeOfDay selectedTime = TimeOfDay.now();
     MaterialLocalizations localizations = MaterialLocalizations.of(context);
     String formattedTime = localizations.formatTimeOfDay(selectedTime,
         alwaysUse24HourFormat: false);
@@ -1173,16 +1183,20 @@ class FormDataDialogState extends State<FormDataDialog> {
         title: Text(strConfirms),
         content: Text(strUpdateMsg),
         actions: <Widget>[
-          FlatButton(
-            onPressed: () => closeDialog(),
-            child: Text(strNO),
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () => closeDialog(),
+            title: strNO,
           ),
-          FlatButton(
-            onPressed: () {
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () {
               isUpdatePressed = true;
               commonSaveMethod();
             },
-            child: Text(strYES),
+            title: strYES,
           ),
         ],
       ),

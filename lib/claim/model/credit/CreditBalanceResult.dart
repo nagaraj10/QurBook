@@ -34,7 +34,7 @@ class CreditBalanceResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['userId'] = this.userId;
     data['balanceAmount'] = this.balanceAmount;
     data['balanceDoctorAppointments'] = this.balanceDoctorAppointments;

@@ -6,29 +6,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/add_new_plan/block/AddNewPlanBlock.dart';
 import 'package:myfhb/add_new_plan/model/PlanCode.dart';
-import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class AddNewPlan {
-  FHBBasicWidget fhbBasicWidget = new FHBBasicWidget();
-  TextEditingController planContent = new TextEditingController();
+  FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
+  TextEditingController planContent = TextEditingController();
   String? validationMsg;
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   String? feedBackType;
   late String titleName;
   bool _validate = false;
-  AddNewBlock _addNewPlanBlock = new AddNewBlock();
+  AddNewBlock _addNewPlanBlock = AddNewBlock();
 
   Future<Widget?> addNewPlan(BuildContext context, String feedbackCode,
       String titleNameNew, String hintText, Function(bool) refresh) {
     feedBackType = feedbackCode;
     titleName = titleNameNew;
-    StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
-      return new AlertDialog(
+    StatefulBuilder dialog = StatefulBuilder(builder: (context, setState) {
+      return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,8 +87,8 @@ class AddNewPlan {
 
     String? feedBackID = getFeedbackId(planCodeResult, feedBackType);
 
-    Map<String, dynamic> postMediaData = new Map();
-    Map<String, dynamic> postMediaFeedBack = new Map();
+    Map<String, dynamic> postMediaData = Map();
+    Map<String, dynamic> postMediaFeedBack = Map();
     postMediaFeedBack["id"] = feedBackID;
     postMediaData["feedbackType"] = postMediaFeedBack;
     postMediaData["content"] = planContent.text;

@@ -20,6 +20,7 @@ import '../../my_family/bloc/FamilyListBloc.dart';
 import '../../src/utils/alert.dart';
 import '../../widgets/GradientAppBar.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 
 class AddFamilyOTPScreen extends StatefulWidget {
   AddFamilyOTPArguments? arguments;
@@ -43,7 +44,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
 
   late AddFamilyOTPBloc _addFamilyOTPBloc;
 
-  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
 
   @override
   void dispose() {
@@ -260,18 +261,16 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  FlatButton(
-                    onPressed: () {
+                  FlatButtonWidget(
+                    bgColor: Colors.transparent,
+                    isSelected: true,
+                    onPress: () {
                       generateOtp(widget.arguments!.selectedCountryCode,
                           widget.arguments!.enteredMobNumber);
                     },
-                    child: Text(
-                      variable.strResendCode,
-                      style: TextStyle(
-                          //color: Colors.deepPurple[300],
-                          color: Color(CommonUtil().getMyPrimaryColor()),
-                          fontWeight: FontWeight.w600),
-                    ),
+                    title: variable.strResendCode,
+                    titleColor: Color(CommonUtil().getMyPrimaryColor()),
+                    fontWeight: FontWeight.w600,
                   ),
                   SizedBox(
                     height: 20.0.h,

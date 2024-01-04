@@ -877,7 +877,7 @@ double kToolbarHeight = 56.0;
 double itemHeight = (height - kToolbarHeight - 24) / 8;
 double itemWidth = width / 2;
 
-FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
+FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics.instance;
 late var mInitialTime;
 
 const String address = 'Address';

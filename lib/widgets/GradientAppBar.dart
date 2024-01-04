@@ -15,8 +15,8 @@ class _GradientAppBarState extends State<GradientAppBar> {
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: <Color>[
-            Color(new CommonUtil().getMyPrimaryColor()),
-            Color(new CommonUtil().getMyGredientColor())
+            Color(CommonUtil().getMyPrimaryColor()),
+            Color(CommonUtil().getMyGredientColor())
           ],
               stops: [
             0.3,

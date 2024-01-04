@@ -22,7 +22,7 @@ class TelehealthProviderModel {
       success = json[parameters.strSuccess];
       message = json[parameters.strMessage];
       response = json[parameters.strResponse] != null
-              ? new Response.fromJson(json[parameters.strResponse])
+              ? Response.fromJson(json[parameters.strResponse])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -30,7 +30,7 @@ class TelehealthProviderModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strStatus] = this.status;
     data[parameters.strSuccess] = this.success;
     data[parameters.strMessage] = this.message;
@@ -50,14 +50,14 @@ class Response {
   Response.fromJson(Map<String, dynamic> json) {
     try {
       count = json[parameters.strCount];
-      data = json[parameters.strData] != null ? new Data.fromJson(json[parameters.strData]) : null;
+      data = json[parameters.strData] != null ? Data.fromJson(json[parameters.strData]) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strCount] = this.count;
     if (this.data != null) {
       data[parameters.strData] = this.data!.toJson();
@@ -74,7 +74,7 @@ class Data {
   Data.fromJson(Map<String, dynamic> json) {
     try {
       medicalPreferences = json[parameters.strmedicalPreferences] != null
-              ? new MedicalPreferences.fromJson(json[parameters.strmedicalPreferences])
+              ? MedicalPreferences.fromJson(json[parameters.strmedicalPreferences])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -82,7 +82,7 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.medicalPreferences != null) {
       data[parameters.strmedicalPreferences] = this.medicalPreferences!.toJson();
     }
@@ -98,7 +98,7 @@ class MedicalPreferences {
   MedicalPreferences.fromJson(Map<String, dynamic> json) {
     try {
       preferences = json[parameters.strpreferences] != null
-              ? new Preferences.fromJson(json[parameters.strpreferences])
+              ? Preferences.fromJson(json[parameters.strpreferences])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -106,7 +106,7 @@ class MedicalPreferences {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.preferences != null) {
       data[parameters.strpreferences] = this.preferences!.toJson();
     }
@@ -126,19 +126,19 @@ class Preferences {
       if (json[parameters.strdoctorIds] != null) {
             doctorIds = <DoctorIds>[];
             json[parameters.strdoctorIds].forEach((v) {
-              doctorIds!.add(new DoctorIds.fromJson(v));
+              doctorIds!.add(DoctorIds.fromJson(v));
             });
           }
       if (json[parameters.strhospitalIds] != null) {
             hospitalIds = <HospitalIds>[];
             json[parameters.strhospitalIds].forEach((v) {
-              hospitalIds!.add(new HospitalIds.fromJson(v));
+              hospitalIds!.add(HospitalIds.fromJson(v));
             });
           }
       if (json[parameters.strlaboratoryIds] != null) {
             laboratoryIds = <LaboratoryIds>[];
             json[parameters.strlaboratoryIds].forEach((v) {
-              laboratoryIds!.add(new LaboratoryIds.fromJson(v));
+              laboratoryIds!.add(LaboratoryIds.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -147,7 +147,7 @@ class Preferences {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.doctorIds != null) {
       data[parameters.strdoctorIds] = this.doctorIds!.map((v) => v.toJson()).toList();
     }

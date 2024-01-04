@@ -468,10 +468,12 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
   }
 
   Widget prescriptionButton(buttonText, NewPrescription newPrescription) {
-    return FlatButton(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-          side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+            side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
+      ),
       child: Text(
         buttonText,
         style: TextStyle(

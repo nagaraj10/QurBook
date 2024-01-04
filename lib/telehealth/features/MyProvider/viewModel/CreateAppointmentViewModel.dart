@@ -7,7 +7,7 @@ import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/p
 
 class CreateAppointMentViewModel {
   CreateAppointmentService createAppointmentService =
-      new CreateAppointmentService();
+      CreateAppointmentService();
   CreateAppointmentModel bookAppointment = CreateAppointmentModel();
   AppointmentNotificationPayment appointmentNotification = AppointmentNotificationPayment();
 

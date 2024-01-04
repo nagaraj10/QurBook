@@ -3,5 +3,63 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": []
+    "configurations": [
+        {
+            "name": "myfhb_mobile_flutter",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "myfhb_mobile_flutter (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "myfhb_mobile_flutter (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "flutter_absolute_path",
+            "cwd": "flutter_absolute_path",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "flutter_absolute_path (profile mode)",
+            "cwd": "flutter_absolute_path",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "flutter_absolute_path (release mode)",
+            "cwd": "flutter_absolute_path",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "local_auth",
+            "cwd": "local_auth",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "local_auth (profile mode)",
+            "cwd": "local_auth",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "local_auth (release mode)",
+            "cwd": "local_auth",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
 }

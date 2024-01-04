@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -13,7 +12,6 @@ import 'package:myfhb/more_menu/trouble_shoot_controller.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:provider/provider.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 
 class TroubleShooting extends StatefulWidget {
@@ -138,7 +136,7 @@ class _TroubleShootingState extends State<TroubleShooting> {
                                             duration: const Duration(
                                                 milliseconds: 3500),
                                             builder: (context, value, _) =>
-                                                new CircularProgressIndicator(
+                                                CircularProgressIndicator(
                                                     strokeWidth: 15.0,
                                                     value: controller
                                                         .progressValue,

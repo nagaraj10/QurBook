@@ -187,7 +187,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       version = packageInfo.version + " + " + packageInfo.buildNumber;
     });
     selectedList = [];
-    _deviceModel = new DevicesViewModel();
+    _deviceModel = DevicesViewModel();
     authViewModel = AuthViewModel();
 
     if ((BASE_URL == prodINURL) ||
@@ -265,8 +265,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               //       size: 24.0.sp,
               //     ),
               //     onPressed: () {
-              //       new FHBBasicWidget().exitApp(context, () {
-              //         new CommonUtil().logout(moveToLoginPage);
+              //       FHBBasicWidget().exitApp(context, () {
+              //         CommonUtil().logout(moveToLoginPage);
               //       });
               //     })
             ]),
@@ -1128,8 +1128,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       scale: switchTrail,
                       child: Switch(
                         value: _isdigitRecognition!,
-                        activeColor:
-                            Color(new CommonUtil().getMyPrimaryColor()),
+                        activeColor: Color(CommonUtil().getMyPrimaryColor()),
                         onChanged: (bool newValue) {
                           setState(() {
                             isSkillIntegration = true;
@@ -1167,8 +1166,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       scale: switchTrail,
                       child: Switch(
                         value: _isdeviceRecognition!,
-                        activeColor:
-                            Color(new CommonUtil().getMyPrimaryColor()),
+                        activeColor: Color(CommonUtil().getMyPrimaryColor()),
                         onChanged: (bool newValue) {
                           setState(() {
                             isSkillIntegration = true;
@@ -1682,7 +1680,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     scale: switchTrail,
                     child: Switch(
                       value: PreferenceUtil.getIfQurhomeisDefaultUI(),
-                      activeColor: Color(new CommonUtil().getMyPrimaryColor()),
+                      activeColor: Color(CommonUtil().getMyPrimaryColor()),
                       onChanged: (bool newValue) {
                         setState(
                           () {
@@ -1919,8 +1917,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       scale: switchTrail,
                       child: Switch(
                         value: PreferenceUtil.getEnableAppLock(),
-                        activeColor:
-                            Color(new CommonUtil().getMyPrimaryColor()),
+                        activeColor: Color(CommonUtil().getMyPrimaryColor()),
                         onChanged: (bool newValue) async {
                           if (newValue) {
                             String msg = 'You are not authorized.';

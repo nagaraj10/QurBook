@@ -1,4 +1,4 @@
-import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
+import 'package:advance_pdf_viewer2/advance_pdf_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
@@ -8,7 +8,6 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 
 class PDFView extends StatefulWidget {
   const PDFView(
@@ -29,7 +28,7 @@ class PDFView extends StatefulWidget {
 class _PDFViewState extends State<PDFView> {
   final controller = Get.find<PDFViewController>();
 
-  ChatSocketService _chatSocketService = new ChatSocketService();
+  ChatSocketService _chatSocketService = ChatSocketService();
 
   @override
   void initState() {

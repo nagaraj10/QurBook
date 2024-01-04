@@ -15,7 +15,7 @@ class CancelAppointmentModel {
       if (json[parameters.dataResult] != null) {
             result = <CancelResult>[];
             json[parameters.dataResult].forEach((v) {
-              result!.add(new CancelResult.fromJson(v));
+              result!.add(CancelResult.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -24,7 +24,7 @@ class CancelAppointmentModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strIsSuccess] = this.isSuccess;
     if (this.result != null) {
       data[parameters.dataResult] = this.result!.map((v) => v.toJson()).toList();

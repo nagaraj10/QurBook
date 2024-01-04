@@ -13,7 +13,7 @@ class HubListResponse {
       if (json['result'] != null) {
         result = <UserDeviceCollection>[];
         json['result'].forEach((v) {
-          result!.add(new UserDeviceCollection.fromJson(v));
+          result!.add(UserDeviceCollection.fromJson(v));
         });
       }
     } catch (e,stackTrace) {
@@ -22,7 +22,7 @@ class HubListResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] =
@@ -63,12 +63,12 @@ class Result {
       createdOn = json['createdOn'];
       hubId = json['hubId'];
       userId = json['userId'];
-      //hub = json['hub'] != null ? new Hub.fromJson(json['hub']) : null;
+      //hub = json['hub'] != null ? Hub.fromJson(json['hub']) : null;
 
       if (json['userDeviceCollection'] != null) {
             userDeviceCollection = <UserDeviceCollection>[];
             json['userDeviceCollection'].forEach((v) {
-              userDeviceCollection!.add(new UserDeviceCollection.fromJson(v));
+              userDeviceCollection!.add(UserDeviceCollection.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -77,7 +77,7 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['nickName'] = this.nickName;
     data['additionalDetails'] = this.additionalDetails;
@@ -109,7 +109,7 @@ class AdditionalDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['isVirtualHub'] = this.isVirtualHub;
     } catch (e,stackTrace) {
@@ -143,7 +143,7 @@ class Hub {
       name = json['name'];
       serialNumber = json['serialNumber'];
       additionalDetails = json['additionalDetails'] != null
-              ? new AdditionalDetails.fromJson(json['additionalDetails'])
+              ? AdditionalDetails.fromJson(json['additionalDetails'])
               : null;
       isActive = json['isActive'];
       createdOn = json['createdOn'];
@@ -299,7 +299,7 @@ class DeviceType {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       additionalInfo = json['additionalInfo'] != null
-          ? new AdditionalInfo.fromJson(json['additionalInfo'])
+          ? AdditionalInfo.fromJson(json['additionalInfo'])
           : null;
       if (additionalInfo == null) {
         AdditionalInfo additionalInfoTemp = AdditionalInfo();
@@ -410,7 +410,7 @@ class User {
     // lastModifiedOn = json['lastModifiedOn'];
     // providerId = json['providerId'];
     // additionalInfo = json['additionalInfo'] != null
-    //     ? new AdditionalInfo.fromJson(json['additionalInfo'])
+    //     ? AdditionalInfo.fromJson(json['additionalInfo'])
     //     : null;
     // firstLoggedIn = json['firstLoggedIn'];
   }
@@ -483,7 +483,7 @@ class AdditionalInfo {
       offset = json['offset'];
       weight = json['weight'];
       // if (json['language'] != null) {
-      //   language = new List<Null>();
+      //   language = List<Null>();
       //   json['language'].forEach((v) {
       //     language.add(new Null.fromJson(v));
       //   });

@@ -16,13 +16,13 @@ class QualificationInfo {
       if (json[parameters.strdegree] != null) {
             degree = <Degree>[];
             json[parameters.strdegree].forEach((v) {
-              degree!.add(new Degree.fromJson(v));
+              degree!.add(Degree.fromJson(v));
             });
           }
       if (json[parameters.struniversity] != null) {
             university = <University>[];
             json[parameters.struniversity].forEach((v) {
-              university!.add(new University.fromJson(v));
+              university!.add(University.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -31,7 +31,7 @@ class QualificationInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.degree != null) {
       data[parameters.strdegree] = this.degree!.map((v) => v.toJson()).toList();
     }

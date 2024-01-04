@@ -19,12 +19,10 @@ import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/ticket_support/model/ticket_details_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/TicketsListResponse.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
-import 'package:path/path.dart' as p;
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as strConstants;
@@ -490,8 +488,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                               begin: Alignment.centerLeft,
                               end: Alignment.centerRight,
                               colors: [
-                                Color(new CommonUtil().getMyPrimaryColor()),
-                                Color(new CommonUtil().getMyGredientColor())
+                                Color(CommonUtil().getMyPrimaryColor()),
+                                Color(CommonUtil().getMyGredientColor())
                               ]).createShader(bounds);
                         },
                         blendMode: BlendMode.srcATop,
@@ -507,8 +505,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
                                 colors: [
-                                  Color(new CommonUtil().getMyPrimaryColor()),
-                                  Color(new CommonUtil().getMyGredientColor())
+                                  Color(CommonUtil().getMyPrimaryColor()),
+                                  Color(CommonUtil().getMyGredientColor())
                                 ]).createShader(bounds);
                           },
                           blendMode: BlendMode.srcATop,
@@ -526,8 +524,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
                                 colors: [
-                                  Color(new CommonUtil().getMyPrimaryColor()),
-                                  Color(new CommonUtil().getMyGredientColor())
+                                  Color(CommonUtil().getMyPrimaryColor()),
+                                  Color(CommonUtil().getMyGredientColor())
                                 ]).createShader(bounds);
                           },
                           blendMode: BlendMode.srcATop,
@@ -552,27 +550,27 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                     ticketList.history!.isNotEmpty? ListView.builder(
                             shrinkWrap: true,
                             itemBuilder: (BuildContext context, int index) {
-                              return new Stack(
+                              return Stack(
                                 children: <Widget>[
-                                  new Positioned(
+                                  Positioned(
                                     top: 10.0,
                                     bottom: 0.0,
                                     left: 20.0,
-                                    child: new Container(
+                                    child: Container(
                                       height: 20,
                                       width: 1.0,
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
                                     ),
                                   ),
-                                  new Positioned(
+                                  Positioned(
                                     top: 0.0,
                                     left: 10.0,
-                                    child: new Container(
-                                      margin: new EdgeInsets.all(5.0),
+                                    child: Container(
+                                      margin: EdgeInsets.all(5.0),
                                       height: 10.0,
                                       width: 10.0,
-                                      decoration: new BoxDecoration(
+                                      decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: Color(CommonUtil()
                                               .getMyPrimaryColor())),
@@ -587,7 +585,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        new Container(
+                                        Container(
                                           height: 100.h,
                                           child: Column(
                                             children: [
@@ -697,7 +695,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                               suffixIcon: SizedBoxWithChild(
                                                 width: 50.0.h,
                                                 height: 50.0.h,
-                                                child: FlatButton(
+                                                child: ElevatedButton(
                                                     onPressed: () async {
                                                       FilePickerResult? result =
                                                           await FilePicker
@@ -717,7 +715,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                             file);
                                                       }
                                                     },
-                                                    child: new Icon(
+                                                    child: Icon(
                                                       Icons.attach_file,
                                                       color: Color(CommonUtil()
                                                           .getMyPrimaryColor()),
@@ -760,7 +758,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                       ),
                                       Flexible(
                                         flex: 1,
-                                        child: new Container(
+                                        child: Container(
                                           child: RawMaterialButton(
                                             onPressed: () {
                                                onSendMessage(
@@ -780,7 +778,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                       ),
                                       // Flexible(
                                       //   flex: 1,
-                                      //   child: new Container(
+                                      //   child: Container(
                                       //     child: RawMaterialButton(
                                       //       onPressed: () {
                                       //         Navigator.of(context)
@@ -988,7 +986,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                       )),
                   Flexible(
                     flex: 1,
-                    child: new Container(
+                    child: Container(
                       child: RawMaterialButton(
                         onPressed: () {
                           // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
@@ -1048,7 +1046,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                 children: [
                   Flexible(
                     flex: 1,
-                    child: new Container(
+                    child: Container(
                       child: RawMaterialButton(
                         onPressed: () {
                           // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);

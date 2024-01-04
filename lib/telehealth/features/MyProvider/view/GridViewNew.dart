@@ -24,8 +24,8 @@ class _GridViewNew extends State<GridViewNew> {
 
   int _selectedIndex = -1;
   int rowPosition = -1;
-  CommonWidgets commonWidgets = new CommonWidgets();
-  CommonUtil commonUtil = new CommonUtil();
+  CommonWidgets commonWidgets = CommonWidgets();
+  CommonUtil commonUtil = CommonUtil();
 
 
   _onSelected(int index,int positionFinal) {
@@ -82,7 +82,7 @@ class _GridViewNew extends State<GridViewNew> {
       ),
       borderRadius: BorderRadius.all(Radius.circular(15.0)),
       color: _selectedIndex != null && _selectedIndex == index && widget.rowPosition == widget.selectedRow
-          ? Color(new CommonUtil().getMyPrimaryColor())
+          ? Color(CommonUtil().getMyPrimaryColor())
           : Colors.white,
     );
   }

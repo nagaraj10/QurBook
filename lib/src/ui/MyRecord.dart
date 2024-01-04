@@ -93,7 +93,7 @@ class _MyRecordsState extends State<MyRecords> {
   FamilyListBloc? _familyListBloc;
   MyProfileBloc? _myProfileBloc;
 
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   GlobalSearchBloc? _globalSearchBloc;
   bool fromSearch = false;
@@ -101,13 +101,14 @@ class _MyRecordsState extends State<MyRecords> {
   HealthRecordList? completeData;
   List<MediaData> mediaData = [];
 
-  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state =
+      GlobalKey<ScaffoldMessengerState>();
   int? initPosition = 0;
 
   final GlobalKey _cameraKey = GlobalKey();
   final GlobalKey _voiceKey = GlobalKey();
   late BuildContext _myContext;
-  CategoryResult categoryDataObjClone = new CategoryResult();
+  CategoryResult categoryDataObjClone = CategoryResult();
 
   List<String> selectedMedia = [];
   static bool audioPage = false;
@@ -234,7 +235,7 @@ class _MyRecordsState extends State<MyRecords> {
 
   Widget getResponseForSearchedMedia() {
     _globalSearchBloc = null;
-    _globalSearchBloc = new GlobalSearchBloc();
+    _globalSearchBloc = GlobalSearchBloc();
     _globalSearchBloc!.searchBasedOnMediaType(
         (searchQuery == null && searchQuery == '') ? '' : searchQuery);
 
@@ -285,8 +286,8 @@ class _MyRecordsState extends State<MyRecords> {
   Widget getWidgetForSearchedMedia(List<Data> data) {
     List<CategoryResult> categoryDataList = [];
 
-    // categoryDataList = new CommonUtil().getAllCategoryList(data);
-    completeData = new CommonUtil().getMediaTypeInfo(data);
+    // categoryDataList = CommonUtil().getAllCategoryList(data);
+    completeData = CommonUtil().getMediaTypeInfo(data);
     PreferenceUtil.saveCompleteData(Constants.KEY_SEARCHED_LIST, completeData);
     PreferenceUtil.saveCategoryList(
         Constants.KEY_SEARCHED_CATEGORY, categoryDataList);
@@ -327,7 +328,7 @@ class _MyRecordsState extends State<MyRecords> {
 
             case Status.COMPLETED:
               _categoryListBlocks = null;
-              _categoryListBlocks = new CategoryListBlock();
+              _categoryListBlocks = CategoryListBlock();
 
               if (categoryDataList.length > 0) {
                 categoryDataList.clear();
@@ -358,7 +359,7 @@ class _MyRecordsState extends State<MyRecords> {
 
   Widget getMainWidgets(List<CategoryResult> data) {
     _categoryListBlocks = null;
-    _categoryListBlocks = new CategoryListBlock();
+    _categoryListBlocks = CategoryListBlock();
     List<CategoryResult> categoryData = [];
     if (!fromSearch) {
       PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, data);
@@ -496,7 +497,7 @@ class _MyRecordsState extends State<MyRecords> {
                 style: TextStyle(color: Colors.black54, fontSize: 16.0.sp),
                 onChanged: (editedValue) {
                   _globalSearchBloc = null;
-                  _globalSearchBloc = new GlobalSearchBloc();
+                  _globalSearchBloc = GlobalSearchBloc();
                   /*if (editedValue != '' && editedValue.length > 3) {
                     PreferenceUtil.saveCompleteData(
                             Constants.KEY_SEARCHED_LIST, null)
@@ -527,8 +528,8 @@ class _MyRecordsState extends State<MyRecords> {
           SizedBoxWidget(
             width: 2.0.w,
           ),
-          new CommonUtil().getNotificationIcon(context),
-          new SwitchProfile().buildActions(
+          CommonUtil().getNotificationIcon(context),
+          SwitchProfile().buildActions(
               context, _keyLoader, callBackToRefresh, false,
               changeWhiteBg: true),
         ],
@@ -544,38 +545,38 @@ class _MyRecordsState extends State<MyRecords> {
 
   void rebuildAllBlocks() {
     if (_categoryListBlocks == null) {
-      _categoryListBlocks = new CategoryListBlock();
+      _categoryListBlocks = CategoryListBlock();
       _categoryListBlocks!.getCategoryLists();
     } else if (_categoryListBlocks != null) {
       _categoryListBlocks = null;
-      _categoryListBlocks = new CategoryListBlock();
+      _categoryListBlocks = CategoryListBlock();
       _categoryListBlocks!.getCategoryLists();
     }
 
     if (_healthReportListForUserBlock == null) {
-      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+      _healthReportListForUserBlock = HealthReportListForUserBlock();
       _healthReportListForUserBlock!.getHelthReportLists();
     } else if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;
 
-      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+      _healthReportListForUserBlock = HealthReportListForUserBlock();
       _healthReportListForUserBlock!.getHelthReportLists();
     }
 
     if (_mediaTypeBlock == null) {
-      _mediaTypeBlock = new MediaTypeBlock();
+      _mediaTypeBlock = MediaTypeBlock();
       _mediaTypeBlock!.getMediTypesList();
     }
     /* if (_familyListBloc == null) {
-      _familyListBloc = new FamilyListBloc();
+      _familyListBloc = FamilyListBloc();
       _familyListBloc.getFamilyMembersList();
     }*/
 
     if (_myProfileBloc == null) {
-      _myProfileBloc = new MyProfileBloc();
+      _myProfileBloc = MyProfileBloc();
     }
     if (_globalSearchBloc == null) {
-      _globalSearchBloc = new GlobalSearchBloc();
+      _globalSearchBloc = GlobalSearchBloc();
     }
   }
 
@@ -632,7 +633,7 @@ class CustomTabView extends StatefulWidget {
 
   GlobalKey? cameraKey;
   GlobalKey? voiceKey;
-  GlobalKey<ScaffoldState>? scaffold_state;
+  GlobalKey<ScaffoldMessengerState>? scaffold_state;
   bool? fromSearch;
   HealthRecordList? completeData;
   List<String?>? selectedMedia = [];
@@ -712,23 +713,25 @@ class _CustomTabsState extends State<CustomTabView>
   FamilyListBloc? _familyListBloc;
   MyProfileBloc? _myProfileBloc;
 
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   GlobalSearchBloc? _globalSearchBloc;
   List<CategoryData> categoryDataList = [];
   List<MediaData> mediaData = [];
 
-  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state =
+      GlobalKey<ScaffoldMessengerState>();
   bool containsAudio = false;
   String audioPath = '';
   HealthResult? selectedResult;
   late CommonUtil commonUtil;
 
   final qurhomeDashboardController = Get.put(QurhomeDashboardController());
+  var landingScreenController = CommonUtil().onInitLandingScreenController();
 
   @override
   void initState() {
-    commonUtil = new CommonUtil();
+    commonUtil = CommonUtil();
     if (widget.fromSearch!) {
       _currentPosition = 0;
     } else {
@@ -825,8 +828,8 @@ class _CustomTabsState extends State<CustomTabView>
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: <Color>[
-                Color(new CommonUtil().getMyPrimaryColor()),
-                Color(new CommonUtil().getMyGredientColor())
+                Color(CommonUtil().getMyPrimaryColor()),
+                Color(CommonUtil().getMyGredientColor())
               ],
                   stops: [
                 0.3,
@@ -872,7 +875,7 @@ class _CustomTabsState extends State<CustomTabView>
           margin: EdgeInsets.only(right: 10, bottom: 10),
           constraints: BoxConstraints(maxHeight: 120.0.h),
           decoration: BoxDecoration(
-              color: Color(new CommonUtil().getMyPrimaryColor()),
+              color: Color(CommonUtil().getMyPrimaryColor()),
               borderRadius: BorderRadius.circular(30)),
           child: (widget.categoryData != null &&
                   widget.categoryData![controller!.index].categoryName ==
@@ -952,7 +955,7 @@ class _CustomTabsState extends State<CustomTabView>
               /*(widget.selectedMedia != null &&
                   widget.selectedMedia.length > 0 &&
                   !widget.showDetails)*/
-              ? OutlineButton(
+              ? OutlinedButton(
                   onPressed: () {
                     if (widget.isFromChat!) {
                       Navigator.of(context)
@@ -979,12 +982,14 @@ class _CustomTabsState extends State<CustomTabView>
                   },
                   child:
                       widget.isFromChat! ? Text('Attach') : Text('Associate'),
-                  textColor: Color(new CommonUtil().getMyPrimaryColor()),
-                  color: Colors.white,
-                  borderSide: BorderSide(
-                      color: Color(new CommonUtil().getMyPrimaryColor())),
-                  shape: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30)),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                    backgroundColor: Colors.white,
+                    side: BorderSide(
+                        color: Color(CommonUtil().getMyPrimaryColor())),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                  ),
                 )
               : SizedBox()
           //: SizedBox(),
@@ -1096,49 +1101,49 @@ class _CustomTabsState extends State<CustomTabView>
 
   void rebuildAllBlocks() {
     if (_categoryListBlock == null) {
-      _categoryListBlock = new CategoryListBlock();
+      _categoryListBlock = CategoryListBlock();
       _categoryListBlock!.getCategoryLists();
     } else if (_categoryListBlock != null) {
       _categoryListBlock = null;
-      _categoryListBlock = new CategoryListBlock();
+      _categoryListBlock = CategoryListBlock();
       _categoryListBlock!.getCategoryLists();
     }
 
     if (_healthReportListForUserBlock == null) {
-      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+      _healthReportListForUserBlock = HealthReportListForUserBlock();
       _healthReportListForUserBlock!.getHelthReportLists(userID: widget.userID);
     } else if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;
 
-      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+      _healthReportListForUserBlock = HealthReportListForUserBlock();
       _healthReportListForUserBlock!.getHelthReportLists(userID: widget.userID);
     }
 
     if (_mediaTypeBlock == null) {
-      _mediaTypeBlock = new MediaTypeBlock();
+      _mediaTypeBlock = MediaTypeBlock();
       _mediaTypeBlock!.getMediTypesList();
     }
     /*if (_familyListBloc == null) {
-      _familyListBloc = new FamilyListBloc();
+      _familyListBloc = FamilyListBloc();
       _familyListBloc.getFamilyMembersList();
     }*/
 
     if (_myProfileBloc == null) {
-      _myProfileBloc = new MyProfileBloc();
+      _myProfileBloc = MyProfileBloc();
     }
     if (_globalSearchBloc == null) {
-      _globalSearchBloc = new GlobalSearchBloc();
+      _globalSearchBloc = GlobalSearchBloc();
     }
   }
 
   Widget getMediTypeForlabels(
       List<CategoryResult>? data, HealthRecordList? completeData) {
     if (_mediaTypeBlock == null) {
-      _mediaTypeBlock = new MediaTypeBlock();
+      _mediaTypeBlock = MediaTypeBlock();
       _mediaTypeBlock!.getMediTypesList();
     } else {
       _mediaTypeBlock = null;
-      _mediaTypeBlock = new MediaTypeBlock();
+      _mediaTypeBlock = MediaTypeBlock();
       _mediaTypeBlock!.getMediTypesList();
     }
 
@@ -1269,7 +1274,7 @@ class _CustomTabsState extends State<CustomTabView>
     } else if (widget.allowSelectNotes! || widget.allowSelectVoice!) {
       if (condition) {
         if (widget.selectedMedia!.length > 0) {
-          new FHBBasicWidget()
+          FHBBasicWidget()
               .showInSnackBar(Constants.STR_ONLY_ONE, widget.scaffold_state!);
         } else {
           widget.selectedMedia!.add(metaId);
@@ -1297,7 +1302,7 @@ class _CustomTabsState extends State<CustomTabView>
                                 .isDisplay && dataObj.categoryName != Constants.STR_FEEDBACK) {*/
       if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionPrescription) {
-        tabWidgetList.add(new HealthReportListScreen(
+        tabWidgetList.add(HealthReportListScreen(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
@@ -1316,9 +1321,9 @@ class _CustomTabsState extends State<CustomTabView>
         if ((CommonUtil.isUSRegion()) &&
             (qurhomeDashboardController.isVitalModuleDisable.value)) {
           tabWidgetList
-              .add(new FHBBasicWidget().getContainerFeatureDisableDataText());
+              .add(FHBBasicWidget().getContainerFeatureDisableDataText());
         } else {
-          tabWidgetList.add(new DeviceListScreen(
+          tabWidgetList.add(DeviceListScreen(
               completeData,
               callBackToRefresh,
               dataObj.categoryName,
@@ -1335,7 +1340,7 @@ class _CustomTabsState extends State<CustomTabView>
         }
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionLabReport) {
-        tabWidgetList.add(new LabReportListScreen(
+        tabWidgetList.add(LabReportListScreen(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
@@ -1351,7 +1356,7 @@ class _CustomTabsState extends State<CustomTabView>
             addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionMedicalReport) {
-        tabWidgetList.add(new MedicalReportListScreen(
+        tabWidgetList.add(MedicalReportListScreen(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
@@ -1367,7 +1372,7 @@ class _CustomTabsState extends State<CustomTabView>
             addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionBills) {
-        tabWidgetList.add(new BillsList(
+        tabWidgetList.add(BillsList(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
@@ -1384,7 +1389,7 @@ class _CustomTabsState extends State<CustomTabView>
             widget.isFromBills));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionIDDocs) {
-        tabWidgetList.add(new IDDocsList(
+        tabWidgetList.add(IDDocsList(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
@@ -1400,7 +1405,7 @@ class _CustomTabsState extends State<CustomTabView>
             addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionOthers) {
-        tabWidgetList.add(new OtherDocsList(
+        tabWidgetList.add(OtherDocsList(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
@@ -1424,7 +1429,7 @@ class _CustomTabsState extends State<CustomTabView>
         if (CommonUtil.audioPage == false && widget.fromClass == 'audio') {
           widget.fromClass = '';
         }
-        tabWidgetList.add(new VoiceRecordList(
+        tabWidgetList.add(VoiceRecordList(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
@@ -1439,7 +1444,7 @@ class _CustomTabsState extends State<CustomTabView>
             widget.showDetails));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionClaimsRecord) {
-        tabWidgetList.add(new OtherDocsList(
+        tabWidgetList.add(OtherDocsList(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
@@ -1456,7 +1461,7 @@ class _CustomTabsState extends State<CustomTabView>
             addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionNotes) {
-        tabWidgetList.add(new NotesScreenList(
+        tabWidgetList.add(NotesScreenList(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
@@ -1471,7 +1476,7 @@ class _CustomTabsState extends State<CustomTabView>
             widget.showDetails));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionHospitalDocument) {
-        tabWidgetList.add(new HospitalDocuments(
+        tabWidgetList.add(HospitalDocuments(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
@@ -1486,7 +1491,7 @@ class _CustomTabsState extends State<CustomTabView>
             widget.isFromChat,
             addHealthRecords));
       } else {
-        tabWidgetList.add(new FHBBasicWidget().getContainerWithNoDataText());
+        tabWidgetList.add(FHBBasicWidget().getContainerWithNoDataText());
       }
       /* }*/
     }
@@ -1585,10 +1590,10 @@ class _CustomTabsState extends State<CustomTabView>
       });
     });
 
-    TextEditingController fileName = new TextEditingController(
+    TextEditingController fileName = TextEditingController(
         text: categoryName! +
             '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
-    new CommonDialogBox().getDialogBoxForNotes(
+    CommonDialogBox().getDialogBoxForNotes(
         context,
         containsAudio,
         audioPath,
@@ -1635,7 +1640,7 @@ class _CustomTabsState extends State<CustomTabView>
               (CommonUtil.isUSRegion()
                   ? Constants.STR_PROVIDERDOCUMENTS
                   : Constants.STR_HOSPITALDOCUMENT)) {
-        new FHBBasicWidget().showInSnackBar(
+        FHBBasicWidget().showInSnackBar(
             Constants.MSG_NO_CAMERA_VOICERECORDS + ' ' + categoryName!,
             widget.scaffold_state!);
       } else if (categoryName == AppConstants.notes) {
@@ -1653,10 +1658,14 @@ class _CustomTabsState extends State<CustomTabView>
                     Constants.stop_detecting, variable.strNO);
 
                 Navigator.pushNamed(context, router.rt_TakePictureForDevices)
-                    .then((value) {});
+                    .then((value) {
+                  onRefreshWidgets();
+                });
               } else {
                 Navigator.pushNamed(context, router.rt_TakePictureScreen)
-                    .then((value) {});
+                    .then((value) {
+                  onRefreshWidgets();
+                });
               }
             });
           });
@@ -1682,7 +1691,7 @@ class _CustomTabsState extends State<CustomTabView>
         (CommonUtil.isUSRegion()
             ? Constants.STR_PROVIDERDOCUMENTS
             : Constants.STR_HOSPITALDOCUMENT)) {
-      new FHBBasicWidget().showInSnackBar(
+      FHBBasicWidget().showInSnackBar(
           Constants.MSG_NO_VOICERECORDS + ' ' + categoryName!,
           widget.scaffold_state!);
     } else {
@@ -1713,13 +1722,17 @@ class _CustomTabsState extends State<CustomTabView>
                         ? ''
                         : widget.argument!.fromClass ?? 'audio'),
               ),
-            );
+            )!.then((results) {
+              onRefreshWidgets();
+            });
           } else {
             Navigator.pushNamed(context, router.rt_AudioScreen,
                     arguments: AudioScreenArguments(
                         fromVoice: true,
                         fromClass: widget.argument!.fromClass ?? 'audio'))
-                .then((results) {});
+                .then((results) {
+                  onRefreshWidgets();
+            });
           }
         });
       });
@@ -1732,6 +1745,13 @@ class _CustomTabsState extends State<CustomTabView>
       categoryName =
           widget.categoryData!.elementAt(_currentPosition!).categoryName;
       categoryID = widget.categoryData!.elementAt(_currentPosition!).id;
+    }
+  }
+
+  onRefreshWidgets() {
+    if (landingScreenController.ishealthRecordsScreenRefreshNeeded.value) {
+      landingScreenController.ishealthRecordsScreenRefreshNeeded.value = false;
+      setState(() {});
     }
   }
 }

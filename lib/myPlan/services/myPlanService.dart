@@ -1,5 +1,3 @@
-import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
-
 import '../../constants/fhb_query.dart';
 import '../model/myPlanDetailModel.dart';
 import '../model/myPlanListModel.dart';

@@ -46,7 +46,7 @@ class ClaimListResult {
       if (json['documentMetadata'] != null) {
             documentMetadata = <DocumentMetadata>[];
             json['documentMetadata'].forEach((v) {
-              documentMetadata!.add(new DocumentMetadata.fromJson(v));
+              documentMetadata!.add(DocumentMetadata.fromJson(v));
             });
           }
       remark = json['remark'];
@@ -56,12 +56,12 @@ class ClaimListResult {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       status =
-          json['status'] != null ? new Status.fromJson(json['status']) : null;
+          json['status'] != null ? Status.fromJson(json['status']) : null;
       submittedBy = json['submittedBy'] != null
-              ? new MyProfileResult.fromJson(json['submittedBy'])
+              ? MyProfileResult.fromJson(json['submittedBy'])
               : null;
       submittedFor = json['submittedFor'] != null
-              ? new MyProfileResult.fromJson(json['submittedFor'])
+              ? MyProfileResult.fromJson(json['submittedFor'])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -69,7 +69,7 @@ class ClaimListResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['planName'] = this.planName;
     data['claimNumber'] = this.claimNumber;

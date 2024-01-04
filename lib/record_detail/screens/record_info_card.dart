@@ -798,7 +798,7 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
       ),
     ),
   ]);
-  //return new Row(children: list);
+  //return Row(children: list);
 }
 
 getDoctorProfileImageWidget(MetaInfo data) {

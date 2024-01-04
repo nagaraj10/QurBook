@@ -27,7 +27,7 @@ class ClaimListBloc implements BaseBloc {
   ClaimListBloc() {
     _claimExpiryListControlller =
         StreamController<ApiResponse<ClaimExpiryResponse>>();
-    claimLosRepository = new ClaimListRepository();
+    claimLosRepository = ClaimListRepository();
   }
 
   Future<ClaimExpiryResponse?> getExpiryListResponse() async {

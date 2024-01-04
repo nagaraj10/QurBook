@@ -1,6 +1,5 @@
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/model/BottomNavigationArguments.dart';
@@ -41,7 +40,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
           color: Colors.white,
           buttonBackgroundColor: widget.selectedPageIndex == 2
               ? Colors.white
-              : Color(new CommonUtil().getMyPrimaryColor()),
+              : Color(CommonUtil().getMyPrimaryColor()),
           backgroundColor: Colors.transparent,
           animationCurve: Curves.linearToEaseOut,
           animationDuration: Duration(milliseconds: 450),
@@ -62,7 +61,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
 
     for (BottomNavigationArguments bottomNavigationArguments
         in widget.bottomNavigationArgumentsList!) {
-      widgetsForBottom.add(new BottomBarWidget(
+      widgetsForBottom.add(BottomBarWidget(
         name: bottomNavigationArguments.name,
         icon: bottomNavigationArguments.imageIcon,
         selectedPageIndex: widget.selectedPageIndex,

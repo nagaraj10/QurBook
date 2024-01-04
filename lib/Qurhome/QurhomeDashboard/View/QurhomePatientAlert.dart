@@ -440,7 +440,7 @@ class _QurhomePatientALertState extends State<QurhomePatientALert> {
                                     CommonUtil().getQurhomePrimaryColor())),
                           ),
                           border: OutlineInputBorder(
-                              // borderSide: new BorderSide(color: Colors.teal)
+                              // borderSide: BorderSide(color: Colors.teal)
                               ),
                         ),
                         keyboardType: TextInputType.multiline,

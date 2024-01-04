@@ -1,23 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import '../../../../common/firestore_services.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProviderHospitals.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProviders.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
-import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class MyProvidersMain extends StatefulWidget {
   final int? mTabIndex;
@@ -29,7 +22,7 @@ class MyProvidersMain extends StatefulWidget {
 
 class _TabBarDemoState extends State<MyProvidersMain>
     with SingleTickerProviderStateMixin {
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
   TabController? _controller;
   int _selectedIndex = 0;
   bool isRefresh = true;
@@ -38,7 +31,7 @@ class _TabBarDemoState extends State<MyProvidersMain>
     // TODO: implement initState
     super.initState();
     // Create TabController for getting the index of current tab
-    _controller = new TabController(
+    _controller = TabController(
       length: 2,
       vsync: this,
     );
@@ -125,8 +118,8 @@ class _TabBarDemoState extends State<MyProvidersMain>
                     : Constants.mobileFontTitle),
           ),
         ),
-        new CommonUtil().getNotificationIcon(context),
-        new SwitchProfile()
+        CommonUtil().getNotificationIcon(context),
+        SwitchProfile()
             .buildActions(context, _keyLoader, callBackToRefresh, false),
         // Icon(Icons.more_vert),
       ],

@@ -1,16 +1,10 @@
 
 // import 'package:auto_size_text/auto_size_text.dart'; //  FU2.5
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:intl/intl.dart';
 import 'package:myfhb/my_providers/models/ProviderRequestCollection3.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -19,7 +13,6 @@ import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseData.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/search_providers/models/search_arguments.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/AvailableTimeSlotsModel.dart';
@@ -28,8 +21,6 @@ import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slo
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 
 import '../../SearchWidget/view/SearchWidget.dart';
 import 'healthOrganization/HealthOrganization.dart';
@@ -49,7 +40,7 @@ class _MyProvidersState extends State<MyProviders> {
   int selectedPosition = 0;
   bool firstTym = false;
   String? doctorsName;
-  CommonWidgets commonWidgets = new CommonWidgets();
+  CommonWidgets commonWidgets = CommonWidgets();
   bool isSearch = false;
 
   List<DoctorIds> doctorData = [];
@@ -70,7 +61,7 @@ class _MyProvidersState extends State<MyProviders> {
     mInitialTime = DateTime.now();
     super.initState();
     getDataForProvider();
-    _providersBloc = new ProvidersBloc();
+    _providersBloc = ProvidersBloc();
     _medicalPreferenceList = _providersBloc.getMedicalPreferencesForDoctors();
     print('init doctor');
   }
@@ -144,7 +135,7 @@ class _MyProvidersState extends State<MyProviders> {
           },
           child: Icon(
             Icons.add,
-            color: Color(new CommonUtil().getMyPrimaryColor()),
+            color: Color(CommonUtil().getMyPrimaryColor()),
             size: 24.0.sp,
           ),
         ));
@@ -178,7 +169,7 @@ class _MyProvidersState extends State<MyProviders> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        new Stack(
+        Stack(
           overflow: Overflow.visible,
           children: <Widget>[
             Container(
@@ -186,7 +177,7 @@ class _MyProvidersState extends State<MyProviders> {
               child: commonWidgets.getClipOvalImageNew(
                   docs[i].profilePicThumbnailURL, fhbStyles.cardClipImage),
             ),
-            new Positioned(
+            Positioned(
               bottom: 0.0,
               right: 2.0,
               child: commonWidgets.getDoctorStatusWidget(docs[i], i),
@@ -278,7 +269,7 @@ class _MyProvidersState extends State<MyProviders> {
   void getDataForProvider() async {
     if (firstTym == false) {
       firstTym = true;
-      providerViewModel = new MyProviderViewModel();
+      providerViewModel = MyProviderViewModel();
     }
   }
 
@@ -315,7 +306,7 @@ class _MyProvidersState extends State<MyProviders> {
   }
 
   Widget getDoctorProviderListNew() {
-    return new FutureBuilder<MyProvidersResponse?>(
+    return FutureBuilder<MyProvidersResponse?>(
       future: _medicalPreferenceList,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -416,14 +407,14 @@ class _MyProvidersState extends State<MyProviders> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            new Stack(
-              overflow: Overflow.visible,
+            Stack(
+              clipBehavior: Clip.none,
               children: <Widget>[
                 Container(
                   alignment: Alignment.center,
                   child: commonWidgets.getClipOvalImageNew(docs[i]),
                 ),
-                new Positioned(
+                Positioned(
                   bottom: 0.0,
                   right: 2.0,
                   child: commonWidgets.getDoctorStatusWidgetNew(docs[i]!, i),

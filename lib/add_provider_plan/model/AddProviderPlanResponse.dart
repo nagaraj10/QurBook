@@ -13,7 +13,7 @@ class AddProviderPlanResponse {
       if (json['result'] != null) {
             result =  <AddProviderPlanResponseResult>[];
             json['result'].forEach((v) {
-              result!.add(new AddProviderPlanResponseResult.fromJson(v));
+              result!.add(AddProviderPlanResponseResult.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -22,7 +22,7 @@ class AddProviderPlanResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.map((v) => v.toJson()).toList();
@@ -65,17 +65,17 @@ class AddProviderPlanResponseResult {
     try {
       providerType = json['providerType'];
       createdBy = json['createdBy'] != null
-              ? new CreatedBy.fromJson(json['createdBy'])
+              ? CreatedBy.fromJson(json['createdBy'])
               : null;
       createdOn = json['createdOn'];
       isDefault = json['isDefault'];
       isInvite = json['isInvite'];
       doctor = json['doctor'];
       healthOrganization = json['healthOrganization'] != null
-              ? new CreatedBy.fromJson(json['healthOrganization'])
+              ? CreatedBy.fromJson(json['healthOrganization'])
               : null;
       patient = json['patient'] != null
-              ? new CreatedBy.fromJson(json['patient'])
+              ? CreatedBy.fromJson(json['patient'])
               : null;
       startDate = json['startDate'];
       endDate = json['endDate'];
@@ -88,7 +88,7 @@ class AddProviderPlanResponseResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['providerType'] = this.providerType;
     if (this.createdBy != null) {
       data['createdBy'] = this.createdBy!.toJson();
@@ -126,7 +126,7 @@ class CreatedBy {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     return data;
   }

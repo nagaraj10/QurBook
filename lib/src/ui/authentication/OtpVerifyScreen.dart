@@ -2,6 +2,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/firebase_analytics_service.dart';
@@ -42,16 +43,16 @@ class OtpVerifyScreen extends StatefulWidget {
 }
 
 class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
-  TextEditingController controller1 = new TextEditingController(text: '');
-  TextEditingController controller2 = new TextEditingController(text: '');
-  TextEditingController controller3 = new TextEditingController(text: '');
-  TextEditingController controller4 = new TextEditingController(text: '');
-  TextEditingController currController = new TextEditingController(text: '');
+  TextEditingController controller1 = TextEditingController(text: '');
+  TextEditingController controller2 = TextEditingController(text: '');
+  TextEditingController controller3 = TextEditingController(text: '');
+  TextEditingController controller4 = TextEditingController(text: '');
+  TextEditingController currController = TextEditingController(text: '');
 
   late OTPVerifyBloc _otpVerifyBloc;
   late AddFamilyUserInfoBloc addFamilyUserInfoBloc;
 
-  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
 
   @override
   void dispose() {
@@ -69,7 +70,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     super.initState();
     currController = controller1;
     _otpVerifyBloc = OTPVerifyBloc();
-    addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
+    addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
   }
 
   @override
@@ -77,15 +78,15 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     List<Widget> widgetList = [
       Padding(
         padding: EdgeInsets.only(left: 0.0, right: 2.0),
-        child: new Container(
+        child: Container(
           color: Colors.transparent,
         ),
       ),
       Padding(
         padding: const EdgeInsets.only(right: 2.0, left: 2.0),
-        child: new Container(
+        child: Container(
             alignment: Alignment.center,
-            child: new TextField(
+            child: TextField(
               textCapitalization: TextCapitalization.sentences,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(1),
@@ -99,9 +100,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
       ),
       Padding(
         padding: const EdgeInsets.only(right: 2.0, left: 2.0),
-        child: new Container(
+        child: Container(
           alignment: Alignment.center,
-          child: new TextField(
+          child: TextField(
             textCapitalization: TextCapitalization.sentences,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
@@ -117,9 +118,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
       ),
       Padding(
         padding: const EdgeInsets.only(right: 2.0, left: 2.0),
-        child: new Container(
+        child: Container(
           alignment: Alignment.center,
-          child: new TextField(
+          child: TextField(
             textCapitalization: TextCapitalization.sentences,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
@@ -135,9 +136,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
       ),
       Padding(
         padding: const EdgeInsets.only(right: 2.0, left: 2.0),
-        child: new Container(
+        child: Container(
           alignment: Alignment.center,
-          child: new TextField(
+          child: TextField(
             textCapitalization: TextCapitalization.sentences,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
@@ -152,7 +153,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
       ),
       Padding(
         padding: EdgeInsets.only(left: 2.0, right: 0.0),
-        child: new Container(
+        child: Container(
           color: Colors.transparent,
         ),
       ),
@@ -250,30 +251,30 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     color: Colors.grey,
                   ),
                 ),
-                FlatButton(
-                    onPressed: () {
-                      new FHBUtils().check().then((intenet) {
-                        if (intenet != null && intenet) {
-                          if (widget.forEmailVerify!) {
-                            verifyOTPFromEmai();
-                          } else {
-                            generateOtp(
-                                _otpVerifyBloc,
-                                widget.selectedCountryCode,
-                                widget.enteredMobNumber);
-                          }
+                FlatButtonWidget(
+                  bgColor: Colors.transparent,
+                  isSelected: true,
+                  onPress: () {
+                    FHBUtils().check().then((intenet) {
+                      if (intenet != null && intenet) {
+                        if (widget.forEmailVerify!) {
+                          verifyOTPFromEmai();
                         } else {
-                          new FHBBasicWidget().showInSnackBar(
-                              Constants.STR_NO_CONNECTIVITY, scaffold_state);
+                          generateOtp(
+                              _otpVerifyBloc,
+                              widget.selectedCountryCode,
+                              widget.enteredMobNumber);
                         }
-                      });
-                    },
-                    child: Text(
-                      variable.strResendCode,
-                      style: TextStyle(
-                          color: Color(new CommonUtil().getMyPrimaryColor()),
-                          fontWeight: FontWeight.w600),
-                    )),
+                      } else {
+                        FHBBasicWidget().showInSnackBar(
+                            Constants.STR_NO_CONNECTIVITY, scaffold_state);
+                      }
+                    });
+                  },
+                  title: variable.strResendCode,
+                  titleColor: Color(CommonUtil().getMyPrimaryColor()),
+                  fontWeight: FontWeight.w600,
+                ),
                 SizedBox(height: 20.0.h)
               ])),
           !widget.fromSignIn! && !widget.forEmailVerify!
@@ -286,7 +287,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    new Container(
+                    Container(
                       child: Padding(
                         padding: const EdgeInsets.only(
                             left: 8.0, top: 8.0, right: 8.0, bottom: 0.0),
@@ -329,7 +330,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                         ),
                       ),
                     ),
-                    new Container(
+                    Container(
                       child: Padding(
                         padding: const EdgeInsets.only(
                             left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
@@ -371,7 +372,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                         ),
                       ),
                     ),
-                    new Container(
+                    Container(
                       child: Padding(
                         padding: const EdgeInsets.only(
                             left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
@@ -413,7 +414,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                         ),
                       ),
                     ),
-                    new Container(
+                    Container(
                       child: Padding(
                         padding: const EdgeInsets.only(
                             left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
@@ -428,7 +429,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                 child: Icon(
                                   Icons.backspace,
                                   color: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
+                                      CommonUtil().getMyPrimaryColor()),
                                 )),
                             MaterialButton(
                               onPressed: () {
@@ -452,7 +453,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                       controller3.text +
                                       controller4.text;
 
-                                  new FHBUtils().check().then((intenet) {
+                                  FHBUtils().check().then((intenet) {
                                     if (intenet != null && intenet) {
                                       if (widget.forEmailVerify!) {
                                         _otpVerifyBloc
@@ -464,7 +465,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                                       .MSG_EMAIL_OTP_VERIFIED) {
                                             updateProfile();
                                           } else {
-                                            new FHBBasicWidget().showInSnackBar(
+                                            FHBBasicWidget().showInSnackBar(
                                                 value.message!, scaffold_state);
                                           }
                                         });
@@ -480,20 +481,20 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                         });
                                       }
                                     } else {
-                                      new FHBBasicWidget().showInSnackBar(
+                                      FHBBasicWidget().showInSnackBar(
                                           Constants.STR_NO_CONNECTIVITY,
                                           scaffold_state);
                                     }
                                   });
                                 } else {
-                                  new FHBBasicWidget().showInSnackBar(
+                                  FHBBasicWidget().showInSnackBar(
                                       Constants.STR_OTP_FIELD, scaffold_state);
                                 }
                                 //matchOtp();
                               },
                               child: Icon(Icons.done,
                                   color: Color(
-                                      new CommonUtil().getMyPrimaryColor())),
+                                      CommonUtil().getMyPrimaryColor())),
                             ),
                           ],
                         ),
@@ -519,7 +520,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
           constraints: BoxConstraints(minWidth: 220, maxWidth: double.infinity),
           child: MaterialButton(
               child: Icon(Icons.done,
-                  color: Color(new CommonUtil().getMyPrimaryColor())),
+                  color: Color(CommonUtil().getMyPrimaryColor())),
               onPressed: //snapshot.hasData ? bloc.submit : null,
                   () {
                 String otp = controller1.text +
@@ -533,7 +534,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                         value.message == Constants.MSG_EMAIL_OTP_VERIFIED) {
                       updateProfile();
                     } else {
-                      new FHBBasicWidget()
+                      FHBBasicWidget()
                           .showInSnackBar(value.message!, scaffold_state);
                     }
                   });
@@ -632,7 +633,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
   void checkOTPResponse(OTPResponse otpResponse) {
     if (otpResponse.message == Constants.STR_OTPMISMATCHED) {
-      new FHBBasicWidget()
+      FHBBasicWidget()
           .showInSnackBar(Constants.STR_OTPMISMATCHED_STRING, scaffold_state);
     } else {
       PreferenceUtil.saveString(
@@ -668,13 +669,13 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         .generateOTP(widget.enteredMobNumber, widget.selectedCountryCode!,
             widget.fromSignIn!)
         .then((onValue) {
-      new FHBBasicWidget().showInSnackBar(onValue!.message!, scaffold_state);
+      FHBBasicWidget().showInSnackBar(onValue!.message!, scaffold_state);
     });
   }
 
   void verifyOTPFromEmai() {
     addFamilyUserInfoBloc.verifyEmail().then((value) {
-      new FHBBasicWidget().showInSnackBar(value!.message!, scaffold_state);
+      FHBBasicWidget().showInSnackBar(value!.message!, scaffold_state);
     });
   }
 
@@ -724,7 +725,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   }
 
   void updateProfile() {
-    MyProfileBloc _myProfileBloc = new MyProfileBloc();
+    MyProfileBloc _myProfileBloc = MyProfileBloc();
 
     _myProfileBloc
         .getMyProfileData(Constants.KEY_USERID_MAIN)

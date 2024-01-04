@@ -1,10 +1,8 @@
 
 import 'dart:core';
-import 'dart:ui';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/video_call/Prescription/model/prescription_medicines_model.dart';
@@ -234,7 +232,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                         ),
                         Container(
                           alignment: FractionalOffset.bottomRight,
-                          child: FlatButton(
+                          child: ElevatedButton(
                             onPressed: () {
                               setState(() {
                                 medicineList!.add(PrescriptionMedicines(
@@ -316,9 +314,9 @@ class NewPrescriptionState extends State<NewPrescription> {
   }
 
   Widget medicineListItem(int pos, List<PrescriptionMedicines>? medicine) {
-    GlobalKey key = new GlobalKey();
-    GlobalKey key1 = new GlobalKey();
-    GlobalKey key2 = new GlobalKey();
+    GlobalKey key = GlobalKey();
+    GlobalKey key1 = GlobalKey();
+    GlobalKey key2 = GlobalKey();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -416,7 +414,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                 ],
               ),
               quantityField(medicineList![pos].quantity),
-              FlatButton(
+              ElevatedButton(
                   onPressed: () {
                     setState(() {
                       medicineList!.removeAt(pos);
@@ -599,10 +597,12 @@ class NewPrescriptionState extends State<NewPrescription> {
   }
 
   Widget prescriptionButton(buttonText) {
-    return FlatButton(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-          side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+            side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
+      ),
       child: Text(
         buttonText,
         style: TextStyle(

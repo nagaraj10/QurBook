@@ -1,11 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:provider/provider.dart';
 import 'checkout_page_provider.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class CartIconWithBadge extends StatelessWidget {
   Color color;

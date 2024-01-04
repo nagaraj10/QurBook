@@ -16,13 +16,13 @@ class Fees {
     try {
       doctorId = json[parameters.strDoctorId];
       consulting = json[parameters.strconsulting] != null
-              ? new Consulting.fromJson(json[parameters.strconsulting])
+              ? Consulting.fromJson(json[parameters.strconsulting])
               : null;
       followup = json[parameters.strfollowup] != null
-              ? new Followup.fromJson(json[parameters.strfollowup])
+              ? Followup.fromJson(json[parameters.strfollowup])
               : null;
       cancellation = json[parameters.strcancellation] != null
-              ? new Consulting.fromJson(json[parameters.strcancellation])
+              ? Consulting.fromJson(json[parameters.strcancellation])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -30,7 +30,7 @@ class Fees {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strDoctorId] = this.doctorId;
     if (this.consulting != null) {
       data[parameters.strconsulting] = this.consulting!.toJson();
