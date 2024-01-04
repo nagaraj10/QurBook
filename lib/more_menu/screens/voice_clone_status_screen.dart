@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
@@ -11,9 +12,16 @@ import 'package:myfhb/more_menu/screens/terms_and_conditon.dart';
 import 'package:myfhb/more_menu/voice_clone_status_controller.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart';
+import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
+import 'package:myfhb/voice_cloning/model/voice_cloning_choose_member_arguments.dart';
+import 'package:myfhb/voice_cloning/view/widgets/voice_clone_family_members_list.dart';
 
 class VoiceCloningStatus extends StatefulWidget {
-  const VoiceCloningStatus();
+  final VoiceCloneStatusArguments? arguments;
+
+  const VoiceCloningStatus({
+    required this.arguments,
+  });
 
   @override
   _MyFhbWebViewState createState() => _MyFhbWebViewState();
@@ -47,64 +55,40 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => WillPopScope(
+    return Obx(
+      () => WillPopScope(
         onWillPop: () {
-          // to enable navigation from down back button
-          Get.off(
-            MoreMenuScreen(),
-          );
+          controller.setBackButton(context,widget.arguments?.fromMenu ?? false);
+          //  Get.off(
+          //  MoreMenuScreen(),
+          //);
           return Future.value(false);
         },
         child: Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  size: 24.0.sp,
-                ),
-                onPressed: () {
-                  Get.off(
-                    MoreMenuScreen(),
-                  );
-                },
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                size: 24.0.sp,
               ),
-              title: AppBarForVoiceCloning().getVoiceCloningAppBar(),
-              centerTitle: false,
+              onPressed: () {
+                controller.setBackButton(context,widget.arguments?.fromMenu ?? false);
+              },
             ),
-            body: controller.loadingData.value
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : controller.voiceCloneStatusModel?.result != null
-                    ? Stack(children: [
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: InkWell(
-                            onTap: _onButtonPressed,
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: 20),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: getColors()),
-                                borderRadius: BorderRadius.circular(20),
-                                color: getBackGroundColor(),
-                              ),
-                              child: Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 30.sp,
-                                      right: 30.sp,
-                                      top: 10,
-                                      bottom: 10),
-                                  child: Text(
-                                    getTextBasedOnStatus(),
-                                    style: TextStyle(color: getColors()),
-                                  )),
-                            ),
-                          ),
-                        ),
+            title: AppBarForVoiceCloning().getVoiceCloningAppBar(),
+            centerTitle: false,
+          ),
+          body: controller.loadingData.value
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : controller.voiceCloneStatusModel?.result != null
+                  ? Stack(
+                      children: [
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
+                          children: [
                             Padding(
                               padding: EdgeInsets.all(10),
                               child: Text(
@@ -140,7 +124,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                         fontSize: subtitle,
                                       )),
                                 ]),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Row(
@@ -166,44 +150,94 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                               '')),
                                 ]),
                             Visibility(
-                              visible: (controller
-                                      .voiceCloneStatusModel?.result?.status ==
-                                  strDecline),
-                              child: Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: RichText(
-                                    textAlign: TextAlign.center,
-                                    text: TextSpan(
-                                      style: TextStyle(
-                                        fontSize: 17.0.sp,
-                                        color: Colors.black,
-                                      ),
-                                      children: [
-                                        TextSpan(
-                                          text: strReason,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: mobileFontTitle,
-                                              color: Colors.grey[600]),
+                                visible: controller.voiceCloneStatusModel
+                                            ?.result?.status ==
+                                        strApproved &&
+                                    controller.listOfFamilyMembers.length > 0,
+                                child: Expanded(
+                                        child: Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              8, 16, 8, 8),
+                                          child: VoiceCloneFamilyMembersList(
+                                            isShowcaseExisting: true,
+                                            familyMembers:
+                                                controller.listOfFamilyMembers,
+                                            onValueSelected: (value) {},
+                                          ),
                                         ),
-                                        TextSpan(
-                                            text: controller
-                                                    .voiceCloneStatusModel
-                                                    ?.result
-                                                    ?.additionalInfo
-                                                    ?.reason ??
-                                                '',
-                                            style: TextStyle(
-                                                color: Colors.grey[600],
-                                                fontSize: mobileFontTitle)),
-                                      ],
+                                      )
                                     ),
-                                  )),
+                            Visibility(
+                              visible: controller
+                                      .voiceCloneStatusModel?.result?.status ==
+                                  strDecline,
+                              child: Padding(
+                                padding: EdgeInsets.all(10),
+                                child: RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
+                                    style: TextStyle(
+                                      fontSize: 17.0.sp,
+                                      color: Colors.black,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: strReason,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: mobileFontTitle,
+                                            color: Colors.grey[600]),
+                                      ),
+                                      TextSpan(
+                                          text: controller
+                                                  .voiceCloneStatusModel
+                                                  ?.result
+                                                  ?.additionalInfo
+                                                  ?.reason ??
+                                              '',
+                                          style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: mobileFontTitle)),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 80,
                             ),
                           ],
-                        )
-                      ])
-                    : ErrorsWidget())));
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: InkWell(
+                            onTap: _onButtonPressed,
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: 20),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: getColors()),
+                                borderRadius: BorderRadius.circular(20),
+                                color: getBackGroundColor(),
+                              ),
+                              child: Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 30.sp,
+                                      right: 30.sp,
+                                      top: 10,
+                                      bottom: 10),
+                                  child: Text(
+                                    getTextBasedOnStatus(),
+                                    style: TextStyle(color: getColors()),
+                                  )),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : ErrorsWidget(),
+        ),
+      ),
+    );
   }
 
   /**
@@ -254,13 +288,21 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
     String statusBtn = getTextBasedOnStatus();
     if (statusBtn == 'Revoke Submission') {
       //revoke the submission of voice clone and navigate to more menu screen
-      await controller.revokeSubmission();
+      await controller.revokeSubmission(widget.arguments?.fromMenu ?? false);
     } else if (statusBtn == 'Record Again') {
       //Pop the current page and should go back to recording page
-      Navigator.pop(context);
       Navigator.pushNamed(context, rt_record_submission);
     } else {
       //Navigate to assign to members
+      final selectedFamilyMembers = controller.listOfFamilyMembers.value
+          .map((e) => e.child?.id ?? '')
+          .toList();
+
+      Navigator.pushNamed(context, rt_VoiceCloningChooseMemberSubmit,
+          arguments: VoiceCloningChooseMemberArguments(
+            voiceCloneId: controller.voiceCloneId.value,
+            selectedFamilyMembers: controller.selectedFamilyMembers,
+          ));
     }
   }
 }

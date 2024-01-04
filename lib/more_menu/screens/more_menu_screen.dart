@@ -31,6 +31,7 @@ import 'package:myfhb/src/ui/settings/NonAdheranceSettingsScreen.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/ticket_support/model/user_comments_model.dart';
 import 'package:myfhb/unit/choose_unit.dart';
+import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -2117,12 +2118,15 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
           setState(() {});
         });
       } else if (voiceCloningStatus != strApproved && voiceCloning) {
-        Navigator.pop(
-            context); //removing the router from screen to refresh the screen when returned
-        Navigator.pushNamed(
-          context,
-          router.rt_VoiceCloningStatus,
-        ).then((value) {
+        Navigator.pushNamed(context, router.rt_VoiceCloningStatus,
+                arguments: VoiceCloneStatusArguments(fromMenu: true))
+            .then((value) {
+          setState(() {});
+        });
+      } else if (voiceCloningStatus == strApproved && voiceCloning) {
+        Navigator.pushNamed(context, router.rt_VoiceCloningStatus,
+                arguments: VoiceCloneStatusArguments(fromMenu: true))
+            .then((value) {
           setState(() {});
         });
       }

@@ -136,8 +136,9 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                               arguments:
                                   UserAccountsArguments(selectedIndex: 0),
                             ));
-                          } catch (e,stackTrace) {
-                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                          } catch (e, stackTrace) {
+                            CommonUtil()
+                                .appLogs(message: e, stackTrace: stackTrace);
 
                             //print(e);
                           }
@@ -152,8 +153,9 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                             clearControllerValues();
                             Get.back();
                             Get.to(AppointmentsMain(isFromQurday: true));
-                          } catch (e,stackTrace) {
-                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                          } catch (e, stackTrace) {
+                            CommonUtil()
+                                .appLogs(message: e, stackTrace: stackTrace);
 
                             //print(e);
                           }
@@ -174,8 +176,9 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                             Get.to(MyRecords(
                               argument: MyRecordsArgument(),
                             ));
-                          } catch (e,stackTrace) {
-                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                          } catch (e, stackTrace) {
+                            CommonUtil()
+                                .appLogs(message: e, stackTrace: stackTrace);
 
                             //print(e);
                           }
@@ -300,8 +303,9 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                                     .updateBLETimer(Enable: false);
 
                               Get.to(() => OrdersView());
-                            } catch (e,stackTrace) {
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                            } catch (e, stackTrace) {
+                              CommonUtil()
+                                  .appLogs(message: e, stackTrace: stackTrace);
 
                               //print(e);
                             }
@@ -322,9 +326,13 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                               Get.find<QurhomeDashboardController>()
                                   .updateBLETimer(Enable: false);
                             Get.back();
-                            Get.to(() => MoreMenuScreen(refresh: refresh));
-                          } catch (e,stackTrace) {
-                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                            Navigator.pushNamed(context, router.rt_more_menu,
+                                    arguments: refresh)
+                                .then((value) {});
+                            // Get.to(() => MoreMenuScreen(refresh: refresh));
+                          } catch (e, stackTrace) {
+                            CommonUtil()
+                                .appLogs(message: e, stackTrace: stackTrace);
 
                             //print(e);
                           }
@@ -345,8 +353,9 @@ class QurHomeNavigationDrawer extends StatelessWidget {
 
                             Get.back();
                             Get.to(() => HelpSupport());
-                          } catch (e,stackTrace) {
-                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                          } catch (e, stackTrace) {
+                            CommonUtil()
+                                .appLogs(message: e, stackTrace: stackTrace);
 
                             //print(e);
                           }
@@ -416,8 +425,9 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                                     .updateBLETimer(Enable: false);
 
                               Get.to(() => ReportListScreen());
-                            } catch (e,stackTrace) {
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                            } catch (e, stackTrace) {
+                              CommonUtil()
+                                  .appLogs(message: e, stackTrace: stackTrace);
 
                               //print(e);
                             }
@@ -445,8 +455,9 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                                       .updateBLETimer(Enable: false);
 
                                 Get.to(() => ClaimList());
-                              } catch (e,stackTrace) {
-                                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                              } catch (e, stackTrace) {
+                                CommonUtil().appLogs(
+                                    message: e, stackTrace: stackTrace);
 
                                 //print(e);
                               }
@@ -499,8 +510,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
       phoneNumber = (myProfile.result!.userContactCollection3!.length) > 0
           ? myProfile.result!.userContactCollection3![0]!.phoneNumber!
           : '';
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       //print(e);
     }
