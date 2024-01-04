@@ -4031,47 +4031,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
 
     }
 
-    /*@RequiresApi(Build.VERSION_CODES.KITKAT)
-    private fun scheduleAppointment(data: Map<String, Any>) {
-
-        val remindBefore = "5"
-        val nsId = data["eid"] as String
-        val eDateTime: String = data["estart"] as String
-        val eDateReplace: String = eDateTime.replace("T", " ")
-        val date: String = eDateReplace.split(" ")[0]
-        val time: String = eDateReplace.split(" ")[1]
-        val alarmHour = time.split(":")[0].toInt()
-        val alarmMin = time.split(":")[1].toInt()
-        val alarmDate = date.split("-")[2].toInt()
-        val alarmMonth = date.split("-")[1].toInt()
-        val alarmYear = date.split("-")[0].toInt()
-
-        // Set the alarm to start for specific time
-        val calendar: Calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            set(Calendar.YEAR, alarmYear)
-            set(Calendar.MONTH, alarmMonth - 1)
-            set(Calendar.DAY_OF_MONTH, alarmDate)
-            set(Calendar.HOUR_OF_DAY, alarmHour)
-            set(Calendar.MINUTE, alarmMin)
-            set(Calendar.SECOND, 0)
-        }
-
-        calendar.add(Calendar.MINUTE, -remindBefore.toInt())
-
-        //check the reminder time with current time if its true allow user to create alaram
-        if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
-            val eIdAppend = "${nsId}${"000"}"
-            val notificationAndAlarmId = NotificationID.currentMillis
-            SharedPrefUtils().saveAlarmId(this, eIdAppend, notificationAndAlarmId)
-            createScheduleAppointment(
-                notificationAndAlarmId,
-                calendar.timeInMillis,
-            )
-        }
-
-    }*/
-
     @SuppressLint("LaunchActivityFromNotification")
     private fun createNotifiationBuilder(
         title: String,
@@ -4232,49 +4191,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             Log.e("crash", e.message.toString())
         }
     }
-
-    /*@SuppressLint("LaunchActivityFromNotification")
-    private fun createScheduleAppointment(
-        nsId: Int,
-        currentMillis: Long,
-    ) {
-        try {
-
-            val notificationIntent = Intent(this, ScheduleAppointment::class.java)
-            notificationIntent.putExtra(ScheduleAppointment.NOTIFICATION_ID, nsId)
-
-            val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.getBroadcast(
-                    this,
-                    nsId,
-                    notificationIntent,
-                    PendingIntent.FLAG_IMMUTABLE
-                )
-            } else {
-                PendingIntent.getBroadcast(
-                    this,
-                    nsId,
-                    notificationIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT
-                )
-            }
-
-
-            val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    currentMillis,
-                    pendingIntent
-                )
-            } else {
-                alarmManager.set(AlarmManager.RTC_WAKEUP, currentMillis, pendingIntent)
-            }
-
-        } catch (e: Exception) {
-            Log.e("crash", e.message.toString())
-        }
-    }*/
 
     private fun createNotificationChannel(importanceChannel: String) {
         // Create the NotificationChannel, but only on API 26+ because
