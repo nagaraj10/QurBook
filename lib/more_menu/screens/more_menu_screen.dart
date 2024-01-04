@@ -101,7 +101,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   bool voiceCloning = false;
   bool providerAllowedVoiceCloningModule = false;
   bool superAdminAllowedVoiceCloningModule = false;
-  String voiceCloningStatus = 'Inactive';
+  String voiceCloningStatus = strInActive; //set defaut value
   bool showVoiceCloningUI = true;
   String healthOrganization = '';
 
@@ -842,12 +842,16 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             ?.superAdminAllowedVoiceCloningModule ??
         false;
 
+    var statusValue =
+        getDeviceSelectionModel.result![0].profileSetting!.voiceCloningStatus ??
+            '';
+
     //value of the voice cloning status
     voiceCloningStatus = superAdminAllowedVoiceCloningModule
         ? providerAllowedVoiceCloningModule
-            ? getDeviceSelectionModel
-                    .result![0].profileSetting!.voiceCloningStatus ??
-                strInActive
+            ? ((statusValue != "" && statusValue != null)
+                ? statusValue
+                : strInActive)
             : strInActive
         : strInActive;
 
@@ -861,9 +865,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     healthOrganization = getDeviceSelectionModel
             .result![0].primaryProvider?.healthorganizationid ??
         '';
+
     ///Saving the Healthorganization id to shared preferences.
-    PreferenceUtil.saveString(keyHealthOrganizationId,
-        healthOrganization);
+    PreferenceUtil.saveString(keyHealthOrganizationId, healthOrganization);
   }
 
   Future<CreateDeviceSelectionModel?> createAppColorSelection(
@@ -891,13 +895,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             allowVitalNotification,
             allowSymptomsNotification,
             voiceCloning)
-        .then((value) {
+        .then((value) async {
       createDeviceSelectionModel = value;
       if (createDeviceSelectionModel!.isSuccess!) {
       } else {
         if (createDeviceSelectionModel!.message ==
             STR_USER_PROFILE_SETTING_ALREADY) {
-          updateDeviceSelectionModel(priColor, greColor);
+          await updateDeviceSelectionModel(priColor, greColor);
         }
       }
     });
@@ -929,17 +933,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             allowSymptomsNotification,
             preferredMeasurement,
             voiceCloning)
-        .then((value) {
+        .then((value) async {
       updateDeviceModel = value;
       if (updateDeviceModel!.isSuccess!) {
         // app color updated
         if (isVoiceCloningChanged) {
-          Navigator.pushNamed(
-            context,
-            router.rt_VoiceCloneTerms,
-          ).then((value) {
-            setState(() {});
-          });
+          await getAppColorValues();
+          navigateToTermsOrStatusScreen();
         }
       }
     });
@@ -1260,21 +1260,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             },
                           ),
                         ),
-                        onTap: () {
-                          if (superAdminAllowedVoiceCloningModule &&
-                              providerAllowedVoiceCloningModule) {
-                            if (voiceCloningStatus == strInActive &&
-                                voiceCloning) {
-                              Navigator.pushNamed(
-                                context,
-                                router.rt_VoiceCloneTerms,
-                              ).then((value) {
-                                setState(() {});
-                              });
-                            } else if (voiceCloningStatus != strInActive &&
-                                voiceCloning) {}
-                          }
-                        }),
+                        onTap: () => navigateToTermsOrStatusScreen()),
                   ),
                 if (Platform.isAndroid)
                   Theme(
@@ -2116,5 +2102,31 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         ],
       ),
     );
+  }
+
+/**
+ * Set a commonmethod to navigate to eithe terms screen or status
+ */
+  void navigateToTermsOrStatusScreen() {
+    if (superAdminAllowedVoiceCloningModule &&
+        providerAllowedVoiceCloningModule) {
+      if (voiceCloningStatus == strInActive && voiceCloning) {
+        Navigator.pushNamed(
+          context,
+          router.rt_VoiceCloneTerms,
+        ).then((value) {
+          setState(() {});
+        });
+      } else if (voiceCloningStatus != strApproved && voiceCloning) {
+        Navigator.pop(
+            context); //removing the router from screen to refresh the screen when returned
+        Navigator.pushNamed(
+          context,
+          router.rt_VoiceCloningStatus,
+        ).then((value) {
+          setState(() {});
+        });
+      }
+    }
   }
 }
