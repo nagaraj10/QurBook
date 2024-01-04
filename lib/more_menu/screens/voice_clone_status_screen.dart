@@ -12,11 +12,16 @@ import 'package:myfhb/more_menu/screens/terms_and_conditon.dart';
 import 'package:myfhb/more_menu/voice_clone_status_controller.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart';
+import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:myfhb/voice_cloning/model/voice_cloning_choose_member_arguments.dart';
 import 'package:myfhb/voice_cloning/view/widgets/voice_clone_family_members_list.dart';
 
 class VoiceCloningStatus extends StatefulWidget {
-  const VoiceCloningStatus();
+  final VoiceCloneStatusArguments? arguments;
+
+  const VoiceCloningStatus({
+    required this.arguments,
+  });
 
   @override
   _MyFhbWebViewState createState() => _MyFhbWebViewState();
@@ -53,10 +58,10 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
     return Obx(
       () => WillPopScope(
         onWillPop: () {
-          // to enable navigation from down back button
-          Get.off(
-            MoreMenuScreen(),
-          );
+          setBackButton(context);
+          //  Get.off(
+          //  MoreMenuScreen(),
+          //);
           return Future.value(false);
         },
         child: Scaffold(
@@ -67,9 +72,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                 size: 24.0.sp,
               ),
               onPressed: () {
-                Get.off(
-                  MoreMenuScreen(),
-                );
+                setBackButton(context);
               },
             ),
             title: AppBarForVoiceCloning().getVoiceCloningAppBar(),
@@ -307,7 +310,6 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
       await controller.revokeSubmission();
     } else if (statusBtn == 'Record Again') {
       //Pop the current page and should go back to recording page
-      Navigator.pop(context);
       Navigator.pushNamed(context, rt_record_submission);
     } else {
       //Navigate to assign to members
@@ -316,6 +318,22 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
             voiceCloneId: controller.voiceCloneId.value,
             selectedFamilyMembers: controller.listOfExistingFamilyMembers.value,
           ));
+    }
+  }
+
+//Set back button functionlaity from mobile back button and top of the screen
+  void setBackButton(BuildContext context) {
+    // to enable navigation from down back button
+    if (widget.arguments?.fromMenu == true) {
+      Navigator.of(context).pop();
+    } else {
+      Navigator.popUntil(context, (route) {
+        var shouldPop = false;
+        if (route.settings.name == rt_more_menu) {
+          shouldPop = true;
+        }
+        return shouldPop;
+      });
     }
   }
 }

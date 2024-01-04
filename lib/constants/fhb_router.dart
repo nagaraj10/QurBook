@@ -14,6 +14,7 @@ import 'package:myfhb/confirm_location/models/confirm_location_arguments.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/devices/device_dashboard_arguments.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
+import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
 import 'package:myfhb/more_menu/screens/terms_and_conditon.dart';
 import 'package:myfhb/more_menu/screens/voice_clone_status_screen.dart';
 import 'package:myfhb/more_menu/screens/voicecloning_introduction.dart';
@@ -30,6 +31,7 @@ import 'package:myfhb/src/ui/SheelaAI/Views/SheelaAIMainScreen.dart';
 import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
 import 'package:myfhb/unit/choose_unit.dart';
 import 'package:myfhb/video_call/model/CallArguments.dart';
+import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:myfhb/voice_cloning/model/voice_cloning_choose_member_arguments.dart';
 import 'package:myfhb/voice_cloning/view/screens/voice_clone_choose_members.dart';
 import '../add_family_user_info/screens/add_family_user_info_clone.dart';
@@ -192,13 +194,18 @@ setRouter(List<CameraDescription> listOfCameras) async {
         ), //initialize router for terms and condition of voice cloning
     router.rt_VoiceCloningIntro: (context) =>
         VoiceCloningIntroducuton(), //initialize router for introduction page of voice cloning
-    router.rt_VoiceCloningStatus: (context) =>
-        VoiceCloningStatus(), //initialize router for introduction page of voice cloning
+    router.rt_VoiceCloningStatus: (context) => VoiceCloningStatus(
+        arguments: ModalRoute.of(context)!.settings.arguments
+            as VoiceCloneStatusArguments?), //initialize router for introduction page of voice cloning
     router.rt_record_submission: (BuildContext context) =>
         VoiceRecordingScreen(),
     router.rt_VoiceCloningChooseMemberSubmit: (context) => VoiceCloningChooseMember(
         arguments: ModalRoute.of(context)!.settings.arguments
-            as VoiceCloningChooseMemberArguments?) //initialize router for Choose and Submit Caregiver Voice Assignment of voice cloning
+            as VoiceCloningChooseMemberArguments?), //initialize router for Choose and Submit Caregiver Voice Assignment of voice cloning
+    router.rt_more_menu: (context) => MoreMenuScreen(
+          refresh:
+              ModalRoute.of(context)!.settings.arguments as Function(bool)?,
+        )
   };
 
   return fhbRouter;

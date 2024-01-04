@@ -89,7 +89,6 @@ class _MyFhbWebViewState extends State<TermsAndConditonWebView> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context); //to pop up this page
                     Navigator.pushNamed(
                       context,
                       rt_VoiceCloningIntro,
