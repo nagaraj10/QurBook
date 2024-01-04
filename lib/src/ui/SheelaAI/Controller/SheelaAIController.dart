@@ -1018,6 +1018,7 @@ class SheelaAIController extends GetxController {
                             apiReminder = data[i];
                           }
                           if (Platform.isAndroid) {
+
                             // snooze invoke to android native for locally save the reminder data
                             QurPlanReminders.getTheRemindersFromAPI(
                                 isSnooze: true,

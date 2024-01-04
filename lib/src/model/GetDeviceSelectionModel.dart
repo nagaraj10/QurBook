@@ -292,8 +292,8 @@ class PrimaryProvider {
 
   PrimaryProvider.fromJson(Map<String, dynamic> json) {
     try {
-      healthorganizationid = json[
-          'healthOrganizationId']; //changed the parameter tag as this is object coming from response
+      healthorganizationid =
+          json['healthorganizationid'] ?? json['healthOrganizationId'];
       additionalInfo = json['additionalInfo'] != null
           ? new AdditionalInfoModuleAccess.fromJson(json['additionalInfo'])
           : null;

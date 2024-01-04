@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -860,6 +861,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     healthOrganization = getDeviceSelectionModel
             .result![0].primaryProvider?.healthorganizationid ??
         '';
+    ///Saving the Healthorganization id to shared preferences.
+    PreferenceUtil.saveString(keyHealthOrganizationId,
+        healthOrganization);
   }
 
   Future<CreateDeviceSelectionModel?> createAppColorSelection(

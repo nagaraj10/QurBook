@@ -57,3 +57,6 @@ const String rt_VoiceCloningIntro =
     '/voiceclone_intro'; //router for intro screen
 const String rt_VoiceCloningStatus =
     '/voiceclone_status';//router for status screen
+
+
+const String rt_record_submission = '/record_submit';

@@ -139,11 +139,6 @@ class AppBarForVoiceCloning {
         // you can forcefully translate values left side using Transform
         transform: Matrix4.translationValues(-30.0, 0.0, 0.0),
         child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-          ImageIcon(
-            AssetImage(variable.icon_voice_cloning),
-            size: iconSize,
-            color: Colors.white,
-          ),
           SizedBox(
             width: 10.sp,
           ),
