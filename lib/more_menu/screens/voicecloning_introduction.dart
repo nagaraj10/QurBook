@@ -4,6 +4,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/more_menu/screens/terms_and_conditon.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../constants/router_variable.dart' as router;
 
 class VoiceCloningIntroducuton extends StatefulWidget {
   const VoiceCloningIntroducuton();
@@ -67,18 +68,21 @@ class _MyFhbWebViewState extends State<VoiceCloningIntroducuton> {
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+              child: InkWell(
+                onTap:()=> Navigator.pushNamed(context, router.rt_record_submission),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Color(CommonUtil().getMyPrimaryColor()),
+                  ),
+                  child: Padding(
+                      padding: EdgeInsets.only(
+                          left: 30.sp, right: 30.sp, top: 10, bottom: 10),
+                      child: Text(
+                        strStart,
+                        style: TextStyle(color: Colors.white, fontSize: iconSize),
+                      )),
                 ),
-                child: Padding(
-                    padding: EdgeInsets.only(
-                        left: 30.sp, right: 30.sp, top: 10, bottom: 10),
-                    child: Text(
-                      strStart,
-                      style: TextStyle(color: Colors.white, fontSize: iconSize),
-                    )),
               ),
             ),
             SizedBox(
