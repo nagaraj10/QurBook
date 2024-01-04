@@ -115,36 +115,41 @@ class VoiceCloneStatusController extends GetxController {
 
     listOfExistingFamilyMembers.value =
         selectedFamilyMembers?.map((e) => e.id ?? '').toList() ?? [];
-
-    final listFamilyMembers =
+    listOfFamilyMembers.value = [];
+    final _listFamilyMembers =
         await _voiceCloneMembersServices.getFamilyMembersListNew();
-    listFamilyMembers.result?.sharedByUsers?.forEach((sharedByUser) {
+
+      var _customlistOfFamilyMembers = <VoiceCloneSharedByUsers>[];
+    _listFamilyMembers.result?.sharedByUsers?.forEach((sharedByUser) {
       final isSelected = selectedFamilyMembers?.contains(
             sharedByUser.id ?? '',
           ) ??
           false;
-      listOfFamilyMembers.add(
-        VoiceCloneSharedByUsers(
-          id: sharedByUser.id,
-          status: sharedByUser.status,
-          nickName: sharedByUser.nickName,
-          isActive: sharedByUser.isActive,
-          createdOn: sharedByUser.createdOn,
-          lastModifiedOn: sharedByUser.lastModifiedOn,
-          relationship: sharedByUser.relationship,
-          child: sharedByUser.child,
-          membershipOfferedBy: sharedByUser.membershipOfferedBy,
-          isCaregiver: sharedByUser.isCaregiver,
-          isNewUser: sharedByUser.isNewUser,
-          remainderForId: sharedByUser.remainderForId,
-          remainderFor: sharedByUser.remainderFor,
-          remainderMins: sharedByUser.remainderMins,
-          nonAdheranceId: sharedByUser.nonAdheranceId,
-          chatListItem: sharedByUser.chatListItem,
-          nickNameSelf: sharedByUser.nickNameSelf,
-          isSelected: isSelected,
-        ),
-      );
+      if (isSelected) {
+        _customlistOfFamilyMembers.add(
+          VoiceCloneSharedByUsers(
+            id: sharedByUser.id,
+            status: sharedByUser.status,
+            nickName: sharedByUser.nickName,
+            isActive: sharedByUser.isActive,
+            createdOn: sharedByUser.createdOn,
+            lastModifiedOn: sharedByUser.lastModifiedOn,
+            relationship: sharedByUser.relationship,
+            child: sharedByUser.child,
+            membershipOfferedBy: sharedByUser.membershipOfferedBy,
+            isCaregiver: sharedByUser.isCaregiver,
+            isNewUser: sharedByUser.isNewUser,
+            remainderForId: sharedByUser.remainderForId,
+            remainderFor: sharedByUser.remainderFor,
+            remainderMins: sharedByUser.remainderMins,
+            nonAdheranceId: sharedByUser.nonAdheranceId,
+            chatListItem: sharedByUser.chatListItem,
+            nickNameSelf: sharedByUser.nickNameSelf,
+            isSelected: isSelected,
+          ),
+        );
+      }
     });
+    listOfFamilyMembers.value = _customlistOfFamilyMembers;
   }
 }
