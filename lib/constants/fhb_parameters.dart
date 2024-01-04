@@ -439,6 +439,7 @@ const String PAYCREDIT = 'Credit';
 const String PAYCAPTURED = 'captured';
 const String PAYMENT_SUCCESS_PNG = 'assets/payment/success_tick.png';
 const String PAYMENT_FAILURE_PNG = 'assets/payment/failure.png';
+const String VOICE_CLONE_USER_SELECTED = 'assets/icons/voice_user_selected.png';
 const String PROFILE_PH = 'assets/user/profile_pic_ph.png';
 const String PAYMENT_SUCCESS_MSG = 'Payment Successful';
 const String PAYMENT_FAILURE_MSG = 'Payment Failed';

@@ -731,6 +731,9 @@ const String strStatus = 'Status : ';
 const String strVoiceTerms = 'Accept And Continue';
 const String strInActive = 'InActive';
 const String strStart = 'Start';
+const String strSubmit = 'Submit';
+const String strVoiceCloningExistingMembersHeader = 'Your cloned voice is in use for the following members:';
+const String strVoiceCloningAddMembersHeader = 'Choose the list of members, to apply the cloned voice';
 
 //for  googleFit activation and sync
 const String strGoogleFit = 'Google fit';

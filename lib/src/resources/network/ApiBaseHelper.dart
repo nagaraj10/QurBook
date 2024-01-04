@@ -500,13 +500,45 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> saveOrEditNonAdherance(String url, dynamic data) async {
-    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     print(authToken);
     var responseJson;
     final body = convert.jsonEncode(data);
     print(body);
     try {
-      var response = await ApiServices.post(_baseUrl + url,
+      final response = await ApiServices.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersWithoutOffset(),
+          body: body);
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> fetchAlreadySelectedFamilyMembersList(String url) async {
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    print(authToken);
+    var responseJson;
+    try {
+      final response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersAuthAcceptNew());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> submitVoiceCloneWithFamilyMembers(
+      String url, dynamic data) async {
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    print(authToken);
+    var responseJson;
+    final body = convert.jsonEncode(data);
+    print(body);
+    try {
+      final response = await ApiServices.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersWithoutOffset(),
           body: body);
       responseJson = _returnResponse(response);

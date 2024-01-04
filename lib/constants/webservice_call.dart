@@ -121,6 +121,8 @@ class WebserviceCall {
     return query;
   }
 
+  String getQueryForAlreadySelectedFamilyMembers(String voiceCloneId) => 'voice-clone/fetch-user-mapping/$voiceCloneId';
+
   String getQueryForPostUserDelinking() {
     var query = '';
     final userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
