@@ -151,7 +151,7 @@ class _VoiceCloningChooseMemberState extends State<VoiceCloningChooseMember> {
             Align(
               alignment: Alignment.bottomCenter,
               child: InkWell(
-                onTap: () async {
+                onTap: isFamilyMembersSelected() ? () async {
                   final users = _listOfFamilyMembers
                       .map(
                         (familyMember) => VoiceCloneUserRequest(
@@ -168,7 +168,7 @@ class _VoiceCloningChooseMemberState extends State<VoiceCloningChooseMember> {
                   final response = await _voiceCloneMembersServices
                       .submitVoiceCloneWithFamilyMembers(request);
                   _flutterToast.getToast(response.message ?? '', Colors.green);
-                },
+                } : null,
                 child: Container(
                   margin: const EdgeInsets.only(bottom: 30),
                   decoration: BoxDecoration(

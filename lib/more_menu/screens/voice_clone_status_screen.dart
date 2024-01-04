@@ -149,7 +149,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                             Visibility(
                                 visible: controller.voiceCloneStatusModel
                                         ?.result?.status ==
-                                    strApproved,
+                                    strApproved && controller.listOfFamilyMembers.value.length > 0,
                                 child: FutureBuilder(
                                   future: controller.fetchFamilyMembersList(
                                       controller.voiceCloneId.value),
