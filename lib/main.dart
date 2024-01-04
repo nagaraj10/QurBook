@@ -928,7 +928,9 @@ class _MyFHBState extends State<MyFHB> {
           });
           PageNavigator.goToPermanent(Get.context!, router.rt_Landing);
         }
-      } else if (passedValArr[0] == 'sheela') {
+      }
+      // new feature appointment reminder 5 mins before from api side
+      else if (passedValArr[0] == 'sheela') {
         if (passedValArr[1] == strAppointment) {
           // Prepare JSON data for adding to the sheela queue request
           final reqJson = {

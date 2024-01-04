@@ -3137,10 +3137,13 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                 "${Constants.PROP_ACK}&$sharedValue&${senderId}&${senderName}&${senderProfile}&${groupId}"
         } else if (redirect_to == "claimList") {
             sharedValue = "${redirect_to}&${message}&$rawBody"
-        } else if ((templateName != null) && (templateName.equals("NonTeleconsultationAppointmentPreReminder5")) || (templateName.equals(
+        }
+        // templateName condition is for appointment reminder in 5 mins from api
+        else if ((templateName != null) && (templateName.equals("NonTeleconsultationAppointmentPreReminder5")) || (templateName.equals(
                 "AppointmentReminder5"
             ))
         ) {
+            // this sheela&Appointments is for receving in flutter with appointmentID & eid
             sharedValue = "sheela&Appointments&$appointmentID&$eid"
         } else if (redirect_to == "sheela|pushMessage") {
             sharedValue = "isSheelaFollowup&${message}&$rawBody&$audioURL&$EVEId"
