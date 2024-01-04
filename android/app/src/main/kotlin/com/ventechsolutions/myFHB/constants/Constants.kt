@@ -103,7 +103,6 @@ object Constants {
     val BLE_SCAN_CANCEL ="bleScanCancel"
     val UID ="uid"
     val GET_CURRENT_LOCATION ="getCurrentLocation"
-    val APPOINTMENT_DETAILS ="appointmentDetails"
     val IS_CARE_GIVER ="isCareGiver"
     val DELIVERED_DATE_TIME ="deliveredDateTime"
     val IS_FROM_CARE_COORDINATOR ="isFromCareCoordinator"

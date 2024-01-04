@@ -22,6 +22,7 @@ import com.ventechsolutions.myFHB.MyApp
 import com.ventechsolutions.myFHB.NotificationActivity
 import com.ventechsolutions.myFHB.R
 import com.ventechsolutions.myFHB.constants.Constants
+import com.ventechsolutions.myFHB.constants.Constants.PROP_TEMP_NAME
 
 
 class MyFirebaseInstanceService : FirebaseMessagingService() {
@@ -375,8 +376,13 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             }else {
                 intent.putExtra(Constants.PROP_REDIRECT_TO, "isSheelaFollowup")
                 intent.putExtra("message", data[getString(R.string.pro_ns_body)])
+                // template name is for appointment reminder 5 mins before from api
+                intent.putExtra("templateName", data[PROP_TEMP_NAME])
+                intent.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
+                intent.putExtra(Constants.eidSheela, data[Constants.eidSheela])
                 intent.putExtra("rawMessage", data[getString(R.string.pro_ns_raw)])
                 intent.putExtra("sheelaAudioMsgUrl", data[getString(R.string.pro_ns_audioURL)])
+                // event id for sheela queue appointment reminder
                 intent.putExtra("eventId", data[getString(R.string.eventId)])
             }
             this.sendBroadcast(intent)
@@ -441,6 +447,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(Constants.PROP_DATA, data[Constants.PROP_DATA])
         //onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
         onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
+        onTapNS.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
 
         onTapNS.putExtra(Constants.PROP_HRMID, data[Constants.PROP_HRMID])
         onTapNS.putExtra(Constants.PROP_RAWBODY, data[Constants.PROP_RAWBODY])
@@ -450,7 +457,10 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(Constants.PROP_ISSHEELA, data[Constants.PROP_ISSHEELA])
         onTapNS.putExtra(Constants.OTHERS, data[Constants.OTHERS])
         onTapNS.putExtra(Constants.EVENT_TYPE, data[Constants.EVENT_TYPE])
+
+        // apppointmnetid and eid for sheela queue feature to flutter(appointmnet reminder from api)
         onTapNS.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
+        onTapNS.putExtra(Constants.eidSheela, data[Constants.eidSheela])
 
 //            onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
 //            onTapNS.putExtra(getString(R.string.pat_name), PAT_NAME)
