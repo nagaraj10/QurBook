@@ -732,7 +732,7 @@ const String strVoiceTerms = 'Accept And Continue';
 const String strInActive = 'InActive';
 const String strApproved = 'Approved'; //status text for approved
 const String strDeclined = 'Declined'; //status text for declined
-const String strReason = 'Reason :'; //status text for reason
+const String strReason = 'Reason : '; //status text for reason,include spacing
 
 const String strStart = 'Start';
 const String strDOS = 'Date of submission : ';
@@ -970,7 +970,7 @@ const String strEdit = 'Edit';
 const String strView = 'View';
 const String strConfirms = 'Are you sure?';
 const String strUpdateMsg = 'Do you want to update the changes';
-const String strDecline = 'Decline';
+const String strDecline = 'Declined';
 
 //For Alert
 const String strEscalate = 'Escalate';

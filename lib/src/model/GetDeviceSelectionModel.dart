@@ -1,6 +1,7 @@
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/model/CaregiverCommunicationSettings.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 
@@ -178,8 +179,8 @@ class ProfileSetting {
                 ? new CaregiverCommunicationSetting.fromJson(
                     json['caregiverCommunicationSetting'])
                 : null;
-        voiceCloningStatus =
-            json['voiceCloningStatus']; //get the status of voice cloning
+        voiceCloningStatus = json['voiceCloningStatus'] ??
+            strInActive; //get the status of voice cloning
         voiceCloning = json[
             'voiceCloning']; // get the value if voice cloning is enabled or not
       }

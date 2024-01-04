@@ -1,11 +1,14 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/more_menu/models/voice_clone_status_model.dart';
+import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 
@@ -32,14 +35,14 @@ class VoiceCloneStatusController extends GetxController {
     loadingData.value = true;
     await healthReportListForUserRepository
         .getDeviceSelection(userIdFromBloc: userId)
-        .then((value) {
+        .then((value) async {
       if (value?.isSuccess ?? false) {
         if (value?.result != null && (value?.result?.length ?? 0) > 0) {
           String id =
               value?.result![0]?.primaryProvider?.healthorganizationid ?? '';
           if (id != null && id != "") {
             healthOrganizationId.value = id;
-            getStatusFromApi();
+            await getStatusFromApi(); //wait till the  next ap is also called
           }
           loadingData.value = false;
         }
@@ -74,7 +77,14 @@ class VoiceCloneStatusController extends GetxController {
       jsonData,
     );
     if (req != null) {
-      loadingData.value = false;
+      if (req['isSuccess']) {
+        loadingData.value = false;
+        Get.off(
+          MoreMenuScreen(),
+        );
+      } else {
+        FlutterToast().getToast((req['message'].toString()), Colors.red);
+      }
     }
     loadingData.value = false;
   }
