@@ -69,10 +69,11 @@ class _MyFhbWebViewState extends State<VoiceCloningIntroducuton> {
             Align(
               alignment: Alignment.bottomCenter,
               child: InkWell(
-                onTap:()=> Navigator.pushNamed(context, router.rt_record_submission),
+                onTap: () =>
+                    Navigator.pushNamed(context, router.rt_record_submission),
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(30),
                     color: Color(CommonUtil().getMyPrimaryColor()),
                   ),
                   child: Padding(
@@ -80,7 +81,8 @@ class _MyFhbWebViewState extends State<VoiceCloningIntroducuton> {
                           left: 30.sp, right: 30.sp, top: 10, bottom: 10),
                       child: Text(
                         strStart,
-                        style: TextStyle(color: Colors.white, fontSize: iconSize),
+                        style:
+                            TextStyle(color: Colors.white, fontSize: iconSize),
                       )),
                 ),
               ),

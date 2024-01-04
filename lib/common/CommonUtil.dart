@@ -891,7 +891,6 @@ class CommonUtil {
 
       await QurPlanReminders.deleteAllLocalReminders();
       moveToLoginPage();
-
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       // if (Platform.isIOS) {
@@ -1798,23 +1797,35 @@ class CommonUtil {
   static String getDateStringFromDateTime(String string,
       {bool forNotification = false}) {
     try {
-      var dateTime = DateTime.tryParse(string);
-      if (dateTime != null) {
-        return dateConversionToApiFormat(dateTime,
-            MMM: true, forAppointmentNotification: forNotification);
+      if (string != "" && string != null) {
+        //check if date is empty or not
+        var dateTime = DateTime.tryParse(string);
+        if (dateTime != null) {
+          return dateConversionToApiFormat(dateTime,
+              MMM: true, forAppointmentNotification: forNotification);
+        } else {
+          DateFormat format = DateFormat(
+              CommonUtil.REGION_CODE == 'IN' ? "dd-MM-yyyy" : "MM-dd-yyyy");
+
+          var now = format.parse(string);
+          final df = new DateFormat(
+              CommonUtil.REGION_CODE == 'IN' ? 'dd-MMM-yyyy' : 'MMM-dd-yyyy');
+
+          return df.format(now);
+        }
       } else {
         DateFormat format = DateFormat(
             CommonUtil.REGION_CODE == 'IN' ? "dd-MM-yyyy" : "MM-dd-yyyy");
 
-        var now = format.parse(string);
+        var now =
+            DateTime.now(); //when date is empty use the current date to fomat
         final df = new DateFormat(
             CommonUtil.REGION_CODE == 'IN' ? 'dd-MMM-yyyy' : 'MMM-dd-yyyy');
 
-        return df.format(now);
+        return format.format(now);
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-
       DateFormat format = DateFormat(
           CommonUtil.REGION_CODE == 'IN' ? "dd-MM-yyyy" : "MM-dd-yyyy");
 
@@ -2035,7 +2046,8 @@ class CommonUtil {
     }
   }
 
-  Future<bool> checkAppLock({bool useErrorDialogs: true, Function(String)? authErrorCallback }) async {
+  Future<bool> checkAppLock(
+      {bool useErrorDialogs: true, Function(String)? authErrorCallback}) async {
     try {
       var value = await LocalAuthentication().authenticate(
         localizedReason: strAuthToUseApp,
@@ -2055,7 +2067,7 @@ class CommonUtil {
       print("value:${value}");
       return value;
     } on PlatformException catch (e, stackTrace) {
-       authErrorCallback?.call(e.code);
+      authErrorCallback?.call(e.code);
       if (e.code == auth_error.notAvailable) {
         print(e.message);
         return false;
@@ -5657,7 +5669,7 @@ class CommonUtil {
       {Function()? onPressManual,
       Function()? onPressCancel,
       String? title,
-        // Display "Enter Manually" button only if manual recording is not restricted
+      // Display "Enter Manually" button only if manual recording is not restricted
       bool? isVitalsManualRecordingRestricted}) async {
     showGeneralDialog(
       context: context,
@@ -7375,9 +7387,9 @@ class CommonUtil {
     }
     return "";
   }
+
   bool isAllowSheelaLiveReminders() {
-    SheelaAIController? sheelaAIController =
-    onInitSheelaAIController();
+    SheelaAIController? sheelaAIController = onInitSheelaAIController();
     return sheelaAIController.isAllowSheelaLiveReminders;
   }
 
@@ -7393,7 +7405,7 @@ class CommonUtil {
             timeMills = Platform.isAndroid ? '900000' : '900';
             break;
           case '30':
-            timeMills =  Platform.isAndroid ?'1800000' : '1800';
+            timeMills = Platform.isAndroid ? '1800000' : '1800';
             break;
         }
       }
@@ -7431,7 +7443,8 @@ class CommonUtil {
         // Create an instance of QurHomeApiProvider
         final apiResponse = QurHomeApiProvider();
         // Call saveUserLastAccessTime method on QurHomeApiProvider
-        await apiResponse.saveUserLastAccessTime(version: version,appNameTemp: appName);
+        await apiResponse.saveUserLastAccessTime(
+            version: version, appNameTemp: appName);
       }
     } catch (e, stackTrace) {
       // Log any errors using appLogs
