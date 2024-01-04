@@ -21,7 +21,7 @@ dependencies:
     sdk: flutter
   
   gmiwidgetspackage:
-    path: ../myfhb-flutter-common-nullsafety
+    path: ../../qurhealth/fhbCommon
 
   # The following adds the Cupertino Icons font to your application.
   firebase_core: ^2.5.0
