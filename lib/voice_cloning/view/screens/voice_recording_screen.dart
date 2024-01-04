@@ -66,7 +66,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
             Expanded(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 5),
-                child: WebContentWidget(selectedUrl:CommonUtil.PORTAL_URL + voice_transcript_html, isLocalAsset: false)
+                child: WebContentWidget(selectedUrl:CommonUtil.PORTAL_URL + voice_transcript_html)
               ),
             ),
             if (_voiceCloningController.isRecorderView) ...{

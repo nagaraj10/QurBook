@@ -8,12 +8,10 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class WebContentWidget extends StatefulWidget {
   final String? selectedUrl;
-  final bool isLocalAsset;
 
   const WebContentWidget(
       {
-        required this.selectedUrl,
-        required this.isLocalAsset});
+        required this.selectedUrl});
 
   @override
   _MyWebContentWidget createState() => _MyWebContentWidget();
@@ -28,17 +26,14 @@ class _MyWebContentWidget extends State<WebContentWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return  Stack(
+  Widget build(BuildContext context) => Stack(
       children: <Widget>[
         WebView(
           initialUrl: widget.selectedUrl,
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (webViewController) {
             _controller = webViewController;
-            widget.isLocalAsset
-                ? _loadHtmlFromAssets(widget.selectedUrl!)
-                : _controller.loadUrl(widget.selectedUrl!);
+            _controller.loadUrl(widget.selectedUrl!);
           },
           onPageFinished: (_) {
             setState(() {
@@ -49,25 +44,4 @@ class _MyWebContentWidget extends State<WebContentWidget> {
         if (isLoading) CommonCircularIndicator() else Container(),
       ],
     );
-  }
-
-  _loadHtmlFromAssets(String selectedUrl) async {
-    try {
-      final fileText = await rootBundle.loadString(selectedUrl);
-      await _controller.loadUrl(Uri.dataFromString(fileText,
-          mimeType: strtexthtml,
-          encoding: Encoding.getByName(strUtf))
-          .toString());
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
-      print(e);
-      if (selectedUrl.isNotEmpty) {
-        await _controller.loadUrl(Uri.dataFromString(selectedUrl,
-            mimeType: strtexthtml,
-            encoding: Encoding.getByName(strUtf))
-            .toString());
-      }
-    }
-  }
 }
