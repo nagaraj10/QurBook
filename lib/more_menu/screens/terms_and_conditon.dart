@@ -88,6 +88,11 @@ class _MyFhbWebViewState extends State<TermsAndConditonWebView> {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(
+                      CommonUtil().getMyPrimaryColor(),
+                    ),
+                  ),
                   onPressed: () {
                     Navigator.pushNamed(
                       context,

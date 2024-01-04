@@ -15,6 +15,8 @@ import 'package:myfhb/voice_cloning/model/voice_clone_caregiver_assignment_respo
 import 'package:myfhb/voice_cloning/model/voice_clone_shared_by_users.dart';
 import 'package:myfhb/voice_cloning/services/voice_clone_members_services.dart';
 
+import '../constants/router_variable.dart';
+
 class VoiceCloneStatusController extends GetxController {
   var loadingData = false.obs;
   var _helper = ApiBaseHelper();
@@ -27,6 +29,8 @@ class VoiceCloneStatusController extends GetxController {
   var listOfFamilyMembers = <VoiceCloneSharedByUsers>[].obs;
   var listOfExistingFamilyMembers = <String>[].obs;
 
+  List<VoiceCloneCaregiverAssignmentResult> selectedFamilyMembers = [];
+
   final _voiceCloneMembersServices = VoiceCloneMembersServices();
 
   @override
@@ -34,6 +38,9 @@ class VoiceCloneStatusController extends GetxController {
     // TODO: implement onInit
     super.onInit();
     loadingData = true.obs;
+    listOfFamilyMembers.value = [];
+    selectedFamilyMembers = [];
+    listOfExistingFamilyMembers.value = [];
   }
 
   void getStatusOfUser() {}
@@ -72,9 +79,10 @@ class VoiceCloneStatusController extends GetxController {
     voiceCloneStatusModel = VoiceCloneStatusModel.fromJson(response ?? '');
     voiceCloneId.value = voiceCloneStatusModel?.result?.id ?? '';
     loadingData.value = false;
+    fetchFamilyMembersList(voiceCloneId.value);
   }
 
-  revokeSubmission() async {
+  revokeSubmission(bool fromMenu) async {
     loadingData.value = true;
     final body = {
       'id': voiceCloneStatusModel?.result?.id,
@@ -88,14 +96,28 @@ class VoiceCloneStatusController extends GetxController {
     if (req != null) {
       if (req['isSuccess']) {
         loadingData.value = false;
-        Get.off(
-          MoreMenuScreen(),
-        );
+        setBackButton(Get.context!, fromMenu);
       } else {
         FlutterToast().getToast((req['message'].toString()), Colors.red);
       }
     }
     loadingData.value = false;
+  }
+
+  //Set back button functionlaity from mobile back button and top of the screen
+  void setBackButton(BuildContext context, bool fromMenu) {
+    // to enable navigation from down back button
+    if (fromMenu == true) {
+      Navigator.of(context).pop();
+    } else {
+      Navigator.popUntil(context, (route) {
+        var shouldPop = false;
+        if (route.settings.name == rt_more_menu) {
+          shouldPop = true;
+        }
+        return shouldPop;
+      });
+    }
   }
 
   Future<List<VoiceCloneCaregiverAssignmentResult>?>
@@ -109,9 +131,10 @@ class VoiceCloneStatusController extends GetxController {
 
   /// Fetch FamilyMembers list from API
   Future<void> fetchFamilyMembersList(String voiceCloneId) async {
-    final selectedFamilyMembers = await fetchAlreadySelectedFamilyMembersList(
-      voiceCloneId,
-    );
+    selectedFamilyMembers = await fetchAlreadySelectedFamilyMembersList(
+          voiceCloneId,
+        ) ??
+        [];
 
     listOfExistingFamilyMembers.value =
         selectedFamilyMembers?.map((e) => e.id ?? '').toList() ?? [];
@@ -119,13 +142,15 @@ class VoiceCloneStatusController extends GetxController {
     final _listFamilyMembers =
         await _voiceCloneMembersServices.getFamilyMembersListNew();
 
-      var _customlistOfFamilyMembers = <VoiceCloneSharedByUsers>[];
+    var _customlistOfFamilyMembers = <VoiceCloneSharedByUsers>[];
     _listFamilyMembers.result?.sharedByUsers?.forEach((sharedByUser) {
-      final isSelected = selectedFamilyMembers?.contains(
-            sharedByUser.id ?? '',
-          ) ??
-          false;
-      if (isSelected) {
+      final existingFamilyMembers = selectedFamilyMembers
+          .where((element) => element.user?.id == sharedByUser.child?.id)
+          .toList();
+
+      ;
+      if (existingFamilyMembers.isNotEmpty &&
+          (existingFamilyMembers[0].isActive ?? false)) {
         _customlistOfFamilyMembers.add(
           VoiceCloneSharedByUsers(
             id: sharedByUser.id,
@@ -145,7 +170,7 @@ class VoiceCloneStatusController extends GetxController {
             nonAdheranceId: sharedByUser.nonAdheranceId,
             chatListItem: sharedByUser.chatListItem,
             nickNameSelf: sharedByUser.nickNameSelf,
-            isSelected: isSelected,
+            isSelected: existingFamilyMembers[0].isActive ?? false,
           ),
         );
       }

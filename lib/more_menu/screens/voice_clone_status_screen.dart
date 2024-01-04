@@ -58,7 +58,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
     return Obx(
       () => WillPopScope(
         onWillPop: () {
-          setBackButton(context);
+          controller.setBackButton(context,widget.arguments?.fromMenu ?? false);
           //  Get.off(
           //  MoreMenuScreen(),
           //);
@@ -72,7 +72,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                 size: 24.0.sp,
               ),
               onPressed: () {
-                setBackButton(context);
+                controller.setBackButton(context,widget.arguments?.fromMenu ?? false);
               },
             ),
             title: AppBarForVoiceCloning().getVoiceCloningAppBar(),
@@ -151,27 +151,10 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                 ]),
                             Visibility(
                                 visible: controller.voiceCloneStatusModel
-                                        ?.result?.status ==
-                                    strApproved && controller.listOfFamilyMembers.value.length > 0,
-                                child: FutureBuilder(
-                                  future: controller.fetchFamilyMembersList(
-                                      controller.voiceCloneId.value),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return Expanded(
-                                        child: Center(
-                                          child: SizedBox(
-                                            width: 30.0.h,
-                                            height: 30.0.h,
-                                            child: CommonCircularIndicator(),
-                                          ),
-                                        ),
-                                      );
-                                    } else if (snapshot.hasError) {
-                                      return ErrorsWidget();
-                                    } else {
-                                      return Expanded(
+                                            ?.result?.status ==
+                                        strApproved &&
+                                    controller.listOfFamilyMembers.length > 0,
+                                child: Expanded(
                                         child: Container(
                                           padding: const EdgeInsets.fromLTRB(
                                               8, 16, 8, 8),
@@ -182,10 +165,8 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                             onValueSelected: (value) {},
                                           ),
                                         ),
-                                      );
-                                    }
-                                  },
-                                )),
+                                      )
+                                    ),
                             Visibility(
                               visible: controller
                                       .voiceCloneStatusModel?.result?.status ==
@@ -307,33 +288,21 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
     String statusBtn = getTextBasedOnStatus();
     if (statusBtn == 'Revoke Submission') {
       //revoke the submission of voice clone and navigate to more menu screen
-      await controller.revokeSubmission();
+      await controller.revokeSubmission(widget.arguments?.fromMenu ?? false);
     } else if (statusBtn == 'Record Again') {
       //Pop the current page and should go back to recording page
       Navigator.pushNamed(context, rt_record_submission);
     } else {
       //Navigate to assign to members
+      final selectedFamilyMembers = controller.listOfFamilyMembers.value
+          .map((e) => e.child?.id ?? '')
+          .toList();
+
       Navigator.pushNamed(context, rt_VoiceCloningChooseMemberSubmit,
           arguments: VoiceCloningChooseMemberArguments(
             voiceCloneId: controller.voiceCloneId.value,
-            selectedFamilyMembers: controller.listOfExistingFamilyMembers.value,
+            selectedFamilyMembers: controller.selectedFamilyMembers,
           ));
-    }
-  }
-
-//Set back button functionlaity from mobile back button and top of the screen
-  void setBackButton(BuildContext context) {
-    // to enable navigation from down back button
-    if (widget.arguments?.fromMenu == true) {
-      Navigator.of(context).pop();
-    } else {
-      Navigator.popUntil(context, (route) {
-        var shouldPop = false;
-        if (route.settings.name == rt_more_menu) {
-          shouldPop = true;
-        }
-        return shouldPop;
-      });
     }
   }
 }

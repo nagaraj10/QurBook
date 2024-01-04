@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
-import 'package:myfhb/voice_cloning/model/voice_cloning_choose_member_arguments.dart';
 
 import '../../../../colors/fhb_colors.dart' as fhb_colors;
 import '../../../../common/CommonUtil.dart';
@@ -11,10 +8,12 @@ import '../../../../common/common_circular_indicator.dart';
 import '../../../../constants/fhb_constants.dart' as fhb_constants;
 import '../../../../constants/variable_constant.dart';
 import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../constants/router_variable.dart';
 import '../../../more_menu/screens/terms_and_conditon.dart';
 import '../../../src/utils/colors_utils.dart';
 import '../../model/voice_clone_shared_by_users.dart';
 import '../../model/voice_clone_submit_request.dart';
+import '../../model/voice_cloning_choose_member_arguments.dart';
 import '../../services/voice_clone_members_services.dart';
 import '../widgets/voice_clone_family_members_list.dart';
 
@@ -44,7 +43,6 @@ class _VoiceCloningChooseMemberState extends State<VoiceCloningChooseMember> {
   void initState() {
     fhb_constants.mInitialTime = DateTime.now();
     super.initState();
-
     fetchFamilyMembersList();
   }
 
@@ -53,10 +51,6 @@ class _VoiceCloningChooseMemberState extends State<VoiceCloningChooseMember> {
     final listFamilyMembers =
         await _voiceCloneMembersServices.getFamilyMembersListNew();
     listFamilyMembers.result?.sharedByUsers?.forEach((sharedByUser) {
-      final isSelected = widget.arguments?.selectedFamilyMembers?.contains(
-            sharedByUser.id ?? '',
-          ) ??
-          false;
       _listOfFamilyMembers.add(
         VoiceCloneSharedByUsers(
           id: sharedByUser.id,
@@ -76,7 +70,9 @@ class _VoiceCloningChooseMemberState extends State<VoiceCloningChooseMember> {
           nonAdheranceId: sharedByUser.nonAdheranceId,
           chatListItem: sharedByUser.chatListItem,
           nickNameSelf: sharedByUser.nickNameSelf,
-          isSelected: isSelected,
+          isSelected: widget.arguments?.selectedFamilyMembers?.firstWhereOrNull(
+                  (element) => (element.user?.id == sharedByUser.child?.id) &&
+                      (element.isActive ?? false))?.isActive ??  false,
         ),
       );
     });
@@ -151,24 +147,34 @@ class _VoiceCloningChooseMemberState extends State<VoiceCloningChooseMember> {
             Align(
               alignment: Alignment.bottomCenter,
               child: InkWell(
-                onTap: isFamilyMembersSelected() ? () async {
-                  final users = _listOfFamilyMembers
-                      .map(
-                        (familyMember) => VoiceCloneUserRequest(
-                          id: familyMember.child?.id,
-                          isActive: familyMember.isSelected,
-                        ),
-                      )
-                      .toList();
-                  final voiceClone = VoiceCloneBaseRequest(
-                    id: widget.arguments?.voiceCloneId,
-                  );
-                  final request =
-                      VoiceCloneRequest(user: users, voiceClone: voiceClone);
-                  final response = await _voiceCloneMembersServices
-                      .submitVoiceCloneWithFamilyMembers(request);
-                  _flutterToast.getToast(response.message ?? '', Colors.green);
-                } : null,
+                onTap: isFamilyMembersSelected()
+                    ? () async {
+                        final users = _listOfFamilyMembers
+                            .map(
+                              (familyMember) => VoiceCloneUserRequest(
+                                id: familyMember.child?.id,
+                                isActive: familyMember.isSelected,
+                              ),
+                            )
+                            .toList();
+                        final voiceClone = VoiceCloneBaseRequest(
+                          id: widget.arguments?.voiceCloneId,
+                        );
+                        final request = VoiceCloneRequest(
+                            user: users, voiceClone: voiceClone);
+                        final response = await _voiceCloneMembersServices
+                            .submitVoiceCloneWithFamilyMembers(request);
+                        _flutterToast.getToast(
+                            response.message ?? '', Colors.green);
+                        Navigator.popUntil(context, (route) {
+                          var shouldPop = false;
+                          if (route.settings.name == rt_more_menu) {
+                            shouldPop = true;
+                          }
+                          return shouldPop;
+                        });
+                      }
+                    : null,
                 child: Container(
                   margin: const EdgeInsets.only(bottom: 30),
                   decoration: BoxDecoration(
