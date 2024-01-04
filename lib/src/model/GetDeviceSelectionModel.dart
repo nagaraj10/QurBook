@@ -1,3 +1,4 @@
+
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -296,7 +297,7 @@ class PrimaryProvider {
 
   PrimaryProvider.fromJson(Map<String, dynamic> json) {
     try {
-      healthorganizationid = json['healthorganizationid'];
+      healthorganizationid = json['healthorganizationid']??json['healthOrganizationId'];
       additionalInfo = json['additionalInfo'] != null
           ? new AdditionalInfoModuleAccess.fromJson(json['additionalInfo'])
           : null;
