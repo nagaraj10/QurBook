@@ -33,7 +33,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
 
   late PlanProviderViewModel planListProvider;
   List<String?> selectedCategories = [];
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
 
   bool isSelectedALL = false;
   bool hasData = false;

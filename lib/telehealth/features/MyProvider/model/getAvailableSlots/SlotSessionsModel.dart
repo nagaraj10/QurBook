@@ -34,7 +34,7 @@ class SlotSessionsModel {
       if (json['weekdayPreference'] != null) {
             weekdayPreference = <WeekdayPreference>[];
             json['weekdayPreference'].forEach((v) {
-              weekdayPreference!.add(new WeekdayPreference.fromJson(v));
+              weekdayPreference!.add(WeekdayPreference.fromJson(v));
             });
           }
       isEnabled = json['isEnabled'];
@@ -43,7 +43,7 @@ class SlotSessionsModel {
       if (json['slots'] != null) {
             slots = <Slots>[];
             json['slots'].forEach((v) {
-              slots!.add(new Slots.fromJson(v));
+              slots!.add(Slots.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -52,7 +52,7 @@ class SlotSessionsModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['doctorSessionId'] = this.doctorSessionId;
     data['sessionStartTime'] = this.sessionStartTime;
     data['sessionEndTime'] = this.sessionEndTime;

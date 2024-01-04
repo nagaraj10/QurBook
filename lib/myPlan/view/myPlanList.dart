@@ -203,15 +203,15 @@ class _MyPlanState extends State<MyPlanList> {
           FHBBasicWidget.customShowCase(
               _GotoRegimentKey,
               Constants.GoToRegimentDescription,
-              FlatButton(
+              ElevatedButton(style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18),
                 ),
-                color: Color(CommonUtil().getMyPrimaryColor()),
-                textColor: Colors.white,
+                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                foregroundColor: Colors.white,
                 padding: EdgeInsets.all(
                   10.0.sp,
-                ),
+                ),),
                 onPressed: () async {
                   Provider.of<RegimentViewModel>(
                     context,
@@ -243,7 +243,7 @@ class _MyPlanState extends State<MyPlanList> {
         ? ListView.builder(
             shrinkWrap: true,
             padding: EdgeInsets.only(
-              bottom: 8.0.h,
+              bottom: 85.00,
             ),
             itemBuilder: (ctx, i) {
               return i != 0
@@ -463,7 +463,7 @@ class _MyPlanState extends State<MyPlanList> {
                                   Align(
                                     child: SizedBoxWithChild(
                                       height: 32.0.h,
-                                      child: FlatButton(
+                                      child: ElevatedButton(style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(18),
@@ -473,14 +473,14 @@ class _MyPlanState extends State<MyPlanList> {
                                                     ? Color(CommonUtil()
                                                         .getMyPrimaryColor())
                                                     : Colors.red)),
-                                        color: Colors.transparent,
-                                        textColor: planList[i].isexpired == '1'
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor: planList[i].isexpired == '1'
                                             ? Color(CommonUtil()
                                                 .getMyPrimaryColor())
                                             : Colors.red,
                                         padding: EdgeInsets.all(
                                           8.0.sp,
-                                        ),
+                                        ),),
                                         onPressed: () async {
                                           if (planList[i].isexpired == '1') {
                                             if (planList[i].ispublic == '0') {
@@ -548,23 +548,27 @@ class _MyPlanState extends State<MyPlanList> {
                                   Align(
                                     child: SizedBoxWithChild(
                                       height: 32.0.h,
-                                      child: FlatButton(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(18),
-                                            side: BorderSide(
-                                                color: planList[i].isexpired ==
-                                                        '1'
-                                                    ? Colors.red
-                                                    : Color(CommonUtil()
-                                                        .getMyPrimaryColor()))),
-                                        color: Colors.transparent,
-                                        textColor: planList[i].isexpired == '1'
-                                            ? Colors.red
-                                            : Color(CommonUtil()
-                                                .getMyPrimaryColor()),
-                                        padding: EdgeInsets.all(
-                                          8.0.sp,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(18),
+                                              side: BorderSide(
+                                                  color: planList[i]
+                                                              .isexpired ==
+                                                          '1'
+                                                      ? Colors.red
+                                                      : Color(CommonUtil()
+                                                          .getMyPrimaryColor()))),
+                                          backgroundColor: Colors.transparent,
+                                          foregroundColor:
+                                              planList[i].isexpired == '1'
+                                                  ? Colors.red
+                                                  : Color(CommonUtil()
+                                                      .getMyPrimaryColor()),
+                                          padding: EdgeInsets.all(
+                                            8.0.sp,
+                                          ),
                                         ),
                                         onPressed: () {},
                                         child: TextWidget(

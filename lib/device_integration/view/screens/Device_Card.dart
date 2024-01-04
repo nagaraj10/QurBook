@@ -48,7 +48,7 @@ class _DeviceCardState extends State<DeviceCard> {
                       child: Icon(
                         Icons.check_circle,
                         size: 14,
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                        color: Color(CommonUtil().getMyPrimaryColor()),
                       ),
                     )
                   else

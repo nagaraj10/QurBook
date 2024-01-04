@@ -4,10 +4,6 @@ import 'package:flutter/material.dart';
 import 'CommonUtil.dart';
 import 'PreferenceUtil.dart';
 import '../constants/fhb_constants.dart' as Constants;
-import '../src/model/Category/CategoryData.dart';
-import '../src/model/Category/CategoryResponseList.dart';
-import '../src/model/Category/catergory_result.dart';
-import '../src/model/Media/DeviceModel.dart';
 import '../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 

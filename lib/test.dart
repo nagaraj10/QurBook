@@ -225,7 +225,7 @@
 //     CommonUtil().initPortraitMode();
 //     // }
 //     try {
-//       CategoryListBlock _categoryListBlock = new CategoryListBlock();
+//       CategoryListBlock _categoryListBlock = CategoryListBlock();
 
 //       _categoryListBlock.getCategoryLists().then((value) {});
 //     } catch (e,stackTrace) {}
@@ -351,7 +351,7 @@
 // }
 
 // void saveUnitSystemToPreference() async {
-//   new CommonUtil().commonMethodToSetPreference();
+//   CommonUtil().commonMethodToSetPreference();
 // }
 
 // void saveToPreference() async {
@@ -951,7 +951,7 @@
 //                         context, router.rt_Landing)));
 //           });
 //         } else if (passedValArr[1] == 'familyProfile') {
-//           new CommonUtil()
+//           CommonUtil()
 //               .getDetailsOfAddedFamilyMember(Get.context, passedValArr[2]);
 //         } else if (passedValArr[1] == 'manageActivities') {
 //           fbaLog(eveParams: {

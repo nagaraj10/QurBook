@@ -4,16 +4,11 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/add_new_plan/view/AddNewPlan.dart';
 import 'package:myfhb/add_provider_plan/view/AddProviderPlan.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/plan_wizard/view/pages/care_plan/care_plan_page.dart';
-import 'package:myfhb/plan_wizard/view/pages/diet_plan/diet_plan_page.dart';
 import 'package:myfhb/plan_wizard/view/pages/diet_plan/tab_diet_main.dart';
 import 'package:myfhb/plan_wizard/view/pages/health_condition_page.dart';
-import 'package:myfhb/plan_wizard/view/widgets/plan_header.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -162,10 +157,14 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                                 ),
                               ),
                             ),
-                            OutlineButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  10.0.sp,
+                            OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(color: Colors.white),
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    10.0.sp,
+                                  ),
                                 ),
                               ),
                               onPressed: () {
@@ -174,12 +173,12 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                                   Get.to(AddProviderPlan(
                                       planWizardViewModel.selectedTag));
                                 } else {
-                                  new AddNewPlan().addNewPlan(
+                                  AddNewPlan().addNewPlan(
                                       context,
                                       feedbackCode,
                                       titleName,
                                       hintText, (bool) {
-                                    FlutterToast toast = new FlutterToast();
+                                    FlutterToast toast = FlutterToast();
                                     if (bool) {
                                       toast.getToast(
                                           "We've received your request and get back to you soon",
@@ -191,9 +190,6 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                                   });
                                 }
                               },
-                              borderSide: BorderSide(color: Colors.white),
-                              color: Colors.white,
-                              textColor: Colors.white,
                               child: Text(
                                 _getBottomButtonText(
                                     planWizardViewModel.currentPage,

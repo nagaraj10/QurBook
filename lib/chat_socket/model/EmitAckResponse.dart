@@ -11,14 +11,14 @@ class EmitAckResponse {
 
   EmitAckResponse.fromJson(Map<String, dynamic> json) {
     /*if (json['chatList'] != null) {
-      chatList = new List<ChatList>();
+      chatList = List<ChatList>();
       json['chatList'].forEach((v) {
         chatList.add(new ChatList.fromJson(v));
       });
     }*/
     try {
       lastSentMessageInfo = json['lastSentMessageInfo'] != null
-              ? new ChatHistoryResult.fromJson(json['lastSentMessageInfo'])
+              ? ChatHistoryResult.fromJson(json['lastSentMessageInfo'])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -26,7 +26,7 @@ class EmitAckResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
    /* if (this.chatList != null) {
       data['chatList'] = this.chatList.map((v) => v.toJson()).toList();
     }*/
@@ -78,7 +78,7 @@ class EmitAckResponse {
     isRead = json['isRead'];
     messageType = json['messageType'];
     messages = json['messages'] != null
-        ? new Messages.fromJson(json['messages'])
+        ? Messages.fromJson(json['messages'])
         : null;
     documentId = json['documentId'];
     unReadCount = json['unReadCount'];
@@ -86,7 +86,7 @@ class EmitAckResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['peerId'] = this.peerId;
     data['firstName'] = this.firstName;
@@ -132,12 +132,12 @@ class Messages {
     isread = json['isread'];
     content = json['content'];
     timestamp = json['timestamp'] != null
-        ? new Timestamp.fromJson(json['timestamp'])
+        ? Timestamp.fromJson(json['timestamp'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['idTo'] = this.idTo;
     data['type'] = this.type;
@@ -163,7 +163,7 @@ class Timestamp {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['_seconds'] = this.iSeconds;
     data['_nanoseconds'] = this.iNanoseconds;
     return data;
@@ -199,7 +199,7 @@ class LastSentMessageInfo {
     isRead = json['isRead'];
     type = json['type'];
     messages = json['messages'] != null
-        ? new Messages.fromJson(json['messages'])
+        ? Messages.fromJson(json['messages'])
         : null;
     documentId = json['documentId'];
     createdOn = json['createdOn'];
@@ -208,7 +208,7 @@ class LastSentMessageInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['deliveredOn'] = this.deliveredOn;
     data['isRead'] = this.isRead;

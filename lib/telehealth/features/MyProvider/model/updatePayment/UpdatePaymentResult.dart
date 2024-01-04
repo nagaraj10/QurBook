@@ -28,10 +28,10 @@ class UpdatePaymentResult {
       paymentOrderId = json['paymentOrderId'];
       paymentRequestId = json['paymentRequestId'];
       appointmentStatus = json['appointmentStatus'] != null
-              ? new AppointmentStatus.fromJson(json['appointmentStatus'])
+              ? AppointmentStatus.fromJson(json['appointmentStatus'])
               : null;
       paymentStatus = json['paymentStatus'] != null
-              ? new AppointmentStatus.fromJson(json['paymentStatus'])
+              ? AppointmentStatus.fromJson(json['paymentStatus'])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -39,7 +39,7 @@ class UpdatePaymentResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['appointmentId'] = this.appointmentId;
     data['bookingId'] = this.bookingId;
     data['paymentId'] = this.paymentId;

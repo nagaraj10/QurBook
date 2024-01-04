@@ -11,14 +11,14 @@ class UpdatePaymentResponse {
     try {
       isSuccess = json['isSuccess'];
       result =
-              json['result'] != null ? new Result.fromJson(json['result']) : null;
+              json['result'] != null ? Result.fromJson(json['result']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.toJson();
@@ -48,7 +48,7 @@ class Result {
   Result.fromJson(Map<String, dynamic> json) {
     try {
       subscribeResponse = json['subscribeResponse'] != null
-              ? new SubscribeResponse.fromJson(json['subscribeResponse'])
+              ? SubscribeResponse.fromJson(json['subscribeResponse'])
               : null;
       paymentId = json['paymentId'];
       paymentOrderId = json['paymentOrderId'];
@@ -62,7 +62,7 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.subscribeResponse != null) {
       data['subscribeResponse'] = this.subscribeResponse!.toJson();
     }
@@ -88,7 +88,7 @@ class SubscribeResponse {
       if (json['payload'] != null) {
             payload = <Payload>[];
             json['payload'].forEach((v) {
-              payload!.add(new Payload.fromJson(v));
+              payload!.add(Payload.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -97,7 +97,7 @@ class SubscribeResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.payload != null) {
       data['payload'] = this.payload!.map((v) => v.toJson()).toList();
@@ -136,7 +136,7 @@ class Payload {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['Result'] = this.result;
     data['PlanStartDate'] = this.planStartDate;
     data['Message'] = this.message;

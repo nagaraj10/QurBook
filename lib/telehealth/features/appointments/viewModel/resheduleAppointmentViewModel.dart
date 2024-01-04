@@ -7,7 +7,7 @@ import 'package:myfhb/telehealth/features/appointments/services/reshedule_appoin
 class ResheduleAppointmentViewModel extends ChangeNotifier {
   ResheduleAppointmentsService _resheduleAppointmentsService =
       ResheduleAppointmentsService();
-  ResheduleModel resheduleAppointmentModel = new ResheduleModel();
+  ResheduleModel resheduleAppointmentModel = ResheduleModel();
 
   Future<ResheduleModel?> resheduleAppointment(List<String?> bookingId,
       String slotNumber, String resheduleDate, String doctorSessionId) async {

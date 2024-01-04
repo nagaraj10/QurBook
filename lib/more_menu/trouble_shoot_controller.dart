@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -68,7 +67,7 @@ class TroubleShootController extends GetxController {
       troubleShootingList.clear();
       troubleShootingList = [];
     }
-    new Timer.periodic(Duration(milliseconds: 1500), (Timer timer) {
+    Timer.periodic(Duration(milliseconds: 1500), (Timer timer) {
       if (progressValue >= 0.96) {
         timer.cancel();
         if (!isTroubleShootCompleted.value) switchCaseMethod();
@@ -88,7 +87,7 @@ class TroubleShootController extends GetxController {
       isLatestVersion = false;
     }
     if (!isAppAdded) {
-      troubleShootingList.add(new TroubleShootingModel(
+      troubleShootingList.add(TroubleShootingModel(
           strAppCompatibilty,
           isLatestVersion,
           ImageIcon(
@@ -109,7 +108,7 @@ class TroubleShootController extends GetxController {
     else
       isStoragePermission = true;
     if (progressalue && !isStorageAdded) {
-      troubleShootingList.add(new TroubleShootingModel(
+      troubleShootingList.add(TroubleShootingModel(
           strStorage, isStoragePermission, Icon(Icons.storage)));
       isStorageAdded = true;
       increaseProgressValue(addValue);
@@ -149,7 +148,7 @@ class TroubleShootController extends GetxController {
       isCameraPermission = true;
     }
     if (progressalue && !isCameraAdded) {
-      troubleShootingList.add(new TroubleShootingModel(
+      troubleShootingList.add(TroubleShootingModel(
           strCamera,
           isCameraPermission,
           ImageIcon(
@@ -180,7 +179,7 @@ class TroubleShootController extends GetxController {
       isMicrophone = true;
     }
     if (progressalue && isMicrophoneAdded) {
-      troubleShootingList.add(new TroubleShootingModel(
+      troubleShootingList.add(TroubleShootingModel(
           strMicrophone,
           isMicrophone,
           ImageIcon(
@@ -210,7 +209,7 @@ class TroubleShootController extends GetxController {
       isLocation = true;
     }
     if (progressalue && isLocationAdded) {
-      troubleShootingList.add(new TroubleShootingModel(
+      troubleShootingList.add(TroubleShootingModel(
           strLocation,
           isLocation,
           ImageIcon(
@@ -371,7 +370,7 @@ class TroubleShootController extends GetxController {
       _isNetworkAvailable = false;
     }
     if (progressalue && !isInternetAdded) {
-      troubleShootingList.add(new TroubleShootingModel(
+      troubleShootingList.add(TroubleShootingModel(
           strCommunication,
           _isNetworkAvailable,
           ImageIcon(
@@ -426,7 +425,7 @@ class TroubleShootController extends GetxController {
         }
 
         if (!isAuthTokenAdded) {
-          troubleShootingList.add(new TroubleShootingModel(
+          troubleShootingList.add(TroubleShootingModel(
               strConfirmUserValidity,
               isAuthTokenValid,
               ImageIcon(
@@ -438,7 +437,7 @@ class TroubleShootController extends GetxController {
         }
       } on SocketException {
         isAuthTokenValid = false;
-        troubleShootingList.add(new TroubleShootingModel(
+        troubleShootingList.add(TroubleShootingModel(
             strConfirmUserValidity,
             isAuthTokenValid,
             ImageIcon(

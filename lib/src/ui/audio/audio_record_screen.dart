@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data' show Uint8List;
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:intl/date_symbol_data_local.dart';
@@ -36,7 +37,7 @@ class AudioRecordScreen extends StatefulWidget {
 
   AudioRecordScreen({this.arguments});
   @override
-  _AudioRecordScreenState createState() => new _AudioRecordScreenState();
+  _AudioRecordScreenState createState() => _AudioRecordScreenState();
 }
 
 class _AudioRecordScreenState extends State<AudioRecordScreen> {
@@ -57,16 +58,16 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
   t_MEDIA _media = t_MEDIA.FILE;
   Codec _codec = Codec.aacADTS;
 
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
 
   List<CategoryResult> filteredCategoryData = [];
-  CategoryListBlock _categoryListBlock = new CategoryListBlock();
+  CategoryListBlock _categoryListBlock = CategoryListBlock();
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
-    flutterSound = new FlutterSound();
+    flutterSound = FlutterSound();
     // flutterSound.setSubscriptionDuration(0.01);
     // flutterSound.setDbPeakLevelUpdate(0.8);
     // flutterSound.setDbLevelEnabled(true);
@@ -161,11 +162,11 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
         PreferenceUtil.saveString(Constants.KEY_CATEGORYID,
                 PreferenceUtil.getStringValue(Constants.KEY_VOICE_ID)!)
             .then((value) {
-          TextEditingController fileName = new TextEditingController(
+          TextEditingController fileName = TextEditingController(
               text: AppConstants.voiceRecords +
                   '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
 
-          new CommonDialogBox().getDialogForVoicerecords(
+          CommonDialogBox().getDialogForVoicerecords(
               context, containsAudioMain, this._path[_codec.index],
               (containsAudio, audioPath) {
             audioPathMain = audioPath;
@@ -377,7 +378,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
                     width: 120.0.h,
                     child: AvatarGlow(
                       startDelay: Duration(milliseconds: 200),
-                      glowColor: Color(new CommonUtil().getMyPrimaryColor()),
+                      glowColor: Color(CommonUtil().getMyPrimaryColor()),
                       endRadius: 100.0,
                       duration: Duration(milliseconds: 2000),
                       repeat: true,
@@ -446,9 +447,11 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
                     color: _isRecording ? Colors.red : Colors.green,
                     borderRadius: BorderRadius.circular(30)),
                 child: ClipOval(
-                  child: FlatButton(
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.all(8.0),
+                      ),
                       onPressed: onStartRecorderPressed(),
-                      padding: EdgeInsets.all(8.0),
                       child: recorderAssetImage()),
                 ),
               ),

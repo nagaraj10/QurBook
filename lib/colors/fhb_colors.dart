@@ -13,23 +13,19 @@ const gradient2 = 0XFF5e1fe0;
 const transparentColor = 0x00000000;
 
 final darkTheme = ThemeData(
-  primarySwatch: Colors.grey,
   primaryColor: Colors.black,
   brightness: Brightness.dark,
   backgroundColor: const Color(0xFF212121),
-  accentColor: Colors.black,
-  accentIconTheme: IconThemeData(color: Colors.red),
-  dividerColor: Colors.black12,
+  dividerColor: Colors.black12, colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.grey).copyWith(secondary: Colors.black),
 );
 
 final lightTheme = ThemeData(
-  primarySwatch: Colors.grey,
   primaryColor: Color(0xff5f0cf9),
   brightness: Brightness.light,
   backgroundColor: const Color(0xFFE5E5E5),
-  accentColor: Colors.white,
-  accentIconTheme: IconThemeData(color: Colors.white),
   dividerColor: Colors.white54,
+  colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.grey)
+      .copyWith(secondary: Colors.white),
 );
 
 const String actionColor = '#6d35de';

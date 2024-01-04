@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -37,7 +38,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
   PlanWizardViewModel? planListProvider;
 
   List sortType = ['Default', 'Price', 'Duration'];
-  ValueNotifier<String?> _selectedItem = new ValueNotifier<String?>('Default');
+  ValueNotifier<String?> _selectedItem = ValueNotifier<String?>('Default');
 
   bool isSwitched = false;
 
@@ -91,7 +92,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   onChanged: toggleSwitch,
                   value: isSwitched,
-                  activeColor: Color(new CommonUtil().getMyPrimaryColor()),
+                  activeColor: Color(CommonUtil().getMyPrimaryColor()),
                 ),
                 SizedBox(width: 2.w),
                 Text(
@@ -144,14 +145,14 @@ class _FreeDietPlans extends State<FreeDietPlans> {
   }
 
   Widget getDietPlanList() {
-    return new FutureBuilder<PlanListModel?>(
+    return FutureBuilder<PlanListModel?>(
       future: planListModel,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 4.5,
-              child: new Center(
+              child: Center(
                 child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,
@@ -246,17 +247,21 @@ class _FreeDietPlans extends State<FreeDietPlans> {
         content: Text(
             'You’ve not chosen any diet plan. Are you sure you want to continue'),
         actions: <Widget>[
-          FlatButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('No'),
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () => Navigator.pop(context),
+            title: 'No',
           ),
-          FlatButton(
-            onPressed: () {
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () {
               Navigator.pop(context);
               Get.to(CheckoutPage())!.then(
                   (value) => FocusManager.instance.primaryFocus!.unfocus());
             },
-            child: Text('Yes'),
+            title: 'Yes',
           ),
         ],
       ),
@@ -264,22 +269,22 @@ class _FreeDietPlans extends State<FreeDietPlans> {
   }
 
   Widget popMenuItemNew() {
-    return new PopupMenuButton<String>(
+    return PopupMenuButton<String>(
       icon: Icon(
         Icons.sort,
       ),
       itemBuilder: (BuildContext context) {
         List<PopupMenuEntry<String>> menuItems =
-            new List<PopupMenuEntry<String>>.generate(
+            List<PopupMenuEntry<String>>.generate(
           sortType.length,
           (int index) {
-            return new PopupMenuItem(
+            return PopupMenuItem(
               value: sortType[index],
-              child: new AnimatedBuilder(
-                child: new Text(sortType[index]),
+              child: AnimatedBuilder(
+                child: Text(sortType[index]),
                 animation: _selectedItem,
                 builder: (BuildContext context, Widget? child) {
-                  return new RadioListTile<String>(
+                  return RadioListTile<String>(
                     value: sortType[index],
                     groupValue: _selectedItem.value,
                     title: child,
@@ -313,10 +318,10 @@ class _FreeDietPlans extends State<FreeDietPlans> {
         menuItems
           ..insert(
               0,
-              new CheckedPopupMenuItem(
+              CheckedPopupMenuItem(
                 enabled: false,
                 value: popUpChoiceSortLabel,
-                child: new Text(
+                child: Text(
                   popUpChoiceSortLabel,
                   style: TextStyle(fontSize: 14.0.sp, color: Colors.blueGrey),
                 ),

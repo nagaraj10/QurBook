@@ -6,7 +6,7 @@ mixin Validators {
   var mobileNumberValidator = StreamTransformer<String, String>.fromHandlers(
       handleData: (mobileNumber, sink) {
     String patttern = DBConstant.PRO_PATTERN;
-    RegExp regExp = new RegExp(patttern);
+    RegExp regExp = RegExp(patttern);
     if (!regExp.hasMatch(mobileNumber) && mobileNumber.length < 9) {
       sink.addError(variable.strValidPhoneNumber);
     } else {

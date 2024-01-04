@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:http/http.dart' as http;
@@ -93,7 +92,7 @@ class QurhomeRegimenController extends GetxController {
   startUpdateUITimer() {
     updateUITimer = Timer.periodic(const Duration(seconds: 30), (timer) {
       var regimentList = qurHomeRegimenResponseModel?.regimentsList ?? [];
-      refreshTheNextActivity(regimentList,null);
+      refreshTheNextActivity(regimentList, null);
     });
   }
 
@@ -115,7 +114,7 @@ class QurhomeRegimenController extends GetxController {
       qurHomeRegimenResponseModel =
           await _apiProvider.getRegimenList(date, patientId: patientId);
       var regimentList = qurHomeRegimenResponseModel?.regimentsList ?? [];
-      refreshTheNextActivity(regimentList,patientId);
+      refreshTheNextActivity(regimentList, patientId);
       loadingData.value = false;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -126,7 +125,7 @@ class QurhomeRegimenController extends GetxController {
     }
   }
 
-  refreshTheNextActivity(List<RegimentDataModel> regimentList,var userId) {
+  refreshTheNextActivity(List<RegimentDataModel> regimentList, var userId) {
     if (regimentList.length > 0) {
       regimentList.removeWhere((element) {
         bool isOnceInplan = element.dayrepeat?.trim().toLowerCase() ==
@@ -173,10 +172,6 @@ class QurhomeRegimenController extends GetxController {
           currentIndex = regimentList.length - 1;
         }
       }
-      if (userId == null) {
-        updateAppointments(regimentList);
-      }
-      qurhomeDashboardController.getValuesNativeAppointment();
     }
 
     update(["newUpdate"]);
@@ -184,36 +179,6 @@ class QurhomeRegimenController extends GetxController {
       isFirstTime.value = false;
       getUserDetails();
       getCareCoordinatorId();
-    }
-  }
-
-  updateAppointments(List<RegimentDataModel> regimentList) async {
-    for (int i = 0; i < regimentList.length; i++) {
-      if (regimentList[i].activityOrgin != null) {
-        if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin ==
-            'Appointment') {
-          if (regimentList[i].estart != null && regimentList[i].estart != '') {
-            if (regimentList[i].eid != null && regimentList[i].eid != '') {
-              var apiReminder = regimentList[i];
-              const platform = MethodChannel(APPOINTMENT_DETAILS);
-              try {
-                if (Platform.isIOS) {
-                  platform.invokeMethod(
-                      APPOINTMENT_DETAILS, apiReminder.toJson());
-                } else {
-                  await platform.invokeMethod(APPOINTMENT_DETAILS,
-                      {'data': jsonEncode(apiReminder.toJson())});
-                }
-              } catch (e, stackTrace) {
-                CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-                if (kDebugMode) {
-                  print(e);
-                }
-              }
-            }
-          }
-        }
-      }
     }
   }
 

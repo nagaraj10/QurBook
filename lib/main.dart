@@ -396,7 +396,7 @@ class _MyFHBState extends State<MyFHB> {
     );
   }
 
-  void _updateTimer(msg) {
+  Future<void> _updateTimer(msg) async {
     String? doctorPic = '';
     String? patientPic = '';
     var callType = '';
@@ -898,7 +898,7 @@ class _MyFHBState extends State<MyFHB> {
           if (passedValArr[2] != null) {
             try {
               if (passedValArr[3] != null) {
-                new CommonUtil().acceptCareGiverTransportRequestReminder(
+                CommonUtil().acceptCareGiverTransportRequestReminder(
                     context,
                     passedValArr[2],
                     passedValArr[3],
@@ -928,6 +928,37 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'Tele Health Appointment list',
           });
           PageNavigator.goToPermanent(Get.context!, router.rt_Landing);
+        }
+      }
+      // new feature appointment reminder 5 mins before from api side
+      else if (passedValArr[0] == 'sheela') {
+        if (passedValArr[1] == strAppointment) {
+          // Prepare JSON data for adding to the sheela queue request
+          final reqJson = {
+            KIOSK_task: KIOSK_appointment_avail,
+            KIOSK_appoint_id: passedValArr[2] ?? '',
+            KIOSK_eid: passedValArr[3] ?? '',
+          };
+          // Check if Sheela Live reminders are allowed
+          if (CommonUtil().isAllowSheelaLiveReminders()) {
+            // Check if Sheela screen is active
+            if (sheelaAIController?.isSheelaScreenActive ?? false) {
+              //Adding the notificaiton to sheela reminder Queue
+              CommonUtil().callQueueNotificationPostApi(reqJson);
+            } else if (PreferenceUtil.getIfQurhomeisAcive()) {
+              // Navigate to Sheela screen with specific arguments
+              await Get.toNamed(
+                rt_Sheela,
+                arguments: SheelaArgument(
+                  scheduleAppointment: true,
+                ),
+              );
+            }
+          } else {
+            //Adding the notificaiton to sheela reminder Queue
+            //since the live notifications are disabled.
+            CommonUtil().callQueueNotificationPostApi(reqJson);
+          }
         }
       } else if (passedValArr[1] == 'appointmentList' ||
           passedValArr[1] == 'appointmentHistory') {
@@ -1363,6 +1394,12 @@ class _MyFHBState extends State<MyFHB> {
             return SplashScreen(
               nsRoute: parsedData[1],
             );
+          } else if (parsedData[0] == 'sheela') {
+            if (parsedData[1] == strAppointment) {
+              return SplashScreen(
+                nsRoute: strAppointment,
+              );
+            }
           } else if (parsedData[0] == 'ack') {
             final temp = parsedData[1].split('|');
             if (temp[0] == 'myRecords') {

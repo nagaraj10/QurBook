@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
@@ -58,7 +57,7 @@ class PrescriptionModule extends StatelessWidget {
                                       AssetImage('assets/icons/rx.png'),
                                       size: 30,
                                       color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
+                                          CommonUtil().getMyPrimaryColor()),
                                     ),
                                     onPressed: () {
                                       FetchRecords(

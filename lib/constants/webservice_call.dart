@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:intl/intl.dart';
 import '../add_family_user_info/models/update_relatiosnship_model.dart';
 import '../common/CommonConstants.dart';
 import '../common/CommonUtil.dart';
@@ -10,7 +9,6 @@ import 'fhb_constants.dart' as Constants;
 import 'fhb_query.dart' as variable;
 import '../src/model/user/AddressTypeModel.dart';
 import '../src/model/user/MyProfileModel.dart';
-import '../src/model/user/MyProfileResult.dart';
 
 class WebserviceCall {
   String getQueryToUpdateDoctor(bool isPreferred, String providerId) {

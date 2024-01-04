@@ -28,8 +28,9 @@ class CropAndRotateScreen extends StatefulWidget {
 }
 
 class CropAndRotateScreenState extends State<CropAndRotateScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+      GlobalKey<ScaffoldMessengerState>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   String? categoryName, categoryNameClone;
   String? categoryID;
@@ -82,7 +83,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
             },
           ),
         ),
-        new SwitchProfile().buildActions(
+        SwitchProfile().buildActions(
             context, _keyLoader, callBackToRefresh, false,
             changeWhiteBg: true)
       ],
@@ -136,7 +137,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
                         child: Container(
                           height: double.infinity,
                           child: imgUrl!.contains(variable.strpdf)
-                              ? new CommonUtil().showPDFInWidget(imgUrl)
+                              ? CommonUtil().showPDFInWidget(imgUrl)
                               : Image.file(
                                   File(imgUrl),
                                   fit: BoxFit.scaleDown,

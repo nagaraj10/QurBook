@@ -2,7 +2,6 @@
 import 'package:myfhb/common/CommonUtil.dart';
 
 import 'Members.dart';
-import 'SendMailTo.dart';
 import 'attachments.dart';
 import 'comments.dart';
 import 'notes.dart';
@@ -32,7 +31,7 @@ class TicketsListResponse {
       if (json['tickets'] != null) {
             tickets = <Tickets>[];
             json['tickets'].forEach((v) {
-              tickets!.add(new Tickets.fromJson(v));
+              tickets!.add(Tickets.fromJson(v));
             });
           }
       count = json['count'];
@@ -46,7 +45,7 @@ class TicketsListResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['success'] = this.success;
     if (this.tickets != null) {
       data['tickets'] = this.tickets!.map((v) => v.toJson()).toList();
@@ -114,57 +113,57 @@ class Tickets {
       if (json['tags'] != null) {
             tags = <Tags>[];
             json['tags'].forEach((v) {
-              tags!.add(new Tags.fromJson(v));
+              tags!.add(Tags.fromJson(v));
             });
           }
       if (json['subscribers'] != null) {
             subscribers = <Subscribers>[];
             json['subscribers'].forEach((v) {
-              subscribers!.add(new Subscribers.fromJson(v));
+              subscribers!.add(Subscribers.fromJson(v));
             });
           }
       sId = json['_id'];
       owner =
-              json['owner'] != null ? new Subscribers.fromJson(json['owner']) : null;
+              json['owner'] != null ? Subscribers.fromJson(json['owner']) : null;
       subject = json['subject'];
-      group = json['group'] != null ? new Group.fromJson(json['group']) : null;
-      type = json['type'] != null ? new Type.fromJson(json['type']) : null;
+      group = json['group'] != null ? Group.fromJson(json['group']) : null;
+      type = json['type'] != null ? Type.fromJson(json['type']) : null;
       priority = json['priority'] != null
-              ? new Priority.fromJson(json['priority'])
+              ? Priority.fromJson(json['priority'])
               : null;
       issue = json['issue'];
       assignee = json['assignee'] != null
-              ? new Subscribers.fromJson(json['assignee'])
+              ? Subscribers.fromJson(json['assignee'])
               : null;
       date = json['date'];
       preferredDate = json['preferredDate'];
       if (json['comments'] != null) {
             comments = <Comments>[];
             json['comments'].forEach((v) {
-              comments!.add(new Comments.fromJson(v));
+              comments!.add(Comments.fromJson(v));
             });
           }
       if (json['notes'] != null) {
             notes = <Notes>[];
             json['notes'].forEach((v) {
-              notes!.add(new Notes.fromJson(v));
+              notes!.add(Notes.fromJson(v));
             });
           }
       if (json['attachments'] != null) {
             attachments = <Attachments>[];
             json['attachments'].forEach((v) {
-              attachments!.add(new Attachments.fromJson(v));
+              attachments!.add(Attachments.fromJson(v));
             });
           }
 
       additionalInfo = json['additionalInfo'] != null
-              ? new AdditionalInfo.fromJson(json['additionalInfo'])
+              ? AdditionalInfo.fromJson(json['additionalInfo'])
               : null;
 
       if (json['history'] != null) {
             history = <History>[];
             json['history'].forEach((v) {
-              history!.add(new History.fromJson(v));
+              history!.add(History.fromJson(v));
             });
           }
       uid = json['uid'];
@@ -175,7 +174,7 @@ class Tickets {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['deleted'] = this.deleted;
     data['status'] = this.status;
     if (this.tags != null) {
@@ -239,7 +238,7 @@ class Tags {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     return data;
   }
@@ -267,7 +266,7 @@ class Subscribers {
       username = json['username'];
       fullname = json['fullname'];
       email = json['email'];
-      role = json['role'] != null ? new Role.fromJson(json['role']) : null;
+      role = json['role'] != null ? Role.fromJson(json['role']) : null;
       title = json['title'];
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -275,7 +274,7 @@ class Subscribers {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['_id'] = this.sId;
     data['username'] = this.username;
     data['fullname'] = this.fullname;
@@ -318,7 +317,7 @@ class Role {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['_id'] = this.sId;
     data['name'] = this.name;
     data['description'] = this.description;
@@ -343,7 +342,7 @@ class Group {
       if (json['members'] != null) {
             members = <Members>[];
             json['members'].forEach((v) {
-              members!.add(new Members.fromJson(v));
+              members!.add(Members.fromJson(v));
             });
           }
       sendMailTo = json['sendMailTo'].cast<String>();
@@ -356,7 +355,7 @@ class Group {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.members != null) {
       data['members'] = this.members!.map((v) => v.toJson()).toList();
     }
@@ -383,7 +382,7 @@ class Type {
       if (json['priorities'] != null) {
             priorities = <Priorities>[];
             json['priorities'].forEach((v) {
-              priorities!.add(new Priorities.fromJson(v));
+              priorities!.add(Priorities.fromJson(v));
             });
           }
       sId = json['_id'];
@@ -395,7 +394,7 @@ class Type {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.priorities != null) {
       data['priorities'] = this.priorities!.map((v) => v.toJson()).toList();
     }
@@ -439,7 +438,7 @@ class Priorities {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['overdueIn'] = this.overdueIn;
     data['htmlColor'] = this.htmlColor;
     data['_id'] = this.sId;
@@ -487,7 +486,7 @@ class Priority {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['overdueIn'] = this.overdueIn;
     data['htmlColor'] = this.htmlColor;
     data['_id'] = this.sId;
@@ -515,7 +514,7 @@ class History {
       action = json['action'];
       description = json['description'];
       owner =
-              json['owner'] != null ? new Subscribers.fromJson(json['owner']) : null;
+              json['owner'] != null ? Subscribers.fromJson(json['owner']) : null;
       date = json['date'];
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -523,7 +522,7 @@ class History {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['_id'] = this.sId;
     data['action'] = this.action;
     data['description'] = this.description;

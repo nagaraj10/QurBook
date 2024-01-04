@@ -56,17 +56,17 @@ class _ClaimListState extends State<ClaimList> {
   Future<ClaimExpiryResponse?>? claimExpiryResponse;
 
   List<String> exercises = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
-    claimListRepository = new ClaimListRepository();
-    _categoryResponseListRepository = new CategoryResponseListRepository();
-    claimListResponse = new ClaimListResponse();
+    claimListRepository = ClaimListRepository();
+    _categoryResponseListRepository = CategoryResponseListRepository();
+    claimListResponse = ClaimListResponse();
 
-    _claimListBloc = new ClaimListBloc();
+    _claimListBloc = ClaimListBloc();
     claimExpiryResponse = _claimListBloc.getExpiryListResponse();
     callImportantMethods();
   }
@@ -99,7 +99,7 @@ class _ClaimListState extends State<ClaimList> {
             },
             child: Icon(
               Icons.add,
-              color: Color(new CommonUtil().getMyPrimaryColor()),
+              color: Color(CommonUtil().getMyPrimaryColor()),
               size: 24.0.sp,
             ),
           ),
@@ -149,8 +149,8 @@ class _ClaimListState extends State<ClaimList> {
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                       colors: <Color>[
-                    Color(new CommonUtil().getMyPrimaryColor()),
-                    Color(new CommonUtil().getMyGredientColor())
+                    Color(CommonUtil().getMyPrimaryColor()),
+                    Color(CommonUtil().getMyGredientColor())
                   ],
                       stops: [
                     0.3,
@@ -416,7 +416,7 @@ class _ClaimListState extends State<ClaimList> {
     try {
       categoryDataList = (await PreferenceUtil.getCategoryType())!;
       if (categoryDataList == null && categoryDataList.length < 0) {
-        _categoryListBlock = new CategoryListBlock();
+        _categoryListBlock = CategoryListBlock();
         _categoryListBlock.getCategoryLists();
 
         CategoryDataList categoryDataListObj =
@@ -427,7 +427,7 @@ class _ClaimListState extends State<ClaimList> {
       }
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-      _categoryListBlock = new CategoryListBlock();
+      _categoryListBlock = CategoryListBlock();
       _categoryListBlock.getCategoryLists();
 
       CategoryDataList categoryDataListObj =
@@ -612,7 +612,7 @@ class _ClaimListState extends State<ClaimList> {
         DateFormat format = DateFormat("dd-MM-yyyy");
 
         var now = format.parse(billDate);
-        final df = new DateFormat('dd-MMM-yyyy');
+        final df = DateFormat('dd-MMM-yyyy');
 
         return df.format(now);
       } catch (e,stackTrace) {
@@ -630,7 +630,7 @@ class _ClaimListState extends State<ClaimList> {
         DateFormat format = DateFormat("yyyy-MM-dd");
 
         var now = format.parse(billDate);
-        final df = new DateFormat(
+        final df = DateFormat(
             CommonUtil.REGION_CODE == 'IN' ? 'dd-MMM-yyyy' : 'MMM-dd-yyyy');
 
         return df.format(now);
@@ -653,7 +653,7 @@ class _ClaimListState extends State<ClaimList> {
         case "CLAIM_ACCEPTED":
           return Colors.green;
         default:
-          return Color(new CommonUtil().getMyPrimaryColor());
+          return Color(CommonUtil().getMyPrimaryColor());
       }
     }
   }

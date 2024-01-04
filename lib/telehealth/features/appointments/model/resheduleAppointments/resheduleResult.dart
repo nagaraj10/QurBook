@@ -14,7 +14,7 @@ class ResheduleResult {
   ResheduleResult.fromJson(Map<String, dynamic> json) {
     try {
       appointmentInfo = json['appointmentInfo'] != null
-              ? new ResheduleAppointmentInfo.fromJson(json['appointmentInfo'])
+              ? ResheduleAppointmentInfo.fromJson(json['appointmentInfo'])
               : null;
       paymentInfo = json['paymentInfo'] != null
               ?  (json['paymentInfo'])
@@ -25,7 +25,7 @@ class ResheduleResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.appointmentInfo != null) {
       data['appointmentInfo'] = this.appointmentInfo!.toJson();
     }

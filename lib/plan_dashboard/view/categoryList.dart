@@ -16,12 +16,10 @@ import 'planDetailsView.dart';
 import 'planList.dart';
 import '../viewModel/planViewModel.dart';
 import '../viewModel/subscribeViewModel.dart';
-import '../../regiment/view_model/regiment_view_model.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
 import '../../widgets/GradientAppBar.dart';
-import 'package:provider/provider.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 
 class CategoryList extends StatefulWidget {
@@ -620,7 +618,7 @@ class _CategoryState extends State<CategoryList> {
                                             planListResult[inx.index].price!,
                                         fontsize: 16.0.sp,
                                         fontWeight: FontWeight.w500,
-                                        colors: Color(new CommonUtil()
+                                        colors: Color(CommonUtil()
                                             .getMyPrimaryColor())),
                                   )
                                 : Container(),
@@ -629,20 +627,22 @@ class _CategoryState extends State<CategoryList> {
                                 child: SizedBoxWithChild(
                               width: 95.0.w,
                               height: 32.0.h,
-                              child: FlatButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18),
-                                    side: BorderSide(
-                                        color: getBorderColor(
-                                            inx.index, planListResult))),
-                                color: Colors.transparent,
-                                textColor: planListResult[inx.index]
-                                            .isSubscribed ==
-                                        '0'
-                                    ? Color(CommonUtil().getMyPrimaryColor())
-                                    : Colors.grey,
-                                padding: EdgeInsets.all(
-                                  8.0.sp,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18),
+                                      side: BorderSide(
+                                          color: getBorderColor(
+                                              inx.index, planListResult))),
+                                  backgroundColor: Colors.transparent,
+                                  foregroundColor: planListResult[inx.index]
+                                              .isSubscribed ==
+                                          '0'
+                                      ? Color(CommonUtil().getMyPrimaryColor())
+                                      : Colors.grey,
+                                  padding: EdgeInsets.all(
+                                    8.0.sp,
+                                  ),
                                 ),
                                 onPressed: (planListResult[inx.index]
                                                 .catselecttype ==

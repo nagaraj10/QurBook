@@ -13,14 +13,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -126,15 +124,15 @@ class HomeScreenState extends State<ChatHomeScreen> {
 
   void configLocalNotification() {
     var initializationSettingsAndroid =
-        new AndroidInitializationSettings(STR_MIP_MAP_LAUNCHER);
-    var initializationSettingsIOS = new IOSInitializationSettings();
-    var initializationSettings = new InitializationSettings(
+        AndroidInitializationSettings(STR_MIP_MAP_LAUNCHER);
+    var initializationSettingsIOS = IOSInitializationSettings();
+    var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
   void showNotification(message) async {
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       Platform.isAndroid
           ? 'com.ventechsolutions.myFHB'
           : 'com.ventechsolutions.myFHB',
@@ -145,8 +143,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
       importance: Importance.max,
       priority: Priority.high,
     );
-    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    var platformChannelSpecifics = new NotificationDetails(
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);
 
@@ -301,7 +299,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
               ),
               centerTitle: true,
               actions: [
-                Center(child: new CommonUtil().getNotificationIcon(context)),
+                Center(child: CommonUtil().getNotificationIcon(context)),
                 SizedBoxWidget(
                   width: 10,
                 ),
@@ -315,11 +313,11 @@ class HomeScreenState extends State<ChatHomeScreen> {
   }
 
   Widget checkIfDoctorIdExist() {
-    return new FutureBuilder<String?>(
+    return FutureBuilder<String?>(
       future: getPatientDetails(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return new Scaffold(
+          return Scaffold(
             body: CommonCircularIndicator(),
           );
         } else if (snapshot.hasError) {
@@ -488,7 +486,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                                           .toUpperCase()
                                                       : '',
                                                   style: TextStyle(
-                                                    color: Color(new CommonUtil()
+                                                    color: Color(CommonUtil()
                                                         .getMyPrimaryColor()),
                                                     fontSize: 16.0.sp,
                                                     fontWeight: FontWeight.w400,
@@ -704,7 +702,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
             );
           }
         } else {
-          return new SizedBox.shrink();
+          return SizedBox.shrink();
         }
       },
     );

@@ -161,18 +161,6 @@ import PushKit
                 }
             }
         }
-        let appointmentDetailsChannel =  FlutterMethodChannel(name: Constants.appointmentDetailsMethodAndChannel, binaryMessenger: flutterController.binaryMessenger)
-        appointmentDetailsChannel.setMethodCallHandler {[weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) in
-            guard let self = self else{
-                result(FlutterMethodNotImplemented)
-                return
-            }
-            if call.method == Constants.appointmentDetailsMethodAndChannel{
-                if let notifiationToShow = call.arguments as? NSDictionary{
-                    self.scheduleAppointmentReminder(message: notifiationToShow)
-                }
-            }
-        }
         
         
         ResponseNotificationChannel.setMethodCallHandler {[weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) in

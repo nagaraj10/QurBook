@@ -10,7 +10,6 @@ import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/notification_model.dart';
-import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'dart:convert';
 
@@ -18,7 +17,7 @@ class FetchNotificationService {
   final String _baseUrl = Constants.BASE_URL;
   String? authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-  HeaderRequest headerRequest = new HeaderRequest();
+  HeaderRequest headerRequest = HeaderRequest();
   final ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<NotificationModel> fetchNotificationList(int page) async {

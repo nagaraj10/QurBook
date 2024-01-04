@@ -6,8 +6,6 @@ import '../../../../common/firestore_services.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
-import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
-    as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/appointmentsModel.dart';
@@ -24,9 +22,6 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class Appointments extends StatefulWidget {
@@ -54,7 +49,7 @@ class _AppointmentsState extends State<Appointments> {
   List<Past> upcomingTimeInfo = [];
   SharedPreferences? prefs;
   Function(String)? closePage;
-  final GlobalKey<State> _key = new GlobalKey<State>();
+  final GlobalKey<State> _key = GlobalKey<State>();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
 
@@ -107,8 +102,8 @@ class _AppointmentsState extends State<Appointments> {
   }
 
   getCategoryList() {
-    CategoryListBlock _categoryListBlock = new CategoryListBlock();
-    MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
+    CategoryListBlock _categoryListBlock = CategoryListBlock();
+    MediaTypeBlock _mediaTypeBlock = MediaTypeBlock();
 
     _categoryListBlock.getCategoryLists().then((value) {});
 
@@ -226,7 +221,7 @@ class _AppointmentsState extends State<Appointments> {
         return SafeArea(
           child: SizedBox(
             height: 1.sh / 2.0,
-            child: new Center(
+            child: Center(
               child: SizedBox(
                 width: 30.0.h,
                 height: 30.0.h,
@@ -312,7 +307,7 @@ class _AppointmentsState extends State<Appointments> {
                         ),
                         (appointmentsData.result!.past != null &&
                                 appointmentsData.result!.past!.length > 0)
-                            ? new ListView.builder(
+                            ? ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemBuilder: (BuildContext ctx, int i) {

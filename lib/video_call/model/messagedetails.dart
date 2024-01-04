@@ -13,16 +13,16 @@ class MessageDetails {
   MessageDetails.fromJson(Map<String, dynamic> json) {
     try {
       content =
-              json[c_content] != null ? new Content.fromJson(json[c_content]) : null;
+              json[c_content] != null ? Content.fromJson(json[c_content]) : null;
       payload =
-              json[c_payload] != null ? new Payload.fromJson(json[c_payload]) : null;
+              json[c_payload] != null ? Payload.fromJson(json[c_payload]) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.content != null) {
       data[c_content] = this.content!.toJson();
     }

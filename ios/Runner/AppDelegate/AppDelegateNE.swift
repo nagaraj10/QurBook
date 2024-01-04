@@ -125,55 +125,6 @@ extension AppDelegate: MessagingDelegate {
     }
     
     
-    func scheduleAppointmentReminder(message: NSDictionary)  {
-        print(message)
-        if let _id =  message["eid"] as? String {
-            id = _id
-        }else{
-            return
-        }
-        if let dateNotifiation = message["estart"] as? String{
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
-            let dateFromString = dateFormatter.date(from: dateNotifiation)?.toLocalTime()
-            var dateFromStringBefore:Date?
-            if let dateToBeTriggered = dateFromString{
-                dateFromStringBefore = Calendar.current.date(byAdding: .minute, value: -5, to: dateToBeTriggered) ?? dateToBeTriggered
-                
-            }
-            
-            if let dateForSchedule = dateFromStringBefore{
-                let strOfDateAndTime = "\(dateForSchedule)"
-                let strSplitDateTime = strOfDateAndTime.components(separatedBy: " ")
-                let strDates = strSplitDateTime[0].components(separatedBy: "-")
-                let strTime = strSplitDateTime[1].components(separatedBy: ":")
-                if let year = Int(strDates[0]),let month = Int(strDates[1]),let day = Int(strDates[2]),let hour = Int(strTime[0]),let min = Int(strTime[1]),let sec = Int(strTime[2]){
-                    dateComponentBefore.year = year
-                    dateComponentBefore.month = month
-                    dateComponentBefore.day = day
-                    dateComponentBefore.hour = hour
-                    dateComponentBefore.minute = min
-                    dateComponentBefore.second = sec
-                }
-            }
-        }else{
-            return
-        }
-        
-        let content = UNMutableNotificationContent()
-        content.title = "Appointment confirmation"
-        content.body = "Appointment confirmation"
-        let identifier = id + "0000"
-        content.userInfo = message as! [AnyHashable : Any]
-        
-        let dateTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponentBefore, repeats: false)
-        let  request = UNNotificationRequest(identifier: identifier, content: content, trigger: dateTrigger)
-        notificationCenter.add(request) { (error) in
-            if let error = error {
-                print("Error \(error.localizedDescription)")
-            }
-        }
-    }
     
     //Prepare New Notificaion with deatils and trigger
     func scheduleNotification(message: NSDictionary,snooze:Bool = false) {
@@ -349,14 +300,7 @@ extension AppDelegate: MessagingDelegate {
                                          willPresent notification: UNNotification,
                                          withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         checkForCallListener(notification: notification)
-        if let userInfo = notification.request.content.userInfo as? NSDictionary,let type = userInfo["activityname_orig"] as? String,type.lowercased() == "appointment",let controller = navigationController?.children.first as? FlutterViewController{
-            print("Inside the notification")
-            let notificationChannel = FlutterMethodChannel.init(name: Constants.appointmentDetailsMethodAndChannel, binaryMessenger: controller.binaryMessenger)
-            
-            notificationChannel.invokeMethod(Constants.appointmentDetailsMethodAndChannel, arguments: userInfo)
-            completionHandler([])
-            
-        }else if let userInfo = notification.request.content.userInfo as? NSDictionary,
+         if let userInfo = notification.request.content.userInfo as? NSDictionary,
                  let type = userInfo["isSheela"] as? String,
                  let controller = navigationController?.children.first as? FlutterViewController,
                  UIApplication.shared.applicationState == .active{

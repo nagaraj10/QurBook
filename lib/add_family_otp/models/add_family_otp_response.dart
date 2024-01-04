@@ -1,7 +1,6 @@
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 
-import '../../constants/fhb_parameters.dart' as parameters;
 // class AddFamilyOTPResponse {
 //   int status;
 //   bool success;
@@ -16,7 +15,7 @@ import '../../constants/fhb_parameters.dart' as parameters;
 //     success = json[parameters.strSuccess];
 //     message = json[parameters.strMessage];
 //     response = json[parameters.strResponse] != null
-//         ? new Response.fromJson(json[parameters.strResponse])
+//         ? Response.fromJson(json[parameters.strResponse])
 //         : null;
 //   }
 
@@ -456,7 +455,7 @@ class HeightObjNew {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['valueFeet'] = this.valueFeet;
     data['valueInches'] = this.valueInches;
     return data;

@@ -57,26 +57,26 @@ class AppointmentInfoModel {
       isFollowUp = json[strIsFollowUp_C];
       slotNumber = json[strSlotNumber];
       doctorSession = json[strDoctorSession] != null
-              ? new DoctorSession.fromJson(json[strDoctorSession])
+              ? DoctorSession.fromJson(json[strDoctorSession])
               : null;
       isActive = json[strIsActive];
       lastModifiedBy = json[strlastModifiedBy] != null
-              ? new DoctorSession.fromJson(json[strlastModifiedBy])
+              ? DoctorSession.fromJson(json[strlastModifiedBy])
               : null;
       bookedFor = json[strBookedFor] != null
-              ? new DoctorSession.fromJson(json[strBookedFor])
+              ? DoctorSession.fromJson(json[strBookedFor])
               : null;
       createdBy = json[strCreatedBy] != null
-              ? new DoctorSession.fromJson(json[strCreatedBy])
+              ? DoctorSession.fromJson(json[strCreatedBy])
               : null;
       bookedBy = json[strBookedBy] != null
-              ? new DoctorSession.fromJson(json[strBookedBy])
+              ? DoctorSession.fromJson(json[strBookedBy])
               : null;
       bookingId = json[strBookingId_S];
       plannedStartDateTime = json[strPlannedStartDateTime];
       plannedEndDateTime = json[strPlannedEndDateTime];
       status = json[strStatus] != null
-              ? new DoctorSession.fromJson(json[strStatus])
+              ? DoctorSession.fromJson(json[strStatus])
               : null;
       doctorSessionId = json[strDoctorSessionId];
       actualStartDateTime = json[strActualStartDateTime];
@@ -95,7 +95,7 @@ class AppointmentInfoModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[strIsFollowUp_C] = this.isFollowUp;
     data[strSlotNumber] = this.slotNumber;
     if (this.doctorSession != null) {
@@ -149,7 +149,7 @@ class DoctorSession {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[strId] = this.id;
     return data;
   }

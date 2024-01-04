@@ -929,7 +929,7 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                     } else if (widget.nsRoute == "familyProfile") {
                       var passedValArr = widget.bundle?.split('&');
 
-                      new CommonUtil()
+                      CommonUtil()
                           .getDetailsOfAddedFamilyMember(
                               Get.context!, passedValArr[2].toString())
                           .then((value) {
@@ -1038,7 +1038,7 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                       if (passedValArr[2] != null) {
                         try {
                           if (passedValArr[3] != null) {
-                            new CommonUtil()
+                            CommonUtil()
                                 .acceptCareGiverTransportRequestReminder(
                                     context,
                                     passedValArr[2],
@@ -1088,7 +1088,7 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                         FirebaseMessaging.instance;
 
                     _firebaseMessaging.getToken().then((token) {
-                      new CommonUtil()
+                      CommonUtil()
                           .sendDeviceToken(
                               PreferenceUtil.getStringValue(
                                   Constants.KEY_USERID),
@@ -1170,7 +1170,7 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
 
   void getProfileData() async {
     try {
-      await new CommonUtil().getUserProfileData();
+      await CommonUtil().getUserProfileData();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }

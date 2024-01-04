@@ -68,11 +68,11 @@ class SelectionResult {
       if (json['tags'] != null) {
         tags = <Tags>[];
         json['tags'].forEach((v) {
-          tags!.add(new Tags.fromJson(v));
+          tags!.add(Tags.fromJson(v));
         });
       }
       primaryProvider = json['primaryProvider'] != null
-          ? new PrimaryProvider.fromJson(json['primaryProvider'])
+          ? PrimaryProvider.fromJson(json['primaryProvider'])
           : null;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -171,12 +171,12 @@ class ProfileSetting {
       preferred_language = json['preferred_language'];
       qa_subscription = json['qa-subscription'];
       preferredMeasurement = json['preferred_measurement'] != null
-          ? new PreferredMeasurement.fromJson(json['preferred_measurement'])
+          ? PreferredMeasurement.fromJson(json['preferred_measurement'])
           : null;
       if (json.containsKey('caregiverCommunicationSetting')) {
         caregiverCommunicationSetting =
             json['caregiverCommunicationSetting'] != null
-                ? new CaregiverCommunicationSetting.fromJson(
+                ? CaregiverCommunicationSetting.fromJson(
                     json['caregiverCommunicationSetting'])
                 : null;
         voiceCloningStatus = json['voiceCloningStatus'] ??
@@ -187,7 +187,7 @@ class ProfileSetting {
 
       if (json.containsKey('preferred_measurement')) {
         preferredMeasurement = json['preferred_measurement'] != null
-            ? new PreferredMeasurement.fromJson(json['preferred_measurement'])
+            ? PreferredMeasurement.fromJson(json['preferred_measurement'])
             : null;
       }
     } catch (e, stackTrace) {
@@ -235,12 +235,10 @@ class PreferredMeasurement {
 
   PreferredMeasurement.fromJson(Map<String, dynamic> json) {
     try {
-      height =
-          json['height'] != null ? new Height.fromJson(json['height']) : null;
-      weight =
-          json['weight'] != null ? new Height.fromJson(json['weight']) : null;
+      height = json['height'] != null ? Height.fromJson(json['height']) : null;
+      weight = json['weight'] != null ? Height.fromJson(json['weight']) : null;
       temperature = json['temperature'] != null
-          ? new Height.fromJson(json['temperature'])
+          ? Height.fromJson(json['temperature'])
           : null;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -248,7 +246,7 @@ class PreferredMeasurement {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.height != null) {
       data['height'] = this.height!.toJson();
     }
@@ -278,7 +276,7 @@ class Height {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['unitCode'] = this.unitCode;
     data['unitName'] = this.unitName;
     return data;
@@ -296,7 +294,7 @@ class PrimaryProvider {
       healthorganizationid =
           json['healthorganizationid'] ?? json['healthOrganizationId'];
       additionalInfo = json['additionalInfo'] != null
-          ? new AdditionalInfoModuleAccess.fromJson(json['additionalInfo'])
+          ? AdditionalInfoModuleAccess.fromJson(json['additionalInfo'])
           : null;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -304,7 +302,7 @@ class PrimaryProvider {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['healthOrganizationId'] = this.healthorganizationid;
     if (this.additionalInfo != null) {
       data['additionalInfo'] = this.additionalInfo?.toJson();
@@ -331,7 +329,7 @@ class AdditionalInfoModuleAccess {
       if (json['module-access'] != null) {
         moduleAccess = <ModuleAccess>[];
         json['module-access'].forEach((v) {
-          moduleAccess?.add(new ModuleAccess.fromJson(v));
+          moduleAccess?.add(ModuleAccess.fromJson(v));
         });
       }
       // Extract and assign the 'record_vitals' value from JSON, default to false if not present
@@ -353,7 +351,7 @@ class AdditionalInfoModuleAccess {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.moduleAccess != null) {
       data['module-access'] =
           this.moduleAccess?.map((v) => v.toJson()).toList();
@@ -395,7 +393,7 @@ class ModuleAccess {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
     data['access'] = this.access;

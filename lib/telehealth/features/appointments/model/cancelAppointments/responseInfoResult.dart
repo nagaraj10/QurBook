@@ -13,7 +13,7 @@ class ResponseInfoResult {
     try {
       success = json[parameters.strSuccess];
       refund = json[parameters.strRefund] != null
-              ? new ResponseInfoResultRefund.fromJson(json[parameters.strRefund])
+              ? ResponseInfoResultRefund.fromJson(json[parameters.strRefund])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -21,7 +21,7 @@ class ResponseInfoResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strSuccess] = this.success;
     if (this.refund != null) {
       data[parameters.strRefund] = this.refund!.toJson();

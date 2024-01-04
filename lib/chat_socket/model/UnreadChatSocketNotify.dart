@@ -13,14 +13,14 @@ class UnreadChatSocketNotify {
       idFrom = json['idFrom'];
       idTo = json['idTo'];
       result =
-          json['result'] != null ? new Result.fromJson(json['result']) : null;
+          json['result'] != null ? Result.fromJson(json['result']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['idFrom'] = this.idFrom;
     data['idTo'] = this.idTo;
     if (this.result != null) {
@@ -42,7 +42,7 @@ class Result {
       if (json['payload'] != null) {
             payload = <Payload>[];
             json['payload'].forEach((v) {
-              payload!.add(new Payload.fromJson(v));
+              payload!.add(Payload.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -51,7 +51,7 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.payload != null) {
       data['payload'] = this.payload!.map((v) => v.toJson()).toList();
@@ -74,7 +74,7 @@ class Payload {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['count'] = this.count;
     return data;
   }

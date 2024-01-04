@@ -202,20 +202,20 @@ class _SearchProviderList extends State<SearchProviderList> {
   }
 
   /*Widget getPlanList() {
-    return new FutureBuilder<PlanListModel>(
+    return FutureBuilder<PlanListModel>(
       future: myPlanViewModel.getPlanList(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 4.5,
-              child: new Center(
+              child: Center(
                 child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,
-                  child: new CircularProgressIndicator(
+                  child: CircularProgressIndicator(
                       backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor())),
+                          Color(CommonUtil().getMyPrimaryColor())),
                 ),
               ),
             ),

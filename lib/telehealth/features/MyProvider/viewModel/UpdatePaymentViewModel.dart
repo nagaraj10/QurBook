@@ -7,11 +7,11 @@ import 'package:myfhb/telehealth/features/MyProvider/services/updatePaymentServi
 
 class UpdatePaymentViewModel {
   UpdatePaymentModel updatePaymentModel = UpdatePaymentModel();
-  UpdatePaymentService updatePaymentService = new UpdatePaymentService();
+  UpdatePaymentService updatePaymentService = UpdatePaymentService();
   UpdatePaymentStatusSubscribe updatePaymentStatusModel =
-      new UpdatePaymentStatusSubscribe();
+      UpdatePaymentStatusSubscribe();
   PaymentFailureRetryModel paymentFailureRetryModel =
-  new PaymentFailureRetryModel();
+  PaymentFailureRetryModel();
 
   Future<UpdatePaymentModel?> updatePaymentStatus(
       String paymentId,

@@ -42,7 +42,7 @@ class GetTimeSlots extends StatelessWidget {
   Past? doctorsData;
   final DateTime? selectedDate;
   bool? isReshedule;
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
   List<String?> bookingIds = [];
   final List<HealthOrganizationResult>? healthOrganizationResult;
   final List<ResultFromHospital>? resultFromHospitalList;
@@ -103,15 +103,17 @@ class GetTimeSlots extends StatelessWidget {
           child: SizedBoxWithChild(
             width: 95.0.w,
             height: 35.0.h,
-            child: FlatButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                  side: BorderSide(
-                      color: Color(new CommonUtil().getMyPrimaryColor()))),
-              color: Colors.transparent,
-              textColor: Color(new CommonUtil().getMyPrimaryColor()),
-              padding: EdgeInsets.all(
-                8.0.sp,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(
+                        color: Color(CommonUtil().getMyPrimaryColor()))),
+                backgroundColor: Colors.transparent,
+                foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                padding: EdgeInsets.all(
+                  8.0.sp,
+                ),
               ),
               onPressed: () {
                 if (isReshedule == true) {
@@ -125,7 +127,7 @@ class GetTimeSlots extends StatelessWidget {
                 } else {
                   if (rowPosition > -1 && itemPosition > -1) {
                     if (doctorsData == null) {
-                      new FHBUtils().check().then((intenet) {
+                      FHBUtils().check().then((intenet) {
                         if (intenet != null && intenet) {
                           var userId = PreferenceUtil.getStringValue(
                               Constants.KEY_USERID)!;

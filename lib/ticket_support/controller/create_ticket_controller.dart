@@ -1,6 +1,5 @@
 
 import 'package:flutter/foundation.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -84,18 +83,18 @@ class CreateTicketController extends GetxController {
                 .toLowerCase()
                 .compareTo(
                     CommonUtil().validString(b.name.toString()).toLowerCase()));
-            labsList!.insert(0, new Hospitals(name: 'Select'));
+            labsList!.insert(0, Hospitals(name: 'Select'));
             isPreferredLabDisable.value = false;
           } else {
             labsList = [];
-            labsList!.insert(0, new Hospitals(name: 'Select'));
+            labsList!.insert(0, Hospitals(name: 'Select'));
             isPreferredLabDisable.value = true;
           }
         });
       } else {}
     } catch (e,stackTrace) {
       labsList = [];
-      labsList!.insert(0, new Hospitals(name: 'Select'));
+      labsList!.insert(0, Hospitals(name: 'Select'));
       isCTLoading.value = false;
       isPreferredLabDisable.value = true;
                   CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -123,18 +122,18 @@ class CreateTicketController extends GetxController {
                     .validString(b!.user!.name.toString())
                     .toLowerCase()));
             // ignore: unnecessary_new
-            doctorsList!.insert(0, new Doctors(user: User(name: 'Select')));
+            doctorsList!.insert(0, Doctors(user: User(name: 'Select')));
             isPreferredDoctorDisable.value = false;
           } else {
             doctorsList = [];
-            doctorsList!.insert(0, new Doctors(user: User(name: 'Select')));
+            doctorsList!.insert(0, Doctors(user: User(name: 'Select')));
             isPreferredDoctorDisable.value = true;
           }
         });
       } else {}
     } catch (e,stackTrace) {
       doctorsList = [];
-      doctorsList!.insert(0, new Doctors(user: User(name: 'Select')));
+      doctorsList!.insert(0, Doctors(user: User(name: 'Select')));
       isCTLoading.value = false;
       isPreferredDoctorDisable.value = true;
                   CommonUtil().appLogs(message: e,stackTrace:stackTrace);

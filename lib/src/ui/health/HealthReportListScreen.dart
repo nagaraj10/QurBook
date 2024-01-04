@@ -63,17 +63,17 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
   late BookmarkRecordBloc _bookmarkRecordBloc;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
   List<HealthRecordCollection> mediMasterId = [];
 
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
   String? authToken;
 
   bool _enabled = true;
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    _healthReportListForUserBlock = HealthReportListForUserBlock();
     _healthReportListForUserBlock.getHelthReportLists();
     _bookmarkRecordBloc = BookmarkRecordBloc();
 
@@ -101,7 +101,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
   Widget _getWidgetToDisplayHealthRecords(HealthRecordList completeData) {
     List<HealthResult> mediaMetaInfoObj = [];
 
-    mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
+    mediaMetaInfoObj = CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionPrescription);
     return RefreshIndicator(
       key: _refreshIndicatorKey,
@@ -168,7 +168,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                     (mediaMetaInfoObj.healthRecordCollection?.length ?? 0) >
                         0) {
                   mediMasterId =
-                      new CommonUtil().getMetaMasterIdListNew(mediaMetaInfoObj);
+                      CommonUtil().getMetaMasterIdListNew(mediaMetaInfoObj);
                   if (mediMasterId.length > 0) {
                     widget.healthRecordSelected(
                         mediaMetaInfoObj.id, mediMasterId, condition);
@@ -197,7 +197,12 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                     data: mediaMetaInfoObj,
                   ),
                 ),
-              );
+              ).then((value) async {
+                if (value ?? false) {
+                  await Future.delayed(Duration(milliseconds: 100));
+                  widget.callBackToRefresh();
+                }
+              });
             }
           },
           child: Container(
@@ -293,7 +298,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                                     : mobileHeader2),
                           )),
                       Text(
-                        new FHBUtils()
+                        FHBUtils()
                             .getFormattedDateString(mediaMetaInfoObj.createdOn),
                         style: TextStyle(
                             color: Colors.grey[400],
@@ -316,7 +321,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                               ? ImageIcon(
                                   AssetImage(variable.icon_record_fav_active),
                                   color: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
+                                      CommonUtil().getMyPrimaryColor()),
                                   size: CommonUtil().isTablet!
                                       ? tabHeader2
                                       : mobileHeader2,
@@ -329,7 +334,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                                       : mobileHeader2,
                                 ),
                           onPressed: () {
-                            new CommonUtil()
+                            CommonUtil()
                                 .bookMarkRecord(mediaMetaInfoObj, _refresh);
                           }),
                       (mediaMetaInfoObj?.metadata?.hasVoiceNotes != null &&
@@ -344,7 +349,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                           ? Icon(
                               Icons.done,
                               color:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
+                                  Color(CommonUtil().getMyPrimaryColor()),
                             )
                           : SizedBox(),
                     ],
@@ -370,7 +375,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
             fit: BoxFit.cover,
           );
         } else {
-          return new SizedBox(
+          return SizedBox(
             width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
             height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
             child: Shimmer.fromColors(
@@ -400,7 +405,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
               colorFilter: ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
         ),
       ),
-      placeholder: (context, url) => new SizedBox(
+      placeholder: (context, url) => SizedBox(
           width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
           height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
           child: Shimmer.fromColors(
@@ -416,7 +421,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
     if (data.mediaMasterIds!.isNotEmpty) {
       return FutureBuilder(
         future: _healthReportListForUserBlock
-            .getDocumentImage(new CommonUtil().getMetaMasterId(data)!),
+            .getDocumentImage(CommonUtil().getMetaMasterId(data)!),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
             return Container(
@@ -430,7 +435,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
               ),
             );
           } else {
-            return new SizedBox(
+            return SizedBox(
               width: 40.0,
               height: 60.0,
               child: Shimmer.fromColors(
@@ -460,7 +465,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
           usrId +
           query.qr_slash +
           query.qr_rawMedia +
-          new CommonUtil().getMetaMasterId(data)!,
+          CommonUtil().getMetaMasterId(data)!,
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -469,7 +474,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
               colorFilter: ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
         ),
       ),
-      placeholder: (context, url) => new SizedBox(
+      placeholder: (context, url) => SizedBox(
           width: 50.0,
           height: 50.0,
           child: Shimmer.fromColors(

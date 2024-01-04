@@ -32,7 +32,7 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
   bool isPlaying = false;
   SheelaAIController sheelaAIController = Get.find();
 
-  ChatSocketService _chatSocketService = new ChatSocketService();
+  ChatSocketService _chatSocketService = ChatSocketService();
 
   @override
   void initState() {

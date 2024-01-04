@@ -2,7 +2,6 @@
 import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -34,10 +33,11 @@ class _ShowImageState extends State<ShowImage> {
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(top: 30, right: 10),
-              child: OutlineButton(
+              child: OutlinedButton(
                   child: Text(variable.strClose),
-                  textColor: Colors.white70,
-                  borderSide: BorderSide(color: Colors.white70),
+                  style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.white70,
+                  side: BorderSide(color: Colors.white70),),
                   onPressed: Navigator
                       .of(context)
                       .pop),

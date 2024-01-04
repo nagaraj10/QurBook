@@ -55,7 +55,7 @@ class ClaimRecordDetailsResult {
       if (json['documentMetadata'] != null) {
             documentMetadata = <DocumentMetadata>[];
             json['documentMetadata'].forEach((v) {
-              documentMetadata!.add(new DocumentMetadata.fromJson(v));
+              documentMetadata!.add(DocumentMetadata.fromJson(v));
             });
           }
       submittedBy = json['submittedBy'];
@@ -85,7 +85,7 @@ class ClaimRecordDetailsResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['claimId'] = this.claimId;
     data['claimNumber'] = this.claimNumber;
     data['submitDate'] = this.submitDate;

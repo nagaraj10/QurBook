@@ -116,21 +116,21 @@ class BookingConfirmation extends StatefulWidget {
 }
 
 class BookingConfirmationState extends State<BookingConfirmation> {
-  CommonWidgets commonWidgets = new CommonWidgets();
-  CommonUtil commonUtil = new CommonUtil();
+  CommonWidgets commonWidgets = CommonWidgets();
+  CommonUtil commonUtil = CommonUtil();
   late MyProviderViewModel providerViewModel;
   late CreateAppointMentViewModel createAppointMentViewModel;
   late FamilyListBloc _familyListBloc;
-  FamilyMembers familyMembersModel = new FamilyMembers();
+  FamilyMembers familyMembersModel = FamilyMembers();
   List<SharedByUsers> sharedbyme = [];
-  FlutterToast toast = new FlutterToast();
-  FamilyMembers? familyData = new FamilyMembers();
+  FlutterToast toast = FlutterToast();
+  FamilyMembers? familyData = FamilyMembers();
 
   List<SharedByUsers> _familyNames = [];
 
-  /* List<String> recordIds = new List();
-  List<String> notesId = new List();
-  List<String> voiceIds = new List();*/
+  /* List<String> recordIds = List();
+  List<String> notesId = List();
+  List<String> voiceIds = List();*/
 
   List<String> healthRecords = [];
 
@@ -154,7 +154,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   List<CategoryResult>? categoryDataList = [];
   List<CategoryResult> filteredCategoryData = [];
-  CategoryResult categoryDataObjClone = new CategoryResult();
+  CategoryResult categoryDataObjClone = CategoryResult();
 
   String? doctorId;
 
@@ -164,7 +164,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
   bool? checkedValue = false;
 
@@ -184,15 +184,15 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    providerViewModel = new MyProviderViewModel();
-    createAppointMentViewModel = new CreateAppointMentViewModel();
+    providerViewModel = MyProviderViewModel();
+    createAppointMentViewModel = CreateAppointMentViewModel();
     createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     selectedId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    _familyListBloc = new FamilyListBloc();
+    _familyListBloc = FamilyListBloc();
     _familyListBloc.getFamilyMembersListNew();
 
     _categoryListBlock = null;
-    _categoryListBlock = new CategoryListBlock();
+    _categoryListBlock = CategoryListBlock();
 
     getCategoryList();
     getDataFromWidget();
@@ -431,10 +431,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     if (sharedByMeList == null) {
       sharedByMeList = [];
       sharedByMeList
-          .add(new SharedByUsers(id: myProfile?.result?.id, nickName: 'Self'));
+          .add(SharedByUsers(id: myProfile?.result?.id, nickName: 'Self'));
     } else {
       sharedByMeList.insert(
-          0, new SharedByUsers(id: myProfile?.result?.id, nickName: 'Self'));
+          0, SharedByUsers(id: myProfile?.result?.id, nickName: 'Self'));
     }
     if (_familyNames.length == 0) {
       for (int i = 0; i < sharedByMeList.length; i++) {
@@ -604,7 +604,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   height: 30,
                   decoration: BoxDecoration(
                     color: Color(
-                        new CommonUtil().getMyPrimaryColor()), // border color
+                        CommonUtil().getMyPrimaryColor()), // border color
                     shape: BoxShape.circle,
                   ),
                   child: Padding(
@@ -613,7 +613,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       // or ClipRRect if you need to clip the content
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Color(new CommonUtil()
+                        color: Color(CommonUtil()
                             .getMyPrimaryColor()), // inner circle color
                       ),
                       child: Center(
@@ -636,7 +636,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   @override
   Widget build(BuildContext context) {
-    pr = new ProgressDialog(context, type: ProgressDialogType.normal);//  FU2.5
+    pr = ProgressDialog(context, type: ProgressDialogType.normal);//  FU2.5
     pr.style(
         message: checkSlots,
         borderRadius: 6.0,
@@ -709,7 +709,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         originalFees != '') {
       if (discount != '0.00' && discount != '0') {
         try {
-          discount = new CommonUtil()
+          discount = CommonUtil()
               .doubleWithoutDecimalToInt(double.parse(discount))
               .toString();
         } catch (e,stackTrace) {
@@ -818,17 +818,18 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                   SizedBoxWithChild(
                                     width: 90,
                                     height: 40,
-                                    child: FlatButton(
+                                    child: ElevatedButton(style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                          side: BorderSide(
-                                              color: Color(new CommonUtil()
-                                                  .getMyPrimaryColor()))),
-                                      color: Colors.transparent,
-                                      textColor: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      padding: EdgeInsets.all(8.0),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                            side: BorderSide(
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor()))),
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                        padding: EdgeInsets.all(8.0),
+                                      ),
                                       onPressed: () {
                                         if (widget.isFromPaymentNotification) {
                                           Get.off(NotificationMain());
@@ -845,17 +846,19 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                   SizedBoxWithChild(
                                     width: 90,
                                     height: 40,
-                                    child: FlatButton(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                          side: BorderSide(
-                                              color: Color(new CommonUtil()
-                                                  .getMyPrimaryColor()))),
-                                      color: Colors.transparent,
-                                      textColor: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      padding: EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                            side: BorderSide(
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor()))),
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor: Color(CommonUtil()
+                                            .getMyPrimaryColor()),
+                                        padding: EdgeInsets.all(8.0),
+                                      ),
                                       onPressed: () {
                                         if (widget.isFromPaymentNotification) {
                                           if (shortURL != null) {
@@ -1193,8 +1196,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             ),
           ),
         ),
-        new CommonUtil().getNotificationIcon(context),
-        //new SwitchProfile().buildActions(context, _key, callBackToRefresh),
+        CommonUtil().getNotificationIcon(context),
+        //SwitchProfile().buildActions(context, _key, callBackToRefresh),
       ],
     );
   }
@@ -1207,8 +1210,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        new Stack(
-          overflow: Overflow.visible,
+        Stack(
+          clipBehavior: Clip.none,
           children: <Widget>[
             Container(
               alignment: Alignment.center,
@@ -1232,7 +1235,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               child: widget.isFromHospital?commonWidgets.getClipOvalImageForHos(widget.resultFromHospitalList[widget.doctorListIndex]
                   .doctor):commonWidgets.getClipOvalImageNew(widget.docs[widget.doctorListPos]),
             ),*/
-            new Positioned(
+            Positioned(
               bottom: 0.0,
               right: 2.0,
               child: widget.isFromPaymentNotification
@@ -1491,7 +1494,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         categoryDataList = value!.result;
 
         filteredCategoryData =
-            new CommonUtil().fliterCategories(categoryDataList!);
+            CommonUtil().fliterCategories(categoryDataList!);
 
         //filteredCategoryData.add(categoryDataObjClone);
         return filteredCategoryData;
@@ -1932,7 +1935,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   void showInSnackBar(String message, String actionName) {
     _scaffoldKey.currentState!.showSnackBar(
-      new SnackBar(
+      SnackBar(
         content: Text(message),
         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         elevation: 5.0,
@@ -1970,7 +1973,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       try {
         priceLast = twoDecimal
             ? price.toStringAsFixed(2)
-            : new CommonUtil()
+            : CommonUtil()
                 .doubleWithoutDecimalToInt(double.parse(price.toString()))
                 .toStringAsFixed(2)
                 .toString();
@@ -2006,7 +2009,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             child: Column(
               children: <Widget>[
                 nameDateCard(),
-                new Divider(
+                Divider(
                   color: Colors.grey[400],
                 ),
                 Container(
@@ -2032,8 +2035,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                           ),
                           Column(
                             children: <Widget>[
-                              new Stack(
-                                overflow: Overflow.visible,
+                              Stack(
+                                clipBehavior: Clip.none,
                                 children: <Widget>[
                                   SizedBoxWithChild(
                                     height: 22.0,
@@ -2042,8 +2045,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                       iconPath: Constants.NOTES_ICON_LINK,
                                       size: 18.0,
                                       color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      padding: new EdgeInsets.all(1.0),
+                                          CommonUtil().getMyPrimaryColor()),
+                                      padding: EdgeInsets.all(1.0),
                                       onPressed: () {
                                         if (widget.isFromPaymentNotification ==
                                             false)
@@ -2082,8 +2085,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                           ),
                           Column(
                             children: <Widget>[
-                              new Stack(
-                                overflow: Overflow.visible,
+                              Stack(
+                                clipBehavior: Clip.none,
                                 children: <Widget>[
                                   SizedBoxWithChild(
                                     height: 22.0,
@@ -2092,8 +2095,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                       iconPath: Constants.VOICE_ICON_LINK,
                                       size: 18.0,
                                       color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      padding: new EdgeInsets.all(1.0),
+                                          CommonUtil().getMyPrimaryColor()),
+                                      padding: EdgeInsets.all(1.0),
                                       onPressed: () {
                                         if (widget.isFromPaymentNotification ==
                                             false)
@@ -2132,8 +2135,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                           ),
                           Column(
                             children: <Widget>[
-                              new Stack(
-                                overflow: Overflow.visible,
+                              Stack(
+                                clipBehavior: Clip.none,
                                 children: <Widget>[
                                   SizedBoxWithChild(
                                     height: 22.0,
@@ -2142,8 +2145,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                       iconPath: Constants.RECORDS_ICON_LINK,
                                       size: 18.0,
                                       color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      padding: new EdgeInsets.all(1.0),
+                                          CommonUtil().getMyPrimaryColor()),
+                                      padding: EdgeInsets.all(1.0),
                                       onPressed: () {
                                         if (widget.isFromPaymentNotification ==
                                             false)
@@ -2181,7 +2184,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   ),
                 ),
                 SizedBoxWidget(height: 10.0),
-                new Divider(
+                Divider(
                   color: Colors.grey[400],
                 ),
               ],
@@ -2235,7 +2238,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 style: TextStyle(
                     fontSize: 22.0.sp,
                     fontWeight: FontWeight.w500,
-                    color: Color(new CommonUtil().getMyPrimaryColor())),
+                    color: Color(CommonUtil().getMyPrimaryColor())),
               ),
             ),
           ),
@@ -2250,15 +2253,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 SizedBoxWithChild(
                   width: 130.0.w,
                   height: 40.0.h,
-                  child: FlatButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        side: BorderSide(
-                            color:
-                                Color(new CommonUtil().getMyPrimaryColor()))),
-                    color: Colors.transparent,
-                    textColor: Color(new CommonUtil().getMyPrimaryColor()),
-                    padding: EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: BorderSide(
+                              color:
+                                  Color(CommonUtil().getMyPrimaryColor()))),
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                      padding: EdgeInsets.all(8.0),
+                    ),
                     onPressed: () {
                       if (widget.isFromPaymentNotification == false)
                         widget.refresh!();
@@ -2273,17 +2278,19 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 SizedBoxWithChild(
                   width: 130.0.w,
                   height: 40.0.h,
-                  child: FlatButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                        side: BorderSide(
-                            color:
-                                Color(new CommonUtil().getMyPrimaryColor()))),
-                    color: Colors.transparent,
-                    textColor: Color(new CommonUtil().getMyPrimaryColor()),
-                    padding: EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: BorderSide(
+                              color:
+                                  Color(CommonUtil().getMyPrimaryColor()))),
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                      padding: EdgeInsets.all(8.0),
+                    ),
                     onPressed: () {
-                      new FHBUtils().check().then((intenet) {
+                      FHBUtils().check().then((intenet) {
                         if (intenet != null && intenet) {
                           if (isFamilyChanged) {
                             profileValidationCheck(

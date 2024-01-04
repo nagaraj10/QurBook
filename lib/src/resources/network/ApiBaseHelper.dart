@@ -244,7 +244,7 @@ class ApiBaseHelper {
 
   Future<dynamic> updateTeleHealthProvidersNew(String url, String jsonString,
       {bool? isPAR}) async {
-    Dio dio = new Dio();
+    Dio dio = Dio();
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
     dio.options.headers[variable.strAuthorization] =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -2185,7 +2185,7 @@ class ApiBaseHelper {
       FetchingCartItemsModel responseJson;
 
       if (userID != null && userID != "" && ((createBy ?? '').isNotEmpty)) {
-        Map<String, dynamic> jsobBodyMap = new Map();
+        Map<String, dynamic> jsobBodyMap = Map();
         jsobBodyMap['userId'] =
             ((cartUserId ?? '').isNotEmpty) ? cartUserId : userID;
         jsobBodyMap['createdBy'] = ((notificationListId ?? '').isNotEmpty)
@@ -2225,7 +2225,7 @@ class ApiBaseHelper {
       FetchingCartItemsModel responseJson;
 
       if (userID != null && userID != "" && ((createBy ?? '').isNotEmpty)) {
-        Map<String, String?> jsobBodyMap = new Map();
+        Map<String, String?> jsobBodyMap = Map();
         jsobBodyMap['userId'] = userID;
         jsobBodyMap['createdBy'] = createBy;
         try {

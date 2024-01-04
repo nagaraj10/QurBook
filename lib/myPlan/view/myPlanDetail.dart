@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -9,11 +8,9 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/myPlan/model/myPlanListModel.dart';
 import 'package:myfhb/plan_dashboard/view/plan_pdf_viewer.dart';
-import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import '../../authentication/constants/constants.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart';
-import '../../constants/responseModel.dart';
 import '../viewModel/myPlanViewModel.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
@@ -81,7 +78,7 @@ class PlanDetail extends State<MyPlanDetail> {
   String price = '';
   String isExtendable = '';
   String isPlublic = '';
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
   bool showRenewOrSubscribeButton = false;
   late Future<MyPlanListModel?> planListFetch;
@@ -356,7 +353,7 @@ class PlanDetail extends State<MyPlanDetail> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  OutlineButton(
+                  OutlinedButton(
                     onPressed: () async {
                       if (isExpired == '1') {
                         if (isPlublic == '0') {
@@ -391,12 +388,12 @@ class PlanDetail extends State<MyPlanDetail> {
                           );
                         }
                       }
-                    },
-                    borderSide: BorderSide(
+                    },style: OutlinedButton.styleFrom(
+                    side: BorderSide(
                       color: isExpired == '1'
                           ? Color(CommonUtil().getMyPrimaryColor())
                           : Colors.red,
-                    ),
+                    ),),
                     child: Text(
                       isExpired == '1'
                           ? (isPlublic == '0'
@@ -405,7 +402,7 @@ class PlanDetail extends State<MyPlanDetail> {
                           : strUnSubscribe.toUpperCase(),
                       style: TextStyle(
                         color: isExpired == '1'
-                            ? Color(new CommonUtil().getMyPrimaryColor())
+                            ? Color(CommonUtil().getMyPrimaryColor())
                             : Colors.red,
                         fontSize: 13.sp,
                       ),
@@ -414,7 +411,7 @@ class PlanDetail extends State<MyPlanDetail> {
                   SizedBox(
                     width: 10,
                   ),
-                  OutlineButton(
+                  OutlinedButton(
                     //hoverColor: Color(getMyPrimaryColor()),
                     onPressed: () async {
                       if (isExpired == '1') {
@@ -431,12 +428,12 @@ class PlanDetail extends State<MyPlanDetail> {
                           Navigator.pop(context);
                         });
                       }
-                    },
-                    borderSide: BorderSide(
+                    },style: OutlinedButton.styleFrom(
+                    side: BorderSide(
                       color: Color(
                         CommonUtil().getMyPrimaryColor(),
                       ),
-                    ),
+                    ),),
                     //hoverColor: Color(getMyPrimaryColor()),
                     child: Text(
                       isExpired == '1'
@@ -456,24 +453,24 @@ class PlanDetail extends State<MyPlanDetail> {
     );
   }
 
-  ///// removed activities list for new UI screen changed
+  ///// removed activities list for ui screen changed
 
   /*Widget getActivityList() {
-    return new FutureBuilder<MyPlanDetailModel>(
+    return FutureBuilder<MyPlanDetailModel>(
       future: myPlanViewModel.getMyPlanDetails(packageId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 4.5,
-              child: new Center(
+              child: Center(
                 child: SizedBox(
                   width: 20.0.h,
                   height: 20.0.h,
-                  child: new CircularProgressIndicator(
+                  child: CircularProgressIndicator(
                       strokeWidth: 1.0,
                       backgroundColor:
-                      Color(new CommonUtil().getMyPrimaryColor())),
+                      Color(CommonUtil().getMyPrimaryColor())),
                 ),
               ),
             ),
@@ -506,9 +503,9 @@ class PlanDetail extends State<MyPlanDetail> {
 
   Widget activitiesList(List<MyPlanDetailResult> actList) {
     return (actList != null && actList.length > 0)
-        ? new Container(
+        ? Container(
       constraints: BoxConstraints(minHeight: 20, maxHeight: 280),
-      margin: new EdgeInsets.symmetric(horizontal: 50.0),
+      margin: EdgeInsets.symmetric(horizontal: 50.0),
       child: Scrollbar(
         child: ListView.builder(
           shrinkWrap: true,

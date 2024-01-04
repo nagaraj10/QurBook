@@ -32,7 +32,7 @@ class PaymentModel {
     try {
       id = json['id'];
       paymentStatus = json['paymentStatus'] != null
-              ? new PaymentStatusModel.fromJson(json['paymentStatus'])
+              ? PaymentStatusModel.fromJson(json['paymentStatus'])
               : null;
       createdOn = json['createdOn'];
       isActive = json['isActive'];
@@ -49,7 +49,7 @@ class PaymentModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     if (this.paymentStatus != null) {
       data['paymentStatus'] = this.paymentStatus!.toJson();

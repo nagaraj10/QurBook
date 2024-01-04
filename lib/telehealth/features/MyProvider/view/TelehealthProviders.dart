@@ -1,8 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/bottomnavigation_item.dart';
-import 'package:myfhb/authentication/service/authservice.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:myfhb/chat_socket/view/ChatUserList.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -14,21 +13,15 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/model/BottomNavigationArguments.dart';
-import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomNavigation.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
-import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
-    as AppConstants;
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/cancelAppointmentViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
-import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import '../../../../src/ui/MyRecord.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'dart:convert' as convert;
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/common/CommonConstants.dart';
 
@@ -281,12 +274,14 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    FlatButton(
-                      child: Text(parameters.Yes),
-                      onPressed: () async {
+                    FlatButtonWidget(
+                      bgColor: Colors.transparent,
+                      isSelected: true,
+                      title: parameters.Yes,
+                      onPress: () async {
                         //call the appointment cancel api
                         CommonConstants.showNotificationdialog = true;
-                        FlutterToast toast = new FlutterToast();
+                        FlutterToast toast = FlutterToast();
                         _isCancelDialogShouldShown = false;
                         Navigator.of(context).pop(true);
                         CancelAppointmentModel? cancelAppointment =
@@ -314,9 +309,11 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                         }
                       },
                     ),
-                    FlatButton(
-                        child: Text(parameters.No),
-                        onPressed: () {
+                    FlatButtonWidget(
+                        bgColor: Colors.transparent,
+                        isSelected: true,
+                        title: parameters.No,
+                        onPress: () {
                           CommonConstants.showNotificationdialog = true;
                           _isCancelDialogShouldShown = false;
                           Navigator.of(context).pop(false);
@@ -343,19 +340,19 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
   }
 
   void getAllValuesForBottom() {
-    bottomNavigationArgumentsList.add(new BottomNavigationArguments(
+    bottomNavigationArgumentsList.add(BottomNavigationArguments(
       name: 'TeleHealth',
       imageIcon: 'assets/navicons/th.png',
     ));
-    bottomNavigationArgumentsList.add(new BottomNavigationArguments(
+    bottomNavigationArgumentsList.add(BottomNavigationArguments(
         name: 'My Providers', imageIcon: 'assets/navicons/my_providers.png'));
-    bottomNavigationArgumentsList.add(new BottomNavigationArguments(
+    bottomNavigationArgumentsList.add(BottomNavigationArguments(
       name: variable.strMaya,
       imageIcon: 'assets/maya/maya_us_main.png',
     ));
-    bottomNavigationArgumentsList.add(new BottomNavigationArguments(
+    bottomNavigationArgumentsList.add(BottomNavigationArguments(
         name: 'Chats', imageIcon: 'assets/navicons/chat.png'));
-    bottomNavigationArgumentsList.add(new BottomNavigationArguments(
+    bottomNavigationArgumentsList.add(BottomNavigationArguments(
         name: 'My Records', imageIcon: 'assets/navicons/records.png'));
   }
 }

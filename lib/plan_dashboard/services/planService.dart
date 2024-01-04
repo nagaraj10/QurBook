@@ -1,6 +1,4 @@
 import '../../constants/fhb_query.dart';
-import '../../myPlan/model/myPlanDetailModel.dart';
-import '../../myPlan/model/myPlanListModel.dart';
 import '../model/PlanListModel.dart';
 import '../../src/resources/network/ApiBaseHelper.dart';
 import 'dart:convert' as convert;

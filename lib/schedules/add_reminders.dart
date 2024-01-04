@@ -129,7 +129,7 @@ class _AddReminderState extends State<AddReminder> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            OutlineButton(
+                            OutlinedButton(
                               onPressed: () {
                                 _selectDate(context);
                               },
@@ -146,7 +146,7 @@ class _AddReminderState extends State<AddReminder> {
                                 ],
                               ),
                             ),
-                            OutlineButton(
+                            OutlinedButton(
                               onPressed: () {
                                 _selectTime(context);
                               },

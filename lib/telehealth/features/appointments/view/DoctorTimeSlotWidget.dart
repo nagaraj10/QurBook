@@ -88,7 +88,7 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(
-                            color: Color(new CommonUtil().getMyPrimaryColor())),
+                            color: Color(CommonUtil().getMyPrimaryColor())),
                       ),
                       height: 40.0.h,
                       width: 25.0.h,
@@ -107,7 +107,7 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
                             fontsize: 7.0.sp,
                             text: TranslationConstants.hours.t(),
                             fontWeight: FontWeight.w500,
-                            colors: Color(new CommonUtil().getMyPrimaryColor()),
+                            colors: Color(CommonUtil().getMyPrimaryColor()),
                           ),
                         ],
                       ),
@@ -118,7 +118,7 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(
-                            color: Color(new CommonUtil().getMyPrimaryColor())),
+                            color: Color(CommonUtil().getMyPrimaryColor())),
                       ),
                       height: 40.0.h,
                       width: 25.0.w,
@@ -139,7 +139,7 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
                             fontsize: 7.0.sp,
                             text: TranslationConstants.minutes.t(),
                             fontWeight: FontWeight.w500,
-                            colors: Color(new CommonUtil().getMyPrimaryColor()),
+                            colors: Color(CommonUtil().getMyPrimaryColor()),
                           ),
                         ],
                       ),

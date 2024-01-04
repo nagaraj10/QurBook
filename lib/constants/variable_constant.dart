@@ -904,7 +904,7 @@ const listenToCallStatusMethod = 'listenToCallStatus';
 
 // True Desk
 
-const String strNoTicketsRaised = 'Tap on + icon to create new tickets';
+const String strNoTicketsRaised = 'Tap on + icon to create Tickets';
 const String strNoTicketTypesAvaliable = 'No Ticket Types Found !!';
 
 var reminderMethodChannelAndroid = const MethodChannel('android/notification');

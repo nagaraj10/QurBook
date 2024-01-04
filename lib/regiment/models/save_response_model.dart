@@ -94,7 +94,7 @@ class Actions {
         returnData: json['ret'] is List || json['ret'] == null
             ? null
             : ReturnModel.fromJson(json['ret'] ?? {}),
-        input: json['input'] != null ? new Input.fromJson(json['input']) : null,
+        input: json['input'] != null ? Input.fromJson(json['input']) : null,
       );
 
   Map<String, dynamic> toJson() =>
@@ -180,7 +180,7 @@ class Input {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['Action'] = this.action;
     data['ack_local'] = this.ackLocal;
     data['eid'] = this.eid;
@@ -207,7 +207,7 @@ class Input {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['providerId'] = this.providerId;
     data['providerName'] = this.providerName;
     data['linkid'] = this.linkid;

@@ -1,18 +1,16 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/video_call/model/CallArguments.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/video_call/pages/call.dart';
@@ -283,9 +281,11 @@ class _CallMainState extends State<CallMain> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    FlatButton(
-                        child: Text(parameters.Yes),
-                        onPressed: () {
+                    FlatButtonWidget(
+                        bgColor: Colors.transparent,
+                        isSelected: true,
+                        title: parameters.Yes,
+                        onPress: () {
                           if (Platform.isIOS) {
                             Navigator.of(context);
                           } else {
@@ -300,9 +300,11 @@ class _CallMainState extends State<CallMain> {
                             }
                           }
                         }),
-                    FlatButton(
-                        child: Text(parameters.No),
-                        onPressed: () {
+                    FlatButtonWidget(
+                        bgColor: Colors.transparent,
+                        isSelected: true,
+                        title: parameters.No,
+                        onPress: () {
                           Navigator.of(context).pop(false);
                         }),
                   ],

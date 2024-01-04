@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../constants/fhb_parameters.dart';
 import '../model/BPValues.dart';
 import '../model/GulcoseValues.dart';
-import '../model/HeartRate.dart';
 import '../model/OxySaturationValues.dart';
 import '../model/TemperatureValues.dart';
 import '../model/WeightValues.dart';
@@ -120,7 +119,7 @@ class DevicesViewModel with ChangeNotifier {
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<dynamic> finalResult;
       List<BPResult> ret = [];
-      //List<HeartRateEntity> heartRate = new List();
+      //List<HeartRateEntity> heartRate = List();
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.bloodPressureCollection!.isEmpty) {
           return [];
@@ -231,7 +230,7 @@ class DevicesViewModel with ChangeNotifier {
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<dynamic> finalResult;
       var ret = <OxyResult>[];
-      //List<HeartRateEntity> heartRate = new List();
+      //List<HeartRateEntity> heartRate = List();
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.oxygenSaturationCollection!.isEmpty &&
             dataElement.heartRateCollection!.isEmpty) {

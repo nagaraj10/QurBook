@@ -3,7 +3,6 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
 import 'package:myfhb/src/model/NonAdheranceList/NonAdheranceResponseModel.dart';
 import 'package:myfhb/src/model/remainderfor_model/RemainderForModel.dart';

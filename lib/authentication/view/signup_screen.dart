@@ -226,7 +226,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                     fontSize: 16.0.sp,
                                   ),
                                   controller: firstNameController,
-                                  autovalidate: _autoValidateBool,
+                                  autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
                                   validator: (value) {
                                     return AuthenticationValidator()
                                         .charValidation(
@@ -245,7 +245,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
                                   ),
-                                  autovalidate: _autoValidateBool,
+                                  autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
                                   decoration: InputDecoration(
                                     hintText: strLastNameHint,
                                     labelText: strLastNameHint,
@@ -282,7 +282,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                   style: TextStyle(
                                       fontSize: 16.0.sp,
                                   ),
-                                  autovalidate: _autoValidateBool,
+                                  autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
                                   decoration: InputDecoration(
                                     hintText: strNewPhoneHint,
                                     labelText: strNumberHint,
@@ -338,7 +338,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 style: TextStyle(
                                   fontSize: 16.0.sp,
                                 ),
-                                autovalidate: _autoValidateBool,
+                                autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
                                 decoration: InputDecoration(
                                   hintText: CommonUtil.isUSRegion()
                                       ? strUSEmailHintText
@@ -379,7 +379,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 style: TextStyle(
                                   fontSize: 16.0.sp,
                                 ),
-                                autovalidate: _autoValidateBool,
+                                autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
                                 obscureText: _isHidden,
                                 decoration: InputDecoration(
                                   hintText: strNewPasswordHintTxt,
@@ -424,7 +424,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 style: TextStyle(
                                   fontSize: 16.0.sp,
                                 ),
-                                autovalidate: _autoValidateBool,
+                                autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
                                 obscureText: _isConfirmPwdHidden,
                                 decoration: InputDecoration(
                                   hintText: strConfirmationPassword,

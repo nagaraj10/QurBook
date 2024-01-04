@@ -24,7 +24,7 @@ class ResheduleMain extends StatefulWidget {
 }
 
 class _ResheduleMainState extends State<ResheduleMain> {
-  final GlobalKey<State> _key = new GlobalKey<State>();
+  final GlobalKey<State> _key = GlobalKey<State>();
 
   @override
   Widget build(BuildContext context) {

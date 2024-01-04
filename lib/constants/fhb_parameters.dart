@@ -1,7 +1,5 @@
 library fhb_parmeters;
 
-import '../telehealth/features/appointments/view/appointments.dart';
-
 const String strStatus = 'status';
 const String strSuccess = 'isSuccess';
 const String strMessage = 'message';
@@ -749,6 +747,9 @@ const String ongoing_channel = 'ongoing_ns.channel';
 const String startOnGoingNS = 'startOnGoingNS';
 const String notifyCaregiverForMedicalRecord =
     'notifyCaregiverForMedicalRecord';
+const String NonTeleconsultationAppointmentPreReminder5 =
+    'NonTeleconsultationAppointmentPreReminder5';
+const String AppointmentReminder5 = 'AppointmentReminder5';
 const String mode = 'mode';
 const String start = 'start';
 const String stop = 'stop';

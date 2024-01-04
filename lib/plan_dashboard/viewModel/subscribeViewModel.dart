@@ -4,14 +4,9 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
 import 'package:provider/provider.dart';
 import '../../common/PreferenceUtil.dart';
-import '../../myPlan/model/myPlanDetailModel.dart';
-import '../../myPlan/model/myPlanListModel.dart';
-import '../../myPlan/services/myPlanService.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../model/CreateSubscribeModel.dart';
-import '../model/PlanListModel.dart';
 import '../model/subscribeModel.dart';
-import '../services/planService.dart';
 import '../services/subscribeService.dart';
 
 class SubscribeViewModel extends ChangeNotifier {
