@@ -49,6 +49,7 @@ import PushKit
     var listOfScheduledNotificaitons:[UNNotificationRequest] = []
     let showBothButtonsCat = "showBothButtonsCat"
     let showSingleButtonCat = "showSingleButtonCat"
+    let showVCAcceptRejectedButtons = "showVCAcceptRejectedButtons"
     let planRenewButton = "planRenewButton"
     let escalateToCareCoordinatorButtons = "escalateToCareCoordinatorButtons"
     let showTransportationNotification = "transportationRequestAcceptDeclineButtons"
