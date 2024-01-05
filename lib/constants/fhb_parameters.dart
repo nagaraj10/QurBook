@@ -818,6 +818,8 @@ const String strNotificationChat = 'chat';
 const String strChoosePrefDate = 'apptChoosePreferredDate';
 const String strMissedCallFromCCToPatient ='missedCallFromCCToPatient';
 const String strConnectedDevicesScreen ='connectedDevicesScreen';
+const String strVCApproveByProvider = 'vcApproveByProvider';
+const String strVCDeclineByProvider = 'vcDeclineByProvider';
 
 const String strVoiceClonePatientAssignment = 'voiceClonePatientAssignment';
 // Constant representing the key for Voice Clone Patient Assignment in data or preferences.
