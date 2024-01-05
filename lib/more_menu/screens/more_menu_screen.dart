@@ -645,7 +645,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     });
   }
 
-  Future<GetDeviceSelectionModel?> getAppColorValues() async {
+  Future<GetDeviceSelectionModel?> getAppColorValues(
+      {bool forNavigation = false}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
     await healthReportListForUserRepository
@@ -654,7 +655,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       selectionResult = value;
       if (selectionResult!.isSuccess!) {
         if (selectionResult!.result != null) {
-          setValues(selectionResult!);
+          if (forNavigation) {
+            setVoiceCloneValue(selectionResult!);
+          } else {
+            setValues(selectionResult!);
+          }
           userMappingId = selectionResult!.result![0].id;
         } else {
           userMappingId = '';
@@ -822,46 +827,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 .result![0].profileSetting!.preferredMeasurement
             : null;
 
-    //status of the voice cloning toggle button
-    voiceCloning =
-        getDeviceSelectionModel.result![0].profileSetting!.voiceCloning ??
-            false;
-
-    //set the bool value when provider has allowed the permssion
-    providerAllowedVoiceCloningModule = getDeviceSelectionModel
-            .result![0]
-            .primaryProvider
-            ?.additionalInfo
-            ?.providerAllowedVoiceCloningModule ??
-        false;
-
-    //set the bool value when super admin has allowed the permssion
-    superAdminAllowedVoiceCloningModule = getDeviceSelectionModel
-            .result![0]
-            .primaryProvider
-            ?.additionalInfo
-            ?.superAdminAllowedVoiceCloningModule ??
-        false;
-
-    var statusValue =
-        getDeviceSelectionModel.result![0].profileSetting!.voiceCloningStatus ??
-            '';
-
-    //value of the voice cloning status
-    voiceCloningStatus = superAdminAllowedVoiceCloningModule
-        ? providerAllowedVoiceCloningModule
-            ? ((statusValue != "" && statusValue != null)
-                ? statusValue
-                : strInActive)
-            : strInActive
-        : strInActive;
-
-    //Conditon when to show the voice clonng UI
-    showVoiceCloningUI = superAdminAllowedVoiceCloningModule
-        ? providerAllowedVoiceCloningModule
-            ? true
-            : false
-        : false;
+    setVoiceCloneValue(getDeviceSelectionModel);
 
     healthOrganization = getDeviceSelectionModel
             .result![0].primaryProvider?.healthorganizationid ??
@@ -939,7 +905,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       if (updateDeviceModel!.isSuccess!) {
         // app color updated
         if (isVoiceCloningChanged) {
-          await getAppColorValues();
+          await getAppColorValues(forNavigation: true);
           navigateToTermsOrStatusScreen();
         }
       }
@@ -1138,6 +1104,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             isDisplayPreference = false;
                             isSheelaNotificationPref = false;
                             isTouched = true;
+                            isVoiceCloningChanged = false;
 
                             _isdigitRecognition = newValue;
                             createAppColorSelection(preColor, greColor);
@@ -1177,6 +1144,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             isSheelaNotificationPref = false;
                             isTouched = true;
                             _isdeviceRecognition = newValue;
+                            isVoiceCloningChanged = false;
                             createAppColorSelection(preColor, greColor);
                             /*PreferenceUtil.saveString(
                                         Constants.allowDeviceRecognition,
@@ -1197,7 +1165,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                               ? Colors.black
                               : Colors.grey,
                         ),
-                        title: Text(variable.strVoiceCloning,
+                        title: Text(variable.strAllowVoiceCloning,
                             style: TextStyle(
                                 fontSize: subtitle,
                                 color: providerAllowedVoiceCloningModule
@@ -1208,6 +1176,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                           children: [
                             Text(
                               variable.strSheelaDesc,
+                              maxLines: 2,
                               style: TextStyle(
                                   fontSize: title4, color: Colors.grey),
                             ),
@@ -1693,6 +1662,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             isVitalPreferences = false;
                             isDisplayPreference = true;
                             isSheelaNotificationPref = false;
+                            isVoiceCloningChanged = false;
                           },
                         );
                       },
@@ -1869,7 +1839,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       isVitalPreferences = false;
                       isDisplayPreference = false;
                       isSheelaNotificationPref = true;
-
+                      isVoiceCloningChanged = false;
                       createAppColorSelection(preColor, greColor).then((value) {
                         setState(() {});
                       });
@@ -2129,5 +2099,48 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         });
       }
     }
+  }
+
+  void setVoiceCloneValue(GetDeviceSelectionModel getDeviceSelectionModel) {
+    //status of the voice cloning toggle button
+    voiceCloning =
+        getDeviceSelectionModel.result![0].profileSetting!.voiceCloning ??
+            false;
+
+    //set the bool value when provider has allowed the permssion
+    providerAllowedVoiceCloningModule = getDeviceSelectionModel
+            .result![0]
+            .primaryProvider
+            ?.additionalInfo
+            ?.providerAllowedVoiceCloningModule ??
+        false;
+
+    //set the bool value when super admin has allowed the permssion
+    superAdminAllowedVoiceCloningModule = getDeviceSelectionModel
+            .result![0]
+            .primaryProvider
+            ?.additionalInfo
+            ?.superAdminAllowedVoiceCloningModule ??
+        false;
+
+    var statusValue =
+        getDeviceSelectionModel.result![0].profileSetting!.voiceCloningStatus ??
+            '';
+
+    //value of the voice cloning status
+    voiceCloningStatus = superAdminAllowedVoiceCloningModule
+        ? providerAllowedVoiceCloningModule
+            ? ((statusValue != "" && statusValue != null)
+                ? statusValue
+                : strInActive)
+            : strInActive
+        : strInActive;
+
+    //Conditon when to show the voice clonng UI
+    showVoiceCloningUI = superAdminAllowedVoiceCloningModule
+        ? providerAllowedVoiceCloningModule
+            ? true
+            : false
+        : false;
   }
 }

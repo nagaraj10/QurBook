@@ -15,6 +15,7 @@ import 'package:myfhb/voice_cloning/model/voice_clone_caregiver_assignment_respo
 import 'package:myfhb/voice_cloning/model/voice_clone_shared_by_users.dart';
 import 'package:myfhb/voice_cloning/services/voice_clone_members_services.dart';
 
+import '../common/CommonUtil.dart';
 import '../constants/router_variable.dart';
 
 class VoiceCloneStatusController extends GetxController {
@@ -58,12 +59,15 @@ class VoiceCloneStatusController extends GetxController {
           if (id != null && id != "") {
             healthOrganizationId.value = id;
             await getStatusFromApi(); //wait till the  next ap is also called
+          } else {
+            loadingData.value = false;
           }
+        } else {
           loadingData.value = false;
         }
+      } else {
         loadingData.value = false;
       }
-      loadingData.value = false;
     });
   }
 
@@ -78,7 +82,6 @@ class VoiceCloneStatusController extends GetxController {
     final response = await _helper.getStatusOfVoiceCloning(url);
     voiceCloneStatusModel = VoiceCloneStatusModel.fromJson(response ?? '');
     voiceCloneId.value = voiceCloneStatusModel?.result?.id ?? '';
-    loadingData.value = false;
     fetchFamilyMembersList(voiceCloneId.value);
   }
 
@@ -131,50 +134,58 @@ class VoiceCloneStatusController extends GetxController {
 
   /// Fetch FamilyMembers list from API
   Future<void> fetchFamilyMembersList(String voiceCloneId) async {
-    selectedFamilyMembers = await fetchAlreadySelectedFamilyMembersList(
-          voiceCloneId,
-        ) ??
-        [];
+    try {
+      selectedFamilyMembers = await fetchAlreadySelectedFamilyMembersList(
+            voiceCloneId,
+          ) ??
+          [];
 
-    listOfExistingFamilyMembers.value =
-        selectedFamilyMembers?.map((e) => e.id ?? '').toList() ?? [];
-    listOfFamilyMembers.value = [];
-    final _listFamilyMembers =
-        await _voiceCloneMembersServices.getFamilyMembersListNew();
+      listOfExistingFamilyMembers.value =
+          selectedFamilyMembers?.map((e) => e.id ?? '').toList() ?? [];
+      listOfFamilyMembers.value = [];
+      final _listFamilyMembers =
+          await _voiceCloneMembersServices.getFamilyMembersListNew();
 
-    var _customlistOfFamilyMembers = <VoiceCloneSharedByUsers>[];
-    _listFamilyMembers.result?.sharedByUsers?.forEach((sharedByUser) {
-      final existingFamilyMembers = selectedFamilyMembers
-          .where((element) => element.user?.id == sharedByUser.child?.id)
-          .toList();
+      var _customlistOfFamilyMembers = <VoiceCloneSharedByUsers>[];
+      _listFamilyMembers.result?.sharedByUsers?.forEach((sharedByUser) {
+        final existingFamilyMembers = selectedFamilyMembers
+            .where((element) => element.user?.id == sharedByUser.child?.id)
+            .toList();
 
-      ;
-      if (existingFamilyMembers.isNotEmpty &&
-          (existingFamilyMembers[0].isActive ?? false)) {
-        _customlistOfFamilyMembers.add(
-          VoiceCloneSharedByUsers(
-            id: sharedByUser.id,
-            status: sharedByUser.status,
-            nickName: sharedByUser.nickName,
-            isActive: sharedByUser.isActive,
-            createdOn: sharedByUser.createdOn,
-            lastModifiedOn: sharedByUser.lastModifiedOn,
-            relationship: sharedByUser.relationship,
-            child: sharedByUser.child,
-            membershipOfferedBy: sharedByUser.membershipOfferedBy,
-            isCaregiver: sharedByUser.isCaregiver,
-            isNewUser: sharedByUser.isNewUser,
-            remainderForId: sharedByUser.remainderForId,
-            remainderFor: sharedByUser.remainderFor,
-            remainderMins: sharedByUser.remainderMins,
-            nonAdheranceId: sharedByUser.nonAdheranceId,
-            chatListItem: sharedByUser.chatListItem,
-            nickNameSelf: sharedByUser.nickNameSelf,
-            isSelected: existingFamilyMembers[0].isActive ?? false,
-          ),
-        );
-      }
-    });
-    listOfFamilyMembers.value = _customlistOfFamilyMembers;
+        ;
+        if (existingFamilyMembers.isNotEmpty &&
+            (existingFamilyMembers[0].isActive ?? false)) {
+          _customlistOfFamilyMembers.add(
+            VoiceCloneSharedByUsers(
+              id: sharedByUser.id,
+              status: sharedByUser.status,
+              nickName: sharedByUser.nickName,
+              isActive: sharedByUser.isActive,
+              createdOn: sharedByUser.createdOn,
+              lastModifiedOn: sharedByUser.lastModifiedOn,
+              relationship: sharedByUser.relationship,
+              child: sharedByUser.child,
+              membershipOfferedBy: sharedByUser.membershipOfferedBy,
+              isCaregiver: sharedByUser.isCaregiver,
+              isNewUser: sharedByUser.isNewUser,
+              remainderForId: sharedByUser.remainderForId,
+              remainderFor: sharedByUser.remainderFor,
+              remainderMins: sharedByUser.remainderMins,
+              nonAdheranceId: sharedByUser.nonAdheranceId,
+              chatListItem: sharedByUser.chatListItem,
+              nickNameSelf: sharedByUser.nickNameSelf,
+              isSelected: existingFamilyMembers[0].isActive ?? false,
+            ),
+          );
+        }
+      });
+      listOfFamilyMembers.value = _customlistOfFamilyMembers;
+      loadingData.value = false;
+    } catch (e, stackTrace) {
+      loadingData.value = false;
+
+      CommonUtil()
+          .appLogs(message: e.toString(), stackTrace: stackTrace.toString());
+    }
   }
 }
