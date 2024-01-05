@@ -323,7 +323,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             createNotification4MissedEvents(data)
         } else if (data["templateName"] == "notifyCaregiverForMedicalRecord") {
             createNotificationCaregiverForMedicalRecord(data)
-        } else if (data["templateName"] == "careGiverTransportRequestReminder") {
+        } else if ((data["templateName"] == "careGiverTransportRequestReminder") || (data[Constants.PROP_TEMP_NAME] == getString(R.string.voice_clone_patient_assignment))) {
             careGiverTransportRequestReminder(data)
         }else if (data[Constants.PROB_EXTERNAL_LINK] != null && data[Constants.PROB_EXTERNAL_LINK] != "") {
             openURLFromNotification(data)
@@ -1989,6 +1989,17 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
     private fun careGiverTransportRequestReminder(data: Map<String, String> = HashMap()) {
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+
+        val channelID = when (data[Constants.PROP_TEMP_NAME]) {
+            getString(R.string.voice_clone_patient_assignment) -> getString(R.string.voice_clone_patient_assignment)
+            else -> CareGiverTransportRequestReminder
+        }
+
+        val channelName = when (data[Constants.PROP_TEMP_NAME]) {
+            getString(R.string.voice_clone_patient_assignment) -> getString(R.string.voice_clone_patient_assignment)
+            else -> getString(R.string.transportation_appointment)
+        }
+
         val NS_ID = System.currentTimeMillis().toInt()
         val PAT_NAME = data[getString(R.string.pat_name)]
         val ack_sound: Uri =
@@ -1996,8 +2007,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val manager = getSystemService(NotificationManager::class.java)
             val channelCancelApps = NotificationChannel(
-                CareGiverTransportRequestReminder,
-                getString(R.string.transportation_appointment),
+                channelID,
+                channelName,
                 NotificationManager.IMPORTANCE_HIGH
             )
             channelCancelApps.description = getString(R.string.channel_renew_desc)
@@ -2009,7 +2020,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         }
 
         val renewIntent = Intent(applicationContext, MainActivity::class.java)
-        renewIntent.action = Intent.ACTION_SEND
+        renewIntent.action = Intent.ACTION_CHOOSER
         renewIntent.type= Constants.TXT_PLAIN
         renewIntent.putExtra(getString(R.string.nsid), NS_ID)
         renewIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_RENEW)
@@ -2017,6 +2028,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         renewIntent.putExtra(Constants.PATIENT_ID, data[Constants.PATIENT_ID])
         renewIntent.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
         renewIntent.putExtra(Constants.STATUS,"accept")
+        renewIntent.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
+        renewIntent.putExtra(Constants.VOICECLONEID, data[Constants.VOICECLONEID])
         val renewPendingIntent = PendingIntent.getActivity(
             applicationContext,
             NS_ID,
@@ -2029,7 +2042,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
 
         val callBackIntent = Intent(applicationContext, MainActivity::class.java)
-        callBackIntent.action = Intent.ACTION_SEND
+        callBackIntent.action = Intent.ACTION_DELETE
         callBackIntent.type= Constants.TXT_PLAIN
         callBackIntent.putExtra(getString(R.string.nsid), NS_ID)
         callBackIntent.putExtra(Intent.EXTRA_TEXT, Constants.APPOINTMENT_DETAIL)
@@ -2037,6 +2050,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         callBackIntent.putExtra(Constants.PATIENT_ID, data[Constants.PATIENT_ID])
         callBackIntent.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
         callBackIntent.putExtra(Constants.STATUS,"decline")
+        callBackIntent.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
+        callBackIntent.putExtra(Constants.VOICECLONEID, data[Constants.VOICECLONEID])
         val callBackPendingIntent = PendingIntent.getActivity(
             applicationContext,
             NS_ID,
@@ -2053,17 +2068,21 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(Constants.PROP_DATA, data[Constants.PROP_DATA])
         onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
         onTapNS.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
-
-        val onTapPendingIntent = PendingIntent.getActivity(
-            applicationContext,
-            NS_ID,
-            onTapNS,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        onTapNS.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
+        onTapNS.putExtra(Constants.VOICECLONEID, data[Constants.VOICECLONEID])
 
 
+        val onTapPendingIntent = when (data[Constants.PROP_TEMP_NAME]) {
+            getString(R.string.voice_clone_patient_assignment) -> null
+            else -> PendingIntent.getActivity(
+                applicationContext,
+                NS_ID,
+                onTapNS,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
 
-        var notification = NotificationCompat.Builder(this, CareGiverTransportRequestReminder)
+        var notification = NotificationCompat.Builder(this, channelID)
             .setSmallIcon(R.mipmap.app_ns_icon)
             .setLargeIcon(
                 BitmapFactory.decodeResource(

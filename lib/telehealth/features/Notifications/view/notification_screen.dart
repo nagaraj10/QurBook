@@ -2070,14 +2070,20 @@ class _NotificationScreen extends State<NotificationScreen> {
 
         break;
       case parameters.careGiverTransportRequestReminder:
+      case strVoiceClonePatientAssignment:
         return (notification.messageDetails?.isAccepted == null)
-            ? (isAppointmentExpired(
-                    notification.messageDetails?.payload?.appointmentDate ?? '')
+            ? (notification?.messageDetails?.payload?.templateName ==
+                    strVoiceClonePatientAssignment)
                 ? getAppointmentAcceptAndReject(notification)
-                : Container())
+                : (isAppointmentExpired(
+                        notification.messageDetails?.payload?.appointmentDate ??
+                            '')
+                    ? getAppointmentAcceptAndReject(notification)
+                    : Container())
             : Container();
 
         break;
+
       default:
         return Container();
         break;
@@ -2085,22 +2091,38 @@ class _NotificationScreen extends State<NotificationScreen> {
   }
 
   Widget getAppointmentAcceptAndReject(NotificationResult notification) {
+    Payload? payload = notification?.messageDetails?.payload;
     return Padding(
       padding: const EdgeInsets.all(0),
       child: Row(
         children: [
           OutlineButton(
             onPressed: () async {
-              new CommonUtil()
-                  .acceptCareGiverTransportRequestReminder(
-                      context,
-                      notification.messageDetails?.payload?.appointmentId ?? '',
-                      notification.messageDetails?.payload?.patientId ?? '',
-                      true)
-                  .then((value) {
-                readUnreadAction(notification, isRead: true);
-                notification.messageDetails?.setAccepted(true);
-              });
+              if (payload?.templateName ==
+                  parameters.careGiverTransportRequestReminder) {
+                new CommonUtil()
+                    .acceptCareGiverTransportRequestReminder(
+                        context,
+                        notification.messageDetails?.payload?.appointmentId ??
+                            '',
+                        notification.messageDetails?.payload?.patientId ?? '',
+                        true)
+                    .then((value) {
+                  readUnreadAction(notification, isRead: true);
+                  notification.messageDetails?.setAccepted(true);
+                });
+              } else if (payload?.templateName ==
+                  strVoiceClonePatientAssignment) {
+                CommonUtil()
+                    .saveVoiceClonePatientAssignmentStatus(
+                        notification.messageDetails?.payload?.voiceCloneId ??
+                            '',
+                        true)
+                    .then((value) {
+                  readUnreadAction(notification, isRead: true);
+                  notification.messageDetails?.setAccepted(true);
+                });
+              }
             },
             borderSide: !notification.isActionDone!
                 ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
@@ -2120,16 +2142,31 @@ class _NotificationScreen extends State<NotificationScreen> {
           ),
           OutlineButton(
             onPressed: () async {
-              new CommonUtil()
-                  .acceptCareGiverTransportRequestReminder(
-                      context,
-                      notification.messageDetails?.payload?.appointmentId ?? '',
-                      notification.messageDetails?.payload?.patientId ?? '',
-                      false)
-                  .then((value) {
-                readUnreadAction(notification, isRead: true);
-                notification.messageDetails?.setAccepted(true);
-              });
+              if (payload?.templateName ==
+                  parameters.careGiverTransportRequestReminder) {
+                new CommonUtil()
+                    .acceptCareGiverTransportRequestReminder(
+                        context,
+                        notification.messageDetails?.payload?.appointmentId ??
+                            '',
+                        notification.messageDetails?.payload?.patientId ?? '',
+                        false)
+                    .then((value) {
+                  readUnreadAction(notification, isRead: true);
+                  notification.messageDetails?.setAccepted(true);
+                });
+              } else if (payload?.templateName ==
+                  strVoiceClonePatientAssignment) {
+                CommonUtil()
+                    .saveVoiceClonePatientAssignmentStatus(
+                        notification.messageDetails?.payload?.voiceCloneId ??
+                            '',
+                        false)
+                    .then((value) {
+                  readUnreadAction(notification, isRead: true);
+                  notification.messageDetails?.setAccepted(true);
+                });
+              }
             },
             borderSide: !notification.isActionDone!
                 ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))

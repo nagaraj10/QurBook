@@ -33,7 +33,8 @@ class Payload {
       this.sheelaAudioMsgUrl,
       this.isSheela,
       this.notificationListId,
-      this.senderName});
+      this.senderName,
+      this.voiceCloneId});
 
   String? type;
   String? meetingId;
@@ -72,6 +73,7 @@ class Payload {
   String? notificationListId;
   dynamic eventId;
   String? senderName;
+  String? voiceCloneId;
 
   Payload.fromJson(Map<String, dynamic> json) {
     try {
@@ -156,6 +158,9 @@ class Payload {
       }
       sheelaAudioMsgUrl =
           json["sheelaAudioMsgUrl"] == null ? null : json["sheelaAudioMsgUrl"];
+
+      voiceCloneId = json["voiceCloneId"] == null ? null : json["voiceCloneId"];
+
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -176,6 +181,7 @@ class Payload {
     data[parameters.KIOSK_isSheela] = this.isSheela;
     data[parameters.notificationListId] = this.notificationListId;
     data['eventId'] = this.eventId;
+    data['voiceCloneId'] = this.voiceCloneId;
 
     return data;
   }

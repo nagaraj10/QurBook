@@ -462,3 +462,10 @@ const String qr_sourceLanguageCode = 'sourceLanguageCode';
 //captureUserLastAccessTime
 const String lastAccessTime = 'lastAccessTime';
 const String save_last_access_time = 'user/device-audit-logs';
+
+//voiceClonePatientAssignment
+const String qr_voiceCloneId = 'voiceCloneId';
+const String qr_statusCode = 'statusCode';
+const String qr_vc_accept = 'VCAPPROVED';
+const String qr_vc_decline = 'VCDECLINED';
+const String save_voice_clone_patient_assignment_status = 'voice-clone/accept-reject-requests';
