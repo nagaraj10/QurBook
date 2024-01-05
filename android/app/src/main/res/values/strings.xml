@@ -146,6 +146,8 @@
     <string name="ns_viewdetails">View Details</string>
 
     <string name="voice_clone_patient_assignment">voiceClonePatientAssignment</string>
+    <!-- This resource defines the string value "voiceClonePatientAssignment" for the key "voice_clone_patient_assignment". -->
+
 
 
 </resources>

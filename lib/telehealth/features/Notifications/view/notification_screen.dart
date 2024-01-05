@@ -585,7 +585,8 @@ class _NotificationScreen extends State<NotificationScreen> {
             );
           } else if (payload?.templateName ==
               strVoiceClonePatientAssignment) {
-            // do nothing.
+            // Skip further processing when the payload templateName is 'voiceClonePatientAssignment'.
+            // This block is intentionally left empty ('do nothing') as no additional actions are required.
           }else {
             readUnreadAction(notification);
           }
@@ -2077,6 +2078,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         break;
       case parameters.careGiverTransportRequestReminder:
       case strVoiceClonePatientAssignment:
+        // Check if the 'isAccepted' property is null in the messageDetails
         return (notification.messageDetails?.isAccepted == null)
             ? (notification?.messageDetails?.payload?.templateName ==
                     strVoiceClonePatientAssignment)
@@ -2084,8 +2086,10 @@ class _NotificationScreen extends State<NotificationScreen> {
                 : (isAppointmentExpired(
                         notification.messageDetails?.payload?.appointmentDate ??
                             '')
+                    // Check if the appointment is expired based on the appointmentDate
                     ? getAppointmentAcceptAndReject(notification)
                     : Container())
+            // Return an empty Container if 'isAccepted' is not null
             : Container();
 
         break;
@@ -2098,9 +2102,13 @@ class _NotificationScreen extends State<NotificationScreen> {
   Widget getAppointmentAcceptAndReject(NotificationResult notification) {
     Payload? payload = notification?.messageDetails?.payload;
     bool isEnablebutton = false;
+
+    // Check if the templateName is 'careGiverTransportRequestReminder'
     if (payload?.templateName == parameters.careGiverTransportRequestReminder) {
       isEnablebutton = (!notification.isActionDone!);
     } else if (payload?.templateName == strVoiceClonePatientAssignment) {
+      // Check if the templateName is 'strVoiceClonePatientAssignment'
+
       isEnablebutton = (notification.isUnread ?? false);
     }
     return Padding(
@@ -2127,6 +2135,9 @@ class _NotificationScreen extends State<NotificationScreen> {
                       });
                     } else if (payload?.templateName ==
                         strVoiceClonePatientAssignment) {
+                      // Check if the templateName is 'strVoiceClonePatientAssignment'
+
+                      // Save the Voice Clone Patient Assignment accept status using CommonUtil
                       CommonUtil()
                           .saveVoiceClonePatientAssignmentStatus(
                               notification
@@ -2134,6 +2145,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                   '',
                               true)
                           .then((value) {
+                        // Perform read/unread action after saving the status
                         readUnreadAction(notification, isRead: true);
                       });
                     }
@@ -2176,6 +2188,9 @@ class _NotificationScreen extends State<NotificationScreen> {
                       });
                     } else if (payload?.templateName ==
                         strVoiceClonePatientAssignment) {
+                      // Check if the templateName is 'strVoiceClonePatientAssignment'
+
+                      // Save the Voice Clone Patient Assignment decline status using CommonUtil
                       CommonUtil()
                           .saveVoiceClonePatientAssignmentStatus(
                               notification
@@ -2183,6 +2198,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                   '',
                               false)
                           .then((value) {
+                        // Perform read/unread action after saving the status
                         readUnreadAction(notification, isRead: true);
                       });
                     }

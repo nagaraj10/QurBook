@@ -1074,12 +1074,17 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                           .navigateToHubList(context, fromNotification: false);
                     } else if (widget.nsRoute ==
                         Constants.strVoiceClonePatientAssignment) {
+                      // Handling logic for Voice Clone Patient Assignment route
                       var passedValArr = widget.bundle?.split('&');
+
+                      // Extract Voice Clone ID and check for acceptance in the passed values
                       CommonUtil().saveVoiceClonePatientAssignmentStatus(
                           passedValArr[1],
                           passedValArr[2]
                               .toString()
                               .contains(accept.toLowerCase()));
+
+                      // Navigate to the permanent landing page after processing the Voice Clone Patient Assignment
                       PageNavigator.goToPermanent(context, router.rt_Landing);
                     } else {
                       fbaLog(eveParams: {

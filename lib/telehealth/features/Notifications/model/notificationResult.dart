@@ -51,8 +51,12 @@ class NotificationResult {
       senderUser = json['senderUser'] != null
               ? RecipientUser.fromJson(json['senderUser'])
               : null;
-      isActionDone = json['isActionDone']??false;
-      isUnread = json['isUnread']??false;
+      isActionDone = json['isActionDone'] ?? false;
+      // Set 'isActionDone' based on the value in the JSON, defaulting to 'false' if not present.
+
+      isUnread = json['isUnread'] ?? false;
+      // Set 'isUnread' based on the value in the JSON, defaulting to 'false' if not present.
+
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }

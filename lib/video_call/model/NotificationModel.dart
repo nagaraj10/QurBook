@@ -55,7 +55,11 @@ class NotificationModel {
   String? appointmentId;
   String? status;
   String? voiceCloneId;
+  // Nullable variable to store the Voice Clone ID.
+
   String? voiceCloneStatus;
+  // Nullable variable to store the Voice Clone Status.
+
 
   NotificationModel(
       {this.title,

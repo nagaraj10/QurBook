@@ -735,7 +735,7 @@ class QurHomeApiProvider {
     }
   }
 
-  // Saves the user's last access time on the server.
+  // Saves the user's saveVoiceClonePatientAssignmentStatus on the server
   saveVoiceClonePatientAssignmentStatus(
       {String strVoiceCloneId = '', bool isAccept = false}) async {
     try {
@@ -751,7 +751,7 @@ class QurHomeApiProvider {
         qr_statusCode: isAccept ? qr_vc_accept : qr_vc_decline,
       };
 
-      // Send a POST request to save the last access time
+      // Send a POST request to save the user's saveVoiceClonePatientAssignmentStatus
       http.Response res = (await ApiServices.put(
         Constants.BASE_URL + save_voice_clone_patient_assignment_status,
         headers: header,

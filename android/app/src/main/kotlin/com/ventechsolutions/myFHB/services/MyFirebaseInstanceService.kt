@@ -325,6 +325,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         } else if (data["templateName"] == "notifyCaregiverForMedicalRecord") {
             createNotificationCaregiverForMedicalRecord(data)
         } else if ((data["templateName"] == "careGiverTransportRequestReminder") || (data[Constants.PROP_TEMP_NAME] == getString(R.string.voice_clone_patient_assignment))) {
+            // Handle the case when the templateName is "careGiverTransportRequestReminder"
+            // OR when PROP_TEMP_NAME is equal to the string resource "voice_clone_patient_assignment"
+
             careGiverTransportRequestReminder(data)
         }else if (data[Constants.PROB_EXTERNAL_LINK] != null && data[Constants.PROB_EXTERNAL_LINK] != "") {
             openURLFromNotification(data)
@@ -2000,11 +2003,13 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
     private fun careGiverTransportRequestReminder(data: Map<String, String> = HashMap()) {
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
 
+        // Determine the channelID based on the value of PROP_TEMP_NAME in data
         val channelID = when (data[Constants.PROP_TEMP_NAME]) {
             getString(R.string.voice_clone_patient_assignment) -> getString(R.string.voice_clone_patient_assignment)
             else -> CareGiverTransportRequestReminder
         }
 
+        // Determine the channelName based on the value of PROP_TEMP_NAME in data
         val channelName = when (data[Constants.PROP_TEMP_NAME]) {
             getString(R.string.voice_clone_patient_assignment) -> getString(R.string.voice_clone_patient_assignment)
             else -> getString(R.string.transportation_appointment)
@@ -2030,6 +2035,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         }
 
         val renewIntent = Intent(applicationContext, MainActivity::class.java)
+        // Set the action of the renewIntent to ACTION_CHOOSER for the accept status
         renewIntent.action = Intent.ACTION_CHOOSER
         renewIntent.type= Constants.TXT_PLAIN
         renewIntent.putExtra(getString(R.string.nsid), NS_ID)
@@ -2038,8 +2044,13 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         renewIntent.putExtra(Constants.PATIENT_ID, data[Constants.PATIENT_ID])
         renewIntent.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
         renewIntent.putExtra(Constants.STATUS,"accept")
+
+        // Set the value of PROP_TEMP_NAME from data as an extra in the renewIntent
         renewIntent.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
+
+        // Set the value of VOICECLONEID from data as an extra in the renewIntent
         renewIntent.putExtra(Constants.VOICECLONEID, data[Constants.VOICECLONEID])
+
         val renewPendingIntent = PendingIntent.getActivity(
             applicationContext,
             NS_ID,
@@ -2052,6 +2063,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
 
         val callBackIntent = Intent(applicationContext, MainActivity::class.java)
+        // Set the action of the callBackIntent to ACTION_DELETE for the decline status
         callBackIntent.action = Intent.ACTION_DELETE
         callBackIntent.type= Constants.TXT_PLAIN
         callBackIntent.putExtra(getString(R.string.nsid), NS_ID)
@@ -2060,8 +2072,13 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         callBackIntent.putExtra(Constants.PATIENT_ID, data[Constants.PATIENT_ID])
         callBackIntent.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
         callBackIntent.putExtra(Constants.STATUS,"decline")
+
+        // Add PROP_TEMP_NAME as an extra to callBackIntent with the corresponding value from data
         callBackIntent.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
+
+        // Add VOICECLONEID as an extra to callBackIntent with the corresponding value from data
         callBackIntent.putExtra(Constants.VOICECLONEID, data[Constants.VOICECLONEID])
+
         val callBackPendingIntent = PendingIntent.getActivity(
             applicationContext,
             NS_ID,
@@ -2078,12 +2095,17 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(Constants.PROP_DATA, data[Constants.PROP_DATA])
         onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
         onTapNS.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
+        // Add PROP_TEMP_NAME as an extra to onTapNS with the corresponding value from data
         onTapNS.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
+
+        // Add VOICECLONEID as an extra to onTapNS with the corresponding value from data
         onTapNS.putExtra(Constants.VOICECLONEID, data[Constants.VOICECLONEID])
 
 
+
+        // Create a PendingIntent based on the value of PROP_TEMP_NAME in data
         val onTapPendingIntent = when (data[Constants.PROP_TEMP_NAME]) {
-            getString(R.string.voice_clone_patient_assignment) -> null
+            getString(R.string.voice_clone_patient_assignment) -> null // Set onTapPendingIntent to null when PROP_TEMP_NAME is a specific value
             else -> PendingIntent.getActivity(
                 applicationContext,
                 NS_ID,
@@ -2091,6 +2113,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
         }
+
 
         var notification = NotificationCompat.Builder(this, channelID)
             .setSmallIcon(R.mipmap.app_ns_icon)

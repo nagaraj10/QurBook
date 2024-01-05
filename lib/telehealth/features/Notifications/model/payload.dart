@@ -74,6 +74,9 @@ class Payload {
   dynamic eventId;
   String? senderName;
   String? voiceCloneId;
+ // Nullable variable to store the Voice Clone ID, indicating that it can hold either a String or null.
+
+
 
   Payload.fromJson(Map<String, dynamic> json) {
     try {
@@ -160,6 +163,7 @@ class Payload {
           json["sheelaAudioMsgUrl"] == null ? null : json["sheelaAudioMsgUrl"];
 
       voiceCloneId = json["voiceCloneId"] == null ? null : json["voiceCloneId"];
+      // Assign 'voiceCloneId' the value from the JSON key "voiceCloneId" if present, otherwise set it to null.
 
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);

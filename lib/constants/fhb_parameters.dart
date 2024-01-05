@@ -24,8 +24,13 @@ const String strRoleDescription = 'roleDescription';
 const String strIsActive = 'isActive';
 const String strCreatedOn = 'createdOn';
 const String strLastModifiedOn = 'lastModifiedOn';
+
 const String strVoiceCloneId = 'voiceCloneId';
+// Constant representing the key for Voice Clone ID in data or preferences.
+
 const String strVoiceCloneStatus = 'voiceCloneStatus';
+// Constant representing the key for Voice Clone Status in data or preferences.
+
 
 //parameters for doctors,hospital and laboratory
 
@@ -813,7 +818,10 @@ const String strNotificationChat = 'chat';
 const String strChoosePrefDate = 'apptChoosePreferredDate';
 const String strMissedCallFromCCToPatient ='missedCallFromCCToPatient';
 const String strConnectedDevicesScreen ='connectedDevicesScreen';
+
 const String strVoiceClonePatientAssignment = 'voiceClonePatientAssignment';
+// Constant representing the key for Voice Clone Patient Assignment in data or preferences.
+
 
 //appointment
 const String strIsFollowUp_C = 'isFollowUp';
