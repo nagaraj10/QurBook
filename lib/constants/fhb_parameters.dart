@@ -811,6 +811,8 @@ const String strNotificationChat = 'chat';
 const String strChoosePrefDate = 'apptChoosePreferredDate';
 const String strMissedCallFromCCToPatient ='missedCallFromCCToPatient';
 const String strConnectedDevicesScreen ='connectedDevicesScreen';
+const String strVCApproveByProvider = 'vcApproveByProvider';
+const String strVCDeclineByProvider = 'vcDeclineByProvider';
 
 //appointment
 const String strIsFollowUp_C = 'isFollowUp';
