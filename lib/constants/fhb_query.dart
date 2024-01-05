@@ -480,3 +480,7 @@ const String qr_vc_decline = 'VCDECLINED';
 const String save_voice_clone_patient_assignment_status = 'voice-clone/accept-reject-requests';
 // Constant representing the endpoint to save Voice Clone Patient Assignment status.
 
+
+const String qr_TTS_Proxy_URL = 'tts/proxy';
+const String qr_Get_VoiceId = 'voice-clone/user-vc-details?userId=';
+const String qr_voiceId = 'voiceId';
