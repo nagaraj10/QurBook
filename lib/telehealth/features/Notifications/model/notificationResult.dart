@@ -51,8 +51,8 @@ class NotificationResult {
       senderUser = json['senderUser'] != null
               ? RecipientUser.fromJson(json['senderUser'])
               : null;
-      isActionDone = json['isActionDone'];
-      isUnread = json['isUnread'];
+      isActionDone = json['isActionDone']??false;
+      isUnread = json['isUnread']??false;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }

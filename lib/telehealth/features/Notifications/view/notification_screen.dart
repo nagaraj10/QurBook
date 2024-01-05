@@ -583,7 +583,10 @@ class _NotificationScreen extends State<NotificationScreen> {
               notification,
               payload?.redirectTo,
             );
-          } else {
+          } else if (payload?.templateName ==
+              strVoiceClonePatientAssignment) {
+            // do nothing.
+          }else {
             readUnreadAction(notification);
           }
           // notificationOnTapActions(
@@ -2094,12 +2097,18 @@ class _NotificationScreen extends State<NotificationScreen> {
 
   Widget getAppointmentAcceptAndReject(NotificationResult notification) {
     Payload? payload = notification?.messageDetails?.payload;
+    bool isEnablebutton = false;
+    if (payload?.templateName == parameters.careGiverTransportRequestReminder) {
+      isEnablebutton = (!notification.isActionDone!);
+    } else if (payload?.templateName == strVoiceClonePatientAssignment) {
+      isEnablebutton = (notification.isUnread ?? false);
+    }
     return Padding(
       padding: const EdgeInsets.all(0),
       child: Row(
         children: [
           OutlinedButton(
-            onPressed: (notification.isUnread ?? false)
+            onPressed: isEnablebutton
                 ? () async {
                     if (payload?.templateName ==
                         parameters.careGiverTransportRequestReminder) {
@@ -2126,18 +2135,17 @@ class _NotificationScreen extends State<NotificationScreen> {
                               true)
                           .then((value) {
                         readUnreadAction(notification, isRead: true);
-                        notification.messageDetails?.setAccepted(true);
                       });
                     }
                   }
                 : null,
             style: OutlinedButton.styleFrom(
-            side: ((!notification.isActionDone!)||(notification.isUnread ?? false))
+            side: isEnablebutton
                 ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
                 : BorderSide(color: Colors.grey),),
             child: TextWidget(
               text: 'Accept',
-              colors: ((!notification.isActionDone!)||(notification.isUnread ?? false))
+              colors: isEnablebutton
                   ? Color(CommonUtil().getMyPrimaryColor())
                   : Colors.grey,
               overflow: TextOverflow.visible,
@@ -2149,7 +2157,7 @@ class _NotificationScreen extends State<NotificationScreen> {
             width: 15.0.w,
           ),
           OutlinedButton(
-            onPressed: (notification.isUnread ?? false)
+            onPressed: isEnablebutton
                 ? () async {
                     if (payload?.templateName ==
                         parameters.careGiverTransportRequestReminder) {
@@ -2176,18 +2184,17 @@ class _NotificationScreen extends State<NotificationScreen> {
                               false)
                           .then((value) {
                         readUnreadAction(notification, isRead: true);
-                        notification.messageDetails?.setAccepted(true);
                       });
                     }
                   }
                 : null,
             style: OutlinedButton.styleFrom(
-            side: ((!notification.isActionDone!)||(notification.isUnread ?? false))
+            side: isEnablebutton
                 ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
                 : BorderSide(color: Colors.grey),),
             child: TextWidget(
               text: 'Decline',
-              colors: ((!notification.isActionDone!)||(notification.isUnread ?? false))
+              colors: isEnablebutton
                   ? Color(CommonUtil().getMyPrimaryColor())
                   : Colors.grey,
               overflow: TextOverflow.visible,
