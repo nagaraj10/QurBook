@@ -54,6 +54,8 @@ class NotificationModel {
   String? others;
   String? appointmentId;
   String? status;
+  String? voiceCloneId;
+  String? voiceCloneStatus;
 
   NotificationModel(
       {this.title,
@@ -96,7 +98,9 @@ class NotificationModel {
       this.eventType,
       this.others,
       this.appointmentId,
-      this.status});
+      this.status,
+      this.voiceCloneId,
+      this.voiceCloneStatus});
 
   Map<String, dynamic> toMap() {
     return {
@@ -135,7 +139,9 @@ class NotificationModel {
       'chatWithCC': chatWithCC,
       'eventType': eventType,
       'others': others,
-      'appointmentId': appointmentId
+      'appointmentId': appointmentId,
+      'voiceCloneId': voiceCloneId,
+      'voiceCloneStatus': voiceCloneStatus,
     };
   }
 
@@ -175,8 +181,10 @@ class NotificationModel {
       viewRecordAction = message['viewRecordAction'];
       chatWithCC = message['chatWithCC'];
       appointmentId = message['appointmentId'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      voiceCloneId = message['voiceCloneId'];
+      voiceCloneStatus = message['voiceCloneStatus'];
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -369,6 +377,12 @@ class NotificationModel {
         if (message[parameters.strMessage] != null) {
           this.message = message[parameters.strMessage];
         }
+        if (message[parameters.strVoiceCloneId] != null) {
+          voiceCloneId = message[parameters.strVoiceCloneId];
+        }
+        if (message[parameters.strVoiceCloneStatus] != null) {
+          voiceCloneStatus = message[parameters.strVoiceCloneStatus];
+        }
         if (message[parameters.strisFromCareCoordinator] != null) {
           var currentVal = message[parameters.strisFromCareCoordinator];
           if (currentVal.runtimeType == String) {
@@ -458,6 +472,12 @@ class NotificationModel {
     }
     if (message[parameters.GCMUserId] != null) {
       userId = message[parameters.GCMUserId];
+    }
+    if (message[parameters.strVoiceCloneId] != null) {
+      voiceCloneId = message[parameters.strVoiceCloneId];
+    }
+    if (message[parameters.strVoiceCloneStatus] != null) {
+      voiceCloneStatus = message[parameters.strVoiceCloneStatus];
     }
     if (message[parameters.meeting_id] != null) {
       meeting_id = message[parameters.meeting_id];
