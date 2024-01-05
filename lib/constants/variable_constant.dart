@@ -724,15 +724,19 @@ const String strEnableApplock =
 const String strAuthToUseApp = 'Please complete the authentication to proceed.';
 const String strVoiceCloning =
     'Voice Cloning'; //String declared for voice cloning
+const String strAllowVoiceCloning =
+    'Allow voice cloning'; //String declared for Allow voice cloning
 const String strSheelaDesc =
-    'enables Sheela to speak to in your own voice'; // descrption for voice cloning
+    'Sheela clones your voice for family member communication'; // descrption for voice cloning
 const String strStatus = 'Status : ';
 //Create common String for voice cloning text
 const String strVoiceTerms = 'Accept And Continue';
 const String strInActive = 'InActive';
 const String strSubmit = 'Submit';
-const String strVoiceCloningExistingMembersHeader = 'Your cloned voice is in use for the following members:';
-const String strVoiceCloningAddMembersHeader = 'Choose the list of members, to apply the cloned voice';
+const String strVoiceCloningExistingMembersHeader =
+    'Your cloned voice is in use for the following members:';
+const String strVoiceCloningAddMembersHeader =
+    'Choose the list of members, to apply the cloned voice';
 const String strApproved = 'Approved'; //status text for approved
 const String strDeclined = 'Declined'; //status text for declined
 const String strReason = 'Reason : '; //status text for reason,include spacing
