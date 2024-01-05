@@ -344,7 +344,8 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
 
         val action = intent.action
         val type = intent.type
-        if (Intent.ACTION_SEND == action && type != null) {
+        // Check if the action is one of the specified actions (ACTION_SEND, ACTION_CHOOSER, ACTION_DELETE)
+        if ((Intent.ACTION_SEND == action || Intent.ACTION_CHOOSER == action || Intent.ACTION_DELETE == action) && type != null) {
             if ((Constants.TXT_PLAIN == type) && (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0) {
                 handleSendText(intent) // Handle text being sent
             }
@@ -3117,7 +3118,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         var callType = intent.getStringExtra(getString(R.string.callType))
         var userId = intent.getStringExtra(Constants.PROB_USER_ID)
         var patientId = intent.getStringExtra(Constants.PATIENT_ID)
-        var status = intent.getStringExtra(Constants.STATUS)
         var isWeb = intent.getStringExtra(getString(R.string.web))
         var appLog = intent.getStringExtra(getString(R.string.ns_type_applog))
         val appointmentID = intent.getStringExtra(Constants.APPOINTMENTID)
@@ -3136,6 +3136,14 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         val others = intent.getStringExtra(Constants.OTHERS)
         val estart = intent.getStringExtra(Constants.PROP_ESTART)
         val dosemeal = intent.getStringExtra(Constants.PROP_DOSEMEAL)
+        // Extract the voice clone ID from the Intent's extra using the provided key
+        val voiceCloneId = intent.getStringExtra(Constants.VOICECLONEID)
+        // Determine the status based on the Intent action
+        val status = when (intent.action) {
+            Intent.ACTION_CHOOSER -> Constants.PROP_ACCEPT
+            Intent.ACTION_DELETE -> Constants.PROP_DECLINE
+            else -> null
+        }
 
 
 
@@ -3143,7 +3151,13 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         if (sharedValue != null && sharedValue == "chat") {
             sharedValue =
                 "${Constants.PROP_ACK}&$sharedValue&${senderId}&${senderName}&${senderProfile}&${groupId}"
-        } else if (redirect_to == "claimList") {
+        } else if (templateName == getString(R.string.voice_clone_patient_assignment)) {
+            // Check if the templateName is related to voice clone patient assignment
+            if (status != null) {
+                // If true, construct a sharedValue string with templateName, voiceCloneId, and status
+                sharedValue = "${templateName}&${voiceCloneId}&$status"
+            }
+        }else if (redirect_to == "claimList") {
             sharedValue = "${redirect_to}&${message}&$rawBody"
         }
         // templateName condition is for appointment reminder in 5 mins from api
@@ -3315,7 +3329,8 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         setIntent(intent)
         val action = intent.action
         val type = intent.type
-        if (Intent.ACTION_SEND == action && type != null) {
+        // Check if the action is one of the specified actions (ACTION_SEND, ACTION_CHOOSER, ACTION_DELETE)
+        if ((Intent.ACTION_SEND == action || Intent.ACTION_CHOOSER == action || Intent.ACTION_DELETE == action) && type != null) {
             if (Constants.TXT_PLAIN == type) {
                 handleSendText(intent) // Handle text being sent
             }

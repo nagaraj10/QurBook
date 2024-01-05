@@ -142,4 +142,7 @@ object Constants {
 
     val sheelaText ="Sheela"
 
+    // Define a constant for the voice clone ID key
+    val VOICECLONEID ="voiceCloneId"
+
 }

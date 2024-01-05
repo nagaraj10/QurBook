@@ -643,6 +643,17 @@ class IosNotificationHandler {
       } else {
         CommonUtil.showFamilyMemberPlanExpiryDialog(model.patientName);
       }
+    } else if (model.templateName ==
+            parameters.strVoiceClonePatientAssignment &&
+        (acceptAction || declineAction)) {
+      // Check if the first element of passedValArr is related to voice clone patient assignment
+      // Call the method to save the voice clone patient assignment status
+      CommonUtil().saveVoiceClonePatientAssignmentStatus(
+        model.voiceCloneId ?? '',
+        acceptAction,
+      );
+      acceptAction = false;
+      declineAction = false;
     } else if (model.redirect == parameters.claimList &&
         (model.claimId ?? '').isNotEmpty) {
       await Get.to(
