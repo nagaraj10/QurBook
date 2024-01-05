@@ -1,6 +1,5 @@
 
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/cupertino.dart';
 import '../constants/constants.dart';
 
 class AuthenticationValidator {

@@ -15,7 +15,7 @@ class AvailableTimeSlotsModel {
       isSuccess = json[strIsSuccess];
       message = json [strMessage];
       result = json[strResult] != null
-              ? new SlotsResultModel.fromJson(json[strResult])
+              ? SlotsResultModel.fromJson(json[strResult])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -23,7 +23,7 @@ class AvailableTimeSlotsModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[strIsSuccess] = this.isSuccess;
     data[strMessage] = this.message;
     if (this.result != null) {

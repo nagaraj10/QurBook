@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
-import 'package:intl/intl.dart';
 import 'package:myfhb/Orders/View/OrdersView.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/QurHub/View/HubListView.dart';
 
 import 'package:myfhb/claim/screen/ClaimList.dart';
-import 'package:myfhb/common/DexComWebScreen.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/landing/view/widgets/help_support.dart';
@@ -134,8 +132,9 @@ class NavigationDrawer extends StatelessWidget {
                             if (refresh != null) {
                               refresh(true);
                             }
-                          } catch (e,stackTrace) {
-                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                          } catch (e, stackTrace) {
+                            CommonUtil()
+                                .appLogs(message: e, stackTrace: stackTrace);
 
                             //print(e);
                           }
@@ -169,8 +168,9 @@ class NavigationDrawer extends StatelessWidget {
                             if (refresh != null) {
                               refresh(true);
                             }
-                          } catch (e,stackTrace) {
-                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                          } catch (e, stackTrace) {
+                            CommonUtil()
+                                .appLogs(message: e, stackTrace: stackTrace);
 
                             //print(e);
                           }
@@ -196,8 +196,9 @@ class NavigationDrawer extends StatelessWidget {
                             if (refresh != null) {
                               refresh(true);
                             }
-                          } catch (e,stackTrace) {
-                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                          } catch (e, stackTrace) {
+                            CommonUtil()
+                                .appLogs(message: e, stackTrace: stackTrace);
 
                             //print(e);
                           }
@@ -239,8 +240,9 @@ class NavigationDrawer extends StatelessWidget {
                                 },
                               ),
                             );
-                          } catch (e,stackTrace) {
-                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                          } catch (e, stackTrace) {
+                            CommonUtil()
+                                .appLogs(message: e, stackTrace: stackTrace);
 
                             //print(e);
                           }
@@ -260,8 +262,9 @@ class NavigationDrawer extends StatelessWidget {
                             try {
                               Get.back();
                               Get.to(() => OrdersView());
-                            } catch (e,stackTrace) {
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                            } catch (e, stackTrace) {
+                              CommonUtil()
+                                  .appLogs(message: e, stackTrace: stackTrace);
 
                               //print(e);
                             }
@@ -277,9 +280,13 @@ class NavigationDrawer extends StatelessWidget {
                         onPressed: () {
                           try {
                             Get.back();
-                            Get.to(() => MoreMenuScreen(refresh: refresh));
-                          } catch (e,stackTrace) {
-                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                            Navigator.pushNamed(context, router.rt_more_menu,
+                                    arguments: refresh)
+                                .then((value) {});
+                            //Get.to(() => MoreMenuScreen(refresh: refresh));
+                          } catch (e, stackTrace) {
+                            CommonUtil()
+                                .appLogs(message: e, stackTrace: stackTrace);
 
                             //print(e);
                           }
@@ -297,8 +304,9 @@ class NavigationDrawer extends StatelessWidget {
                           try {
                             Get.back();
                             Get.to(() => HelpSupport());
-                          } catch (e,stackTrace) {
-                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                          } catch (e, stackTrace) {
+                            CommonUtil()
+                                .appLogs(message: e, stackTrace: stackTrace);
 
                             //print(e);
                           }
@@ -343,8 +351,9 @@ class NavigationDrawer extends StatelessWidget {
                             try {
                               Get.back();
                               Get.to(() => ReportListScreen());
-                            } catch (e,stackTrace) {
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                            } catch (e, stackTrace) {
+                              CommonUtil()
+                                  .appLogs(message: e, stackTrace: stackTrace);
 
                               //print(e);
                             }
@@ -366,8 +375,9 @@ class NavigationDrawer extends StatelessWidget {
                               try {
                                 Get.back();
                                 Get.to(() => ClaimList());
-                              } catch (e,stackTrace) {
-                                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                              } catch (e, stackTrace) {
+                                CommonUtil().appLogs(
+                                    message: e, stackTrace: stackTrace);
 
                                 //print(e);
                               }
@@ -417,8 +427,8 @@ class NavigationDrawer extends StatelessWidget {
       phoneNumber = (myProfile.result?.userContactCollection3?.length ?? 0) > 0
           ? myProfile.result?.userContactCollection3![0]!.phoneNumber
           : '';
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       //print(e);
     }

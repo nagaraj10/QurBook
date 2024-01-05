@@ -57,16 +57,16 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
   late HealthReportListForUserBlock _healthReportListForUserBlock;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   List<HealthRecordCollection> mediMasterId = [];
 
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    _healthReportListForUserBlock = HealthReportListForUserBlock();
 
     super.initState();
   }
@@ -90,7 +90,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
   Widget _getWidgetToDisplayLabReport(HealthRecordList completeData) {
     List<HealthResult> mediaMetaInfoObj = [];
 
-    mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
+    mediaMetaInfoObj = CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionLabReport);
     return RefreshIndicator(
       key: _refreshIndicatorKey,
@@ -153,7 +153,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
             if (mediaMetaInfo != null &&
                 (mediaMetaInfo.healthRecordCollection?.length ?? 0) > 0) {
               mediMasterId =
-                  new CommonUtil().getMetaMasterIdListNew(mediaMetaInfo);
+                  CommonUtil().getMetaMasterIdListNew(mediaMetaInfo);
               if (mediMasterId.length > 0) {
                 widget.healthRecordSelected(
                     mediaMetaInfo.id, mediMasterId, condition);
@@ -183,7 +183,12 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                 data: mediaMetaInfo,
               ),
             ),
-          );
+          ).then((value) async {
+            if (value ?? false) {
+              await Future.delayed(Duration(milliseconds: 100));
+              widget.callBackToRefresh();
+            }
+          });
         }
       },
       child: Container(
@@ -274,7 +279,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                             : mobileHeader2),
                   ),
                   Text(
-                    new FHBUtils()
+                    FHBUtils()
                         .getFormattedDateString(mediaMetaInfo.createdOn),
                     style: TextStyle(
                         color: Colors.grey[400],
@@ -297,7 +302,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                           ? ImageIcon(
                               AssetImage(variable.icon_record_fav_active),
                               color:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
+                                  Color(CommonUtil().getMyPrimaryColor()),
                               size: CommonUtil().isTablet!
                                   ? tabHeader2
                                   : mobileHeader2,
@@ -310,7 +315,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                                   : mobileHeader2,
                             ),
                       onPressed: () {
-                        new CommonUtil()
+                        CommonUtil()
                             .bookMarkRecord(mediaMetaInfo, _refresh);
                       }),
                   (mediaMetaInfo.metadata!.hasVoiceNotes != null &&
@@ -323,7 +328,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                   widget.mediaMeta!.contains(mediaMetaInfo.id)
                       ? Icon(
                           Icons.done,
-                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                          color: Color(CommonUtil().getMyPrimaryColor()),
                         )
                       : SizedBox(),
                 ],
@@ -348,7 +353,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
             fit: BoxFit.cover,
           );
         } else {
-          return new SizedBox(
+          return SizedBox(
             width: 50.0.h,
             height: 50.0.h,
             child: Shimmer.fromColors(
@@ -367,12 +372,12 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
   getDocumentImageWidget(MediaMetaInfo data) {
     return FutureBuilder(
       future: _healthReportListForUserBlock
-          .getDocumentImage(new CommonUtil().getMetaMasterId(data)!),
+          .getDocumentImage(CommonUtil().getMetaMasterId(data)!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Image.memory(snapshot.data);
         } else {
-          return new SizedBox(
+          return SizedBox(
             width: 50.0.h,
             height: 50.0.h,
             child: Shimmer.fromColors(

@@ -30,7 +30,6 @@ if (keystorePropertiesFile.exists()) {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-apply plugin: 'kotlin-android-extensions'
 
 
 android {
@@ -113,6 +112,11 @@ android {
         }
     }
 
+    // Enable View Binding for the project's build features
+    buildFeatures {
+        viewBinding = true
+    }
+
 }
 
 flutter {
@@ -166,7 +170,13 @@ dependencies {
 }
 apply plugin: 'com.google.gms.google-services'
 repositories {
-    maven { url 'http://maven.fabric.io/public' }
-    maven { url 'https://www.jitpack.io' }
+    maven {
+        url 'http://maven.fabric.io/public'
+        allowInsecureProtocol = true
+    }
+    maven {
+        url 'https://www.jitpack.io'
+        allowInsecureProtocol = true
+    }
     mavenCentral()
 }

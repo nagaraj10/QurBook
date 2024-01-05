@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:grouped_list/grouped_list.dart';
@@ -11,7 +12,6 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
-import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/Category/catergory_data_list.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
@@ -71,7 +71,7 @@ class EachDeviceValues extends StatefulWidget {
 }
 
 class _EachDeviceValuesState extends State<EachDeviceValues> {
-  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   String errorMsg = '', errorMsgDia = '', errorMsgSys = '';
   bool onOkClicked = false;
@@ -312,7 +312,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 SizedBox(
                   width: 50,
                 ),
-                OutlineButton(
+                OutlinedButton(
                   onPressed: onOkClicked
                       ? () {}
                       : () async {
@@ -328,22 +328,23 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             }
                           });
                         } /*() {
-                      new FHBUtils().check().then((intenet) {
+                      FHBUtils().check().then((intenet) {
                         if (intenet != null && intenet) {
                           createDeviceRecords(deviceName);
                         } else {
-                          new FHBBasicWidget().showInSnackBar(
+                          FHBBasicWidget().showInSnackBar(
                               Constants.STR_NO_CONNECTIVITY, scaffold_state);
                         }
                       });
                     }*/
                   ,
-                  textColor: Color(CommonUtil().getMyPrimaryColor()),
-                  color: Colors.transparent,
-                  borderSide: BorderSide(
+                  style: OutlinedButton.styleFrom(
+                  foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                  backgroundColor: Colors.transparent,
+                  side: BorderSide(
                       color: Color(CommonUtil().getMyPrimaryColor())),
-                  shape: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),),
                   child: Text('OK'),
                 ),
                 //submitButton(_otpVerifyBloc)
@@ -2256,7 +2257,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     Text(
                       value2,
                       style: TextStyle(
-                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                          color: Color(CommonUtil().getMyPrimaryColor()),
                           fontSize: 14.0.sp),
                     ),
                   ],
@@ -2278,7 +2279,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     Text(
                       value3,
                       style: TextStyle(
-                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                          color: Color(CommonUtil().getMyPrimaryColor()),
                           fontSize: 14.0.sp),
                     ),
                   ],
@@ -2345,8 +2346,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: <Color>[
-                              Color(new CommonUtil().getMyPrimaryColor()),
-                              Color(new CommonUtil().getMyGredientColor())
+                              Color(CommonUtil().getMyPrimaryColor()),
+                              Color(CommonUtil().getMyGredientColor())
                             ],
                             stops: [
                               0.3,
@@ -2461,8 +2462,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: <Color>[
-                              Color(new CommonUtil().getMyPrimaryColor()),
-                              Color(new CommonUtil().getMyGredientColor())
+                              Color(CommonUtil().getMyPrimaryColor()),
+                              Color(CommonUtil().getMyGredientColor())
                             ],
                             stops: [
                               0.3,
@@ -2562,7 +2563,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               unit != '' ? unit : '',
                               style: TextStyle(
                                   color: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
+                                      CommonUtil().getMyPrimaryColor()),
                                   fontSize: 14.0.sp),
                             ),*/
                                   ],
@@ -2791,29 +2792,25 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 ),
               )),
           actions: <Widget>[
-            FlatButton(
-              onPressed: () {
+            FlatButtonWidget(
+              bgColor: Colors.transparent,
+              isSelected: true,
+              onPress: () {
                 refreshData();
                 Navigator.pop(context);
               },
-              child: Text(
-                'No',
-                style: TextStyle(
-                  fontSize: 16.0.sp,
-                ),
-              ),
+              title: 'No',
+              fontSize: 16.0.sp,
             ),
-            FlatButton(
-              onPressed: () {
+            FlatButtonWidget(
+              bgColor: Colors.transparent,
+              isSelected: true,
+              onPress: () {
                 Navigator.pop(context);
                 createActivityMethod(widget.device_name);
               },
-              child: Text(
-                'Yes',
-                style: TextStyle(
-                  fontSize: 16.0.sp,
-                ),
-              ),
+              title: 'Yes',
+              fontSize: 16.0.sp,
             )
           ],
         );
@@ -2823,8 +2820,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getMasterRegimenList(
       BuildContext context, DevicesViewModel devicesmodel) {
-    return new FutureBuilder<List<RegimentDataModel>>(
-      future: new CommonUtil().getMasterData(context, ''),
+    return FutureBuilder<List<RegimentDataModel>>(
+      future: CommonUtil().getMasterData(context, ''),
       builder: (BuildContext context, snapshot) {
         if (!snapshot.hasData) {
           return CommonCircularIndicator();
@@ -2870,7 +2867,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     saveMap = {};
     DateTime initDate =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-    TimeOfDay _currentTime = new TimeOfDay.now();
+    TimeOfDay _currentTime = TimeOfDay.now();
     final fieldsResponseModel =
         await Provider.of<RegimentViewModel>(context, listen: false)
             .getFormData(eid: selectedActivity!.eid);

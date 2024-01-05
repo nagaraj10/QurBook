@@ -1,11 +1,9 @@
-import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
 import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/HeaderRequest.dart';
 import '../../constants/fhb_constants.dart';
-import '../../constants/fhb_query.dart';
 import '../../constants/variable_constant.dart';
 import '../../src/resources/network/AppException.dart';
 import '../../src/resources/network/api_services.dart';

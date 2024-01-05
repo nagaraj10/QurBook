@@ -10,13 +10,13 @@ class UnitConfiguration {
     if (json['result'] != null) {
       result = <Result>[];
       json['result'].forEach((v) {
-        result?.add(new Result.fromJson(v));
+        result?.add(Result.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result?.map((v) => v.toJson()).toList();
@@ -48,7 +48,7 @@ class Result {
     code = json['code'];
     name = json['name'];
     configurationData = json['configurationData'] != null
-        ? new ConfigurationData.fromJson(json['configurationData'])
+        ? ConfigurationData.fromJson(json['configurationData'])
         : null;
     isActive = json['isActive'];
     createdOn = json['createdOn'];
@@ -56,7 +56,7 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['code'] = this.code;
     data['name'] = this.name;
@@ -80,18 +80,18 @@ class ConfigurationData {
 
   ConfigurationData.fromJson(Map<String, dynamic> json) {
     unitSystemList = json['unit-system-list'] != null
-        ? new UnitSystemList.fromJson(json['unit-system-list'])
+        ? UnitSystemList.fromJson(json['unit-system-list'])
         : null;
     dbDefaultUnitSystem = json['db-default-unit-system'] != null
-        ? new DbDefaultUnitSystem.fromJson(json['db-default-unit-system'])
+        ? DbDefaultUnitSystem.fromJson(json['db-default-unit-system'])
         : null;
     unitConversion = json['unit-conversion'] != null
-        ? new DbDefaultUnitSystem.fromJson(json['unit-conversion'])
+        ? DbDefaultUnitSystem.fromJson(json['unit-conversion'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.unitSystemList != null) {
       data['unit-system-list'] = this.unitSystemList?.toJson();
     }
@@ -112,12 +112,12 @@ class UnitSystemList {
   UnitSystemList({this.india, this.us});
 
   UnitSystemList.fromJson(Map<String, dynamic> json) {
-    india = json['india'] != null ? new India.fromJson(json['india']) : null;
-    us = json['us'] != null ? new India.fromJson(json['us']) : null;
+    india = json['india'] != null ? India.fromJson(json['india']) : null;
+    us = json['us'] != null ? India.fromJson(json['us']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.india != null) {
       data['india'] = this.india?.toJson();
     }
@@ -139,25 +139,25 @@ class India {
     if (json['height'] != null) {
       height = <Height>[];
       json['height'].forEach((v) {
-        height?.add(new Height.fromJson(v));
+        height?.add(Height.fromJson(v));
       });
     }
     if (json['weight'] != null) {
       weight = <Height>[];
       json['weight'].forEach((v) {
-        weight?.add(new Height.fromJson(v));
+        weight?.add(Height.fromJson(v));
       });
     }
     if (json['temperature'] != null) {
       temperature = <Height>[];
       json['temperature'].forEach((v) {
-        temperature?.add(new Height.fromJson(v));
+        temperature?.add(Height.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.height != null) {
       data['height'] = this.height?.map((v) => v.toJson()).toList();
     }
@@ -183,7 +183,7 @@ class Height {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['unitCode'] = this.unitCode;
     data['unitName'] = this.unitName;
     return data;
@@ -199,18 +199,18 @@ class DbDefaultUnitSystem {
 
   DbDefaultUnitSystem.fromJson(Map<String, dynamic> json) {
     height = json['height'] != null
-        ? new HeightDefault.fromJson(json['height'])
+        ? HeightDefault.fromJson(json['height'])
         : null;
     weight = json['weight'] != null
-        ? new HeightDefault.fromJson(json['weight'])
+        ? HeightDefault.fromJson(json['weight'])
         : null;
     temperature = json['temperature'] != null
-        ? new HeightDefault.fromJson(json['temperature'])
+        ? HeightDefault.fromJson(json['temperature'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.height != null) {
       data['height'] = this.height?.toJson();
     }
@@ -232,13 +232,13 @@ class HeightDefault {
 
   HeightDefault.fromJson(Map<String, dynamic> json) {
     fInCm =
-        json['f-in-cm'] != null ? new FInCm.fromJson(json['f-in-cm']) : null;
+        json['f-in-cm'] != null ? FInCm.fromJson(json['f-in-cm']) : null;
     cmFIn =
-        json['cm-f-in'] != null ? new CmFIn.fromJson(json['cm-f-in']) : null;
+        json['cm-f-in'] != null ? CmFIn.fromJson(json['cm-f-in']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.fInCm != null) {
       data['f-in-cm'] = this.fInCm?.toJson();
     }
@@ -259,7 +259,7 @@ class FInCm {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['conversionFormula'] = this.conversionFormula;
     return data;
   }
@@ -277,7 +277,7 @@ class CmFIn {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['conversionFormulaToFeet'] = this.conversionFormulaToFeet;
     data['conversionFormulaToInches'] = this.conversionFormulaToInches;
     return data;
@@ -291,12 +291,12 @@ class Weight {
   Weight({this.kgLb, this.lbKg});
 
   Weight.fromJson(Map<String, dynamic> json) {
-    kgLb = json['kg-lb'] != null ? new FInCm.fromJson(json['kg-lb']) : null;
-    lbKg = json['lb-kg'] != null ? new FInCm.fromJson(json['lb-kg']) : null;
+    kgLb = json['kg-lb'] != null ? FInCm.fromJson(json['kg-lb']) : null;
+    lbKg = json['lb-kg'] != null ? FInCm.fromJson(json['lb-kg']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.kgLb != null) {
       data['kg-lb'] = this.kgLb?.toJson();
     }
@@ -314,12 +314,12 @@ class Temperature {
   Temperature({this.cF, this.fC});
 
   Temperature.fromJson(Map<String, dynamic> json) {
-    cF = json['c-f'] != null ? new FInCm.fromJson(json['c-f']) : null;
-    fC = json['f-c'] != null ? new FInCm.fromJson(json['f-c']) : null;
+    cF = json['c-f'] != null ? FInCm.fromJson(json['c-f']) : null;
+    fC = json['f-c'] != null ? FInCm.fromJson(json['f-c']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.cF != null) {
       data['c-f'] = this.cF?.toJson();
     }

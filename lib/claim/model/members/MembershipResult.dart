@@ -29,7 +29,7 @@ class MemberShipResult {
       healthOrganizationId = json['healthOrganizationId'];
       planName = json['planName'];
       additionalInfo = json['additionalInfo'] != null
-              ? new MemberShipAdditionalInfo.fromJson(json['additionalInfo'])
+              ? MemberShipAdditionalInfo.fromJson(json['additionalInfo'])
               : null;
       planStartDate = json['planStartDate'];
       planEndDate = json['planEndDate'];
@@ -40,7 +40,7 @@ class MemberShipResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['healthOrganizationName'] = this.healthOrganizationName;
     data['healthOrganizationId'] = this.healthOrganizationId;

@@ -12,12 +12,8 @@ import '../bloc/my_family_detail_view_boc.dart';
 import '../models/my_family_detail_view_arguments.dart';
 import 'my_family_detail_view_hospital.dart';
 import 'my_family_detail_view_insurance.dart';
-import '../../src/model/Category/CategoryData.dart';
 import '../../src/model/Category/catergory_data_list.dart';
-import '../../src/model/Health/CompleteData.dart';
-import '../../src/model/Category/CategoryResponseList.dart';
 import '../../src/model/Category/catergory_result.dart';
-import '../../src/model/Health/UserHealthResponseList.dart';
 import '../../src/model/Health/asgard/health_record_list.dart';
 import '../../src/resources/network/ApiResponse.dart';
 import '../../src/utils/FHBUtils.dart';
@@ -27,9 +23,7 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../src/utils/FHBUtils.dart';
-import '../../src/model/Health/CompleteData.dart';
 import '../../constants/router_variable.dart' as router;
-import '../../constants/fhb_query.dart' as query;
 import '../../common/errors_widget.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 
@@ -50,7 +44,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
   int? activeTabIndex = 0;
   MyFamilyDetailViewBloc? myFamilyDetailViewBloc;
   List<CategoryResult>? categoryData;
-  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {

@@ -11,7 +11,7 @@ class AppointmentDetailModel {
     try {
       isSuccess = json['isSuccess'];
       result = json['result'] != null
-              ? new AppointmentResult.fromJson(json['result'])
+              ? AppointmentResult.fromJson(json['result'])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -19,7 +19,7 @@ class AppointmentDetailModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.toJson();
@@ -47,19 +47,19 @@ class AppointmentResult {
   AppointmentResult.fromJson(Map<String, dynamic> json) {
     try {
       upcoming = json['upcoming'] != null
-              ? new Upcoming.fromJson(json['upcoming'])
+              ? Upcoming.fromJson(json['upcoming'])
               : null;
-      past = json['past'] != null ? new Past.fromJson(json['past']) : null;
+      past = json['past'] != null ? Past.fromJson(json['past']) : null;
       deviceToken = json['deviceToken'] != null
-              ? new DeviceToken.fromJson(json['deviceToken'])
+              ? DeviceToken.fromJson(json['deviceToken'])
               : null;
       isCaregiver = json['isCaregiver'];
       isPatient = json['isPatient'];
       chatList = json['chatList'] != null
-              ? new ChatList.fromJson(json['chatList'])
+              ? ChatList.fromJson(json['chatList'])
               : null;
       doctorOrCarecoordinatorInfo = json['doctorOrCarecoordinatorInfo'] != null
-              ? new DoctorOrCarecoordinatorInfo.fromJson(
+              ? DoctorOrCarecoordinatorInfo.fromJson(
                   json['doctorOrCarecoordinatorInfo'])
               : null;
     } catch (e,stackTrace) {
@@ -68,7 +68,7 @@ class AppointmentResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.upcoming != null) {
       data['upcoming'] = this.upcoming!.toJson();
     }
@@ -154,7 +154,7 @@ class Upcoming {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['bookingId'] = this.bookingId;
     data['doctorSessionId'] = this.doctorSessionId;
@@ -244,7 +244,7 @@ class Past {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['bookingId'] = this.bookingId;
     data['doctorSessionId'] = this.doctorSessionId;
@@ -299,7 +299,7 @@ class SharedHealthRecordMetadata {
     try {
       id = json['id'];
       metadata = json['metadata'] != null
-              ? new Metadata.fromJson(json['metadata'])
+              ? Metadata.fromJson(json['metadata'])
               : null;
       isBookmarked = json['isBookmarked'];
       isCompleted = json['isCompleted'];
@@ -316,7 +316,7 @@ class SharedHealthRecordMetadata {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     if (this.metadata != null) {
       data['metadata'] = this.metadata!.toJson();
@@ -345,10 +345,10 @@ class Metadata {
   Metadata.fromJson(Map<String, dynamic> json) {
     try {
       mediaTypeInfo = json['mediaTypeInfo'] != null
-              ? new MediaTypeInfo.fromJson(json['mediaTypeInfo'])
+              ? MediaTypeInfo.fromJson(json['mediaTypeInfo'])
               : null;
       categoryInfo = json['categoryInfo'] != null
-              ? new CategoryInfo.fromJson(json['categoryInfo'])
+              ? CategoryInfo.fromJson(json['categoryInfo'])
               : null;
       healthRecordsReference = json['healthRecordsReference'].cast<String>();
     } catch (e,stackTrace) {
@@ -357,7 +357,7 @@ class Metadata {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.mediaTypeInfo != null) {
       data['mediaTypeInfo'] = this.mediaTypeInfo!.toJson();
     }
@@ -408,7 +408,7 @@ class MediaTypeInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
     data['description'] = this.description;
@@ -458,7 +458,7 @@ class CategoryInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['categoryName'] = this.categoryName;
     data['categoryDescription'] = this.categoryDescription;
@@ -481,11 +481,11 @@ class DeviceToken {
   DeviceToken.fromJson(Map<String, dynamic> json) {
     try {
       doctor =
-              json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
+              json['doctor'] != null ? Doctor.fromJson(json['doctor']) : null;
       patient =
-              json['patient'] != null ? new Doctor.fromJson(json['patient']) : null;
+              json['patient'] != null ? Doctor.fromJson(json['patient']) : null;
       parentMember = json['parentMember'] != null
-              ? new Doctor.fromJson(json['parentMember'])
+              ? Doctor.fromJson(json['parentMember'])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -493,7 +493,7 @@ class DeviceToken {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.doctor != null) {
       data['doctor'] = this.doctor!.toJson();
     }
@@ -519,7 +519,7 @@ class Doctor {
       if (json['payload'] != null) {
             payload = <Payload>[];
             json['payload'].forEach((v) {
-              payload!.add(new Payload.fromJson(v));
+              payload!.add(Payload.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -528,7 +528,7 @@ class Doctor {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.payload != null) {
       data['payload'] = this.payload!.map((v) => v.toJson()).toList();
@@ -567,7 +567,7 @@ class Payload {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['deviceTokenId'] = this.deviceTokenId;
     data['platformTypeCode'] = this.platformTypeCode;
@@ -640,7 +640,7 @@ class ChatList {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
 
     /* data['chatListId'] = this.chatListId;
 
@@ -692,7 +692,7 @@ class DoctorOrCarecoordinatorInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['carecoordinatorfirstName'] = this.carecoordinatorfirstName;
     data['carecoordinatorMiddleName'] = this.carecoordinatorMiddleName;
     data['carecoordinatorLastName'] = this.carecoordinatorLastName;

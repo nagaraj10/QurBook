@@ -47,7 +47,7 @@ class DownloadMultipleImages {
       }
     }
     if (filePathist.length == image_list.length) {
-      Scaffold.of(contxt).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(contxt).showSnackBar(SnackBar(
           content: Text(
             variable.strFileDownloaded,
             style: TextStyle(
@@ -67,7 +67,7 @@ class DownloadMultipleImages {
             },
           )));
     }else{
-      Scaffold.of(contxt).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(contxt).showSnackBar(SnackBar(
           content: Text(
             variable.strFileDownloadeding,
             style: TextStyle(

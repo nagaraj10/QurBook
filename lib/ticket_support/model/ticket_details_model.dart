@@ -19,14 +19,14 @@ class TicketDetailResponseModel {
       isSuccess = json['isSuccess'];
       message = json['message'];
       result =
-              json['result'] != null ? new Result.fromJson(json['result']) : null;
+              json['result'] != null ? Result.fromJson(json['result']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
     if (this.result != null) {
@@ -46,14 +46,14 @@ class Result {
     try {
       success = json['success'];
       ticket =
-              json['ticket'] != null ? new Ticket.fromJson(json['ticket']) : null;
+              json['ticket'] != null ? Ticket.fromJson(json['ticket']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['success'] = this.success;
     if (this.ticket != null) {
       data['ticket'] = this.ticket!.toJson();
@@ -119,57 +119,57 @@ class Ticket {
       if (json['tags'] != null) {
         tags = <Tags>[];
         json['tags'].forEach((v) {
-          tags!.add(new Tags.fromJson(v));
+          tags!.add(Tags.fromJson(v));
         });
       }
       if (json['subscribers'] != null) {
         subscribers = <Subscribers>[];
         json['subscribers'].forEach((v) {
-          subscribers!.add(new Subscribers.fromJson(v));
+          subscribers!.add(Subscribers.fromJson(v));
         });
       }
       sId = json['_id'];
       owner = json['owner'] != null
-          ? new Subscribers.fromJson(json['owner'])
+          ? Subscribers.fromJson(json['owner'])
           : null;
       subject = json['subject'];
-      group = json['group'] != null ? new Group.fromJson(json['group']) : null;
-      type = json['type'] != null ? new Type.fromJson(json['type']) : null;
+      group = json['group'] != null ? Group.fromJson(json['group']) : null;
+      type = json['type'] != null ? Type.fromJson(json['type']) : null;
       priority = json['priority'] != null
-          ? new Priorities.fromJson(json['priority'])
+          ? Priorities.fromJson(json['priority'])
           : null;
       issue = json['issue'];
       assignee = json['assignee'] != null
-          ? new Subscribers.fromJson(json['assignee'])
+          ? Subscribers.fromJson(json['assignee'])
           : null;
       date = json['date'];
       preferredDate = json['preferredDate'];
       if (json['comments'] != null) {
         comments = <Comments>[];
         json['comments'].forEach((v) {
-          comments!.add(new Comments.fromJson(v));
+          comments!.add(Comments.fromJson(v));
         });
       }
       if (json['notes'] != null) {
         notes = <Notes>[];
         json['notes'].forEach((v) {
-          notes!.add(new Notes.fromJson(v));
+          notes!.add(Notes.fromJson(v));
         });
       }
       if (json['attachments'] != null) {
             attachments = <Attachments>[];
         json['attachments'].forEach((v) {
-          attachments!.add(new Attachments.fromJson(v));
+          attachments!.add(Attachments.fromJson(v));
         });
       }
       if (json['history'] != null) {
             history = <History>[];
         json['history'].forEach((v) {
-          history!.add(new History.fromJson(v));
+          history!.add(History.fromJson(v));
         });
       }
       additionalInfo = json['additionalInfo'] != null
-          ? new AdditionalInfo.fromJson(json['additionalInfo'])
+          ? AdditionalInfo.fromJson(json['additionalInfo'])
           : null;
       uid = json['uid'];
       iV = json['__v'];
@@ -223,7 +223,7 @@ class Ticket {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['deleted'] = this.deleted;
     data['status'] = this.status;
     if (this.tags != null) {
@@ -307,7 +307,7 @@ class Attachments {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['_id'] = this.sId;
     data['owner'] = this.owner;
     data['name'] = this.name;
@@ -384,7 +384,7 @@ class Comments {
     try {
       deleted = json['deleted'];
       sId = json['_id'];
-      owner = json['owner'] != null ? new Owner.fromJson(json['owner']) : null;
+      owner = json['owner'] != null ? Owner.fromJson(json['owner']) : null;
       date = json['date'];
       comment = json['comment'];
     } catch (e,stackTrace) {
@@ -393,7 +393,7 @@ class Comments {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['deleted'] = this.deleted;
     data['_id'] = this.sId;
     if (this.owner != null) {
@@ -427,7 +427,7 @@ class Owner {
       username = json['username'];
       fullname = json['fullname'];
       email = json['email'];
-      role = json['role'] != null ? new Role.fromJson(json['role']) : null;
+      role = json['role'] != null ? Role.fromJson(json['role']) : null;
       title = json['title'];
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -435,7 +435,7 @@ class Owner {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['_id'] = this.sId;
     data['username'] = this.username;
     data['fullname'] = this.fullname;
@@ -471,14 +471,14 @@ class Subscribers {
       email = json['email'];
       fullname = json['fullname'];
       title = json['title'];
-      role = json['role'] != null ? new Role.fromJson(json['role']) : null;
+      role = json['role'] != null ? Role.fromJson(json['role']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['_id'] = this.sId;
     data['username'] = this.username;
     data['email'] = this.email;
@@ -524,7 +524,7 @@ class Role {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['_id'] = this.sId;
     data['name'] = this.name;
     data['description'] = this.description;
@@ -557,7 +557,7 @@ class Group {
       if (json['members'] != null) {
             members = <Members>[];
             json['members'].forEach((v) {
-              members!.add(new Members.fromJson(v));
+              members!.add(Members.fromJson(v));
             });
           }
       if (json['sendMailTo'] != null) {
@@ -573,7 +573,7 @@ class Group {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.members != null) {
       data['members'] = this.members!.map((v) => v.toJson()).toList();
     }
@@ -639,7 +639,7 @@ class Members {
       username = json['username'];
       fullname = json['fullname'];
       email = json['email'];
-      role = json['role'] != null ? new Role.fromJson(json['role']) : null;
+      role = json['role'] != null ? Role.fromJson(json['role']) : null;
       title = json['title'];
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -647,7 +647,7 @@ class Members {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['deleted'] = this.deleted;
     data['_id'] = this.sId;
     data['username'] = this.username;
@@ -675,14 +675,14 @@ class Type {
       if (json['priorities'] != null) {
         priorities = <Priorities>[];
         json['priorities'].forEach((v) {
-          priorities!.add(new Priorities.fromJson(v));
+          priorities!.add(Priorities.fromJson(v));
         });
       }
       sId = json['_id'];
       name = json['name'];
       iV = json['__v'];
       additionalInfo = json['additionalInfo'] != null
-          ? new AdditionalInfoType.fromJson(json['additionalInfo'])
+          ? AdditionalInfoType.fromJson(json['additionalInfo'])
           : null;
     } catch (e,stackTrace) {
                   CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -690,7 +690,7 @@ class Type {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       if (this.priorities != null) {
         data['priorities'] = this.priorities!.map((v) => v.toJson()).toList();
@@ -749,7 +749,7 @@ class Priorities {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['overdueIn'] = this.overdueIn;
     data['htmlColor'] = this.htmlColor;
     data['_id'] = this.sId;
@@ -778,7 +778,7 @@ class History {
       action = json['action'];
       description = json['description'];
       owner =
-              json['owner'] != null ? new Subscribers.fromJson(json['owner']) : null;
+              json['owner'] != null ? Subscribers.fromJson(json['owner']) : null;
       date = json['date'];
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -786,7 +786,7 @@ class History {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['_id'] = this.sId;
     data['action'] = this.action;
     data['description'] = this.description;
@@ -809,7 +809,7 @@ class AdditionalInfoType {
       if (json['field'] != null) {
         field = <Field>[];
         json['field'].forEach((v) {
-          field!.add(new Field.fromJson(v));
+          field!.add(Field.fromJson(v));
         });
       }
       healthOrgTypeId = json['healthOrgTypeId'];
@@ -821,7 +821,7 @@ class AdditionalInfoType {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       if (this.field != null) {
         data['field'] = this.field!.map((v) => v.toJson()).toList();
@@ -879,7 +879,7 @@ class Field {
       if (json['data'] != null) {
         fieldData = <FieldData>[];
         json['data'].forEach((v) {
-          fieldData!.add(new FieldData.fromJson(v));
+          fieldData!.add(FieldData.fromJson(v));
         });
       }
       displayName = json['display_name'];
@@ -894,7 +894,7 @@ class Field {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['name'] = this.name;
       data['type'] = this.type;
@@ -940,7 +940,7 @@ class FieldData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['id'] = this.id;
       data['name'] = this.name;

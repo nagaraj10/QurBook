@@ -2,8 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/claim/model/credit/CreditBalance.dart';
 import 'package:myfhb/claim/model/credit/CreditBalanceResult.dart';
 import 'package:myfhb/claim/service/ClaimListRepository.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -309,7 +307,7 @@ class CheckoutPageProvider extends ChangeNotifier {
   }
 
   Future<void> getCreditBalance() async {
-    ClaimListRepository claimListRepository = new ClaimListRepository();
+    ClaimListRepository claimListRepository = ClaimListRepository();
     await claimListRepository.getCreditBalance().then((creditBalance) {
       if (creditBalance.isSuccess! && creditBalance.result != null) {
         CreditBalanceResult creditBalanceResult = creditBalance.result!;

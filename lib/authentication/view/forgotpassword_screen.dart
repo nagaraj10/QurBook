@@ -150,7 +150,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           style: TextStyle(
             fontSize: 16.0.sp,
           ),
-          autovalidate: _autoValidateBool,
+          autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
           obscureText: isPassword,
           controller: controller,
           decoration: InputDecoration(

@@ -8,14 +8,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/plan_dashboard/model/UpdatePaymentStatusSubscribe.dart';
 import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/UpdatePaymentViewModel.dart';
-import 'package:myfhb/telehealth/features/Payment/ResultPage.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/checkout_page_provider.dart';
 import 'package:myfhb/widgets/result_page_new.dart';
@@ -62,7 +60,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    updatePaymentViewModel = new UpdatePaymentViewModel();
+    updatePaymentViewModel = UpdatePaymentViewModel();
     PAYMENT_URL = widget.redirectUrl;
     isFromSubscribe = widget.isFromSubscribe;
     isFromRazor = widget.isFromRazor;
@@ -88,8 +86,8 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
       child: Scaffold(
           appBar: AppBar(
             flexibleSpace: GradientAppBar(),
-            leading: new IconButton(
-              icon: new Icon(
+            leading: IconButton(
+              icon: Icon(
                 Icons.arrow_back_ios,
                 size: 24.0.sp,
               ),
@@ -291,11 +289,11 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
         title: Text(STR_ARE_SURE),
         content: Text(STR_SURE_CANCEL_PAY),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text('No'),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () {
               Provider.of<CheckoutPageProvider>(context, listen: false)
                   .loader(false, isNeedRelod: true);
@@ -342,7 +340,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
     return JavascriptChannel(
         name: 'Toaster',
         onMessageReceived: (JavascriptMessage message) {
-          Scaffold.of(context).showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(message.message)),
           );
         });

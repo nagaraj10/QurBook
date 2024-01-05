@@ -97,7 +97,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                               style: TextStyle(
                                 fontSize: 16.0.sp,
                               ),
-                              autovalidate: _autoValidateBool,
+                              autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
                               maxLength: 10,
                               decoration: InputDecoration(
                                 counterText: "",

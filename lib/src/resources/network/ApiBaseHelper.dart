@@ -244,7 +244,7 @@ class ApiBaseHelper {
 
   Future<dynamic> updateTeleHealthProvidersNew(String url, String jsonString,
       {bool? isPAR}) async {
-    Dio dio = new Dio();
+    Dio dio = Dio();
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
     dio.options.headers[variable.strAuthorization] =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -500,13 +500,45 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> saveOrEditNonAdherance(String url, dynamic data) async {
-    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     print(authToken);
     var responseJson;
     final body = convert.jsonEncode(data);
     print(body);
     try {
-      var response = await ApiServices.post(_baseUrl + url,
+      final response = await ApiServices.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersWithoutOffset(),
+          body: body);
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> fetchAlreadySelectedFamilyMembersList(String url) async {
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    print(authToken);
+    var responseJson;
+    try {
+      final response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersAuthAcceptNew());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> submitVoiceCloneWithFamilyMembers(
+      String url, dynamic data) async {
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    print(authToken);
+    var responseJson;
+    final body = convert.jsonEncode(data);
+    print(body);
+    try {
+      final response = await ApiServices.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersWithoutOffset(),
           body: body);
       responseJson = _returnResponse(response);
@@ -2153,7 +2185,7 @@ class ApiBaseHelper {
       FetchingCartItemsModel responseJson;
 
       if (userID != null && userID != "" && ((createBy ?? '').isNotEmpty)) {
-        Map<String, dynamic> jsobBodyMap = new Map();
+        Map<String, dynamic> jsobBodyMap = Map();
         jsobBodyMap['userId'] =
             ((cartUserId ?? '').isNotEmpty) ? cartUserId : userID;
         jsobBodyMap['createdBy'] = ((notificationListId ?? '').isNotEmpty)
@@ -2193,7 +2225,7 @@ class ApiBaseHelper {
       FetchingCartItemsModel responseJson;
 
       if (userID != null && userID != "" && ((createBy ?? '').isNotEmpty)) {
-        Map<String, String?> jsobBodyMap = new Map();
+        Map<String, String?> jsobBodyMap = Map();
         jsobBodyMap['userId'] = userID;
         jsobBodyMap['createdBy'] = createBy;
         try {
@@ -2983,13 +3015,44 @@ class ApiBaseHelper {
     return responseJson;
   }
 
- Future<dynamic> getSheelaConfig(String url) async {
+  Future<dynamic> getSheelaConfig(String url) async {
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
       var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAccept());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> getStatusOfVoiceCloning(String url) async {
+    var headers = headerRequest.getAuths();
+    var responseJson;
+    try {
+      var response = await ApiServices.get(
+        _baseUrl + url,
+        headers: await headerRequest.getAuths(),
+      );
+      responseJson = _returnResponse(response);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+
+      print(e);
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> revokeVoiceClone(String url, String jsonData) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.put(_baseUrl + url,
+          body: jsonData,
+          headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);

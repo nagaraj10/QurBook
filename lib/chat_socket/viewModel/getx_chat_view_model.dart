@@ -10,7 +10,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 class ChatUserListController extends GetxController {
   var shownNewChatFloat = false.obs;
 
-  ChatSocketService chocketService = new ChatSocketService();
+  ChatSocketService chocketService = ChatSocketService();
 
   var userChatList = [].obs;
 

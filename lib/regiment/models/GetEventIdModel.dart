@@ -11,14 +11,14 @@ class GetEventIdModel {
     try {
       isSuccess = json['isSuccess'];
       result =
-          json['result'] != null ? new Result.fromJson(json['result']) : null;
+          json['result'] != null ? Result.fromJson(json['result']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.toJson();
@@ -171,7 +171,7 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['eid'] = this.eid;
     data['providerid'] = this.providerid;
     data['title'] = this.title;

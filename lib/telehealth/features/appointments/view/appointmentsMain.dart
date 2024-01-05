@@ -1,18 +1,10 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:gmiwidgetspackage/widgets/sized_box.dart';
-import 'package:myfhb/common/SwitchProfile.dart';
-import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointments.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsListViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/cancelAppointmentViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/resheduleAppointmentViewModel.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
-    as Constants;
 import 'package:provider/provider.dart';
 
 class AppointmentsMain extends StatefulWidget {

@@ -14,7 +14,7 @@ class CancelResult {
     try {
       bookingId = json[parameters.strBookingId];
       refundInfo = json[parameters.strRefundInfo] != null
-              ? new RefundInfo.fromJson(json[parameters.strRefundInfo])
+              ? RefundInfo.fromJson(json[parameters.strRefundInfo])
               : null;
       status = json[parameters.strStatus];
     } catch (e,stackTrace) {
@@ -23,7 +23,7 @@ class CancelResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strBookingId] = this.bookingId;
     if (this.refundInfo != null) {
       data[parameters.strRefundInfo] = this.refundInfo!.toJson();

@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart'; //FU2.5
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
+// TODO: multi_image_picker deprecated so need to FIX
+// import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -58,7 +59,8 @@ class TakePictureScreenForDevicesState
   bool selectSingleImage = false;
   String _platformMessage = 'No Error';
 
-  List<Asset> images = <Asset>[];
+// TODO: multi_image_picker deprecated so need to FIX
+  // List<Asset> images = <Asset>[];
   String _error = 'No Error Dectected';
   TextEditingController? fileName;
 
@@ -158,7 +160,7 @@ class TakePictureScreenForDevicesState
                     alignment: Alignment.topCenter,
                     child: Container(
                         width: double.infinity,
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                        color: Color(CommonUtil().getMyPrimaryColor()),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -220,7 +222,7 @@ class TakePictureScreenForDevicesState
                     ? _recognitions == null
                         ? Container(
                             height: 60.0.h,
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
                             child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
@@ -241,7 +243,7 @@ class TakePictureScreenForDevicesState
                             ? Container(
                                 height: 80.0.h,
                                 color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(CommonUtil().getMyPrimaryColor()),
                                 child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -262,7 +264,7 @@ class TakePictureScreenForDevicesState
                             : Container(
                                 height: 60.0.h,
                                 color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(CommonUtil().getMyPrimaryColor()),
                                 child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -300,9 +302,9 @@ class TakePictureScreenForDevicesState
                                         height: 40.0.h,
                                         fit: BoxFit.cover,
                                       ),
-                                      new Container(
+                                      Container(
                                         padding: EdgeInsets.all(2),
-                                        decoration: new BoxDecoration(
+                                        decoration: BoxDecoration(
                                           color: Colors.red,
                                           borderRadius:
                                               BorderRadius.circular(6),
@@ -412,7 +414,7 @@ class TakePictureScreenForDevicesState
                           )
                         : Container(
                             height: 60.0.h,
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -490,37 +492,40 @@ class TakePictureScreenForDevicesState
   }
 
   Future<void> loadAssets() async {
-    List<Asset> resultList = <Asset>[];
+    // TODO: multi_image_picker deprecated so need to FIX
+    // List<Asset> resultList = <Asset>[];
 
     try {
-      resultList = await MultiImagePicker.pickImages(
-        maxImages: 300,
-        enableCamera: true,
-        selectedAssets: images,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: variable.strChat),
-        materialOptions: MaterialOptions(
-          actionBarColor: fhbColors.actionColor,
-          useDetailsView: false,
-          selectCircleStrokeColor: fhbColors.colorBlack,
-        ),
-      );
+      // TODO: multi_image_picker deprecated so need to FIX
+      // resultList = await MultiImagePicker.pickImages(
+      //   maxImages: 300,
+      //   enableCamera: true,
+      //   selectedAssets: images,
+      //   cupertinoOptions: CupertinoOptions(takePhotoIcon: variable.strChat),
+      //   materialOptions: MaterialOptions(
+      //     actionBarColor: fhbColors.actionColor,
+      //     useDetailsView: false,
+      //     selectCircleStrokeColor: fhbColors.colorBlack,
+      //   ),
+      // );
     } on FetchException catch (e,stackTrace) {}
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
-
-    for (Asset asset in resultList) {
-      // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
-      // if(filePath!=null)imagePaths.add(filePath);
-      String filePath =
-          await FlutterAbsolutePath.getAbsolutePath(asset.identifier ?? '');
-      imagePaths.add(filePath); // FU2.5
-    }
+// TODO: multi_image_picker deprecated so need to FIX
+    // for (Asset asset in resultList) {
+    //   // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
+    //   // if(filePath!=null)imagePaths.add(filePath);
+    //   String filePath =
+    //       await FlutterAbsolutePath.getAbsolutePath(asset.identifier ?? '');
+    //   imagePaths.add(filePath); // FU2.5
+    // }
 
     setState(() {
-      images = resultList;
+      // TODO: multi_image_picker deprecated so need to FIX
+      // images = resultList;
     });
   }
 
@@ -548,11 +553,11 @@ class TakePictureScreenForDevicesState
 
   void setFileName() {
     if (categoryName == variable.strDevices) {
-      fileName = new TextEditingController(
+      fileName = TextEditingController(
           text: deviceName! +
               '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     } else {
-      fileName = new TextEditingController(
+      fileName = TextEditingController(
           text: categoryName! +
               '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     }
@@ -579,14 +584,14 @@ class TakePictureScreenForDevicesState
   }
 
   Widget _showChooseButton(BuildContext context) {
-    final GestureDetector chooseButtonWithGesture = new GestureDetector(
+    final GestureDetector chooseButtonWithGesture = GestureDetector(
       onTap: _chooseBtnTapped,
-      child: new Container(
+      child: Container(
         width: 100.0.w,
         height: 40.0.h,
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          borderRadius: new BorderRadius.all(Radius.circular(25.0)),
+          borderRadius: BorderRadius.all(Radius.circular(25.0)),
           border: Border.all(color: Colors.white),
           boxShadow: <BoxShadow>[
             BoxShadow(
@@ -596,10 +601,10 @@ class TakePictureScreenForDevicesState
             ),
           ],
         ),
-        child: new Center(
-          child: new Text(
+        child: Center(
+          child: Text(
             variable.strChoose,
-            style: new TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
@@ -609,7 +614,7 @@ class TakePictureScreenForDevicesState
       ),
     );
 
-    return new Padding(
+    return Padding(
         padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 0.0),
         child: chooseButtonWithGesture);
   }
@@ -623,14 +628,14 @@ class TakePictureScreenForDevicesState
   }
 
   Widget _showConfirmButton(BuildContext context) {
-    final GestureDetector addButtonWithGesture = new GestureDetector(
+    final GestureDetector addButtonWithGesture = GestureDetector(
       onTap: _confirmBtnTapped,
-      child: new Container(
+      child: Container(
         width: 100.0.w,
         height: 40.0.h,
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          borderRadius: new BorderRadius.all(Radius.circular(25.0)),
+          borderRadius: BorderRadius.all(Radius.circular(25.0)),
           border: Border.all(color: Colors.white),
           boxShadow: <BoxShadow>[
             BoxShadow(
@@ -640,10 +645,10 @@ class TakePictureScreenForDevicesState
             ),
           ],
         ),
-        child: new Center(
-          child: new Text(
+        child: Center(
+          child: Text(
             variable.strConfirm,
-            style: new TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
@@ -653,7 +658,7 @@ class TakePictureScreenForDevicesState
       ),
     );
 
-    return new Padding(
+    return Padding(
         padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 0.0),
         child: addButtonWithGesture);
   }

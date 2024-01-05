@@ -7,12 +7,8 @@ import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/CartIconWithBadge.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
-import 'package:myfhb/widgets/checkout_page_provider.dart';
-import 'package:myfhb/widgets/shopping_cart_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'page_number_widget.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
 
 class PlanNavigationWidget extends StatelessWidget {
   @override

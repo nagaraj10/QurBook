@@ -268,7 +268,7 @@ const String qr_user_profile_no_slash = 'user-profile-setting';
 const String qr_save_health_rec = 'save-health-record';
 const String qr_digit_recog = 'digit-recognization/';
 const String ar_doctor_list = 'doctor-list?search=&healthOrganizationId=';
-const String qr_isCareGiver = '&isCareGiver=';
+const String qr_isCareGiver = '&isCaregiver='; //parameter names changed
 
 const String qr_str_id = 'id';
 const String qr_healthRecordMetaData = 'healthRecordMetaData';

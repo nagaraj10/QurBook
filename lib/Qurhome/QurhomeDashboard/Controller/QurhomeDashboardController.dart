@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_data.dart';
@@ -156,91 +155,6 @@ class QurhomeDashboardController extends GetxController {
         updateBLETimer(Enable: false);
         break;
     }
-  }
-
-  void getValuesNativeAppointment() {
-     isFirstTime = true;
-    _appointmentSubscription ??=
-        streamAppointment.receiveBroadcastStream().listen((val) {
-      print(val);
-      List<String>? receivedValues = val.split('|');
-      if ((receivedValues ?? []).length > 0) {
-        switch ((receivedValues!.first)) {
-          case "scheduleAppointment":
-            if (isFirstTime) {
-              isFirstTime = false;
-              if (CommonUtil().isAllowSheelaLiveReminders()) {
-                if (sheelaAIController?.isSheelaScreenActive ?? false) {
-                  var reqJson = {
-                    KIOSK_task: KIOSK_appointment_avail,
-                    KIOSK_appoint_id: receivedValues[1],
-                    KIOSK_eid: receivedValues[2],
-                    KIOSK_say_text: receivedValues[3],
-                  };
-                  CommonUtil().callQueueNotificationPostApi(reqJson);
-                } else if (PreferenceUtil.getIfQurhomeisAcive()) {
-                  redirectToSheelaScheduleAppointment();
-                }
-              } else {
-                var reqJson = {
-                  KIOSK_task: KIOSK_appointment_avail,
-                  KIOSK_appoint_id: receivedValues[1],
-                  KIOSK_eid: receivedValues[2],
-                  KIOSK_say_text: receivedValues[3],
-                };
-                CommonUtil().callQueueNotificationPostApi(reqJson);
-              }
-            }
-            break;
-        }
-      }
-    });
-    if (Platform.isIOS) {
-      const platform = MethodChannel(APPOINTMENT_DETAILS);
-      platform.setMethodCallHandler((call) {
-        if (call.method == APPOINTMENT_DETAILS) {
-          if (CommonUtil().isAllowSheelaLiveReminders()) {
-            if (sheelaAIController?.isSheelaScreenActive ?? false) {
-              try {
-                var data = Map<String, dynamic>.from(call.arguments);
-                var reqJson = {
-                  KIOSK_task: KIOSK_appointment_avail,
-                  KIOSK_appoint_id: data[id_sheela] ?? ''.toString(),
-                  KIOSK_eid: data[eid_sheela] ?? ''.toString(),
-                  KIOSK_say_text: data[sayText_sheela] ?? ''.toString(),
-                };
-                CommonUtil().callQueueNotificationPostApi(reqJson);
-              } catch (e, stackTrace) {
-                CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-              }
-            } else if (PreferenceUtil.getIfQurhomeisAcive()) {
-              redirectToSheelaScheduleAppointment();
-            }
-          } else {
-            try {
-              var data = Map<String, dynamic>.from(call.arguments);
-              var reqJson = {
-                KIOSK_task: KIOSK_appointment_avail,
-                KIOSK_appoint_id: data[id_sheela] ?? ''.toString(),
-                KIOSK_eid: data[eid_sheela] ?? ''.toString(),
-                KIOSK_say_text: data[sayText_sheela] ?? ''.toString(),
-              };
-              CommonUtil().callQueueNotificationPostApi(reqJson);
-            } catch (e, stackTrace) {
-              CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-            }
-          }
-        }
-        return Future.value('');
-      });
-    }
-  }
-
-  void redirectToSheelaScheduleAppointment() {
-    Get.toNamed(
-      rt_Sheela,
-      arguments: SheelaArgument(scheduleAppointment: true),
-    );
   }
 
   updateModuleAccess(List<SelectionResult> selectionResult) {

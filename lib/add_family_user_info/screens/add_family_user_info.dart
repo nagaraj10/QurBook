@@ -1,21 +1,17 @@
 import 'dart:async';
-import 'dart:convert' as convert;
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:myfhb/common/common_circular_indicator.dart';
 
-import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../bloc/add_family_user_info_bloc.dart';
-import '../models/CityListModel.dart';
 import '../models/add_family_user_info_arguments.dart';
 import '../models/address_result.dart';
 import '../models/update_relatiosnship_model.dart';
@@ -30,8 +26,6 @@ import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
 import '../../my_family/bloc/FamilyListBloc.dart';
-import '../../my_family/models/FamilyMembersRes.dart';
-import '../../my_family/models/RelationShip.dart';
 import '../../my_family/models/relationship_response_list.dart';
 import '../../my_family/models/relationships.dart';
 import '../../my_providers/models/ProfilePicThumbnail.dart';
@@ -43,8 +37,6 @@ import '../../src/model/user/MyProfileModel.dart';
 import '../../src/model/user/MyProfileResult.dart';
 import '../../src/model/user/UserAddressCollection.dart';
 //import 'package:myfhb/src/model/user/UserAddressCollection.dart';
-import '../../src/model/user/city_list_model.dart';
-import '../../src/model/user/state_list_model.dart';
 import '../../src/resources/network/ApiResponse.dart';
 import '../../src/ui/authentication/OtpVerifyScreen.dart';
 import '../../src/utils/FHBUtils.dart';
@@ -66,7 +58,7 @@ class AddFamilyUserInfoScreen extends StatefulWidget {
 }
 
 class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
-  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
   final mobileNoController = TextEditingController();
   FocusNode mobileNoFocus = FocusNode();
 
@@ -146,7 +138,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   static int count = 0;
   var currentSelectedProfilePic;
 
-  //CityResult cityVal = new CityResult();
+  //CityResult cityVal = CityResult();
   City? cityVal = City();
   stateObj.State? stateVal = stateObj.State();
 
@@ -964,7 +956,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                           : _showRelationShipTextField()
                     else
                       widget.arguments!.fromClass == CommonConstants.user_update
-                          ? new Container()
+                          ? Container()
                           : _showRelationShipTextField(),
                     _showEmailAddTextField(),
                     Row(
@@ -1095,7 +1087,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             : getAllCustomRoles()
                         : widget.arguments.fromClass ==
                                 CommonConstants.user_update
-                            ? new Container()
+                            ? Container()
                             : _showRelationShipTextField(), */
           },
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -1185,13 +1177,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           //                     fontSize: 15.0.sp,
           //                     fontWeight: FontWeight.w400,
           //                     color:
-          //                         Color(new CommonUtil().getMyPrimaryColor()))),
+          //                         Color(CommonUtil().getMyPrimaryColor()))),
           //             onTap: () {
-          //               new FHBUtils().check().then((intenet) {
+          //               FHBUtils().check().then((intenet) {
           //                 if (intenet != null && intenet) {
           //                   verifyEmail();
           //                 } else {
-          //                   new FHBBasicWidget().showInSnackBar(
+          //                   FHBBasicWidget().showInSnackBar(
           //                       Constants.STR_NO_CONNECTIVITY, scaffold_state);
           //                 }
           //               });
@@ -1635,8 +1627,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 value: selectedRelationShip != null ? selectedRelationShip : null,
                 /* items: data.map((relationShipDetail) {
                   return DropdownMenuItem<RelationsShipModel>(
-                    child: new Text(relationShipDetail.name,
-                        style: new TextStyle(
+                    child: Text(relationShipDetail.name,
+                        style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0.sp,
                             color: ColorUtils.blackcolor)),
@@ -1700,8 +1692,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 value: selectedBloodGroup,
                 items: variable.bloodGroupArray.map((eachBloodGroup) {
                   return DropdownMenuItem(
-                    child: new Text(eachBloodGroup,
-                        style: new TextStyle(
+                    child: Text(eachBloodGroup,
+                        style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0.sp,
                             color: ColorUtils.blackcolor)),
@@ -1735,8 +1727,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           items: variable.bloodRangeArray.map((eachBloodGroup) {
             return DropdownMenuItem<String>(
               value: eachBloodGroup,
-              child: new Text(eachBloodGroup,
-                  style: new TextStyle(
+              child: Text(eachBloodGroup,
+                  style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16.0.sp,
                       color: ColorUtils.blackcolor)),
@@ -1762,8 +1754,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 value: selectedBloodRange,
                 items: variable.bloodRangeArray.map((eachBloodGroup) {
                   return DropdownMenuItem(
-                    child: new Text(eachBloodGroup,
-                        style: new TextStyle(
+                    child: Text(eachBloodGroup,
+                        style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0.sp,
                             color: ColorUtils.blackcolor)),
@@ -1795,8 +1787,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           items: variable.genderArray.map((eachGender) {
             return DropdownMenuItem(
               value: eachGender,
-              child: new Text(eachGender,
-                  style: new TextStyle(
+              child: Text(eachGender,
+                  style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16.0.sp,
                       color: ColorUtils.blackcolor)),
@@ -1827,8 +1819,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     : selectedGender,
                 items: variable.genderArray.map((eachGender) {
                   return DropdownMenuItem(
-                    child: new Text(eachGender,
-                        style: new TextStyle(
+                    child: Text(eachGender,
+                        style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0.sp,
                             color: ColorUtils.blackcolor)),
@@ -1930,7 +1922,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           profileResult.userAddressCollection3[0].createdBy= '';
 
           profileResult.userAddressCollection3[0].state = stateVal;
-          profileResult.userAddressCollection3[0].city = new City(
+          profileResult.userAddressCollection3[0].city = City(
               id: cityVal.id,
               isActive: cityVal.isActive,
               name: cityVal.name,
@@ -2169,7 +2161,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               userAddressCollection3.addressLine1 = cntrlr_addr_one.text;
               userAddressCollection3.addressLine2 = cntrlr_addr_two.text;
               userAddressCollection3.pincode = cntrlr_addr_zip.text;
-              /* userAddressCollection3.city = new City(
+              /* userAddressCollection3.city = City(
                   id: widget.arguments?.myProfileResult?.userAddressCollection3[0].city?.id,
                   isActive: widget.arguments?.myProfileResult?.userAddressCollection3[0].city?.isActive,
                   name: widget.arguments?.myProfileResult?.userAddressCollection3[0].city?.name,
@@ -2289,9 +2281,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               } else {
                 showDialog(
                     context: context,
-                    child: new AlertDialog(
-                      title: new Text(variable.strAPP_NAME),
-                      content: new Text(strErrorMsg),
+                    child: AlertDialog(
+                      title: Text(variable.strAPP_NAME),
+                      content: Text(strErrorMsg),
                     ));
               }
             } */

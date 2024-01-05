@@ -31,7 +31,7 @@ class PatientAlertData {
     try {
       id = json['id'];
       additionalInfo = json['additionalInfo'] != null
-          ? new AdditionalInfo.fromJson(json['additionalInfo'])
+          ? AdditionalInfo.fromJson(json['additionalInfo'])
           : null;
       statusId = json['statusId'];
       statusName = json['statusName'];
@@ -49,7 +49,7 @@ class PatientAlertData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     if (this.additionalInfo != null) {
       data['additionalInfo'] = this.additionalInfo!.toJson();

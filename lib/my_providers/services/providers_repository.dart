@@ -3,7 +3,6 @@ import 'dart:convert' as convert;
 
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
 
-import '../../common/CommonConstants.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_parameters.dart' as parameters;
@@ -15,15 +14,12 @@ import '../models/Hospitals.dart';
 import '../models/MyProviderResponseNew.dart';
 import '../../src/model/Health/asgard/health_record_list.dart';
 import '../../src/resources/network/ApiBaseHelper.dart';
-import '../../telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
 import '../../telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
 import '../../telehealth/features/MyProvider/model/DoctorsFromHospitalModel.dart';
 import '../../telehealth/features/MyProvider/model/associaterecords/associate_success_response.dart';
 import '../../telehealth/features/MyProvider/model/associaterecords/associate_update_success_response.dart';
 import '../../telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationModel.dart';
-import '../../telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import '../../telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
-import '../../telehealth/features/appointments/model/historyModel.dart';
 import '../../telehealth/features/chat/model/AppointmentDetailModel.dart';
 
 class ProvidersListRepository {

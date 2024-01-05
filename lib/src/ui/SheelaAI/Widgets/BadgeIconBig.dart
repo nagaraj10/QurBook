@@ -26,15 +26,15 @@ class BadgeIconBig extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Stack(children: <Widget>[
+    return Stack(children: <Widget>[
       icon!,
       if (badgeCount > 0 || showIfZero)
         Positioned(
           right: right ?? 37,
           top: top ?? 37,
-          child: new Container(
+          child: Container(
             padding: EdgeInsets.all(0),
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: badgeColor,
               borderRadius: BorderRadius.circular(20),
             ),

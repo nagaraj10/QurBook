@@ -20,7 +20,7 @@ class PatientForgotPasswordModel {
       message = json[strmessage];
       isSuccess = json[strIsSuccess];
       result =
-              json['result'] != null ? new ForgorResult.fromJson(json['result']) : null;
+              json['result'] != null ? ForgorResult.fromJson(json['result']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -54,7 +54,7 @@ class ForgorResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isVirtualNumber'] = this.isVirtualNumber;
     return data;
   }

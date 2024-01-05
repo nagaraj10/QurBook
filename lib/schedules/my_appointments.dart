@@ -1,5 +1,3 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../src/model/AppointmentModel.dart';
 import '../src/utils/FHBUtils.dart';

@@ -30,12 +30,12 @@ class HealthOrganizationResult {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       healthOrganization = json['healthOrganization'] != null
-              ? new HealthOrganization.fromJson(json['healthOrganization'])
+              ? HealthOrganization.fromJson(json['healthOrganization'])
               : null;
       if (json['doctorFeeCollection'] != null) {
             doctorFeeCollection = <DoctorFeeCollection>[];
             json['doctorFeeCollection'].forEach((v) {
-              doctorFeeCollection!.add(new DoctorFeeCollection.fromJson(v));
+              doctorFeeCollection!.add(DoctorFeeCollection.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -44,7 +44,7 @@ class HealthOrganizationResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['startDate'] = this.startDate;
     data['endDate'] = this.endDate;
@@ -92,7 +92,7 @@ class HealthOrganization {
             <HealthOrganizationAddressCollection>[];
             json['healthOrganizationAddressCollection'].forEach((v) {
               healthOrganizationAddressCollection!
-                  .add(new HealthOrganizationAddressCollection.fromJson(v));
+                  .add(HealthOrganizationAddressCollection.fromJson(v));
             });
           }
       if (json['healthOrganizationContactCollection'] != null) {
@@ -100,7 +100,7 @@ class HealthOrganization {
             <HealthOrganizationContactCollection>[];
             json['healthOrganizationContactCollection'].forEach((v) {
               healthOrganizationContactCollection!
-                  .add(new HealthOrganizationContactCollection.fromJson(v));
+                  .add(HealthOrganizationContactCollection.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -109,7 +109,7 @@ class HealthOrganization {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
     data['isActive'] = this.isActive;
@@ -168,17 +168,17 @@ class HealthOrganizationAddressCollection {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       addressType = json['addressType'] != null
-              ? new AddressTypeNew.fromJson(json['addressType'])
+              ? AddressTypeNew.fromJson(json['addressType'])
               : null;
-      city = json['city'] != null ? new CityNew.fromJson(json['city']) : null;
-      state = json['state'] != null ? new StateNew.fromJson(json['state']) : null;
+      city = json['city'] != null ? CityNew.fromJson(json['city']) : null;
+      state = json['state'] != null ? StateNew.fromJson(json['state']) : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['addressLine1'] = this.addressLine1;
     data['addressLine2'] = this.addressLine2;
@@ -239,7 +239,7 @@ class AddressTypeNew {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['code'] = this.code;
     data['name'] = this.name;
@@ -276,7 +276,7 @@ class CityNew {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
     data['isActive'] = this.isActive;
@@ -316,7 +316,7 @@ class StateNew {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
     data['countryCode'] = this.countryCode;
@@ -358,7 +358,7 @@ class HealthOrganizationContactCollection {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['phoneNumber'] = this.phoneNumber;
     data['isPrimary'] = this.isPrimary;
@@ -401,7 +401,7 @@ class DoctorFeeCollection {
       fee = json['fee'];
       followupValue = json['followupValue'];
       followupIn = json['followupIn'] != null
-              ? new FollowupIn.fromJson(json['followupIn'])
+              ? FollowupIn.fromJson(json['followupIn'])
               : null;
       effectiveFromDate = json['effectiveFromDate'];
       effectiveToDate = json['effectiveToDate'];
@@ -409,9 +409,9 @@ class DoctorFeeCollection {
       createdOn = json['createdOn'];
       lastModifiedOn = json['lastModifiedOn'];
       feeType =
-          json['feeType'] != null ? new FeeType.fromJson(json['feeType']) : null;
+          json['feeType'] != null ? FeeType.fromJson(json['feeType']) : null;
       followupType = json['followupType'] != null
-              ? new FeeType.fromJson(json['followupType'])
+              ? FeeType.fromJson(json['followupType'])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -419,7 +419,7 @@ class DoctorFeeCollection {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['fee'] = this.fee;
     data['followupValue'] = this.followupValue;
@@ -458,7 +458,7 @@ class FollowupIn {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['days'] = this.days;
     return data;
   }
@@ -503,7 +503,7 @@ class FeeType {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['code'] = this.code;
     data['name'] = this.name;

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/location_data_model.dart';
@@ -1694,7 +1695,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       hospitalListRepository.addHospitalList(params).then((value) {
         if (value!.isSuccess!) {
           Navigator.pop(context);
-          HospitalsListResult hospitaData = new HospitalsListResult();
+          HospitalsListResult hospitaData = HospitalsListResult();
           hospitaData.name = '';
           hospitaData.healthOrganizationName = value.result!.name;
           hospitaData.healthOrganizationId = null;
@@ -1851,13 +1852,15 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           return AlertDialog(
             content: Text(variable.strDisableTeleconsulting),
             actions: <Widget>[
-              FlatButton(
-                  onPressed: () {
+              FlatButtonWidget(
+                bgColor: Colors.transparent,
+                isSelected: true,
+                onPress: () {
                     Navigator.of(context).pop();
                     teleHealthAlertShown = true;
                     _addBtnTappedProvider(data);
                   },
-                  child: Text('Ok'))
+                  title: 'Ok',)
             ],
           );
         });

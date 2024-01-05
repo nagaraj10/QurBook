@@ -13,7 +13,7 @@ class ActivityStatusModel {
       if (json['result'] != null) {
             result = <ActivityStatusResult>[];
             json['result'].forEach((v) {
-              result!.add(new ActivityStatusResult.fromJson(v));
+              result!.add(ActivityStatusResult.fromJson(v));
             });
           }
     } catch (e,stackTrace) {
@@ -22,7 +22,7 @@ class ActivityStatusModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.map((v) => v.toJson()).toList();
@@ -47,7 +47,7 @@ class ActivityStatusResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['PlanStatus'] = this.planStatus;
     data['CurDate'] = this.curDate;
     return data;

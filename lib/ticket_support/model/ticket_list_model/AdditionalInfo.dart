@@ -1,6 +1,5 @@
 
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/src/model/Health/Data.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 
 class AdditionalInfo {
@@ -25,10 +24,10 @@ class AdditionalInfo {
       _preferredLabName = json['preferredLabName'];
       _preferredTime = json['preferredTime'];
       _modeOfService = json['modeOfService'] != null||json['mode_of_service']!= null
-              ? new FieldData.fromJson(json['modeOfService'] == null?json['mode_of_service']:json['modeOfService'])
+              ? FieldData.fromJson(json['modeOfService'] == null?json['mode_of_service']:json['modeOfService'])
               : null;
       _ticketStatus = json['ticketStatus'] != null
-              ? new Data.fromJson(json['ticketStatus'])
+              ? Data.fromJson(json['ticketStatus'])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -91,7 +90,7 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
     return data;

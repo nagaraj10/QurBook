@@ -34,8 +34,8 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   late LoginBloc _loginBloc;
   Country _selectedDialogCountry = Country.fromCode(CommonUtil.REGION_CODE);
-  TextEditingController phoneTextController = new TextEditingController();
-  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  TextEditingController phoneTextController = TextEditingController();
+  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -67,7 +67,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   textAlign: TextAlign.start,
                   style: TextStyle(
                       //TODO chnage theme
-                      color: Color(new CommonUtil().getMyPrimaryColor()),
+                      color: Color(CommonUtil().getMyPrimaryColor()),
                       fontSize: 20.0.sp,
                       fontWeight: FontWeight.w500),
                 ),
@@ -87,7 +87,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 child: ImageIcon(
                   AssetImage(variable.icon_otp),
                   size: 70,
-                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                  color: Color(CommonUtil().getMyPrimaryColor()),
                 ),
               ),
               Padding(
@@ -153,8 +153,8 @@ class _SignInScreenState extends State<SignInScreen> {
           keyboardType: TextInputType.phone,
           inputFormatters: <TextInputFormatter>[
             LengthLimitingTextInputFormatter(12),
-            WhitelistingTextInputFormatter.digitsOnly,
-            BlacklistingTextInputFormatter.singleLineFormatter,
+            FilteringTextInputFormatter.digitsOnly,
+            FilteringTextInputFormatter.singleLineFormatter,
           ],
           decoration: InputDecoration(
               border: InputBorder.none,
@@ -182,12 +182,12 @@ class _SignInScreenState extends State<SignInScreen> {
               gradient: LinearGradient(
                 colors: <Color>[
                   //TODO chnage theme
-                  Color(new CommonUtil().getMyPrimaryColor()),
-                  Color(new CommonUtil().getMyGredientColor()),
+                  Color(CommonUtil().getMyPrimaryColor()),
+                  Color(CommonUtil().getMyGredientColor()),
                 ],
               ),
               onPressed: () {
-                new FHBUtils().check().then((intenet) {
+                FHBUtils().check().then((intenet) {
                   if (intenet != null && intenet) {
                     bloc
                         .submit(phoneTextController.text, countryCode!)
@@ -221,7 +221,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       }
                     });
                   } else {
-                    new FHBBasicWidget().showInSnackBar(
+                    FHBBasicWidget().showInSnackBar(
                         Constants.STR_NO_CONNECTIVITY, scaffold_state);
                   }
                   // No-Internet Case
@@ -247,7 +247,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       );
     } else {
-      new FHBBasicWidget().getSnackBarWidget(context, signIn.message!);
+      FHBBasicWidget().getSnackBarWidget(context, signIn.message!);
     }
   }
 }

@@ -6,34 +6,36 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:myfhb/voice_cloning/services/voice_clone_services.dart';
 import 'package:myfhb/voice_cloning/view/widgets/countdown_timer_widget.dart';
 import 'package:path_provider/path_provider.dart';
 
-
-class VoiceCloningController extends ChangeNotifier{
+class VoiceCloningController extends ChangeNotifier {
   var countdown = 10;
   var progressValue = 0.0;
   var recordingDurationTxt = '0:00:00';
   bool isRecorderView = true;
-  bool isPlayerLoading =false;
-  bool canStopRecording =false;
+  bool isPlayerLoading = false;
+  bool canStopRecording = false;
   bool isRecording = false;
   String _mPath = 'recorder.m4a';
   List<double> audioWaveData = [];
   Timer? countDownTimer;
 
-  double playPosition=0.0;
+  double playPosition = 0.0;
 
-  double maxPlayerDuration=1.0;
+  double maxPlayerDuration = 1.0;
+
   ///Audio And recorder Controllers
-  late  RecorderController recorderController;
+  late RecorderController recorderController;
   late PlayerController playerController;
   VoiceCloneServices voiceCloneServices = VoiceCloneServices();
-  void disposeRecorder(){
-    isRecorderView =true;
-     isRecording =false;
-     recorderController.dispose();
+  void disposeRecorder() {
+    isRecorderView = true;
+    isRecording = false;
+    recorderController.dispose();
     playerController.dispose();
   }
 
@@ -44,82 +46,81 @@ class VoiceCloningController extends ChangeNotifier{
   }
 
   void initialiseControllers() {
-    canStopRecording =false;
-   playerController = PlayerController();
+    canStopRecording = false;
+    playerController = PlayerController();
     recorderController = RecorderController()
       ..androidEncoder = AndroidEncoder.aac
       ..androidOutputFormat = AndroidOutputFormat.mpeg4
       ..iosEncoder = IosEncoder.kAudioFormatMPEG4AAC
       ..sampleRate = 44100;
-    recorderController.onCurrentDuration.listen((duration){
+    recorderController.onCurrentDuration.listen((duration) {
       ///Added this condition because min player duration should be 1 sec
       ///so enabling the stop button after one sec
-      if(duration >= Duration(seconds: 1)){
-        canStopRecording =true;
+      if (duration >= Duration(seconds: 1)) {
+        canStopRecording = true;
       }
-      recordingDurationTxt =duration.toHHMMSS();
+      recordingDurationTxt = duration.toHHMMSS();
       notifyListeners();
     });
   }
 
-  void toggleResumePause(){
-    if(recorderController.isRecording){
+  void toggleResumePause() {
+    if (recorderController.isRecording) {
       recorderController.pause();
-      isRecording =false;
-    }else{
+      isRecording = false;
+    } else {
       recorderController.record();
-      isRecording =true;
+      isRecording = true;
     }
     notifyListeners();
   }
 
-  void startRecording()async{
-    try{
+  void startRecording() async {
+    try {
       await recorderController.record(path: _mPath);
       isRecording = true;
       notifyListeners();
-    }catch(e){
-
-    }
+    } catch (e) {}
   }
 
-  void stopRecording()async{
+  void stopRecording() async {
     /// Clears WaveData and labels from the list. This will effectively remove
     /// waves and labels from the UI.
     recorderController.reset();
     recorderController.refresh();
     _mPath = (await recorderController.stop(false))!;
-    if (_mPath != null) {
-
-    }
+    if (_mPath != null) {}
     recordingDurationTxt = '0:00:00';
-    isRecorderView =false;
-    isRecording =false;
-    playPosition =0.0;
-    maxPlayerDuration =1.0;
+    isRecorderView = false;
+    isRecording = false;
+    playPosition = 0.0;
+    maxPlayerDuration = 1.0;
     notifyListeners();
     startPlayer();
   }
 
-  void submitRecording()async{
+  void submitRecording() async {
     setPlayerLoading(true);
-    ///Checking the Recorded file is less than 100 MB.
-   var fileInMb =await  getFileSizeInMB(_mPath);
-   if(fileInMb<=100){
-     var data = await voiceCloneServices.uploadVoiceClone(_mPath);
-     setPlayerLoading(false);
-     if(data.isSuccess==true){
-       FlutterToast().getToast('success', Colors.green);
-       Navigator.pop(Get.context!);
-     }else{
-       FlutterToast().getToast(data.message.toString(), Colors.red);
-     }
-   }else{
-     setPlayerLoading(false);
-     FlutterToast().getToast(fileShouldLess, Colors.red);
-   }
 
+    ///Checking the Recorded file is less than 100 MB.
+    var fileInMb = await getFileSizeInMB(_mPath);
+    if (fileInMb <= 100) {
+      var data = await voiceCloneServices.uploadVoiceClone(_mPath);
+      setPlayerLoading(false);
+      if (data.isSuccess == true) {
+        Navigator.pop(Get.context!);
+        Navigator.pushNamed(Get.context!, rt_VoiceCloningStatus,
+                arguments: VoiceCloneStatusArguments(fromMenu: false))
+            .then((value) {});
+      } else {
+        FlutterToast().getToast(data.message.toString(), Colors.red);
+      }
+    } else {
+      setPlayerLoading(false);
+      FlutterToast().getToast(fileShouldLess, Colors.red);
+    }
   }
+
   Future<int> getFileSizeInMB(String filePath) async {
     File file = File(filePath);
     int sizeInBytes = await file.length();
@@ -139,69 +140,64 @@ class VoiceCloningController extends ChangeNotifier{
             content: VoiceCloningCountDownWidget(),
           );
         }).then((value) {
-          if(value==true){
-            startRecording();
-          }else{
-            countDownTimer?.cancel();
-          }
-
+      if (value == true) {
+        startRecording();
+      } else {
+        countDownTimer?.cancel();
+      }
     });
   }
 
-
   void startCountDownTimer() {
-    countdown=10;
-    progressValue=0;
-    isRecorderView =true;
-    recordingDurationTxt ='0:00:00';
+    countdown = 10;
+    progressValue = 0;
+    isRecorderView = true;
+    recordingDurationTxt = '0:00:00';
     audioWaveData.clear();
     notifyListeners();
     countDownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (countdown > 0) {
         countdown--;
+
         ///progress value supports only 0.1 to 1 so added logic
         /// to achieve from countdown timer.
         progressValue = (10 - countdown) / 10.0;
         notifyListeners();
       } else {
         timer.cancel();
-        Navigator.pop(Get.context!,true);
+        Navigator.pop(Get.context!, true);
       }
     });
   }
 
-  void setPlayerLoading(bool value){
+  void setPlayerLoading(bool value) {
     this.isPlayerLoading = value;
     notifyListeners();
   }
 
-
-  void reRecord(){
+  void reRecord() {
     playerController.stopPlayer();
-    isRecorderView =true;
-    canStopRecording =false;
-    recordingDurationTxt ='00:00:00';
+    isRecorderView = true;
+    canStopRecording = false;
+    recordingDurationTxt = '00:00:00';
     showCountdownDialog();
     notifyListeners();
   }
-
-
-
 
   Future<void> startPlayer() async {
     setPlayerLoading(true);
     audioWaveData = await playerController.extractWaveformData(
       path: _mPath,
     );
-    await playerController.preparePlayer(
-      path: _mPath
-    );
-    maxPlayerDuration= (await playerController.getDuration(DurationType.max)).toDouble();
+    await playerController.preparePlayer(path: _mPath);
+    maxPlayerDuration =
+        (await playerController.getDuration(DurationType.max)).toDouble();
     setPlayerLoading(false);
+
     ///When using Finish mode pause it will allow to play and pause for every time.
     await playerController.startPlayer(finishMode: FinishMode.pause);
     playerController.onCompletion.listen((event) {
-      playPosition =0.0;
+      playPosition = 0.0;
       notifyListeners();
     });
 
@@ -213,11 +209,11 @@ class VoiceCloningController extends ChangeNotifier{
   }
 
   Future<void> playPausePlayer() async {
-    if(playerController.playerState.isPlaying){
+    if (playerController.playerState.isPlaying) {
       await playerController.pausePlayer();
-    }else{
-      await playerController.startPlayer(finishMode:FinishMode.pause,forceRefresh: true);
-
+    } else {
+      await playerController.startPlayer(
+          finishMode: FinishMode.pause, forceRefresh: true);
     }
     notifyListeners();
   }
@@ -228,25 +224,19 @@ class VoiceCloningController extends ChangeNotifier{
     String formattedDuration = '';
 
     if (duration.inHours > 0) {
-      formattedDuration +=
-      '${duration.inHours.toString().padLeft(2, '0')}:';
+      formattedDuration += '${duration.inHours.toString().padLeft(2, '0')}:';
     }
     formattedDuration +=
-    '${duration.inMinutes.remainder(60).toString().padLeft(2, '0')}:';
+        '${duration.inMinutes.remainder(60).toString().padLeft(2, '0')}:';
     formattedDuration +=
-    (duration.inSeconds.remainder(60)).toString().padLeft(2, '0');
+        (duration.inSeconds.remainder(60)).toString().padLeft(2, '0');
 
     return formattedDuration;
   }
-
 
   @override
   void dispose() {
     audioWaveData.clear();
     super.dispose();
   }
-
-
-
-
 }

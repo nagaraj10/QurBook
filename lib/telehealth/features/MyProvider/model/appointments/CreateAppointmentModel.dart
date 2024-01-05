@@ -16,7 +16,7 @@ class CreateAppointmentModel {
       message = json[strMessage];
       result =
           json[strResult] != null
-              ? new CreateAppointmentResult.fromJson(json[strResult])
+              ? CreateAppointmentResult.fromJson(json[strResult])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -24,7 +24,7 @@ class CreateAppointmentModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[strIsSuccess] = this.isSuccess;
     data[strMessage] = this.message;
     if (this.result != null) {

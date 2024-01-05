@@ -1,8 +1,7 @@
 
 import 'dart:io';
 
-import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
-import 'package:flutter/material.dart';
+import 'package:advance_pdf_viewer2/advance_pdf_viewer.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
 

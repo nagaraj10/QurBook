@@ -5,7 +5,7 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class CommonComponents {
   getOutlineButton(String buttonText, onPressed) {
-    return OutlineButton(
+    return OutlinedButton(
         child: Text(buttonText),
         onPressed: () {
           onPressed();
@@ -22,7 +22,7 @@ class CommonComponents {
   }
 
   showSnackBar(String message, BuildContext context, Color color) {
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       backgroundColor: color,
       content: Text(message, style: TextStyle(color: Colors.white)),
     ));
@@ -40,16 +40,16 @@ class CommonComponents {
               color: Colors.transparent,
               child: Container(
                 padding: EdgeInsets.all(10.0),
-                margin: new EdgeInsets.all(20.0),
-                decoration: new BoxDecoration(
+                margin: EdgeInsets.all(20.0),
+                decoration: BoxDecoration(
                   color: color,
                   shape: BoxShape.rectangle,
-                  borderRadius: new BorderRadius.circular(30.0),
+                  borderRadius: BorderRadius.circular(30.0),
                   boxShadow: <BoxShadow>[
-                    new BoxShadow(
+                    BoxShadow(
                       color: Colors.black12,
                       blurRadius: 20.0,
-                      offset: new Offset(0.0, 5.0),
+                      offset: Offset(0.0, 5.0),
                     ),
                   ],
                 ),

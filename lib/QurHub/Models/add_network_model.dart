@@ -22,7 +22,7 @@ class AddNetworkModel {
       isSuccess = json['isSuccess'];
       message = json['message'];
       diagnostics = json['diagnostics'] != null
-          ? new Diagnostics.fromJson(json['diagnostics'])
+          ? Diagnostics.fromJson(json['diagnostics'])
           : null;
     } catch (e,stackTrace) {
             CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -31,7 +31,7 @@ class AddNetworkModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     try {
       data['result'] = this.result;
       data['hubId'] = this.hubId;
@@ -52,7 +52,7 @@ class Diagnostics {
   Diagnostics.fromJson(Map<String, dynamic>? json) {}
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     return data;
   }
 }

@@ -20,7 +20,7 @@ class ClaimListResponse {
             if (json['result'] != null) {
               result = <ClaimListResult>[];
               json['result'].forEach((v) {
-                result!.add(new ClaimListResult.fromJson(v));
+                result!.add(ClaimListResult.fromJson(v));
               });
             }
           }
@@ -30,7 +30,7 @@ class ClaimListResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
     if (this.result != null) {

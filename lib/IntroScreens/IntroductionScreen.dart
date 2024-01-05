@@ -5,7 +5,7 @@ import '../common/CommonUtil.dart';
 import '../common/PreferenceUtil.dart';
 import '../constants/variable_constant.dart';
 import '../src/ui/SplashScreen.dart';
-import '../src/utils/colors_utils.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 
 class IntroductionScreen extends StatefulWidget {
   @override
@@ -59,17 +59,16 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
           const SizedBox(
             height: 10,
           ),
-          FlatButton(
-              onPressed: () {
-                Get.offAll(SplashScreen());
-              },
-              child: Text(
-                (screens.length - 1) == currentScreen ? 'CLOSE' : 'SKIP',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Color(CommonUtil().getMyPrimaryColor()),
-                ),
-              )),
+          FlatButtonWidget(
+            bgColor: Colors.transparent,
+            isSelected: true,
+            onPress: () {
+              Get.offAll(SplashScreen());
+            },
+            title: (screens.length - 1) == currentScreen ? 'CLOSE' : 'SKIP',
+            fontSize: 18,
+            titleColor: Color(CommonUtil().getMyPrimaryColor()),
+          ),
           const SizedBox(
             height: 20,
           ),

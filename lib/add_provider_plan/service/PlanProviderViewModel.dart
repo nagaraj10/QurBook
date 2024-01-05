@@ -5,13 +5,11 @@ import 'package:myfhb/add_provider_plan/service/AddProviderService.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:provider/provider.dart';
 import 'dart:convert' as convert;
 
-import 'package:scroll_to_index/util.dart';
 
 class PlanProviderViewModel extends ChangeNotifier {
-  AddProviderService _addProviderService = new AddProviderService();
+  AddProviderService _addProviderService = AddProviderService();
   List<Result>? providerPlanResult;
   bool hasSelectAllData = false;
 

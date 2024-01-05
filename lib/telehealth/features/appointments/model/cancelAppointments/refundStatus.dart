@@ -39,7 +39,7 @@ class RefundStatus {
       createdOn = json[parameters.strCreatedOn];
       lastModifiedOn = json[parameters.strLastModifiedOn];
       referenceData = json[parameters.strReferenceData] != null
-              ? new ReferenceData.fromJson(json[parameters.strReferenceData])
+              ? ReferenceData.fromJson(json[parameters.strReferenceData])
               : null;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -47,7 +47,7 @@ class RefundStatus {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data[parameters.strId] = this.id;
     data[parameters.strCode] = this.code;
     data[parameters.strName] = this.name;

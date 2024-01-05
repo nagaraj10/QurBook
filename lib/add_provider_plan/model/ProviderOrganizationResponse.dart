@@ -10,13 +10,13 @@ class ProviderOrganisationResponse {
     if (json['result'] != null) {
       result = <Result>[];
       json['result'].forEach((v) {
-        result!.add(new Result.fromJson(v));
+        result!.add(Result.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.map((v) => v.toJson()).toList();
@@ -65,7 +65,7 @@ class Result {
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
     businessDetail = json['businessDetail'] != null
-        ? new BusinessDetail.fromJson(json['businessDetail'])
+        ? BusinessDetail.fromJson(json['businessDetail'])
         : null;
     domainUrl = json['domainUrl'];
     isDisabled = json['isDisabled'];
@@ -74,18 +74,18 @@ class Result {
     if (json['specialty'] != null) {
       specialty = <Specialty>[];
       json['specialty'].forEach((v) {
-        specialty!.add(new Specialty.fromJson(v));
+        specialty!.add(Specialty.fromJson(v));
       });
     }
     isHealthPlansActivated = json['isHealthPlansActivated'];
     isOptCaregiveService = json['isOptCaregiveService'];
     healthOrganizationType = json['healthOrganizationType'] != null
-        ? new HealthOrganizationType.fromJson(json['healthOrganizationType'])
+        ? HealthOrganizationType.fromJson(json['healthOrganizationType'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
     data['isActive'] = this.isActive;
@@ -128,7 +128,7 @@ class BusinessDetail {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.documents != null) {
       data['documents'] = this.documents;
     }
@@ -149,7 +149,7 @@ class Specialty {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
     return data;
@@ -191,7 +191,7 @@ class HealthOrganizationType {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['code'] = this.code;
     data['name'] = this.name;

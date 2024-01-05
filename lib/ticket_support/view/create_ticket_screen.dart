@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -10,11 +9,11 @@ import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
+// TODO: multi_image_picker deprecated so need to FIX
+// import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
@@ -45,9 +44,7 @@ import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
 import 'package:open_filex/open_filex.dart';
 //import 'package:open_file/open_file.dart'; FU2.5
 import 'package:provider/provider.dart';
-import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as tckConstants;
-import '../../main.dart';
 import '../../widgets/GradientAppBar.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'my_tickets_screen.dart';
@@ -56,8 +53,7 @@ import '../../constants/variable_constant.dart' as variable;
 import 'dart:convert';
 import '../../../my_providers/models/UserAddressCollection.dart' as address;
 import '../../constants/fhb_parameters.dart' as parameters;
-import 'package:flutter_absolute_path/flutter_absolute_path.dart'; //FU2.5
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+//FU2.5
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/resources/network/api_services.dart';
@@ -89,7 +85,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   final descController = TextEditingController();
   FocusNode preferredDateFocus = FocusNode();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
-  GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
   var controller = Get.put(CreateTicketController());
   var regController = CommonUtil().onInitQurhomeRegimenController();
   Hospitals? selectedLab;
@@ -109,7 +105,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   Hospitals? hospitalObj;
 
   var doctorsData, hospitalData, labData;
-  CommonWidgets commonWidgets = new CommonWidgets();
+  CommonWidgets commonWidgets = CommonWidgets();
   TextEditingController doctor = TextEditingController();
   TextEditingController lab = TextEditingController();
   TextEditingController hospital = TextEditingController();
@@ -124,7 +120,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   bool isFirstTym = true;
 
   List<ImagesModel> imagePaths = [];
-  List<Asset> images = <Asset>[];
+  // TODO: multi_image_picker deprecated so need to FIX
+  // List<Asset> images = <Asset>[];
   List<String> recordIds = [];
   var healthRecordList;
   String? authToken;
@@ -346,7 +343,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
   getTextField(Field field) {
     try {
-      var textEditingController = new TextEditingController();
+      var textEditingController = TextEditingController();
       textEditingControllers.putIfAbsent(
           CommonUtil().getFieldName(field.name), () => textEditingController);
     } catch (e,stackTrace) {
@@ -1140,8 +1137,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                      Color(new CommonUtil().getMyPrimaryColor()),
-                      Color(new CommonUtil().getMyGredientColor())
+                      Color(CommonUtil().getMyPrimaryColor()),
+                      Color(CommonUtil().getMyGredientColor())
                     ]).createShader(bounds);
               },
               child: Image.asset(
@@ -1154,12 +1151,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             borderRadius: BorderRadius.all(Radius.circular(8.0)),
             borderSide: BorderSide(width: 0, color: Colors.white),
           ),
-          enabledBorder: new OutlineInputBorder(
-            borderRadius: new BorderRadius.circular(8.0),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
             borderSide: BorderSide(color: Colors.white),
           ),
-          focusedBorder: new OutlineInputBorder(
-            borderRadius: new BorderRadius.circular(8.0),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
             borderSide: BorderSide(color: getColorFromHex('#fffff')),
           ),
         ),
@@ -1202,8 +1199,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                      Color(new CommonUtil().getMyPrimaryColor()),
-                      Color(new CommonUtil().getMyGredientColor())
+                      Color(CommonUtil().getMyPrimaryColor()),
+                      Color(CommonUtil().getMyGredientColor())
                     ]).createShader(bounds);
               },
               child: Image.asset(
@@ -1216,12 +1213,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             borderRadius: BorderRadius.all(Radius.circular(8.0)),
             borderSide: BorderSide(width: 0, color: Colors.white),
           ),
-          enabledBorder: new OutlineInputBorder(
-            borderRadius: new BorderRadius.circular(8.0),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
             borderSide: BorderSide(color: Colors.white),
           ),
-          focusedBorder: new OutlineInputBorder(
-            borderRadius: new BorderRadius.circular(8.0),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
             borderSide: BorderSide(color: getColorFromHex('#fffff')),
           ),
         ),
@@ -1267,14 +1264,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
           borderSide: BorderSide(width: 0, color: Colors.white),
         ),
-        enabledBorder: new OutlineInputBorder(
-          borderRadius: new BorderRadius.circular(8.0),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide(color: Colors.white),
         ),
-        focusedBorder: new OutlineInputBorder(
-          borderRadius: new BorderRadius.circular(8.0),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide(
-            color: Color(new CommonUtil().getMyPrimaryColor()),
+            color: Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
       ),
@@ -1295,14 +1292,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
           borderSide: BorderSide(width: 0, color: Colors.white),
         ),
-        enabledBorder: new OutlineInputBorder(
-          borderRadius: new BorderRadius.circular(8.0),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide(color: Colors.white),
         ),
-        focusedBorder: new OutlineInputBorder(
-          borderRadius: new BorderRadius.circular(8.0),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide(
-            color: Color(new CommonUtil().getMyPrimaryColor()),
+            color: Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
       ),
@@ -1322,14 +1319,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
           borderSide: BorderSide(width: 0, color: Colors.white),
         ),
-        enabledBorder: new OutlineInputBorder(
-          borderRadius: new BorderRadius.circular(8.0),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide(color: Colors.white),
         ),
-        focusedBorder: new OutlineInputBorder(
-          borderRadius: new BorderRadius.circular(8.0),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide(
-            color: Color(new CommonUtil().getMyPrimaryColor()),
+            color: Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
       ),
@@ -1362,14 +1359,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
           borderSide: BorderSide(width: 0, color: Colors.white),
         ),
-        enabledBorder: new OutlineInputBorder(
-          borderRadius: new BorderRadius.circular(8.0),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide(color: Colors.white),
         ),
-        focusedBorder: new OutlineInputBorder(
-          borderRadius: new BorderRadius.circular(8.0),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide(
-            color: Color(new CommonUtil().getMyPrimaryColor()),
+            color: Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
       ),
@@ -1706,7 +1703,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
     if (_providersBloc != null) {
       _providersBloc = null;
-      _providersBloc = new ProvidersBloc();
+      _providersBloc = ProvidersBloc();
     }
     return FutureBuilder<MyProvidersResponse?>(
       future: _providersBloc!.getMedicalPreferencesForDoctors(),
@@ -1820,7 +1817,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                               padding: EdgeInsets.symmetric(vertical: 10),
                               width: 0.5.sw,
                               child: Text(element!.user != null
-                                  ? new CommonUtil()
+                                  ? CommonUtil()
                                       .getDoctorName(element.user!)!
                                   : ''),
                             ),
@@ -1836,7 +1833,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         child: Container(
                           width: 0.5.sw,
                           child: Text(element!.user != null
-                              ? new CommonUtil().getDoctorName(element.user!)!
+                              ? CommonUtil().getDoctorName(element.user!)!
                               : ''),
                         ),
                       ))
@@ -2528,7 +2525,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 child: IconButton(
           icon: Icon(
             Icons.photo_library,
-            color: Color(new CommonUtil().getMyPrimaryColor()),
+            color: Color(CommonUtil().getMyPrimaryColor()),
             size: 32.0.sp,
           ),
           onPressed: () async {
@@ -2538,9 +2535,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         Center(
             child: Visibility(
                 child: IconButton(
-          icon: new ImageIcon(
+          icon: ImageIcon(
             AssetImage(variable.icon_attach),
-            color: Color(new CommonUtil().getMyPrimaryColor()),
+            color: Color(CommonUtil().getMyPrimaryColor()),
             size: 32.0.sp,
           ),
           onPressed: () async {
@@ -2608,37 +2605,41 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   }
 
   Future<void> loadAssets() async {
-    List<Asset> resultList = <Asset>[];
+    // TODO: multi_image_picker deprecated so need to FIX
+    // List<Asset> resultList = <Asset>[];
     try {
-      resultList = await MultiImagePicker.pickImages(
-        maxImages: 300,
-        enableCamera: true,
-        selectedAssets: images,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: variable.strChat),
-        materialOptions: MaterialOptions(
-          actionBarColor: fhbColors.actionColor,
-          useDetailsView: false,
-          selectCircleStrokeColor: fhbColors.colorBlack,
-        ),
-      );
+      // TODO: multi_image_picker deprecated so need to FIX
+      // resultList = await MultiImagePicker.pickImages(
+      //   maxImages: 300,
+      //   enableCamera: true,
+      //   selectedAssets: images,
+      //   cupertinoOptions: CupertinoOptions(takePhotoIcon: variable.strChat),
+      //   materialOptions: MaterialOptions(
+      //     actionBarColor: fhbColors.actionColor,
+      //     useDetailsView: false,
+      //     selectCircleStrokeColor: fhbColors.colorBlack,
+      //   ),
+      // );
     } on FetchException catch (e,stackTrace) {}
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
-    for (Asset asset in resultList) {
-      // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
-      // if(filePath!=null)imagePaths.add(ImagesModel(isFromFile: true, file: filePath, isdownloaded: true, asset: asset));
-      String filePath =
-          await FlutterAbsolutePath.getAbsolutePath(asset.identifier ?? '');
-      imagePaths.add(ImagesModel(
-          isFromFile: true,
-          file: filePath,
-          isdownloaded: true,
-          asset: asset)); //FU2.5
-    }
+    // TODO: multi_image_picker deprecated so need to FIX
+    // for (Asset asset in resultList) {
+    //   // String? filePath = await LecleFlutterAbsolutePath.getAbsolutePath(uri: asset.identifier??'');
+    //   // if(filePath!=null)imagePaths.add(ImagesModel(isFromFile: true, file: filePath, isdownloaded: true, asset: asset));
+    //   String filePath =
+    //       await FlutterAbsolutePath.getAbsolutePath(asset.identifier ?? '');
+    //   imagePaths.add(ImagesModel(
+    //       isFromFile: true,
+    //       file: filePath,
+    //       isdownloaded: true,
+    //       asset: asset)); //FU2.5
+    // }
     setState(() {
-      images = resultList;
+      // TODO: multi_image_picker deprecated so need to FIX
+      // images = resultList;
     });
   }
 
@@ -2652,8 +2653,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 crossAxisSpacing: 10),
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              var asset =
-                  imagePaths[index].isFromFile ? imagePaths[index].asset : "";
+              // TODO: multi_image_picker deprecated so need to FIX
+              // var asset = imagePaths[index].isFromFile ? imagePaths[index].asset : "";
               return InkWell(
                 onTap: () {},
                 child: Container(
@@ -2668,11 +2669,15 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                               ? Material(
                                   child: Container(
                                       height: double.infinity,
-                                      child: AssetThumb(
-                                        asset: asset as Asset,
-                                        width: 150,
-                                        height: 150,
-                                      )))
+                                      child: Container()
+                                      // TODO: multi_image_picker deprecated so need to FIX for Default Set Container()
+                                      // AssetThumb(
+                                      //     asset: asset as Asset,
+                                      //     width: 150,
+                                      //     height: 150,
+                                      //   ),
+                                      ),
+                                )
                               : imagePaths[index].isdownloaded
                                   ? imagePaths[index].fileType!.trim() == ".pdf"
                                       ? Material(
@@ -2742,7 +2747,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                               imagePaths.removeAt(index);
 
                               setState(() {
-                                //print('set new state of images');
+                                //print('set State of images');
                               });
                             },
                             child: Icon(
@@ -3002,7 +3007,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         }
       }
     } else {
-      Scaffold.of(contxt).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(contxt).showSnackBar(SnackBar(
         content: Text(
           variable.strFileDownloadeding,
           style: TextStyle(

@@ -7,21 +7,17 @@ import 'package:intl/intl.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
-import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_constants.dart' as Constants;
-import '../../constants/fhb_parameters.dart';
 import '../../constants/variable_constant.dart' as variable;
 import '../model/PlanListModel.dart';
 import 'planDetailsView.dart';
 import '../viewModel/planViewModel.dart';
 import '../viewModel/subscribeViewModel.dart';
-import '../../regiment/view_model/regiment_view_model.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
 import '../../widgets/GradientAppBar.dart';
-import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class PlanList extends StatefulWidget {
@@ -196,20 +192,20 @@ class _MyPlanState extends State<PlanList> {
   }
 
   /*Widget getPlanList() {
-    return new FutureBuilder<PlanListModel>(
+    return FutureBuilder<PlanListModel>(
       future: myPlanViewModel.getPlanList(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
               height: 1.sh / 4.5,
-              child: new Center(
+              child: Center(
                 child: SizedBox(
                   width: 30.0.h,
                   height: 30.0.h,
-                  child: new CircularProgressIndicator(
+                  child: CircularProgressIndicator(
                       backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor())),
+                          Color(CommonUtil().getMyPrimaryColor())),
                 ),
               ),
             ),
@@ -370,7 +366,7 @@ class _MyPlanState extends State<PlanList> {
                                   SizedBox(width: 55.w),
                                 if (planList[i].isSubscribed == '1')
                                   Text(
-                                    new CommonUtil().dateFormatConversion(
+                                    CommonUtil().dateFormatConversion(
                                         planList[i].startDate),
                                     maxLines: 1,
                                     style: TextStyle(
@@ -404,13 +400,13 @@ class _MyPlanState extends State<PlanList> {
                                   fontsize: 16.0.sp,
                                   fontWeight: FontWeight.w500,
                                   colors: Color(
-                                      new CommonUtil().getMyPrimaryColor())),
+                                      CommonUtil().getMyPrimaryColor())),
                               replacement: TextWidget(
                                   text: FREE,
                                   fontsize: 16.0.sp,
                                   fontWeight: FontWeight.w500,
                                   colors: Color(
-                                      new CommonUtil().getMyPrimaryColor())),
+                                      CommonUtil().getMyPrimaryColor())),
                             )
                           else
                             Container(),
@@ -420,22 +416,22 @@ class _MyPlanState extends State<PlanList> {
                                   ? SizedBoxWithChild(
                                       width: 95.0.w,
                                       height: 32.0.h,
-                                      child: FlatButton(
+                                      child: ElevatedButton(style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(18),
                                             side: BorderSide(
                                                 color: getBorderColor(
                                                     i, planList))),
-                                        color: Colors.transparent,
-                                        textColor:
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor:
                                             planList[i].isSubscribed == '0'
                                                 ? Color(CommonUtil()
                                                     .getMyPrimaryColor())
                                                 : Colors.grey,
                                         padding: EdgeInsets.all(
                                           8.0.sp,
-                                        ),
+                                        ),),
                                         onPressed:
                                             planList[i].catselecttype == '1' &&
                                                     planList[i].isSubscribed ==
@@ -492,22 +488,22 @@ class _MyPlanState extends State<PlanList> {
                                       SizedBoxWithChild(
                                         width: 95.0.w,
                                         height: 32.0.h,
-                                        child: FlatButton(
+                                        child: ElevatedButton(style: ElevatedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(18),
                                               side: BorderSide(
                                                   color: getBorderColor(
                                                       i, planList))),
-                                          color: Colors.transparent,
-                                          textColor:
+                                          backgroundColor: Colors.transparent,
+                                          foregroundColor:
                                               planList[i].isSubscribed == '0'
                                                   ? Color(CommonUtil()
                                                       .getMyPrimaryColor())
                                                   : Colors.grey,
                                           padding: EdgeInsets.all(
                                             8.0.sp,
-                                          ),
+                                          ),),
                                           onPressed:
                                               planList[i].catselecttype ==
                                                           '1' &&

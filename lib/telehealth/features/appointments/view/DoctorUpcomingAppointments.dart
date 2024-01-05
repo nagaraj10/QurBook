@@ -52,7 +52,7 @@ class DoctorUpcomingAppointments extends StatefulWidget {
 
 class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   AppointmentsCommonWidget commonWidget = AppointmentsCommonWidget();
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
   List<String?> bookingIds = [];
   List<String?> dates = [];
 
@@ -60,7 +60,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   SharedPreferences? prefs;
   ChatViewModel chatViewModel = ChatViewModel();
   List<CategoryResult> filteredCategoryData = [];
-  CategoryListBlock _categoryListBlock = new CategoryListBlock();
+  CategoryListBlock _categoryListBlock = CategoryListBlock();
 
   AppointmentDetailsController appointmentDetailsController= CommonUtil().onInitAppointmentDetailsController();
 
@@ -264,7 +264,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                     widget.doc!.plannedStartDateTime!))
                                     .toString(),
                                 fontWeight: FontWeight.w600,
-                                colors: Color(new CommonUtil().getMyPrimaryColor()),
+                                colors: Color(CommonUtil().getMyPrimaryColor()),
                               ),
                               TextWidget(
                                 fontsize: 12.0.sp,
@@ -447,17 +447,19 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                   SizedBoxWithChild(
                                     width: 90.0.w,
                                     height: 40.0.h,
-                                    child: FlatButton(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(12.0),
-                                          side: BorderSide(
-                                              color: Color(new CommonUtil()
-                                                  .getMyPrimaryColor()))),
-                                      color: Colors.transparent,
-                                      textColor: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      padding: EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            side: BorderSide(
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor()))),
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                        padding: const EdgeInsets.all(8),
+                                      ),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
@@ -469,17 +471,19 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                   SizedBoxWithChild(
                                     width: 90.0.w,
                                     height: 40.0.h,
-                                    child: FlatButton(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(12.0),
-                                          side: BorderSide(
-                                              color: Color(new CommonUtil()
-                                                  .getMyPrimaryColor()))),
-                                      color: Colors.transparent,
-                                      textColor: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      padding: EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            side: BorderSide(
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor()))),
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor: Color(CommonUtil()
+                                            .getMyPrimaryColor()),
+                                        padding: const EdgeInsets.all(8),
+                                      ),
                                       onPressed: () {
                                         Navigator.pop(context,
                                             getCancelAppoitment(appointments));
@@ -619,7 +623,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   List<CategoryResult>? getCategoryList() {
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
-        filteredCategoryData = new CommonUtil().fliterCategories(value!.result!);
+        filteredCategoryData = CommonUtil().fliterCategories(value!.result!);
 
         //filteredCategoryData.add(categoryDataObjClone);
         return filteredCategoryData;

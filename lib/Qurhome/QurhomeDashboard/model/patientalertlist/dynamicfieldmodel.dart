@@ -45,7 +45,7 @@ class DynamicFieldModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['amax'] = this.amax;
     data['amin'] = this.amin;
     data['type'] = this.type;

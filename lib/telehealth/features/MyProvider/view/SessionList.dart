@@ -21,7 +21,7 @@ class SessionList extends StatefulWidget {
 }
 
 class SessionListState extends State<SessionList> {
-  CommonUtil commonUtil = new CommonUtil();
+  CommonUtil commonUtil = CommonUtil();
   String? sessionTimings = '';
   int selectedRow = -1;
   int selectedItem = -1;
@@ -46,7 +46,7 @@ class SessionListState extends State<SessionList> {
                     visible: widget.sessionData![index].slots!.length > 0
                         ? true
                         : false,
-                    child: new Row(
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBoxWidget(width: 10.0.w),

@@ -5,7 +5,6 @@ import '../../constants/fhb_parameters.dart' as parameters;
 import 'DoctorModel.dart';
 import 'HospitalModel.dart';
 import 'LaborartoryModel.dart';
-import 'ProfilePic.dart';
 
 class MyProvidersResponseList {
   int? status;

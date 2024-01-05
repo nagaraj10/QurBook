@@ -1,14 +1,12 @@
 // import 'package:auto_size_text/auto_size_text.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../../add_providers/models/add_providers_arguments.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
-import '../../constants/variable_constant.dart' as variable;
 import '../bloc/providers_block.dart';
 import '../models/Hospitals.dart';
 import 'package:myfhb/my_providers/screens/my_provider.dart';
@@ -125,7 +123,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                               child: ClipOval(
                                   child: eachLabModel != null
                                       ? /*myProfile.result.profilePicThumbnailUrl != null
-                                  ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
+                                  ? FHBBasicWidget().getProfilePicWidgeUsingUrl(
                                       myProfile.result.profilePicThumbnailUrl)
                                   :*/
                                       Container(

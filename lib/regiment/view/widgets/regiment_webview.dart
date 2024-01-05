@@ -71,13 +71,12 @@ class _RegimentWebViewState extends State<RegimentWebView> {
                     'src="',
                   ) ??
                   '',
-          onLinkTap: (linkUrl, context, attributes, element) {
+          onLinkTap: (linkUrl, attributes, element) {
             CommonUtil().openWebViewNew(
               widget.title,
               linkUrl,
               false,
             );
-            
           },
         ),
       ),

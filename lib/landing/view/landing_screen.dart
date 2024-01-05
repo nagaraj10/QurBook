@@ -6,16 +6,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/SheelaRemainderPopup.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import '../../common/firestore_services.dart';
 import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/SuperMaya.dart';
 import 'package:myfhb/src/utils/lifecycle_state_provider.dart';
@@ -60,7 +59,7 @@ import '../../telehealth/features/chat/view/BadgeIcon.dart';
 import '../view_model/landing_view_model.dart';
 import 'landing_arguments.dart';
 import 'widgets/home_widget.dart';
-import 'widgets/navigation_drawer.dart';
+import 'widgets/navigation_drawer.dart' as NavigationDrawer;
 
 class LandingScreen extends StatefulWidget {
   static _LandingScreenState? of(BuildContext context) =>
@@ -105,7 +104,7 @@ class _LandingScreenState extends State<LandingScreen> {
       CommonUtil().onInitQurhomeRegimenController();
 
   SheelaAIController? sheelBadgeController =
-  CommonUtil().onInitSheelaAIController();
+      CommonUtil().onInitSheelaAIController();
 
   double selOption = 30.0.sp;
   double unSelOption = 28.0.sp;
@@ -322,15 +321,19 @@ class _LandingScreenState extends State<LandingScreen> {
           return AlertDialog(
             content: Text('Do you want to exit for now?'),
             actions: <Widget>[
-              FlatButton(
-                child: Text('CANCEL'),
-                onPressed: () {
+              FlatButtonWidget(
+                bgColor: Colors.transparent,
+                isSelected: true,
+                title: 'CANCEL',
+                onPress: () {
                   Navigator.of(context).pop(false);
                 },
               ),
-              FlatButton(
-                child: Text('OK'),
-                onPressed: () {
+              FlatButtonWidget(
+                bgColor: Colors.transparent,
+                isSelected: true,
+                title: 'OK',
+                onPress: () {
                   Navigator.of(context).pop(true);
                 },
               )
@@ -464,7 +467,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   ],
                 ),
               ),
-              drawer: NavigationDrawer(
+              drawer: NavigationDrawer.NavigationDrawer(
                 myProfile: myProfile,
                 moveToLoginPage: moveToLoginPage,
                 userChangedbool: landingViewModel!.isUserMainId,
@@ -520,14 +523,8 @@ class _LandingScreenState extends State<LandingScreen> {
                     unselectedLabelStyle: const TextStyle(
                       color: Colors.black54,
                     ),
-                    selectedIconTheme: IconThemeData(
-                      color: Color(
-                        CommonUtil().getMyPrimaryColor(),
-                      ),
-                    ),
-                    unselectedIconTheme: const IconThemeData(
-                      color: Colors.black54,
-                    ),
+                    selectedItemColor: Color(CommonUtil().getMyPrimaryColor()),
+                    unselectedItemColor: Colors.black54,
                     items: [
                       BottomNavigationBarItem(
                         icon: ImageIcon(
@@ -542,44 +539,15 @@ class _LandingScreenState extends State<LandingScreen> {
                                   ? selOption
                                   : unSelOption,
                         ),
-                        title: Text(
-                          variable.strhome,
-                          style: TextStyle(
-                            color: landingScreenController!
-                                        .currentTabIndex.value ==
-                                    0
-                                ? Color(
-                                    CommonUtil().getMyPrimaryColor(),
-                                  )
-                                : Colors.black54,
-                          ),
-                        ),
+                        label: variable.strhome,
                       ),
                       BottomNavigationBarItem(
                         icon: getChatSocketIcon(),
-                        title: Text(
-                          variable.strChat,
-                          style: TextStyle(
-                            color: landingScreenController!
-                                        .currentTabIndex.value ==
-                                    1
-                                ? Color(CommonUtil().getMyPrimaryColor())
-                                : Colors.black54,
-                          ),
-                        ),
+                        label: variable.strChat,
                       ),
                       BottomNavigationBarItem(
                         icon: getSheelaIcon(),
-                        title: Text(
-                          variable.strMaya,
-                          style: TextStyle(
-                            color: landingScreenController!
-                                        .currentTabIndex.value ==
-                                    2
-                                ? Color(CommonUtil().getMyPrimaryColor())
-                                : Colors.black54,
-                          ),
-                        ),
+                        label: variable.strMaya,
                       ),
                       BottomNavigationBarItem(
                         icon: ImageIcon(
@@ -592,16 +560,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                   ? selOption
                                   : unSelOption,
                         ),
-                        title: Text(
-                          constants.strAppointment,
-                          style: TextStyle(
-                            color: landingScreenController!
-                                        .currentTabIndex.value ==
-                                    3
-                                ? Color(CommonUtil().getMyPrimaryColor())
-                                : Colors.black54,
-                          ),
-                        ),
+                        label: constants.strAppointment,
                       ),
                       BottomNavigationBarItem(
                         icon: ImageIcon(
@@ -614,16 +573,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                   ? selOption
                                   : unSelOption,
                         ),
-                        title: Text(
-                          variable.strMyRecords,
-                          style: TextStyle(
-                            color: landingScreenController!
-                                        .currentTabIndex.value ==
-                                    4
-                                ? Color(CommonUtil().getMyPrimaryColor())
-                                : Colors.black54,
-                          ),
-                        ),
+                        label: variable.strMyRecords,
                       )
                     ],
                     //backgroundColor: Colors.grey[200],
@@ -863,18 +813,18 @@ class _LandingScreenState extends State<LandingScreen> {
                 });
               });
             } else {
-              new CommonUtil().commonMethodToSetPreference();
+              CommonUtil().commonMethodToSetPreference();
             }
           } else {
-            new CommonUtil().commonMethodToSetPreference();
+            CommonUtil().commonMethodToSetPreference();
           }
         } else {
-          new CommonUtil().commonMethodToSetPreference();
+          CommonUtil().commonMethodToSetPreference();
         }
       } catch (e, stackTrace) {
         CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
-        new CommonUtil().commonMethodToSetPreference();
+        CommonUtil().commonMethodToSetPreference();
       }
     } else {
       CommonUtil().logout(moveToLoginPage);
@@ -996,7 +946,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
     try {
       try {
-        CategoryListBlock _categoryListBlock = new CategoryListBlock();
+        CategoryListBlock _categoryListBlock = CategoryListBlock();
 
         _categoryListBlock.getCategoryLists().then((value) {});
       } catch (e, stackTrace) {
@@ -1102,7 +1052,9 @@ class _LandingScreenState extends State<LandingScreen> {
                         .result![0].profileSetting!.sheelaLiveReminders ??
                     true
                 : true;
-            print('----------isAllowBool: '+(sheelBadgeController?.isAllowSheelaLiveReminders??true).toString());
+            print('----------isAllowBool: ' +
+                (sheelBadgeController?.isAllowSheelaLiveReminders ?? true)
+                    .toString());
           } else {
             PreferenceUtil.saveTheme(
                 Constants.keyPriColor,

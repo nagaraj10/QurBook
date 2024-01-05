@@ -48,23 +48,23 @@ class IDDocsList extends StatefulWidget {
       this.healthRecordSelected);
 
   @override
-  _IDDocsListState createState() => new _IDDocsListState();
+  _IDDocsListState createState() => _IDDocsListState();
 }
 
 class _IDDocsListState extends State<IDDocsList> {
   late HealthReportListForUserBlock _healthReportListForUserBlock;
 
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   List<HealthRecordCollection> mediMasterId = [];
 
-  FlutterToast toast = new FlutterToast();
+  FlutterToast toast = FlutterToast();
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    _healthReportListForUserBlock = HealthReportListForUserBlock();
 
     super.initState();
   }
@@ -88,7 +88,7 @@ class _IDDocsListState extends State<IDDocsList> {
   Widget getWidgetToDisplayIDDocs(HealthRecordList completeData) {
     List<HealthResult> mediaMetaInfoObj = [];
 
-    mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
+    mediaMetaInfoObj = CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionIDDocs);
 
     return RefreshIndicator(
@@ -152,7 +152,7 @@ class _IDDocsListState extends State<IDDocsList> {
               if (mediaMetaInfoObj != null &&
                   (mediaMetaInfoObj.healthRecordCollection?.length ?? 0) > 0) {
                 mediMasterId =
-                    new CommonUtil().getMetaMasterIdListNew(mediaMetaInfoObj);
+                    CommonUtil().getMetaMasterIdListNew(mediaMetaInfoObj);
                 if (mediMasterId.length > 0) {
                   widget.healthRecordSelected(
                       mediaMetaInfoObj.id, mediMasterId, condition);
@@ -182,7 +182,12 @@ class _IDDocsListState extends State<IDDocsList> {
                   data: mediaMetaInfoObj,
                 ),
               ),
-            );
+            ).then((value) async {
+              if (value ?? false) {
+                await Future.delayed(Duration(milliseconds: 100));
+                widget.callBackToRefresh();
+              }
+            });
           }
         },
         child: Container(
@@ -212,7 +217,7 @@ class _IDDocsListState extends State<IDDocsList> {
                   mediaMetaInfoObj.metadata!.healthRecordCategory!.logo!,
                   height: 25.0.h,
                   width: 25.0.h,
-                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                  color: Color(CommonUtil().getMyPrimaryColor()),
                   errorBuilder: (context, error, stackTrace) => SizedBox(),
                 ),
               ),
@@ -255,7 +260,7 @@ class _IDDocsListState extends State<IDDocsList> {
                                   : mobileHeader2),
                         )),
                     Text(
-                      new FHBUtils()
+                      FHBUtils()
                           .getFormattedDateString(mediaMetaInfoObj.createdOn),
                       style: TextStyle(
                           fontSize: CommonUtil().isTablet!
@@ -279,7 +284,7 @@ class _IDDocsListState extends State<IDDocsList> {
                                 AssetImage(variable.icon_record_fav_active),
                                 //TODO chnage theme
                                 color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(CommonUtil().getMyPrimaryColor()),
                                 size: 20,
                               )
                             : ImageIcon(
@@ -288,7 +293,7 @@ class _IDDocsListState extends State<IDDocsList> {
                                 size: 20,
                               ),
                         onPressed: () {
-                          new CommonUtil()
+                          CommonUtil()
                               .bookMarkRecord(mediaMetaInfoObj, _refresh);
                         }),
                     (mediaMetaInfoObj.metadata!.hasVoiceNotes != null &&
@@ -301,7 +306,7 @@ class _IDDocsListState extends State<IDDocsList> {
                     widget.mediaMeta!.contains(mediaMetaInfoObj.id)
                         ? Icon(
                             Icons.done,
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
                           )
                         : SizedBox(),
                   ],
@@ -313,9 +318,9 @@ class _IDDocsListState extends State<IDDocsList> {
   }
 
   getDocumentImageWidget(MediaMetaInfo data) {
-    return new FutureBuilder(
+    return FutureBuilder(
       future: _healthReportListForUserBlock
-          .getDocumentImage(new CommonUtil().getMetaMasterId(data)!),
+          .getDocumentImage(CommonUtil().getMetaMasterId(data)!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Container(
@@ -325,7 +330,7 @@ class _IDDocsListState extends State<IDDocsList> {
             child: Image.memory(snapshot.data),
           );
         } else {
-          return new Shimmer.fromColors(
+          return Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
               child: Container(

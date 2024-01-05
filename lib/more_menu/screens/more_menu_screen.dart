@@ -29,6 +29,7 @@ import 'package:myfhb/src/ui/settings/NonAdheranceSettingsScreen.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/ticket_support/model/user_comments_model.dart';
 import 'package:myfhb/unit/choose_unit.dart';
+import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -101,7 +102,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   bool voiceCloning = false;
   bool providerAllowedVoiceCloningModule = false;
   bool superAdminAllowedVoiceCloningModule = false;
-  String voiceCloningStatus = 'Inactive';
+  String voiceCloningStatus = strInActive; //set defaut value
   bool showVoiceCloningUI = true;
   String healthOrganization = '';
 
@@ -187,7 +188,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       version = packageInfo.version + " + " + packageInfo.buildNumber;
     });
     selectedList = [];
-    _deviceModel = new DevicesViewModel();
+    _deviceModel = DevicesViewModel();
     authViewModel = AuthViewModel();
 
     if ((BASE_URL == prodINURL) ||
@@ -265,8 +266,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               //       size: 24.0.sp,
               //     ),
               //     onPressed: () {
-              //       new FHBBasicWidget().exitApp(context, () {
-              //         new CommonUtil().logout(moveToLoginPage);
+              //       FHBBasicWidget().exitApp(context, () {
+              //         CommonUtil().logout(moveToLoginPage);
               //       });
               //     })
             ]),
@@ -842,12 +843,16 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             ?.superAdminAllowedVoiceCloningModule ??
         false;
 
+    var statusValue =
+        getDeviceSelectionModel.result![0].profileSetting!.voiceCloningStatus ??
+            '';
+
     //value of the voice cloning status
     voiceCloningStatus = superAdminAllowedVoiceCloningModule
         ? providerAllowedVoiceCloningModule
-            ? getDeviceSelectionModel
-                    .result![0].profileSetting!.voiceCloningStatus ??
-                strInActive
+            ? ((statusValue != "" && statusValue != null)
+                ? statusValue
+                : strInActive)
             : strInActive
         : strInActive;
 
@@ -861,9 +866,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     healthOrganization = getDeviceSelectionModel
             .result![0].primaryProvider?.healthorganizationid ??
         '';
+
     ///Saving the Healthorganization id to shared preferences.
-    PreferenceUtil.saveString(keyHealthOrganizationId,
-        healthOrganization);
+    PreferenceUtil.saveString(keyHealthOrganizationId, healthOrganization);
   }
 
   Future<CreateDeviceSelectionModel?> createAppColorSelection(
@@ -891,13 +896,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             allowVitalNotification,
             allowSymptomsNotification,
             voiceCloning)
-        .then((value) {
+        .then((value) async {
       createDeviceSelectionModel = value;
       if (createDeviceSelectionModel!.isSuccess!) {
       } else {
         if (createDeviceSelectionModel!.message ==
             STR_USER_PROFILE_SETTING_ALREADY) {
-          updateDeviceSelectionModel(priColor, greColor);
+          await updateDeviceSelectionModel(priColor, greColor);
         }
       }
     });
@@ -929,17 +934,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             allowSymptomsNotification,
             preferredMeasurement,
             voiceCloning)
-        .then((value) {
+        .then((value) async {
       updateDeviceModel = value;
       if (updateDeviceModel!.isSuccess!) {
         // app color updated
         if (isVoiceCloningChanged) {
-          Navigator.pushNamed(
-            context,
-            router.rt_VoiceCloneTerms,
-          ).then((value) {
-            setState(() {});
-          });
+          await getAppColorValues();
+          navigateToTermsOrStatusScreen();
         }
       }
     });
@@ -1128,8 +1129,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       scale: switchTrail,
                       child: Switch(
                         value: _isdigitRecognition!,
-                        activeColor:
-                            Color(new CommonUtil().getMyPrimaryColor()),
+                        activeColor: Color(CommonUtil().getMyPrimaryColor()),
                         onChanged: (bool newValue) {
                           setState(() {
                             isSkillIntegration = true;
@@ -1167,8 +1167,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       scale: switchTrail,
                       child: Switch(
                         value: _isdeviceRecognition!,
-                        activeColor:
-                            Color(new CommonUtil().getMyPrimaryColor()),
+                        activeColor: Color(CommonUtil().getMyPrimaryColor()),
                         onChanged: (bool newValue) {
                           setState(() {
                             isSkillIntegration = true;
@@ -1260,21 +1259,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             },
                           ),
                         ),
-                        onTap: () {
-                          if (superAdminAllowedVoiceCloningModule &&
-                              providerAllowedVoiceCloningModule) {
-                            if (voiceCloningStatus == strInActive &&
-                                voiceCloning) {
-                              Navigator.pushNamed(
-                                context,
-                                router.rt_VoiceCloneTerms,
-                              ).then((value) {
-                                setState(() {});
-                              });
-                            } else if (voiceCloningStatus != strInActive &&
-                                voiceCloning) {}
-                          }
-                        }),
+                        onTap: () => navigateToTermsOrStatusScreen()),
                   ),
                 if (Platform.isAndroid)
                   Theme(
@@ -1696,7 +1681,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     scale: switchTrail,
                     child: Switch(
                       value: PreferenceUtil.getIfQurhomeisDefaultUI(),
-                      activeColor: Color(new CommonUtil().getMyPrimaryColor()),
+                      activeColor: Color(CommonUtil().getMyPrimaryColor()),
                       onChanged: (bool newValue) {
                         setState(
                           () {
@@ -1933,8 +1918,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       scale: switchTrail,
                       child: Switch(
                         value: PreferenceUtil.getEnableAppLock(),
-                        activeColor:
-                            Color(new CommonUtil().getMyPrimaryColor()),
+                        activeColor: Color(CommonUtil().getMyPrimaryColor()),
                         onChanged: (bool newValue) async {
                           if (newValue) {
                             String msg = 'You are not authorized.';
@@ -2116,5 +2100,34 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         ],
       ),
     );
+  }
+
+/**
+ * Set a commonmethod to navigate to eithe terms screen or status
+ */
+  void navigateToTermsOrStatusScreen() {
+    if (superAdminAllowedVoiceCloningModule &&
+        providerAllowedVoiceCloningModule) {
+      if (voiceCloningStatus == strInActive && voiceCloning) {
+        Navigator.pushNamed(
+          context,
+          router.rt_VoiceCloneTerms,
+        ).then((value) {
+          setState(() {});
+        });
+      } else if (voiceCloningStatus != strApproved && voiceCloning) {
+        Navigator.pushNamed(context, router.rt_VoiceCloningStatus,
+                arguments: VoiceCloneStatusArguments(fromMenu: true))
+            .then((value) {
+          setState(() {});
+        });
+      } else if (voiceCloningStatus == strApproved && voiceCloning) {
+        Navigator.pushNamed(context, router.rt_VoiceCloningStatus,
+                arguments: VoiceCloneStatusArguments(fromMenu: true))
+            .then((value) {
+          setState(() {});
+        });
+      }
+    }
   }
 }

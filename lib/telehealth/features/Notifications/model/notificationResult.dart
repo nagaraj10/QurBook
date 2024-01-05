@@ -1,7 +1,6 @@
 
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/messageDetails.dart';
-import 'package:myfhb/telehealth/features/Notifications/model/notificationResponseText.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/recipientUser.dart';
 
 class NotificationResult {
@@ -38,7 +37,7 @@ class NotificationResult {
     try {
       id = json['id'];
       messageDetails = json['messageDetails'] != null
-              ? new MessageDetails.fromJson(json['messageDetails'])
+              ? MessageDetails.fromJson(json['messageDetails'])
               : null;
       transportMedium = json['transportMedium'];
       responseText = json['responseText'] != null ? (json['responseText']) : null;
@@ -46,7 +45,7 @@ class NotificationResult {
       createdOn = json['createdOn'];
       recipientUserDetails = json['recipientUserDetails'];
       recipientUser = json['recipientUser'] != null
-              ? new RecipientUser.fromJson(json['recipientUser'])
+              ? RecipientUser.fromJson(json['recipientUser'])
               : null;
       scheduler = json['scheduler'];
       senderUser = json['senderUser'] != null
@@ -60,7 +59,7 @@ class NotificationResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     if (this.messageDetails != null) {
       data['messageDetails'] = this.messageDetails!.toJson();

@@ -1,7 +1,5 @@
 library fhb_parmeters;
 
-import '../telehealth/features/appointments/view/appointments.dart';
-
 const String strStatus = 'status';
 const String strSuccess = 'isSuccess';
 const String strMessage = 'message';
@@ -439,6 +437,7 @@ const String PAYCREDIT = 'Credit';
 const String PAYCAPTURED = 'captured';
 const String PAYMENT_SUCCESS_PNG = 'assets/payment/success_tick.png';
 const String PAYMENT_FAILURE_PNG = 'assets/payment/failure.png';
+const String VOICE_CLONE_USER_SELECTED = 'assets/icons/voice_user_selected.png';
 const String PROFILE_PH = 'assets/user/profile_pic_ph.png';
 const String PAYMENT_SUCCESS_MSG = 'Payment Successful';
 const String PAYMENT_FAILURE_MSG = 'Payment Failed';
@@ -748,6 +747,9 @@ const String ongoing_channel = 'ongoing_ns.channel';
 const String startOnGoingNS = 'startOnGoingNS';
 const String notifyCaregiverForMedicalRecord =
     'notifyCaregiverForMedicalRecord';
+const String NonTeleconsultationAppointmentPreReminder5 =
+    'NonTeleconsultationAppointmentPreReminder5';
+const String AppointmentReminder5 = 'AppointmentReminder5';
 const String mode = 'mode';
 const String start = 'start';
 const String stop = 'stop';

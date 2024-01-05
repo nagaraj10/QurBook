@@ -9,13 +9,13 @@ class SheelaRemainderConfig {
     if (json['result'] != null) {
       result = <Result>[];
       json['result'].forEach((v) {
-        result!.add(new Result.fromJson(v));
+        result!.add(Result.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
       data['result'] = this.result!.map((v) => v.toJson()).toList();
@@ -49,7 +49,7 @@ class Result {
     if (json['configurationData'] != null) {
       configurationData = <ConfigurationData>[];
       json['configurationData'].forEach((v) {
-        configurationData!.add(new ConfigurationData.fromJson(v));
+        configurationData!.add(ConfigurationData.fromJson(v));
       });
     }
     isActive = json['isActive'];
@@ -58,7 +58,7 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['code'] = this.code;
     data['name'] = this.name;
@@ -85,7 +85,7 @@ class ConfigurationData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['name'] = this.name;
     data['value'] = this.value;
     return data;
