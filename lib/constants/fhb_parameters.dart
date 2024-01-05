@@ -24,6 +24,8 @@ const String strRoleDescription = 'roleDescription';
 const String strIsActive = 'isActive';
 const String strCreatedOn = 'createdOn';
 const String strLastModifiedOn = 'lastModifiedOn';
+const String strVoiceCloneId = 'voiceCloneId';
+const String strVoiceCloneStatus = 'voiceCloneStatus';
 
 //parameters for doctors,hospital and laboratory
 
@@ -811,6 +813,7 @@ const String strNotificationChat = 'chat';
 const String strChoosePrefDate = 'apptChoosePreferredDate';
 const String strMissedCallFromCCToPatient ='missedCallFromCCToPatient';
 const String strConnectedDevicesScreen ='connectedDevicesScreen';
+const String strVoiceClonePatientAssignment = 'voiceClonePatientAssignment';
 
 //appointment
 const String strIsFollowUp_C = 'isFollowUp';

@@ -30,7 +30,6 @@ import '../../../../claim/screen/ClaimRecordDisplay.dart';
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../../constants/fhb_constants.dart';
-import '../../../../constants/fhb_parameters.dart';
 import '../../../../constants/fhb_parameters.dart' as parameters;
 import '../../../../constants/router_variable.dart' as routervariable;
 import '../../../../constants/router_variable.dart' as router;
@@ -514,7 +513,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               payload?.redirectTo,
             );
           } else if (payload?.redirectTo ==
-              strAppointmentDetail) {
+              parameters.strAppointmentDetail) {
             notificationOnTapActions(
               notification,
               payload?.redirectTo,
@@ -593,7 +592,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           //         ?.templateName);
         }
             : () {
-          if (payload?.redirectTo == strAppointmentDetail) {
+          if (payload?.redirectTo == parameters.strAppointmentDetail) {
             notificationOnTapActions(
               notification,
               payload?.redirectTo,
@@ -1074,14 +1073,14 @@ class _NotificationScreen extends State<NotificationScreen> {
         readUnreadAction(result);
         break;
       case "PaymentReceipt":
-      case strQurbookServiceRequestStatusUpdate:
+      case parameters.strQurbookServiceRequestStatusUpdate:
         Get.to(DetailedTicketView(
             null, true, result?.messageDetails?.payload?.userId));
         readUnreadAction(result);
 
         break;
 
-      case strNotifyPatientServiceTicketByCC:
+      case parameters.strNotifyPatientServiceTicketByCC:
         Get.to(DetailedTicketView(
             null, true, result?.messageDetails?.payload?.eventId));
         readUnreadAction(result);
@@ -1139,7 +1138,7 @@ class _NotificationScreen extends State<NotificationScreen> {
       case "AppointmentTransactionCancelledMidway":
         readUnreadAction(result);
         break;
-      case myPlanDetails:
+      case parameters.myPlanDetails:
         final userId = PreferenceUtil.getStringValue(KEY_USERID);
         if ((result?.messageDetails?.payload?.userId == userId) &&
             ((result?.messageDetails?.payload?.planId ?? '').isNotEmpty)) {
@@ -1315,7 +1314,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         }
         readUnreadAction(result);
         break;
-      case strAppointmentDetail:
+      case parameters.strAppointmentDetail:
         if ((result?.messageDetails?.payload?.appointmentId ?? '').isNotEmpty) {
           AppointmentDetailsController appointmentDetailsController =
           CommonUtil().onInitAppointmentDetailsController();
@@ -1325,7 +1324,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         }
         readUnreadAction(result);
         break;
-      case strPatientReferralAcceptToPatient:
+      case parameters.strPatientReferralAcceptToPatient:
         if (CommonUtil.isUSRegion())
           Get.toNamed(router.rt_UserAccounts,
               arguments: UserAccountsArguments(selectedIndex: 2))
@@ -1333,7 +1332,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
-      case strChoosePrefDate:
+      case parameters.strChoosePrefDate:
         if (result?.messageDetails?.payload?.careCoordinatorUserId != null &&
             result?.messageDetails?.payload?.careCoordinatorUserId != '') {
           Navigator.push(
@@ -1365,7 +1364,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           readUnreadAction(result);
         }
         break;
-      case strMissedCallFromCCToPatient:
+      case parameters.strMissedCallFromCCToPatient:
         if (result?.messageDetails?.payload?.careCoordinatorUserId != null &&
             result?.messageDetails?.payload?.careCoordinatorUserId != '') {
           Navigator.push(
@@ -1396,7 +1395,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           readUnreadAction(result);
         }
         break;
-      case strConnectedDevicesScreen:
+      case parameters.strConnectedDevicesScreen:
         try {
           //Get.back();
           Get.to(
