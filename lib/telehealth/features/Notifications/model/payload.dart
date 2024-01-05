@@ -33,7 +33,8 @@ class Payload {
       this.sheelaAudioMsgUrl,
       this.isSheela,
       this.notificationListId,
-      this.senderName});
+      this.senderName,
+      this.voiceCloneId});
 
   String? type;
   String? meetingId;
@@ -72,6 +73,10 @@ class Payload {
   String? notificationListId;
   dynamic eventId;
   String? senderName;
+  String? voiceCloneId;
+ // Nullable variable to store the Voice Clone ID, indicating that it can hold either a String or null.
+
+
 
   Payload.fromJson(Map<String, dynamic> json) {
     try {
@@ -156,6 +161,10 @@ class Payload {
       }
       sheelaAudioMsgUrl =
           json["sheelaAudioMsgUrl"] == null ? null : json["sheelaAudioMsgUrl"];
+
+      voiceCloneId = json["voiceCloneId"] == null ? null : json["voiceCloneId"];
+      // Assign 'voiceCloneId' the value from the JSON key "voiceCloneId" if present, otherwise set it to null.
+
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -176,6 +185,7 @@ class Payload {
     data[parameters.KIOSK_isSheela] = this.isSheela;
     data[parameters.notificationListId] = this.notificationListId;
     data['eventId'] = this.eventId;
+    data['voiceCloneId'] = this.voiceCloneId;
 
     return data;
   }

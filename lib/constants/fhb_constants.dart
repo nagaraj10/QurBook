@@ -941,6 +941,10 @@ const String StrSheelaErrorMsg =
 const String KEY_IS_Vitals_ManualRecording_Restricted =
     'isVitalsManualRecordingRestricted';
 
+// Define a constant for the key related to voice clone patient assignment
+const String strVoiceClonePatientAssignment =
+    'voiceClonePatientAssignment';
+
 const double tabFontTitle = 25.0;
 const double mobileFontTitle = 18.0;
 

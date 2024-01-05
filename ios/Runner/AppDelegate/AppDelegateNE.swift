@@ -31,11 +31,15 @@ extension AppDelegate: MessagingDelegate {
         let viewDetailsAction = UNNotificationAction(identifier: "ViewDetails", title: "View Details", options: [.foreground])
         let communicationsettingsAction = UNNotificationAction(identifier: "Communicationsettings", title: "Communication settings", options: [.foreground])
         let declineNewAction = UNNotificationAction(identifier: "Decline", title: "Decline", options: [])
+        let declineVoiceCloneAction = UNNotificationAction(identifier: "Decline", title: "Decline", options: [.foreground])
         let showTransportationcategory = UNNotificationCategory(identifier: showTransportationNotification,
                                                                 actions:  [acceptAction, declineNewAction],
                                                                 intentIdentifiers: [],
                                                                 options: [])
-        
+        let voiceCloneAcceptRejectedButtonsCategory = UNNotificationCategory(identifier: showVCAcceptRejectedButtons,
+                                                                actions:  [acceptAction, declineVoiceCloneAction],
+                                                                intentIdentifiers: [],
+                                                                options: [])
         let showBothButtonscategory = UNNotificationCategory(identifier: showBothButtonsCat,
                                                              actions:  [snoozeAction, declineAction],
                                                              intentIdentifiers: [],
@@ -76,6 +80,7 @@ extension AppDelegate: MessagingDelegate {
                                                       esclateButtonscategory,
                                                       chatCCAndViewrecordButtonsCategory,
                                                       viewDetailButtonCategory,
+                                                      voiceCloneAcceptRejectedButtonsCategory,
                                                       showTransportationcategory])
         
     }

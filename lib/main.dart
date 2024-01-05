@@ -1115,6 +1115,12 @@ class _MyFHBState extends State<MyFHB> {
           //       duration: Duration(seconds: 3),
           //       backgroundColor: Colors.green.shade500);
         }
+      } else if (passedValArr[0] == Constants.strVoiceClonePatientAssignment) {
+        // Check if the first element of passedValArr is related to voice clone patient assignment
+
+        // Call the method to save the voice clone patient assignment status
+        CommonUtil().saveVoiceClonePatientAssignmentStatus(passedValArr[1],
+            passedValArr[2].toString().contains(accept.toLowerCase()));
       } else if (passedValArr.asMap().containsKey(4)) {
         if (passedValArr[4] == 'call') {
           try {
@@ -1664,6 +1670,11 @@ class _MyFHBState extends State<MyFHB> {
                 'userId': '${navRoute.split('&')[2]}'
               },
             );
+          } else if (navRoute.split('&')[0] ==
+              Constants.strVoiceClonePatientAssignment) {
+            // Check if the first element of the split result from navRoute (using '&') is related to voice clone patient assignment
+            return SplashScreen(
+                nsRoute: navRoute.split('&')[0], bundle: navRoute);
           } else if (parsedData.asMap().containsKey(4)) {
             if (parsedData[4] == call) {
               return SplashScreen(
