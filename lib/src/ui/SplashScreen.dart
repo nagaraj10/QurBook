@@ -56,6 +56,7 @@ import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
 
+import '../../voice_cloning/model/voice_clone_status_arguments.dart';
 import '../utils/PageNavigator.dart';
 import '../utils/timezone/timezone_services.dart';
 import 'NetworkScreen.dart';
@@ -440,7 +441,14 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                           body: body,
                         ),
                       );
-                    } else if (widget.nsRoute == 'DoctorCancellation') {
+                    }else if(widget.nsRoute =='vcApproveByProvider' || widget.nsRoute =='vcDeclineByProvider'){
+                      Get.toNamed(
+                        rt_VoiceCloningStatus,
+                        arguments: const VoiceCloneStatusArguments(fromMenu: true),
+                      )?.then((value) => PageNavigator.goToPermanent(
+                          context, router.rt_Landing));
+                    }
+                    else if (widget.nsRoute == 'DoctorCancellation') {
                       //cancel appointments route
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',

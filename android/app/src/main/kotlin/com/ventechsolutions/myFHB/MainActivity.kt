@@ -3153,7 +3153,13 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         ) {
             // this sheela&Appointments is for receving in flutter with appointmentID & eid
             sharedValue = "sheela&Appointments&$appointmentID&$eid"
-        } else if (redirect_to == "sheela|pushMessage") {
+        } else if ((templateName != null) && (templateName.equals("vcApproveByProvider")) || (templateName.equals(
+                "vcDeclineByProvider"
+            ))){
+            sharedValue = "$templateName"
+        }
+
+        else if (redirect_to == "sheela|pushMessage") {
             sharedValue = "isSheelaFollowup&${message}&$rawBody&$audioURL&$EVEId"
         } else if (redirect_to == "isSheelaFollowup") {
             sharedValue = "${redirect_to}&${message}&$rawBody"
