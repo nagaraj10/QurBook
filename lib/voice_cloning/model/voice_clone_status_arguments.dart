@@ -4,8 +4,10 @@
  */
 class VoiceCloneStatusArguments {
   final bool fromMenu;
+  final String? voiceCloneId;
 
   const VoiceCloneStatusArguments({
     required this.fromMenu,
+    this.voiceCloneId,
   });
 }

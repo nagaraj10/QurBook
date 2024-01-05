@@ -44,6 +44,7 @@ import '../../../../src/ui/MyRecord.dart';
 import '../../../../src/utils/PageNavigator.dart';
 import '../../../../src/utils/language/language_utils.dart';
 import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../../voice_cloning/model/voice_clone_status_arguments.dart';
 import '../../../../widgets/GradientAppBar.dart';
 import '../../../../widgets/checkout_page.dart';
 import '../../MyProvider/view/TelehealthProviders.dart';
@@ -531,7 +532,16 @@ class _NotificationScreen extends State<NotificationScreen> {
                               notification,
                               payload?.templateName,
                             );
-                          } else if (payload?.redirectTo ==
+                          } else if ([
+                            strVCApproveByProvider,
+                            strVCDeclineByProvider
+                          ].contains(payload?.templateName)) {
+                           notificationOnTapActions(
+                              notification,
+                              payload?.templateName,
+                            );
+                          }
+                           else if (payload?.redirectTo ==
                                   constants.strMyCardDetails ||
                               payload?.redirectTo == 'mycartdetails') {
                             // do nothing.
@@ -1418,6 +1428,12 @@ class _NotificationScreen extends State<NotificationScreen> {
         }
 
         break;
+      case strVCApproveByProvider || strVCDeclineByProvider:
+        Get.toNamed(
+          rt_VoiceCloningStatus,
+          arguments: const VoiceCloneStatusArguments(fromMenu: true),
+        )?.then((value) {});
+          readUnreadAction(result);;
       default:
         readUnreadAction(result);
         break;
