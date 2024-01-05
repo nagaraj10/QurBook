@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/model/SheelaBadgeModel.dart';
@@ -39,11 +41,14 @@ import '../../../../common/keysofmodel.dart';
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/fhb_parameters.dart';
 import '../../../../constants/variable_constant.dart';
+import '../../../../regiment/view_model/AddRegimentModel.dart';
+import '../../../../regiment/view_model/pickImageController.dart';
 import '../../../../reminders/QurPlanReminders.dart';
 import '../../../blocs/health/HealthReportListForUserBlock.dart';
 import '../../../model/CreateDeviceSelectionModel.dart';
 import '../../../model/GetDeviceSelectionModel.dart';
 import '../../../model/user/MyProfileModel.dart';
+import '../../../resources/network/ApiBaseHelper.dart';
 import '../../../resources/repository/health/HealthReportListForUserRepository.dart';
 import '../Models/DeviceStatus.dart';
 import '../Models/GoogleTTSRequestModel.dart';
@@ -53,6 +58,7 @@ import '../Models/SheelaResponse.dart';
 import '../Models/sheela_arguments.dart';
 import '../Services/SheelaAIAPIServices.dart';
 import '../Services/SheelaAIBLEServices.dart';
+import 'package:image/image.dart' as img;
 
 enum BLEStatus { Searching, Connected, Disabled }
 
@@ -111,6 +117,11 @@ class SheelaAIController extends GetxController {
 
   bool isAllowSheelaLiveReminders = true;
   SheelaBadgeModel? _sheelaBadgeModel;
+
+  String? btnTextLocal = '';
+  bool? isRetakeCapture = false;
+
+  final ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
   void onInit() {
@@ -1018,7 +1029,6 @@ class SheelaAIController extends GetxController {
                             apiReminder = data[i];
                           }
                           if (Platform.isAndroid) {
-
                             // snooze invoke to android native for locally save the reminder data
                             QurPlanReminders.getTheRemindersFromAPI(
                                 isSnooze: true,
@@ -1244,10 +1254,8 @@ class SheelaAIController extends GetxController {
         currentDeviceStatus.voiceCloning);
     if (value.isSuccess ?? false) {
       //updated
-
     } else {
       //failed to update
-
     }
   }
 
@@ -1575,10 +1583,10 @@ makeApiRequest is used to update the data with latest data
 
 /**
  * This method checks the first and last activity time of the day
- * Get the list of times on which the remainder should popup based on 
- * the interval time 
- * If the device time matched the time with any of the value in the remainder 
- * list then check if the remainder count in not empty 
+ * Get the list of times on which the remainder should popup based on
+ * the interval time
+ * If the device time matched the time with any of the value in the remainder
+ * list then check if the remainder count in not empty
  * If not show popup dialog else doesnt
  */
   void showRemainderBasedOnCondition(
@@ -1718,5 +1726,143 @@ makeApiRequest is used to update the data with latest data
       Buttons(title: strExit, payload: strExit, mute: sheela_hdn_btn_yes),
     ];
     return buttons;
+  }
+
+  List<Buttons> sheelaImagePreviewButtons(String? btnTitle) {
+    List<Buttons> buttons = [
+      Buttons(
+          title: strCamelYes,
+          payload: btnTitle,
+          btnRedirectTo: strRedirectToUploadImage),
+      Buttons(title: strRetake, btnRedirectTo: strRedirectRetakePicture),
+      Buttons(title: strExit, payload: strExit, mute: sheela_hdn_btn_yes),
+    ];
+    return buttons;
+  }
+
+  Future<void> sheelaImagePreviewThumbnail(
+      {String? btnTitle, String? selectedImagePath}) async {
+    try {
+      // left sheela card
+      isLoading.value = true;
+      SheelaResponse currentCon = SheelaResponse();
+      currentCon.recipientId = sheelaRecepId;
+      currentCon.endOfConv = false;
+      currentCon.endOfConvDiscardDialog = false;
+      currentCon.singleuse = true;
+      currentCon.isActionDone = false;
+      currentCon.isButtonNumber = false;
+      currentCon.recipientId = sheelaRecepId;
+      currentCon.buttons = sheelaImagePreviewButtons(btnTitle);
+      currentCon.imageThumbnailUrl = selectedImagePath;
+      if(isRetakeCapture??false){
+        isLoading.value = false;
+        conversations.removeLast();
+      }
+      conversations.add(currentCon);
+      currentPlayingConversation = currentCon;
+      isLoading.value = false;
+      isRetakeCapture = false;
+      playTTS();
+      scrollToEnd();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  Future<void> showCameraGalleryDialog(BuildContext context, String? btnTitle) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              title: Text('Choose an action'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        getOpenGallery(strGallery, btnTitle);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Gallery"),
+                    ),
+                    Padding(padding: EdgeInsets.all(8)),
+                    GestureDetector(
+                      child: Text('Camera'),
+                      onTap: () {
+                        imgFromCamera(strGallery, btnTitle);
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
+                ),
+              ));
+        });
+  }
+
+  imgFromCamera(String fromPath, String? btnTitle) async {
+    late File _image;
+    var picker = ImagePicker();
+    var pickedFile = await picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      _image = File(pickedFile.path);
+      var imagePath = _image.path;
+
+      if (imagePath != null && imagePath != '') {
+        sheelaImagePreviewThumbnail(
+            btnTitle: btnTitle, selectedImagePath: imagePath);
+      }
+    }
+  }
+
+  void getOpenGallery(String fromPath, String? btnTitle) {
+    PickImageController.instance
+        .cropImageFromFile(fromPath)
+        .then((croppedFile) async {
+      if (croppedFile != null) {
+        if (await validateImageSize(croppedFile)) {
+          var imagePathGallery = croppedFile.path;
+
+          if (imagePathGallery != null && imagePathGallery != '') {
+            sheelaImagePreviewThumbnail(
+                btnTitle: btnTitle, selectedImagePath: imagePathGallery);
+          }
+        } else {
+          FlutterToast().getToast(
+              'Selected image exceeds the maximum allowed size', Colors.red);
+        }
+      }
+    });
+  }
+
+  Future<AddMediaRegimentModel> saveMediaRegiment(
+      String imagePaths, String? providerId) async {
+    var patientId = PreferenceUtil.getStringValue(KEY_USERID);
+
+    final response = await _helper.saveRegimentMedia(
+        qr_save_regi_media, imagePaths, patientId, providerId);
+    return AddMediaRegimentModel.fromJson(response);
+  }
+
+  Future<bool> validateImageSize(var _selectedImage) async {
+    try {
+      int maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+      int selectedImageSize = await _getImageSize(_selectedImage);
+      if (selectedImageSize > maxSizeInBytes) {
+            print('Selected image exceeds the maximum allowed size');
+            return false;
+          } else {
+            print('Selected image size is within the allowed limit');
+            return true;
+          }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      return false;
+    }
+  }
+
+  Future<int> _getImageSize(File imageFile) async {
+    int length = await imageFile.length();
+    return length;
   }
 }

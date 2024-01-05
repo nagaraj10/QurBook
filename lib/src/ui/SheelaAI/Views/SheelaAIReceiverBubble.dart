@@ -120,7 +120,11 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                               ),
                                         ),
                                         getImageURLFromCondition(),
-                                        buttonWidgets()
+                                        (chat.imageThumbnailUrl != null &&
+                                            chat.imageThumbnailUrl != '')
+                                            ? getImagePreviewThumbnail(chat.imageThumbnailUrl??'')
+                                            : SizedBox.shrink(),
+                                        buttonWidgets(context)
                                       ],
                                     ),
                                   ),
@@ -276,7 +280,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
     );
   }
 
-  Widget buttonWidgets() {
+  Widget buttonWidgets(BuildContext context) {
     if ((chat.buttons ?? []).isNotEmpty) {
       return Wrap(
         spacing: 6.0,
@@ -446,6 +450,59 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         } catch (e,  stackTrace) {
                           print("");
                             CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+                        }
+                      } else if (buttonData?.needPhoto ?? false) {
+                        if (controller.isLoading.isTrue) {
+                          return;
+                        }
+                        controller.stopTTS();
+                        controller.isSheelaScreenActive = false;
+                        controller.btnTextLocal = buttonData?.title??'';
+                        controller.showCameraGalleryDialog(context,controller.btnTextLocal??'').then((value) {
+                          controller.isSheelaScreenActive = true;
+                        });
+                      }else if (buttonData?.btnRedirectTo == strRedirectRetakePicture) {
+                        if (controller.isLoading.isTrue) {
+                          return;
+                        }
+                        controller.stopTTS();
+                        controller.isSheelaScreenActive = false;
+                        controller.isRetakeCapture = true;
+                        controller.showCameraGalleryDialog(context,controller.btnTextLocal??'').then((value) {
+                          controller.isSheelaScreenActive = true;
+                        });
+                      } else if (buttonData?.btnRedirectTo ==
+                          strRedirectToUploadImage) {
+                        controller.isLoading.value = true;
+                        controller.conversations.add(SheelaResponse(loading: true));
+                        controller.scrollToEnd();
+                        if (chat.imageThumbnailUrl != null &&
+                            chat.imageThumbnailUrl != '') {
+                          controller
+                              .saveMediaRegiment(
+                                  chat.imageThumbnailUrl ?? '', '')
+                              .then((value) {
+                            controller.isLoading.value = false;
+                            controller.conversations.removeLast();
+                            if (value.isSuccess ?? false) {
+                              if (controller.isLoading.isTrue) {
+                                return;
+                              }
+                              if (chat.singleuse != null &&
+                                  chat.singleuse! &&
+                                  chat.isActionDone != null) {
+                                chat.isActionDone = true;
+                              }
+                              buttonData?.isSelected = true;
+                              controller.startSheelaFromButton(
+                                  buttonText: buttonData?.title,
+                                  payload: buttonData?.payload,
+                                  buttons: buttonData);
+                              Future.delayed(const Duration(seconds: 3), () {
+                                buttonData?.isSelected = false;
+                              });
+                            }
+                          });
                         }
                       } else {
                         if (controller.isLoading.isTrue) {
@@ -685,6 +742,35 @@ class SheelaAIReceiverBubble extends StatelessWidget {
 
         fontSize: 14.0.sp, // Set the font size to 14 sp
       ),
+    );
+  }
+
+  Widget getImagePreviewThumbnail(String selectedImage) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: Colors.white,
+          ),
+          width: 1.sw,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              InkWell(
+                  onTap: () {
+                    Get.to(FullPhoto(
+                      url: "",
+                      filePath: selectedImage,
+                    ));
+                  },
+                  child: Image.file(File(selectedImage))
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

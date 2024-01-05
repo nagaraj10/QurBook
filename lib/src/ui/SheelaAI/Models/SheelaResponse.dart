@@ -71,6 +71,7 @@ class SheelaResponse {
   bool? playAudioInit = false;
   bool? isButtonNumber;
   String? pronunciationText;
+  String? imageThumbnailUrl;
 
   SheelaResponse({this.recipientId,
     this.text,
@@ -104,7 +105,8 @@ class SheelaResponse {
     this.audioFile,
     this.playAudioInit,
     this.isButtonNumber,
-    this.pronunciationText});
+    this.pronunciationText,
+    this.imageThumbnailUrl});
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
     try {
@@ -204,6 +206,7 @@ class SheelaResponse {
     data['relationshipId'] = this.relationshipId;
     data['IsButtonNumber'] = this.isButtonNumber;
     data['pronunciationText'] = this.pronunciationText;
+    data['imageThumbnailUrl'] = this.imageThumbnailUrl;
     return data;
   }
 }
@@ -228,6 +231,9 @@ class Buttons {
   String? media;
   String? mediaType;
   bool? isImageWithContent;
+  bool? needPhoto;
+  bool? needAudio;
+  bool? needVideo;
 
   Buttons({
     this.payload,
@@ -246,6 +252,9 @@ class Buttons {
     this.media,
     this.mediaType,
     this.isImageWithContent = false,
+    this.needPhoto = false,
+    this.needAudio = false,
+    this.needVideo = false,
   });
 
   Buttons.fromJson(Map<String, dynamic> json) {
@@ -262,6 +271,9 @@ class Buttons {
       videoUrl = (json['videoUrl'] ?? '');
       audioUrl = (json['audioUrl'] ?? '');
       isSnoozeAction = (json['isSnoozeAction'] ?? false);
+      needPhoto = (json['needPhoto'] ?? false);
+      needAudio = (json['needAudio'] ?? false);
+      needVideo = (json['needVideo'] ?? false);
       if (json['chatAttachments'] != null) {
         chatAttachments = <ChatAttachments>[];
         json['chatAttachments'].forEach((v) {
@@ -291,6 +303,9 @@ class Buttons {
     data['videoUrl'] = this.videoUrl;
     data['audioUrl'] = this.audioUrl;
     data['isSnoozeAction'] = this.isSnoozeAction;
+    data['needPhoto'] = this.needPhoto;
+    data['needAudio'] = this.needAudio;
+    data['needVideo'] = this.needVideo;
     if (this.chatAttachments != null) {
       data['chatAttachments'] =
           this.chatAttachments!.map((v) => v.toJson()).toList();
