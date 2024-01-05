@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -795,6 +796,9 @@ class SheelaAIController extends GetxController {
         final GoogleTTSResponseModel result =
             GoogleTTSResponseModel.fromJson(data);
         if (result != null && (result.isSuccess ?? false)) {
+          if (kDebugMode) {
+            log("getGoogleTTSForText audioContent ${result.payload?.audioContent ?? ''}");
+          }
           return result;
         } else {
           //Need to handle failure
