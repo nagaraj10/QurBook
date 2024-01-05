@@ -104,7 +104,7 @@ class _NotificationScreen extends State<NotificationScreen> {
       'eventTime': '${DateTime.now()}',
       'pageName': 'Notification Screen',
       'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+      '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
     notificationData?.pagingController.dispose();
   }
@@ -167,7 +167,7 @@ class _NotificationScreen extends State<NotificationScreen> {
   Widget notificationAppBar(BuildContext context) {
     return AppBar(
       flexibleSpace:
-          widget.isFromQurday ? GradientAppBarQurhome() : GradientAppBar(),
+      widget.isFromQurday ? GradientAppBarQurhome() : GradientAppBar(),
       //centerTitle: true,
       leading: IconWidget(
         icon: Icons.arrow_back_ios,
@@ -275,7 +275,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               child: Text('Ok',
                   style: TextStyle(
                       fontSize:
-                          CommonUtil().isTablet! ? tabHeader3 : mobileHeader3)),
+                      CommonUtil().isTablet! ? tabHeader3 : mobileHeader3)),
               onPressed: () {
                 callClearAllApi();
                 Navigator.of(context).pop();
@@ -285,7 +285,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               child: Text('Cancel',
                   style: TextStyle(
                       fontSize:
-                          CommonUtil().isTablet! ? tabHeader3 : mobileHeader3)),
+                      CommonUtil().isTablet! ? tabHeader3 : mobileHeader3)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -305,11 +305,11 @@ class _NotificationScreen extends State<NotificationScreen> {
     FetchNotificationService().clearNotifications(body).then((data) {
       if (data != null && data) {
         Provider.of<FetchNotificationViewModel>(context, listen: false)
-          //..clearNotifications()
+        //..clearNotifications()
           ..fetchNotifications();
       } else {
         Provider.of<FetchNotificationViewModel>(context, listen: false)
-          //..clearNotifications()
+        //..clearNotifications()
           ..fetchNotifications();
       }
     });
@@ -326,11 +326,11 @@ class _NotificationScreen extends State<NotificationScreen> {
         FetchNotificationService().updateNsOnTapAction(body).then((data) {
           if (data != null && data['isSuccess']) {
             Provider.of<FetchNotificationViewModel>(context, listen: false)
-              //..clearNotifications()
+            //..clearNotifications()
               ..fetchNotifications();
           } else {
             Provider.of<FetchNotificationViewModel>(context, listen: false)
-              //..clearNotifications()
+            //..clearNotifications()
               ..fetchNotifications();
           }
         });
@@ -426,287 +426,287 @@ class _NotificationScreen extends State<NotificationScreen> {
       return (message.messageBody == "" || message.messageTitle == "")
           ? Container()
           : InkWell(
-              onLongPress: () {
-                // if ((notificationData?.deleteLogId?.length ?? 0) == 0) {
-                //   notificationData.deleteMode = true;
-                //   notification.deleteSelected = true;
-                //   notificationData.addTheidToDelete(notification.id);
-                // }
-              },
-              splashColor: Color(CommonUtil.secondaryGrey),
-              onTap: notificationData!.deleteMode
-                  ? () {
-                      if (notification.deleteSelected) {
-                        notification.deleteSelected = false;
+        onLongPress: () {
+          // if ((notificationData?.deleteLogId?.length ?? 0) == 0) {
+          //   notificationData.deleteMode = true;
+          //   notification.deleteSelected = true;
+          //   notificationData.addTheidToDelete(notification.id);
+          // }
+        },
+        splashColor: Color(CommonUtil.secondaryGrey),
+        onTap: notificationData!.deleteMode
+            ? () {
+          if (notification.deleteSelected) {
+            notification.deleteSelected = false;
 
-                        notificationData!.removeTheIdToDelete(notification.id);
-                      } else {
-                        notification.deleteSelected = true;
-                        notificationData!.addTheidToDelete(notification.id);
-                      }
-                    }
-                  : (notification.isUnread ?? false)
-                      ? () {
-                          var tempRedirectTo = (payload?.redirectTo != null &&
-                                  payload?.redirectTo != ''
-                              ? payload?.redirectTo!.split('|')[0]
-                              : '')!;
-                          if (tempRedirectTo == 'myRecords') {
-                            if ((payload?.healthRecordMetaIds ?? '')
-                                .isNotEmpty) {
-                              notificationOnTapActions(
-                                  notification, tempRedirectTo,
-                                  bundles: {
-                                    'catName':
-                                        payload?.redirectTo!.split('|')[1],
-                                    'healthRecordMetaIds':
-                                        payload?.healthRecordMetaIds
-                                  });
-                            } else {
-                              final List<String> split =
-                                  payload!.redirectTo!.split('|');
-                              var redirectData = {
-                                for (int i = 0; i < split.length; i++)
-                                  i: split[i]
-                              };
-                              var id = redirectData[2];
-                              if (id.runtimeType == String &&
-                                  (id ?? '').isNotEmpty) {
-                                final userId =
-                                    PreferenceUtil.getStringValue(KEY_USERID);
-                                if ((payload.userId ?? '') == userId) {
-                                  CommonUtil()
-                                      .navigateToRecordDetailsScreen(id);
-                                } else {
-                                  CommonUtil.showFamilyMemberPlanExpiryDialog(
-                                    (payload.patientName ?? ''),
-                                    redirect: (payload.redirectTo ?? ''),
-                                  );
-                                }
-                              }
-                            }
-                          } else if (payload?.redirectTo ==
-                              'sheela|pushMessage') {
-                            notificationOnTapActions(
-                              notification,
-                              payload?.redirectTo,
-                            );
-                          } else if (payload?.redirectTo == 'mycart') {
-                            notificationOnTapActions(
-                              notification,
-                              payload?.redirectTo,
-                            );
-                          } else if (payload?.redirectTo == 'familyProfile') {
-                            notificationOnTapActions(
-                              notification,
-                              payload?.redirectTo,
-                            );
-                          } else if (payload?.redirectTo ==
-                              'escalateToCareCoordinatorToRegimen') {
-                            notificationOnTapActions(
-                              notification,
-                              payload?.redirectTo,
-                            );
-                          } else if (payload?.redirectTo ==
-                              'appointmentPayment') {
-                            notificationOnTapActions(
-                              notification,
-                              payload?.redirectTo,
-                            );
-                          } else if (payload?.redirectTo ==
-                              strAppointmentDetail) {
-                            notificationOnTapActions(
-                              notification,
-                              payload?.redirectTo,
-                            );
-                          } else if (payload?.templateName ==
-                              'qurbookServiceRequestStatusUpdate') {
-                            notificationOnTapActions(
-                              notification,
-                              payload?.templateName,
-                            );
-                          } else if (payload?.templateName ==
-                              'notifyPatientServiceTicketByCC') {
-                            notificationOnTapActions(
-                              notification,
-                              payload?.templateName,
-                            );
-                          } else if (payload?.redirectTo ==
-                                  constants.strMyCardDetails ||
-                              payload?.redirectTo == 'mycartdetails') {
-                            // do nothing.
-                          } else if (payload?.redirectTo == 'devices_tab') {
-                            notificationOnTapActions(
-                              notification,
-                              payload?.redirectTo,
-                            );
-                          } else if (payload?.redirectTo == 'regiment_screen') {
-                            notificationOnTapActions(
-                              notification,
-                              payload?.redirectTo,
-                            );
-                          } else if (payload?.redirectTo ==
-                              parameters.myPlanDetails) {
-                            notificationOnTapActions(
-                              notification,
-                              payload?.redirectTo,
-                            );
-                          } else if (payload?.redirectTo ==
-                              parameters.claimList) {
-                            notificationOnTapActions(
-                              notification,
-                              payload?.redirectTo,
-                            );
-                          } else if (payload?.templateName ==
-                              parameters.strPatientReferralAcceptToPatient) {
-                            notificationOnTapActions(
-                              notification,
-                              payload?.templateName,
-                            );
-                          } else if (payload?.redirectTo ==
-                              parameters.strNotificationChat) {
-                            if (payload?.templateName ==
-                                parameters.strChoosePrefDate) {
-                              notificationOnTapActions(
-                                notification,
-                                payload?.templateName,
-                              );
-                            } else if (payload?.templateName ==
-                                parameters.strMissedCallFromCCToPatient) {
-                              notificationOnTapActions(
-                                notification,
-                                payload?.templateName,
-                              );
-                            }
-                          } else if (payload?.redirectTo ==
-                              parameters.strConnectedDevicesScreen) {
-                            notificationOnTapActions(
-                              notification,
-                              payload?.redirectTo,
-                            );
-                          } else {
-                            readUnreadAction(notification);
-                          }
-                          // notificationOnTapActions(
-                          //     notification?.result[index],
-                          //     notification?.result[index]?.messageDetails?.content
-                          //         ?.templateName);
-                        }
-                      : () {
-                          if (payload?.redirectTo == strAppointmentDetail) {
-                            notificationOnTapActions(
-                              notification,
-                              payload?.redirectTo,
-                            );
-                          }
-                        },
-              child: Container(
-                color: notification.deleteSelected ? Colors.grey : Colors.white,
+            notificationData!.removeTheIdToDelete(notification.id);
+          } else {
+            notification.deleteSelected = true;
+            notificationData!.addTheidToDelete(notification.id);
+          }
+        }
+            : (notification.isUnread ?? false)
+            ? () {
+          var tempRedirectTo = (payload?.redirectTo != null &&
+              payload?.redirectTo != ''
+              ? payload?.redirectTo!.split('|')[0]
+              : '')!;
+          if (tempRedirectTo == 'myRecords') {
+            if ((payload?.healthRecordMetaIds ?? '')
+                .isNotEmpty) {
+              notificationOnTapActions(
+                  notification, tempRedirectTo,
+                  bundles: {
+                    'catName':
+                    payload?.redirectTo!.split('|')[1],
+                    'healthRecordMetaIds':
+                    payload?.healthRecordMetaIds
+                  });
+            } else {
+              final List<String> split =
+              payload!.redirectTo!.split('|');
+              var redirectData = {
+                for (int i = 0; i < split.length; i++)
+                  i: split[i]
+              };
+              var id = redirectData[2];
+              if (id.runtimeType == String &&
+                  (id ?? '').isNotEmpty) {
+                final userId =
+                PreferenceUtil.getStringValue(KEY_USERID);
+                if ((payload.userId ?? '') == userId) {
+                  CommonUtil()
+                      .navigateToRecordDetailsScreen(id);
+                } else {
+                  CommonUtil.showFamilyMemberPlanExpiryDialog(
+                    (payload.patientName ?? ''),
+                    redirect: (payload.redirectTo ?? ''),
+                  );
+                }
+              }
+            }
+          } else if (payload?.redirectTo ==
+              'sheela|pushMessage') {
+            notificationOnTapActions(
+              notification,
+              payload?.redirectTo,
+            );
+          } else if (payload?.redirectTo == 'mycart') {
+            notificationOnTapActions(
+              notification,
+              payload?.redirectTo,
+            );
+          } else if (payload?.redirectTo == 'familyProfile') {
+            notificationOnTapActions(
+              notification,
+              payload?.redirectTo,
+            );
+          } else if (payload?.redirectTo ==
+              'escalateToCareCoordinatorToRegimen') {
+            notificationOnTapActions(
+              notification,
+              payload?.redirectTo,
+            );
+          } else if (payload?.redirectTo ==
+              'appointmentPayment') {
+            notificationOnTapActions(
+              notification,
+              payload?.redirectTo,
+            );
+          } else if (payload?.redirectTo ==
+              strAppointmentDetail) {
+            notificationOnTapActions(
+              notification,
+              payload?.redirectTo,
+            );
+          } else if (payload?.templateName ==
+              'qurbookServiceRequestStatusUpdate') {
+            notificationOnTapActions(
+              notification,
+              payload?.templateName,
+            );
+          } else if (payload?.templateName ==
+              'notifyPatientServiceTicketByCC') {
+            notificationOnTapActions(
+              notification,
+              payload?.templateName,
+            );
+          } else if (payload?.redirectTo ==
+              constants.strMyCardDetails ||
+              payload?.redirectTo == 'mycartdetails') {
+            // do nothing.
+          } else if (payload?.redirectTo == 'devices_tab') {
+            notificationOnTapActions(
+              notification,
+              payload?.redirectTo,
+            );
+          } else if (payload?.redirectTo == 'regiment_screen') {
+            notificationOnTapActions(
+              notification,
+              payload?.redirectTo,
+            );
+          } else if (payload?.redirectTo ==
+              parameters.myPlanDetails) {
+            notificationOnTapActions(
+              notification,
+              payload?.redirectTo,
+            );
+          } else if (payload?.redirectTo ==
+              parameters.claimList) {
+            notificationOnTapActions(
+              notification,
+              payload?.redirectTo,
+            );
+          } else if (payload?.templateName ==
+              parameters.strPatientReferralAcceptToPatient) {
+            notificationOnTapActions(
+              notification,
+              payload?.templateName,
+            );
+          } else if (payload?.redirectTo ==
+              parameters.strNotificationChat) {
+            if (payload?.templateName ==
+                parameters.strChoosePrefDate) {
+              notificationOnTapActions(
+                notification,
+                payload?.templateName,
+              );
+            } else if (payload?.templateName ==
+                parameters.strMissedCallFromCCToPatient) {
+              notificationOnTapActions(
+                notification,
+                payload?.templateName,
+              );
+            }
+          } else if (payload?.redirectTo ==
+              parameters.strConnectedDevicesScreen) {
+            notificationOnTapActions(
+              notification,
+              payload?.redirectTo,
+            );
+          } else {
+            readUnreadAction(notification);
+          }
+          // notificationOnTapActions(
+          //     notification?.result[index],
+          //     notification?.result[index]?.messageDetails?.content
+          //         ?.templateName);
+        }
+            : () {
+          if (payload?.redirectTo == strAppointmentDetail) {
+            notificationOnTapActions(
+              notification,
+              payload?.redirectTo,
+            );
+          }
+        },
+        child: Container(
+          color: notification.deleteSelected ? Colors.grey : Colors.white,
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 5, bottom: 5),
                 child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5, bottom: 5),
-                      child: Column(
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Container(
-                                  padding: EdgeInsets.only(top: 5, left: 10),
-                                  width: 1.sw * 0.8,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextWidget(
-                                        text: message.messageTitle,
-                                        colors:
-                                            (notification.isUnread == null ||
-                                                    !notification.isUnread!)
-                                                ? Colors.black
-                                                : Color(CommonUtil()
-                                                    .getMyPrimaryColor()),
-                                        overflow: TextOverflow.visible,
-                                        fontWeight: FontWeight.w600,
-                                        fontsize: 15.0.sp,
-                                        softwrap: true,
-                                      ),
-                                      SizedBox(
-                                        height: 5.0.h,
-                                      ),
-                                      TextWidget(
-                                        text: message.messageBody,
-                                        colors: Color(CommonUtil.secondaryGrey),
-                                        overflow: TextOverflow.visible,
-                                        fontWeight: FontWeight.w500,
-                                        fontsize: 14.0.sp,
-                                        softwrap: true,
-                                      ),
-                                      SizedBox(
-                                        height: 5.0.h,
-                                      ),
-                                      createNSActionButton(
-                                          payload?.templateName, notification),
-                                    ],
-                                  ),
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: Container(
+                            padding: EdgeInsets.only(top: 5, left: 10),
+                            width: 1.sw * 0.8,
+                            child: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+                                TextWidget(
+                                  text: message.messageTitle,
+                                  colors:
+                                  (notification.isUnread == null ||
+                                      !notification.isUnread!)
+                                      ? Colors.black
+                                      : Color(CommonUtil()
+                                      .getMyPrimaryColor()),
+                                  overflow: TextOverflow.visible,
+                                  fontWeight: FontWeight.w600,
+                                  fontsize: 15.0.sp,
+                                  softwrap: true,
                                 ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  padding: EdgeInsets.only(top: 5),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      TextWidget(
-                                        text: constants.notificationDate(
-                                            notification.createdOn!),
-                                        colors: Colors.black,
-                                        overflow: TextOverflow.visible,
-                                        fontWeight: FontWeight.w500,
-                                        fontsize: 12.0.sp,
-                                        softwrap: true,
-                                      ),
-                                      SizedBox(
-                                        height: 5.0.h,
-                                      ),
-                                      TextWidget(
-                                        text: constants.notificationTime(
-                                            notification.createdOn!),
-                                        colors:
-                                            (notification.isUnread == null ||
-                                                    !notification.isUnread!)
-                                                ? Colors.black
-                                                : Color(CommonUtil()
-                                                    .getMyPrimaryColor()),
-                                        //colors: Color(CommonUtil.primaryColor),
-                                        overflow: TextOverflow.visible,
-                                        fontWeight: FontWeight.w600,
-                                        fontsize: 12.0.sp,
-                                        softwrap: true,
-                                      ),
-                                    ],
-                                  ),
+                                SizedBox(
+                                  height: 5.0.h,
                                 ),
-                              ),
-                            ],
+                                TextWidget(
+                                  text: message.messageBody,
+                                  colors: Color(CommonUtil.secondaryGrey),
+                                  overflow: TextOverflow.visible,
+                                  fontWeight: FontWeight.w500,
+                                  fontsize: 14.0.sp,
+                                  softwrap: true,
+                                ),
+                                SizedBox(
+                                  height: 5.0.h,
+                                ),
+                                createNSActionButton(
+                                    payload?.templateName, notification),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            padding: EdgeInsets.only(top: 5),
+                            child: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.center,
+                              children: <Widget>[
+                                TextWidget(
+                                  text: constants.notificationDate(
+                                      notification.createdOn!),
+                                  colors: Colors.black,
+                                  overflow: TextOverflow.visible,
+                                  fontWeight: FontWeight.w500,
+                                  fontsize: 12.0.sp,
+                                  softwrap: true,
+                                ),
+                                SizedBox(
+                                  height: 5.0.h,
+                                ),
+                                TextWidget(
+                                  text: constants.notificationTime(
+                                      notification.createdOn!),
+                                  colors:
+                                  (notification.isUnread == null ||
+                                      !notification.isUnread!)
+                                      ? Colors.black
+                                      : Color(CommonUtil()
+                                      .getMyPrimaryColor()),
+                                  //colors: Color(CommonUtil.primaryColor),
+                                  overflow: TextOverflow.visible,
+                                  fontWeight: FontWeight.w600,
+                                  fontsize: 12.0.sp,
+                                  softwrap: true,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    Container(
-                      height: 0.2.h,
-                      color: notification.deleteSelected
-                          ? Colors.white
-                          : Colors.black,
-                    )
                   ],
                 ),
               ),
-            );
+              Container(
+                height: 0.2.h,
+                color: notification.deleteSelected
+                    ? Colors.white
+                    : Colors.black,
+              )
+            ],
+          ),
+        ),
+      );
       /* : Column(
           children: <Widget>[
             Padding(
@@ -929,7 +929,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                               ),
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   SizedBoxWithChild(
                                     width: 90.0.w,
@@ -938,7 +938,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(12.0),
+                                            BorderRadius.circular(12.0),
                                             side: BorderSide(
                                                 color: Color(CommonUtil()
                                                     .getMyPrimaryColor()))),
@@ -963,7 +963,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(12.0),
+                                            BorderRadius.circular(12.0),
                                             side: BorderSide(
                                                 color: Color(CommonUtil()
                                                     .getMyPrimaryColor()))),
@@ -1018,19 +1018,19 @@ class _NotificationScreen extends State<NotificationScreen> {
                 if (data != null && data['isSuccess']) {
                   Provider.of<FetchNotificationViewModel>(context,
                       listen: false)
-                    //..clearNotifications()
+                  //..clearNotifications()
                     ..fetchNotifications();
                 } else {
                   Provider.of<FetchNotificationViewModel>(context,
                       listen: false)
-                    //..clearNotifications()
+                  //..clearNotifications()
                     ..fetchNotifications();
                 }
               });
             }
           } else {
             Provider.of<FetchNotificationViewModel>(context, listen: false)
-              //..clearNotifications()
+            //..clearNotifications()
               ..fetchNotifications();
           }
         });
@@ -1070,7 +1070,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               templateName: result?.messageDetails?.content?.templateName),
         ))!
             .then((value) =>
-                PageNavigator.goToPermanent(context, router.rt_Landing));
+            PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "PaymentReceipt":
@@ -1098,7 +1098,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               templateName: result?.messageDetails?.content?.templateName),
         ))!
             .then((value) =>
-                PageNavigator.goToPermanent(context, router.rt_Landing));
+            PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "SlotsFull":
@@ -1110,11 +1110,11 @@ class _NotificationScreen extends State<NotificationScreen> {
               templateName: result?.messageDetails?.content?.templateName),
         ))!
             .then((value) =>
-                PageNavigator.goToPermanent(context, router.rt_Landing));
+            PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "PatientPrescription":
-        //* navigate user to prescription page.
+      //* navigate user to prescription page.
         Navigator.pushNamed(
           context,
           router.rt_HomeScreen,
@@ -1144,7 +1144,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         if ((result?.messageDetails?.payload?.userId == userId) &&
             ((result?.messageDetails?.payload?.planId ?? '').isNotEmpty)) {
           Get.to(
-            () => MyPlanDetail(
+                () => MyPlanDetail(
               packageId: result?.messageDetails?.payload?.planId,
               showRenew: false,
               templateName: result?.messageDetails?.payload?.templateName,
@@ -1160,34 +1160,34 @@ class _NotificationScreen extends State<NotificationScreen> {
         break;
       case "sheela":
         Get.to(SuperMaya())!.then(
-            (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+                (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "profile_page":
         Get.toNamed(router.rt_UserAccounts,
-                arguments: UserAccountsArguments(selectedIndex: 0))!
+            arguments: UserAccountsArguments(selectedIndex: 0))!
             .then((value) =>
-                PageNavigator.goToPermanent(context, router.rt_Landing));
+            PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "googlefit":
         Get.toNamed(router.rt_AppSettings)!.then(
-            (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+                (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "th_provider":
         Get.toNamed(router.rt_TelehealthProvider,
-                arguments: HomeScreenArguments(selectedIndex: 1))!
+            arguments: HomeScreenArguments(selectedIndex: 1))!
             .then((value) =>
-                PageNavigator.goToPermanent(context, router.rt_Landing));
+            PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "my_record":
         getProfileData();
         Get.toNamed(router.rt_HomeScreen,
-                arguments: HomeScreenArguments(selectedIndex: 1))!
+            arguments: HomeScreenArguments(selectedIndex: 1))!
             .then((value) =>
-                PageNavigator.goToPermanent(context, router.rt_Landing));
+            PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "myRecords":
@@ -1202,7 +1202,7 @@ class _NotificationScreen extends State<NotificationScreen> {
       case "sheela|pushMessage":
         if (result!.messageDetails!.payload!.redirectTo!.contains("sheela")) {
           List<String> redirectArray =
-              result.messageDetails!.payload!.redirectTo!.split("|");
+          result.messageDetails!.payload!.redirectTo!.split("|");
           if (redirectArray.length > 1 && redirectArray[1] == "pushMessage") {
             var rawBody, rawTitle;
             rawBody = result.messageDetails?.rawMessage?.messageBody;
@@ -1219,9 +1219,9 @@ class _NotificationScreen extends State<NotificationScreen> {
                 Get.toNamed(
                   routervariable.rt_Sheela,
                   arguments: SheelaArgument(
-                    allowBackBtnPress: true,
-                    textSpeechSheela: rawBody,
-                    isNeedPreferredLangauge: true
+                      allowBackBtnPress: true,
+                      textSpeechSheela: rawBody,
+                      isNeedPreferredLangauge: true
                   ),
                 )!
                     .then((value) {
@@ -1239,18 +1239,18 @@ class _NotificationScreen extends State<NotificationScreen> {
                   ),
                 )!
                     .then((value) => PageNavigator.goToPermanent(
-                        context, router.rt_Landing));
+                    context, router.rt_Landing));
               }
 
               readUnreadAction(result);
             } else if (result.messageDetails?.payload?.sheelaAudioMsgUrl !=
-                    null &&
+                null &&
                 result.messageDetails?.payload?.sheelaAudioMsgUrl != '') {
               Get.toNamed(
                 routervariable.rt_Sheela,
                 arguments: SheelaArgument(
                     audioMessage:
-                        result.messageDetails?.payload?.sheelaAudioMsgUrl,
+                    result.messageDetails?.payload?.sheelaAudioMsgUrl,
                     allowBackBtnPress: true),
               )!
                   .then((value) {
@@ -1263,7 +1263,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         }
         break;
       case "mycart":
-        /* Get.to(CheckoutPage(
+      /* Get.to(CheckoutPage(
           isFromNotification: true,
           bookingId: result?.messageDetails?.payload?.bookingId,
           cartUserId: result?.messageDetails?.payload?.userId,
@@ -1283,7 +1283,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1),
         )!
             .then(
-          (value) => PageNavigator.goToPermanent(
+              (value) => PageNavigator.goToPermanent(
             context,
             router.rt_Landing,
             arguments: LandingArguments(
@@ -1308,7 +1308,7 @@ class _NotificationScreen extends State<NotificationScreen> {
       case "claimList":
         if ((result?.messageDetails?.payload?.claimId ?? '').isNotEmpty) {
           Get.to(
-            () => ClaimRecordDisplay(
+                () => ClaimRecordDisplay(
               claimID: result?.messageDetails?.payload?.claimId,
             ),
           );
@@ -1318,7 +1318,7 @@ class _NotificationScreen extends State<NotificationScreen> {
       case strAppointmentDetail:
         if ((result?.messageDetails?.payload?.appointmentId ?? '').isNotEmpty) {
           AppointmentDetailsController appointmentDetailsController =
-              CommonUtil().onInitAppointmentDetailsController();
+          CommonUtil().onInitAppointmentDetailsController();
           appointmentDetailsController.getAppointmentDetail(
               result?.messageDetails?.payload?.appointmentId ?? '');
           Get.to(() => AppointmentDetailScreen());
@@ -1328,9 +1328,9 @@ class _NotificationScreen extends State<NotificationScreen> {
       case strPatientReferralAcceptToPatient:
         if (CommonUtil.isUSRegion())
           Get.toNamed(router.rt_UserAccounts,
-                  arguments: UserAccountsArguments(selectedIndex: 2))
+              arguments: UserAccountsArguments(selectedIndex: 2))
               ?.then((value) =>
-                  PageNavigator.goToPermanent(context, router.rt_Landing));
+              PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case strChoosePrefDate:
@@ -1341,26 +1341,26 @@ class _NotificationScreen extends State<NotificationScreen> {
             MaterialPageRoute(
                 builder: (context) => ChatDetail(
                     peerId:
-                        result?.messageDetails?.payload?.careCoordinatorUserId,
+                    result?.messageDetails?.payload?.careCoordinatorUserId,
                     peerAvatar:
-                        result?.messageDetails?.payload?.senderProfilePic,
+                    result?.messageDetails?.payload?.senderProfilePic,
                     peerName: result?.messageDetails?.payload?.patientName,
                     patientId: '',
                     patientName: '',
                     patientPicture: '',
                     isFromVideoCall: false,
                     isFromCareCoordinator: result
-                            ?.messageDetails?.payload?.isFromCareCoordinator
-                            .toLowerCase() ==
+                        ?.messageDetails?.payload?.isFromCareCoordinator
+                        .toLowerCase() ==
                         'true',
                     carecoordinatorId:
-                        result?.messageDetails?.payload?.careCoordinatorUserId,
+                    result?.messageDetails?.payload?.careCoordinatorUserId,
                     isCareGiver: result?.messageDetails?.payload?.isCareGiver
-                            .toLowerCase() ==
+                        .toLowerCase() ==
                         'true',
                     groupId: '',
                     lastDate:
-                        result?.messageDetails?.payload?.deliveredDateTime)),
+                    result?.messageDetails?.payload?.deliveredDateTime)),
           ).then((value) {});
           readUnreadAction(result);
         }
@@ -1372,26 +1372,26 @@ class _NotificationScreen extends State<NotificationScreen> {
             context,
             MaterialPageRoute(
                 builder: (context) => ChatDetail(
-                      peerId: result
-                          ?.messageDetails?.payload?.careCoordinatorUserId,
-                      peerAvatar:
-                          result?.messageDetails?.payload?.senderProfilePic,
-                      peerName: result?.messageDetails?.payload?.senderName,
-                      patientId: '',
-                      patientName: '',
-                      patientPicture: '',
-                      isFromVideoCall: false,
-                      isFromCareCoordinator: result
-                              ?.messageDetails?.payload?.isFromCareCoordinator
-                              .toLowerCase() ==
-                          'true',
-                      carecoordinatorId: result
-                          ?.messageDetails?.payload?.careCoordinatorUserId,
-                      isCareGiver: result?.messageDetails?.payload?.isCareGiver
-                              .toLowerCase() ==
-                          'true',
-                      groupId: '',
-                    )),
+                  peerId: result
+                      ?.messageDetails?.payload?.careCoordinatorUserId,
+                  peerAvatar:
+                  result?.messageDetails?.payload?.senderProfilePic,
+                  peerName: result?.messageDetails?.payload?.senderName,
+                  patientId: '',
+                  patientName: '',
+                  patientPicture: '',
+                  isFromVideoCall: false,
+                  isFromCareCoordinator: result
+                      ?.messageDetails?.payload?.isFromCareCoordinator
+                      .toLowerCase() ==
+                      'true',
+                  carecoordinatorId: result
+                      ?.messageDetails?.payload?.careCoordinatorUserId,
+                  isCareGiver: result?.messageDetails?.payload?.isCareGiver
+                      .toLowerCase() ==
+                      'true',
+                  groupId: '',
+                )),
           ).then((value) {});
           readUnreadAction(result);
         }
@@ -1400,12 +1400,12 @@ class _NotificationScreen extends State<NotificationScreen> {
         try {
           //Get.back();
           Get.to(
-            () => HubListView(),
+                () => HubListView(),
             binding: BindingsBuilder(
-              () {
+                  () {
                 if (!Get.isRegistered<HubListViewController>()) {
                   Get.lazyPut(
-                    () => HubListViewController(),
+                        () => HubListViewController(),
                   );
                 }
               },
@@ -1434,7 +1434,7 @@ class _NotificationScreen extends State<NotificationScreen> {
 
       if (isRead) {
         Provider.of<FetchNotificationViewModel>(context, listen: false)
-          //..clearNotifications()
+        //..clearNotifications()
           ..fetchNotifications();
       }
     });
@@ -1462,58 +1462,58 @@ class _NotificationScreen extends State<NotificationScreen> {
               OutlinedButton(
                 onPressed: !notification.isActionDone!
                     ? () {
-                        //Reschedule
-                        var body = {};
-                        body['templateName'] = payload?.templateName;
-                        body['contextId'] = payload?.bookingId;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ResheduleMain(
-                                    isFromNotification: false,
-                                    isFromFollowUpApp: false,
-                                    closePage: (value) {},
-                                    isReshedule: true,
-                                    doc: Past(
-                                        doctor: doctorObj.Doctor(
-                                            id: notification.messageDetails!
-                                                .payload!.doctorId),
-                                        doctorSessionId: notification
-                                            .messageDetails!
-                                            .payload!
-                                            .doctorSessionId,
-                                        healthOrganization: City(
-                                            id: notification.messageDetails!
-                                                .payload!.healthOrganizationId),
-                                        bookingId: notification.messageDetails!
-                                            .payload!.bookingId),
-                                    body: body,
-                                  )),
-                        ).then((value) {
-                          if (notification.isUnread != null &&
-                              notification.isUnread!) {
-                            NotificationOntapRequest req =
-                                NotificationOntapRequest();
-                            req.logIds = [notification.id];
-                            final body = req.toJson();
-                            FetchNotificationService()
-                                .updateNsOnTapAction(body)
-                                .then((data) {
-                              if (data != null && data['isSuccess']) {
-                                Provider.of<FetchNotificationViewModel>(context,
-                                    listen: false)
-                                  //..clearNotifications()
-                                  ..fetchNotifications();
-                              } else {
-                                Provider.of<FetchNotificationViewModel>(context,
-                                    listen: false)
-                                  //..clearNotifications()
-                                  ..fetchNotifications();
-                              }
-                            });
-                          }
-                        });
-                      }
+                  //Reschedule
+                  var body = {};
+                  body['templateName'] = payload?.templateName;
+                  body['contextId'] = payload?.bookingId;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ResheduleMain(
+                          isFromNotification: false,
+                          isFromFollowUpApp: false,
+                          closePage: (value) {},
+                          isReshedule: true,
+                          doc: Past(
+                              doctor: doctorObj.Doctor(
+                                  id: notification.messageDetails!
+                                      .payload!.doctorId),
+                              doctorSessionId: notification
+                                  .messageDetails!
+                                  .payload!
+                                  .doctorSessionId,
+                              healthOrganization: City(
+                                  id: notification.messageDetails!
+                                      .payload!.healthOrganizationId),
+                              bookingId: notification.messageDetails!
+                                  .payload!.bookingId),
+                          body: body,
+                        )),
+                  ).then((value) {
+                    if (notification.isUnread != null &&
+                        notification.isUnread!) {
+                      NotificationOntapRequest req =
+                      NotificationOntapRequest();
+                      req.logIds = [notification.id];
+                      final body = req.toJson();
+                      FetchNotificationService()
+                          .updateNsOnTapAction(body)
+                          .then((data) {
+                        if (data != null && data['isSuccess']) {
+                          Provider.of<FetchNotificationViewModel>(context,
+                              listen: false)
+                          //..clearNotifications()
+                            ..fetchNotifications();
+                        } else {
+                          Provider.of<FetchNotificationViewModel>(context,
+                              listen: false)
+                          //..clearNotifications()
+                            ..fetchNotifications();
+                        }
+                      });
+                    }
+                  });
+                }
                     : null,style: OutlinedButton.styleFrom(
                 side: !notification.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
@@ -1534,23 +1534,23 @@ class _NotificationScreen extends State<NotificationScreen> {
               OutlinedButton(
                 onPressed: !notification.isActionDone!
                     ? () {
-                        var body = {};
-                        body['templateName'] = payload?.templateName;
-                        body['contextId'] = payload?.bookingId;
-                        _displayDialog(
-                            context,
-                            [
-                              Past(
-                                  bookingId: notification
-                                      .messageDetails!.payload!.bookingId,
-                                  plannedStartDateTime: notification
-                                      .messageDetails!
-                                      .payload!
-                                      .plannedStartDateTime)
-                            ],
-                            body,
-                            notification);
-                      }
+                  var body = {};
+                  body['templateName'] = payload?.templateName;
+                  body['contextId'] = payload?.bookingId;
+                  _displayDialog(
+                      context,
+                      [
+                        Past(
+                            bookingId: notification
+                                .messageDetails!.payload!.bookingId,
+                            plannedStartDateTime: notification
+                                .messageDetails!
+                                .payload!
+                                .plannedStartDateTime)
+                      ],
+                      body,
+                      notification);
+                }
                     : null,style: OutlinedButton.styleFrom(
                 side: !notification.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
@@ -1583,29 +1583,29 @@ class _NotificationScreen extends State<NotificationScreen> {
               OutlinedButton(
                 onPressed: !notification.isActionDone!
                     ? () {
-                        final currentUserId =
-                            PreferenceUtil.getStringValue(KEY_USERID);
-                        if (currentUserId ==
-                            notification.messageDetails?.payload?.userId) {
-                          Get.to(
-                            MyPlanDetail(
-                              packageId:
-                                  notification.messageDetails?.payload?.planId,
-                              templateName: notification
-                                  .messageDetails?.payload?.templateName,
-                              showRenew: true,
-                            ),
-                          )!
-                              .then((value) => PageNavigator.goToPermanent(
-                                  context, router.rt_Landing));
-                        } else {
-                          CommonUtil.showFamilyMemberPlanExpiryDialog(
-                              notification
-                                  .messageDetails?.payload?.patientName);
-                        }
-                        //readUnreadAction(result);
+                  final currentUserId =
+                  PreferenceUtil.getStringValue(KEY_USERID);
+                  if (currentUserId ==
+                      notification.messageDetails?.payload?.userId) {
+                    Get.to(
+                      MyPlanDetail(
+                        packageId:
+                        notification.messageDetails?.payload?.planId,
+                        templateName: notification
+                            .messageDetails?.payload?.templateName,
+                        showRenew: true,
+                      ),
+                    )!
+                        .then((value) => PageNavigator.goToPermanent(
+                        context, router.rt_Landing));
+                  } else {
+                    CommonUtil.showFamilyMemberPlanExpiryDialog(
+                        notification
+                            .messageDetails?.payload?.patientName);
+                  }
+                  //readUnreadAction(result);
 
-                        /* if (notification?.isUnread != null &&
+                  /* if (notification?.isUnread != null &&
                               notification?.isUnread) {
                             NotificationOntapRequest req =
                                 NotificationOntapRequest();
@@ -1627,7 +1627,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                               }
                             });
                           } */
-                      }
+                }
                     : null,style: OutlinedButton.styleFrom(
                 side: !notification.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
@@ -1648,35 +1648,35 @@ class _NotificationScreen extends State<NotificationScreen> {
               OutlinedButton(
                 onPressed: !notification.isActionDone!
                     ? () {
-                        CommonUtil().CallbackAPI(
-                          notification.messageDetails?.payload?.patientName,
-                          notification.messageDetails?.payload?.planId,
-                          notification.messageDetails?.payload?.userId,
-                        );
-                        var body = {};
-                        body['templateName'] = payload?.templateName;
-                        body['contextId'] =
-                            notification.messageDetails?.payload?.planId;
-                        FetchNotificationService()
-                            .updateNsActionStatus(body)
-                            .then((data) {
-                          FetchNotificationService()
-                              .updateNsOnTapAction(body)
-                              .then((data) {
-                            if (data != null && data['isSuccess']) {
-                              Provider.of<FetchNotificationViewModel>(context,
-                                  listen: false)
-                                //..clearNotifications()
-                                ..fetchNotifications();
-                            } else {
-                              Provider.of<FetchNotificationViewModel>(context,
-                                  listen: false)
-                                //..clearNotifications()
-                                ..fetchNotifications();
-                            }
-                          });
-                        });
+                  CommonUtil().CallbackAPI(
+                    notification.messageDetails?.payload?.patientName,
+                    notification.messageDetails?.payload?.planId,
+                    notification.messageDetails?.payload?.userId,
+                  );
+                  var body = {};
+                  body['templateName'] = payload?.templateName;
+                  body['contextId'] =
+                      notification.messageDetails?.payload?.planId;
+                  FetchNotificationService()
+                      .updateNsActionStatus(body)
+                      .then((data) {
+                    FetchNotificationService()
+                        .updateNsOnTapAction(body)
+                        .then((data) {
+                      if (data != null && data['isSuccess']) {
+                        Provider.of<FetchNotificationViewModel>(context,
+                            listen: false)
+                        //..clearNotifications()
+                          ..fetchNotifications();
+                      } else {
+                        Provider.of<FetchNotificationViewModel>(context,
+                            listen: false)
+                        //..clearNotifications()
+                          ..fetchNotifications();
                       }
+                    });
+                  });
+                }
                     : null,style: OutlinedButton.styleFrom(
                 side: !notification.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
@@ -1703,11 +1703,11 @@ class _NotificationScreen extends State<NotificationScreen> {
               OutlinedButton(
                 onPressed: () async {
                   if ((notification.messageDetails?.payload
-                                  ?.patientPhoneNumber ??
-                              '')
-                          .isNotEmpty &&
+                      ?.patientPhoneNumber ??
+                      '')
+                      .isNotEmpty &&
                       (notification.messageDetails?.payload?.verificationCode ??
-                              '')
+                          '')
                           .isNotEmpty) {
                     CaregiverAPIProvider().approveCareGiver(
                       phoneNumber: notification
@@ -1717,7 +1717,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                     );
                   }
                   Provider.of<FetchNotificationViewModel>(context,
-                          listen: false)
+                      listen: false)
                       .fetchNotifications();
                 },style: OutlinedButton.styleFrom(
                 side: BorderSide(
@@ -1739,12 +1739,12 @@ class _NotificationScreen extends State<NotificationScreen> {
               OutlinedButton(
                 onPressed: () async {
                   if ((notification
-                                  .messageDetails?.payload?.caregiverReceiver ??
-                              '')
-                          .isNotEmpty &&
+                      .messageDetails?.payload?.caregiverReceiver ??
+                      '')
+                      .isNotEmpty &&
                       (notification.messageDetails?.payload
-                                  ?.caregiverRequestor ??
-                              '')
+                          ?.caregiverRequestor ??
+                          '')
                           .isNotEmpty) {
                     CaregiverAPIProvider().rejectCareGiver(
                       receiver: notification
@@ -1754,7 +1754,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                     );
                   }
                   Provider.of<FetchNotificationViewModel>(context,
-                          listen: false)
+                      listen: false)
                       .fetchNotifications();
                 },style: OutlinedButton.styleFrom(
                 side: BorderSide(
@@ -1784,15 +1784,15 @@ class _NotificationScreen extends State<NotificationScreen> {
               OutlinedButton(
                 onPressed: () async {
                   if ((notification
-                              .messageDetails?.payload?.caregiverRequestor ??
-                          '')
+                      .messageDetails?.payload?.caregiverRequestor ??
+                      '')
                       .isNotEmpty) {
                     Navigator.pushNamed(
                       context,
                       router.rt_FamilyDetailScreen,
                       arguments: MyFamilyDetailArguments(
                           caregiverRequestor: notification.messageDetails
-                                  ?.payload?.caregiverRequestor ??
+                              ?.payload?.caregiverRequestor ??
                               ''),
                     );
                   }
@@ -1867,7 +1867,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                         .then((value) => {});
                   });
                   checkIfPaymentLinkIsExpired(
-                          notification.messageDetails!.payload!.appointmentId!)
+                      notification.messageDetails!.payload!.appointmentId!)
                       .then((value) {
                     if (value) {
                       Get.to(BookingConfirmation(
@@ -1927,10 +1927,10 @@ class _NotificationScreen extends State<NotificationScreen> {
                     bookingId: notification.messageDetails?.payload?.bookingId,
                     cartUserId: notification.messageDetails?.payload?.userId,
                     notificationListId:
-                        notification.messageDetails?.payload?.createdBy,
+                    notification.messageDetails?.payload?.createdBy,
                     cartId: notification.messageDetails?.payload?.bookingId,
                     patientName:
-                        notification.messageDetails?.payload?.patientName,
+                    notification.messageDetails?.payload?.patientName,
                   ))!
                       .then((value) {});
                 },style: OutlinedButton.styleFrom(
@@ -1975,11 +1975,11 @@ class _NotificationScreen extends State<NotificationScreen> {
                             isFromVideoCall: false,
                             isFromFamilyListChat: true,
                             isFromCareCoordinator:
-                                payload.isFromCareCoordinator.toLowerCase() ==
-                                    'true',
+                            payload.isFromCareCoordinator.toLowerCase() ==
+                                'true',
                             carecoordinatorId: payload.careCoordinatorUserId,
                             isCareGiver:
-                                payload.isCareGiver.toLowerCase() == 'true',
+                            payload.isCareGiver.toLowerCase() == 'true',
                             groupId: '',
                             lastDate: payload.deliveredDateTime)),
                   ).then((value) {});
@@ -2100,39 +2100,45 @@ class _NotificationScreen extends State<NotificationScreen> {
       child: Row(
         children: [
           OutlinedButton(
-            onPressed: () async {
-              if (payload?.templateName ==
-                  parameters.careGiverTransportRequestReminder) {
-                new CommonUtil()
-                    .acceptCareGiverTransportRequestReminder(
-                        context,
-                        notification.messageDetails?.payload?.appointmentId ??
-                            '',
-                        notification.messageDetails?.payload?.patientId ?? '',
-                        true)
-                    .then((value) {
-                  readUnreadAction(notification, isRead: true);
-                  notification.messageDetails?.setAccepted(true);
-                });
-              } else if (payload?.templateName ==
-                  strVoiceClonePatientAssignment) {
-                CommonUtil()
-                    .saveVoiceClonePatientAssignmentStatus(
-                        notification.messageDetails?.payload?.voiceCloneId ??
-                            '',
-                        true)
-                    .then((value) {
-                  readUnreadAction(notification, isRead: true);
-                  notification.messageDetails?.setAccepted(true);
-                });
-              }
-            },
-            borderSide: !notification.isActionDone!
+            onPressed: (notification.isUnread ?? false)
+                ? () async {
+                    if (payload?.templateName ==
+                        parameters.careGiverTransportRequestReminder) {
+                      CommonUtil()
+                          .acceptCareGiverTransportRequestReminder(
+                              context,
+                              notification
+                                      .messageDetails?.payload?.appointmentId ??
+                                  '',
+                              notification.messageDetails?.payload?.patientId ??
+                                  '',
+                              true)
+                          .then((value) {
+                        readUnreadAction(notification, isRead: true);
+                        notification.messageDetails?.setAccepted(true);
+                      });
+                    } else if (payload?.templateName ==
+                        strVoiceClonePatientAssignment) {
+                      CommonUtil()
+                          .saveVoiceClonePatientAssignmentStatus(
+                              notification
+                                      .messageDetails?.payload?.voiceCloneId ??
+                                  '',
+                              true)
+                          .then((value) {
+                        readUnreadAction(notification, isRead: true);
+                        notification.messageDetails?.setAccepted(true);
+                      });
+                    }
+                  }
+                : null,
+            style: OutlinedButton.styleFrom(
+            side: ((!notification.isActionDone!)||(notification.isUnread ?? false))
                 ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
                 : BorderSide(color: Colors.grey),),
             child: TextWidget(
               text: 'Accept',
-              colors: !notification.isActionDone!
+              colors: ((!notification.isActionDone!)||(notification.isUnread ?? false))
                   ? Color(CommonUtil().getMyPrimaryColor())
                   : Colors.grey,
               overflow: TextOverflow.visible,
@@ -2144,39 +2150,45 @@ class _NotificationScreen extends State<NotificationScreen> {
             width: 15.0.w,
           ),
           OutlinedButton(
-            onPressed: () async {
-              if (payload?.templateName ==
-                  parameters.careGiverTransportRequestReminder) {
-                new CommonUtil()
-                    .acceptCareGiverTransportRequestReminder(
-                        context,
-                        notification.messageDetails?.payload?.appointmentId ??
-                            '',
-                        notification.messageDetails?.payload?.patientId ?? '',
-                        false)
-                    .then((value) {
-                  readUnreadAction(notification, isRead: true);
-                  notification.messageDetails?.setAccepted(true);
-                });
-              } else if (payload?.templateName ==
-                  strVoiceClonePatientAssignment) {
-                CommonUtil()
-                    .saveVoiceClonePatientAssignmentStatus(
-                        notification.messageDetails?.payload?.voiceCloneId ??
-                            '',
-                        false)
-                    .then((value) {
-                  readUnreadAction(notification, isRead: true);
-                  notification.messageDetails?.setAccepted(true);
-                });
-              }
-            },
-            borderSide: !notification.isActionDone!
+            onPressed: (notification.isUnread ?? false)
+                ? () async {
+                    if (payload?.templateName ==
+                        parameters.careGiverTransportRequestReminder) {
+                      CommonUtil()
+                          .acceptCareGiverTransportRequestReminder(
+                              context,
+                              notification
+                                      .messageDetails?.payload?.appointmentId ??
+                                  '',
+                              notification.messageDetails?.payload?.patientId ??
+                                  '',
+                              false)
+                          .then((value) {
+                        readUnreadAction(notification, isRead: true);
+                        notification.messageDetails?.setAccepted(true);
+                      });
+                    } else if (payload?.templateName ==
+                        strVoiceClonePatientAssignment) {
+                      CommonUtil()
+                          .saveVoiceClonePatientAssignmentStatus(
+                              notification
+                                      .messageDetails?.payload?.voiceCloneId ??
+                                  '',
+                              false)
+                          .then((value) {
+                        readUnreadAction(notification, isRead: true);
+                        notification.messageDetails?.setAccepted(true);
+                      });
+                    }
+                  }
+                : null,
+            style: OutlinedButton.styleFrom(
+            side: ((!notification.isActionDone!)||(notification.isUnread ?? false))
                 ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
                 : BorderSide(color: Colors.grey),),
             child: TextWidget(
               text: 'Decline',
-              colors: !notification.isActionDone!
+              colors: ((!notification.isActionDone!)||(notification.isUnread ?? false))
                   ? Color(CommonUtil().getMyPrimaryColor())
                   : Colors.grey,
               overflow: TextOverflow.visible,
@@ -2213,10 +2225,10 @@ class _NotificationScreen extends State<NotificationScreen> {
   Future<bool> checkIfPaymentLinkIsExpired(String appointmentId) async {
     bool paymentStatus = false;
     CreateAppointMentViewModel createAppointMentViewModel =
-        CreateAppointMentViewModel();
+    CreateAppointMentViewModel();
     AppointmentNotificationPayment? appointmentNotificationPayment =
-        await createAppointMentViewModel
-            .getAppointmentDetailsUsingId(appointmentId);
+    await createAppointMentViewModel
+        .getAppointmentDetailsUsingId(appointmentId);
     if (appointmentNotificationPayment != null) {
       if (appointmentNotificationPayment.result?.appointment?.status != null) {
         if (appointmentNotificationPayment.result?.appointment?.status!.code ==
