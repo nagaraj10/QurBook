@@ -60,7 +60,7 @@ class VoiceCloneStatusController extends GetxController {
             healthOrganizationId.value = id;
             await getStatusFromApi(); //wait till the  next ap is also called
           } else {
-            loadingData.value = false;
+            loadingData.value = false; // solved the family list issue loading
           }
         } else {
           loadingData.value = false;

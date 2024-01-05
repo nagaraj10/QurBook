@@ -1104,7 +1104,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             isDisplayPreference = false;
                             isSheelaNotificationPref = false;
                             isTouched = true;
-                            isVoiceCloningChanged = false;
+                            isVoiceCloningChanged =
+                                false; // to restrict navigation to terms page
 
                             _isdigitRecognition = newValue;
                             createAppColorSelection(preColor, greColor);
@@ -1144,7 +1145,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             isSheelaNotificationPref = false;
                             isTouched = true;
                             _isdeviceRecognition = newValue;
-                            isVoiceCloningChanged = false;
+                            isVoiceCloningChanged =
+                                false; // to restrict navigation to terms page
+
                             createAppColorSelection(preColor, greColor);
                             /*PreferenceUtil.saveString(
                                         Constants.allowDeviceRecognition,
@@ -1662,7 +1665,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             isVitalPreferences = false;
                             isDisplayPreference = true;
                             isSheelaNotificationPref = false;
-                            isVoiceCloningChanged = false;
+                            isVoiceCloningChanged =
+                                false; // to restrict navigation to terms page
                           },
                         );
                       },
@@ -1839,7 +1843,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       isVitalPreferences = false;
                       isDisplayPreference = false;
                       isSheelaNotificationPref = true;
-                      isVoiceCloningChanged = false;
+                      isVoiceCloningChanged =
+                          false; // to restrict navigation to terms page
+
                       createAppColorSelection(preColor, greColor).then((value) {
                         setState(() {});
                       });
@@ -2101,6 +2107,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     }
   }
 
+/** 
+ * Created this method to decrease the time for navigation from menu 
+ * screen on click of toggle button
+ */
   void setVoiceCloneValue(GetDeviceSelectionModel getDeviceSelectionModel) {
     //status of the voice cloning toggle button
     voiceCloning =

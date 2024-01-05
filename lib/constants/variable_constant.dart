@@ -725,7 +725,7 @@ const String strAuthToUseApp = 'Please complete the authentication to proceed.';
 const String strVoiceCloning =
     'Voice Cloning'; //String declared for voice cloning
 const String strAllowVoiceCloning =
-    'Allow voice cloning'; //String declared for voice cloning
+    'Allow voice cloning'; //String declared for Allow voice cloning
 const String strSheelaDesc =
     'Sheela clones your voice for family member communication'; // descrption for voice cloning
 const String strStatus = 'Status : ';
