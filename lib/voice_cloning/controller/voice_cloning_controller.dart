@@ -69,7 +69,7 @@ class VoiceCloningController extends ChangeNotifier {
       recorderController.pause();
       isRecording = false;
     } else {
-      recorderController.record();
+      recorderController.record(path: _mPath);
       isRecording = true;
     }
     notifyListeners();
