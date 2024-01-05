@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
-import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
-import 'package:myfhb/QurHub/View/HubListView.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/video_call/pages/callmain.dart';
-import 'package:myfhb/video_call/utils/rtc_engine.dart';
 import 'package:provider/provider.dart';
 
+import '../../QurHub/Controller/HubListViewController.dart';
+import '../../QurHub/View/HubListView.dart';
 import '../../Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import '../../caregiverAssosication/caregiverAPIProvider.dart';
 import '../../chat_socket/view/ChatDetail.dart';
@@ -16,15 +13,16 @@ import '../../claim/screen/ClaimRecordDisplay.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart';
-import '../../constants/fhb_parameters.dart' as parameters;
 import '../../constants/fhb_parameters.dart';
-import '../../constants/router_variable.dart' as router;
+import '../../constants/fhb_parameters.dart' as parameters;
 import '../../constants/router_variable.dart';
+import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
 import '../../myPlan/view/myPlanDetail.dart';
 import '../../my_family_detail/models/my_family_detail_arguments.dart';
 import '../../my_family_detail/screens/my_family_detail_screen.dart';
 import '../../regiment/models/regiment_arguments.dart';
+import '../../regiment/view_model/regiment_view_model.dart';
 import '../../src/model/home_screen_arguments.dart';
 import '../../src/model/user/user_accounts_arguments.dart';
 import '../../src/ui/SheelaAI/Controller/SheelaAIController.dart';
@@ -37,9 +35,12 @@ import '../../telehealth/features/Notifications/view/notification_main.dart';
 import '../../telehealth/features/appointments/controller/AppointmentDetailsController.dart';
 import '../../telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import '../../ticket_support/view/detail_ticket_view_screen.dart';
+import '../../voice_cloning/model/voice_clone_status_arguments.dart';
 import '../../widgets/checkout_page.dart';
 import '../model/NotificationModel.dart';
+import '../pages/callmain.dart';
 import '../utils/audiocall_provider.dart';
+import '../utils/rtc_engine.dart';
 
 class IosNotificationHandler {
   final myDB = FirebaseFirestore.instance;
@@ -440,6 +441,14 @@ class IosNotificationHandler {
     } else if (model.type == parameters.FETCH_LOG) {
     } else if (model.templateName == parameters.familyMemberCaregiverRequest) {
       //No Navigation required
+    } else if ([
+      parameters.strVCApproveByProvider,
+      parameters.strVCDeclineByProvider
+    ].contains(model.templateName)) {
+      await Get.toNamed(
+        rt_VoiceCloningStatus,
+        arguments: const VoiceCloneStatusArguments(fromMenu: true),
+      );
     } else if (model.templateName ==
         parameters.associationNotificationToCaregiver) {
       //No Navigation required
@@ -634,6 +643,17 @@ class IosNotificationHandler {
       } else {
         CommonUtil.showFamilyMemberPlanExpiryDialog(model.patientName);
       }
+    } else if (model.templateName ==
+            parameters.strVoiceClonePatientAssignment &&
+        (acceptAction || declineAction)) {
+      // Check if the first element of passedValArr is related to voice clone patient assignment
+      // Call the method to save the voice clone patient assignment status
+      CommonUtil().saveVoiceClonePatientAssignmentStatus(
+        model.voiceCloneId ?? '',
+        acceptAction,
+      );
+      acceptAction = false;
+      declineAction = false;
     } else if (model.redirect == parameters.claimList &&
         (model.claimId ?? '').isNotEmpty) {
       await Get.to(

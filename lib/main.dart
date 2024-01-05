@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:camera/camera.dart';
+import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -413,6 +414,12 @@ class _MyFHBState extends State<MyFHB> {
         });
         Get.to(ChatUserList());
       } else if (cMsg == 'FETCH_LOG') {}
+      if(cMsg =='vcApproveByProvider' || cMsg =='vcDeclineByProvider'){
+        Get.toNamed(
+          rt_VoiceCloningStatus,
+          arguments: const VoiceCloneStatusArguments(fromMenu: true),
+        );
+      }
       final passedValArr = cMsg.split('&');
       if (passedValArr[0] == 'facebookdeeplink') {
         var firebase = FirebaseAnalyticsService();
@@ -1115,6 +1122,12 @@ class _MyFHBState extends State<MyFHB> {
           //       duration: Duration(seconds: 3),
           //       backgroundColor: Colors.green.shade500);
         }
+      } else if (passedValArr[0] == Constants.strVoiceClonePatientAssignment) {
+        // Check if the first element of passedValArr is related to voice clone patient assignment
+
+        // Call the method to save the voice clone patient assignment status
+        CommonUtil().saveVoiceClonePatientAssignmentStatus(passedValArr[1],
+            passedValArr[2].toString().contains(accept.toLowerCase()));
       } else if (passedValArr.asMap().containsKey(4)) {
         if (passedValArr[4] == 'call') {
           try {
@@ -1367,13 +1380,18 @@ class _MyFHBState extends State<MyFHB> {
       }
     } else {
       try {
-        final parsedData = navRoute.split('&');
 
         if (navRoute == 'FETCH_LOG') {
           return SplashScreen(
             nsRoute: '',
           );
         }
+        if(navRoute =='vcApproveByProvider' || navRoute =='vcDeclineByProvider'){
+          return SplashScreen(
+            nsRoute:navRoute,
+          );
+        }
+        final parsedData = navRoute.split('&');
         if (parsedData != null && parsedData.length > 0) {
           if (parsedData[0] == 'isSheelaFollowup') {
             if ((parsedData[3].toString()).isNotEmpty &&
@@ -1664,6 +1682,11 @@ class _MyFHBState extends State<MyFHB> {
                 'userId': '${navRoute.split('&')[2]}'
               },
             );
+          } else if (navRoute.split('&')[0] ==
+              Constants.strVoiceClonePatientAssignment) {
+            // Check if the first element of the split result from navRoute (using '&') is related to voice clone patient assignment
+            return SplashScreen(
+                nsRoute: navRoute.split('&')[0], bundle: navRoute);
           } else if (parsedData.asMap().containsKey(4)) {
             if (parsedData[4] == call) {
               return SplashScreen(

@@ -734,4 +734,44 @@ class QurHomeApiProvider {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
+
+  // Saves the user's saveVoiceClonePatientAssignmentStatus on the server
+  saveVoiceClonePatientAssignmentStatus(
+      {String strVoiceCloneId = '', bool isAccept = false}) async {
+    try {
+      // Get the request headers with time slot
+      var header = await HeaderRequest().getRequestHeadersTimeSlot();
+
+      String strUserIdTemp = PreferenceUtil.getStringValue(KEY_USERID) ?? '';
+
+      // Prepare the data to be sent in the request body
+      var data = {
+        qr_voiceCloneId: strVoiceCloneId,
+        qr_userid: strUserIdTemp,
+        qr_statusCode: isAccept ? qr_vc_accept : qr_vc_decline,
+      };
+
+      // Send a POST request to save the user's saveVoiceClonePatientAssignmentStatus
+      http.Response res = (await ApiServices.put(
+        Constants.BASE_URL + save_voice_clone_patient_assignment_status,
+        headers: header,
+        body: json.encode(data),
+      ))!;
+
+      // Check the response status code
+      if (res?.statusCode == 200) {
+        // Success
+      } else {
+        // Failure
+      }
+
+      // Log the response in debug mode
+      if (kDebugMode) {
+        log('saveVoiceClonePatientAssignmentStatus request ${json.encode(data)} and response ${(res?.statusCode ?? '').toString()} ${(res?.body ?? '').toString()}');
+      }
+    } catch (e, stackTrace) {
+      // Log the error using appLogs
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
 }

@@ -462,3 +462,25 @@ const String qr_sourceLanguageCode = 'sourceLanguageCode';
 //captureUserLastAccessTime
 const String lastAccessTime = 'lastAccessTime';
 const String save_last_access_time = 'user/device-audit-logs';
+
+
+// Constants related to Voice Clone Patient Assignment
+const String qr_voiceCloneId = 'voiceCloneId';
+// Constant representing the key for Voice Clone ID
+
+const String qr_statusCode = 'statusCode';
+// Constant representing the key for status code
+
+const String qr_vc_accept = 'VCAPPROVED';
+// Constant representing the value for Voice Clone approval
+
+const String qr_vc_decline = 'VCDECLINED';
+// Constant representing the value for Voice Clone decline
+
+const String save_voice_clone_patient_assignment_status = 'voice-clone/accept-reject-requests';
+// Constant representing the endpoint to save Voice Clone Patient Assignment status.
+
+
+const String qr_TTS_Proxy_URL = 'tts/proxy';
+const String qr_Get_VoiceId = 'voice-clone/user-vc-details?userId=';
+const String qr_voiceId = 'voiceId';

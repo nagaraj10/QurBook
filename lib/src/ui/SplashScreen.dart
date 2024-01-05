@@ -7,11 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:get/get.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
 import 'package:myfhb/chat_socket/view/ChatDetail.dart';
@@ -56,6 +53,7 @@ import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
 
+import '../../voice_cloning/model/voice_clone_status_arguments.dart';
 import '../utils/PageNavigator.dart';
 import '../utils/timezone/timezone_services.dart';
 import 'NetworkScreen.dart';
@@ -440,7 +438,14 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                           body: body,
                         ),
                       );
-                    } else if (widget.nsRoute == 'DoctorCancellation') {
+                    }else if(widget.nsRoute =='vcApproveByProvider' || widget.nsRoute =='vcDeclineByProvider'){
+                      Get.toNamed(
+                        rt_VoiceCloningStatus,
+                        arguments: const VoiceCloneStatusArguments(fromMenu: true),
+                      )?.then((value) => PageNavigator.goToPermanent(
+                          context, router.rt_Landing));
+                    }
+                    else if (widget.nsRoute == 'DoctorCancellation') {
                       //cancel appointments route
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
@@ -1075,6 +1080,20 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                     } else if (widget.nsRoute == strConnectedDevicesScreen) {
                       CommonUtil()
                           .navigateToHubList(context, fromNotification: false);
+                    } else if (widget.nsRoute ==
+                        Constants.strVoiceClonePatientAssignment) {
+                      // Handling logic for Voice Clone Patient Assignment route
+                      var passedValArr = widget.bundle?.split('&');
+
+                      // Extract Voice Clone ID and check for acceptance in the passed values
+                      CommonUtil().saveVoiceClonePatientAssignmentStatus(
+                          passedValArr[1],
+                          passedValArr[2]
+                              .toString()
+                              .contains(accept.toLowerCase()));
+
+                      // Navigate to the permanent landing page after processing the Voice Clone Patient Assignment
+                      PageNavigator.goToPermanent(context, router.rt_Landing);
                     } else {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',

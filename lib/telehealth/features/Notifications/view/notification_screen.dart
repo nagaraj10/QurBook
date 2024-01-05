@@ -30,7 +30,6 @@ import '../../../../claim/screen/ClaimRecordDisplay.dart';
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../../constants/fhb_constants.dart';
-import '../../../../constants/fhb_parameters.dart';
 import '../../../../constants/fhb_parameters.dart' as parameters;
 import '../../../../constants/router_variable.dart' as routervariable;
 import '../../../../constants/router_variable.dart' as router;
@@ -44,6 +43,7 @@ import '../../../../src/ui/MyRecord.dart';
 import '../../../../src/utils/PageNavigator.dart';
 import '../../../../src/utils/language/language_utils.dart';
 import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../../voice_cloning/model/voice_clone_status_arguments.dart';
 import '../../../../widgets/GradientAppBar.dart';
 import '../../../../widgets/checkout_page.dart';
 import '../../MyProvider/view/TelehealthProviders.dart';
@@ -438,7 +438,6 @@ class _NotificationScreen extends State<NotificationScreen> {
                   ? () {
                       if (notification.deleteSelected) {
                         notification.deleteSelected = false;
-
                         notificationData!.removeTheIdToDelete(notification.id);
                       } else {
                         notification.deleteSelected = true;
@@ -514,7 +513,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                               payload?.redirectTo,
                             );
                           } else if (payload?.redirectTo ==
-                              strAppointmentDetail) {
+                              parameters.strAppointmentDetail) {
                             notificationOnTapActions(
                               notification,
                               payload?.redirectTo,
@@ -563,6 +562,14 @@ class _NotificationScreen extends State<NotificationScreen> {
                               notification,
                               payload?.templateName,
                             );
+                          } else if ([
+                            parameters.strVCApproveByProvider,
+                            parameters.strVCDeclineByProvider
+                          ].contains(payload?.templateName)) {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.templateName,
+                            );
                           } else if (payload?.redirectTo ==
                               parameters.strNotificationChat) {
                             if (payload?.templateName ==
@@ -584,6 +591,10 @@ class _NotificationScreen extends State<NotificationScreen> {
                               notification,
                               payload?.redirectTo,
                             );
+                          } else if (payload?.templateName ==
+                              strVoiceClonePatientAssignment) {
+                            // Skip further processing when the payload templateName is 'voiceClonePatientAssignment'.
+                            // This block is intentionally left empty ('do nothing') as no additional actions are required.
                           } else {
                             readUnreadAction(notification);
                           }
@@ -593,7 +604,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                           //         ?.templateName);
                         }
                       : () {
-                          if (payload?.redirectTo == strAppointmentDetail) {
+                          if (payload?.redirectTo ==
+                              parameters.strAppointmentDetail) {
                             notificationOnTapActions(
                               notification,
                               payload?.redirectTo,
@@ -968,8 +980,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                                                 color: Color(CommonUtil()
                                                     .getMyPrimaryColor()))),
                                         backgroundColor: Colors.transparent,
-                                        foregroundColor: Color(CommonUtil()
-                                            .getMyPrimaryColor()),
+                                        foregroundColor: Color(
+                                            CommonUtil().getMyPrimaryColor()),
                                         padding: EdgeInsets.all(8.0),
                                       ),
                                       onPressed: () {
@@ -1074,14 +1086,14 @@ class _NotificationScreen extends State<NotificationScreen> {
         readUnreadAction(result);
         break;
       case "PaymentReceipt":
-      case strQurbookServiceRequestStatusUpdate:
+      case parameters.strQurbookServiceRequestStatusUpdate:
         Get.to(DetailedTicketView(
             null, true, result?.messageDetails?.payload?.userId));
         readUnreadAction(result);
 
         break;
 
-      case strNotifyPatientServiceTicketByCC:
+      case parameters.strNotifyPatientServiceTicketByCC:
         Get.to(DetailedTicketView(
             null, true, result?.messageDetails?.payload?.eventId));
         readUnreadAction(result);
@@ -1139,7 +1151,7 @@ class _NotificationScreen extends State<NotificationScreen> {
       case "AppointmentTransactionCancelledMidway":
         readUnreadAction(result);
         break;
-      case myPlanDetails:
+      case parameters.myPlanDetails:
         final userId = PreferenceUtil.getStringValue(KEY_USERID);
         if ((result?.messageDetails?.payload?.userId == userId) &&
             ((result?.messageDetails?.payload?.planId ?? '').isNotEmpty)) {
@@ -1219,10 +1231,9 @@ class _NotificationScreen extends State<NotificationScreen> {
                 Get.toNamed(
                   routervariable.rt_Sheela,
                   arguments: SheelaArgument(
-                    allowBackBtnPress: true,
-                    textSpeechSheela: rawBody,
-                    isNeedPreferredLangauge: true
-                  ),
+                      allowBackBtnPress: true,
+                      textSpeechSheela: rawBody,
+                      isNeedPreferredLangauge: true),
                 )!
                     .then((value) {
                   readUnreadAction(result, isRead: true);
@@ -1315,7 +1326,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         }
         readUnreadAction(result);
         break;
-      case strAppointmentDetail:
+      case parameters.strAppointmentDetail:
         if ((result?.messageDetails?.payload?.appointmentId ?? '').isNotEmpty) {
           AppointmentDetailsController appointmentDetailsController =
               CommonUtil().onInitAppointmentDetailsController();
@@ -1325,7 +1336,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         }
         readUnreadAction(result);
         break;
-      case strPatientReferralAcceptToPatient:
+      case parameters.strPatientReferralAcceptToPatient:
         if (CommonUtil.isUSRegion())
           Get.toNamed(router.rt_UserAccounts,
                   arguments: UserAccountsArguments(selectedIndex: 2))
@@ -1333,7 +1344,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                   PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
-      case strChoosePrefDate:
+      case parameters.strChoosePrefDate:
         if (result?.messageDetails?.payload?.careCoordinatorUserId != null &&
             result?.messageDetails?.payload?.careCoordinatorUserId != '') {
           Navigator.push(
@@ -1365,7 +1376,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           readUnreadAction(result);
         }
         break;
-      case strMissedCallFromCCToPatient:
+      case parameters.strMissedCallFromCCToPatient:
         if (result?.messageDetails?.payload?.careCoordinatorUserId != null &&
             result?.messageDetails?.payload?.careCoordinatorUserId != '') {
           Navigator.push(
@@ -1396,7 +1407,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           readUnreadAction(result);
         }
         break;
-      case strConnectedDevicesScreen:
+      case parameters.strConnectedDevicesScreen:
         try {
           //Get.back();
           Get.to(
@@ -1418,6 +1429,14 @@ class _NotificationScreen extends State<NotificationScreen> {
         }
 
         break;
+      case parameters.strVCApproveByProvider ||
+            parameters.strVCDeclineByProvider:
+        Get.toNamed(
+          rt_VoiceCloningStatus,
+          arguments: const VoiceCloneStatusArguments(fromMenu: true),
+        )?.then((value) {});
+        readUnreadAction(result);
+        ;
       default:
         readUnreadAction(result);
         break;
@@ -1514,10 +1533,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                           }
                         });
                       }
-                    : null,style: OutlinedButton.styleFrom(
-                side: !notification.isActionDone!
-                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),),
+                    : null,
+                style: OutlinedButton.styleFrom(
+                  side: !notification.isActionDone!
+                      ? BorderSide(
+                          color: Color(CommonUtil().getMyPrimaryColor()))
+                      : BorderSide(color: Colors.grey),
+                ),
                 child: TextWidget(
                   text: TranslationConstants.reschedule.t(),
                   colors: !notification.isActionDone!
@@ -1551,10 +1573,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                             body,
                             notification);
                       }
-                    : null,style: OutlinedButton.styleFrom(
-                side: !notification.isActionDone!
-                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),),
+                    : null,
+                style: OutlinedButton.styleFrom(
+                  side: !notification.isActionDone!
+                      ? BorderSide(
+                          color: Color(CommonUtil().getMyPrimaryColor()))
+                      : BorderSide(color: Colors.grey),
+                ),
                 child: TextWidget(
                   text: TranslationConstants.cancel.t(),
                   colors: !notification.isActionDone!
@@ -1628,10 +1653,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                             });
                           } */
                       }
-                    : null,style: OutlinedButton.styleFrom(
-                side: !notification.isActionDone!
-                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),),
+                    : null,
+                style: OutlinedButton.styleFrom(
+                  side: !notification.isActionDone!
+                      ? BorderSide(
+                          color: Color(CommonUtil().getMyPrimaryColor()))
+                      : BorderSide(color: Colors.grey),
+                ),
                 child: TextWidget(
                   text: TranslationConstants.renew.t(),
                   colors: !notification.isActionDone!
@@ -1677,10 +1705,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                           });
                         });
                       }
-                    : null,style: OutlinedButton.styleFrom(
-                side: !notification.isActionDone!
-                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),),
+                    : null,
+                style: OutlinedButton.styleFrom(
+                  side: !notification.isActionDone!
+                      ? BorderSide(
+                          color: Color(CommonUtil().getMyPrimaryColor()))
+                      : BorderSide(color: Colors.grey),
+                ),
                 child: TextWidget(
                   text: TranslationConstants.callback.t(),
                   colors: !notification.isActionDone!
@@ -1719,12 +1750,14 @@ class _NotificationScreen extends State<NotificationScreen> {
                   Provider.of<FetchNotificationViewModel>(context,
                           listen: false)
                       .fetchNotifications();
-                },style: OutlinedButton.styleFrom(
-                side: BorderSide(
-                  color: Color(
-                    CommonUtil().getMyPrimaryColor(),
+                },
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(
+                    color: Color(
+                      CommonUtil().getMyPrimaryColor(),
+                    ),
                   ),
-                ),),
+                ),
                 child: TextWidget(
                   text: parameters.accept,
                   colors: Color(CommonUtil().getMyPrimaryColor()),
@@ -1756,12 +1789,14 @@ class _NotificationScreen extends State<NotificationScreen> {
                   Provider.of<FetchNotificationViewModel>(context,
                           listen: false)
                       .fetchNotifications();
-                },style: OutlinedButton.styleFrom(
-                side: BorderSide(
-                  color: Color(
-                    CommonUtil().getMyPrimaryColor(),
+                },
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(
+                    color: Color(
+                      CommonUtil().getMyPrimaryColor(),
+                    ),
                   ),
-                ),),
+                ),
                 child: TextWidget(
                   text: parameters.reject,
                   colors: Color(
@@ -1796,12 +1831,14 @@ class _NotificationScreen extends State<NotificationScreen> {
                               ''),
                     );
                   }
-                },style: OutlinedButton.styleFrom(
-                side: BorderSide(
-                  color: Color(
-                    CommonUtil().getMyPrimaryColor(),
+                },
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(
+                    color: Color(
+                      CommonUtil().getMyPrimaryColor(),
+                    ),
                   ),
-                ),),
+                ),
                 child: TextWidget(
                   text: parameters.viewMember,
                   colors: Color(CommonUtil().getMyPrimaryColor()),
@@ -1822,12 +1859,14 @@ class _NotificationScreen extends State<NotificationScreen> {
                         builder: (context) => CareGiverSettings(),
                       ),
                     );
-                  },style: OutlinedButton.styleFrom(
-                  side: BorderSide(
-                    color: Color(
-                      CommonUtil().getMyPrimaryColor(),
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      color: Color(
+                        CommonUtil().getMyPrimaryColor(),
+                      ),
                     ),
-                  ),),
+                  ),
                   child: SizedBox(
                     child: TextWidget(
                       text: parameters.communicationSetting,
@@ -1879,10 +1918,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                           'Payment Link Expired', Colors.red, context);
                     }
                   });
-                },style: OutlinedButton.styleFrom(
-                side: !notification.isActionDone!
-                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),),
+                },
+                style: OutlinedButton.styleFrom(
+                  side: !notification.isActionDone!
+                      ? BorderSide(
+                          color: Color(CommonUtil().getMyPrimaryColor()))
+                      : BorderSide(color: Colors.grey),
+                ),
                 child: TextWidget(
                   text: 'Pay Now',
                   colors: !notification.isActionDone!
@@ -1933,10 +1975,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                         notification.messageDetails?.payload?.patientName,
                   ))!
                       .then((value) {});
-                },style: OutlinedButton.styleFrom(
-                side: !notification.isActionDone!
-                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),),
+                },
+                style: OutlinedButton.styleFrom(
+                  side: !notification.isActionDone!
+                      ? BorderSide(
+                          color: Color(CommonUtil().getMyPrimaryColor()))
+                      : BorderSide(color: Colors.grey),
+                ),
                 child: TextWidget(
                   text: 'Pay Now',
                   colors: !notification.isActionDone!
@@ -1983,10 +2028,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                             groupId: '',
                             lastDate: payload.deliveredDateTime)),
                   ).then((value) {});
-                },style: OutlinedButton.styleFrom(
-                side: notification.isUnread!
-                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),),
+                },
+                style: OutlinedButton.styleFrom(
+                  side: notification.isUnread!
+                      ? BorderSide(
+                          color: Color(CommonUtil().getMyPrimaryColor()))
+                      : BorderSide(color: Colors.grey),
+                ),
                 child: TextWidget(
                   text: TranslationConstants.chatwithcc,
                   colors: notification.isUnread!
@@ -2022,10 +2070,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                       );
                     }
                   }
-                },style: OutlinedButton.styleFrom(
-                side: notification.isUnread!
-                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),),
+                },
+                style: OutlinedButton.styleFrom(
+                  side: notification.isUnread!
+                      ? BorderSide(
+                          color: Color(CommonUtil().getMyPrimaryColor()))
+                      : BorderSide(color: Colors.grey),
+                ),
                 child: TextWidget(
                   text: TranslationConstants.viewrecord,
                   colors: notification.isUnread!
@@ -2051,10 +2102,13 @@ class _NotificationScreen extends State<NotificationScreen> {
 
                   CommonUtil().getDetailsOfAddedFamilyMember(
                       context, notification.messageDetails!.payload!.userId!);
-                },style: OutlinedButton.styleFrom(
-                side: !notification.isActionDone!
-                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                    : BorderSide(color: Colors.grey),),
+                },
+                style: OutlinedButton.styleFrom(
+                  side: !notification.isActionDone!
+                      ? BorderSide(
+                          color: Color(CommonUtil().getMyPrimaryColor()))
+                      : BorderSide(color: Colors.grey),
+                ),
                 child: TextWidget(
                   text: 'View Details',
                   colors: !notification.isActionDone!
@@ -2074,11 +2128,19 @@ class _NotificationScreen extends State<NotificationScreen> {
 
         break;
       case parameters.careGiverTransportRequestReminder:
+      case strVoiceClonePatientAssignment:
+        // Check if the 'isAccepted' property is null in the messageDetails
         return (notification.messageDetails?.isAccepted == null)
-            ? (isAppointmentExpired(
-                    notification.messageDetails?.payload?.appointmentDate ?? '')
+            ? (notification?.messageDetails?.payload?.templateName ==
+                    strVoiceClonePatientAssignment)
                 ? getAppointmentAcceptAndReject(notification)
-                : Container())
+                : (isAppointmentExpired(
+                        notification.messageDetails?.payload?.appointmentDate ??
+                            '')
+                    // Check if the appointment is expired based on the appointmentDate
+                    ? getAppointmentAcceptAndReject(notification)
+                    : Container())
+            // Return an empty Container if 'isAccepted' is not null
             : Container();
 
         break;
@@ -2089,29 +2151,65 @@ class _NotificationScreen extends State<NotificationScreen> {
   }
 
   Widget getAppointmentAcceptAndReject(NotificationResult notification) {
+    Payload? payload = notification?.messageDetails?.payload;
+    bool isEnablebutton = false;
+
+    // Check if the templateName is 'careGiverTransportRequestReminder'
+    if (payload?.templateName == parameters.careGiverTransportRequestReminder) {
+      isEnablebutton = (!notification.isActionDone!);
+    } else if (payload?.templateName == strVoiceClonePatientAssignment) {
+      // Check if the templateName is 'strVoiceClonePatientAssignment'
+
+      isEnablebutton = (notification.isUnread ?? false);
+    }
     return Padding(
       padding: const EdgeInsets.all(0),
       child: Row(
         children: [
           OutlinedButton(
-            onPressed: () async {
-              CommonUtil()
-                  .acceptCareGiverTransportRequestReminder(
-                      context,
-                      notification.messageDetails?.payload?.appointmentId ?? '',
-                      notification.messageDetails?.payload?.patientId ?? '',
-                      true)
-                  .then((value) {
-                readUnreadAction(notification, isRead: true);
-                notification.messageDetails?.setAccepted(true);
-              });
-            },style: OutlinedButton.styleFrom(
-            side: !notification.isActionDone!
-                ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                : BorderSide(color: Colors.grey),),
+            onPressed: isEnablebutton
+                ? () async {
+                    if (payload?.templateName ==
+                        parameters.careGiverTransportRequestReminder) {
+                      CommonUtil()
+                          .acceptCareGiverTransportRequestReminder(
+                              context,
+                              notification
+                                      .messageDetails?.payload?.appointmentId ??
+                                  '',
+                              notification.messageDetails?.payload?.patientId ??
+                                  '',
+                              true)
+                          .then((value) {
+                        readUnreadAction(notification, isRead: true);
+                        notification.messageDetails?.setAccepted(true);
+                      });
+                    } else if (payload?.templateName ==
+                        strVoiceClonePatientAssignment) {
+                      // Check if the templateName is 'strVoiceClonePatientAssignment'
+
+                      // Save the Voice Clone Patient Assignment accept status using CommonUtil
+                      CommonUtil()
+                          .saveVoiceClonePatientAssignmentStatus(
+                              notification
+                                      .messageDetails?.payload?.voiceCloneId ??
+                                  '',
+                              true)
+                          .then((value) {
+                        // Perform read/unread action after saving the status
+                        readUnreadAction(notification, isRead: true);
+                      });
+                    }
+                  }
+                : null,
+            style: OutlinedButton.styleFrom(
+              side: isEnablebutton
+                  ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                  : BorderSide(color: Colors.grey),
+            ),
             child: TextWidget(
               text: 'Accept',
-              colors: !notification.isActionDone!
+              colors: isEnablebutton
                   ? Color(CommonUtil().getMyPrimaryColor())
                   : Colors.grey,
               overflow: TextOverflow.visible,
@@ -2123,24 +2221,49 @@ class _NotificationScreen extends State<NotificationScreen> {
             width: 15.0.w,
           ),
           OutlinedButton(
-            onPressed: () async {
-              CommonUtil()
-                  .acceptCareGiverTransportRequestReminder(
-                      context,
-                      notification.messageDetails?.payload?.appointmentId ?? '',
-                      notification.messageDetails?.payload?.patientId ?? '',
-                      false)
-                  .then((value) {
-                readUnreadAction(notification, isRead: true);
-                notification.messageDetails?.setAccepted(true);
-              });
-            },style: OutlinedButton.styleFrom(
-            side: !notification.isActionDone!
-                ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
-                : BorderSide(color: Colors.grey),),
+            onPressed: isEnablebutton
+                ? () async {
+                    if (payload?.templateName ==
+                        parameters.careGiverTransportRequestReminder) {
+                      CommonUtil()
+                          .acceptCareGiverTransportRequestReminder(
+                              context,
+                              notification
+                                      .messageDetails?.payload?.appointmentId ??
+                                  '',
+                              notification.messageDetails?.payload?.patientId ??
+                                  '',
+                              false)
+                          .then((value) {
+                        readUnreadAction(notification, isRead: true);
+                        notification.messageDetails?.setAccepted(true);
+                      });
+                    } else if (payload?.templateName ==
+                        strVoiceClonePatientAssignment) {
+                      // Check if the templateName is 'strVoiceClonePatientAssignment'
+
+                      // Save the Voice Clone Patient Assignment decline status using CommonUtil
+                      CommonUtil()
+                          .saveVoiceClonePatientAssignmentStatus(
+                              notification
+                                      .messageDetails?.payload?.voiceCloneId ??
+                                  '',
+                              false)
+                          .then((value) {
+                        // Perform read/unread action after saving the status
+                        readUnreadAction(notification, isRead: true);
+                      });
+                    }
+                  }
+                : null,
+            style: OutlinedButton.styleFrom(
+              side: isEnablebutton
+                  ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                  : BorderSide(color: Colors.grey),
+            ),
             child: TextWidget(
               text: 'Decline',
-              colors: !notification.isActionDone!
+              colors: isEnablebutton
                   ? Color(CommonUtil().getMyPrimaryColor())
                   : Colors.grey,
               overflow: TextOverflow.visible,

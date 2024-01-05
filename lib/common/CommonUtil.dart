@@ -7466,6 +7466,21 @@ class CommonUtil {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
+
+  // Define a method to save the voice clone patient assignment status
+  saveVoiceClonePatientAssignmentStatus(
+      String voiceCloneId, bool isAcceptTemp) async {
+    try {
+      // Create an instance of QurHomeApiProvider
+      final apiResponse = QurHomeApiProvider();
+      // Call the saveVoiceClonePatientAssignmentStatus method on QurHomeApiProvider
+      await apiResponse.saveVoiceClonePatientAssignmentStatus(
+          strVoiceCloneId: voiceCloneId, isAccept: isAcceptTemp);
+    } catch (e, stackTrace) {
+      // Log any errors using appLogs
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
 }
 
 extension CapExtension on String {
