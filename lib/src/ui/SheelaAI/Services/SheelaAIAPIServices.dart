@@ -1,7 +1,11 @@
 
 import 'dart:convert';
+import 'dart:developer';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/src/ui/SheelaAI/Models/SheelaVoiceIdModel.dart';
 import '../../../../common/CommonUtil.dart';
 import '../../../../constants/HeaderRequest.dart';
 import '../../../../constants/fhb_constants.dart';
@@ -38,8 +42,13 @@ class SheelAIAPIService {
   }
 
   Future<Response> getAudioFileTTS(Map<String, dynamic> reqJson) async {
-    final urlForTTS = BASE_URL + qr_Google_TTS_Proxy_URL;
+    var strVoiceId = await getVoiceId();
+    final urlForTTS = BASE_URL + qr_TTS_Proxy_URL;
     try {
+      reqJson[qr_voiceId]= strVoiceId??'';
+      if(kDebugMode){
+        log("getAudioFileTTS voiceId $strVoiceId");
+      }
       final jsonString = jsonEncode(reqJson);
       final headerRequest = await HeaderRequest().getRequestHeader();
       // print("-----------------Sheela request---------------------");
@@ -77,4 +86,36 @@ class SheelAIAPIService {
       throw Exception('$e was thrown');
     }
   }
+
+  Future<String?> getVoiceId() async {
+    final urlForTextTranslate = BASE_URL + qr_Get_VoiceId;
+    try {
+
+      String strUserIdTemp = await PreferenceUtil.getStringValue(KEY_USERID) ?? '';
+
+      final headerRequest = await HeaderRequest().getRequestHeader();
+      final response = await ApiServices.get(
+        urlForTextTranslate+strUserIdTemp,
+        headers: headerRequest,
+      );
+      if (response?.statusCode == 200) {
+        final data = jsonDecode(response?.body??'');
+        final SheelaVoiceIdModel sheelaVoiceIdModel =
+        SheelaVoiceIdModel.fromJson(data);
+        if ((sheelaVoiceIdModel != null) &&
+            (sheelaVoiceIdModel.isSuccess ?? false)) {
+          return (sheelaVoiceIdModel?.result?.voiceClone?.voiceId ?? '');
+        } else {
+          return '';
+        }
+      } else {
+        return '';
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      throw Exception('$e was thrown');
+    }
+  }
+
+
 }
