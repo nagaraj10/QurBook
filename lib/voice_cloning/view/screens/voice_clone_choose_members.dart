@@ -50,32 +50,46 @@ class _VoiceCloningChooseMemberState extends State<VoiceCloningChooseMember> {
   Future<void> fetchFamilyMembersList() async {
     final listFamilyMembers =
         await _voiceCloneMembersServices.getFamilyMembersListNew();
-    listFamilyMembers.result?.sharedByUsers?.forEach((sharedByUser) {
-      _listOfFamilyMembers.add(
-        VoiceCloneSharedByUsers(
-          id: sharedByUser.id,
-          status: sharedByUser.status,
-          nickName: sharedByUser.nickName,
-          isActive: sharedByUser.isActive,
-          createdOn: sharedByUser.createdOn,
-          lastModifiedOn: sharedByUser.lastModifiedOn,
-          relationship: sharedByUser.relationship,
-          child: sharedByUser.child,
-          membershipOfferedBy: sharedByUser.membershipOfferedBy,
-          isCaregiver: sharedByUser.isCaregiver,
-          isNewUser: sharedByUser.isNewUser,
-          remainderForId: sharedByUser.remainderForId,
-          remainderFor: sharedByUser.remainderFor,
-          remainderMins: sharedByUser.remainderMins,
-          nonAdheranceId: sharedByUser.nonAdheranceId,
-          chatListItem: sharedByUser.chatListItem,
-          nickNameSelf: sharedByUser.nickNameSelf,
-          isSelected: widget.arguments?.selectedFamilyMembers?.firstWhereOrNull(
-                  (element) => (element.user?.id == sharedByUser.child?.id) &&
-                      (element.isActive ?? false))?.isActive ??  false,
-        ),
-      );
-    });
+    final listOfCareGiverFamilyMembers =
+        (await _voiceCloneMembersServices.getCareGiverPatientList() ?? [])
+            .map((e) => e?.childId ?? '')
+            .toList();
+
+    _listOfFamilyMembers.addAll(
+      listFamilyMembers.result?.sharedByUsers
+              ?.where((sharedByUser) => listOfCareGiverFamilyMembers
+                  .contains(sharedByUser.child?.id ?? ''))
+              .map(
+                (sharedByUser) => VoiceCloneSharedByUsers(
+                  id: sharedByUser.id,
+                  status: sharedByUser.status,
+                  nickName: sharedByUser.nickName,
+                  isActive: sharedByUser.isActive,
+                  createdOn: sharedByUser.createdOn,
+                  lastModifiedOn: sharedByUser.lastModifiedOn,
+                  relationship: sharedByUser.relationship,
+                  child: sharedByUser.child,
+                  membershipOfferedBy: sharedByUser.membershipOfferedBy,
+                  isCaregiver: sharedByUser.isCaregiver,
+                  isNewUser: sharedByUser.isNewUser,
+                  remainderForId: sharedByUser.remainderForId,
+                  remainderFor: sharedByUser.remainderFor,
+                  remainderMins: sharedByUser.remainderMins,
+                  nonAdheranceId: sharedByUser.nonAdheranceId,
+                  chatListItem: sharedByUser.chatListItem,
+                  nickNameSelf: sharedByUser.nickNameSelf,
+                  isSelected: widget.arguments?.selectedFamilyMembers
+                          ?.firstWhereOrNull((element) =>
+                              (element.user?.id == sharedByUser.child?.id) &&
+                              (element.isActive ?? false))
+                          ?.isActive ??
+                      false,
+                ),
+              )
+              .toList() ??
+          [],
+    );
+
     _hasData = _listOfFamilyMembers.isNotEmpty;
     _isLoading = false;
     setState(() {});

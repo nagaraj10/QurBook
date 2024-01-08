@@ -1,3 +1,7 @@
+import '../../Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as fhb_constants;
+import '../../constants/fhb_query.dart' as fhb_query;
 import '../../constants/webservice_call.dart';
 import '../../my_family/models/FamilyMembersRes.dart';
 import '../../src/resources/network/ApiBaseHelper.dart';
@@ -31,5 +35,15 @@ class VoiceCloneMembersServices {
       ),
     );
     return VoiceCloneCaregiverAssignmentResponse.fromJson(response).result;
+  }
+
+  Future<List<CareGiverPatientListResult?>?>? getCareGiverPatientList() async {
+    final userId =
+        PreferenceUtil.getStringValue(fhb_constants.KEY_USERID) ?? '';
+    final response = await _helper.getProfileInfo(fhb_query.qr_userlinking +
+        fhb_query.qr_caregiver_family +
+        fhb_query.qr_caregiver_user_id +
+        userId);
+    return CareGiverPatientList.fromJson(response).result;
   }
 }
