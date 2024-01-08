@@ -34,7 +34,9 @@ import 'package:myfhb/video_call/model/CallArguments.dart';
 import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:myfhb/voice_cloning/model/voice_cloning_choose_member_arguments.dart';
 import 'package:myfhb/voice_cloning/view/screens/voice_clone_choose_members.dart';
+import 'package:path/path.dart';
 import '../add_family_user_info/screens/add_family_user_info_clone.dart';
+import '../telehealth/features/Notifications/view/notification_main.dart';
 import '../voice_cloning/view/screens/voice_recording_screen.dart';
 import 'router_variable.dart' as router;
 import '../device_integration/viewModel/Device_model.dart';
@@ -205,7 +207,8 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_more_menu: (context) => MoreMenuScreen(
           refresh:
               ModalRoute.of(context)!.settings.arguments as Function(bool)?,
-        )
+        ),
+    router.rt_notification_main: (BuildContext context) => NotificationMain(),
   };
 
   return fhbRouter;

@@ -4,6 +4,8 @@ import 'package:myfhb/telehealth/features/Notifications/view/notification_main.d
 import 'package:myfhb/widgets/checkout_page_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../constants/router_variable.dart';
+
 class ShoppingCartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -16,10 +18,8 @@ class ShoppingCartWidget extends StatelessWidget {
         width: 50.0,
         child:  GestureDetector(
           onTap: () {
-            Navigator.of(context).push(
-               MaterialPageRoute(
-                builder: (BuildContext context) =>  NotificationMain(),
-              ),
+            Navigator.of(context).pushNamed(
+              rt_notification_main,
             );
           },
           child: Stack(

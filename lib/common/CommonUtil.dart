@@ -2648,10 +2648,9 @@ class CommonUtil {
                               : Colors.white,
                           size: CommonUtil().isTablet! ? 33.0.sp : 27.0.sp,
                           onTap: () {
-                            Navigator.push(
+                            Navigator.pushNamed(
                               context,
-                              MaterialPageRoute(
-                                  builder: (context) => NotificationMain()),
+                              rt_notification_main,
                             );
                           },
                         ),
