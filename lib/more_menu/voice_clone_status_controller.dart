@@ -141,18 +141,27 @@ class VoiceCloneStatusController extends GetxController {
           [];
 
       listOfExistingFamilyMembers.value =
-          selectedFamilyMembers?.map((e) => e.id ?? '').toList() ?? [];
+          selectedFamilyMembers.map((e) => e.id ?? '').toList();
       listOfFamilyMembers.value = [];
       final _listFamilyMembers =
           await _voiceCloneMembersServices.getFamilyMembersListNew();
+      final listOfCareGiverFamilyMembers =
+          (await _voiceCloneMembersServices.getCareGiverPatientList() ?? [])
+              .map((e) => e?.childId ?? '')
+              .toList();
 
-      var _customlistOfFamilyMembers = <VoiceCloneSharedByUsers>[];
+      List<VoiceCloneSharedByUsers> _customlistOfFamilyMembers =
+          <VoiceCloneSharedByUsers>[];
       _listFamilyMembers.result?.sharedByUsers?.forEach((sharedByUser) {
         final existingFamilyMembers = selectedFamilyMembers
-            .where((element) => element.user?.id == sharedByUser.child?.id)
+            .where(
+              (element) =>
+                  element.user?.id == sharedByUser.child?.id
+                   &&
+                  listOfCareGiverFamilyMembers.contains(sharedByUser.child?.id),
+            )
             .toList();
 
-        ;
         if (existingFamilyMembers.isNotEmpty &&
             (existingFamilyMembers[0].isActive ?? false)) {
           _customlistOfFamilyMembers.add(
