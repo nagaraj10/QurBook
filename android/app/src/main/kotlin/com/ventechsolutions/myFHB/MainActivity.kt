@@ -4252,9 +4252,11 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                             displayText.setText(finalWords)
                         }
 
+                        sendBtn.performClick()
                         speechRecognizer?.stopListening()
-                        speechIntent?.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode)
-                        speechRecognizer?.startListening(speechIntent)
+                        speechRecognizer?.cancel()
+                        speechRecognizer?.destroy()
+
                     }
                 }
 
