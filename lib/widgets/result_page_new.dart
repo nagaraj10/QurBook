@@ -187,7 +187,9 @@ class _ResultPage extends State<PaymentResultPage> {
                                   SchedulerBinding.instance!
                                       .addPostFrameCallback((_) async {
                                     if (widget.isPaymentFromNotification) {
-                                      Get.offAll(NotificationMain());
+                                      Get.offAllNamed(
+                                        router.rt_notification_main,
+                                      );
                                     } else {
                                       Get.offAllNamed(
                                         router.rt_Landing,

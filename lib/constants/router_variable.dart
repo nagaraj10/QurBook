@@ -62,3 +62,4 @@ const String rt_VoiceCloningChooseMemberSubmit =
 
 const String rt_record_submission = '/record_submit';
 const String rt_more_menu = '/more_menu';//router form more menu
+const String rt_notification_main = '/NotificationMain';

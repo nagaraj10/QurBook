@@ -1433,10 +1433,9 @@ class _NotificationScreen extends State<NotificationScreen> {
             parameters.strVCDeclineByProvider:
         Get.toNamed(
           rt_VoiceCloningStatus,
-          arguments: const VoiceCloneStatusArguments(fromMenu: true),
+          arguments: const VoiceCloneStatusArguments(fromMenu: false),
         )?.then((value) {});
         readUnreadAction(result);
-        ;
       default:
         readUnreadAction(result);
         break;

@@ -26,6 +26,7 @@ import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as strConstants;
+import '../../constants/router_variable.dart';
 import '../../widgets/GradientAppBar.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
@@ -115,7 +116,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
           size: 24.0.sp,
           onTap: () {
             if (widget.isFromNotification) {
-              Get.offAll(NotificationMain());
+              Get.offAllNamed(rt_notification_main);
             } else {
               Navigator.pop(context);
             }
