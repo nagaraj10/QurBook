@@ -465,7 +465,7 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                               context, router.rt_Landing));
                     } else if (widget.nsRoute ==
                         parameters.doctorCancellation) {
-                      Get.to(NotificationMain());
+                      Get.toNamed(rt_notification_main);
                     } else if (widget.nsRoute == 'chat') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',

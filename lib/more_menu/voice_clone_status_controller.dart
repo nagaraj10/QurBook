@@ -115,7 +115,7 @@ class VoiceCloneStatusController extends GetxController {
     } else {
       Navigator.popUntil(context, (route) {
         var shouldPop = false;
-        if (route.settings.name == rt_more_menu) {
+        if ([rt_notification_main, rt_more_menu].contains(route.settings.name)) {
           shouldPop = true;
         }
         return shouldPop;

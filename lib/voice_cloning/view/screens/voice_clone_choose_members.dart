@@ -180,11 +180,12 @@ class _VoiceCloningChooseMemberState extends State<VoiceCloningChooseMember> {
                             .submitVoiceCloneWithFamilyMembers(request);
                         _flutterToast.getToast(
                             response.message ?? '', Colors.green);
+                            
                         Navigator.popUntil(context, (route) {
                           var shouldPop = false;
-                          if (route.settings.name == rt_more_menu) {
-                            shouldPop = true;
-                          }
+                           if ([rt_notification_main,rt_more_menu].contains(route.settings.name)) {
+                              shouldPop = true;
+                            }
                           return shouldPop;
                         });
                       }

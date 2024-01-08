@@ -172,7 +172,7 @@ class _ResultPage extends State<ResultPage> {
                                         needFreshLoad: false,
                                       ),
                                     )
-                                  : Get.off(NotificationMain());
+                                  : Get.offNamed(router.rt_notification_main);
                             } else {
                               status && !isFromSubscribe!
                                   ? Navigator.pushReplacement(

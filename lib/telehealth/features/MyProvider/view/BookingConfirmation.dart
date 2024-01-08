@@ -666,7 +666,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     return WillPopScope(
       onWillPop: () async {
         if (widget.isFromPaymentNotification) {
-          Get.offAll(NotificationMain());
+          Get.offAllNamed(router.rt_notification_main);
           return true;
         } else {
           Navigator.pop(context);
@@ -681,7 +681,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           leading: GestureDetector(
             onTap: () {
               if (widget.isFromPaymentNotification) {
-                Get.offAll(NotificationMain());
+                Get.offAllNamed(router.rt_notification_main);
               } else {
                 if (widget.isFromPaymentNotification == false) widget.refresh!();
                 Navigator.pop(context);
@@ -832,7 +832,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                       ),
                                       onPressed: () {
                                         if (widget.isFromPaymentNotification) {
-                                          Get.off(NotificationMain());
+                                          Get.offNamed(router.rt_notification_main);
                                         } else {
                                           Navigator.pop(context);
                                         }
@@ -1178,7 +1178,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                         widget.refresh!();
                         Navigator.pop(context);
                       } else {
-                        Get.off(NotificationMain());
+                        Get.offNamed(router.rt_notification_main);
                       }
                     }
                   },
