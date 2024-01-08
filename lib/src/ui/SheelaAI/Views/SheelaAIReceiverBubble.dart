@@ -7,6 +7,7 @@ import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:myfhb/common/AudioWidget.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
@@ -765,8 +766,15 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                       filePath: selectedImage,
                     ));
                   },
-                  child: Image.file(File(selectedImage))
-              ),
+                  child: Container(
+                      padding: EdgeInsets.only(right: 60.sp),
+                      width: double.infinity,
+                      height: 200.h,
+                      child: PhotoView(
+                          backgroundDecoration:
+                              BoxDecoration(color: Colors.transparent),
+                          imageProvider:
+                              FileImage(File(selectedImage ?? ''))))),
             ],
           ),
         ),
