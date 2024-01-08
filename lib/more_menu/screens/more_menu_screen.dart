@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,27 +8,28 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/unit/choose_unit.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view/otp_remove_account_screen.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/DeleteAccountWebScreen.dart';
 import 'package:myfhb/common/DexComWebScreen.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
+import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import 'package:myfhb/more_menu/screens/terms_and_conditon.dart';
 import 'package:myfhb/more_menu/screens/trouble_shooting.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
-import 'package:myfhb/src/ui/settings/AppleHealthSettings.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/src/ui/settings/NonAdheranceSettingsScreen.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/ticket_support/model/user_comments_model.dart';
 import 'package:myfhb/unit/choose_unit.dart';
 import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:package_info/package_info.dart';
@@ -39,8 +39,8 @@ import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../common/errors_widget.dart';
-import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
 import '../../device_integration/viewModel/Device_model.dart';
@@ -56,9 +56,6 @@ import '../../src/ui/HomeScreen.dart';
 import '../../src/ui/settings/MySettings.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
-import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:local_auth/error_codes.dart' as auth_error;
 
 class MoreMenuScreen extends StatefulWidget {
   final Function(bool userChanged)? refresh;
@@ -905,11 +902,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         .then((value) async {
       updateDeviceModel = value;
       if (updateDeviceModel!.isSuccess!) {
-        // app color updated
-        if (isVoiceCloningChanged) {
-          await getAppColorValues(forNavigation: true);
-          navigateToTermsOrStatusScreen();
-        }
+        // app color updgated
+        // await getAppColorValues(forNavigation: isVoiceCloningChanged);
       }
     });
     return updateDeviceModel;
@@ -1223,7 +1217,17 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                   isVoiceCloningChanged = newValue;
 
                                   voiceCloning = newValue;
-                                  createAppColorSelection(preColor, greColor);
+                                  createAppColorSelection(preColor, greColor)
+                                      .then((value) async {
+                                    //to set toggle button value when app opened for the first tym
+                                    setState(() {});
+                                    //get the values of status to initiate navigation
+                                    await getAppColorValues(
+                                        forNavigation: true);
+                                    if (isVoiceCloningChanged) {
+                                      navigateToTermsOrStatusScreen();
+                                    }
+                                  });
 
                                   /*PreferenceUtil.saveString(
                                         Constants.allowDeviceRecognition,
