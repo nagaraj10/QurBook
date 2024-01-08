@@ -459,7 +459,7 @@ class IosNotificationHandler {
         'navigationPage': 'Appointment List',
       });
       await await isAlreadyLoaded
-          ? Get.to(() => NotificationMain())
+          ? Get.toNamed(rt_notification_main)
           : Get.to(() => SplashScreen(
                 nsRoute: parameters.doctorCancellation,
               ));

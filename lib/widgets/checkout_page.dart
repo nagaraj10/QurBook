@@ -102,7 +102,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     // Navigator.of(context).pop(true);
 
     if (widget.isFromNotification) {
-      Get.offAll(NotificationMain());
+      Get.offAllNamed(router.rt_notification_main);
     } else if (Navigator.canPop(context)) {
       Get.back();
     } else {
