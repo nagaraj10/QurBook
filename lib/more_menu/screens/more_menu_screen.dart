@@ -858,7 +858,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             allowAppointmentNotification,
             allowVitalNotification,
             allowSymptomsNotification,
-            isVoiceCloningChanged)
+            voiceCloning)
         .then((value) async {
       createDeviceSelectionModel = value;
       if (createDeviceSelectionModel!.isSuccess!) {
@@ -896,16 +896,12 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             allowVitalNotification,
             allowSymptomsNotification,
             preferredMeasurement,
-            isVoiceCloningChanged)
+            voiceCloning)
         .then((value) async {
       updateDeviceModel = value;
       if (updateDeviceModel!.isSuccess!) {
-        // app color updated
-        await getAppColorValues(forNavigation: isVoiceCloningChanged);
-
-        if (isVoiceCloningChanged) {
-          navigateToTermsOrStatusScreen();
-        }
+        // app color updgated
+        // await getAppColorValues(forNavigation: isVoiceCloningChanged);
       }
     });
     return updateDeviceModel;
@@ -1218,8 +1214,18 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                   isTouched = true;
                                   isVoiceCloningChanged = newValue;
 
-                                  // voiceCloning = newValue;
-                                  createAppColorSelection(preColor, greColor);
+                                  voiceCloning = newValue;
+                                  createAppColorSelection(preColor, greColor)
+                                      .then((value) async {
+                                    //to set toggle button value when app opened for the first tym
+                                    setState(() {});
+                                    //get the values of status to initiate navigation
+                                    await getAppColorValues(
+                                        forNavigation: true);
+                                    if (isVoiceCloningChanged) {
+                                      navigateToTermsOrStatusScreen();
+                                    }
+                                  });
 
                                   /*PreferenceUtil.saveString(
                                         Constants.allowDeviceRecognition,
@@ -2105,18 +2111,15 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     }
   }
 
-/**
- * Created this method to decrease the time for navigation from menu
+/** 
+ * Created this method to decrease the time for navigation from menu 
  * screen on click of toggle button
  */
   void setVoiceCloneValue(GetDeviceSelectionModel getDeviceSelectionModel) {
     //status of the voice cloning toggle button
-
     voiceCloning =
         getDeviceSelectionModel.result![0].profileSetting!.voiceCloning ??
             false;
-
-    isVoiceCloningChanged = voiceCloning;
 
     //set the bool value when provider has allowed the permssion
     providerAllowedVoiceCloningModule = getDeviceSelectionModel
