@@ -1,33 +1,33 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view/otp_remove_account_screen.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/DeleteAccountWebScreen.dart';
 import 'package:myfhb/common/DexComWebScreen.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
+import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import 'package:myfhb/more_menu/screens/terms_and_conditon.dart';
 import 'package:myfhb/more_menu/screens/trouble_shooting.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
-import 'package:myfhb/src/ui/settings/AppleHealthSettings.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/src/ui/settings/NonAdheranceSettingsScreen.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/ticket_support/model/user_comments_model.dart';
 import 'package:myfhb/unit/choose_unit.dart';
 import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:package_info/package_info.dart';
@@ -37,8 +37,8 @@ import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../common/errors_widget.dart';
-import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
 import '../../device_integration/viewModel/Device_model.dart';
@@ -54,9 +54,6 @@ import '../../src/ui/HomeScreen.dart';
 import '../../src/ui/settings/MySettings.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
-import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:local_auth/error_codes.dart' as auth_error;
 
 class MoreMenuScreen extends StatefulWidget {
   final Function(bool userChanged)? refresh;
@@ -861,7 +858,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             allowAppointmentNotification,
             allowVitalNotification,
             allowSymptomsNotification,
-            voiceCloning)
+            isVoiceCloningChanged)
         .then((value) async {
       createDeviceSelectionModel = value;
       if (createDeviceSelectionModel!.isSuccess!) {
@@ -899,13 +896,14 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             allowVitalNotification,
             allowSymptomsNotification,
             preferredMeasurement,
-            voiceCloning)
+            isVoiceCloningChanged)
         .then((value) async {
       updateDeviceModel = value;
       if (updateDeviceModel!.isSuccess!) {
         // app color updated
+        await getAppColorValues(forNavigation: isVoiceCloningChanged);
+
         if (isVoiceCloningChanged) {
-          await getAppColorValues(forNavigation: true);
           navigateToTermsOrStatusScreen();
         }
       }
@@ -1220,7 +1218,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                   isTouched = true;
                                   isVoiceCloningChanged = newValue;
 
-                                  voiceCloning = newValue;
+                                  // voiceCloning = newValue;
                                   createAppColorSelection(preColor, greColor);
 
                                   /*PreferenceUtil.saveString(
@@ -2107,15 +2105,18 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     }
   }
 
-/** 
- * Created this method to decrease the time for navigation from menu 
+/**
+ * Created this method to decrease the time for navigation from menu
  * screen on click of toggle button
  */
   void setVoiceCloneValue(GetDeviceSelectionModel getDeviceSelectionModel) {
     //status of the voice cloning toggle button
+
     voiceCloning =
         getDeviceSelectionModel.result![0].profileSetting!.voiceCloning ??
             false;
+
+    isVoiceCloningChanged = voiceCloning;
 
     //set the bool value when provider has allowed the permssion
     providerAllowedVoiceCloningModule = getDeviceSelectionModel
