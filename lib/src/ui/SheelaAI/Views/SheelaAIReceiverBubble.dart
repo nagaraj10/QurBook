@@ -121,6 +121,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                               ),
                                         ),
                                         getImageURLFromCondition(),
+                                        // Conditional rendering of an image preview thumbnail
                                         (chat.imageThumbnailUrl != null &&
                                             chat.imageThumbnailUrl != '')
                                             ? getImagePreviewThumbnail(chat.imageThumbnailUrl??'')
@@ -453,59 +454,63 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             CommonUtil().appLogs(message: e, stackTrace: stackTrace);
                         }
                       } else if (buttonData?.needPhoto ?? false) {
+                        // Check if the button requires a photo
                         if (controller.isLoading.isTrue) {
-                          return;
+                          return; // If loading, do nothing
                         }
-                        controller.stopTTS();
-                        controller.isSheelaScreenActive = false;
-                        controller.btnTextLocal = buttonData?.title??'';
-                        controller.showCameraGalleryDialog(context,controller.btnTextLocal??'').then((value) {
-                          controller.isSheelaScreenActive = true;
+                        controller.stopTTS(); // Stop Text-to-Speech
+                        controller.isSheelaScreenActive = false; // Deactivate Sheela screen
+                        controller.btnTextLocal = buttonData?.title ?? ''; // Set local button text
+                        // Show the camera/gallery dialog and handle the result
+                        controller.showCameraGalleryDialog(controller.btnTextLocal ?? '').then((value) {
+                          controller.isSheelaScreenActive = true; // Reactivate Sheela screen after dialog
                         });
-                      }else if (buttonData?.btnRedirectTo == strRedirectRetakePicture) {
+                      } else if (buttonData?.btnRedirectTo == strRedirectRetakePicture) {
+                        // Check if the button redirects to retake picture
                         if (controller.isLoading.isTrue) {
-                          return;
+                          return; // If loading, do nothing
                         }
-                        controller.stopTTS();
-                        controller.isSheelaScreenActive = false;
-                        controller.isRetakeCapture = true;
-                        controller.showCameraGalleryDialog(context,controller.btnTextLocal??'').then((value) {
-                          controller.isSheelaScreenActive = true;
+                        controller.stopTTS(); // Stop Text-to-Speech
+                        controller.isSheelaScreenActive = false; // Deactivate Sheela screen
+                        controller.isRetakeCapture = true; // Set flag for retake capture
+                        // Show the camera/gallery dialog and handle the result
+                        controller.showCameraGalleryDialog(controller.btnTextLocal ?? '').then((value) {
+                          controller.isSheelaScreenActive = true; // Reactivate Sheela screen after dialog
                         });
-                      } else if (buttonData?.btnRedirectTo ==
-                          strRedirectToUploadImage) {
-                        controller.isLoading.value = true;
-                        controller.conversations.add(SheelaResponse(loading: true));
-                        controller.scrollToEnd();
-                        if (chat.imageThumbnailUrl != null &&
-                            chat.imageThumbnailUrl != '') {
+                      } else if (buttonData?.btnRedirectTo == strRedirectToUploadImage) {
+                        // Check if the button redirects to upload image
+                        controller.isLoading.value = true; // Set loading flag
+                        controller.conversations.add(SheelaResponse(loading: true)); // Add loading response to conversations
+                        controller.scrollToEnd(); // Scroll to the end of conversations
+                        if (chat.imageThumbnailUrl != null && chat.imageThumbnailUrl != '') {
+                          // Check if there is a valid image thumbnail URL
                           controller
-                              .saveMediaRegiment(
-                                  chat.imageThumbnailUrl ?? '', '')
+                              .saveMediaRegiment(chat.imageThumbnailUrl ?? '', '') // Save media regiment
                               .then((value) {
-                            controller.isLoading.value = false;
-                            controller.conversations.removeLast();
+                            controller.isLoading.value = false; // Reset loading flag
+                            controller.conversations.removeLast(); // Remove the loading response from conversations
                             if (value.isSuccess ?? false) {
                               if (controller.isLoading.isTrue) {
-                                return;
+                                return; // If loading, do nothing
                               }
-                              if (chat.singleuse != null &&
-                                  chat.singleuse! &&
-                                  chat.isActionDone != null) {
-                                chat.isActionDone = true;
+                              if (chat.singleuse != null && chat.singleuse! && chat.isActionDone != null) {
+                                chat.isActionDone = true; // Set action done flag if it's a single-use button
                               }
-                              buttonData?.isSelected = true;
+                              buttonData?.isSelected = true; // Mark the button as selected
+                              // Start Sheela from the button with specified parameters
                               controller.startSheelaFromButton(
-                                  buttonText: buttonData?.title,
-                                  payload: buttonData?.payload,
-                                  buttons: buttonData);
+                                buttonText: buttonData?.title,
+                                payload: buttonData?.payload,
+                                buttons: buttonData,
+                              );
+                              // Delay for 3 seconds and then unselect the button
                               Future.delayed(const Duration(seconds: 3), () {
                                 buttonData?.isSelected = false;
                               });
                             }
                           });
                         }
-                      } else {
+                      }else {
                         if (controller.isLoading.isTrue) {
                           return;
                         }
@@ -746,6 +751,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
     );
   }
 
+  // Widget to display an image preview thumbnail
   Widget getImagePreviewThumbnail(String selectedImage) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -755,30 +761,41 @@ class SheelaAIReceiverBubble extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             color: Colors.white,
           ),
-          width: 1.sw,
+          width: 1.sw, // Width is set to the screen width
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               InkWell(
-                  onTap: () {
-                    Get.to(FullPhoto(
-                      url: "",
-                      filePath: selectedImage,
-                    ));
-                  },
-                  child: Container(
-                      padding: EdgeInsets.only(right: 60.sp),
-                      width: double.infinity,
-                      height: 200.h,
-                      child: PhotoView(
-                          backgroundDecoration:
-                              BoxDecoration(color: Colors.transparent),
-                          imageProvider:
-                              FileImage(File(selectedImage ?? ''))))),
+                onTap: () {
+                  controller.stopTTS(); // Stop Text-to-Speech
+                  controller.isSheelaScreenActive = false; // Deactivate Sheela screen
+                  // Navigate to FullPhoto screen and handle the result
+                  Get.to(FullPhoto(
+                    url: "",
+                    filePath: selectedImage,
+                  ))?.then((value) {
+                    controller.isSheelaScreenActive = true; // Reactivate Sheela screen after navigating back
+                  });
+                },
+                child: Container(
+                  // Container for the PhotoView
+                  padding: EdgeInsets.only(
+                    right: CommonUtil().isTablet! ? 200.sp : 60.sp,
+                  ),
+                  width: double.infinity, // Width takes the full width of the container
+                  height: 200.h, // Height is set to 200 logical pixels
+                  child: PhotoView(
+                    // Widget to display the image with zooming capabilities
+                    backgroundDecoration: BoxDecoration(color: Colors.transparent),
+                    imageProvider: FileImage(File(selectedImage ?? '')),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ],
     );
   }
+
 }

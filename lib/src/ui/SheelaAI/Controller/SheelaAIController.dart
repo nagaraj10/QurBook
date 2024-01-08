@@ -1057,6 +1057,85 @@ class SheelaAIController extends GetxController {
                           CommonUtil()
                               .appLogs(message: e, stackTrace: stackTrace);
                         }
+                      } else if (button?.needPhoto ?? false) {
+                        // Check if the button requires a photo
+                        if (isLoading.isTrue) {
+                          return; // If loading, do nothing
+                        }
+                        stopTTS(); // Stop Text-to-Speech
+                        isSheelaScreenActive =
+                            false; // Deactivate Sheela screen
+                        btnTextLocal =
+                            button?.title ?? ''; // Set local button text
+                        // Show the camera/gallery dialog and handle the result
+                        showCameraGalleryDialog(btnTextLocal ?? '')
+                            .then((value) {
+                          isSheelaScreenActive =
+                              true; // Reactivate Sheela screen after dialog
+                        });
+                      } else if (button?.btnRedirectTo ==
+                          strRedirectRetakePicture) {
+                        // Check if the button redirects to retake picture
+                        if (isLoading.isTrue) {
+                          return; // If loading, do nothing
+                        }
+                        stopTTS(); // Stop Text-to-Speech
+                        isSheelaScreenActive =
+                            false; // Deactivate Sheela screen
+                        isRetakeCapture = true; // Set flag for retake capture
+                        // Show the camera/gallery dialog and handle the result
+                        showCameraGalleryDialog(btnTextLocal ?? '')
+                            .then((value) {
+                          isSheelaScreenActive =
+                              true; // Reactivate Sheela screen after dialog
+                        });
+                      } else if (button?.btnRedirectTo ==
+                          strRedirectToUploadImage) {
+                        // Check if the button redirects to upload image
+                        SheelaResponse sheelaLastConversation =
+                            SheelaResponse();
+                        sheelaLastConversation = conversations.last;
+                        isLoading.value = true; // Set loading flag
+                        conversations.add(SheelaResponse(
+                            loading:
+                                true)); // Add loading response to conversations
+                        scrollToEnd(); // Scroll to the end of conversations
+                        if (sheelaLastConversation.imageThumbnailUrl != null &&
+                            sheelaLastConversation.imageThumbnailUrl != '') {
+                          // Check if there is a valid image thumbnail URL
+                          saveMediaRegiment(
+                            sheelaLastConversation.imageThumbnailUrl ?? '',
+                            // Save media regiment
+                            '',
+                          ).then((value) {
+                            isLoading.value = false; // Reset loading flag
+                            conversations
+                                .removeLast(); // Remove the loading response from conversations
+                            if (value.isSuccess ?? false) {
+                              if (isLoading.isTrue) {
+                                return; // If loading, do nothing
+                              }
+                              if (conversations.last.singleuse != null &&
+                                  conversations.last.singleuse! &&
+                                  conversations.last.isActionDone != null) {
+                                conversations.last.isActionDone =
+                                    true; // Set action done flag if it's a single-use button
+                              }
+                              button?.isSelected =
+                                  true; // Mark the button as selected
+                              // Start Sheela from the button with specified parameters
+                              startSheelaFromButton(
+                                buttonText: button?.title,
+                                payload: button?.payload,
+                                buttons: button,
+                              );
+                              // Delay for 3 seconds and then unselect the button
+                              Future.delayed(const Duration(seconds: 3), () {
+                                button?.isSelected = false;
+                              });
+                            }
+                          });
+                        }
                       } else {
                         startSheelaFromButton(
                             buttonText: button.title,
@@ -1732,106 +1811,149 @@ makeApiRequest is used to update the data with latest data
     return buttons;
   }
 
+  // Function to generate a list of button configurations for image preview
   List<Buttons> sheelaImagePreviewButtons(String? btnTitle) {
     List<Buttons> buttons = [
       Buttons(
-          title: strCamelYes,
-          payload: btnTitle,
-          btnRedirectTo: strRedirectToUploadImage),
-      Buttons(title: strRetake, btnRedirectTo: strRedirectRetakePicture),
-      Buttons(title: strExit, payload: strExit, mute: sheela_hdn_btn_yes),
+        title: strCamelYes, // Button title
+        payload: btnTitle, // Payload data (optional)
+        btnRedirectTo: strRedirectToUploadImage, // Redirection information
+      ),
+      Buttons(
+        title: strRetake, // Button title
+        btnRedirectTo: strRedirectRetakePicture, // Redirection information
+      ),
+      Buttons(
+        title: strExit, // Button title
+        payload: strExit, // Payload data
+        mute: sheela_hdn_btn_yes, // Mute flag (optional)
+      ),
     ];
     return buttons;
   }
 
-  Future<void> sheelaImagePreviewThumbnail(
-      {String? btnTitle, String? selectedImagePath}) async {
+  // A function to handle the logic for displaying an image thumbnail in the Sheela chat
+  Future<void> sheelaImagePreviewThumbnail({
+    String? btnTitle, // Optional button title
+    String? selectedImagePath, // Path to the selected image
+  }) async {
     try {
-      // left sheela card
-      isLoading.value = true;
-      SheelaResponse currentCon = SheelaResponse();
-      currentCon.recipientId = sheelaRecepId;
-      currentCon.endOfConv = false;
-      currentCon.endOfConvDiscardDialog = false;
-      currentCon.singleuse = true;
-      currentCon.isActionDone = false;
-      currentCon.isButtonNumber = false;
-      currentCon.recipientId = sheelaRecepId;
-      currentCon.buttons = sheelaImagePreviewButtons(btnTitle);
-      currentCon.imageThumbnailUrl = selectedImagePath;
-      if(isRetakeCapture??false){
-        isLoading.value = false;
-        conversations.removeLast();
+      // Left Sheela card setup
+      isLoading.value = true; // Set loading flag to true
+      SheelaResponse currentCon =
+          SheelaResponse(); // Create a new SheelaResponse instance
+      currentCon.recipientId = sheelaRecepId; // Set recipient ID
+      currentCon.endOfConv = false; // Set end of conversation flag to false
+      currentCon.endOfConvDiscardDialog =
+          false; // Set end of conversation discard dialog flag to false
+      currentCon.singleuse = true; // Set single use flag to true
+      currentCon.isActionDone = false; // Set action done flag to false
+      currentCon.isButtonNumber = false; // Set button number flag to false
+      currentCon.recipientId =
+          sheelaRecepId; // Set recipient ID again (duplicated line?)
+      currentCon.buttons = sheelaImagePreviewButtons(
+          btnTitle); // Generate buttons for the Sheela card
+      currentCon.imageThumbnailUrl =
+          selectedImagePath; // Set image thumbnail URL
+      if (isRetakeCapture ?? false) {
+        isLoading.value = false; // Set loading flag to false
+        conversations.removeLast(); // Remove the last conversation (if retake)
       }
-      conversations.add(currentCon);
-      currentPlayingConversation = currentCon;
-      isLoading.value = false;
-      isRetakeCapture = false;
-      playTTS();
-      scrollToEnd();
+      conversations.add(currentCon); // Add the current conversation to the list
+      currentPlayingConversation =
+          currentCon; // Set the current playing conversation
+      isLoading.value = false; // Set loading flag to false
+      isRetakeCapture = false; // Reset retake flag
+      checkForButtonsAndPlay(); // Check for buttons and play the conversation
+      scrollToEnd(); // Scroll to the end of the conversation
     } catch (e, stackTrace) {
+      // Catch any exceptions and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
-  Future<void> showCameraGalleryDialog(BuildContext context, String? btnTitle) {
+  // A function to show a dialog with options to choose from Camera or Gallery
+  Future<void> showCameraGalleryDialog(String? btnTitle) {
+    // Show a dialog using the showDialog function
     return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-              title: Text('Choose an action'),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        getOpenGallery(strGallery, btnTitle);
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("Gallery"),
-                    ),
-                    Padding(padding: EdgeInsets.all(8)),
-                    GestureDetector(
-                      child: Text('Camera'),
-                      onTap: () {
-                        imgFromCamera(strGallery, btnTitle);
-                        Navigator.of(context).pop();
-                      },
-                    )
-                  ],
+      context: Get.context!, // Use Get.context to get the current context
+      builder: (context) {
+        // Return an AlertDialog with title and content
+        return AlertDialog(
+          title: Text('Choose an action'), // Set the title of the dialog
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                // Gallery option with GestureDetector
+                GestureDetector(
+                  onTap: () {
+                    getOpenGallery(strGallery,
+                        btnTitle); // Handle action when Gallery is tapped
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: Text("Gallery"), // Display "Gallery" text
                 ),
-              ));
-        });
+                Padding(padding: EdgeInsets.all(8)),
+                // Add padding between options
+                // Camera option with GestureDetector
+                GestureDetector(
+                  onTap: () {
+                    imgFromCamera(strGallery,
+                        btnTitle); // Handle action when Camera is tapped
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: Text('Camera'), // Display "Camera" text
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
+  // Function to capture an image from the camera and trigger image preview
   imgFromCamera(String fromPath, String? btnTitle) async {
-    late File _image;
-    var picker = ImagePicker();
-    var pickedFile = await picker.pickImage(source: ImageSource.camera);
-    if (pickedFile != null) {
-      _image = File(pickedFile.path);
-      var imagePath = _image.path;
+    late File _image; // Declare a variable to store the captured image
 
-      if (imagePath != null && imagePath != '') {
-        sheelaImagePreviewThumbnail(
-            btnTitle: btnTitle, selectedImagePath: imagePath);
-      }
+    var picker = ImagePicker(); // Create an instance of ImagePicker
+    var pickedFile = await picker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 80); // Capture an image from the camera
+
+    if (pickedFile != null) {
+      _image = File(
+          pickedFile.path); // Create a File object from the captured image path
+
+      // Trigger the image preview thumbnail with the captured image path
+      sheelaImagePreviewThumbnail(
+        btnTitle: btnTitle, // Optional button title
+        selectedImagePath: _image.path, // Path to the captured image
+      );
     }
   }
 
+  // Function to open the gallery, crop the selected image, and trigger image preview
   void getOpenGallery(String fromPath, String? btnTitle) {
+    // Use PickImageController to crop the image from the gallery
     PickImageController.instance
         .cropImageFromFile(fromPath)
         .then((croppedFile) async {
       if (croppedFile != null) {
+        // Validate the size of the cropped image
         if (await validateImageSize(croppedFile)) {
           var imagePathGallery = croppedFile.path;
 
+          // Check if the image path is not null or empty
           if (imagePathGallery != null && imagePathGallery != '') {
+            // Trigger the image preview thumbnail with the cropped image path
             sheelaImagePreviewThumbnail(
-                btnTitle: btnTitle, selectedImagePath: imagePathGallery);
+              btnTitle: btnTitle, // Optional button title
+              selectedImagePath: imagePathGallery, // Path to the cropped image
+            );
           }
         } else {
+          // Display a toast message if the selected image exceeds the maximum allowed size
           FlutterToast().getToast(
               'Selected image exceeds the maximum allowed size', Colors.red);
         }
@@ -1839,34 +1961,47 @@ makeApiRequest is used to update the data with latest data
     });
   }
 
+  // Function to save media regiment information
   Future<AddMediaRegimentModel> saveMediaRegiment(
       String imagePaths, String? providerId) async {
+    // Get the patient ID from shared preferences
     var patientId = PreferenceUtil.getStringValue(KEY_USERID);
 
+    // Make an API call to save regiment media using the helper class
     final response = await _helper.saveRegimentMedia(
         qr_save_regi_media, imagePaths, patientId, providerId);
+
+    // Return the parsed response as an AddMediaRegimentModel
     return AddMediaRegimentModel.fromJson(response);
   }
 
+  // Function to validate the size of a selected image
   Future<bool> validateImageSize(var _selectedImage) async {
     try {
-      int maxSizeInBytes = 5 * 1024 * 1024; // 5MB
-      int selectedImageSize = await _getImageSize(_selectedImage);
+      int maxSizeInBytes =
+          5 * 1024 * 1024; // Set the maximum allowed size to 5MB
+      int selectedImageSize = await _getImageSize(
+          _selectedImage); // Get the size of the selected image
+
+      // Check if the selected image size exceeds the maximum allowed size
       if (selectedImageSize > maxSizeInBytes) {
-            print('Selected image exceeds the maximum allowed size');
-            return false;
-          } else {
-            print('Selected image size is within the allowed limit');
-            return true;
-          }
-    } catch (e,stackTrace) {
+        //print('Selected image exceeds the maximum allowed size');
+        return false; // Return false if the image size is too large
+      } else {
+        //print('Selected image size is within the allowed limit');
+        return true; // Return true if the image size is within the allowed limit
+      }
+    } catch (e, stackTrace) {
+      // Catch any exceptions and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-      return false;
+      return false; // Return false in case of an exception
     }
   }
 
+  // Function to get the size of an image file
   Future<int> _getImageSize(File imageFile) async {
-    int length = await imageFile.length();
-    return length;
+    int length =
+        await imageFile.lengthSync(); // Get the length (size) of the image file
+    return length; // Return the size of the image file
   }
 }
