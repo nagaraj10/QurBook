@@ -12,6 +12,8 @@ import 'package:myfhb/voice_cloning/services/voice_clone_services.dart';
 import 'package:myfhb/voice_cloning/view/widgets/countdown_timer_widget.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../common/CommonUtil.dart';
+
 class VoiceCloningController extends ChangeNotifier {
   var countdown = 10;
   var progressValue = 0.0;
@@ -64,15 +66,30 @@ class VoiceCloningController extends ChangeNotifier {
     });
   }
 
-  void toggleResumePause() {
+  Future<void> toggleResumePause() async {
     if (recorderController.isRecording) {
       recorderController.pause();
       isRecording = false;
     } else {
-      recorderController.record(path: _mPath);
-      isRecording = true;
+      ///Checking the Mic permission before starting recording.
+      if(await checkForMicPermission()==true){
+    await recorderController.record(path: _mPath);
+    isRecording = true;
+    }
     }
     notifyListeners();
+  }
+   checkForMicPermission()async{
+    final status = await CommonUtil.askPermissionForCameraAndMic(isAudioCall: true);
+    if (!status) {
+     FlutterToast().getToast(
+        strMicPermission,
+        Colors.red,
+      );
+      return false;
+    }
+    return true;
+
   }
 
   void startRecording() async {
@@ -139,9 +156,11 @@ class VoiceCloningController extends ChangeNotifier {
             backgroundColor: Colors.black.withOpacity(0.6),
             content: VoiceCloningCountDownWidget(),
           );
-        }).then((value) {
+        }).then((value) async {
       if (value == true) {
-        startRecording();
+        if(await checkForMicPermission()==true){
+          startRecording();
+        }
       } else {
         countDownTimer?.cancel();
       }
@@ -190,8 +209,9 @@ class VoiceCloningController extends ChangeNotifier {
       path: _mPath,
     );
     await playerController.preparePlayer(path: _mPath);
-    maxPlayerDuration =
-        (await playerController.getDuration(DurationType.max)).toDouble();
+    maxPlayerDuration= playerController.maxDuration.toDouble();
+ /*   maxPlayerDuration =
+        (await playerController.getDuration(DurationType.max)).toDouble();*/
     setPlayerLoading(false);
 
     ///When using Finish mode pause it will allow to play and pause for every time.
