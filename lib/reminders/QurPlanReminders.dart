@@ -189,9 +189,8 @@ class QurPlanReminders {
                   reminderMethodChannel
                       .invokeMethod(addReminderMethod, [apiReminder.toMap()]);
                 } else {
-                  await reminderMethodChannelAndroid.invokeMethod(
-                      addReminderMethod,
-                      {'data': jsonEncode(apiReminder.toMap())});
+                  // resolved multiple deuplicates reminders in tray
+                  break;
                 }
                 break;
               } else {
