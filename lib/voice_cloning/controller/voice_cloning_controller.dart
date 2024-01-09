@@ -117,8 +117,11 @@ class VoiceCloningController extends ChangeNotifier {
   }
 
   void submitRecording() async {
+    ///Paused the player while submit button taps
+    if (playerController.playerState.isPlaying) {
+      await playerController.pausePlayer();
+    }
     setPlayerLoading(true);
-
     ///Checking the Recorded file is less than 100 MB.
     var fileInMb = await getFileSizeInMB(_mPath);
     if (fileInMb <= 100) {

@@ -300,6 +300,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
 
       Navigator.pushNamed(context, rt_VoiceCloningChooseMemberSubmit,
           arguments: VoiceCloningChooseMemberArguments(
+            fromMenu: widget.arguments?.fromMenu ?? false,
             voiceCloneId: controller.voiceCloneId.value,
             selectedFamilyMembers: controller.selectedFamilyMembers,
           ));
