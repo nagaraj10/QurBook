@@ -1,50 +1,48 @@
-
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
-import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalDetailController.dart';
-import 'package:myfhb/common/CommonCircularQurHome.dart';
-import 'package:myfhb/device_integration/model/BPValues.dart';
-import 'package:myfhb/device_integration/model/DeleteDeviceHealthRecord.dart';
-import 'package:myfhb/device_integration/model/GulcoseValues.dart';
-import 'package:myfhb/device_integration/model/OxySaturationValues.dart';
-import 'package:myfhb/device_integration/model/TemperatureValues.dart';
-import 'package:myfhb/device_integration/model/WeightValues.dart';
-import 'package:myfhb/src/model/Category/catergory_data_list.dart';
-import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
-import 'package:myfhb/unit/choose_unit.dart';
 
 import '../../../colors/fhb_colors.dart';
+import '../../../common/CommonCircularQurHome.dart';
 import '../../../common/CommonConstants.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../common/FHBBasicWidget.dart';
 import '../../../common/PreferenceUtil.dart';
 import '../../../common/customized_checkbox.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
 import '../../../constants/fhb_constants.dart';
-import '../../../constants/fhb_parameters.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
+import '../../../constants/fhb_parameters.dart';
 import '../../../constants/router_variable.dart';
 import '../../../constants/variable_constant.dart';
 import '../../../constants/variable_constant.dart' as variable;
+import '../../../device_integration/model/BPValues.dart';
+import '../../../device_integration/model/DeleteDeviceHealthRecord.dart';
+import '../../../device_integration/model/GulcoseValues.dart';
+import '../../../device_integration/model/OxySaturationValues.dart';
+import '../../../device_integration/model/TemperatureValues.dart';
+import '../../../device_integration/model/WeightValues.dart';
 import '../../../src/blocs/Category/CategoryListBlock.dart';
 import '../../../src/blocs/Media/MediaTypeBlock.dart';
 import '../../../src/blocs/health/HealthReportListForUserBlock.dart';
+import '../../../src/model/Category/catergory_data_list.dart';
 import '../../../src/model/Category/catergory_result.dart';
 import '../../../src/model/Media/media_data_list.dart';
 import '../../../src/model/Media/media_result.dart';
 import '../../../src/resources/repository/health/HealthReportListForUserRepository.dart';
+import '../../../src/ui/SheelaAI/Models/sheela_arguments.dart';
 import '../../../src/utils/FHBUtils.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../../unit/choose_unit.dart';
+import '../../Common/GradientAppBarQurhome.dart';
+import '../viewModel/VitalDetailController.dart';
 import 'ButtonGroup.dart';
-import '../../../constants/fhb_constants.dart' as Constants;
 
 class VitalsDetails extends StatefulWidget {
   const VitalsDetails(
@@ -64,7 +62,8 @@ class VitalsDetails extends StatefulWidget {
 
 class _VitalsDetailsState extends State<VitalsDetails>
     with TickerProviderStateMixin {
-  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state =
+      GlobalKey<ScaffoldMessengerState>();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   String errorMsg = '', errorMsgDia = '', errorMsgSys = '';
   bool onOkClicked = false;
@@ -98,7 +97,6 @@ class _VitalsDetailsState extends State<VitalsDetails>
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
   var commonConstants = CommonConstants();
   final controllerGetx = Get.put(VitalDetailController());
-  // var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
 
   late AnimationController animationController;
 
@@ -109,44 +107,42 @@ class _VitalsDetailsState extends State<VitalsDetails>
   String? tempUnit = 'C';
   String? weightUnit = 'kg';
 
-  //var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
-
   @override
   void initState() {
     try {
-      mInitialTime = DateTime.now();
       super.initState();
       _events.add(180);
-      controllerGetx.deviceName = widget.device_name;
-      controllerGetx.onTapFilterBtn(0);
-      controllerGetx.checkForBleDevices();
+      controllerGetx
+        ..deviceName = widget.device_name
+        ..onTapFilterBtn(0)
+        ..checkForBleDevices();
       catgoryDataList = PreferenceUtil.getCategoryType()!;
       if (catgoryDataList == null || catgoryDataList == []) {
         _categoryListBlock.getCategoryLists().then((value) {
-          catgoryDataList = value.result!;
-        } as FutureOr Function(CategoryDataList?));
+              catgoryDataList = value.result!;
+            } as FutureOr Function(CategoryDataList?));
       }
       _mediaTypeBlock.getMediTypesList().then((value) {
         mediaTypesResponse = value;
       });
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
 
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       weightUnit = "kg";
     }
 
     try {
       tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       tempUnit = "F";
     }
@@ -167,8 +163,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
           timer.cancel();
         }
       });
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -194,8 +190,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
         //   toast.getToast(NoDeviceFound, Colors.red);
         // }
       }
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -210,8 +206,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
       });
       _events.close();
       Navigator.pop(Get.context!);
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -252,8 +248,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
       animationController.reverse(
           from:
               animationController.value == 0 ? 1.0 : animationController.value);
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -298,8 +294,10 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                         try {
                                           _events.close();
                                           Navigator.pop(context);
-                                        } catch (e,stackTrace) {
-                                                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                                        } catch (e, stackTrace) {
+                                          CommonUtil().appLogs(
+                                              message: e,
+                                              stackTrace: stackTrace);
 
                                           print(e);
                                         }
@@ -358,16 +356,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
       animationController.dispose();
       _events.close();
       super.dispose();
-      fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'pageName': 'Device Value Screen',
-        'screenSessionTime':
-            '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-      });
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
-      print(e);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -379,7 +369,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
         toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
         title: Text(
           getStringValue(),
-          style: TextStyle(fontSize: CommonUtil().isTablet! ? 22.0.sp : 18.0.sp),
+          style:
+              TextStyle(fontSize: CommonUtil().isTablet! ? 22.0.sp : 18.0.sp),
         ),
         leading: IconButton(
           icon: Icon(
@@ -455,7 +446,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
             arguments: SheelaArgument(
               sheelaInputs: widget.sheelaRequestString,
             ),
-          )!.then((value) {
+          )!
+              .then((value) {
             controllerGetx.onTapFilterBtn(0);
           });
           /* Navigator.of(context).push(
@@ -562,7 +554,6 @@ class _VitalsDetailsState extends State<VitalsDetails>
       if (deviceHealthRecord.isSuccess!) {
         toast.getToast('Deleted Successfully', Colors.green);
         // setState(() {});
-
       } else {
         toast.getToast('Unable to delete the record', Colors.red);
       }
@@ -582,16 +573,17 @@ class _VitalsDetailsState extends State<VitalsDetails>
         categoryDataObj = CommonUtil()
             .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
         postMediaData[strhealthRecordCategory] = categoryDataObj.toJson();
-      } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         if (catgoryDataList == null) {
           await _categoryListBlock.getCategoryLists().then((value) {
-            catgoryDataList = value.result!;
-            categoryDataObj = CommonUtil()
-                .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
-            postMediaData[strhealthRecordCategory] = categoryDataObj.toJson();
-          } as FutureOr Function(CategoryDataList?));
+                catgoryDataList = value.result!;
+                categoryDataObj = CommonUtil().getCategoryObjForSelectedLabel(
+                    categoryID, catgoryDataList);
+                postMediaData[strhealthRecordCategory] =
+                    categoryDataObj.toJson();
+              } as FutureOr Function(CategoryDataList?));
         }
       }
 
@@ -1083,8 +1075,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
   Widget getCardForThermometer(String deviceName) {
     try {
       tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       tempUnit = "F";
     }
@@ -1360,8 +1352,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
   Widget getCardForWeighingScale(String deviceName) {
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       weightUnit = "kg";
     }
@@ -2691,7 +2683,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
         width: 32.0.h,
         color: Color(CommonUtil().getQurhomePrimaryColor()),
       );
-  } else if ((type == strQurPlan && PreferenceUtil.getIfQurhomeisAcive()) || (type == strDevice && PreferenceUtil.getIfQurhomeisAcive())) {
+    } else if ((type == strQurPlan && PreferenceUtil.getIfQurhomeisAcive()) ||
+        (type == strDevice && PreferenceUtil.getIfQurhomeisAcive())) {
       return Image.asset(
         'assets/Qurhome/Qurhome.png',
         height: 20.0.h,

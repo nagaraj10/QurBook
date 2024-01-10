@@ -1,24 +1,19 @@
-
-import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
-import 'package:myfhb/notifications/myfhb_notifications.dart';
-import 'package:myfhb/schedules/my_schedules.dart';
-import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
-import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/src/ui/user/UserAccountMain.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/src/ui/user/UserAccounts.dart';
+import 'package:flutter/material.dart';
 
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart' as variable;
+import '../../more_menu/screens/more_menu_screen.dart';
+import '../../notifications/myfhb_notifications.dart';
+import '../model/home_screen_arguments.dart';
+import '../model/user/user_accounts_arguments.dart';
+import '../utils/screenutils/size_extensions.dart';
+import 'MyRecord.dart';
+import 'MyRecordsArguments.dart';
 import 'SheelaAI/Views/SuperMaya.dart';
+import 'user/UserAccounts.dart';
 
 class HomeScreen extends StatefulWidget {
   static _HomeScreenState? of(BuildContext context) =>
@@ -51,7 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     _widgetOptions = [
       MyFhbNotifications(),
       MyRecords(
@@ -60,126 +54,19 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       SuperMaya(),
       UserAccounts(arguments: UserAccountsArguments(selectedIndex: 0)),
-      MoreMenuScreen()
+      const MoreMenuScreen()
     ];
     super.initState();
     _selectedIndex = widget.arguments!.selectedIndex;
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Home Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFf7f6f5),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex!),
-      ),
-      // bottomNavigationBar: Container(
-      //   decoration: BoxDecoration(
-      //     boxShadow: <BoxShadow>[
-      //       BoxShadow(
-      //         color: Colors.black54,
-      //         blurRadius: 1,
-      //       ),
-      //     ],
-      //   ),
-      //   child: BottomNavigationBar(
-      //     type: BottomNavigationBarType.fixed,
-      //     selectedFontSize: 10.sp,
-      //     unselectedFontSize: 10.sp,
-      //     items: [
-      //       BottomNavigationBarItem(
-      //           icon: ImageIcon(
-      //             AssetImage(
-      //               variable.icon_home,
-      //             ),
-      //             color: _selectedIndex == 0
-      //                 ? Color(CommonUtil().getMyPrimaryColor())
-      //                 : Colors.black54,
-      //           ),
-      //           title: Text(
-      //             variable.strhome,
-      //             style: TextStyle(
-      //               fontSize: 10.sp,
-      //               color: _selectedIndex == 0
-      //                   ? Color(CommonUtil().getMyPrimaryColor())
-      //                   : Colors.black54,
-      //             ),
-      //           )),
-      //       BottomNavigationBarItem(
-      //           icon: ImageIcon(
-      //             AssetImage(variable.icon_records),
-      //             color: _selectedIndex == 1
-      //                 ? Color(CommonUtil().getMyPrimaryColor())
-      //                 : Colors.black54,
-      //           ),
-      //           title: Text(
-      //             variable.strMyRecords,
-      //             style: TextStyle(
-      //                 fontSize: 10.sp,
-      //                 color: _selectedIndex == 1
-      //                     ? Color(CommonUtil().getMyPrimaryColor())
-      //                     : Colors.black54),
-      //           )),
-      //       BottomNavigationBarItem(
-      //           icon: Image.asset(
-      //             variable.icon_mayaMain,
-      //             height: 25,
-      //             width: 25,
-      //           ),
-      //           title: Text(variable.strMaya,
-      //               style: TextStyle(
-      //                   fontSize: 10.sp,
-      //                   color: _selectedIndex == 2
-      //                       ? Color(CommonUtil().getMyPrimaryColor())
-      //                       : Colors.black54))),
-      //       BottomNavigationBarItem(
-      //           icon: ImageIcon(AssetImage(variable.icon_provider),
-      //               color: _selectedIndex == 3
-      //                   ? Color(CommonUtil().getMyPrimaryColor())
-      //                   : Colors.black54),
-      //           title: Text(variable.strMyProvider,
-      //               style: TextStyle(
-      //                   fontSize: 10.sp,
-      //                   color: _selectedIndex == 3
-      //                       ? Color(CommonUtil().getMyPrimaryColor())
-      //                       : Colors.black54))),
-      //       BottomNavigationBarItem(
-      //           icon: ImageIcon(
-      //             AssetImage(variable.icon_more),
-      //             color: _selectedIndex == 4
-      //                 ? Color(CommonUtil().getMyPrimaryColor())
-      //                 : Colors.black54,
-      //           ),
-      //           title: Text(variable.strMore,
-      //               style: TextStyle(
-      //                   fontSize: 10.sp,
-      //                   color: _selectedIndex == 4
-      //                       ? Color(CommonUtil().getMyPrimaryColor())
-      //                       : Colors.black54)))
-      //     ],
-      //     //backgroundColor: Colors.grey[200],
-      //     onTap: (index) {
-      //       _myFunc(index);
-      //     },
-      //   ),
-      // )
-      // BottomNavigationWidget(
-      //   selectedPageIndex: _selectedIndex,
-      //   myFunc: _myFunc,
-      // ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+        backgroundColor: const Color(0xFFf7f6f5),
+        body: Center(
+          child: _widgetOptions.elementAt(_selectedIndex!),
+        ),
+      );
 
   void _myFunc(int index) {
     if (index == 0) {

@@ -1,36 +1,30 @@
-
-//import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/my_providers/bloc/providers_block.dart';
-import 'package:myfhb/my_providers/models/Doctors.dart';
-import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
-import 'package:myfhb/my_providers/models/User.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/MyProfileResult.dart';
-import 'package:myfhb/src/model/user/UserAddressCollection.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/AvailableTimeSlotsModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/DoctorSessionTimeSlot.dart';
-import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/common/errors_widget.dart';
+
+import '../../../../../add_family_user_info/services/add_family_user_info_repository.dart';
+import '../../../../../colors/fhb_colors.dart' as fhbColors;
+import '../../../../../common/CommonUtil.dart';
+import '../../../../../common/common_circular_indicator.dart';
+import '../../../../../common/errors_widget.dart';
+import '../../../../../constants/fhb_constants.dart';
+import '../../../../../constants/variable_constant.dart' as variable;
+import '../../../../../my_providers/bloc/providers_block.dart';
+import '../../../../../my_providers/models/Doctors.dart';
+import '../../../../../my_providers/models/MyProviderResponseNew.dart';
+import '../../../../../src/model/user/MyProfileModel.dart';
+import '../../../../../src/utils/colors_utils.dart';
+import '../../../../../src/utils/screenutils/size_extensions.dart';
+import '../../model/getAvailableSlots/AvailableTimeSlotsModel.dart';
+import '../../model/getAvailableSlots/SlotSessionsModel.dart';
+import '../../model/getAvailableSlots/Slots.dart';
+import '../../model/healthOrganization/HealthOrganizationModel.dart';
+import '../../model/healthOrganization/HealthOrganizationResult.dart';
+import '../../model/provider_model/DoctorIds.dart';
+import '../../viewModel/MyProviderViewModel.dart';
+import '../CommonWidgets.dart';
+import '../DoctorSessionTimeSlot.dart';
 
 class HealthOrganization extends StatefulWidget {
   final List<Doctors?>? doctors;
@@ -64,21 +58,9 @@ class _HealthOrganizationState extends State<HealthOrganization> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
     getDataForProvider();
     _providersBloc = ProvidersBloc();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Health Organization Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -181,7 +163,8 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                                           .length >
                                       0)
                               ? doctors[index]!
-                                          .doctorProfessionalDetailCollection![0]
+                                          .doctorProfessionalDetailCollection![
+                                              0]
                                           .specialty !=
                                       null
                                   ? doctors[index]!
@@ -201,7 +184,8 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                         ),
                         Text(
                           '' +
-                              commonWidgets.getCityDoctorsModel(doctors[index]!)!,
+                              commonWidgets
+                                  .getCityDoctorsModel(doctors[index]!)!,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: TextStyle(
@@ -379,11 +363,13 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                 ],
               ),
               SizedBox(height: 5.0.h),
-             // AutoSizeText( FU2.5
-              Text( // FU2.5
+              // AutoSizeText( FU2.5
+              Text(
+                // FU2.5
                 (doctors.doctorProfessionalDetailCollection != null &&
                         doctors.doctorProfessionalDetailCollection!.length > 0)
-                    ? doctors.doctorProfessionalDetailCollection![0].specialty !=
+                    ? doctors.doctorProfessionalDetailCollection![0]
+                                .specialty !=
                             null
                         ? doctors.doctorProfessionalDetailCollection![0]
                                     .specialty!.name !=
@@ -401,7 +387,8 @@ class _HealthOrganizationState extends State<HealthOrganization> {
               ),
               SizedBox(height: 5.0.h),
               //AutoSizeText(  FU2.5
-              Text(  //  FU2.5
+              Text(
+                //  FU2.5
                 '' + commonWidgets.getCity(eachHospitalModel[i])! == ''
                     ? commonWidgets
                         .getCityDoctorsModel(widget.doctors![widget.index!]!)!
@@ -458,8 +445,8 @@ class _HealthOrganizationState extends State<HealthOrganization> {
           fees = CommonUtil()
               .doubleWithoutDecimalToInt(double.parse(fees))
               .toString();
-        } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
           widget = SizedBox.shrink();
         }

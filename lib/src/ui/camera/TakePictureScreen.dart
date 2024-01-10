@@ -5,13 +5,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:image_picker/image_picker.dart';
-// TODO: multi_image_picker deprecated so need to FIX
-// import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 
-import '../../../colors/fhb_colors.dart' as fhbColors;
 import '../../../common/CommonUtil.dart';
 import '../../../common/FHBBasicWidget.dart';
 import '../../../common/OverLayCategoryDialog.dart';
@@ -54,9 +51,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   int maxImageNo = 10;
   bool selectSingleImage = false;
   String _platformMessage = 'No Error';
-
-  // TODO: multi_image_picker deprecated so need to FIX
-  // List<Asset> images = <Asset>[];
   String _error = 'No Error Dectected';
 
   String? categoryName;
@@ -68,9 +62,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   String? deviceName;
   @override
   void initState() {
-    Constants.mInitialTime = DateTime.now();
     super.initState();
-
     initFlashlight();
 
     // To display the current output from the Camera,
@@ -84,20 +76,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
     // Next, initialize the controller. This returns a Future.
     _initializeControllerFuture = _controller.initialize();
-
     initializeData();
-
-/*
-    var isFirstTime =
-        PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_CAMERASCREEN);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(
-          Duration(milliseconds: 200),
-          () => isFirstTime
-              ? null
-              : ShowCaseWidget.of(_cameraScreenContext)
-                  .startShowCase([_gallery, _attachments, _singleMultiImg]));
-    }); */
   }
 
   initFlashlight() async {
@@ -108,12 +87,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   @override
   void dispose() {
-    Constants.fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Take Picture Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(Constants.mInitialTime).inSeconds} secs'
-    });
     // Dispose of the controller when the widget is disposed.
     _controller.dispose();
     super.dispose();

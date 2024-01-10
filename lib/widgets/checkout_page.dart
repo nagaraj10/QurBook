@@ -64,7 +64,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   void initState() {
     super.initState();
-    mInitialTime = DateTime.now();
     // Provider.of<CheckoutPageProvider>(context, listen: false).cartType =
     //     widget.cartType;
     Provider.of<CheckoutPageProvider>(context, listen: false).fetchCartItems(
@@ -78,21 +77,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
     Provider.of<CheckoutPageProvider>(context, listen: false)
         .loader(false, isNeedRelod: false);
     //});
-
-    var firebase = FirebaseAnalyticsService();
-    firebase.trackCurrentScreen("checkoutPage", "");
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'CheckoutPage Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   Future<bool> onBackPressed(BuildContext context) async {
@@ -701,11 +691,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         Provider.of<PlanWizardViewModel>(context, listen: false)
             .checkCartForBundle();
     var mCartTotal = value.totalProductCount;
-    var firebase = FirebaseAnalyticsService();
-    firebase.trackEvent("on_pay_clicked", {
-      "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-      "total": mCartTotal
-    });
+
     var body = {
       "cartId": "${value.fetchingCartItemsModel!.result!.cart!.id}",
       "isQurbook": true
@@ -979,8 +965,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                               color:
                                                                   Colors.black,
                                                             ),
-                                                            children: <
-                                                                TextSpan>[
+                                                            children: <TextSpan>[
                                                               TextSpan(
                                                                 text:
                                                                     '${item.productDetail?.planName!.toLowerCase()}',
@@ -1033,29 +1018,34 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                     .isTablet!
                                                                 ? 50
                                                                 : 40,
-                                                            child: ElevatedButton(style: ElevatedButton.styleFrom(
-                                                              shape: RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              12.0),
-                                                                  side: BorderSide(
-                                                                      color: Color(
-                                                                          CommonUtil()
-                                                                              .getMyPrimaryColor()))),
-                                                              backgroundColor: Colors
-                                                                  .transparent,
-                                                              foregroundColor: Color(
-                                                                  CommonUtil()
-                                                                      .getMyPrimaryColor()),
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(8.0),),
+                                                            child:
+                                                                ElevatedButton(
+                                                              style:
+                                                                  ElevatedButton
+                                                                      .styleFrom(
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            12.0),
+                                                                    side: BorderSide(
+                                                                        color: Color(
+                                                                            CommonUtil().getMyPrimaryColor()))),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                                foregroundColor:
+                                                                    Color(CommonUtil()
+                                                                        .getMyPrimaryColor()),
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            8.0),
+                                                              ),
                                                               onPressed: () {
                                                                 try {
                                                                   Navigator.pop(
                                                                       context);
-                                                                } catch (e,stackTrace) {
+                                                                } catch (e, stackTrace) {
                                                                   //print(e);
                                                                   CommonUtil().appLogs(
                                                                       message: e
@@ -1104,10 +1094,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                 foregroundColor:
                                                                     Color(CommonUtil()
                                                                         .getMyPrimaryColor()),
-                                                                padding: const
-                                                                    EdgeInsets
+                                                                padding:
+                                                                    const EdgeInsets
                                                                         .all(
-                                                                            8.0),
+                                                                        8.0),
                                                               ),
                                                               onPressed:
                                                                   () async {
@@ -1138,7 +1128,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
                                                                   Navigator.pop(
                                                                       context);
-                                                                } catch (e,stackTrace) {
+                                                                } catch (e, stackTrace) {
                                                                   //print(e);
                                                                   CommonUtil().appLogs(
                                                                       message: e
@@ -1232,12 +1222,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     Provider.of<CheckoutPageProvider>(context, listen: false).isMembershipCart =
         Provider.of<PlanWizardViewModel>(context, listen: false)
             .checkCartForBundle();
-    var mCartTotal = value.totalProductCount;
-    var firebase = FirebaseAnalyticsService();
-    firebase.trackEvent("on_pay_clicked", {
-      "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-      "total": mCartTotal
-    });
+
     var body = {
       "cartId": "${value.fetchingCartItemsModel!.result!.cart!.id}",
       "isQurbook": true

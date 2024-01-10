@@ -3,15 +3,10 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_absolute_path/flutter_absolute_path.dart'; //FU2.5
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:image_picker/image_picker.dart';
-// TODO: multi_image_picker deprecated so need to FIX
-// import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../../../colors/fhb_colors.dart' as fhbColors;
 import '../../../common/CommonConstants.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../common/OverLayCategoryDialog.dart';
@@ -75,7 +70,6 @@ class TakePictureScreenForDevicesState
     super.initState();
     // To display the current output from the Camera,
     // create a CameraController.
-    Constants.mInitialTime = DateTime.now();
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
     deviceName =
         (PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) ?? '') == ''
@@ -83,10 +77,6 @@ class TakePictureScreenForDevicesState
             : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
 
     isObjectDetecting = false;
-    // PreferenceUtil.getStringValue(Constants.allowDeviceRecognition) ==
-    //         'false'
-    //     ? false
-    //     : true;
 
     initilzeData();
 
@@ -114,12 +104,6 @@ class TakePictureScreenForDevicesState
   void dispose() {
     // Dispose of the controller when the widget is disposed.
     _controller.dispose();
-    Constants.fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Take Picture Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(Constants.mInitialTime).inSeconds} secs'
-    });
     super.dispose();
   }
 
@@ -242,8 +226,7 @@ class TakePictureScreenForDevicesState
                                     variable.strOthers
                             ? Container(
                                 height: 80.0.h,
-                                color:
-                                    Color(CommonUtil().getMyPrimaryColor()),
+                                color: Color(CommonUtil().getMyPrimaryColor()),
                                 child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -263,8 +246,7 @@ class TakePictureScreenForDevicesState
                                     ]))
                             : Container(
                                 height: 60.0.h,
-                                color:
-                                    Color(CommonUtil().getMyPrimaryColor()),
+                                color: Color(CommonUtil().getMyPrimaryColor()),
                                 child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -369,8 +351,10 @@ class TakePictureScreenForDevicesState
                                             imagePaths.add(xpath.path);
 
                                             setState(() {});
-                                          } catch (e,stackTrace) {
-                                                        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                                          } catch (e, stackTrace) {
+                                            CommonUtil().appLogs(
+                                                message: e,
+                                                stackTrace: stackTrace);
 
                                             // If an error occurs, log the error to the console.
                                           }
@@ -469,8 +453,10 @@ class TakePictureScreenForDevicesState
                                               setState(() {});
                                               callDisplayPictureScreen(context);
                                             }
-                                          } catch (e,stackTrace) {
-                                                        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                                          } catch (e, stackTrace) {
+                                            CommonUtil().appLogs(
+                                                message: e,
+                                                stackTrace: stackTrace);
 
                                             (await getTemporaryDirectory())
                                                 .delete(recursive: true);
@@ -508,7 +494,7 @@ class TakePictureScreenForDevicesState
       //     selectCircleStrokeColor: fhbColors.colorBlack,
       //   ),
       // );
-    } on FetchException catch (e,stackTrace) {}
+    } on FetchException catch (e, stackTrace) {}
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling

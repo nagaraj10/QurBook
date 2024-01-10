@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -6,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/view/ChatUserList.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/router_variable.dart';
@@ -17,7 +15,6 @@ import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/regiment/view/regiment_screen.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
-import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:provider/provider.dart';
 
 class DynamicLinks {
@@ -41,13 +38,6 @@ class DynamicLinks {
       await PreferenceUtil.saveString(KEY_DYNAMIC_URL, '');
       if ((deepLink?.queryParameters.length ?? 0) > 0 &&
           (deepLink?.queryParameters['module'] ?? '').isNotEmpty) {
-        var firebase=FirebaseAnalyticsService();
-        firebase.trackEvent("on_deep_link_clicked",
-            {
-              "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-              "type" : deepLink?.queryParameters
-            }
-        );
         switch (deepLink?.queryParameters['module']) {
           case 'qurplan':
             var planWizardViewModel =

@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonUtil.dart';
-import '../../../../common/firestore_services.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
-import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/src/utils/language/language_utils.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/appointmentsModel.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
-import 'package:myfhb/telehealth/features/appointments/view/DoctorUpcomingAppointments.dart';
-import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
-import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsListViewModel.dart';
-import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
+import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../colors/fhb_colors.dart' as fhbColors;
+import '../../../../common/CommonUtil.dart';
+import '../../../../common/SwitchProfile.dart';
+import '../../../../common/common_circular_indicator.dart';
+import '../../../../common/firestore_services.dart';
+import '../../../../constants/variable_constant.dart' as variable;
+import '../../../../src/blocs/Category/CategoryListBlock.dart';
+import '../../../../src/blocs/Media/MediaTypeBlock.dart';
+import '../../../../src/utils/language/language_utils.dart';
+import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../../widgets/GradientAppBar.dart';
+import '../../chat/viewModel/ChatViewModel.dart';
+import '../model/fetchAppointments/appointmentsModel.dart';
+import '../model/fetchAppointments/past.dart';
+import '../viewModel/appointmentsListViewModel.dart';
 import 'DoctorPastAppointments.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/SwitchProfile.dart';
-import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'DoctorUpcomingAppointments.dart';
+import 'appointmentsCommonWidget.dart';
 
 class Appointments extends StatefulWidget {
   Appointments({
@@ -56,12 +56,10 @@ class _AppointmentsState extends State<Appointments> {
   @override
   void initState() {
     try {
-      mInitialTime = DateTime.now();
       Provider.of<AppointmentsListViewModel>(context, listen: false)
           .fetchAppointments();
       super.initState();
     } catch (e, stackTrace) {
-      //print(e);
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
@@ -69,12 +67,7 @@ class _AppointmentsState extends State<Appointments> {
   @override
   void dispose() {
     super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'TeleHealth Appointment Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
+
     try {
       getCategoryList();
     } catch (e, stackTrace) {

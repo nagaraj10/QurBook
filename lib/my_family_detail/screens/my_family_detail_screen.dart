@@ -1,27 +1,28 @@
 import 'dart:io';
-import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
 
-import '../../constants/fhb_constants.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '../../add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import '../../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
 import '../../my_family/models/FamilyMembersRes.dart';
 import '../../my_family/models/relationship_response_list.dart';
 import '../../my_family/models/relationships.dart';
-import '../models/my_family_detail_arguments.dart';
+import '../../my_family/services/FamilyMemberListRepository.dart';
 import '../../my_family_detail_view/models/my_family_detail_view_arguments.dart';
 import '../../src/model/user/MyProfileModel.dart';
 import '../../src/utils/FHBUtils.dart';
 import '../../src/utils/colors_utils.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../models/my_family_detail_arguments.dart';
 
 class MyFamilyDetailScreen extends StatefulWidget {
   MyFamilyDetailArguments? arguments;
@@ -120,7 +121,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   bool isKg = true;
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
     addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
 
@@ -159,17 +159,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     getFamilyMembers();
 
     return myProfile;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Family Detail Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -342,8 +331,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                     myProf.result!.userContactCollection3![0]!.email!;
               }
             }
-          } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
             if (sharedbyme.child!.isVirtualUser!) {
               mobileNoController.text =
@@ -364,8 +353,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 sharedbyme.child!.userContactCollection3![0].email!;
           }
         }
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         if (sharedbyme.child!.isVirtualUser!) {
           mobileNoController.text =
@@ -427,9 +416,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           } else {
             isKg = false;
           }
-        } catch (e,stackTrace) {
-
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
           if (CommonUtil.REGION_CODE == 'IN') {
             isFeetOrInches = true;
             isKg = true;
@@ -740,8 +728,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             selectedBloodRange = null;
           }
         }
-      } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         selectedBloodGroup = null;
         selectedBloodRange = null;
@@ -1457,18 +1445,19 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   Future<void> _selectDate(BuildContext context) async {
     final picked = await showDatePicker(
-        context: context,
-        initialDate: dateTime,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101),
-      builder: (context,child) => Theme(
+      context: context,
+      initialDate: dateTime,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+      builder: (context, child) => Theme(
         data: ThemeData.light().copyWith(
           colorScheme: ColorScheme.light().copyWith(
-            primary:Color(CommonUtil().getMyPrimaryColor()),
+            primary: Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
         child: child!,
-      ),);
+      ),
+    );
 
     if (picked != null) {
       setState(() {

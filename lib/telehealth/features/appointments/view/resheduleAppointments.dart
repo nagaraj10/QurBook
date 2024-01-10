@@ -1,4 +1,3 @@
-
 // import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
@@ -60,20 +59,8 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
     getDoctorsData();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'TeleHealth Reshedule Appointment Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   getDoctorsData() async {
@@ -94,9 +81,10 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
           child: Column(
         children: <Widget>[
           Expanded(
-              child: widget.doc!.healthOrganization!.id != null && doctors != null
-                  ? getHospitalProviderList(widget.doc!.doctor!.id!)
-                  : Container())
+              child:
+                  widget.doc!.healthOrganization!.id != null && doctors != null
+                      ? getHospitalProviderList(widget.doc!.doctor!.id!)
+                      : Container())
         ],
       )),
     );
@@ -366,8 +354,9 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SizedBox(height: 5.0.h),
-              Text( //FU2.5
-             //  AutoSizeText(FU2.5
+              Text(
+                //FU2.5
+                //  AutoSizeText(FU2.5
                 eachHospitalModel[i].healthOrganization!.name != null
                     ? toBeginningOfSentenceCase(
                         eachHospitalModel[i].healthOrganization!.name)!
@@ -378,13 +367,15 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                   fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.start,
-              ),  
+              ),
               SizedBox(height: 5.0.h),
-              Text(// FU2.5
-             // AutoSizeText( FU2.5
+              Text(
+                // FU2.5
+                // AutoSizeText( FU2.5
                 (doctors.doctorProfessionalDetailCollection != null &&
                         doctors.doctorProfessionalDetailCollection!.length > 0)
-                    ? doctors.doctorProfessionalDetailCollection![0].specialty !=
+                    ? doctors.doctorProfessionalDetailCollection![0]
+                                .specialty !=
                             null
                         ? doctors.doctorProfessionalDetailCollection![0]
                                     .specialty!.name !=
@@ -399,10 +390,11 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                     fontSize: 15.0.sp,
                     fontWeight: FontWeight.w400,
                     color: ColorUtils.lightgraycolor),
-              ), 
+              ),
               SizedBox(height: 5.0.h),
-              Text( //FU2.5
-            //  AutoSizeText( FU2.5
+              Text(
+                //FU2.5
+                //  AutoSizeText( FU2.5
                 '' + commonWidgets.getCity(eachHospitalModel[i])! == ''
                     ? getCity(doctors)!
                     : '',
@@ -411,7 +403,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                     fontSize: 15.0.sp,
                     fontWeight: FontWeight.w400,
                     color: ColorUtils.lightgraycolor),
-              ),  
+              ),
               SizedBox(height: 5.0.h),
             ],
           ),
@@ -463,8 +455,8 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
           fees = CommonUtil()
               .doubleWithoutDecimalToInt(double.parse(fees))
               .toString();
-        } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
           widget = SizedBox.shrink();
         }

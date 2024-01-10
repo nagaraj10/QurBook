@@ -3,22 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/ClipImage/ClipOvalImage.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_query.dart' as query;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../../../bookmark_record/bloc/bookmarkRecordBloc.dart';
+import '../../../colors/fhb_colors.dart' as fhbColors;
+import '../../../common/CommonConstants.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../common/PreferenceUtil.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/fhb_query.dart' as query;
+import '../../../constants/variable_constant.dart' as variable;
+import '../../../record_detail/screens/record_detail_screen.dart';
+import '../../blocs/health/HealthReportListForUserBlock.dart';
+import '../../model/Health/MediaMetaInfo.dart';
+import '../../model/Health/asgard/health_record_collection.dart';
+import '../../model/Health/asgard/health_record_list.dart';
+import '../../utils/FHBUtils.dart';
 
 class HealthReportListScreen extends StatefulWidget {
   final HealthRecordList? completeData;
@@ -72,7 +73,6 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
   bool _enabled = true;
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     _healthReportListForUserBlock = HealthReportListForUserBlock();
     _healthReportListForUserBlock.getHelthReportLists();
     _bookmarkRecordBloc = BookmarkRecordBloc();
@@ -83,20 +83,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Health Report List Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _getWidgetToDisplayHealthRecords(widget.completeData!);
-  }
+  Widget build(BuildContext context) =>
+      _getWidgetToDisplayHealthRecords(widget.completeData!);
 
   Widget _getWidgetToDisplayHealthRecords(HealthRecordList completeData) {
     List<HealthResult> mediaMetaInfoObj = [];
@@ -320,8 +308,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                           icon: mediaMetaInfoObj?.isBookmarked ?? false
                               ? ImageIcon(
                                   AssetImage(variable.icon_record_fav_active),
-                                  color: Color(
-                                      CommonUtil().getMyPrimaryColor()),
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor()),
                                   size: CommonUtil().isTablet!
                                       ? tabHeader2
                                       : mobileHeader2,
@@ -348,8 +336,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                       widget.mediaMeta!.contains(mediaMetaInfoObj.id)
                           ? Icon(
                               Icons.done,
-                              color:
-                                  Color(CommonUtil().getMyPrimaryColor()),
+                              color: Color(CommonUtil().getMyPrimaryColor()),
                             )
                           : SizedBox(),
                     ],

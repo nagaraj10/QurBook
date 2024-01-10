@@ -1,15 +1,17 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
+
+import '../../common/CommonUtil.dart';
+import '../../common/common_circular_indicator.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../../constants/variable_constant.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/GradientAppBar.dart';
 
 class TermsAndConditonWebView extends StatefulWidget {
   final String? title;
@@ -29,23 +31,6 @@ class _MyFhbWebViewState extends State<TermsAndConditonWebView> {
   late WebViewController _controller;
   bool isLoading = true;
   double iconSize = CommonUtil().isTablet! ? tabFontTitle : mobileFontTitle;
-
-  @override
-  void initState() {
-    mInitialTime = DateTime.now();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Terms And Condition Voice Cloning',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
-import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+
+import '../../../../Qurhome/Common/GradientAppBarQurhome.dart';
+import '../../../../chat_socket/service/ChatSocketService.dart';
+import '../../../../common/PreferenceUtil.dart';
+import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../../widgets/GradientAppBar.dart';
 
 class FullPhoto extends StatelessWidget {
   final String? url;
@@ -79,7 +79,6 @@ class FullPhotoScreenState extends State<FullPhotoScreen> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
     if (widget.chatMessageId != null && widget.chatMessageId != '') {
       callChatunreadMessageApi();
@@ -91,23 +90,11 @@ class FullPhotoScreenState extends State<FullPhotoScreen> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Profile Picture Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     if (widget.filePath == null) {
-      return Container(child: PhotoView(imageProvider: NetworkImage(url!)));
+      return PhotoView(imageProvider: NetworkImage(url!));
     } else {
-      return Container(
-          child: Center(child: Image.file(File(widget.filePath!))));
+      return Center(child: Image.file(File(widget.filePath!)));
     }
   }
 }

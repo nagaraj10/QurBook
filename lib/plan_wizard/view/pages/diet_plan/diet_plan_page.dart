@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/plan_wizard/models/DietPlanModel.dart';
-import 'package:myfhb/plan_wizard/view/widgets/PlansDietListView.dart';
-import 'package:myfhb/plan_wizard/view/widgets/next_button.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
-import 'package:myfhb/telehealth/features/chat/constants/const.dart';
-import 'package:myfhb/widgets/checkout_page.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../common/CommonUtil.dart';
+import '../../../../common/common_circular_indicator.dart';
+import '../../../../common/errors_widget.dart';
+import '../../../../constants/fhb_constants.dart';
+import '../../../../constants/variable_constant.dart' as variable;
+import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../../telehealth/features/SearchWidget/view/SearchWidget.dart';
+import '../../../../telehealth/features/chat/constants/const.dart';
+import '../../../../widgets/checkout_page.dart';
+import '../../../models/DietPlanModel.dart';
+import '../../../view_model/plan_wizard_view_model.dart';
+import '../../widgets/PlansDietListView.dart';
+import '../../widgets/next_button.dart';
 
 class DietPlanPage extends StatefulWidget {
   @override
@@ -48,23 +49,12 @@ class _DietPlanPageState extends State<DietPlanPage> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
+    super.initState();
     Provider.of<PlanWizardViewModel>(context, listen: false)
         .currentPackageIdDiet = '';
 
     planListModel =
         planWizardViewModel.getDietPlanList() as Future<DietPlanModel>?;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'DietPlanPage Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override

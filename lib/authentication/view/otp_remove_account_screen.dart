@@ -1,41 +1,29 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/authentication/model/patientOTP_model.dart';
+import 'package:provider/provider.dart';
 import 'package:sms_autofill/sms_autofill.dart';
-import '../../add_family_user_info/models/add_family_user_info_arguments.dart';
-import '../constants/constants.dart';
-import '../model/patientverify_model.dart';
-import '../model/resend_otp_model.dart';
-import '../model/verifyotp_model.dart';
-import 'authentication_validator.dart';
-import 'login_screen.dart';
-import '../view_model/patientauth_view_model.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
-import '../../common/CommonConstants.dart';
+
 import '../../common/CommonUtil.dart';
-import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
 import '../../my_family/models/relationships.dart';
 import '../../src/model/Authentication/UserModel.dart';
-import '../../constants/fhb_constants.dart' as Constants;
-import '../../constants/variable_constant.dart';
-import '../../src/model/Authentication/DeviceInfoSucess.dart';
 import '../../src/resources/network/ApiBaseHelper.dart';
-import 'dart:convert';
-import 'dart:io';
-import '../../constants/router_variable.dart' as router;
 import '../../src/ui/loader_class.dart';
-import '../../src/utils/PageNavigator.dart';
-import '../model/patientlogin_model.dart' as loginModel;
-import '../../constants/fhb_constants.dart' as con;
-import '../view_model/otp_view_model.dart';
-import 'package:provider/provider.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/RaisedGradientButton.dart';
-import 'or_divider.dart';
+import '../constants/constants.dart';
+import '../model/patientOTP_model.dart';
+import '../model/patientlogin_model.dart' as loginModel;
+import '../model/patientverify_model.dart';
+import '../model/resend_otp_model.dart';
+import '../view_model/otp_view_model.dart';
+import '../view_model/patientauth_view_model.dart';
+import 'authentication_validator.dart';
+import 'login_screen.dart';
 
 class OTPRemoveAccount extends StatefulWidget {
   OTPRemoveAccount(
@@ -107,7 +95,6 @@ class _OTPRemoveAccountState extends State<OTPRemoveAccount>
 
   @override
   void initState() {
-    con.mInitialTime = DateTime.now();
     super.initState();
     listenForCode();
     SmsAutoFill().listenForCode;
@@ -129,12 +116,6 @@ class _OTPRemoveAccountState extends State<OTPRemoveAccount>
     otpNotifier.value = false;
     WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
-    con.fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Verify Patient Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(con.mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -198,8 +179,9 @@ class _OTPRemoveAccountState extends State<OTPRemoveAccount>
                                   if (Navigator.canPop(context)) {
                                     Get.back();
                                   }
-                                } catch (e,stackTrace) {
-                                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                                } catch (e, stackTrace) {
+                                  CommonUtil().appLogs(
+                                      message: e, stackTrace: stackTrace);
                                   print(e);
                                 }
                               },
@@ -441,7 +423,9 @@ class _OTPRemoveAccountState extends State<OTPRemoveAccount>
         child: TextFormField(
           textCapitalization: TextCapitalization.sentences,
           keyboardType: TextInputType.number,
-          autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
+          autovalidateMode: _autoValidateBool
+              ? AutovalidateMode.always
+              : AutovalidateMode.disabled,
           obscureText: isPassword,
           style: TextStyle(
             fontSize: 16.0.sp,

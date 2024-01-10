@@ -1,25 +1,19 @@
-
-// Copyright 2018 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-// ignore_for_file: public_member_api_docs
-
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/plan_dashboard/model/UpdatePaymentStatusSubscribe.dart';
-import 'package:myfhb/plan_dashboard/viewModel/subscribeViewModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/UpdatePaymentModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/viewModel/UpdatePaymentViewModel.dart';
-import 'package:myfhb/telehealth/features/Payment/ResultPage.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/fhb_parameters.dart';
+import '../../../plan_dashboard/model/UpdatePaymentStatusSubscribe.dart';
+import '../../../plan_dashboard/viewModel/subscribeViewModel.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../../widgets/GradientAppBar.dart';
+import '../MyProvider/model/updatePayment/UpdatePaymentModel.dart';
+import '../MyProvider/viewModel/UpdatePaymentViewModel.dart';
+import 'ResultPage.dart';
 
 class PaymentPage extends StatefulWidget {
   final String? redirectUrl;
@@ -34,7 +28,7 @@ class PaymentPage extends StatefulWidget {
       {Key? key,
       required this.redirectUrl,
       required this.paymentId,
-     this.appointmentId,
+      this.appointmentId,
       required this.isFromSubscribe,
       required this.isFromRazor,
       this.isPaymentFromNotification = false,
@@ -62,7 +56,7 @@ class _WebViewExampleState extends State<PaymentPage> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
+    super.initState();
     updatePaymentViewModel = UpdatePaymentViewModel();
     PAYMENT_URL = widget.redirectUrl;
     paymentId = widget.paymentId;
@@ -70,18 +64,9 @@ class _WebViewExampleState extends State<PaymentPage> {
     isFromSubscribe = widget.isFromSubscribe;
     isFromRazor = widget.isFromRazor;
 
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Payment Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
+    if (Platform.isAndroid) {
+      WebView.platform = SurfaceAndroidWebView();
+    }
   }
 
   @override
@@ -329,31 +314,31 @@ class _WebViewExampleState extends State<PaymentPage> {
 
   Future<bool> _onWillPop() {
     return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(STR_ARE_SURE),
-            content: Text(STR_SURE_CANCEL_PAY),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('No'),
-              ),
-              TextButton(
-                onPressed: () {
-                  if (!isFromSubscribe) {
-                    widget.closePage!(STR_FAILED);
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  } else {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  }
-                },
-                child: Text('Yes'),
-              ),
-            ],
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(STR_ARE_SURE),
+        content: Text(STR_SURE_CANCEL_PAY),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('No'),
           ),
-        ).then((value) => value as bool);
+          TextButton(
+            onPressed: () {
+              if (!isFromSubscribe) {
+                widget.closePage!(STR_FAILED);
+                Navigator.pop(context);
+                Navigator.pop(context);
+              } else {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              }
+            },
+            child: Text('Yes'),
+          ),
+        ],
+      ),
+    ).then((value) => value as bool);
   }
 
   void callResultPage(bool status, String? refNo) {

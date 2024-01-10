@@ -17,11 +17,9 @@ import '../widgets/dropdown_with_categories.dart';
 import '../../src/blocs/Media/MediaTypeBlock.dart';
 import '../../src/model/Media/media_data_list.dart';
 import '../../src/model/Media/media_result.dart';
-import '../../constants/fhb_constants.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:geocoder/geocoder.dart'; FU2.5
 import 'package:geolocator/geolocator.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
@@ -152,7 +150,6 @@ class AddProvidersState extends State<AddProviders> {
   @override
   void initState() {
     try {
-      mInitialTime = DateTime.now();
       super.initState();
 
       addProvidersBloc = AddProvidersBloc();
@@ -203,12 +200,6 @@ class AddProvidersState extends State<AddProviders> {
   @override
   void dispose() {
     super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Add Provider Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override

@@ -46,8 +46,8 @@ class _HomeWidgetState extends State<HomeWidget> {
       getConfiguration();
       super.initState();
       //initilizeViewModel();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -57,8 +57,8 @@ class _HomeWidgetState extends State<HomeWidget> {
     try {
       addPlanButton = await PreferenceUtil.getAddPlanBtn();
       //setState(() {});
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -178,11 +178,6 @@ class _HomeWidgetState extends State<HomeWidget> {
                       icon: variable.icon_my_plan,
                       color: Color(CommonConstants.bplightColor),
                       onPressed: () async {
-                        var firebase = FirebaseAnalyticsService();
-                        firebase.trackEvent("on_plan_button_click", {
-                          "user_id":
-                              PreferenceUtil.getStringValue(KEY_USERID_MAIN)
-                        });
                         await Get.toNamed(rt_MyPlans);
                         await landingViewModel.getQurPlanDashBoard();
                       },
@@ -548,8 +543,8 @@ class _HomeWidgetState extends State<HomeWidget> {
       } else {
         return constants.strNoPlansAdded;
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return constants.strNoPlansAdded;
     }

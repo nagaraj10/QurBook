@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
@@ -98,7 +97,8 @@ class CarePlanCard extends StatelessWidget {
                         ),
                         Text(
                           planList!.providerName != null
-                              ? toBeginningOfSentenceCase(planList!.providerName)!
+                              ? toBeginningOfSentenceCase(
+                                  planList!.providerName)!
                               : '',
                           style: TextStyle(
                               fontSize: 15.0.sp,
@@ -199,14 +199,6 @@ class CarePlanCard extends StatelessWidget {
                                               .currentPackageFreeCareId ==
                                           planList!.packageid,
                               onTap: () async {
-                                var firebase = FirebaseAnalyticsService();
-                                firebase.trackEvent("on_plan_selected", {
-                                  "user_id": PreferenceUtil.getStringValue(
-                                      KEY_USERID_MAIN),
-                                  "planId": planList!.packageid,
-                                  "type": "add or remove",
-                                  "name": planList!.title
-                                });
                                 if (planList!.isSubscribed == '1') {
                                   if (planList!.isExtendable == '1') {
                                     var isSelected =
@@ -220,38 +212,15 @@ class CarePlanCard extends StatelessWidget {
                                     if (isSelected) {
                                       commonRemoveCartDialog(context, planList,
                                           planList!.packageid!, orginalPrice);
-                                      firebase.trackEvent("on_plan_selected", {
-                                        "user_id":
-                                            PreferenceUtil.getStringValue(
-                                                KEY_USERID_MAIN),
-                                        "planId": planList!.packageid,
-                                        "type": "remove",
-                                        "name": planList!.title
-                                      });
                                     } else {
                                       _alertForSubscribedPlan(
                                           context, orginalPrice);
-                                      firebase.trackEvent("on_plan_selected", {
-                                        "user_id":
-                                            PreferenceUtil.getStringValue(
-                                                KEY_USERID_MAIN),
-                                        "planId": planList!.packageid,
-                                        "type": "add",
-                                        "name": planList!.title
-                                      });
                                     }
                                   } else {
                                     FlutterToast()
                                         .getToast(renewalLimit, Colors.black);
                                   }
                                 } else {
-                                  firebase.trackEvent("on_plan_selected", {
-                                    "user_id": PreferenceUtil.getStringValue(
-                                        KEY_USERID_MAIN),
-                                    "planId": planList!.packageid,
-                                    "type": "add or remove",
-                                    "name": planList!.title
-                                  });
                                   var isSelected =
                                       Provider.of<PlanWizardViewModel>(
                                               context,
@@ -300,8 +269,8 @@ class CarePlanCard extends StatelessWidget {
                                                   .currentCartProviderCarePackageId,
                                               orginalPrice);
                                         }
-                                        checkIfMemberShipIsAvailable(
-                                            context, planList, planList!.price!);
+                                        checkIfMemberShipIsAvailable(context,
+                                            planList, planList!.price!);
                                       } else if (isFrom == strFreeCare) {
                                         if (Provider.of<PlanWizardViewModel>(
                                                     context,
@@ -333,8 +302,8 @@ class CarePlanCard extends StatelessWidget {
                                                   .currentCartFreeCarePackageId,
                                               orginalPrice);
                                         }
-                                        checkIfMemberShipIsAvailable(
-                                            context, planList, planList!.price!);
+                                        checkIfMemberShipIsAvailable(context,
+                                            planList, planList!.price!);
                                       }
                                     }
                                   }
@@ -354,13 +323,6 @@ class CarePlanCard extends StatelessWidget {
   }
 
   onCardTapped(BuildContext context) {
-    var firebase = FirebaseAnalyticsService();
-    firebase.trackEvent("on_plan_view", {
-      "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-      "planId": planList!.packageid,
-      "type": "plan view",
-      "name": planList!.title
-    });
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -388,134 +350,132 @@ class CarePlanCard extends StatelessWidget {
   Future<bool> _alertForSubscribedPlan(
       BuildContext context, String? orginalPrice) {
     return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Are you sure?'),
-            content: Text(alreadySubscribed),
-            actions: <Widget>[
-              FlatButtonWidget(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Are you sure?'),
+        content: Text(alreadySubscribed),
+        actions: <Widget>[
+          FlatButtonWidget(
             bgColor: Colors.transparent,
             isSelected: true,
             onPress: () => Navigator.pop(context),
             title: 'Cancel',
           ),
-              FlatButtonWidget(
+          FlatButtonWidget(
             bgColor: Colors.transparent,
             isSelected: true,
             onPress: () async {
-                  Navigator.pop(context);
+              Navigator.pop(context);
 
-                  bool canProceed = await Provider.of<PlanWizardViewModel>(
+              bool canProceed = await Provider.of<PlanWizardViewModel>(
+                      Get.context!,
+                      listen: false)
+                  .handleBundlePlans();
+
+              /// provider care plan
+              if (canProceed) {
+                if (isFrom == strProviderCare) {
+                  if (Provider.of<PlanWizardViewModel>(Get.context!,
+                              listen: false)
+                          .currentPackageProviderCareId !=
+                      '') {
+                    commonRemoveCartDialog(
+                        context,
+                        planList,
+                        Provider.of<PlanWizardViewModel>(context, listen: false)
+                            .currentPackageProviderCareId!,
+                        orginalPrice);
+                  }
+
+                  bool isItemInCart = Provider.of<PlanWizardViewModel>(
                           Get.context!,
                           listen: false)
-                      .handleBundlePlans();
-
-                  /// provider care plan
-                  if (canProceed) {
-                    if (isFrom == strProviderCare) {
-                      if (Provider.of<PlanWizardViewModel>(Get.context!,
-                                  listen: false)
-                              .currentPackageProviderCareId !=
-                          '') {
-                        commonRemoveCartDialog(
-                            context,
-                            planList,
-                            Provider.of<PlanWizardViewModel>(context,
-                                    listen: false)
-                                .currentPackageProviderCareId!,
-                            orginalPrice);
-                      }
-
-                      bool isItemInCart = Provider.of<PlanWizardViewModel>(
-                              Get.context!,
-                              listen: false)
-                          .checkAllItemsForProviderCare();
-                      if (isItemInCart) {
-                        commonRemoveCartDialog(
-                            context,
-                            planList,
-                            Provider.of<PlanWizardViewModel>(Get.context!,
-                                    listen: false)
-                                .currentCartProviderCarePackageId,
-                            orginalPrice);
-                      }
-                      checkIfMemberShipIsAvailable(
-                          context, planList, planList!.price!);
-                    }
-
-                    /// free care plans
-                    else {
-                      if (Provider.of<PlanWizardViewModel>(Get.context!,
-                                  listen: false)
-                              .currentPackageFreeCareId !=
-                          '') {
-                        commonRemoveCartDialog(
-                            context,
-                            planList,
-                            Provider.of<PlanWizardViewModel>(Get.context!,
-                                    listen: false)
-                                .currentPackageFreeCareId!,
-                            orginalPrice);
-                      }
-
-                      bool isItemInCart = Provider.of<PlanWizardViewModel>(
-                              Get.context!,
-                              listen: false)
-                          .checkAllItemsForFreeCare();
-                      if (isItemInCart) {
-                        commonRemoveCartDialog(
-                            context,
-                            planList,
-                            Provider.of<PlanWizardViewModel>(Get.context!,
-                                    listen: false)
-                                .currentCartFreeCarePackageId,
-                            orginalPrice);
-                      }
-                      checkIfMemberShipIsAvailable(
-                          context, planList, planList!.price!);
-                    }
+                      .checkAllItemsForProviderCare();
+                  if (isItemInCart) {
+                    commonRemoveCartDialog(
+                        context,
+                        planList,
+                        Provider.of<PlanWizardViewModel>(Get.context!,
+                                listen: false)
+                            .currentCartProviderCarePackageId,
+                        orginalPrice);
                   }
-                },
-                title: 'Ok',
-              ),
-            ],
+                  checkIfMemberShipIsAvailable(
+                      context, planList, planList!.price!);
+                }
+
+                /// free care plans
+                else {
+                  if (Provider.of<PlanWizardViewModel>(Get.context!,
+                              listen: false)
+                          .currentPackageFreeCareId !=
+                      '') {
+                    commonRemoveCartDialog(
+                        context,
+                        planList,
+                        Provider.of<PlanWizardViewModel>(Get.context!,
+                                listen: false)
+                            .currentPackageFreeCareId!,
+                        orginalPrice);
+                  }
+
+                  bool isItemInCart = Provider.of<PlanWizardViewModel>(
+                          Get.context!,
+                          listen: false)
+                      .checkAllItemsForFreeCare();
+                  if (isItemInCart) {
+                    commonRemoveCartDialog(
+                        context,
+                        planList,
+                        Provider.of<PlanWizardViewModel>(Get.context!,
+                                listen: false)
+                            .currentCartFreeCarePackageId,
+                        orginalPrice);
+                  }
+                  checkIfMemberShipIsAvailable(
+                      context, planList, planList!.price!);
+                }
+              }
+            },
+            title: 'Ok',
           ),
-        ).then((value) => value as bool);
+        ],
+      ),
+    ).then((value) => value as bool);
   }
 
   Future<bool> _alertForMemberShip(
       BuildContext context, PlanListResult planList, bool isMemberShip) {
     String? originalPrice = planList.price;
     return showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            content: Text(
-                "You can subscribe/renew this plan for free. Do you want to use your membership benefit?"),
-            actions: <Widget>[
-              FlatButtonWidget(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: Text(
+            "You can subscribe/renew this plan for free. Do you want to use your membership benefit?"),
+        actions: <Widget>[
+          FlatButtonWidget(
             bgColor: Colors.transparent,
             isSelected: true,
             onPress: () {
               Navigator.pop(context);
               addToCartCommonMethod(
-                      planList, context, originalPrice, "", false);
-                },
-                title: 'No',
-              ),
-              FlatButtonWidget(
+                  planList, context, originalPrice, "", false);
+            },
+            title: 'No',
+          ),
+          FlatButtonWidget(
             bgColor: Colors.transparent,
             isSelected: true,
             onPress: () async {
               Navigator.pop(context);
 
-                  addToCartCommonMethod(
-                      planList, context, originalPrice, "", true);
-                },
-                title: 'Yes',
-              ),
-            ],
+              addToCartCommonMethod(planList, context, originalPrice, "", true);
+            },
+            title: 'Yes',
           ),
-        ).then((value) => value as bool);
+        ],
+      ),
+    ).then((value) => value as bool);
   }
 
   void addToCartCommonMethod(PlanListResult planList, BuildContext context,

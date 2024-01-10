@@ -1,20 +1,15 @@
-
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalListController.dart';
-import 'package:myfhb/common/CommonCircularQurHome.dart';
-import 'package:myfhb/device_integration/model/LastMeasureSync.dart';
-import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 
 import '../../../add_family_user_info/services/add_family_user_info_repository.dart';
+import '../../../common/CommonCircularQurHome.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../common/PreferenceUtil.dart';
 import '../../../common/errors_widget.dart';
@@ -24,11 +19,14 @@ import '../../../constants/fhb_parameters.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
 import '../../../constants/router_variable.dart' as router;
 import '../../../constants/variable_constant.dart' as variable;
+import '../../../device_integration/model/LastMeasureSync.dart';
+import '../../../device_integration/view/screens/Device_Data.dart';
 import '../../../devices/device_dashboard_arguments.dart';
 import '../../../src/model/GetDeviceSelectionModel.dart';
 import '../../../src/model/user/MyProfileModel.dart';
 import '../../../src/resources/repository/health/HealthReportListForUserRepository.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
+import '../viewModel/VitalListController.dart';
 import 'VitalsDetails.dart';
 
 class VitalsList extends StatefulWidget {
@@ -120,30 +118,27 @@ class _VitalsListState extends State<VitalsList> {
   var unitForTemp;
 
   var qurhomeDashboardController =
-  CommonUtil().onInitQurhomeDashboardController();
+      CommonUtil().onInitQurhomeDashboardController();
 
   @override
   void initState() {
     try {
       FocusManager.instance.primaryFocus!.unfocus();
-      mInitialTime = DateTime.now();
-      //onInit();
-      if(Platform.isAndroid){
+
+      if (Platform.isAndroid) {
         CommonUtil().askPermssionLocationBleScan();
       }
       super.initState();
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
-      print(e);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
-  onInit() async {
+  void onInit() {
     try {
       qurhomeDashboardController.getModuleAccess();
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());
@@ -156,16 +151,8 @@ class _VitalsListState extends State<VitalsList> {
     try {
       FocusManager.instance.primaryFocus!.unfocus();
       super.dispose();
-      fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'pageName': 'Device Value Screen',
-        'screenSessionTime':
-            '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-      });
-    } catch (e,stackTrace) {
-      print(e);
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -174,37 +161,40 @@ class _VitalsListState extends State<VitalsList> {
       selectionResult = value;
       if (selectionResult!.isSuccess!) {
         if (selectionResult!.result != null) {
-          bpMonitor =
-              selectionResult!.result![0].profileSetting!.bpMonitor != null &&
-                      selectionResult!.result![0].profileSetting!.bpMonitor != ''
-                  ? selectionResult!.result![0].profileSetting!.bpMonitor
-                  : true;
-          glucoMeter =
-              selectionResult!.result![0].profileSetting!.glucoMeter != null &&
-                      selectionResult!.result![0].profileSetting!.glucoMeter != ''
-                  ? selectionResult!.result![0].profileSetting!.glucoMeter
-                  : true;
-          pulseOximeter =
-              selectionResult!.result![0].profileSetting!.pulseOximeter != null &&
-                      selectionResult!.result![0].profileSetting!.pulseOximeter !=
-                          ''
-                  ? selectionResult!.result![0].profileSetting!.pulseOximeter
-                  : true;
+          bpMonitor = selectionResult!.result![0].profileSetting!.bpMonitor !=
+                      null &&
+                  selectionResult!.result![0].profileSetting!.bpMonitor != ''
+              ? selectionResult!.result![0].profileSetting!.bpMonitor
+              : true;
+          glucoMeter = selectionResult!.result![0].profileSetting!.glucoMeter !=
+                      null &&
+                  selectionResult!.result![0].profileSetting!.glucoMeter != ''
+              ? selectionResult!.result![0].profileSetting!.glucoMeter
+              : true;
+          pulseOximeter = selectionResult!
+                          .result![0].profileSetting!.pulseOximeter !=
+                      null &&
+                  selectionResult!.result![0].profileSetting!.pulseOximeter !=
+                      ''
+              ? selectionResult!.result![0].profileSetting!.pulseOximeter
+              : true;
           thermoMeter =
               selectionResult!.result![0].profileSetting!.thermoMeter != null &&
-                      selectionResult!.result![0].profileSetting!.thermoMeter != ''
+                      selectionResult!.result![0].profileSetting!.thermoMeter !=
+                          ''
                   ? selectionResult!.result![0].profileSetting!.thermoMeter
                   : true;
-          weighScale =
-              selectionResult!.result![0].profileSetting!.weighScale != null &&
-                      selectionResult!.result![0].profileSetting!.weighScale != ''
-                  ? selectionResult!.result![0].profileSetting!.weighScale
-                  : true;
+          weighScale = selectionResult!.result![0].profileSetting!.weighScale !=
+                      null &&
+                  selectionResult!.result![0].profileSetting!.weighScale != ''
+              ? selectionResult!.result![0].profileSetting!.weighScale
+              : true;
           if (selectionResult!.result![0].profileSetting != null) {
-            if (selectionResult!.result![0].profileSetting!.preferred_language !=
+            if (selectionResult!
+                    .result![0].profileSetting!.preferred_language !=
                 null) {
-              final preferredLanguage =
-                  selectionResult!.result![0].profileSetting!.preferred_language;
+              final preferredLanguage = selectionResult!
+                  .result![0].profileSetting!.preferred_language;
               var currentLanguage = '';
               if (preferredLanguage != 'undef') {
                 currentLanguage = preferredLanguage!.split('-').first;
@@ -388,14 +378,16 @@ class _VitalsListState extends State<VitalsList> {
       devicevalue2ForBp =
           deviceValues!.bloodPressure!.entities![0].diastolic.toString();
 
-      if (deviceValues!.bloodPressure!.entities![0].deviceHealthRecord != null) {
+      if (deviceValues!.bloodPressure!.entities![0].deviceHealthRecord !=
+          null) {
         sourceForBp = deviceValues!
             .bloodPressure!.entities![0].deviceHealthRecord!.sourceType!.code
             .toString();
       }
 
       try {
-        if (deviceValues!.bloodPressure!.entities![0].deviceHealthRecord != null) {
+        if (deviceValues!.bloodPressure!.entities![0].deviceHealthRecord !=
+            null) {
           if (deviceValues!.bloodPressure!.entities![0].deviceHealthRecord!
               .heartRateCollection!.isNotEmpty) {
             if (deviceValues!.bloodPressure!.entities![0].deviceHealthRecord!
@@ -431,15 +423,15 @@ class _VitalsListState extends State<VitalsList> {
         }
 
         if (deviceValues!.bloodPressure!.entities![0].averageAsOfNow != null) {
-          averageForSys = deviceValues!.bloodPressure!.entities![0].averageAsOfNow!
-                      .systolicAverage !=
+          averageForSys = deviceValues!.bloodPressure!.entities![0]
+                      .averageAsOfNow!.systolicAverage !=
                   null
               ? deviceValues!
                   .bloodPressure!.entities![0].averageAsOfNow!.systolicAverage
                   .toString()
               : '';
-          averageForDia = deviceValues!.bloodPressure!.entities![0].averageAsOfNow!
-                      .diastolicAverage !=
+          averageForDia = deviceValues!.bloodPressure!.entities![0]
+                      .averageAsOfNow!.diastolicAverage !=
                   null
               ? deviceValues!
                   .bloodPressure!.entities![0].averageAsOfNow!.diastolicAverage
@@ -449,8 +441,8 @@ class _VitalsListState extends State<VitalsList> {
           averageForSys = '';
           averageForDia = '';
         }
-      } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         averageForSys = '';
         averageForDia = '';
@@ -481,8 +473,9 @@ class _VitalsListState extends State<VitalsList> {
           deviceValues!.bloodGlucose!.entities![0].bloodGlucoseLevel.toString();
 
       if (deviceValues!.bloodGlucose!.entities![0].mealContext != null) {
-        deviceMealContext =
-            deviceValues!.bloodGlucose!.entities![0].mealContext!.name.toString();
+        deviceMealContext = deviceValues!
+            .bloodGlucose!.entities![0].mealContext!.name
+            .toString();
       } else {
         deviceMealContext = 'Random';
       }
@@ -498,21 +491,21 @@ class _VitalsListState extends State<VitalsList> {
       }
 
       try {
-        averageForFasting = deviceValues!
-                    .bloodGlucose!.entities![0].averageAsOfNow!.fastingAverage !=
+        averageForFasting = deviceValues!.bloodGlucose!.entities![0]
+                    .averageAsOfNow!.fastingAverage !=
                 null
             ? deviceValues!
                 .bloodGlucose!.entities![0].averageAsOfNow!.fastingAverage
                 .toString()
             : '';
-        averageForPP =
-            deviceValues!.bloodGlucose!.entities![0].averageAsOfNow!.ppAverage !=
-                    null
-                ? deviceValues!.bloodGlucose!.entities![0].averageAsOfNow!.ppAverage
-                    .toString()
-                : '';
-      } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        averageForPP = deviceValues!
+                    .bloodGlucose!.entities![0].averageAsOfNow!.ppAverage !=
+                null
+            ? deviceValues!.bloodGlucose!.entities![0].averageAsOfNow!.ppAverage
+                .toString()
+            : '';
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         averageForFasting = '';
         averageForPP = '';
@@ -536,8 +529,9 @@ class _VitalsListState extends State<VitalsList> {
           .format(dateTimeStampForOs);
       timeForOs = DateFormat(parameters.strTimeHM, variable.strenUs)
           .format(dateTimeStampForOs);
-      devicevalue1ForOs =
-          deviceValues!.oxygenSaturation!.entities![0].oxygenSaturation.toString();
+      devicevalue1ForOs = deviceValues!
+          .oxygenSaturation!.entities![0].oxygenSaturation
+          .toString();
       if (deviceValues!.oxygenSaturation!.entities![0].deviceHealthRecord !=
           null) {
         sourceForPulse = deviceValues!
@@ -551,8 +545,8 @@ class _VitalsListState extends State<VitalsList> {
           if (deviceValues!.oxygenSaturation!.entities![0].deviceHealthRecord!
               .heartRateCollection!.isNotEmpty) {
             try {
-              if (deviceValues!.oxygenSaturation!.entities![0].deviceHealthRecord!
-                      .heartRateCollection![0].bpm !=
+              if (deviceValues!.oxygenSaturation!.entities![0]
+                      .deviceHealthRecord!.heartRateCollection![0].bpm !=
                   null) {
                 prbPMOxi = deviceValues!.oxygenSaturation!.entities![0]
                     .deviceHealthRecord!.heartRateCollection![0].bpm
@@ -561,11 +555,20 @@ class _VitalsListState extends State<VitalsList> {
                 prbPMOxi = '';
               }
 
-              if (deviceValues!.oxygenSaturation!.entities![0].deviceHealthRecord!
-                      .heartRateCollection![0].averageAsOfNow !=
+              if (deviceValues!
+                      .oxygenSaturation!
+                      .entities![0]
+                      .deviceHealthRecord!
+                      .heartRateCollection![0]
+                      .averageAsOfNow !=
                   null) {
-                if (deviceValues!.oxygenSaturation!.entities![0].deviceHealthRecord!
-                        .heartRateCollection![0].averageAsOfNow!.pulseAverage !=
+                if (deviceValues!
+                        .oxygenSaturation!
+                        .entities![0]
+                        .deviceHealthRecord!
+                        .heartRateCollection![0]
+                        .averageAsOfNow!
+                        .pulseAverage !=
                     null) {
                   averageForPRBpm = deviceValues!
                       .oxygenSaturation!
@@ -584,12 +587,12 @@ class _VitalsListState extends State<VitalsList> {
               averageForPul =
                   deviceValues!.oxygenSaturation!.entities![0].averageAsOfNow !=
                           null
-                      ? deviceValues!.oxygenSaturation!.entities![0].averageAsOfNow!
-                          .oxygenLevelAverage
+                      ? deviceValues!.oxygenSaturation!.entities![0]
+                          .averageAsOfNow!.oxygenLevelAverage
                           .toString()
                       : '';
-            } catch (e,stackTrace) {
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+            } catch (e, stackTrace) {
+              CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
               averageForPul = '';
               averageForPRBpm = '';
@@ -604,8 +607,8 @@ class _VitalsListState extends State<VitalsList> {
           averageForPRBpm = '';
           prbPMOxi = '';
         }
-      } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         averageForPulForBp = '';
         averageForPul = '';
@@ -617,12 +620,12 @@ class _VitalsListState extends State<VitalsList> {
         averageForSPO2 = deviceValues!.oxygenSaturation!.entities![0]
                     .averageAsOfNow!.oxygenLevelAverage !=
                 null
-            ? deviceValues!
-                .oxygenSaturation!.entities![0].averageAsOfNow!.oxygenLevelAverage
+            ? deviceValues!.oxygenSaturation!.entities![0].averageAsOfNow!
+                .oxygenLevelAverage
                 .toString()
             : '';
-      } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         averageForSPO2 = '';
       }
@@ -645,32 +648,34 @@ class _VitalsListState extends State<VitalsList> {
       devicevalue1ForTemp =
           deviceValues!.bodyTemperature!.entities![0].temperature.toString();
 
-      if (deviceValues!.bodyTemperature!.entities![0].deviceHealthRecord != null) {
+      if (deviceValues!.bodyTemperature!.entities![0].deviceHealthRecord !=
+          null) {
         sourceForThermo = deviceValues!
             .bodyTemperature!.entities![0].deviceHealthRecord!.sourceType!.code
             .toString();
       }
 
       try {
-        averageForTemp = deviceValues!.bodyTemperature!.entities![0].averageAsOfNow!
-                    .temperatureAverage !=
+        averageForTemp = deviceValues!.bodyTemperature!.entities![0]
+                    .averageAsOfNow!.temperatureAverage !=
                 null
-            ? deviceValues!
-                .bodyTemperature!.entities![0].averageAsOfNow!.temperatureAverage
+            ? deviceValues!.bodyTemperature!.entities![0].averageAsOfNow!
+                .temperatureAverage
                 .toString()
             : '';
-      } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         averageForTemp = '';
       }
       try {
         unitForTemp =
             deviceValues!.bodyTemperature!.entities![0].temperatureUnit != null
-                ? deviceValues!.bodyTemperature!.entities![0].temperatureUnit!.code
+                ? deviceValues!
+                    .bodyTemperature!.entities![0].temperatureUnit!.code
                 : '';
-      } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         unitForTemp = '';
       }
@@ -704,20 +709,22 @@ class _VitalsListState extends State<VitalsList> {
         averageForWeigh = deviceValues!
                     .bodyWeight!.entities![0].averageAsOfNow!.weightAverage !=
                 null
-            ? deviceValues!.bodyWeight!.entities![0].averageAsOfNow!.weightAverage
+            ? deviceValues!
+                .bodyWeight!.entities![0].averageAsOfNow!.weightAverage
                 .toString()
             : '';
-      } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         averageForWeigh = '';
       }
       try {
-        unitForWeight = deviceValues!.bodyWeight!.entities![0].weightUnit != null
-            ? deviceValues!.bodyWeight!.entities![0].weightUnit!.code
-            : '';
-      } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        unitForWeight =
+            deviceValues!.bodyWeight!.entities![0].weightUnit != null
+                ? deviceValues!.bodyWeight!.entities![0].weightUnit!.code
+                : '';
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         unitForWeight = '';
       }
@@ -2652,8 +2659,9 @@ Widget TypeIcon(String type, Color color) {
       height: 20.0.h,
       width: 20.0.h,
       color: color,
-    ); 
-  } else if ((type == strQurPlan && PreferenceUtil.getIfQurhomeisAcive()) || (type == strDevice && PreferenceUtil.getIfQurhomeisAcive())) {
+    );
+  } else if ((type == strQurPlan && PreferenceUtil.getIfQurhomeisAcive()) ||
+      (type == strDevice && PreferenceUtil.getIfQurhomeisAcive())) {
     return Image.asset(
       'assets/Qurhome/Qurhome.png',
       height: 20.0.h,

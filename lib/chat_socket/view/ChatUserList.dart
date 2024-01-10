@@ -1,40 +1,38 @@
 import 'dart:async';
 import 'dart:io';
 
-// import 'package:auto_size_text/auto_size_text.dart'; FU2.5
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/chat_socket/constants/const_socket.dart';
-import 'package:myfhb/chat_socket/model/CaregiverPatientChatModel.dart';
-import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
-import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
-import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/landing/model/qur_plan_dashboard_model.dart';
-import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/chat/constants/const.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 
+import '../../Qurhome/Common/GradientAppBarQurhome.dart';
+import '../../authentication/constants/constants.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
+import '../../common/CommonUtil.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../common/common_circular_indicator.dart';
+import '../../common/errors_widget.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart';
+import '../../constants/variable_constant.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../../landing/model/qur_plan_dashboard_model.dart';
+import '../../landing/view/landing_arguments.dart';
+import '../../my_family/models/FamilyMembersRes.dart';
+import '../../src/model/user/MyProfileModel.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../telehealth/features/chat/constants/const.dart';
+import '../../widgets/GradientAppBar.dart';
+import '../constants/const_socket.dart';
+import '../model/CaregiverPatientChatModel.dart';
 import '../model/UserChatListModel.dart';
+import '../service/ChatSocketService.dart';
+import '../viewModel/chat_socket_view_model.dart';
+import '../viewModel/getx_chat_view_model.dart';
 import 'ChatDetail.dart';
 
 class ChatUserList extends StatefulWidget {
@@ -97,8 +95,6 @@ class _ChatUserListState extends State<ChatUserList> {
     userId = PreferenceUtil.getStringValue(KEY_USERID);
 
     initSocket(true);
-
-    mInitialTime = DateTime.now();
 
     getFamilyListMap();
   }
@@ -953,18 +949,6 @@ class _ChatUserListState extends State<ChatUserList> {
     }
 
     return name;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    //socket.disconnect();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Chat Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
 //Removed the expanded widget as the images were little stretch for tablet alone

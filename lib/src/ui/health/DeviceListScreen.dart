@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../../../colors/fhb_colors.dart' as fhbColors;
+import '../../../common/CommonConstants.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/fhb_parameters.dart';
+import '../../../constants/fhb_parameters.dart' as parameters;
+import '../../../constants/variable_constant.dart' as variable;
+import '../../../record_detail/screens/record_detail_screen.dart';
+import '../../blocs/health/HealthReportListForUserBlock.dart';
+import '../../model/Health/MediaMetaInfo.dart';
+import '../../model/Health/asgard/health_record_collection.dart';
+import '../../model/Health/asgard/health_record_list.dart';
+import '../../utils/FHBUtils.dart';
+import '../../utils/screenutils/size_extensions.dart';
 
 class DeviceListScreen extends StatefulWidget {
   final HealthRecordList? completeData;
@@ -67,23 +67,9 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     _healthReportListForUserBlock = HealthReportListForUserBlock();
-    String? categoryID =
-        PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
 
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Device List Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -239,8 +225,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 12.0.sp,
-                                color:
-                                    Color(CommonUtil().getMyPrimaryColor()),
+                                color: Color(CommonUtil().getMyPrimaryColor()),
                               ),
                               maxLines: 2,
                               softWrap: true,
@@ -262,8 +247,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                             FHBUtils().getFormattedDateStringClone(
                                 data.dateTimeValue!.toLocal()),
                             style: TextStyle(
-                                color:
-                                    Color(CommonUtil().getMyPrimaryColor()),
+                                color: Color(CommonUtil().getMyPrimaryColor()),
                                 fontWeight: FontWeight.w200,
                                 fontSize: 10.0.sp),
                           )
@@ -286,8 +270,8 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                                           AssetImage(
                                               variable.icon_record_fav_active),
                                           //TODO chnage theme
-                                          color: Color(CommonUtil()
-                                              .getMyPrimaryColor()),
+                                          color: Color(
+                                              CommonUtil().getMyPrimaryColor()),
                                           size: CommonUtil().isTablet!
                                               ? tabHeader2
                                               : mobileHeader2,
@@ -300,8 +284,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                                               : mobileHeader2,
                                         ),
                                   onPressed: () {
-                                    CommonUtil()
-                                        .bookMarkRecord(data, _refresh);
+                                    CommonUtil().bookMarkRecord(data, _refresh);
                                   }),
                               (data.metadata!.hasVoiceNotes != null &&
                                       data.metadata!.hasVoiceNotes!)

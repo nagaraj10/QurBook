@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:myfhb/Orders/Controller/OrderController.dart';
-import 'package:myfhb/Orders/Model/OrderModel.dart';
-import 'package:myfhb/Orders/View/AppointmentOrderTile.dart';
-import 'package:myfhb/Orders/View/OrderTile.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+
 import '../../common/CommonUtil.dart';
+import '../../common/common_circular_indicator.dart';
+import '../../constants/fhb_constants.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/GradientAppBar.dart';
+import '../Controller/OrderController.dart';
+import '../Model/OrderModel.dart';
+import 'AppointmentOrderTile.dart';
+import 'OrderTile.dart';
 
 class OrdersView extends StatefulWidget {
   @override
@@ -24,19 +24,13 @@ class _OrdersViewState extends State<OrdersView> {
   @override
   void initState() {
     controller.getOrders();
-    mInitialTime = DateTime.now();
     super.initState();
   }
 
   @override
   void dispose() {
     FocusManager.instance.primaryFocus!.unfocus();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'OrdersView Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
+
     super.dispose();
   }
 

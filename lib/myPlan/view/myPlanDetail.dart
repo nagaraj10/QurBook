@@ -3,53 +3,28 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/myPlan/model/myPlanListModel.dart';
-import 'package:myfhb/plan_dashboard/view/plan_pdf_viewer.dart';
+
 import '../../authentication/constants/constants.dart';
 import '../../common/CommonUtil.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../common/common_circular_indicator.dart';
+import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart';
-import '../viewModel/myPlanViewModel.dart';
+import '../../plan_dashboard/view/plan_pdf_viewer.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
+import '../model/myPlanListModel.dart';
+import '../viewModel/myPlanViewModel.dart';
 
 class MyPlanDetail extends StatefulWidget {
   final String? packageId;
   final String? templateName;
 
-  /*  final String title;
-  final String providerName;
-  final String docName;
-  final String startDate;
-  final String endDate;
-  final String packageId;
-  final String isExpired;
-  final String icon;
-  final String catIcon;
-  final String providerIcon;
-  final String descriptionURL;
-  final String price;
-  final String isExtendable; */
   bool showRenew;
 
   MyPlanDetail(
       {Key? key,
       required this.packageId,
-      /* @required this.title,
-      @required this.providerName,
-      @required this.docName,
-      @required this.startDate,
-      @required this.endDate,
-      @required this.packageId,
-      @required this.isExpired,
-      @required this.icon,
-      @required this.catIcon,
-      @required this.providerIcon,
-      @required this.descriptionURL,
-      @required this.price,
-      @required this.isExtendable */
       this.showRenew = false,
       this.templateName = null})
       : super(key: key);
@@ -78,7 +53,8 @@ class PlanDetail extends State<MyPlanDetail> {
   String price = '';
   String isExtendable = '';
   String isPlublic = '';
-  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+      GlobalKey<ScaffoldMessengerState>();
 
   bool showRenewOrSubscribeButton = false;
   late Future<MyPlanListModel?> planListFetch;
@@ -86,29 +62,16 @@ class PlanDetail extends State<MyPlanDetail> {
   @override
   void initState() {
     super.initState();
-    mInitialTime = DateTime.now();
-    //setValues();
+
     getConfiguration();
-    planListFetch = myPlanViewModel.getMyPlanListDetail(widget.packageId)
-        as Future<MyPlanListModel?>;
+    planListFetch = myPlanViewModel.getMyPlanListDetail(widget.packageId);
   }
 
   Future<void> getConfiguration() async {
-    bool? showRenewOrSubscribeButton =
+    final showRenewOrSubscribeButton =
         await PreferenceUtil.getUnSubscribeValue();
     setState(() {
       this.showRenewOrSubscribeButton = showRenewOrSubscribeButton ?? false;
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'MyPlanDetail Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 
@@ -388,12 +351,14 @@ class PlanDetail extends State<MyPlanDetail> {
                           );
                         }
                       }
-                    },style: OutlinedButton.styleFrom(
-                    side: BorderSide(
-                      color: isExpired == '1'
-                          ? Color(CommonUtil().getMyPrimaryColor())
-                          : Colors.red,
-                    ),),
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(
+                        color: isExpired == '1'
+                            ? Color(CommonUtil().getMyPrimaryColor())
+                            : Colors.red,
+                      ),
+                    ),
                     child: Text(
                       isExpired == '1'
                           ? (isPlublic == '0'
@@ -428,12 +393,14 @@ class PlanDetail extends State<MyPlanDetail> {
                           Navigator.pop(context);
                         });
                       }
-                    },style: OutlinedButton.styleFrom(
-                    side: BorderSide(
-                      color: Color(
-                        CommonUtil().getMyPrimaryColor(),
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(
+                        color: Color(
+                          CommonUtil().getMyPrimaryColor(),
+                        ),
                       ),
-                    ),),
+                    ),
                     //hoverColor: Color(getMyPrimaryColor()),
                     child: Text(
                       isExpired == '1'

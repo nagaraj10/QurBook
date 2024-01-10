@@ -1,30 +1,28 @@
-
-// import 'package:auto_size_text/auto_size_text.dart'; //  FU2.5
 import 'package:flutter/material.dart';
-import 'package:myfhb/my_providers/models/ProviderRequestCollection3.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/my_providers/bloc/providers_block.dart';
-import 'package:myfhb/my_providers/models/Doctors.dart';
-import 'package:myfhb/my_providers/models/MyProviderResponseData.dart';
-import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
-import 'package:myfhb/search_providers/models/search_arguments.dart';
-import 'package:myfhb/styles/styles.dart' as fhbStyles;
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/AvailableTimeSlotsModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
-import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 
+import '../../../../common/CommonConstants.dart';
+import '../../../../common/CommonUtil.dart';
+import '../../../../common/common_circular_indicator.dart';
+import '../../../../common/errors_widget.dart';
+import '../../../../constants/fhb_constants.dart';
+import '../../../../constants/router_variable.dart' as router;
+import '../../../../constants/variable_constant.dart' as variable;
+import '../../../../my_providers/bloc/providers_block.dart';
+import '../../../../my_providers/models/Doctors.dart';
+import '../../../../my_providers/models/MyProviderResponseData.dart';
+import '../../../../my_providers/models/MyProviderResponseNew.dart';
+import '../../../../my_providers/models/ProviderRequestCollection3.dart';
+import '../../../../search_providers/models/search_arguments.dart';
+import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../../styles/styles.dart' as fhbStyles;
 import '../../SearchWidget/view/SearchWidget.dart';
+import '../model/getAvailableSlots/AvailableTimeSlotsModel.dart';
+import '../model/getAvailableSlots/SlotSessionsModel.dart';
+import '../model/getAvailableSlots/Slots.dart';
+import '../model/provider_model/DoctorIds.dart';
+import '../viewModel/MyProviderViewModel.dart';
+import 'CommonWidgets.dart';
 import 'healthOrganization/HealthOrganization.dart';
-import 'package:myfhb/common/errors_widget.dart';
 
 class MyProviders extends StatefulWidget {
   Function(String)? closePage;
@@ -58,28 +56,14 @@ class _MyProvidersState extends State<MyProviders> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
     getDataForProvider();
     _providersBloc = ProvidersBloc();
     _medicalPreferenceList = _providersBloc.getMedicalPreferencesForDoctors();
-    print('init doctor');
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'MyProviders Doctor List Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    print('inside build of doctors');
     if (!widget.isRefresh!) {
       providerViewModel.doctorIdsList = null;
       setState(() {

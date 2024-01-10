@@ -190,10 +190,6 @@ Future<void> main() async {
         print(e.toString());
       }
     }
-
-    var firebase = FirebaseAnalyticsService();
-    firebase.setUserId(PreferenceUtil.getStringValue(KEY_USERID_MAIN));
-    firebase.trackCurrentScreen("startScreen", "classOverride");
     runApp(
       MultiProvider(
         providers: [
@@ -328,11 +324,7 @@ class _MyFHBState extends State<MyFHB> {
     CheckForShowingTheIntroScreens();
     chatViewModel.setCurrentChatRoomID('none');
     super.initState();
-    /*CommonUtil.askPermissionForCameraAndMic().then((value) {
-      CommonUtil.askPermissionForLocation().then((value) {
-        CommonUtil().askPermissionForNotification();
-      });
-    });*/
+
     getMyRoute();
     _enableTimer();
     final res = apiBaseHelper.updateLastVisited();
@@ -345,15 +337,16 @@ class _MyFHBState extends State<MyFHB> {
     }
     FirebaseMessaging.instance.onTokenRefresh
         .listen(CommonUtil().saveTokenToDatabase);
-    Get.put(
-      HubListViewController(),
-    );
-    Get.lazyPut(
-      () => SheelaAIController(),
-    );
-    Get.lazyPut(
-      () => SheelaBLEController(),
-    );
+    Get
+      ..put(
+        HubListViewController(),
+      )
+      ..lazyPut(
+        () => SheelaAIController(),
+      )
+      ..lazyPut(
+        () => SheelaBLEController(),
+      );
 
     //initConnectivity();
     _connectivitySubscription =
@@ -403,32 +396,19 @@ class _MyFHBState extends State<MyFHB> {
     var callType = '';
     var notificationListId = '';
     _msgListener.value = _msg;
-    print('datanotificaton: ' + msg.toString());
     final cMsg = msg as String;
     if (cMsg.isNotEmpty || cMsg != null) {
       if (cMsg == 'chat') {
-        fbaLog(eveParams: {
-          'eventTime': '${DateTime.now()}',
-          'ns_type': 'chat',
-          'navigationPage': 'Tele Health Chat list',
-        });
         Get.to(ChatUserList());
       } else if (cMsg == 'FETCH_LOG') {}
-      if(cMsg =='vcApproveByProvider' || cMsg =='vcDeclineByProvider'){
+      if (cMsg == 'vcApproveByProvider' || cMsg == 'vcDeclineByProvider') {
         Get.toNamed(
           rt_VoiceCloningStatus,
           arguments: const VoiceCloneStatusArguments(fromMenu: true),
         );
       }
       final passedValArr = cMsg.split('&');
-      if (passedValArr[0] == 'facebookdeeplink') {
-        var firebase = FirebaseAnalyticsService();
-        print(passedValArr[1]);
-        firebase.trackEvent("on_facebook_clicked", {
-          "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-          "total": passedValArr[1]
-        });
-      }
+      if (passedValArr[0] == 'facebookdeeplink') {}
       if (passedValArr[0] == 'activityRemainderInvokeSheela') {
         //// allow the user for auto redirect to sheela screen on time
         if (CommonUtil().isAllowSheelaLiveReminders()) {
@@ -510,11 +490,7 @@ class _MyFHBState extends State<MyFHB> {
         if (temp[0] == 'myRecords') {
           final dataOne = temp[1];
           final dataTwo = temp[2];
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'myRecords',
-            'navigationPage': temp[1],
-          });
+
           if (dataTwo.runtimeType == String && (dataTwo).isNotEmpty) {
             final userId = PreferenceUtil.getStringValue(KEY_USERID);
             if ((passedValArr[2]) == userId) {
@@ -567,18 +543,8 @@ class _MyFHBState extends State<MyFHB> {
             );
           }
         } else if (passedValArr[1] == 'qurbookServiceRequestStatusUpdate') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'qurbookServiceRequestStatusUpdate',
-            'navigationPage': 'TicketDetails',
-          });
           Get.to(DetailedTicketView(null, true, passedValArr[2]));
         } else if (passedValArr[1] == 'notifyPatientServiceTicketByCC') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'notifyPatientServiceTicketByCC',
-            'navigationPage': 'TicketDetails',
-          });
           Get.to(DetailedTicketView(null, true, passedValArr[2]));
         } else if (passedValArr[1] == 'appointmentPayment') {
           var nsBody = {};
@@ -616,11 +582,6 @@ class _MyFHBState extends State<MyFHB> {
           //   ),
           // );
         } else if (passedValArr[1] == 'sheela') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'sheela',
-            'navigationPage': 'Sheela Start Page',
-          });
           try {
             if (CommonUtil().isAllowSheelaLiveReminders()) {
               if (passedValArr[2] != null && passedValArr[2].isNotEmpty) {
@@ -663,52 +624,26 @@ class _MyFHBState extends State<MyFHB> {
           }
         } else if (passedValArr[1] == 'profile_page' ||
             passedValArr[1] == 'profile') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'profile_page',
-            'navigationPage': 'User Profile page',
-          });
           Get.toNamed(router.rt_UserAccounts,
                   arguments: UserAccountsArguments(selectedIndex: 0))!
               .then((value) => setState(() {}));
         } else if (passedValArr[1] == 'googlefit') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'googlefit',
-            'navigationPage': 'Google Fit page',
-          });
           Get.toNamed(router.rt_AppSettings);
         } else if (passedValArr[1] == 'th_provider' ||
             passedValArr[1] == 'provider') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'th_provider',
-            'navigationPage': 'Tele Health Provider',
-          });
           Get.toNamed(router.rt_TelehealthProvider,
                   arguments: HomeScreenArguments(selectedIndex: 1))!
               .then((value) => setState(() {}));
         } else if (passedValArr[1] == 'my_record' ||
             passedValArr[1] == 'prescription_list' ||
             passedValArr[1] == 'add_doc') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'my_record',
-            'navigationPage': 'My Records',
-          });
           getProfileData();
           Get.toNamed(router.rt_HomeScreen,
                   arguments: HomeScreenArguments(selectedIndex: 1))!
               .then((value) => setState(() {}));
         } else if (passedValArr[1] == 'regiment_screen') {
           //this need to be navigte to Regiment screen
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': CommonUtil.isUSRegion()
-                ? 'QurHomeRegimenScreen'
-                : 'regiment_screen',
-            'navigationPage': 'Regimen Screen',
-          });
+
           if ((CommonUtil.isUSRegion()) &&
               (passedValArr[3] != null) &&
               (passedValArr[3] != 'null') &&
@@ -742,11 +677,6 @@ class _MyFHBState extends State<MyFHB> {
                 arguments: RegimentArguments(eventId: passedValArr[2]));
           }
         } else if (passedValArr[1] == 'dashboard') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'dashboard',
-            'navigationPage': 'Device List Screen',
-          });
           PageNavigator.goToPermanent(context, router.rt_Landing);
         } else if (passedValArr[1] == 'familyMemberCaregiverRequest') {
           if (passedValArr[2] == 'accept') {
@@ -760,70 +690,31 @@ class _MyFHBState extends State<MyFHB> {
               requestor: passedValArr[6],
             );
           }
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'dashboard',
-            'navigationPage': 'Device List Screen',
-          });
+
           PageNavigator.goToPermanent(context, router.rt_Landing);
         } else if (passedValArr[1] == 'th_provider_hospital') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'th_provider_hospital',
-            'navigationPage': 'TH provider Hospital Screen',
-          });
           Get.toNamed(router.rt_TelehealthProvider,
               arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1));
         } else if (passedValArr[1] == 'myfamily_list' ||
             passedValArr[1] == 'profile_my_family') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'myfamily_list',
-            'navigationPage': 'MyFamily List Screen',
-          });
           Get.toNamed(router.rt_UserAccounts,
               arguments: UserAccountsArguments(selectedIndex: 1));
         } else if (CommonUtil.isUSRegion() &&
             passedValArr[1] == strPatientReferralAcceptToPatient) {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'myprovider_list',
-            'navigationPage': 'MyProvider List Screen',
-          });
           Get.toNamed(router.rt_UserAccounts,
               arguments: UserAccountsArguments(selectedIndex: 2));
         } else if (passedValArr[1] == 'myprovider_list') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'myprovider_list',
-            'navigationPage': 'MyProvider List Screen',
-          });
           Get.toNamed(router.rt_UserAccounts,
               arguments: UserAccountsArguments(selectedIndex: 2));
         } else if (passedValArr[1] == 'myplans') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'myplans',
-            'navigationPage': 'MyPlans Screen',
-          });
           Get.toNamed(router.rt_UserAccounts,
               arguments: UserAccountsArguments(selectedIndex: 3));
         } else if (passedValArr[1] == 'appointmentList' ||
             passedValArr[1] == 'appointmentHistory') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'appointmentList',
-            'navigationPage': 'appointmentList',
-          });
           Get.to(SplashScreen(
             nsRoute: passedValArr[1],
           ));
         } else if (passedValArr[1] == 'devices_tab') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'device_list',
-            'navigationPage': 'devices_tab',
-          });
           getProfileData();
           Get.toNamed(
             router.rt_HomeScreen,
@@ -832,11 +723,6 @@ class _MyFHBState extends State<MyFHB> {
               .then((value) =>
                   PageNavigator.goToPermanent(context, router.rt_Landing));
         } else if (passedValArr[1] == 'bills') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'bills',
-            'navigationPage': 'Bills Screen',
-          });
           Get.toNamed(
             router.rt_HomeScreen,
             arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 4),
@@ -844,11 +730,6 @@ class _MyFHBState extends State<MyFHB> {
               .then((value) =>
                   PageNavigator.goToPermanent(context, router.rt_Landing));
         } else if (passedValArr[1] == 'chat') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'initiate screen',
-            'navigationPage': 'Chat Screen',
-          });
           Get.to(() => ChatDetail(
                     peerId: passedValArr[2],
                     peerName: passedValArr[3],
@@ -864,11 +745,6 @@ class _MyFHBState extends State<MyFHB> {
                   PageNavigator.goToPermanent(context, router.rt_Landing));
           ;
         } else if (passedValArr[1] == 'mycart') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'my cart',
-            'navigationPage': 'My Cart',
-          });
           var nsBody = {};
           nsBody['templateName'] = strCaregiverNotifyPlanSubscription;
           nsBody['contextId'] = passedValArr[4];
@@ -889,19 +765,9 @@ class _MyFHBState extends State<MyFHB> {
           CommonUtil()
               .getDetailsOfAddedFamilyMember(Get.context!, passedValArr[2]);
         } else if (passedValArr[1] == 'manageActivities') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'manageActivities',
-            'navigationPage': 'Manage Activities',
-          });
           Get.to(ManageActivitiesScreen())!.then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
         } else if (passedValArr[1] == strAppointmentDetail) {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'appointmentDetail',
-            'navigationPage': 'Appointment Detail Page',
-          });
           if (passedValArr[2] != null) {
             try {
               if (passedValArr[3] != null) {
@@ -929,11 +795,6 @@ class _MyFHBState extends State<MyFHB> {
         } else if (passedValArr[1] == strConnectedDevicesScreen) {
           CommonUtil().navigateToHubList(Get.context!, fromNotification: false);
         } else {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'appointment_list',
-            'navigationPage': 'Tele Health Appointment list',
-          });
           PageNavigator.goToPermanent(Get.context!, router.rt_Landing);
         }
       }
@@ -969,29 +830,10 @@ class _MyFHBState extends State<MyFHB> {
         }
       } else if (passedValArr[1] == 'appointmentList' ||
           passedValArr[1] == 'appointmentHistory') {
-        fbaLog(eveParams: {
-          'eventTime': '${DateTime.now()}',
-          'ns_type': 'appointmentList',
-          'navigationPage': 'Tele Health Appointment list',
-        });
         Get.to(SplashScreen(
           nsRoute: passedValArr[1],
         ));
       } else if (passedValArr[0] == 'DoctorRescheduling') {
-        /* Get.to(TelehealthProviders(
-          arguments: HomeScreenArguments(
-            selectedIndex: 1,
-          doctorID: passedValArr[1] ?? '',
-          bookingId: passedValArr[2] ?? '',
-          doctorSessionId: passedValArr[3] ?? '',
-          healthOrganizationId: passedValArr[4] ?? ''
-          ),
-        )); */
-        fbaLog(eveParams: {
-          'eventTime': '${DateTime.now()}',
-          'ns_type': 'DoctorRescheduling',
-          'navigationPage': 'Reschedule screen',
-        });
         final body = {};
         body['templateName'] = passedValArr[5];
         body['contextId'] = passedValArr[2];
@@ -1009,11 +851,6 @@ class _MyFHBState extends State<MyFHB> {
           body: body,
         ));
       } else if (passedValArr[0] == 'DoctorCancellation') {
-        fbaLog(eveParams: {
-          'eventTime': '${DateTime.now()}',
-          'ns_type': 'DoctorCancellation',
-          'navigationPage': 'Appointment List',
-        });
         Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(
               selectedIndex: 0,
@@ -1029,11 +866,7 @@ class _MyFHBState extends State<MyFHB> {
         jsonInput['action'] = passedValArr[2];
       } else if (passedValArr[0] == 'openurl') {
         final urlInfo = passedValArr[1];
-        fbaLog(eveParams: {
-          'eventTime': '${DateTime.now()}',
-          'ns_type': 'openurl',
-          'navigationPage': 'Browser page',
-        });
+
         CommonUtil().launchURL(urlInfo);
       } else if (passedValArr[0] == 'myplandetails') {
         final planid = passedValArr[1];
@@ -1042,11 +875,6 @@ class _MyFHBState extends State<MyFHB> {
         final patName = passedValArr[4];
         final currentUserId = PreferenceUtil.getStringValue(KEY_USERID);
         if (currentUserId == userId) {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'myplan_deatails',
-            'navigationPage': 'My Plan Details',
-          });
           Get.to(
             MyPlanDetail(
               packageId: planid,
@@ -1062,11 +890,7 @@ class _MyFHBState extends State<MyFHB> {
         final claimId = passedValArr[1];
         final userId = passedValArr[2];
         final currentUserId = PreferenceUtil.getStringValue(KEY_USERID);
-        fbaLog(eveParams: {
-          'eventTime': '${DateTime.now()}',
-          'ns_type': 'claim_Details',
-          'navigationPage': 'Claim Record Display',
-        });
+
         Get.to(
           ClaimRecordDisplay(
             claimID: claimId,
@@ -1081,11 +905,6 @@ class _MyFHBState extends State<MyFHB> {
         if (passedValArr[0] == 'Renew') {
           final currentUserId = PreferenceUtil.getStringValue(KEY_USERID);
           if (currentUserId == userId) {
-            fbaLog(eveParams: {
-              'eventTime': '${DateTime.now()}',
-              'ns_type': 'myplan_deatails',
-              'navigationPage': 'My Plan Details',
-            });
             Get.to(
               MyPlanDetail(
                 packageId: planid,
@@ -1108,19 +927,6 @@ class _MyFHBState extends State<MyFHB> {
           FetchNotificationService().updateNsActionStatus(nsBody).then((data) {
             FetchNotificationService().updateNsOnTapAction(nsBody);
           });
-          //   //TODO if its Callback just show the message alone
-          //   Get.rawSnackbar(
-          //       messageText: Center(
-          //         child: Text(
-          //           '$patName, Thank you for reaching out.  Your caregiver will call you as soon as possible.',
-          //           style: TextStyle(
-          //               color: Colors.white, fontWeight: FontWeight.w500),
-          //         ),
-          //       ),
-          //       snackPosition: SnackPosition.BOTTOM,
-          //       snackStyle: SnackStyle.GROUNDED,
-          //       duration: Duration(seconds: 3),
-          //       backgroundColor: Colors.green.shade500);
         }
       } else if (passedValArr[0] == Constants.strVoiceClonePatientAssignment) {
         // Check if the first element of passedValArr is related to voice clone patient assignment
@@ -1158,11 +964,6 @@ class _MyFHBState extends State<MyFHB> {
               patientPic = '';
             }
 
-            fbaLog(eveParams: {
-              'eventTime': '${DateTime.now()}',
-              'ns_type': 'call',
-              'navigationPage': 'TeleHelath Call screen',
-            });
             if (callType.toLowerCase() == 'audio') {
               Provider.of<AudioCallProvider>(Get.context!, listen: false)
                   .enableAudioCall();
@@ -1333,7 +1134,8 @@ class _MyFHBState extends State<MyFHB> {
         ChangeNotifierProvider<ChatSocketViewModel>(
           create: (_) => ChatSocketViewModel(),
         ),
-        ChangeNotifierProvider<VoiceCloningController>(create:(_)=>VoiceCloningController())
+        ChangeNotifierProvider<VoiceCloningController>(
+            create: (_) => VoiceCloningController())
       ],
       child: LayoutBuilder(builder: (context, constraints) {
         return OrientationBuilder(builder: (context, orientation) {
@@ -1380,15 +1182,15 @@ class _MyFHBState extends State<MyFHB> {
       }
     } else {
       try {
-
         if (navRoute == 'FETCH_LOG') {
           return SplashScreen(
             nsRoute: '',
           );
         }
-        if(navRoute =='vcApproveByProvider' || navRoute =='vcDeclineByProvider'){
+        if (navRoute == 'vcApproveByProvider' ||
+            navRoute == 'vcDeclineByProvider') {
           return SplashScreen(
-            nsRoute:navRoute,
+            nsRoute: navRoute,
           );
         }
         final parsedData = navRoute.split('&');

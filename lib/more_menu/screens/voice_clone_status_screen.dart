@@ -1,20 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
-import 'package:myfhb/more_menu/screens/terms_and_conditon.dart';
-import 'package:myfhb/more_menu/voice_clone_status_controller.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart';
-import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
-import 'package:myfhb/voice_cloning/model/voice_cloning_choose_member_arguments.dart';
-import 'package:myfhb/voice_cloning/view/widgets/voice_clone_family_members_list.dart';
+
+import '../../common/CommonUtil.dart';
+import '../../common/errors_widget.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart';
+import '../../constants/variable_constant.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../telehealth/features/Notifications/constants/notification_constants.dart';
+import '../../voice_cloning/model/voice_clone_status_arguments.dart';
+import '../../voice_cloning/model/voice_cloning_choose_member_arguments.dart';
+import '../../voice_cloning/view/widgets/voice_clone_family_members_list.dart';
+import '../voice_clone_status_controller.dart';
+import 'terms_and_conditon.dart';
 
 class VoiceCloningStatus extends StatefulWidget {
   final VoiceCloneStatusArguments? arguments;
@@ -34,10 +32,10 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
-    controller.onInit();
-    //Api to get health organzation id and also the status of voice cloning
-    controller.getUserHealthOrganizationId();
+    controller
+      ..onInit()
+      //Api to get health organzation id and also the status of voice cloning
+      ..getUserHealthOrganizationId();
     super.initState();
   }
 
@@ -45,12 +43,6 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
   void dispose() {
     controller.dispose();
     super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': ' Voice Cloning status',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -58,10 +50,9 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
     return Obx(
       () => WillPopScope(
         onWillPop: () {
-          controller.setBackButton(context,widget.arguments?.fromMenu ?? false);
-          //  Get.off(
-          //  MoreMenuScreen(),
-          //);
+          controller.setBackButton(
+              context, widget.arguments?.fromMenu ?? false);
+
           return Future.value(false);
         },
         child: Scaffold(
@@ -72,7 +63,8 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                 size: 24.0.sp,
               ),
               onPressed: () {
-                controller.setBackButton(context,widget.arguments?.fromMenu ?? false);
+                controller.setBackButton(
+                    context, widget.arguments?.fromMenu ?? false);
               },
             ),
             title: AppBarForVoiceCloning().getVoiceCloningAppBar(),
@@ -155,18 +147,17 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                         strApproved &&
                                     controller.listOfFamilyMembers.length > 0,
                                 child: Expanded(
-                                        child: Container(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              8, 16, 8, 8),
-                                          child: VoiceCloneFamilyMembersList(
-                                            isShowcaseExisting: true,
-                                            familyMembers:
-                                                controller.listOfFamilyMembers,
-                                            onValueSelected: (value) {},
-                                          ),
-                                        ),
-                                      )
+                                  child: Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(8, 16, 8, 8),
+                                    child: VoiceCloneFamilyMembersList(
+                                      isShowcaseExisting: true,
+                                      familyMembers:
+                                          controller.listOfFamilyMembers,
+                                      onValueSelected: (value) {},
                                     ),
+                                  ),
+                                )),
                             Visibility(
                               visible: controller
                                       .voiceCloneStatusModel?.result?.status ==

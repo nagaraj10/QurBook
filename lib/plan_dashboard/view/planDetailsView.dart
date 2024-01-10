@@ -1,67 +1,34 @@
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
-import 'package:myfhb/plan_dashboard/view/plan_pdf_viewer.dart';
-import '../../common/CommonUtil.dart';
-import '../../constants/fhb_constants.dart';
-import '../../widgets/GradientAppBar.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:get/get.dart';
-import '../model/MetaDataForURL.dart';
-import '../../authentication/constants/constants.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import '../../authentication/constants/constants.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/common_circular_indicator.dart';
+import '../../common/errors_widget.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart';
+import '../../plan_wizard/view_model/plan_wizard_view_model.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/GradientAppBar.dart';
+import '../model/MetaDataForURL.dart';
+import '../model/PlanListModel.dart';
 import '../viewModel/planViewModel.dart';
+import 'plan_pdf_viewer.dart';
 
 class MyPlanDetailView extends StatefulWidget {
-  // final String title;
-  // final String description;
-  // final String price;
-  // final String issubscription;
   final String? packageId;
-
-  // final String providerName;
-  // final String packageDuration;
-  // final String providerId;
-  // final bool isDisable;
-  // final String hosIcon;
-  // final String iconApi;
-  // final String catIcon;
-  // final bool isRenew;
   final String? isFrom;
-
-  // final bool isExtendable;
-  // final MetaDataForURL metaDataForURL;
 
   const MyPlanDetailView({
     Key? key,
-    // @required this.title,
-    // @required this.description,
-    // @required this.price,
-    // @required this.issubscription,
     this.packageId,
-    // @required this.providerName,
-    // @required this.packageDuration,
-    // @required this.providerId,
-    // @required this.isDisable,
-    // @required this.hosIcon,
-    // @required this.iconApi,
-    // @required this.catIcon,
-    // @required this.isRenew,
     this.isFrom,
-    // @required this.isExtendable,
-    // @required this.metaDataForURL,
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    return PlanDetail();
-  }
+  State<StatefulWidget> createState() => PlanDetail();
 }
 
 class PlanDetail extends State<MyPlanDetailView> {
@@ -82,27 +49,15 @@ class PlanDetail extends State<MyPlanDetailView> {
   bool isRenew = false;
   String? isFrom = '';
   MetaDataForURL? metaDataForURL;
-  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+      GlobalKey<ScaffoldMessengerState>();
 
   late Future<PlanListModel?> planListModel;
   @override
   void initState() {
     super.initState();
-    mInitialTime = DateTime.now();
-    // setValues();
-    planListModel = PlanViewModel().getPlanDetail(widget.packageId)
-        as Future<PlanListModel?>;
-  }
 
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'PlanDetail Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
+    planListModel = PlanViewModel().getPlanDetail(widget.packageId);
   }
 
   void setValues(PlanListResult planList) {

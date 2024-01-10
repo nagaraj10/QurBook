@@ -1,21 +1,16 @@
 import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/src/utils/language/language_utils.dart';
-import 'package:myfhb/src/resources/network/api_services.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/widgets/ShowImage.dart';
-import 'package:open_filex/open_filex.dart';
-//import 'package:open_file/open_file.dart'; FU2.5
-import '../../constants/fhb_parameters.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
-// import 'package:auto_size_text/auto_size_text.dart';  FU2.5
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import '../../bookmark_record/bloc/bookmarkRecordBloc.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/AudioWidget.dart';
@@ -24,33 +19,38 @@ import '../../common/CommonDialogBox.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
+import '../../common/common_circular_indicator.dart';
+import '../../common/errors_widget.dart';
+import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_parameters.dart' as parameters;
+import '../../constants/fhb_parameters.dart';
 import '../../constants/variable_constant.dart' as variable;
 import '../../my_family/bloc/FamilyListBloc.dart';
 import '../../my_family/models/FamilyMembersRes.dart';
 import '../../my_family/screens/FamilyListView.dart';
-import '../bloc/deleteRecordBloc.dart';
-import '../model/ImageDocumentResponse.dart';
-import 'record_info_card.dart';
-import '../services/downloadmultipleimages.dart';
 import '../../src/blocs/health/HealthReportListForUserBlock.dart';
 import '../../src/model/Health/PostImageResponse.dart';
 import '../../src/model/Health/asgard/health_record_collection.dart';
 import '../../src/model/Health/asgard/health_record_list.dart';
 import '../../src/resources/network/ApiResponse.dart';
+import '../../src/resources/network/api_services.dart';
+import '../../src/ui/audio/AudioRecorder.dart';
 import '../../src/ui/audio/AudioScreenArguments.dart';
 import '../../src/ui/imageSlider.dart';
 import '../../src/utils/FHBUtils.dart';
+import '../../src/utils/language/language_utils.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../telehealth/features/chat/view/PDFModel.dart';
+import '../../telehealth/features/chat/view/PDFView.dart';
 import '../../widgets/GradientAppBar.dart';
-import 'package:permission_handler/permission_handler.dart';
+import '../../widgets/ShowImage.dart';
+import '../bloc/deleteRecordBloc.dart';
+import '../model/ImageDocumentResponse.dart';
+import '../services/downloadmultipleimages.dart';
+import 'record_info_card.dart';
 
 export 'package:myfhb/my_family/models/relationship_response_list.dart';
-import '../../common/errors_widget.dart';
-import 'package:get/get.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
-import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 
 typedef OnError = void Function(Exception exception);
 
@@ -87,15 +87,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   int length = 0;
   List<ImageDocumentResponse> imagesPathMain = [];
 
-  // PermissionStatus permissionStatus = PermissionStatus.unknown;
-  //final PermissionHandler _storagePermission = Platform.isAndroid ? Permission.storage : Permission.photos;
   bool firsTym = true;
   bool ispdfPresent = false;
 
   HealthRecordCollection? audioMediaId;
   late HealthRecordCollection pdfId;
 
-  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state =
+      GlobalKey<ScaffoldMessengerState>();
   String? authToken;
 
   var pdfFile;
@@ -112,7 +111,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   @override
   void initState() {
-    Constants.mInitialTime = DateTime.now();
     super.initState();
     PreferenceUtil.init();
     _listenForPermissionStatus();
@@ -153,17 +151,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    Constants.fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Record Details Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(Constants.mInitialTime).inSeconds} secs'
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: const Color(fhbColors.bgColorContainer),
@@ -171,7 +158,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
           title: Text(
-            //FU2.5
             widget.data.metadata!.fileName == null
                 ? toBeginningOfSentenceCase(
                     widget.data.metadata!.healthRecordType!.name)!
@@ -542,8 +528,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 await OpenFilex.open(
                   path?.path,
                 ); //FU2.5
-                var pdfController =
-                CommonUtil().onInitPDFViewController();
+                var pdfController = CommonUtil().onInitPDFViewController();
                 final data = OpenPDF(
                     type: PDFLocation.Path,
                     path: path?.path,
@@ -555,8 +540,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           ),
         );
       } else {
-        CommonUtil.downloadFile(fileNetworkUrl, fileTypeCommon)
-            .then((res) async {
+        CommonUtil.downloadFile(fileNetworkUrl, fileTypeCommon).then(
+          (res) async {
             setState(() {
               downloadStatus = true;
             });
@@ -1382,8 +1367,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                           ? Container(child: CommonCircularIndicator())
                           : Expanded(
                               child: Container(
-                                child:
-                                    CommonUtil().showPDFInWidget(pdfFile),
+                                child: CommonUtil().showPDFInWidget(pdfFile),
                               ),
                             )
                       : widget.data.metadata?.sourceName == 'SHEELA'
@@ -1598,14 +1582,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             isAudioDownload = true;
           } else {
             pdfFile = file.path;
-            fileNetworkUrl = audioMediaId.healthRecordUrl??'';
-            fileTypeCommon = audioMediaId.fileType??'';
+            fileNetworkUrl = audioMediaId.healthRecordUrl ?? '';
+            fileTypeCommon = audioMediaId.fileType ?? '';
           }
         });
       });
       return isAudioDownload;
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e.toString());
       return isAudioDownload;
@@ -1682,8 +1666,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           value = pdfFileName;
         }
         return value;
-      } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         return pdfFileName;
       }
@@ -1715,8 +1699,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         type: PDFLocation.Path,
         path: pdfFile,
         title: widget.data.metadata!.fileName);
-    var pdfController =
-    CommonUtil().onInitPDFViewController();
+    var pdfController = CommonUtil().onInitPDFViewController();
     pdfController.data = data;
     Get.to(() => PDFView());
   }

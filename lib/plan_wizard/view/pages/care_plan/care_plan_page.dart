@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
@@ -41,7 +39,6 @@ class _CarePlanPageState extends State<CarePlanPage> {
   ValueNotifier<String?> _selectedItem = ValueNotifier<String?>('Default');
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     Provider.of<PlanWizardViewModel>(context, listen: false)
         .currentPackageProviderCareId = '';
 
@@ -52,12 +49,6 @@ class _CarePlanPageState extends State<CarePlanPage> {
   @override
   void dispose() {
     super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'CarePlanPage Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -98,10 +89,6 @@ class _CarePlanPageState extends State<CarePlanPage> {
         ),
         floatingActionButton: NextButton(
           onPressed: () {
-            var firebase = FirebaseAnalyticsService();
-            firebase.trackEvent("on_next_button_clicked_to_checkoutpage", {
-              "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-            });
             if (carePlanListLength > 0 &&
                 (planListProvider?.currentPackageProviderCareId ?? '')
                     .isEmpty) {

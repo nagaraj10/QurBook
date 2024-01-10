@@ -1,52 +1,54 @@
+// ignore_for_file: public_member_api_docs
+
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 
 class FirebaseAnalyticsService {
-  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
+  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
-
-
-  Future<void> setUserProperties(String name, String value) async {
-    try{
-      await analytics.setUserProperty(name: name, value: value);
-      print("user prop analytics");
-    }catch(e){
-      print(e);
-    }
+  /// Set user properties for analytics tracking.
+  Future<void> setUserProperties({
+    String? name,
+    String? value,
+  }) async {
+    await _analytics.setUserProperty(
+      name: name ?? 'Qurbook',
+      value: value,
+    );
   }
 
-  FirebaseAnalyticsObserver getObserver() {
-    return observer;
-  }
+  /// Get the Firebase Analytics observer for integration with Navigator.
+  FirebaseAnalyticsObserver getObserver() =>
+      FirebaseAnalyticsObserver(analytics: _analytics);
 
+  /// Set a user ID for analytics tracking.
   Future<void> setUserId(String? uId) async {
-    await analytics.setUserId(id: uId);
+    await _analytics.setUserId(id: uId);
   }
 
-  Future<void> trackEvent(
-      String eventName, Map<String, dynamic> parameters) async {
-
-    print('Event : ' + eventName + ', Parameters : ' + parameters.toString());
-    await analytics
-        .logEvent(name: eventName, parameters: parameters)
-        .whenComplete(() => print('logEvent succeeded'));
+  /// Track a custom event with optional parameters.
+  Future<void> trackEvent({
+    String eventName = '',
+    Map<String, dynamic>? parameters,
+  }) async {
+    await _analytics.logEvent(
+      name: eventName,
+      parameters: parameters,
+    );
   }
 
-  Future<void> trackCurrentScreen(
-      String currentScreen, String classOverrides) async {
-    try{
-      await analytics.setCurrentScreen(
-          screenName: currentScreen, screenClassOverride: classOverrides);
-      print("user prop analytics");
-    }catch(e){
-      print("error: "+e.toString());
-    }
-
+  /// Track the current screen viewed by the user.
+  Future<void> trackCurrentScreen({
+    String? currentScreen,
+    String classOverrides = '',
+  }) async {
+    await _analytics.setCurrentScreen(
+      screenName: currentScreen,
+      screenClassOverride: classOverrides,
+    );
   }
 
+  /// Clear all user properties and reset analytics data.
   Future<void> clearUserProperties() async {
-    await analytics.resetAnalyticsData();
+    await _analytics.resetAnalyticsData();
   }
 }

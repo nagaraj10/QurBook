@@ -5,7 +5,6 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -52,7 +51,6 @@ class _MyPlanState extends State<MyPlanList> {
   @override
   void initState() {
     super.initState();
-    mInitialTime = DateTime.now();
     FocusManager.instance.primaryFocus!.unfocus();
     getConfiguration();
     if (widget.fromDashBoard) {
@@ -96,12 +94,7 @@ class _MyPlanState extends State<MyPlanList> {
   @override
   void dispose() {
     FocusManager.instance.primaryFocus!.unfocus();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'MyPlans Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
+
     super.dispose();
   }
 
@@ -116,11 +109,6 @@ class _MyPlanState extends State<MyPlanList> {
           floatingActionButton: addplanbutton
               ? FloatingActionButton.extended(
                   onPressed: () async {
-                    var firebase = FirebaseAnalyticsService();
-                    firebase.trackEvent("on_add_plan_button_click", {
-                      "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN)
-                    });
-
                     // await Get.toNamed(rt_Diseases);
                     await Get.toNamed(rt_PlanWizard)!.then((value) =>
                         FocusManager.instance.primaryFocus!.unfocus());
@@ -203,15 +191,17 @@ class _MyPlanState extends State<MyPlanList> {
           FHBBasicWidget.customShowCase(
               _GotoRegimentKey,
               Constants.GoToRegimentDescription,
-              ElevatedButton(style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                  foregroundColor: Colors.white,
+                  padding: EdgeInsets.all(
+                    10.0.sp,
+                  ),
                 ),
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                foregroundColor: Colors.white,
-                padding: EdgeInsets.all(
-                  10.0.sp,
-                ),),
                 onPressed: () async {
                   Provider.of<RegimentViewModel>(
                     context,
@@ -463,24 +453,28 @@ class _MyPlanState extends State<MyPlanList> {
                                   Align(
                                     child: SizedBoxWithChild(
                                       height: 32.0.h,
-                                      child: ElevatedButton(style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(18),
-                                            side: BorderSide(
-                                                color: planList[i].isexpired ==
-                                                        '1'
-                                                    ? Color(CommonUtil()
-                                                        .getMyPrimaryColor())
-                                                    : Colors.red)),
-                                        backgroundColor: Colors.transparent,
-                                        foregroundColor: planList[i].isexpired == '1'
-                                            ? Color(CommonUtil()
-                                                .getMyPrimaryColor())
-                                            : Colors.red,
-                                        padding: EdgeInsets.all(
-                                          8.0.sp,
-                                        ),),
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(18),
+                                              side: BorderSide(
+                                                  color: planList[i]
+                                                              .isexpired ==
+                                                          '1'
+                                                      ? Color(CommonUtil()
+                                                          .getMyPrimaryColor())
+                                                      : Colors.red)),
+                                          backgroundColor: Colors.transparent,
+                                          foregroundColor:
+                                              planList[i].isexpired == '1'
+                                                  ? Color(CommonUtil()
+                                                      .getMyPrimaryColor())
+                                                  : Colors.red,
+                                          padding: EdgeInsets.all(
+                                            8.0.sp,
+                                          ),
+                                        ),
                                         onPressed: () async {
                                           if (planList[i].isexpired == '1') {
                                             if (planList[i].ispublic == '0') {

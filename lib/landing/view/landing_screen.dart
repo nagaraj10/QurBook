@@ -9,54 +9,52 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/SheelaRemainderPopup.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
-import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
-import '../../common/firestore_services.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
-import 'package:myfhb/src/ui/SheelaAI/Views/SuperMaya.dart';
-import 'package:myfhb/src/utils/lifecycle_state_provider.dart';
-import '../../chat_socket/view/ChatDetail.dart';
 import 'package:provider/provider.dart';
 
-import '../../chat_socket/view/ChatUserList.dart';
-import '../../chat_socket/viewModel/chat_socket_view_model.dart';
-import '../../common/common_circular_indicator.dart';
-import '../../constants/fhb_constants.dart';
-import '../service/landing_service.dart';
-import 'corp_users_welcome_dialog.dart';
-import '../../src/blocs/Category/CategoryListBlock.dart';
-import '../../src/model/user/MyProfileResult.dart';
-import '../../src/utils/dynamic_links.dart';
-import '../../src/utils/timezone/timezone_services.dart';
-import '../../telehealth/features/chat/view/PDFViewerController.dart';
-import '../../user_plans/view_model/user_plans_view_model.dart';
-
+import '../../Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import '../../Qurhome/QurhomeDashboard/Controller/SheelaRemainderPopup.dart';
+import '../../Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import '../../add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../../authentication/view/login_screen.dart';
+import '../../chat_socket/view/ChatDetail.dart';
+import '../../chat_socket/view/ChatUserList.dart';
+import '../../chat_socket/viewModel/chat_socket_view_model.dart';
+import '../../chat_socket/viewModel/getx_chat_view_model.dart';
 import '../../colors/fhb_colors.dart';
 import '../../common/CommonConstants.dart';
-import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../common/SwitchProfile.dart';
+import '../../common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
-import '../../constants/fhb_constants.dart' as Constants;
+import '../../common/firestore_services.dart';
+import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_constants.dart' as constants;
+import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_parameters.dart';
+import '../../constants/variable_constant.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../src/blocs/Category/CategoryListBlock.dart';
 import '../../src/model/GetDeviceSelectionModel.dart';
 import '../../src/model/user/MyProfileModel.dart';
+import '../../src/model/user/MyProfileResult.dart';
 import '../../src/resources/repository/health/HealthReportListForUserRepository.dart';
 import '../../src/ui/MyRecord.dart';
 import '../../src/ui/MyRecordsArguments.dart';
+import '../../src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import '../../src/ui/SheelaAI/Views/SuperMaya.dart';
 import '../../src/utils/colors_utils.dart';
+import '../../src/utils/dynamic_links.dart';
+import '../../src/utils/lifecycle_state_provider.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
+import '../../src/utils/timezone/timezone_services.dart';
 import '../../telehealth/features/appointments/view/appointmentsMain.dart';
 import '../../telehealth/features/chat/view/BadgeIcon.dart';
+import '../../telehealth/features/chat/view/PDFViewerController.dart';
+import '../../user_plans/view_model/user_plans_view_model.dart';
+import '../service/landing_service.dart';
 import '../view_model/landing_view_model.dart';
+import 'corp_users_welcome_dialog.dart';
 import 'landing_arguments.dart';
 import 'widgets/home_widget.dart';
 import 'widgets/navigation_drawer.dart' as NavigationDrawer;
@@ -147,14 +145,10 @@ class _LandingScreenState extends State<LandingScreen> {
   onInit() async {
     try {
       controller.updateNewChatFloatShown(false);
-      mInitialTime = DateTime.now();
-      // dbInitialize();
       userId = PreferenceUtil.getStringValue(KEY_USERID);
-      try {
-        Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
-      } catch (e, stackTrace) {
-        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-      }
+
+      Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
+
       await callImportantsMethod();
       moveToQurhome();
       callGetFamiltMappingCaregiver();
@@ -165,9 +159,6 @@ class _LandingScreenState extends State<LandingScreen> {
       }
       checkIfUserIdSame();
       if (widget.landingArguments?.needFreshLoad ?? true) {
-        // try {
-        //   commonUtil.versionCheck(context);
-        // } catch (e,stackTrace) {}
         profileData = getMyProfile();
         Provider.of<LandingViewModel>(context, listen: false)
             .getQurPlanDashBoard(needNotify: true);
@@ -176,13 +167,6 @@ class _LandingScreenState extends State<LandingScreen> {
             .getQurPlanDashBoard();
       }
       Provider.of<LandingViewModel>(context, listen: false).checkIfUserIdSame();
-      // Future.delayed(const Duration(seconds: 1)).then((_) {
-      //   if (Platform.isIOS) {
-      //     if (PreferenceUtil.isKeyValid(constants.NotificationData)) {
-      //       changeTabToAppointments();
-      //     }
-      //   }
-      // });
 
       CommonUtil().initSocket();
 
@@ -197,54 +181,7 @@ class _LandingScreenState extends State<LandingScreen> {
       sheelBadgeController?.isAllowSheelaLiveReminders = true;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-
-      print(e);
     }
-  }
-
-  /*void initSocket() {
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
-        ?.socket
-        .off(getChatTotalCountOn);
-
-    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket!
-        .emitWithAck(getChatTotalCountEmit, {
-      'userId': userId,
-    }, ack: (countResponseEmit) {
-      if (countResponseEmit != null) {
-        TotalCountModel totalCountModel =
-            TotalCountModel.fromJson(countResponseEmit);
-        if (totalCountModel != null) {
-          Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-              ?.updateChatTotalCount(totalCountModel);
-        }
-      }
-    });
-
-    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        ?.socket!
-        .on(getChatTotalCountOn, (countResponseOn) {
-      if (countResponseOn != null) {
-        TotalCountModel totalCountModelOn =
-            TotalCountModel.fromJson(countResponseOn);
-        if (totalCountModelOn != null) {
-          Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-              ?.updateChatTotalCount(totalCountModelOn);
-        }
-      }
-    });
-  }*/
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Landing Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   changeTabToAppointments() async {

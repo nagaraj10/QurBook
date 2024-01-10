@@ -1,43 +1,37 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/authentication/model/Country.dart';
-import 'package:myfhb/authentication/model/patientlogin_model.dart';
-import 'package:myfhb/widgets/app_primary_button.dart';
-import '../model/patientsignup_model.dart';
+
+import '../../common/CommonUtil.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/variable_constant.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../../src/ui/loader_class.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/app_primary_button.dart';
 import '../constants/constants.dart';
+import '../model/Country.dart';
+import '../model/patientlogin_model.dart';
+import '../model/patientsignup_model.dart';
+import '../view_model/patientauth_view_model.dart';
+import '../widgets/country_code_picker.dart';
 import 'authentication_validator.dart';
 import 'login_screen.dart';
 import 'verifypatient_screen.dart';
-import '../view_model/patientauth_view_model.dart';
-import '../../constants/fhb_constants.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
-import '../widgets/country_code_picker.dart';
-import '../../common/CommonUtil.dart';
-import '../../constants/variable_constant.dart';
-import '../../constants/fhb_constants.dart' as Constants;
-import '../../constants/variable_constant.dart' as variable;
-import '../../src/ui/loader_class.dart';
 
 class PatientSignUpScreen extends StatefulWidget {
-
-  PatientSignUpScreen({
-    this.flag = 0,
-    this.signInValidationModel,
-    this.selDialogCountry,
-    this.mobNo
-  });
-
+  PatientSignUpScreen(
+      {this.flag = 0,
+      this.signInValidationModel,
+      this.selDialogCountry,
+      this.mobNo});
 
   final int flag;
   final SignInValidationModel? signInValidationModel;
   final Country? selDialogCountry;
   final String? mobNo;
-
 
   @override
   _PatientSignUpScreenState createState() => _PatientSignUpScreenState();
@@ -64,7 +58,6 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
 
     authViewModel = AuthViewModel();
@@ -86,17 +79,6 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Signup Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -134,12 +116,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                         if (widget.flag == 1) ...{
                           Text(
                             widget.signInValidationModel?.result != null &&
-                                widget.signInValidationModel?.result
-                                    ?.firstName !=
-                                    null &&
-                                widget.signInValidationModel?.result
-                                    ?.firstName !=
-                                    ''
+                                    widget.signInValidationModel?.result
+                                            ?.firstName !=
+                                        null &&
+                                    widget.signInValidationModel?.result
+                                            ?.firstName !=
+                                        ''
                                 ? 'Hey, ${toBeginningOfSentenceCase((widget.signInValidationModel?.result?.firstName ?? ""))}'
                                 : '',
                             style: TextStyle(
@@ -157,33 +139,32 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                           ),
                         },
                         if (widget.flag == 1) ...{
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            style: TextStyle(
-                              fontSize: 17.0.sp,
-                              color: Colors.black,
-                            ),
-                            children: [
-                              const TextSpan(
-                                text: '$strSignUpYourProvider ',
+                          RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              style: TextStyle(
+                                fontSize: 17.0.sp,
+                                color: Colors.black,
                               ),
-                              TextSpan(
-                                text: '${widget.signInValidationModel?.result
-                                        ?.providerName ?? ''
-                                    } ',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                              children: [
+                                const TextSpan(
+                                  text: '$strSignUpYourProvider ',
                                 ),
-                              ),
-                              TextSpan(
+                                TextSpan(
                                   text:
-                                      '$strSignUpProviderHasInvitedYouto ${CommonUtil.isUSRegion() ? strQurHome : strAPP_NAME }',
+                                      '${widget.signInValidationModel?.result?.providerName ?? ''} ',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                            ],
+                                TextSpan(
+                                  text:
+                                      '$strSignUpProviderHasInvitedYouto ${CommonUtil.isUSRegion() ? strQurHome : strAPP_NAME}',
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(
+                          SizedBox(
                             height: 25.0.h,
                           ),
                         },
@@ -226,13 +207,15 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                     fontSize: 16.0.sp,
                                   ),
                                   controller: firstNameController,
-                                  autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
+                                  autovalidateMode: _autoValidateBool
+                                      ? AutovalidateMode.always
+                                      : AutovalidateMode.disabled,
                                   validator: (value) {
                                     return AuthenticationValidator()
                                         .charValidation(
                                             value!,
                                             patternChar as String,
-                                        strPleaseEnterFirstname);
+                                            strPleaseEnterFirstname);
                                   },
                                   onSaved: (value) {},
                                 ),
@@ -245,7 +228,9 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
                                   ),
-                                  autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
+                                  autovalidateMode: _autoValidateBool
+                                      ? AutovalidateMode.always
+                                      : AutovalidateMode.disabled,
                                   decoration: InputDecoration(
                                     hintText: strLastNameHint,
                                     labelText: strLastNameHint,
@@ -280,9 +265,11 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                   textCapitalization:
                                       TextCapitalization.sentences,
                                   style: TextStyle(
-                                      fontSize: 16.0.sp,
+                                    fontSize: 16.0.sp,
                                   ),
-                                  autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
+                                  autovalidateMode: _autoValidateBool
+                                      ? AutovalidateMode.always
+                                      : AutovalidateMode.disabled,
                                   decoration: InputDecoration(
                                     hintText: strNewPhoneHint,
                                     labelText: strNumberHint,
@@ -338,7 +325,9 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 style: TextStyle(
                                   fontSize: 16.0.sp,
                                 ),
-                                autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
+                                autovalidateMode: _autoValidateBool
+                                    ? AutovalidateMode.always
+                                    : AutovalidateMode.disabled,
                                 decoration: InputDecoration(
                                   hintText: CommonUtil.isUSRegion()
                                       ? strUSEmailHintText
@@ -366,7 +355,9 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 controller: emailController,
                                 validator: (value) {
                                   return CommonUtil.toCheckEmailValidiation(
-                                      value, patternEmail as String, strEmailValidText);
+                                      value,
+                                      patternEmail as String,
+                                      strEmailValidText);
                                 },
                                 onSaved: (value) {},
                               ),
@@ -379,7 +370,9 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 style: TextStyle(
                                   fontSize: 16.0.sp,
                                 ),
-                                autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
+                                autovalidateMode: _autoValidateBool
+                                    ? AutovalidateMode.always
+                                    : AutovalidateMode.disabled,
                                 obscureText: _isHidden,
                                 decoration: InputDecoration(
                                   hintText: strNewPasswordHintTxt,
@@ -411,8 +404,10 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 controller: passwordController,
                                 validator: (value) {
                                   return AuthenticationValidator()
-                                      .passwordValidation(value!,
-                                          patternPassword as String, strPassCantEmpty);
+                                      .passwordValidation(
+                                          value!,
+                                          patternPassword as String,
+                                          strPassCantEmpty);
                                 },
                               ),
                             ),
@@ -420,11 +415,13 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                             _signupTextFields(
                               TextFormField(
                                 textCapitalization:
-                                TextCapitalization.sentences,
+                                    TextCapitalization.sentences,
                                 style: TextStyle(
                                   fontSize: 16.0.sp,
                                 ),
-                                autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
+                                autovalidateMode: _autoValidateBool
+                                    ? AutovalidateMode.always
+                                    : AutovalidateMode.disabled,
                                 obscureText: _isConfirmPwdHidden,
                                 decoration: InputDecoration(
                                   hintText: strConfirmationPassword,
@@ -504,22 +501,23 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   }
 
   Widget _saveUser() => Align(
-      child: AppPrimaryButton(
-        onTap: (){
-          AuthenticationValidator().checkNetwork().then((intenet) {
-            if (intenet != null && intenet) {
-              checkedValue
-                  ? null
-                  : FlutterToast().getToast(
-                  'Please accept terms and conditions', Colors.black54);
-              _savePatientDetails();
-            } else {
-              toast.getToast(strNetworkIssue, Colors.red);
-            }
-          });
-        }, text: strSignup,
-      ),
-    );
+        child: AppPrimaryButton(
+          onTap: () {
+            AuthenticationValidator().checkNetwork().then((intenet) {
+              if (intenet != null && intenet) {
+                checkedValue
+                    ? null
+                    : FlutterToast().getToast(
+                        'Please accept terms and conditions', Colors.black54);
+                _savePatientDetails();
+              } else {
+                toast.getToast(strNetworkIssue, Colors.red);
+              }
+            });
+          },
+          text: strSignup,
+        ),
+      );
 
   _savePatientDetails() async {
     FocusScope.of(context).unfocus();
@@ -637,7 +635,11 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
               InkWell(
                 onTap: () {
                   CommonUtil().openWebViewNew(
-                      Constants.terms_of_service, CommonUtil.isUSRegion()?variable.file_terms_us:variable.file_terms, true);
+                      Constants.terms_of_service,
+                      CommonUtil.isUSRegion()
+                          ? variable.file_terms_us
+                          : variable.file_terms,
+                      true);
                 },
                 child: Text(
                   'T&C',
@@ -650,7 +652,11 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
               InkWell(
                 onTap: () {
                   CommonUtil().openWebViewNew(
-                      Constants.privacy_policy, CommonUtil.isUSRegion()?variable.file_privacy_us:variable.file_privacy, true);
+                      Constants.privacy_policy,
+                      CommonUtil.isUSRegion()
+                          ? variable.file_privacy_us
+                          : variable.file_privacy,
+                      true);
                 },
                 child: Text(
                   'Privacy Policy ',

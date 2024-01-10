@@ -1,21 +1,18 @@
-
 import 'dart:async';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'package:flutter_geocoder/geocoder.dart';
 
-import '../../common/CommonUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:geocoder/geocoder.dart';  FU2.5
+import 'package:flutter_geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import '../../add_providers/models/add_providers_arguments.dart';
 import '../../common/CommonConstants.dart';
-import '../models/confirm_location_arguments.dart';
-import '../../constants/fhb_constants.dart';
+import '../../common/CommonUtil.dart';
 import '../../constants/router_variable.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
+import '../models/confirm_location_arguments.dart';
 
 class ConfirmLocationScreen extends StatefulWidget {
   ConfirmLocationArguments? arguments;
@@ -44,37 +41,25 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
   LatLng? lastMapPosition;
   LatLng center = LatLng(0, 0);
 
- // Address address;  FU2.5
- var address;
+  // Address address;  FU2.5
+  var address;
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
 
     searchController.text = widget.arguments!.place!.description!;
 
-    center = LatLng(
-        widget.arguments!.placeDetail!.lat!, widget.arguments!.placeDetail!.lng!);
+    center = LatLng(widget.arguments!.placeDetail!.lat!,
+        widget.arguments!.placeDetail!.lng!);
     lastMapPosition = center;
 
     kGooglePlex = CameraPosition(
-      target: LatLng(
-          widget.arguments!.placeDetail!.lat!, widget.arguments!.placeDetail!.lng!),
+      target: LatLng(widget.arguments!.placeDetail!.lat!,
+          widget.arguments!.placeDetail!.lng!),
       zoom: 12,
     );
     addMarker();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Confirm Location Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override

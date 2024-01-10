@@ -1,64 +1,58 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/BadgesBlue.dart';
 import 'package:gmiwidgetspackage/widgets/FlutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/IconButtonWidget.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
-import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/constants/fhb_query.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/utils/language/language_utils.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
-import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/my_providers/models/Doctors.dart';
-import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
-import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/MyProfileResult.dart';
-import 'package:myfhb/src/model/user/UserAddressCollection.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/src/ui/MyRecordsArguments.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/styles/styles.dart' as fhbStyles;
-import 'package:myfhb/telehealth/features/MyProvider/model/DoctorsFromHospitalModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/appointments/AppointmentNotificationPayment.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/appointments/CreateAppointmentModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/associaterecords/associate_success_response.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
-import 'package:myfhb/telehealth/features/MyProvider/viewModel/CreateAppointmentViewModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
-import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';  //FU2.5
-import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart'; //FU2.5
 
-import 'TelehealthProviders.dart';
+import '../../../../add_family_user_info/models/add_family_user_info_arguments.dart';
+import '../../../../add_family_user_info/services/add_family_user_info_repository.dart';
+import '../../../../common/CommonConstants.dart';
+import '../../../../common/FHBBasicWidget.dart';
+import '../../../../common/PreferenceUtil.dart';
+import '../../../../common/common_circular_indicator.dart';
 import '../../../../common/errors_widget.dart';
+import '../../../../constants/fhb_constants.dart' as Constants;
+import '../../../../constants/fhb_constants.dart';
+import '../../../../constants/fhb_parameters.dart';
+import '../../../../constants/fhb_parameters.dart' as parameters;
+import '../../../../constants/fhb_query.dart';
+import '../../../../constants/router_variable.dart' as router;
+import '../../../../constants/variable_constant.dart';
 import '../../../../landing/view/landing_arguments.dart';
+import '../../../../my_family/bloc/FamilyListBloc.dart';
+import '../../../../my_family/models/FamilyMembersRes.dart';
+import '../../../../my_providers/models/Doctors.dart';
+import '../../../../my_providers/models/GetDoctorsByIdModel.dart';
+import '../../../../src/blocs/Category/CategoryListBlock.dart';
+import '../../../../src/model/Category/catergory_result.dart';
+import '../../../../src/model/home_screen_arguments.dart';
+import '../../../../src/model/user/MyProfileModel.dart';
+import '../../../../src/model/user/UserAddressCollection.dart';
+import '../../../../src/resources/network/ApiResponse.dart';
+import '../../../../src/ui/MyRecord.dart';
+import '../../../../src/ui/MyRecordsArguments.dart';
+import '../../../../src/utils/FHBUtils.dart';
+import '../../../../src/utils/language/language_utils.dart';
+import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../../styles/styles.dart' as fhbStyles;
+import '../../../../widgets/GradientAppBar.dart';
+import '../../Payment/PaymentPage.dart';
+import '../../appointments/model/fetchAppointments/past.dart';
+import '../model/DoctorsFromHospitalModel.dart';
+import '../model/appointments/AppointmentNotificationPayment.dart';
+import '../model/appointments/CreateAppointmentModel.dart';
+import '../model/associaterecords/associate_success_response.dart';
+import '../model/getAvailableSlots/SlotSessionsModel.dart';
+import '../model/healthOrganization/HealthOrganizationResult.dart';
+import '../viewModel/CreateAppointmentViewModel.dart';
+import '../viewModel/MyProviderViewModel.dart';
+import 'CommonWidgets.dart';
+import 'TelehealthProviders.dart';
 
 class BookingConfirmation extends StatefulWidget {
   final followUpFee;
@@ -127,11 +121,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   FamilyMembers? familyData = FamilyMembers();
 
   List<SharedByUsers> _familyNames = [];
-
-  /* List<String> recordIds = List();
-  List<String> notesId = List();
-  List<String> voiceIds = List();*/
-
   List<String> healthRecords = [];
 
   int recordIdCount = 0;
@@ -164,7 +153,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
 
-  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+      GlobalKey<ScaffoldMessengerState>();
 
   bool? checkedValue = false;
 
@@ -183,7 +173,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   Doctor? doctorFromNotification;
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     providerViewModel = MyProviderViewModel();
     createAppointMentViewModel = CreateAppointMentViewModel();
     createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
@@ -205,27 +194,15 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           ? getFollowUpFee()
           : widget.isFromHospital!
               ? getFeesFromHospital(
-                  widget.resultFromHospitalList![widget.doctorListIndex!], false)
+                  widget.resultFromHospitalList![widget.doctorListIndex!],
+                  false)
               : getFees(widget.healthOrganizationResult![widget.i!], false));
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Booking Confirmation Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
-  }
-
   addHealthRecords() {
-    //healthRecords.addAll(CommonUtil.recordIds);
     healthRecords.addAll(CommonUtil.notesId!);
     healthRecords.addAll(CommonUtil.voiceIds!);
   }
@@ -243,7 +220,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
       familyMembersModel = familyMembersList;
 
-      for (int i = 0; i < familyMembersModel.result!.sharedByUsers!.length; i++) {
+      for (int i = 0;
+          i < familyMembersModel.result!.sharedByUsers!.length;
+          i++) {
         sharedbyme.add(familyMembersModel.result!.sharedByUsers![i]);
       }
     });
@@ -257,23 +236,25 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           .sessionData![widget.rowPosition!]
           .slots![widget.itemPosition!]
           .startTime!);
-      apiStartTime = widget
-          .sessionData![widget.rowPosition!].slots![widget.itemPosition!].startTime;
-      apiEndTime = widget
-          .sessionData![widget.rowPosition!].slots![widget.itemPosition!].endTime;
-      slotNumber = widget
-          .sessionData![widget.rowPosition!].slots![widget.itemPosition!].slotNumber
+      apiStartTime = widget.sessionData![widget.rowPosition!]
+          .slots![widget.itemPosition!].startTime;
+      apiEndTime = widget.sessionData![widget.rowPosition!]
+          .slots![widget.itemPosition!].endTime;
+      slotNumber = widget.sessionData![widget.rowPosition!]
+          .slots![widget.itemPosition!].slotNumber
           .toString();
-      doctorSessionId = widget.sessionData![widget.rowPosition!].doctorSessionId;
+      doctorSessionId =
+          widget.sessionData![widget.rowPosition!].doctorSessionId;
       scheduleDate = CommonUtil.dateConversionToApiFormat(widget.selectedDate!);
       isResident = widget.isFromHospital!
-          ? widget
-              .resultFromHospitalList![widget.doctorListIndex!].doctor!.isResident
+          ? widget.resultFromHospitalList![widget.doctorListIndex!].doctor!
+              .isResident
           : widget.isFromFollowReschedule!
               ? widget.docsReschedule![widget.doctorListPos!]!.isResident
               : widget.docs![widget.doctorListPos!]!.isResident;
       doctorId = widget.isFromHospital!
-          ? widget.resultFromHospitalList![widget.doctorListIndex!].doctor!.user!.id
+          ? widget
+              .resultFromHospitalList![widget.doctorListIndex!].doctor!.user!.id
           : widget.isFromFollowReschedule!
               ? widget.docsReschedule![widget.doctorListPos!]!.user!.id
               : widget.docs![widget.doctorListPos!]!.user!.id;
@@ -318,7 +299,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       }
       selectedId =
           appointmentNotificationPayment.result?.appointment?.bookedFor != null
-              ? appointmentNotificationPayment.result?.appointment?.bookedFor!.id
+              ? appointmentNotificationPayment
+                  .result?.appointment?.bookedFor!.id
               : "";
       try {
         var firstName = appointmentNotificationPayment
@@ -338,10 +320,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                     null
                 ? firstName! + " " + lastName!
                 : "";
-      } catch (e,stackTrace) {
+      } catch (e, stackTrace) {
         patientName = "";
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
 
       doctorName = appointmentNotificationPayment.result?.doctor?.user != null
@@ -358,10 +339,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       appointmentNotificationPayment
                               .result?.doctor?.user!.lastName !=
                           null
-                  ? (appointmentNotificationPayment.result!.doctor!.user
-                          !.firstName!.capitalizeFirstofEach +
-                      appointmentNotificationPayment
-                          .result!.doctor!.user!.lastName!.capitalizeFirstofEach)
+                  ? (appointmentNotificationPayment.result!.doctor!.user!
+                          .firstName!.capitalizeFirstofEach +
+                      appointmentNotificationPayment.result!.doctor!.user!
+                          .lastName!.capitalizeFirstofEach)
                   : '')
           : '';
 
@@ -385,17 +366,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   height: 30,
                 ),
               );
-              break;
 
             case Status.ERROR:
               return FHBBasicWidget.getRefreshContainerButton(
                   snapshot.data!.message, () {
                 setState(() {});
               });
-              break;
 
             case Status.COMPLETED:
-              //_healthReportListForUserBlock = null;
               print(snapshot.data.toString());
               if (snapshot.data!.data!.result != null) {
                 familyData = snapshot.data!.data;
@@ -404,7 +382,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               return dropDownButton(snapshot.data!.data!.result != null
                   ? snapshot.data!.data!.result!.sharedByUsers
                   : null);
-              break;
           }
         } else {
           return Container(height: 0, color: Colors.white);
@@ -423,9 +400,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               ' ' +
               myProfile.result!.lastName!.capitalizeFirstofEach
           : '';
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     if (sharedByMeList == null) {
@@ -485,9 +461,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                             user.child == null
                                 ? 'Self'
                                 : ((user.child?.firstName ?? '') +
-                                            ' ' +
-                                            (user.child?.lastName ?? ''))
-                                        .capitalizeFirstofEach,
+                                        ' ' +
+                                        (user.child?.lastName ?? ''))
+                                    .capitalizeFirstofEach,
                             style: TextStyle(
                               fontSize: 14.0.sp,
                             )),
@@ -585,7 +561,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                     TextWidget(
                       text: widget.selectedDate != null
                           ? commonUtil
-                              .dateConversionToDayMonthYear(widget.selectedDate!)
+                              .dateConversionToDayMonthYear(
+                                  widget.selectedDate!)
                               .toString()
                           : '',
                       fontsize: 14.0.sp,
@@ -603,8 +580,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   width: 30,
                   height: 30,
                   decoration: BoxDecoration(
-                    color: Color(
-                        CommonUtil().getMyPrimaryColor()), // border color
+                    color:
+                        Color(CommonUtil().getMyPrimaryColor()), // border color
                     shape: BoxShape.circle,
                   ),
                   child: Padding(
@@ -636,7 +613,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   @override
   Widget build(BuildContext context) {
-    pr = ProgressDialog(context, type: ProgressDialogType.normal);//  FU2.5
+    pr = ProgressDialog(context, type: ProgressDialogType.normal); //  FU2.5
     pr.style(
         message: checkSlots,
         borderRadius: 6.0,
@@ -683,7 +660,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               if (widget.isFromPaymentNotification) {
                 Get.offAllNamed(router.rt_notification_main);
               } else {
-                if (widget.isFromPaymentNotification == false) widget.refresh!();
+                if (widget.isFromPaymentNotification == false)
+                  widget.refresh!();
                 Navigator.pop(context);
               }
             },
@@ -712,10 +690,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           discount = CommonUtil()
               .doubleWithoutDecimalToInt(double.parse(discount))
               .toString();
-        } catch (e,stackTrace) {
+        } catch (e, stackTrace) {
           widget = SizedBox.shrink();
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         }
         widget = Container(
           child: Center(
@@ -818,8 +795,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                   SizedBoxWithChild(
                                     width: 90,
                                     height: 40,
-                                    child: ElevatedButton(style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(12.0),
                                             side: BorderSide(
@@ -832,7 +810,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                       ),
                                       onPressed: () {
                                         if (widget.isFromPaymentNotification) {
-                                          Get.offNamed(router.rt_notification_main);
+                                          Get.offNamed(
+                                              router.rt_notification_main);
                                         } else {
                                           Navigator.pop(context);
                                         }
@@ -855,8 +834,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                                 color: Color(CommonUtil()
                                                     .getMyPrimaryColor()))),
                                         backgroundColor: Colors.transparent,
-                                        foregroundColor: Color(CommonUtil()
-                                            .getMyPrimaryColor()),
+                                        foregroundColor: Color(
+                                            CommonUtil().getMyPrimaryColor()),
                                         padding: EdgeInsets.all(8.0),
                                       ),
                                       onPressed: () {
@@ -1039,11 +1018,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           isResidentDoctorMembership: isResidentDoctorMembership,
         );
       }
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       pr.hide();
       toast.getToast(someWentWrong, Colors.red);
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -1225,8 +1203,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                               .user!
                               .profilePicThumbnailUrl
                           : widget.isFromFollowReschedule!
-                              ? widget.docsReschedule![widget.doctorListPos!]!.user!
-                                  .profilePicThumbnailUrl
+                              ? widget.docsReschedule![widget.doctorListPos!]!
+                                  .user!.profilePicThumbnailUrl
                               : widget.docs![widget.doctorListPos!]!.user!
                                   .profilePicThumbnailUrl),
             ),
@@ -1243,7 +1221,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       status: '${status}')
                   : widget.isFromHospital!
                       ? commonWidgets.getDoctorStatusWidgetNewForHos(
-                          widget.resultFromHospitalList![widget.doctorListIndex!]
+                          widget
+                              .resultFromHospitalList![widget.doctorListIndex!]
                               .doctor,
                           widget.i)
                       : widget.isFromFollowReschedule!
@@ -1278,13 +1257,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                           widget.doctorListIndex!]
                                       .doctor!
                                       .user)
-                                  : commonWidgets.setDoctorname(widget
-                                          .isFromFollowReschedule!
-                                      ? widget
-                                          .docsReschedule![widget.doctorListPos!]!
-                                          .user
-                                      : widget
-                                          .docs![widget.doctorListPos!]!.user)),
+                                  : commonWidgets.setDoctorname(
+                                      widget.isFromFollowReschedule!
+                                          ? widget
+                                              .docsReschedule![
+                                                  widget.doctorListPos!]!
+                                              .user
+                                          : widget.docs![widget.doctorListPos!]!
+                                              .user)),
 
                       //commonWidgets.getSizeBoxWidth(10.0),
                       commonWidgets.getIcon(
@@ -1357,11 +1337,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                         ? commonWidgets.getDoctorSpecialityText(speciality!)
                         : widget.isFromHospital!
                             ? commonWidgets.getDoctoSpecialistOnlyForHos(widget
-                                .resultFromHospitalList![widget.doctorListIndex!]
+                                .resultFromHospitalList![
+                                    widget.doctorListIndex!]
                                 .doctor!)
                             : widget.isFromFollowReschedule!
                                 ? commonWidgets.getDoctoSpecialistForReschedule(
-                                    widget.docsReschedule![widget.doctorListPos!]!)
+                                    widget.docsReschedule![
+                                        widget.doctorListPos!]!)
                                 : commonWidgets.getDoctoSpecialistOnly(
                                     widget.docs![widget.doctorListPos!]!)),
               ]),
@@ -1457,7 +1439,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                                   widget.doctorListPos!]!
                                               .isMciVerified!,
                                       'Not Verified')
-                              : widget.docs![widget.doctorListPos!]!.isMciVerified!
+                              : widget.docs![widget.doctorListPos!]!
+                                      .isMciVerified!
                                   ? commonWidgets.getMCVerified(
                                       widget.isFromHospital!
                                           ? widget
@@ -1493,8 +1476,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       _categoryListBlock!.getCategoryLists().then((value) {
         categoryDataList = value!.result;
 
-        filteredCategoryData =
-            CommonUtil().fliterCategories(categoryDataList!);
+        filteredCategoryData = CommonUtil().fliterCategories(categoryDataList!);
 
         //filteredCategoryData.add(categoryDataObjClone);
         return filteredCategoryData;
@@ -1674,8 +1656,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 double.parse(discountPercent!),
               )
               .toString();
-        } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
           return;
         }
@@ -1807,22 +1789,24 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 myProfile!.result!.dateOfBirth!.isNotEmpty) {
               if (myProfile!.result!.additionalInfo != null) {
                 if ((myProfile!.result!.additionalInfo!.height != null &&
-                        myProfile!.result!.additionalInfo!.height!.isNotEmpty) ||
+                        myProfile!
+                            .result!.additionalInfo!.height!.isNotEmpty) ||
                     myProfile!.result!.additionalInfo!.heightObj != null) {
                   if (myProfile!.result!.additionalInfo!.weight != null &&
                       myProfile!.result!.additionalInfo!.weight!.isNotEmpty) {
                     if (myProfile!.result!.userAddressCollection3 != null) {
-                      if (myProfile!.result!.userAddressCollection3!.length > 0) {
+                      if (myProfile!.result!.userAddressCollection3!.length >
+                          0) {
                         if (myProfile!.result!.userAddressCollection3![0]
                                     .addressLine1 !=
                                 null &&
                             myProfile!.result!.userAddressCollection3![0]
                                 .addressLine1!.isNotEmpty &&
-                            myProfile!
-                                    .result!.userAddressCollection3![0].pincode !=
+                            myProfile!.result!.userAddressCollection3![0]
+                                    .pincode !=
                                 null &&
-                            myProfile!.result!.userAddressCollection3![0].pincode!
-                                .isNotEmpty) {
+                            myProfile!.result!.userAddressCollection3![0]
+                                .pincode!.isNotEmpty) {
                           if (myProfile!.result!.userAddressCollection3![0]
                                       .addressLine1 !=
                                   null &&
@@ -1977,8 +1961,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 .doubleWithoutDecimalToInt(double.parse(price.toString()))
                 .toStringAsFixed(2)
                 .toString();
-      } catch (e,stackTrace) {
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         return price.toString();
       }
@@ -2258,8 +2242,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                           side: BorderSide(
-                              color:
-                                  Color(CommonUtil().getMyPrimaryColor()))),
+                              color: Color(CommonUtil().getMyPrimaryColor()))),
                       backgroundColor: Colors.transparent,
                       foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
                       padding: EdgeInsets.all(8.0),
@@ -2283,8 +2266,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                           side: BorderSide(
-                              color:
-                                  Color(CommonUtil().getMyPrimaryColor()))),
+                              color: Color(CommonUtil().getMyPrimaryColor()))),
                       backgroundColor: Colors.transparent,
                       foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
                       padding: EdgeInsets.all(8.0),

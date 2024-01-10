@@ -1,48 +1,46 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/model/location_data_model.dart';
-import 'package:myfhb/add_providers/bloc/update_providers_bloc.dart';
-import 'package:myfhb/authentication/model/Country.dart';
-import 'package:myfhb/authentication/widgets/country_code_picker.dart';
-import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_family/screens/FamilyListView.dart';
-import 'package:myfhb/search_providers/models/CityListModel.dart'
-    as cityListModel;
-import 'package:myfhb/search_providers/services/hospital_list_repository.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
+
+import '../../Qurhome/QurhomeDashboard/model/location_data_model.dart';
+import '../../add_providers/bloc/update_providers_bloc.dart';
 import '../../add_providers/models/add_providers_arguments.dart';
+import '../../authentication/model/Country.dart';
+import '../../authentication/widgets/country_code_picker.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
+import '../../common/common_circular_indicator.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
+import '../../my_family/bloc/FamilyListBloc.dart';
+import '../../my_family/models/FamilyMembersRes.dart';
+import '../../my_family/screens/FamilyListView.dart';
+import '../../src/blocs/health/HealthReportListForUserBlock.dart';
+import '../../src/model/user/MyProfileModel.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../../src/utils/colors_utils.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/GradientAppBar.dart';
+import '../bloc/doctors_list_block.dart';
+import '../bloc/hospital_list_block.dart';
 import '../bloc/labs_list_block.dart';
+import '../models/CityListModel.dart' as cityListModel;
 import '../models/doctor_list_response_new.dart';
 import '../models/hospital_list_response_new.dart';
 import '../models/labs_list_response_new.dart';
 import '../models/search_arguments.dart';
 import '../services/doctors_list_repository.dart';
-import '../../src/blocs/health/HealthReportListForUserBlock.dart';
-import '../../src/resources/network/ApiResponse.dart';
-import '../../src/utils/colors_utils.dart';
-import '../../widgets/GradientAppBar.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-
-import '../bloc/doctors_list_block.dart';
-import '../bloc/hospital_list_block.dart';
+import '../services/hospital_list_repository.dart';
 
 export '../models/hospital_list_response.dart';
 
@@ -102,7 +100,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   DoctorsListRepository doctorsListRepository = DoctorsListRepository();
   HospitalListRepository hospitalListRepository = HospitalListRepository();
 
-  //var _selected = Country.IN;
   Country _selectedDialogCountry = Country.fromCode(CommonUtil.REGION_CODE);
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
@@ -122,7 +119,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   @override
   void initState() {
     try {
-      mInitialTime = DateTime.now();
       super.initState();
       USERID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       switchedUserId = USERID;
@@ -160,20 +156,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           (_) => _refreshIndicatorKey.currentState?.show());
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-
-      //print(e);
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Search List Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -1856,11 +1839,12 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 bgColor: Colors.transparent,
                 isSelected: true,
                 onPress: () {
-                    Navigator.of(context).pop();
-                    teleHealthAlertShown = true;
-                    _addBtnTappedProvider(data);
-                  },
-                  title: 'Ok',)
+                  Navigator.of(context).pop();
+                  teleHealthAlertShown = true;
+                  _addBtnTappedProvider(data);
+                },
+                title: 'Ok',
+              )
             ],
           );
         });

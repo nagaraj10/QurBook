@@ -1,21 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/src/resources/network/api_services.dart';
 
 import '../common/CommonUtil.dart';
+import '../common/PreferenceUtil.dart';
 import '../constants/HeaderRequest.dart';
-import '../constants/variable_constant.dart';
-import 'ReminderModel.dart';
-import '../src/utils/FHBUtils.dart';
-import 'package:myfhb/src/resources/network/api_services.dart';
+import '../constants/fhb_constants.dart';
 import '../constants/fhb_constants.dart' as Constants;
+import '../constants/variable_constant.dart';
+import '../src/resources/network/api_services.dart';
+import '../src/utils/FHBUtils.dart';
+import 'ReminderModel.dart';
 
 class QurPlanReminders {
   static const reminderLocalFile = 'notificationList.json';
 
-  static getTheRemindersFromAPI({bool isSnooze = false, Reminder? snoozeReminderData}) async {
+  static getTheRemindersFromAPI(
+      {bool isSnooze = false, Reminder? snoozeReminderData}) async {
     final headerRequest = HeaderRequest();
     var headers = await headerRequest.getRequestHeadersAuthContents();
     var now = DateTime.now();
@@ -81,7 +81,7 @@ class QurPlanReminders {
           reminders.add(snoozeReminderData ?? Reminder());
         }
       }
-      await updateReminderswithLocal(reminders,isSnooze: isSnooze);
+      await updateReminderswithLocal(reminders, isSnooze: isSnooze);
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       print(e.toString());

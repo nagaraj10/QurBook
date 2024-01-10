@@ -1,27 +1,24 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/landing/service/landing_service.dart';
-import 'package:myfhb/my_providers/models/Doctors.dart';
-import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
-import 'package:myfhb/styles/styles.dart' as fhbStyles;
-import 'package:myfhb/telehealth/features/MyProvider/model/DoctorsFromHospitalModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/AvailableTimeSlotsModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotsResultModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/GetTimeSlots.dart';
-import 'package:myfhb/telehealth/features/MyProvider/viewModel/SlotsAvailabilityViewModel.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
+
+import '../../../../common/CommonUtil.dart';
+import '../../../../common/PreferenceUtil.dart';
+import '../../../../common/common_circular_indicator.dart';
+import '../../../../common/errors_widget.dart';
+import '../../../../constants/fhb_parameters.dart';
+import '../../../../landing/service/landing_service.dart';
+import '../../../../my_providers/models/Doctors.dart';
+import '../../../../my_providers/models/GetDoctorsByIdModel.dart';
+import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../../styles/styles.dart' as fhbStyles;
+import '../../appointments/model/fetchAppointments/past.dart';
+import '../model/DoctorsFromHospitalModel.dart';
+import '../model/getAvailableSlots/AvailableTimeSlotsModel.dart';
+import '../model/healthOrganization/HealthOrganizationResult.dart';
+import '../viewModel/SlotsAvailabilityViewModel.dart';
+import 'CommonWidgets.dart';
+import 'GetTimeSlots.dart';
 
 class DoctorSessionTimeSlot extends StatefulWidget {
   final String? doctorId;
@@ -87,33 +84,19 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
     getSelectedValue();
     updateMembershipStatus();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(
-      eveName: 'qurbook_screen_event',
-      eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'pageName': 'Doctor Session Time Screen',
-        'screenSessionTime':
-            '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-      },
-    );
   }
 
   getSelectedValue() {
     DateTime sValue;
     if (widget.doctorsData != null) {
       if (widget.doctorsData!.plannedFollowupDate != null) {
-        int scrollDays = DateTime.parse(widget.doctorsData!.plannedFollowupDate!)
-            .difference(DateTime.now())
-            .inDays;
+        int scrollDays =
+            DateTime.parse(widget.doctorsData!.plannedFollowupDate!)
+                .difference(DateTime.now())
+                .inDays;
         if (scrollDays >= 0) {
           sValue = DateTime.parse(widget.doctorsData!.plannedFollowupDate!);
         } else {
@@ -193,9 +176,10 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
         });
         return widget.onUserChangedDate;
       } else if (widget.doctorsData!.plannedFollowupDate != null) {
-        int scrollDays = DateTime.parse(widget.doctorsData!.plannedFollowupDate!)
-            .difference(DateTime.now())
-            .inDays;
+        int scrollDays =
+            DateTime.parse(widget.doctorsData!.plannedFollowupDate!)
+                .difference(DateTime.now())
+                .inDays;
         if (scrollDays >= 0) {
           return DateTime.parse(widget.doctorsData!.plannedFollowupDate!);
         } else {
@@ -256,7 +240,8 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                         snapshot.data!.result!.sessions != null &&
                         snapshot.data!.result!.sessions != null
                     ? snapshot.data!.result!.sessions![0].slots != null &&
-                            snapshot.data!.result!.sessions![0].slots!.isNotEmpty
+                            snapshot
+                                .data!.result!.sessions![0].slots!.isNotEmpty
                         ? Container(
                             margin: EdgeInsets.only(left: 5, top: 12),
                             child: GetTimeSlots(

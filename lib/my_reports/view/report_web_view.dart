@@ -1,4 +1,3 @@
-
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -10,23 +9,24 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+import '../../common/CommonUtil.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_parameters.dart';
+import '../../widgets/GradientAppBar.dart';
 
 class ReportWebView extends StatefulWidget {
   final String? embededUrl;
   final String? reportId;
   final String? id;
 
-  ReportWebView({Key? key,
-    required this.embededUrl,
-    required this.reportId,
-    required this.id})
+  ReportWebView(
+      {Key? key,
+      required this.embededUrl,
+      required this.reportId,
+      required this.id})
       : super(key: key);
 
   @override
@@ -41,31 +41,16 @@ class _ReportWebView extends State<ReportWebView> {
   late String _power_bi_url;
 
   final Completer<WebViewController> _controller =
-  Completer<WebViewController>();
+      Completer<WebViewController>();
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     embededUrl = widget.embededUrl;
     reportId = widget.reportId;
     id = widget.id;
 
     authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     _power_bi_url = CommonUtil.POWER_BI_URL;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Payment Screen',
-      'screenSessionTime':
-      '${DateTime
-          .now()
-          .difference(mInitialTime)
-          .inSeconds} secs'
-    });
   }
 
   @override
@@ -80,20 +65,11 @@ class _ReportWebView extends State<ReportWebView> {
   }
 
   Widget androidWebview() {
-    var height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    var height = MediaQuery.of(context).size.height;
     return SingleChildScrollView(
       child: Container(
-        width: MediaQuery
-            .of(context)
-            .size
-            .width,
-        height: MediaQuery
-            .of(context)
-            .size
-            .height + 200,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height + 200,
         child: InAppWebView(
           initialUrlRequest: URLRequest(
             url: Uri.parse(_power_bi_url),
@@ -110,7 +86,7 @@ class _ReportWebView extends State<ReportWebView> {
           onLoadStop: (InAppWebViewController controller, Uri? url) {
             controller.evaluateJavascript(
                 source:
-                'onHTMLLoad("$id","$reportId","$embededUrl","$authToken","$height")');
+                    'onHTMLLoad("$id","$reportId","$embededUrl","$authToken","$height")');
             controller.clearCache();
           },
           shouldOverrideUrlLoading:

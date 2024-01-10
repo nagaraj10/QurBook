@@ -1,64 +1,65 @@
 import 'dart:convert';
-import 'package:get/get.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
-import '../../common/firestore_services.dart';
-import 'package:myfhb/landing/view_model/landing_view_model.dart';
-import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonDialogBox.dart';
-import 'package:myfhb/src/utils/language/language_utils.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/SwitchProfile.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/global_search/bloc/GlobalSearchBloc.dart';
-import 'package:myfhb/global_search/model/Data.dart';
-import 'package:myfhb/global_search/model/GlobalSearch.dart';
-import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
-import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
-import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Category/CategoryData.dart';
-import 'package:myfhb/src/model/Category/catergory_data_list.dart';
-import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
-import 'package:myfhb/src/model/Media/MediaData.dart';
-import 'package:myfhb/src/model/Media/media_data_list.dart';
-import 'package:myfhb/src/model/Media/media_result.dart';
-import 'package:myfhb/src/model/TabModel.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/ui/MyRecordsArguments.dart';
-import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
-import 'package:myfhb/src/ui/health/BillsList.dart';
-import 'package:myfhb/src/ui/health/DeviceListScreen.dart';
-import 'package:myfhb/src/ui/health/HealthReportListScreen.dart';
-import 'package:myfhb/src/ui/health/HospitalDocuments.dart';
-import 'package:myfhb/src/ui/health/IDDocsList.dart';
-import 'package:myfhb/src/ui/health/LabReportListScreen.dart';
-import 'package:myfhb/src/ui/health/MedicalReportListScreen.dart';
-import 'package:myfhb/src/ui/health/NotesScreen.dart';
-import 'package:myfhb/src/ui/health/OtherDocsList.dart';
-import 'package:myfhb/src/ui/health/VoiceRecordList.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 
+import '../../Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import '../../common/CommonConstants.dart';
+import '../../common/CommonDialogBox.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/FHBBasicWidget.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../common/SwitchProfile.dart';
+import '../../common/common_circular_indicator.dart';
+import '../../common/firestore_services.dart';
 import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart' as variable;
+import '../../global_search/bloc/GlobalSearchBloc.dart';
+import '../../global_search/model/Data.dart';
+import '../../global_search/model/GlobalSearch.dart';
+import '../../landing/view_model/landing_view_model.dart';
+import '../../my_family/bloc/FamilyListBloc.dart';
+import '../../widgets/GradientAppBar.dart';
+import '../blocs/Category/CategoryListBlock.dart';
+import '../blocs/Media/MediaTypeBlock.dart';
+import '../blocs/User/MyProfileBloc.dart';
+import '../blocs/health/HealthReportListForUserBlock.dart';
+import '../model/Category/CategoryData.dart';
+import '../model/Category/catergory_data_list.dart';
+import '../model/Category/catergory_result.dart';
+import '../model/Health/asgard/health_record_collection.dart';
+import '../model/Health/asgard/health_record_list.dart';
+import '../model/Media/MediaData.dart';
+import '../model/Media/media_data_list.dart';
+import '../model/Media/media_result.dart';
+import '../model/TabModel.dart';
+import '../resources/network/ApiResponse.dart';
+import '../utils/language/language_utils.dart';
+import '../utils/screenutils/size_extensions.dart';
+import 'MyRecordsArguments.dart';
+import 'audio/AudioRecorder.dart';
+import 'audio/AudioScreenArguments.dart';
+import 'health/BillsList.dart';
+import 'health/DeviceListScreen.dart';
+import 'health/HealthReportListScreen.dart';
+import 'health/HospitalDocuments.dart';
+import 'health/IDDocsList.dart';
+import 'health/LabReportListScreen.dart';
+import 'health/MedicalReportListScreen.dart';
+import 'health/NotesScreen.dart';
+import 'health/OtherDocsList.dart';
+import 'health/VoiceRecordList.dart';
 
 export 'package:myfhb/common/CommonUtil.dart';
 export 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 
 class MyRecords extends StatefulWidget {
   MyRecordsArgument? argument;
@@ -121,7 +122,6 @@ class _MyRecordsState extends State<MyRecords> {
   @override
   void initState() {
     qurhomeDashboardController.getModuleAccess();
-    mInitialTime = DateTime.now();
     initPosition = widget.argument!.categoryPosition;
     rebuildAllBlocks();
     searchQuery = _searchQueryController.text.toString();
@@ -138,7 +138,7 @@ class _MyRecordsState extends State<MyRecords> {
     var isFirstTime =
         PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_HOMESCREEN);
     try {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         Future.delayed(
             Duration(milliseconds: 1000),
             () => isFirstTime
@@ -149,17 +149,6 @@ class _MyRecordsState extends State<MyRecords> {
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'MyRecords Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -1703,17 +1692,6 @@ class _CustomTabsState extends State<CustomTabView>
             .then((value) {
           if (widget.argument!.fromClass == 'audio' ||
               widget.argument!.fromClass == null) {
-            // Navigator.pushReplacement(
-            //         context,
-            //         MaterialPageRoute(
-            //             builder: (context) => AudioRecordScreen(
-            //                 arguments: AudioScreenArguments(
-            //                     fromVoice: true,
-            //                     fromClass: categoryName ==
-            //                             AppConstants.voiceRecords
-            //                         ? ''
-            //                         : widget.argument.fromClass ?? 'audio'))))
-            //     .then((results) {});
             Get.to(
               () => AudioRecorder(
                 arguments: AudioScreenArguments(
@@ -1722,7 +1700,8 @@ class _CustomTabsState extends State<CustomTabView>
                         ? ''
                         : widget.argument!.fromClass ?? 'audio'),
               ),
-            )!.then((results) {
+            )!
+                .then((results) {
               onRefreshWidgets();
             });
           } else {
@@ -1731,7 +1710,7 @@ class _CustomTabsState extends State<CustomTabView>
                         fromVoice: true,
                         fromClass: widget.argument!.fromClass ?? 'audio'))
                 .then((results) {
-                  onRefreshWidgets();
+              onRefreshWidgets();
             });
           }
         });
