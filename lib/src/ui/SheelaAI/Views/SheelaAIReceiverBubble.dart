@@ -459,11 +459,13 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                           return; // If loading, do nothing
                         }
                         controller.stopTTS(); // Stop Text-to-Speech
+                        controller.updateTimer(enable: false); // disable the timer
                         controller.isSheelaScreenActive = false; // Deactivate Sheela screen
                         controller.btnTextLocal = buttonData?.title ?? ''; // Set local button text
                         // Show the camera/gallery dialog and handle the result
                         controller.showCameraGalleryDialog(controller.btnTextLocal ?? '').then((value) {
                           controller.isSheelaScreenActive = true; // Reactivate Sheela screen after dialog
+                          controller.updateTimer(enable: true); // enable the timer
                         });
                       } else if (buttonData?.btnRedirectTo == strRedirectRetakePicture) {
                         // Check if the button redirects to retake picture
@@ -472,10 +474,12 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         }
                         controller.stopTTS(); // Stop Text-to-Speech
                         controller.isSheelaScreenActive = false; // Deactivate Sheela screen
+                        controller.updateTimer(enable: false); // disable the timer
                         controller.isRetakeCapture = true; // Set flag for retake capture
                         // Show the camera/gallery dialog and handle the result
                         controller.showCameraGalleryDialog(controller.btnTextLocal ?? '').then((value) {
                           controller.isSheelaScreenActive = true; // Reactivate Sheela screen after dialog
+                          controller.updateTimer(enable: true); // enable the timer
                         });
                       } else if (buttonData?.btnRedirectTo == strRedirectToUploadImage) {
                         // Check if the button redirects to upload image
@@ -490,6 +494,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             controller.isLoading.value = false; // Reset loading flag
                             controller.conversations.removeLast(); // Remove the loading response from conversations
                             if (value.isSuccess ?? false) {
+                              controller.imageRequestUrl =
+                                  value.result?.accessUrl ?? '';
                               if (controller.isLoading.isTrue) {
                                 return; // If loading, do nothing
                               }
@@ -502,6 +508,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                 buttonText: buttonData?.title,
                                 payload: buttonData?.payload,
                                 buttons: buttonData,
+                                isFromImageUpload: true
                               );
                               // Delay for 3 seconds and then unselect the button
                               Future.delayed(const Duration(seconds: 3), () {

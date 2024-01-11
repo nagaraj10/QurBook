@@ -992,6 +992,9 @@ const String strRetake = 'Retake';
 const String strRedirectRetakePicture = 'redirectRetakePicture';
 const String strRedirectToUploadImage = 'redirectUploadBucket';
 
+const String strImageRequestUrl = 'imageRequestUrl';
+const String strImageSizeValidation = 'Selected image exceeds the maximum allowed size';
+
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {
     await _firebaseAnalytics.logEvent(
