@@ -720,11 +720,11 @@ class SheelaAIController extends GetxController {
     if (isMicListening.isTrue) {
       isMicListening(false);
     }
-    if (Platform.isIOS) {
+    /*if (Platform.isIOS) {
       voice_platform.invokeMethod(strCloseSheelaDialog);
     } else {
       CommonUtil().closeSheelaDialog();
-    }
+    }*/
     if (currentPlayingConversation != null) {
       currentPlayingConversation!.isPlaying.value = false;
       currentPlayingConversation!.currentButtonPlayingIndex = null;
@@ -1878,8 +1878,10 @@ makeApiRequest is used to update the data with latest data
     try {
       await speechToText?.initialize(
         onStatus: (status) {
-          if (status.toString().toLowerCase() == strNotListening) {
-            refreshStartListening();
+          if (status.toString().toLowerCase() != strListening.toLowerCase()) {
+            if (isSheelaInputDialogShowing.value) {
+              refreshStartListening();
+            }
           }
         },
         onError: (error) {
@@ -1916,9 +1918,8 @@ makeApiRequest is used to update the data with latest data
   stopListening() async {
     try {
       await speechToText?.stop();
-      await speechToText?.cancel();
-      speechToText = null;
       finalWords.value = '';
+      sheelaInputTextEditingController.text = '';
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -1981,7 +1982,6 @@ makeApiRequest is used to update the data with latest data
                               Get.back();
                               isSheelaInputDialogShowing.value = false;
                               stopListening();
-                              sheelaInputTextEditingController.text = '';
                             },
                           )
                         ],
@@ -2009,19 +2009,21 @@ makeApiRequest is used to update the data with latest data
                     ),
                     Container(
                       margin: EdgeInsets.all(10),
-                      padding: EdgeInsets.only(right: 5, left: 5),
+                      padding: EdgeInsets.only(right: 5, left: 5,top: 2,bottom:2),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black),
                         borderRadius: BorderRadius.circular(
-                            CommonUtil().isTablet! ? 40.0 : 25.0),
+                            CommonUtil().isTablet! ? 40.0 : 20.0),
                       ),
                       child: Row(
                         children: [
                           Expanded(
-                            child: TextField(
+                            child: TextFormField(
                               controller: sheelaInputTextEditingController,
-                              //maxLines: 3,
+                              maxLines: 5,
+                              minLines: 1,
                               style: TextStyle(
+                                fontFamily: font_roboto,
                                 color: Colors
                                     .black, // Set your desired text color here
                               ),
@@ -2045,7 +2047,7 @@ makeApiRequest is used to update the data with latest data
                             child: Icon(
                               Icons.send_sharp,
                               color: Color(0xFF5E1FE0),
-                              size: CommonUtil().isTablet! ? 35.0.sp : 24.0.sp,
+                              size: CommonUtil().isTablet! ? 35.0.sp : 28.0.sp,
                             ),
                           ),
                         ],
