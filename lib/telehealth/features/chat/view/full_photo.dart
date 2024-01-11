@@ -106,8 +106,7 @@ class FullPhotoScreenState extends State<FullPhotoScreen> {
     if (widget.filePath == null) {
       return Container(child: PhotoView(imageProvider: NetworkImage(url!)));
     } else {
-      return Container(
-          child: Center(child: Image.file(File(widget.filePath!))));
+      return Container(child: PhotoView(imageProvider: FileImage(File(widget.filePath??''))));
     }
   }
 }
