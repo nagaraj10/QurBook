@@ -8,6 +8,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
@@ -34,13 +35,11 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart' as youtube;
 
-import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../../common/keysofmodel.dart';
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/fhb_parameters.dart';
 import '../../../../constants/variable_constant.dart';
-import '../../../../reminders/QurPlanReminders.dart';
 import '../../../blocs/health/HealthReportListForUserBlock.dart';
 import '../../../model/CreateDeviceSelectionModel.dart';
 import '../../../model/GetDeviceSelectionModel.dart';
@@ -54,6 +53,9 @@ import '../Models/SheelaResponse.dart';
 import '../Models/sheela_arguments.dart';
 import '../Services/SheelaAIAPIServices.dart';
 import '../Services/SheelaAIBLEServices.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 enum BLEStatus { Searching, Connected, Disabled }
 
@@ -112,6 +114,18 @@ class SheelaAIController extends GetxController {
 
   bool isAllowSheelaLiveReminders = true;
   SheelaBadgeModel? _sheelaBadgeModel;
+
+
+  RxInt countDownSecondsRemaining = 10.obs;
+  StreamController<int> streamEvents = StreamController<int>();
+  Timer? countDownSecondsTimer;
+
+  SpeechToText? speechToText = SpeechToText();
+  var finalWords = ''.obs;
+  var currentLanguageCode = 'en_US'.obs;
+  Rx<bool> isCountDownDialogShowing = false.obs;
+  TextEditingController sheelaInputTextEditingController = TextEditingController();
+  Rx<bool> isSheelaInputDialogShowing = false.obs;
 
   @override
   void onInit() {
@@ -824,6 +838,11 @@ class SheelaAIController extends GetxController {
       if (micStatus) {
         if (isMicListening.isFalse) {
           isMicListening.value = true;
+
+          currentLanguageCode.value = getCurrentLanCode()??'';
+
+          initCountDownTimer();
+          return;
 
           String? currentLanCode = getCurrentLanCode();
 
@@ -1723,4 +1742,321 @@ makeApiRequest is used to update the data with latest data
     ];
     return buttons;
   }
+
+  @override
+  void onClose() {
+    try {
+      countDownSecondsTimer?.cancel();
+      countDownSecondsTimer = null;
+      streamEvents.close();
+      stopListening();
+      super.onClose();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  initCountDownTimer() async {
+    try {
+      await Future.delayed(const Duration(milliseconds: 5));
+      streamEvents = StreamController<int>();
+      streamEvents.add(10);
+      countDownSecondsRemaining.value = 10;
+      if (countDownSecondsTimer != null) {
+        countDownSecondsTimer?.cancel();
+      }
+      countDownSecondsTimer =
+          Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (!streamEvents.isClosed) {
+          if (countDownSecondsRemaining > 0) {
+            countDownSecondsRemaining.value--;
+          } else {
+            countDownSecondsTimer?.cancel();
+          }
+          streamEvents.add(countDownSecondsRemaining.value);
+          notify();
+        } else {
+          countDownSecondsTimer?.cancel();
+        }
+      });
+
+      showContDownTimerDialog();
+      initSpeech();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  notify() {
+    try {
+      if (countDownSecondsRemaining.value == 0) {
+        closeContDownTimerDialog();
+        stopListening();
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  closeContDownTimerDialog() {
+    try {
+      isCountDownDialogShowing.value = false;
+      Get.back();
+      countDownSecondsTimer?.cancel();
+      countDownSecondsTimer = null;
+      streamEvents?.close();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  showContDownTimerDialog() {
+    isCountDownDialogShowing.value = true;
+    return showDialog<void>(
+      context: Get.context!,
+      barrierDismissible: false,
+      barrierColor: Colors.transparent,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: AlertDialog(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6)),
+              content: StreamBuilder<int>(
+                  stream: streamEvents.stream,
+                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                    final double containerSize =
+                        MediaQuery.of(context).size.width * 0.8;
+                    return Material(
+                      color: Colors.transparent,
+                      child: Container(
+                        width: containerSize,
+                        height: containerSize,
+                        color: Colors.transparent,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            SpinKitDoubleBounce(
+                              size: containerSize,
+                              color: const Color(0xFF6021de).withOpacity(0.1),
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  strListening,
+                                  style: TextStyle(
+                                      fontSize: containerSize * 0.07,
+                                      color: Colors.white),
+                                ),
+                                Text(
+                                  "${(snapshot.data.toString() ?? '0')} $strSeconds",
+                                  style: TextStyle(
+                                    fontSize: containerSize * 0.08,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+          );
+        });
+      },
+    );
+  }
+
+  initSpeech() async {
+    try {
+      await speechToText?.initialize(
+        onStatus: (status) {
+          if (status.toString().toLowerCase() == strNotListening) {
+            refreshStartListening();
+          }
+        },
+        onError: (error) {
+          refreshStartListening();
+        },
+      );
+      refreshStartListening();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  refreshStartListening() async {
+    try {
+      await Future.delayed(const Duration(milliseconds: 5));
+      startListening();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  startListening() async {
+    try {
+      await speechToText?.listen(
+        onResult: onSpeechResult,
+        listenFor: Duration(minutes: 2),
+        localeId: currentLanguageCode.value,
+      );
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  stopListening() async {
+    try {
+      await speechToText?.stop();
+      await speechToText?.cancel();
+      speechToText = null;
+      finalWords.value = '';
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  onSpeechResult(SpeechRecognitionResult result) {
+    try {
+      if (result!.finalResult ?? false) {
+        var regWords = result!.recognizedWords ?? '';
+        finalWords.value += '$regWords ';
+        log('onSpeechResult here ${finalWords.value}');
+        sheelaInputTextEditingController.text = finalWords.value;
+        if (isCountDownDialogShowing.value) {
+          closeContDownTimerDialog();
+        }
+        if (!isSheelaInputDialogShowing.value) {
+          dialogForSTTInputText();
+        }
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  dialogForSTTInputText() {
+    isSheelaInputDialogShowing.value = true;
+    return showDialog(
+        context: Get.context!,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: AlertDialog(
+              insetPadding: EdgeInsets.only(
+                  left: CommonUtil().isTablet! ? 0.0 : 25,
+                  right: CommonUtil().isTablet! ? 0.0 : 25),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              titlePadding: EdgeInsets.zero,
+              contentPadding: EdgeInsets.only(top: 0.0),
+              content: Container(
+                width: CommonUtil().isTablet!
+                    ? MediaQuery.of(context).size.width * 0.6
+                    : MediaQuery.of(context).size.width,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(right: 10, top: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.close,
+                              color: Color(0xFF282828),
+                              size: CommonUtil().isTablet! ? 35.0.sp : 24.0.sp,
+                            ),
+                            onPressed: () {
+                              Get.back();
+                              isSheelaInputDialogShowing.value = false;
+                              stopListening();
+                              sheelaInputTextEditingController.text = '';
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: CommonUtil().isTablet! ? 20.0 : 10.0,
+                    ),
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        SpinKitDoubleBounce(
+                          size: CommonUtil().isTablet! ? 300.0 : 200.0,
+                          color: const Color(0xFF6021de).withOpacity(0.1),
+                        ),
+                        Image.asset(
+                          icon_mayaMain, // replace with your image
+                          width: CommonUtil().isTablet! ? 200.0 : 100.0,
+                          height: CommonUtil().isTablet! ? 200.0 : 100.0,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: CommonUtil().isTablet! ? 50.0 : 15.0,
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(10),
+                      padding: EdgeInsets.only(right: 5, left: 5),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(
+                            CommonUtil().isTablet! ? 40.0 : 25.0),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: sheelaInputTextEditingController,
+                              //maxLines: 3,
+                              style: TextStyle(
+                                color: Colors
+                                    .black, // Set your desired text color here
+                              ),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.zero,
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              if (sheelaInputTextEditingController.text
+                                  .trim()
+                                  .isEmpty) {
+                                FlutterToast().getToast(
+                                    strPleaseEnterValidInput, Colors.black54);
+                              } else {
+                                // Handle send button click
+                              }
+                            },
+                            child: Icon(
+                              Icons.send_sharp,
+                              color: Color(0xFF5E1FE0),
+                              size: CommonUtil().isTablet! ? 35.0.sp : 24.0.sp,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
 }
+
