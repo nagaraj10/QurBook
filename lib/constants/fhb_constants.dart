@@ -993,7 +993,7 @@ const String strRedirectRetakePicture = 'redirectRetakePicture';
 const String strRedirectToUploadImage = 'redirectUploadBucket';
 
 const String strImageRequestUrl = 'imageRequestUrl';
-const String strImageSizeValidation = 'Selected image exceeds the maximum allowed size';
+const String strImageSizeValidation = 'Unable to upload photo. File size exceeds 5MB';
 
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {
