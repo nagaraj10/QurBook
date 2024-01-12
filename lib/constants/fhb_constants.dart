@@ -990,7 +990,9 @@ String doseValueHigh = "2048";
 
 const String strRetake = 'Retake';
 const String strRedirectRetakePicture = 'redirectRetakePicture';
+const String strRedirectRetakeAudio = 'redirectRetakeAudio';
 const String strRedirectToUploadImage = 'redirectUploadBucket';
+const String strRedirectToUploadAudio = 'redirectUploadBucketAudio';
 
 const String strImageRequestUrl = 'imageRequestUrl';
 const String strImageSizeValidation = 'Unable to upload photo. File size exceeds 5MB';

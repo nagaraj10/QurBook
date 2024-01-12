@@ -19,6 +19,8 @@ import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/fhb_constants.dart' as Constants;
 import '../../../../constants/variable_constant.dart';
 import '../../../utils/screenutils/size_extensions.dart';
+import '../../audio/AudioRecorder.dart';
+import '../../audio/AudioScreenArguments.dart';
 import '../../imageSlider.dart';
 import '../Controller/SheelaAIController.dart';
 import '../Models/SheelaResponse.dart';
@@ -517,6 +519,56 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             }
                           });
                         }
+                      }else if (buttonData?.needAudio ?? false) {
+                        if (controller.isLoading.isTrue) {
+                          return;
+                        }
+                        controller.stopTTS();
+                        controller.updateTimer(enable: false);
+                        controller.isSheelaScreenActive = false;
+                        controller.btnTextLocal = buttonData?.title ?? '';
+                        goToAudioRecordScreen();
+                      }else if (buttonData?.btnRedirectTo == strRedirectRetakeAudio) {
+                        if (controller.isLoading.isTrue) {
+                          return;
+                        }
+                        controller.stopTTS();
+                        controller.isSheelaScreenActive = false;
+                        controller.updateTimer(enable: false);
+                        controller.isRetakeCapture = true;
+                        goToAudioRecordScreen();
+                      }else if (buttonData?.btnRedirectTo == strRedirectToUploadAudio) {
+                        controller.isLoading.value = true;
+                        controller.conversations.add(SheelaResponse(loading: true));
+                        controller.scrollToEnd();
+                        if (chat.imageThumbnailUrl != null && chat.imageThumbnailUrl != '') {
+                          controller
+                              .saveMediaRegiment(chat.imageThumbnailUrl ?? '', '')
+                              .then((value) {
+                            controller.isLoading.value = false;
+                            controller.conversations.removeLast();
+                            if (value.isSuccess ?? false) {
+                              controller.imageRequestUrl =
+                                  value.result?.accessUrl ?? '';
+                              if (controller.isLoading.isTrue) {
+                                return;
+                              }
+                              if (chat.singleuse != null && chat.singleuse! && chat.isActionDone != null) {
+                                chat.isActionDone = true;
+                              }
+                              buttonData?.isSelected = true;
+                              controller.startSheelaFromButton(
+                                  buttonText: buttonData?.title,
+                                  payload: buttonData?.payload,
+                                  buttons: buttonData,
+                                  isFromImageUpload: true
+                              );
+                              Future.delayed(const Duration(seconds: 3), () {
+                                buttonData?.isSelected = false;
+                              });
+                            }
+                          });
+                        }
                       }else {
                         if (controller.isLoading.isTrue) {
                           return;
@@ -803,6 +855,23 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void goToAudioRecordScreen(){
+    Get.to(AudioRecorder(
+      arguments: AudioScreenArguments(
+        fromVoice: false,
+      ),
+    ))?.then((results) {
+      controller.isSheelaScreenActive = true;
+      controller.updateTimer(enable: true);
+      var audioPath = results[keyAudioFile];
+      if (audioPath != null && audioPath != '') {
+        controller.sheelaImagePreviewThumbnail(
+            btnTitle: controller.btnTextLocal ?? '',
+            selectedImagePath: audioPath);
+      }
+    });
   }
 
 }
