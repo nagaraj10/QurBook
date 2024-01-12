@@ -394,7 +394,9 @@ class HealthReportListForUserRepository {
       bool? allowVitalALerts,
       bool? allowsymptomsAlert,
       PreferredMeasurement? preferredMeasurement,
-      bool? voiceCloning) async {
+      bool? voiceCloning,
+      // should pass when voice clone is changed otherwise it null.
+      bool? isVoiceCloningChanged) async {
     var body = jsonEncode({
       'id': userMappingId,
       'profileSetting': {
@@ -438,7 +440,9 @@ class HealthReportListForUserRepository {
       'tags': tagsList
     });
     final response = await _helper.updateDeviceSelection(
-        query.qr_user_profile_no_slash, body);
+        query.qr_user_profile_no_slash +
+            ((isVoiceCloningChanged != null) ? '?toogleVoiceClone=true' : ''),
+        body);
     return UpdateDeviceModel.fromJson(response);
   }
 
