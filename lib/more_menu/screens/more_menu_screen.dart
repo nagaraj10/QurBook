@@ -169,8 +169,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   double arrowIcon = CommonUtil().isTablet! ? 20.0.sp : 16.0.sp;
   double switchTrail = CommonUtil().isTablet! ? 1.0 : 0.8;
-  bool isVoiceCloningChanged =
-      false; // bool value to allow navigation when tapped
+  bool? isVoiceCloningChanged; // bool value to allow navigation when tapped
 
   @override
   void initState() {
@@ -896,7 +895,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             allowVitalNotification,
             allowSymptomsNotification,
             preferredMeasurement,
-            voiceCloning)
+            voiceCloning,
+            isVoiceCloningChanged)
         .then((value) async {
       updateDeviceModel = value;
       if (updateDeviceModel!.isSuccess!) {
@@ -1099,7 +1099,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             isSheelaNotificationPref = false;
                             isTouched = true;
                             isVoiceCloningChanged =
-                                false; // to restrict navigation to terms page
+                                null; // to restrict navigation to terms page
 
                             _isdigitRecognition = newValue;
                             createAppColorSelection(preColor, greColor);
@@ -1140,7 +1140,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             isTouched = true;
                             _isdeviceRecognition = newValue;
                             isVoiceCloningChanged =
-                                false; // to restrict navigation to terms page
+                                null; // to restrict navigation to terms page
 
                             createAppColorSelection(preColor, greColor);
                             /*PreferenceUtil.saveString(
@@ -1640,7 +1640,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             isDisplayPreference = true;
                             isSheelaNotificationPref = false;
                             isVoiceCloningChanged =
-                                false; // to restrict navigation to terms page
+                                null; // to restrict navigation to terms page
                           },
                         );
                       },
@@ -1818,7 +1818,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       isDisplayPreference = false;
                       isSheelaNotificationPref = true;
                       isVoiceCloningChanged =
-                          false; // to restrict navigation to terms page
+                          null; // to restrict navigation to terms page
 
                       createAppColorSelection(preColor, greColor).then((value) {
                         setState(() {});
@@ -2139,14 +2139,14 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   Future<void> handleVoiceCloneSwitchAction(bool isEnabled) async {
     if (superAdminAllowedVoiceCloningModule &&
         providerAllowedVoiceCloningModule) {
-      setState(() async {
+      setState(() {
         isSkillIntegration = true;
         isCareGiverCommunication = false;
         isVitalPreferences = false;
         isDisplayPreference = false;
         isSheelaNotificationPref = false;
         isTouched = true;
-        isVoiceCloningChanged = isEnabled;
+        isVoiceCloningChanged = true;
         voiceCloning = isEnabled;
       });
       await createAppColorSelection(
@@ -2157,7 +2157,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       setState(() {});
       //get the values of status to initiate navigation
       await getAppColorValues(forNavigation: true);
-      if (isVoiceCloningChanged) {
+      if (isVoiceCloningChanged ?? false) {
         navigateToTermsOrStatusScreen();
       }
     }

@@ -246,7 +246,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
             allowVitalNotification,
             allowSymptomsNotification,
             preferredMeasurement,
-            voiceCloning)
+            voiceCloning,null)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel!.isSuccess!) {
