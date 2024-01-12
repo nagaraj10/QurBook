@@ -2065,7 +2065,8 @@ makeApiRequest is used to update the data with latest data
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(right: 10, top: 5.0),
+                      padding: EdgeInsets.only(right: CommonUtil().isTablet!
+                          ?20:10, top: 5.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -2109,7 +2110,10 @@ makeApiRequest is used to update the data with latest data
                       child: Container(
                         margin: EdgeInsets.all(10),
                         padding: EdgeInsets.only(
-                            right: 5, left: 5, top: 2, bottom: 2),
+                            right: (CommonUtil().isTablet ?? false) ? 7 : 5,
+                            left: (CommonUtil().isTablet ?? false) ? 7 : 5,
+                            top: (CommonUtil().isTablet ?? false) ? 7 : 2,
+                            bottom: (CommonUtil().isTablet ?? false) ? 7 : 2),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.black),
                           borderRadius: BorderRadius.circular(
@@ -2123,6 +2127,7 @@ makeApiRequest is used to update the data with latest data
                                 maxLines: 5,
                                 minLines: 1,
                                 style: TextStyle(
+                                  fontSize: (CommonUtil().isTablet ?? false) ? 18.0.sp : null,
                                   fontFamily: font_roboto,
                                   color: Colors
                                       .black, // Set your desired text color here
