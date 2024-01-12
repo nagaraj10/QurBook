@@ -1743,9 +1743,6 @@ makeApiRequest is used to update the data with latest data
   // Initiates the voice assistant interaction process
   initiateVoiceAssistantInteraction() async {
     try {
-      // Introduce a slight delay before starting to allow for a smoother transition
-      await Future.delayed(const Duration(milliseconds: 5));
-
       // Set up the countdown timer and stream for handling events
       setupCountdownTimerAndStream();
 
@@ -1887,7 +1884,9 @@ makeApiRequest is used to update the data with latest data
                           SpinKitDoubleBounce(
                             size: containerSize,
                             //color: const Color(0xFF6021de).withOpacity(0.1),
-                            color: Colors.grey.withOpacity(0.1),
+                            color: PreferenceUtil.getIfQurhomeisAcive()
+                                ? Color(CommonUtil().getQurhomeGredientColor()).withOpacity(0.2)
+                                : Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.2),
                           ),
                           // Text displaying 'Listening' and the countdown seconds
                           Column(
@@ -1934,34 +1933,21 @@ makeApiRequest is used to update the data with latest data
           if (status.toString().toLowerCase() != strListening.toLowerCase()) {
             // If Sheela's input dialog is showing, trigger a refresh and start listening
             if (isSheelaInputDialogShowing.value) {
-              refreshAndStartListening();
+              // Initiate the speech listening process
+              initiateSpeechListening();
             }
           }
         },
         // Callback for errors
         onError: (error) {
-          // Trigger a refresh and start listening in case of an error
-          refreshAndStartListening();
+          // Initiate the speech listening process
+          initiateSpeechListening();
         },
       );
-      // Trigger a refresh and start listening after initialization
-      refreshAndStartListening();
-    } catch (e, stackTrace) {
-      // Handle any exceptions that occur during initialization and log them
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-    }
-  }
-
-  // Refreshes and starts the speech listening process
-  refreshAndStartListening() async {
-    try {
-      // Introduce a slight delay before starting to allow for a smoother transition
-      await Future.delayed(const Duration(milliseconds: 5));
-
       // Initiate the speech listening process
       initiateSpeechListening();
     } catch (e, stackTrace) {
-      // Handle any exceptions that occur during the refresh process and log them
+      // Handle any exceptions that occur during initialization and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
@@ -2099,7 +2085,9 @@ makeApiRequest is used to update the data with latest data
                         SpinKitDoubleBounce(
                           size: CommonUtil().isTablet! ? 300.0 : 200.0,
                           //color: const Color(0xFF6021de).withOpacity(0.1),
-                          color: Colors.grey.withOpacity(0.1),
+                          color: PreferenceUtil.getIfQurhomeisAcive()
+                              ? Color(CommonUtil().getQurhomeGredientColor()).withOpacity(0.2)
+                              : Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.2),
                         ),
                         Image.asset(
                           icon_mayaMain, // replace with your image
@@ -2199,9 +2187,9 @@ makeApiRequest is used to update the data with latest data
   handleSheelaInputResponse(String? response) async {
     try {
       isMicListening.value = false;
-      if (Platform.isIOS) {
+      /*if (Platform.isIOS) {
         await Future.delayed(const Duration(seconds: 1));
-      }
+      }*/
 
       if ((response ?? '').toString().isNotEmpty) {
         if ((currentLanguageCode.value ?? "").contains("en")) {
