@@ -508,7 +508,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                 buttonText: buttonData?.title,
                                 payload: buttonData?.payload,
                                 buttons: buttonData,
-                                isFromImageUpload: true
+                                isFromImageUpload: true,
+                                requestFileType: strImage // add requestFileType
                               );
                               // Delay for 3 seconds and then unselect the button
                               Future.delayed(const Duration(seconds: 3), () {
