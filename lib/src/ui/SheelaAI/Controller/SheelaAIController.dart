@@ -58,6 +58,7 @@ import '../Models/SheelaResponse.dart';
 import '../Models/sheela_arguments.dart';
 import '../Services/SheelaAIAPIServices.dart';
 import '../Services/SheelaAIBLEServices.dart';
+import 'package:image/image.dart' as img;
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -300,11 +301,13 @@ class SheelaAIController extends GetxController {
     String? buttonText,
     String? payload,
     Buttons? buttons,
-    bool? isFromImageUpload = false
+    bool? isFromImageUpload = false,
+    String? requestFileType,
   }) async {
     stopTTS();
     conversations.add(SheelaResponse(text: buttonText));
-    getAIAPIResponseFor(payload, buttons,isFromImageUpload: isFromImageUpload);
+    getAIAPIResponseFor(payload, buttons,
+        isFromImageUpload: isFromImageUpload, requestFileType: requestFileType);
   }
 
   startSheelaConversation() {
@@ -381,7 +384,8 @@ class SheelaAIController extends GetxController {
     playTTS();
   }
 
-  getAIAPIResponseFor(String? message, Buttons? buttonsList,{bool? isFromImageUpload = false}) async {
+  getAIAPIResponseFor(String? message, Buttons? buttonsList,
+      {bool? isFromImageUpload = false, String? requestFileType}) async {
     try {
       isCallStartFromSheela = false;
       isLoading.value = true;
@@ -389,8 +393,11 @@ class SheelaAIController extends GetxController {
       scrollToEnd();
       final String tzOffset = DateTime.now().timeZoneOffset.toString();
       final splitedArr = tzOffset.split(':');
-      if(isFromImageUpload??false){
-        additionalInfo?[strImageRequestUrl] = imageRequestUrl;
+      // Check if the 'isFromFileUpload' variable is defined and truthy, otherwise default to false
+      if (isFromImageUpload ?? false) {
+        // If it's an image upload, update additionalInfo with the file URL and request type
+        additionalInfo?[strRequestFileUrl] = imageRequestUrl;  // Add file URL to additionalInfo
+        additionalInfo?[strRequestType] = requestFileType;     // Add request type to additionalInfo
       }
       final sheelaRequest = SheelaRequestModel(
         sender: userId,
@@ -1041,7 +1048,7 @@ class SheelaAIController extends GetxController {
         currentDeviceStatus.allowVitalNotification,
         currentDeviceStatus.allowSymptomsNotification,
         currentDeviceStatus.preferredMeasurement,
-        currentDeviceStatus.voiceCloning);
+        currentDeviceStatus.voiceCloning,null);
     if (value.isSuccess ?? false) {
       //updated
     } else {
@@ -1661,8 +1668,7 @@ makeApiRequest is used to update the data with latest data
           }
         } else {
           // Display a toast message if the selected image exceeds the maximum allowed size
-          FlutterToast().getToast(
-              strImageSizeValidation, Colors.red);
+          FlutterToast().getToast(strImageSizeValidation, Colors.red);
         }
       }
     });
