@@ -5568,8 +5568,17 @@ class CommonUtil {
 
   closeSheelaDialog() {
     try {
-      const platform = MethodChannel(strCloseSheelaDialog);
-      platform.invokeMethod(strCloseSheelaDialog);
+      /*const platform = MethodChannel(strCloseSheelaDialog);
+      platform.invokeMethod(strCloseSheelaDialog);*/
+      SheelaAIController? sheelaAIController =
+          CommonUtil().onInitSheelaAIController();
+      if (sheelaAIController.isSheelaInputDialogShowing.value) {
+        sheelaAIController.closeSheelaInputDialogAndStopListening();
+      }
+      if (sheelaAIController.isCountDownDialogShowing.value) {
+        sheelaAIController..closeCountdownTimerDialogAndCleanup()
+          ..stopSpeechListening();
+      }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }

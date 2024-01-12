@@ -44,7 +44,6 @@ import '../../../../constants/fhb_parameters.dart';
 import '../../../../constants/variable_constant.dart';
 import '../../../../regiment/view_model/AddRegimentModel.dart';
 import '../../../../regiment/view_model/pickImageController.dart';
-import '../../../../reminders/QurPlanReminders.dart';
 import '../../../blocs/health/HealthReportListForUserBlock.dart';
 import '../../../model/CreateDeviceSelectionModel.dart';
 import '../../../model/GetDeviceSelectionModel.dart';
@@ -62,7 +61,6 @@ import '../Services/SheelaAIBLEServices.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:image/image.dart' as img;
 
 enum BLEStatus { Searching, Connected, Disabled }
 
@@ -128,7 +126,6 @@ class SheelaAIController extends GetxController {
   Timer? countDownSecondsTimer;
 
   SpeechToText? speechToText = SpeechToText();
-  var finalWords = ''.obs;
   var currentLanguageCode = 'en_US'.obs;
   Rx<bool> isCountDownDialogShowing = false.obs;
   TextEditingController sheelaInputTextEditingController = TextEditingController();
@@ -737,6 +734,7 @@ class SheelaAIController extends GetxController {
     if (isMicListening.isTrue) {
       isMicListening(false);
     }
+    CommonUtil().closeSheelaDialog();
     /*if (Platform.isIOS) {
       voice_platform.invokeMethod(strCloseSheelaDialog);
     } else {
@@ -856,343 +854,9 @@ class SheelaAIController extends GetxController {
         if (isMicListening.isFalse) {
           isMicListening.value = true;
 
-          String? currentLanCode = getCurrentLanCode();
+          currentLanguageCode.value = getCurrentLanCode() ?? '';
 
-          await voice_platform.invokeMethod(
-            strspeakAssistant,
-            {
-              'langcode': currentLanCode,
-            },
-          ).then((response) async {
-            isMicListening.value = false;
-            if (Platform.isIOS) {
-              await Future.delayed(const Duration(seconds: 1));
-            }
-
-            if ((response ?? '').toString().isNotEmpty) {
-              if ((currentLanCode ?? "").contains("en")) {
-                response = prefixListFiltering(response ?? '');
-              }
-              if ((conversations.isNotEmpty) &&
-                  (conversations.last?.additionalInfoSheelaResponse
-                          ?.reconfirmationFlag ??
-                      false)) {
-                redoCurrentPlayingConversation = conversations.last;
-                freeTextConversation(freeText: response);
-              } else {
-                final newConversation = SheelaResponse(text: response);
-                if (conversations.isNotEmpty &&
-                    ((conversations.last?.buttons?.length ?? 0) > 0)) {
-                  try {
-                    var responseRecived =
-                        response.toString().toLowerCase().trim();
-
-                    dynamic button = null;
-
-                    if (!(conversations.last?.isButtonNumber ?? false)) {
-                      if (responseRecived == carGiverSheela) {
-                        responseRecived = careGiverSheela;
-                      }
-                      button = conversations.last?.buttons.firstWhere(
-                          (element) =>
-                              (element.title ?? "").toLowerCase() ==
-                              responseRecived);
-                    } else if ((conversations.last?.isButtonNumber ?? false)) {
-                      bool isDigit = CommonUtil().isNumeric(responseRecived);
-                      for (int i = 0;
-                          i < conversations.last?.buttons.length;
-                          i++) {
-                        var temp =
-                            conversations.last?.buttons[i].title.split(".");
-                        var realNumber = CommonUtil().realNumber(
-                            int.tryParse(temp[0].toString().trim()));
-                        var optionWithRealNumber =
-                            "Option ${realNumber.toString().trim()}";
-                        var optionWithDigit =
-                            "Option ${temp[0].toString().trim()}";
-                        var numberWithRealNumber =
-                            "Number ${realNumber.toString().trim()}";
-                        var numberWithDigit =
-                            "Number ${temp[0].toString().trim()}";
-                        if (((temp[isDigit ? 0 : 1].toString().trim())
-                                    .toLowerCase() ==
-                                responseRecived) ||
-                            (realNumber.toString().toLowerCase().trim() ==
-                                responseRecived) ||
-                            (optionWithRealNumber
-                                    .toString()
-                                    .toLowerCase()
-                                    .trim() ==
-                                responseRecived) ||
-                            (optionWithDigit.toString().toLowerCase().trim() ==
-                                responseRecived) ||
-                            (numberWithRealNumber
-                                    .toString()
-                                    .toLowerCase()
-                                    .trim() ==
-                                responseRecived) ||
-                            (numberWithDigit.toString().toLowerCase().trim() ==
-                                responseRecived)) {
-                          button = conversations.last?.buttons[i];
-                          break;
-                        }
-                      }
-                    }
-                    if (button != null) {
-                      if (button?.btnRedirectTo == strPreviewScreen) {
-                        if (button?.chatAttachments != null &&
-                            (button?.chatAttachments?.length ?? 0) > 0) {
-                          if (isLoading.isTrue) {
-                            return;
-                          }
-                          stopTTS();
-                          isSheelaScreenActive = false;
-                          CommonUtil()
-                              .onInitQurhomeDashboardController()
-                              .setActiveQurhomeDashboardToChat(status: false);
-                          Get.to(
-                            AttachmentListSheela(
-                                chatAttachments: button?.chatAttachments ?? []),
-                          )?.then((value) {
-                            isSheelaScreenActive = true;
-                            playPauseTTS(
-                                conversations.last ?? SheelaResponse());
-                          });
-                        }
-                      } else if (button?.btnRedirectTo ==
-                          strRedirectToHelpPreview) {
-                        if (button?.videoUrl != null &&
-                            button?.videoUrl != '') {
-                          playYoutube(button?.videoUrl);
-                        } else if (button?.audioUrl != null &&
-                            button?.audioUrl != '') {
-                          playAudioFile(button?.audioUrl);
-                        } else if (button?.imageUrl != null &&
-                            button?.imageUrl != '') {
-                          isSheelaScreenActive = false;
-                          Get.to(FullPhoto(
-                            url: button?.imageUrl ?? '',
-                            titleSheelaPreview: strImageTitle,
-                          ))?.then((value) {
-                            isSheelaScreenActive = true;
-                            playPauseTTS(
-                                conversations.last ?? SheelaResponse());
-                          });
-                        }
-                      } else if (button?.btnRedirectTo == strRedirectRedo) {
-                        final cardResponse =
-                            SheelaResponse(text: button?.title);
-                        conversations.add(cardResponse);
-                        scrollToEnd();
-                        Future.delayed(Duration(seconds: 2), () {
-                          conversations.add(redoCurrentPlayingConversation);
-                          currentPlayingConversation =
-                              redoCurrentPlayingConversation;
-                          isLoading.value = false;
-                          playTTS();
-                          scrollToEnd();
-                        });
-                      } else if ((button?.btnRedirectTo ?? "") ==
-                          strHomeScreenForce.toLowerCase()) {
-                        Get.back();
-                      } else if ((button?.isSnoozeAction ?? false)) {
-                        /// we can true this condition is for if snooze enable from api
-                        try {
-                          var apiReminder;
-                          Reminder reminder = Reminder();
-                          reminder.uformname = conversations
-                                  .last
-                                  ?.additionalInfoSheelaResponse
-                                  ?.snoozeData
-                                  ?.uformName ??
-                              '';
-                          reminder.activityname = conversations
-                                  .last
-                                  ?.additionalInfoSheelaResponse
-                                  ?.snoozeData
-                                  ?.activityName ??
-                              '';
-                          reminder.title = conversations
-                                  .last
-                                  ?.additionalInfoSheelaResponse
-                                  ?.snoozeData
-                                  ?.title ??
-                              '';
-                          reminder.description = conversations
-                                  .last
-                                  ?.additionalInfoSheelaResponse
-                                  ?.snoozeData
-                                  ?.description ??
-                              '';
-                          reminder.eid = conversations
-                                  .last
-                                  ?.additionalInfoSheelaResponse
-                                  ?.snoozeData
-                                  ?.eid ??
-                              '';
-                          reminder.estart = CommonUtil()
-                              .snoozeDataFormat(DateTime.now().add(Duration(
-                                  minutes: int.parse(button?.payload ?? '0'))))
-                              .toString();
-                          reminder.dosemeal = conversations
-                                  .last
-                                  ?.additionalInfoSheelaResponse
-                                  ?.snoozeData
-                                  ?.dosemeal ??
-                              '';
-                          reminder.snoozeTime = CommonUtil()
-                              .getTimeMillsSnooze(button?.payload ?? '');
-                          reminder.tplanid = '0';
-                          reminder.teid_user = '0';
-                          reminder.remindin = '0';
-                          reminder.remindin_type = '0';
-                          reminder.providerid = '0';
-                          reminder.remindbefore = '0';
-                          List<Reminder> data = [reminder];
-                          for (var i = 0; i < data.length; i++) {
-                            apiReminder = data[i];
-                          }
-                          if (Platform.isAndroid) {
-                            // snooze invoke to android native for locally save the reminder data
-                            QurPlanReminders.getTheRemindersFromAPI(
-                                isSnooze: true,
-                                snoozeReminderData: apiReminder);
-
-                            // Start Sheela from button with specified parameters
-                            startSheelaFromButton(
-                                buttonText: button.title,
-                                payload: button.payload,
-                                buttons: button);
-                          } else {
-                            reminderMethodChannel.invokeMethod(
-                                snoozeReminderMethod,
-                                [apiReminder.toMap()]).then((value) {
-                              startSheelaFromButton(
-                                  buttonText: button.title,
-                                  payload: button.payload,
-                                  buttons: button);
-                            });
-                          }
-                        } catch (e, stackTrace) {
-                          CommonUtil()
-                              .appLogs(message: e, stackTrace: stackTrace);
-                        }
-                      } else if (button?.needPhoto ?? false) {
-                        // Check if the button requires a photo
-                        if (isLoading.isTrue) {
-                          return; // If loading, do nothing
-                        }
-                        stopTTS(); // Stop Text-to-Speech
-                        isSheelaScreenActive =
-                            false; // Deactivate Sheela screen
-                        updateTimer(enable: false);// disable the timer
-                        btnTextLocal =
-                            button?.title ?? ''; // Set local button text
-                        // Show the camera/gallery dialog and handle the result
-                        showCameraGalleryDialog(btnTextLocal ?? '')
-                            .then((value) {
-                          isSheelaScreenActive =
-                              true; // Reactivate Sheela screen after dialog
-                          updateTimer(enable: true);// disable the timer
-                        });
-                      } else if (button?.btnRedirectTo ==
-                          strRedirectRetakePicture) {
-                        // Check if the button redirects to retake picture
-                        if (isLoading.isTrue) {
-                          return; // If loading, do nothing
-                        }
-                        stopTTS(); // Stop Text-to-Speech
-                        isSheelaScreenActive =
-                            false; // Deactivate Sheela screen
-                        updateTimer(enable: false);// disable the timer
-                        isRetakeCapture = true; // Set flag for retake capture
-                        // Show the camera/gallery dialog and handle the result
-                        showCameraGalleryDialog(btnTextLocal ?? '')
-                            .then((value) {
-                          isSheelaScreenActive =
-                              true; // Reactivate Sheela screen after dialog
-                          updateTimer(enable: true);// disable the timer
-                        });
-                      } else if (button?.btnRedirectTo ==
-                          strRedirectToUploadImage) {
-                        // Check if the button redirects to upload image
-                        SheelaResponse sheelaLastConversation =
-                            SheelaResponse();
-                        sheelaLastConversation = conversations.last;
-                        isLoading.value = true; // Set loading flag
-                        conversations.add(SheelaResponse(
-                            loading:
-                                true)); // Add loading response to conversations
-                        scrollToEnd(); // Scroll to the end of conversations
-                        if (sheelaLastConversation.imageThumbnailUrl != null &&
-                            sheelaLastConversation.imageThumbnailUrl != '') {
-                          // Check if there is a valid image thumbnail URL
-                          saveMediaRegiment(
-                            sheelaLastConversation.imageThumbnailUrl ?? '',
-                            // Save media regiment
-                            '',
-                          ).then((value) {
-                            isLoading.value = false; // Reset loading flag
-                            conversations
-                                .removeLast(); // Remove the loading response from conversations
-                            if (value.isSuccess ?? false) {
-                              imageRequestUrl = value.result?.accessUrl ?? '';
-                              if (isLoading.isTrue) {
-                                return; // If loading, do nothing
-                              }
-                              if (conversations.last.singleuse != null &&
-                                  conversations.last.singleuse! &&
-                                  conversations.last.isActionDone != null) {
-                                conversations.last.isActionDone =
-                                    true; // Set action done flag if it's a single-use button
-                              }
-                              button?.isSelected =
-                                  true; // Mark the button as selected
-                              // Start Sheela from the button with specified parameters
-                              startSheelaFromButton(
-                                buttonText: button?.title,
-                                payload: button?.payload,
-                                buttons: button,
-                                isFromImageUpload: true
-                              );
-                              // Delay for 3 seconds and then unselect the button
-                              Future.delayed(const Duration(seconds: 3), () {
-                                button?.isSelected = false;
-                              });
-                            }
-                          });
-                        }
-                      } else {
-                        startSheelaFromButton(
-                            buttonText: button.title,
-                            payload: button.payload,
-                            buttons: button);
-                      }
-                    } else {
-                      lastMsgIsOfButtons = false;
-                      conversations.add(newConversation);
-                      getAIAPIResponseFor(response, button);
-                    }
-                  } catch (e, stackTrace) {
-                    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-
-                    lastMsgIsOfButtons = false;
-                    conversations.add(newConversation);
-                    getAIAPIResponseFor(response, null);
-                  }
-                } else {
-                  lastMsgIsOfButtons = false;
-                  conversations.add(newConversation);
-                  getAIAPIResponseFor(response, null);
-                }
-              }
-            }
-            scrollToEnd();
-          }).whenComplete(() {
-            isMicListening.value = false;
-          }).onError((dynamic error, stackTrace) {
-            isMicListening.value = false;
-          });
+          initiateVoiceAssistantInteraction();
         }
       } else {
         FlutterToast().getToast(strMicAlertMsg, Colors.black);
@@ -1837,188 +1501,6 @@ makeApiRequest is used to update the data with latest data
     return buttons;
   }
 
-  @override
-  void onClose() {
-    try {
-      countDownSecondsTimer?.cancel();
-      countDownSecondsTimer = null;
-      streamEvents.close();
-      stopListening();
-      super.onClose();
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-    }
-  }
-
-  initCountDownTimer() async {
-    try {
-      await Future.delayed(const Duration(milliseconds: 5));
-      streamEvents = StreamController<int>();
-      streamEvents.add(10);
-      countDownSecondsRemaining.value = 10;
-      if (countDownSecondsTimer != null) {
-        countDownSecondsTimer?.cancel();
-      }
-      countDownSecondsTimer =
-          Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (!streamEvents.isClosed) {
-          if (countDownSecondsRemaining > 0) {
-            countDownSecondsRemaining.value--;
-          } else {
-            countDownSecondsTimer?.cancel();
-          }
-          streamEvents.add(countDownSecondsRemaining.value);
-          notify();
-        } else {
-          countDownSecondsTimer?.cancel();
-        }
-      });
-
-      showContDownTimerDialog();
-      initSpeech();
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-    }
-  }
-
-  notify() {
-    try {
-      if (countDownSecondsRemaining.value == 0) {
-        closeContDownTimerDialog();
-        stopListening();
-      }
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-    }
-  }
-
-  closeContDownTimerDialog() {
-    try {
-      isCountDownDialogShowing.value = false;
-      Get.back();
-      countDownSecondsTimer?.cancel();
-      countDownSecondsTimer = null;
-      streamEvents?.close();
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-    }
-  }
-
-  showContDownTimerDialog() {
-    isCountDownDialogShowing.value = true;
-    return showDialog<void>(
-      context: Get.context!,
-      barrierDismissible: false,
-      barrierColor: Colors.transparent,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return WillPopScope(
-            onWillPop: () async => false,
-            child: AlertDialog(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6)),
-              content: StreamBuilder<int>(
-                  stream: streamEvents.stream,
-                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                    final double containerSize =
-                        MediaQuery.of(context).size.width * 0.8;
-                    return Material(
-                      color: Colors.transparent,
-                      child: Container(
-                        width: containerSize,
-                        height: containerSize,
-                        color: Colors.transparent,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            SpinKitDoubleBounce(
-                              size: containerSize,
-                              color: const Color(0xFF6021de).withOpacity(0.1),
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  strListening,
-                                  style: TextStyle(
-                                      fontSize: containerSize * 0.07,
-                                      color: Colors.white),
-                                ),
-                                Text(
-                                  "${(snapshot.data.toString() ?? '0')} $strSeconds",
-                                  style: TextStyle(
-                                    fontSize: containerSize * 0.08,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }),
-            ),
-          );
-        });
-      },
-    );
-  }
-
-  initSpeech() async {
-    try {
-      await speechToText?.initialize(
-        onStatus: (status) {
-          if (status.toString().toLowerCase() != strListening.toLowerCase()) {
-            if (isSheelaInputDialogShowing.value) {
-              refreshStartListening();
-            }
-          }
-        },
-        onError: (error) {
-          refreshStartListening();
-        },
-      );
-      refreshStartListening();
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-    }
-  }
-
-  refreshStartListening() async {
-    try {
-      await Future.delayed(const Duration(milliseconds: 5));
-      startListening();
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-    }
-  }
-
-  startListening() async {
-    try {
-      await speechToText?.listen(
-        onResult: onSpeechResult,
-        listenFor: Duration(minutes: 2),
-        localeId: currentLanguageCode.value,
-      );
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-    }
-  }
-
-  stopListening() async {
-    try {
-      await speechToText?.stop();
-      finalWords.value = '';
-      sheelaInputTextEditingController.text = '';
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-    }
-  }
-
   // Function to generate a list of button configurations for image preview
   List<Buttons> sheelaImagePreviewButtons(String? btnTitle) {
     List<Buttons> buttons = [
@@ -2212,20 +1694,216 @@ makeApiRequest is used to update the data with latest data
         await imageFile.lengthSync(); // Get the length (size) of the image file
     return length; // Return the size of the image file
   }
-}
 
-  onSpeechResult(SpeechRecognitionResult result) {
+  @override
+  void onClose() {
     try {
+      countDownSecondsTimer?.cancel();
+      countDownSecondsTimer = null;
+      streamEvents.close();
+      stopSpeechListening();
+      super.onClose();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  initiateVoiceAssistantInteraction() async {
+    try {
+      await Future.delayed(const Duration(milliseconds: 5));
+      setupCountdownTimerAndStream();
+      showListeningCountdownDialog();
+      initializeAndConfigureSpeechRecognizer();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  setupCountdownTimerAndStream() {
+    try {
+      streamEvents = StreamController<int>();
+      streamEvents.add(10);
+      countDownSecondsRemaining.value = 10;
+      if (countDownSecondsTimer != null) {
+        countDownSecondsTimer?.cancel();
+      }
+      countDownSecondsTimer =
+          Timer.periodic(const Duration(seconds: 1), (timer) {
+            if (!streamEvents.isClosed) {
+              if (countDownSecondsRemaining > 0) {
+                countDownSecondsRemaining.value--;
+              } else {
+                countDownSecondsTimer?.cancel();
+              }
+              streamEvents.add(countDownSecondsRemaining.value);
+              checkAndHandleCountdownCompletion();
+            } else {
+              countDownSecondsTimer?.cancel();
+            }
+          });
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  checkAndHandleCountdownCompletion() {
+    try {
+      if (countDownSecondsRemaining.value == 0) {
+        closeCountdownTimerDialogAndCleanup();
+        stopSpeechListening();
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  closeCountdownTimerDialogAndCleanup() {
+    try {
+      isCountDownDialogShowing.value = false;
+      Get.back();
+      countDownSecondsTimer?.cancel();
+      countDownSecondsTimer = null;
+      streamEvents?.close();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  showListeningCountdownDialog() {
+    isCountDownDialogShowing.value = true;
+    return showDialog<void>(
+      context: Get.context!,
+      barrierDismissible: false,
+      barrierColor: Colors.transparent,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: AlertDialog(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6)),
+              content: StreamBuilder<int>(
+                  stream: streamEvents.stream,
+                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                    final double containerSize =
+                        MediaQuery.of(context).size.width * 0.8;
+                    return Material(
+                      color: Colors.transparent,
+                      child: Container(
+                        width: containerSize,
+                        height: containerSize,
+                        color: Colors.transparent,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            SpinKitDoubleBounce(
+                              size: containerSize,
+                              //color: const Color(0xFF6021de).withOpacity(0.1),
+                              color: Colors.grey.withOpacity(0.1),
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  strListening,
+                                  style: TextStyle(
+                                      fontSize: containerSize * 0.07,
+                                      color: Colors.white),
+                                ),
+                                Text(
+                                  "${(snapshot.data.toString() ?? '0')} $strSeconds",
+                                  style: TextStyle(
+                                    fontSize: containerSize * 0.08,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+          );
+        });
+      },
+    );
+  }
+
+  initializeAndConfigureSpeechRecognizer() async {
+    try {
+      await speechToText?.initialize(
+        onStatus: (status) {
+          if (status.toString().toLowerCase() != strListening.toLowerCase()) {
+            if (isSheelaInputDialogShowing.value) {
+              refreshAndStartListening();
+            }
+          }
+        },
+        onError: (error) {
+          refreshAndStartListening();
+        },
+      );
+      refreshAndStartListening();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  refreshAndStartListening() async {
+    try {
+      await Future.delayed(const Duration(milliseconds: 5));
+      initiateSpeechListening();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  initiateSpeechListening() async {
+    try {
+      await speechToText?.listen(
+        onResult: handleSpeechRecognitionResult,
+        listenFor: const Duration(minutes: 2),
+        localeId: currentLanguageCode.value,
+      );
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  stopSpeechListening() async {
+    try {
+      await speechToText?.stop();
+      sheelaInputTextEditingController.text = '';
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  handleSpeechRecognitionResult(SpeechRecognitionResult result) {
+    try {
+      if (isCountDownDialogShowing.value) {
+        closeCountdownTimerDialogAndCleanup();
+      }
+      if (!isSheelaInputDialogShowing.value) {
+        showSpeechToTextInputDialog();
+      }
       if (result!.finalResult ?? false) {
         var regWords = result!.recognizedWords ?? '';
-        finalWords.value += '$regWords ';
-        log('onSpeechResult here ${finalWords.value}');
-        sheelaInputTextEditingController.text = finalWords.value;
-        if (isCountDownDialogShowing.value) {
-          closeContDownTimerDialog();
+        sheelaInputTextEditingController.text += '$regWords ';
+        if (kDebugMode) {
+          log('onSpeechResult here ${sheelaInputTextEditingController.text}');
         }
-        if (!isSheelaInputDialogShowing.value) {
-          dialogForSTTInputText();
+        if (CommonUtil.isUSRegion()) {
+          String response = CommonUtil()
+              .validString(sheelaInputTextEditingController.text)
+              .trim();
+          closeSheelaInputDialogAndStopListening();
+          handleSheelaInputResponse(response);
         }
       }
     } catch (e, stackTrace) {
@@ -2233,7 +1911,7 @@ makeApiRequest is used to update the data with latest data
     }
   }
 
-  dialogForSTTInputText() {
+  showSpeechToTextInputDialog() {
     isSheelaInputDialogShowing.value = true;
     return showDialog(
         context: Get.context!,
@@ -2268,9 +1946,7 @@ makeApiRequest is used to update the data with latest data
                               size: CommonUtil().isTablet! ? 35.0.sp : 24.0.sp,
                             ),
                             onPressed: () {
-                              Get.back();
-                              isSheelaInputDialogShowing.value = false;
-                              stopListening();
+                              closeSheelaInputDialogAndStopListening();
                             },
                           )
                         ],
@@ -2284,7 +1960,8 @@ makeApiRequest is used to update the data with latest data
                       children: [
                         SpinKitDoubleBounce(
                           size: CommonUtil().isTablet! ? 300.0 : 200.0,
-                          color: const Color(0xFF6021de).withOpacity(0.1),
+                          //color: const Color(0xFF6021de).withOpacity(0.1),
+                          color: Colors.grey.withOpacity(0.1),
                         ),
                         Image.asset(
                           icon_mayaMain, // replace with your image
@@ -2296,50 +1973,58 @@ makeApiRequest is used to update the data with latest data
                     SizedBox(
                       height: CommonUtil().isTablet! ? 50.0 : 15.0,
                     ),
-                    Container(
-                      margin: EdgeInsets.all(10),
-                      padding: EdgeInsets.only(right: 5, left: 5,top: 2,bottom:2),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(
-                            CommonUtil().isTablet! ? 40.0 : 20.0),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: sheelaInputTextEditingController,
-                              maxLines: 5,
-                              minLines: 1,
-                              style: TextStyle(
-                                fontFamily: font_roboto,
-                                color: Colors
-                                    .black, // Set your desired text color here
-                              ),
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                contentPadding: EdgeInsets.zero,
+                    Visibility(
+                      visible: !(CommonUtil.isUSRegion()),
+                      child: Container(
+                        margin: EdgeInsets.all(10),
+                        padding: EdgeInsets.only(
+                            right: 5, left: 5, top: 2, bottom: 2),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black),
+                          borderRadius: BorderRadius.circular(
+                              CommonUtil().isTablet! ? 40.0 : 20.0),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: sheelaInputTextEditingController,
+                                maxLines: 5,
+                                minLines: 1,
+                                style: TextStyle(
+                                  fontFamily: font_roboto,
+                                  color: Colors
+                                      .black, // Set your desired text color here
+                                ),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.zero,
+                                ),
                               ),
                             ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              if (sheelaInputTextEditingController.text
-                                  .trim()
-                                  .isEmpty) {
-                                FlutterToast().getToast(
-                                    strPleaseEnterValidInput, Colors.black54);
-                              } else {
-                                // Handle send button click
-                              }
-                            },
-                            child: Icon(
-                              Icons.send_sharp,
-                              color: Color(0xFF5E1FE0),
-                              size: CommonUtil().isTablet! ? 35.0.sp : 28.0.sp,
+                            GestureDetector(
+                              onTap: () {
+                                String response = CommonUtil()
+                                    .validString(
+                                        sheelaInputTextEditingController.text)
+                                    .trim();
+                                if (response.isEmpty) {
+                                  FlutterToast().getToast(
+                                      strPleaseEnterValidInput, Colors.black54);
+                                } else {
+                                  closeSheelaInputDialogAndStopListening();
+                                  handleSheelaInputResponse(response);
+                                }
+                              },
+                              child: Icon(
+                                Icons.send_sharp,
+                                color: Color(0xFF5E1FE0),
+                                size:
+                                    CommonUtil().isTablet! ? 35.0.sp : 28.0.sp,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -2348,6 +2033,308 @@ makeApiRequest is used to update the data with latest data
             ),
           );
         });
+  }
+
+  closeSheelaInputDialogAndStopListening() {
+    try {
+      Get.back();
+      isSheelaInputDialogShowing.value = false;
+      stopSpeechListening();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  handleSheelaInputResponse(String? response) async {
+    try {
+      isMicListening.value = false;
+      if (Platform.isIOS) {
+        await Future.delayed(const Duration(seconds: 1));
+      }
+
+      if ((response ?? '').toString().isNotEmpty) {
+        if ((currentLanguageCode.value ?? "").contains("en")) {
+          response = prefixListFiltering(response ?? '');
+        }
+        if ((conversations.isNotEmpty) &&
+            (conversations
+                    .last?.additionalInfoSheelaResponse?.reconfirmationFlag ??
+                false)) {
+          redoCurrentPlayingConversation = conversations.last;
+          freeTextConversation(freeText: response);
+        } else {
+          final newConversation = SheelaResponse(text: response);
+          if (conversations.isNotEmpty &&
+              ((conversations.last?.buttons?.length ?? 0) > 0)) {
+            try {
+              var responseRecived = response.toString().toLowerCase().trim();
+
+              dynamic button = null;
+
+              if (!(conversations.last?.isButtonNumber ?? false)) {
+                if (responseRecived == carGiverSheela) {
+                  responseRecived = careGiverSheela;
+                }
+                button = conversations.last?.buttons.firstWhere((element) =>
+                    (element.title ?? "").toLowerCase() == responseRecived);
+              } else if ((conversations.last?.isButtonNumber ?? false)) {
+                bool isDigit = CommonUtil().isNumeric(responseRecived);
+                for (int i = 0; i < conversations.last?.buttons.length; i++) {
+                  var temp = conversations.last?.buttons[i].title.split(".");
+                  var realNumber = CommonUtil()
+                      .realNumber(int.tryParse(temp[0].toString().trim()));
+                  var optionWithRealNumber =
+                      "Option ${realNumber.toString().trim()}";
+                  var optionWithDigit = "Option ${temp[0].toString().trim()}";
+                  var numberWithRealNumber =
+                      "Number ${realNumber.toString().trim()}";
+                  var numberWithDigit = "Number ${temp[0].toString().trim()}";
+                  if (((temp[isDigit ? 0 : 1].toString().trim())
+                              .toLowerCase() ==
+                          responseRecived) ||
+                      (realNumber.toString().toLowerCase().trim() ==
+                          responseRecived) ||
+                      (optionWithRealNumber.toString().toLowerCase().trim() ==
+                          responseRecived) ||
+                      (optionWithDigit.toString().toLowerCase().trim() ==
+                          responseRecived) ||
+                      (numberWithRealNumber.toString().toLowerCase().trim() ==
+                          responseRecived) ||
+                      (numberWithDigit.toString().toLowerCase().trim() ==
+                          responseRecived)) {
+                    button = conversations.last?.buttons[i];
+                    break;
+                  }
+                }
+              }
+              if (button != null) {
+                if (button?.btnRedirectTo == strPreviewScreen) {
+                  if (button?.chatAttachments != null &&
+                      (button?.chatAttachments?.length ?? 0) > 0) {
+                    if (isLoading.isTrue) {
+                      return;
+                    }
+                    stopTTS();
+                    isSheelaScreenActive = false;
+                    CommonUtil()
+                        .onInitQurhomeDashboardController()
+                        .setActiveQurhomeDashboardToChat(status: false);
+                    Get.to(
+                      AttachmentListSheela(
+                          chatAttachments: button?.chatAttachments ?? []),
+                    )?.then((value) {
+                      isSheelaScreenActive = true;
+                      playPauseTTS(conversations.last ?? SheelaResponse());
+                    });
+                  }
+                } else if (button?.btnRedirectTo == strRedirectToHelpPreview) {
+                  if (button?.videoUrl != null && button?.videoUrl != '') {
+                    playYoutube(button?.videoUrl);
+                  } else if (button?.audioUrl != null &&
+                      button?.audioUrl != '') {
+                    playAudioFile(button?.audioUrl);
+                  } else if (button?.imageUrl != null &&
+                      button?.imageUrl != '') {
+                    isSheelaScreenActive = false;
+                    Get.to(FullPhoto(
+                      url: button?.imageUrl ?? '',
+                      titleSheelaPreview: strImageTitle,
+                    ))?.then((value) {
+                      isSheelaScreenActive = true;
+                      playPauseTTS(conversations.last ?? SheelaResponse());
+                    });
+                  }
+                } else if (button?.btnRedirectTo == strRedirectRedo) {
+                  final cardResponse = SheelaResponse(text: button?.title);
+                  conversations.add(cardResponse);
+                  scrollToEnd();
+                  Future.delayed(Duration(seconds: 2), () {
+                    conversations.add(redoCurrentPlayingConversation);
+                    currentPlayingConversation = redoCurrentPlayingConversation;
+                    isLoading.value = false;
+                    playTTS();
+                    scrollToEnd();
+                  });
+                } else if ((button?.btnRedirectTo ?? "") ==
+                    strHomeScreenForce.toLowerCase()) {
+                  Get.back();
+                } else if ((button?.isSnoozeAction ?? false)) {
+                  /// we can true this condition is for if snooze enable from api
+                  try {
+                    var apiReminder;
+                    Reminder reminder = Reminder();
+                    reminder.uformname = conversations
+                            .last
+                            ?.additionalInfoSheelaResponse
+                            ?.snoozeData
+                            ?.uformName ??
+                        '';
+                    reminder.activityname = conversations
+                            .last
+                            ?.additionalInfoSheelaResponse
+                            ?.snoozeData
+                            ?.activityName ??
+                        '';
+                    reminder.title = conversations.last
+                            ?.additionalInfoSheelaResponse?.snoozeData?.title ??
+                        '';
+                    reminder.description = conversations
+                            .last
+                            ?.additionalInfoSheelaResponse
+                            ?.snoozeData
+                            ?.description ??
+                        '';
+                    reminder.eid = conversations.last
+                            ?.additionalInfoSheelaResponse?.snoozeData?.eid ??
+                        '';
+                    reminder.estart = CommonUtil()
+                        .snoozeDataFormat(DateTime.now().add(Duration(
+                            minutes: int.parse(button?.payload ?? '0'))))
+                        .toString();
+                    reminder.dosemeal = conversations
+                            .last
+                            ?.additionalInfoSheelaResponse
+                            ?.snoozeData
+                            ?.dosemeal ??
+                        '';
+                    reminder.snoozeTime =
+                        CommonUtil().getTimeMillsSnooze(button?.payload ?? '');
+                    reminder.tplanid = '0';
+                    reminder.teid_user = '0';
+                    reminder.remindin = '0';
+                    reminder.remindin_type = '0';
+                    reminder.providerid = '0';
+                    reminder.remindbefore = '0';
+                    List<Reminder> data = [reminder];
+                    for (var i = 0; i < data.length; i++) {
+                      apiReminder = data[i];
+                    }
+                    if (Platform.isAndroid) {
+                      // snooze invoke to android native for locally save the reminder data
+                      QurPlanReminders.getTheRemindersFromAPI(
+                          isSnooze: true, snoozeReminderData: apiReminder);
+
+                      // Start Sheela from button with specified parameters
+                      startSheelaFromButton(
+                          buttonText: button.title,
+                          payload: button.payload,
+                          buttons: button);
+                    } else {
+                      reminderMethodChannel.invokeMethod(snoozeReminderMethod,
+                          [apiReminder.toMap()]).then((value) {
+                        startSheelaFromButton(
+                            buttonText: button.title,
+                            payload: button.payload,
+                            buttons: button);
+                      });
+                    }
+                  } catch (e, stackTrace) {
+                    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+                  }
+                } else if (button?.needPhoto ?? false) {
+                  // Check if the button requires a photo
+                  if (isLoading.isTrue) {
+                    return; // If loading, do nothing
+                  }
+                  stopTTS(); // Stop Text-to-Speech
+                  isSheelaScreenActive = false; // Deactivate Sheela screen
+                  updateTimer(enable: false); // disable the timer
+                  btnTextLocal = button?.title ?? ''; // Set local button text
+                  // Show the camera/gallery dialog and handle the result
+                  showCameraGalleryDialog(btnTextLocal ?? '').then((value) {
+                    isSheelaScreenActive =
+                        true; // Reactivate Sheela screen after dialog
+                    updateTimer(enable: true); // disable the timer
+                  });
+                } else if (button?.btnRedirectTo == strRedirectRetakePicture) {
+                  // Check if the button redirects to retake picture
+                  if (isLoading.isTrue) {
+                    return; // If loading, do nothing
+                  }
+                  stopTTS(); // Stop Text-to-Speech
+                  isSheelaScreenActive = false; // Deactivate Sheela screen
+                  updateTimer(enable: false); // disable the timer
+                  isRetakeCapture = true; // Set flag for retake capture
+                  // Show the camera/gallery dialog and handle the result
+                  showCameraGalleryDialog(btnTextLocal ?? '').then((value) {
+                    isSheelaScreenActive =
+                        true; // Reactivate Sheela screen after dialog
+                    updateTimer(enable: true); // disable the timer
+                  });
+                } else if (button?.btnRedirectTo == strRedirectToUploadImage) {
+                  // Check if the button redirects to upload image
+                  SheelaResponse sheelaLastConversation = SheelaResponse();
+                  sheelaLastConversation = conversations.last;
+                  isLoading.value = true; // Set loading flag
+                  conversations.add(SheelaResponse(
+                      loading: true)); // Add loading response to conversations
+                  scrollToEnd(); // Scroll to the end of conversations
+                  if (sheelaLastConversation.imageThumbnailUrl != null &&
+                      sheelaLastConversation.imageThumbnailUrl != '') {
+                    // Check if there is a valid image thumbnail URL
+                    saveMediaRegiment(
+                      sheelaLastConversation.imageThumbnailUrl ?? '',
+                      // Save media regiment
+                      '',
+                    ).then((value) {
+                      isLoading.value = false; // Reset loading flag
+                      conversations
+                          .removeLast(); // Remove the loading response from conversations
+                      if (value.isSuccess ?? false) {
+                        imageRequestUrl = value.result?.accessUrl ?? '';
+                        if (isLoading.isTrue) {
+                          return; // If loading, do nothing
+                        }
+                        if (conversations.last.singleuse != null &&
+                            conversations.last.singleuse! &&
+                            conversations.last.isActionDone != null) {
+                          conversations.last.isActionDone =
+                              true; // Set action done flag if it's a single-use button
+                        }
+                        button?.isSelected =
+                            true; // Mark the button as selected
+                        // Start Sheela from the button with specified parameters
+                        startSheelaFromButton(
+                            buttonText: button?.title,
+                            payload: button?.payload,
+                            buttons: button,
+                            isFromImageUpload: true);
+                        // Delay for 3 seconds and then unselect the button
+                        Future.delayed(const Duration(seconds: 3), () {
+                          button?.isSelected = false;
+                        });
+                      }
+                    });
+                  }
+                } else {
+                  startSheelaFromButton(
+                      buttonText: button.title,
+                      payload: button.payload,
+                      buttons: button);
+                }
+              } else {
+                lastMsgIsOfButtons = false;
+                conversations.add(newConversation);
+                getAIAPIResponseFor(response, button);
+              }
+            } catch (e, stackTrace) {
+              CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+
+              lastMsgIsOfButtons = false;
+              conversations.add(newConversation);
+              getAIAPIResponseFor(response, null);
+            }
+          } else {
+            lastMsgIsOfButtons = false;
+            conversations.add(newConversation);
+            getAIAPIResponseFor(response, null);
+          }
+        }
+      }
+      scrollToEnd();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 }
 
