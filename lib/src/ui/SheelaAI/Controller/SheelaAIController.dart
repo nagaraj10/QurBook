@@ -121,15 +121,30 @@ class SheelaAIController extends GetxController {
   SheelaBadgeModel? _sheelaBadgeModel;
 
 
+  // Represents the countdown seconds remaining, using the RxInt type
   RxInt countDownSecondsRemaining = 10.obs;
+
+// Represents a stream controller for handling events of type int
   StreamController<int> streamEvents = StreamController<int>();
+
+// Represents a timer used for countdown functionality
   Timer? countDownSecondsTimer;
 
+// Represents an instance of SpeechToText for handling speech-related operations
   SpeechToText? speechToText = SpeechToText();
+
+// Represents the current language code using Rx (reactive programming)
   var currentLanguageCode = 'en_US'.obs;
+
+// Represents a reactive boolean indicating whether the countdown dialog is currently showing
   Rx<bool> isCountDownDialogShowing = false.obs;
+
+// Represents a text editing controller for Sheela's input dialog
   TextEditingController sheelaInputTextEditingController = TextEditingController();
+
+// Represents a reactive boolean indicating whether Sheela's input dialog is currently showing
   Rx<bool> isSheelaInputDialogShowing = false.obs;
+
 
   String? btnTextLocal = '';
   bool? isRetakeCapture = false;
@@ -734,7 +749,9 @@ class SheelaAIController extends GetxController {
     if (isMicListening.isTrue) {
       isMicListening(false);
     }
+    // Invoking a method from the CommonUtil class to close Sheela's dialog
     CommonUtil().closeSheelaDialog();
+
     /*if (Platform.isIOS) {
       voice_platform.invokeMethod(strCloseSheelaDialog);
     } else {
@@ -1698,79 +1715,137 @@ makeApiRequest is used to update the data with latest data
   @override
   void onClose() {
     try {
+      // Cancel the countdown timer if it's active
       countDownSecondsTimer?.cancel();
       countDownSecondsTimer = null;
+
+      // Close the stream controller to release resources
       streamEvents.close();
+
+      // Stop speech listening using a method (assuming it's defined in the same class)
       stopSpeechListening();
+
+      // Call the parent class's onClose method
       super.onClose();
     } catch (e, stackTrace) {
+      // Handle any exceptions that occur during cleanup and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
+
+  // Initiates the voice assistant interaction process
   initiateVoiceAssistantInteraction() async {
     try {
+      // Introduce a slight delay before starting to allow for a smoother transition
       await Future.delayed(const Duration(milliseconds: 5));
+
+      // Set up the countdown timer and stream for handling events
       setupCountdownTimerAndStream();
+
+      // Show a dialog indicating that the voice assistant is listening
       showListeningCountdownDialog();
+
+      // Initialize and configure the speech recognizer
       initializeAndConfigureSpeechRecognizer();
     } catch (e, stackTrace) {
+      // Handle any exceptions that occur during the initiation process and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
-  setupCountdownTimerAndStream() {
+
+  // Sets up a countdown timer and stream for handling countdown events
+  void setupCountdownTimerAndStream() {
     try {
+      // Create a stream controller for handling countdown events of type int
       streamEvents = StreamController<int>();
+
+      // Initialize the stream with the initial countdown value (e.g., 10 seconds)
       streamEvents.add(10);
+
+      // Set the initial value of the countdown seconds remaining
       countDownSecondsRemaining.value = 10;
+
+      // Cancel the existing countdown timer if it's active
       if (countDownSecondsTimer != null) {
         countDownSecondsTimer?.cancel();
       }
-      countDownSecondsTimer =
-          Timer.periodic(const Duration(seconds: 1), (timer) {
-            if (!streamEvents.isClosed) {
-              if (countDownSecondsRemaining > 0) {
-                countDownSecondsRemaining.value--;
-              } else {
-                countDownSecondsTimer?.cancel();
-              }
-              streamEvents.add(countDownSecondsRemaining.value);
-              checkAndHandleCountdownCompletion();
-            } else {
-              countDownSecondsTimer?.cancel();
-            }
-          });
+
+      // Set up a new periodic timer to update the countdown
+      countDownSecondsTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        // Check if the stream is still open to avoid unnecessary updates
+        if (!streamEvents.isClosed) {
+          // Decrease the countdown seconds remaining
+          if (countDownSecondsRemaining > 0) {
+            countDownSecondsRemaining.value--;
+          } else {
+            // If countdown is complete, cancel the timer
+            countDownSecondsTimer?.cancel();
+          }
+
+          // Add the updated countdown value to the stream
+          streamEvents.add(countDownSecondsRemaining.value);
+
+          // Check and handle any actions needed upon countdown completion
+          checkAndHandleCountdownCompletion();
+        } else {
+          // If the stream is closed, cancel the timer
+          countDownSecondsTimer?.cancel();
+        }
+      });
     } catch (e, stackTrace) {
+      // Handle any exceptions that occur during the setup process and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
-  checkAndHandleCountdownCompletion() {
+
+  // Checks and handles actions upon countdown completion
+  void checkAndHandleCountdownCompletion() {
     try {
+      // Check if the countdown has reached zero
       if (countDownSecondsRemaining.value == 0) {
+        // If countdown is complete, close the countdown dialog and perform cleanup
         closeCountdownTimerDialogAndCleanup();
+
+        // Stop speech listening as the countdown is complete
         stopSpeechListening();
       }
     } catch (e, stackTrace) {
+      // Handle any exceptions that occur during the completion check and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
-  closeCountdownTimerDialogAndCleanup() {
+
+  // Closes the countdown timer dialog and performs cleanup
+  void closeCountdownTimerDialogAndCleanup() {
     try {
+      // Set the flag indicating that the countdown dialog is not showing
       isCountDownDialogShowing.value = false;
+
+      // Close the countdown timer dialog using GetX
       Get.back();
+
+      // Cancel the countdown timer if it's active
       countDownSecondsTimer?.cancel();
       countDownSecondsTimer = null;
+
+      // Close the stream controller to release resources
       streamEvents?.close();
     } catch (e, stackTrace) {
+      // Handle any exceptions that occur during the cleanup process and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
+
+  // Shows a dialog indicating that the voice assistant is listening with a countdown timer
   showListeningCountdownDialog() {
+    // Set the flag indicating that the countdown dialog is currently showing
     isCountDownDialogShowing.value = true;
+
     return showDialog<void>(
       context: Get.context!,
       barrierDismissible: false,
@@ -1778,55 +1853,63 @@ makeApiRequest is used to update the data with latest data
       builder: (context) {
         return StatefulBuilder(builder: (context, setState) {
           return WillPopScope(
+            // Disable the ability to dismiss the dialog by pressing the back button
             onWillPop: () async => false,
             child: AlertDialog(
               backgroundColor: Colors.transparent,
               elevation: 0,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6)),
+                borderRadius: BorderRadius.circular(6),
+              ),
               content: StreamBuilder<int>(
-                  stream: streamEvents.stream,
-                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                    final double containerSize =
-                        MediaQuery.of(context).size.width * 0.8;
-                    return Material(
+                // Listen to the countdown stream for updates
+                stream: streamEvents.stream,
+                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                  final double containerSize =
+                      MediaQuery.of(context).size.width * 0.8;
+
+                  return Material(
+                    color: Colors.transparent,
+                    child: Container(
+                      width: containerSize,
+                      height: containerSize,
                       color: Colors.transparent,
-                      child: Container(
-                        width: containerSize,
-                        height: containerSize,
-                        color: Colors.transparent,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            SpinKitDoubleBounce(
-                              size: containerSize,
-                              //color: const Color(0xFF6021de).withOpacity(0.1),
-                              color: Colors.grey.withOpacity(0.1),
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  strListening,
-                                  style: TextStyle(
-                                      fontSize: containerSize * 0.07,
-                                      color: Colors.white),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Loading spinner animation
+                          SpinKitDoubleBounce(
+                            size: containerSize,
+                            //color: const Color(0xFF6021de).withOpacity(0.1),
+                            color: Colors.grey.withOpacity(0.1),
+                          ),
+                          // Text displaying 'Listening' and the countdown seconds
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                strListening,
+                                style: TextStyle(
+                                  fontSize: containerSize * 0.07,
+                                  color: Colors.white,
                                 ),
-                                Text(
-                                  "${(snapshot.data.toString() ?? '0')} $strSeconds",
-                                  style: TextStyle(
-                                    fontSize: containerSize * 0.08,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
+                              ),
+                              Text(
+                                "${(snapshot.data.toString() ?? '0')} $strSeconds",
+                                style: TextStyle(
+                                  fontSize: containerSize * 0.08,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    );
-                  }),
+                    ),
+                  );
+                },
+              ),
             ),
           );
         });
@@ -1834,90 +1917,137 @@ makeApiRequest is used to update the data with latest data
     );
   }
 
+  // This method handles the Speech to text initialization process, status updates, and errors.
   initializeAndConfigureSpeechRecognizer() async {
     try {
+      // Initialize the SpeechToText recognizer
       await speechToText?.initialize(
+        // Callback for status updates
         onStatus: (status) {
+          // Check if the status is not 'Listening'
           if (status.toString().toLowerCase() != strListening.toLowerCase()) {
+            // If Sheela's input dialog is showing, trigger a refresh and start listening
             if (isSheelaInputDialogShowing.value) {
               refreshAndStartListening();
             }
           }
         },
+        // Callback for errors
         onError: (error) {
+          // Trigger a refresh and start listening in case of an error
           refreshAndStartListening();
         },
       );
+      // Trigger a refresh and start listening after initialization
       refreshAndStartListening();
     } catch (e, stackTrace) {
+      // Handle any exceptions that occur during initialization and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
+  // Refreshes and starts the speech listening process
   refreshAndStartListening() async {
     try {
+      // Introduce a slight delay before starting to allow for a smoother transition
       await Future.delayed(const Duration(milliseconds: 5));
+
+      // Initiate the speech listening process
       initiateSpeechListening();
     } catch (e, stackTrace) {
+      // Handle any exceptions that occur during the refresh process and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
+  // Initiates the speech listening process
   initiateSpeechListening() async {
     try {
+      // Start listening using the SpeechToText recognizer
       await speechToText?.listen(
+        // Callback for speech recognition results
         onResult: handleSpeechRecognitionResult,
+
+        // Set the maximum duration for listening to 2 minutes
         listenFor: const Duration(minutes: 2),
+
+        // Specify the locale for speech recognition
         localeId: currentLanguageCode.value,
       );
     } catch (e, stackTrace) {
+      // Handle any exceptions that occur during speech listening and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
+  // Stops the speech listening process
   stopSpeechListening() async {
     try {
+      // Stop the speech recognition using the SpeechToText recognizer
       await speechToText?.stop();
+
+      // Clear the input text in the Sheela's input text editing controller
       sheelaInputTextEditingController.text = '';
     } catch (e, stackTrace) {
+      // Handle any exceptions that occur during stopping speech listening and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
+   // Handles the speech recognition result
+  // This method is called when the SpeechToText recognizer provides a recognition result.
   handleSpeechRecognitionResult(SpeechRecognitionResult result) {
     try {
+      // Check if the countdown dialog is currently showing and close it if true
       if (isCountDownDialogShowing.value) {
         closeCountdownTimerDialogAndCleanup();
       }
+
+      // Check if Sheela's input dialog is not showing, and show it if true
       if (!isSheelaInputDialogShowing.value) {
         showSpeechToTextInputDialog();
       }
-      if (result!.finalResult ?? false) {
-        var regWords = result!.recognizedWords ?? '';
-        sheelaInputTextEditingController.text += '$regWords ';
+
+      // Check if the recognition result is final
+      if (result?.finalResult ?? false) {
+        // Extract recognized words and update the input text
+        var recognizedWords = result?.recognizedWords ?? '';
+        sheelaInputTextEditingController.text += '$recognizedWords ';
+
+        // Log the recognized text in debug mode
         if (kDebugMode) {
           log('onSpeechResult here ${sheelaInputTextEditingController.text}');
         }
+
+        // Perform further actions if the region is US
         if (CommonUtil.isUSRegion()) {
-          String response = CommonUtil()
-              .validString(sheelaInputTextEditingController.text)
-              .trim();
+          // Extract the response from the input text, trim, and handle it
+          String response =
+          CommonUtil().validString(sheelaInputTextEditingController.text).trim();
+
+          // Close Sheela's input dialog and stop listening
           closeSheelaInputDialogAndStopListening();
+
+          // Handle the Sheela's input response
           handleSheelaInputResponse(response);
         }
       }
     } catch (e, stackTrace) {
+      // Handle any exceptions that occur during result handling and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
+  // Shows the input dialog for Sheela's speech-to-text interaction
   showSpeechToTextInputDialog() {
+    // Set the flag indicating that Sheela's input dialog is currently showing
     isSheelaInputDialogShowing.value = true;
     return showDialog(
         context: Get.context!,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return WillPopScope(
+            // Disable the ability to dismiss the dialog by pressing the back button
             onWillPop: () async => false,
             child: AlertDialog(
               insetPadding: EdgeInsets.only(
@@ -1946,6 +2076,7 @@ makeApiRequest is used to update the data with latest data
                               size: CommonUtil().isTablet! ? 35.0.sp : 24.0.sp,
                             ),
                             onPressed: () {
+                              // Close Sheela's input dialog and stop listening
                               closeSheelaInputDialogAndStopListening();
                             },
                           )
@@ -2004,6 +2135,7 @@ makeApiRequest is used to update the data with latest data
                             ),
                             GestureDetector(
                               onTap: () {
+                                // Process and handle Sheela's input response
                                 String response = CommonUtil()
                                     .validString(
                                         sheelaInputTextEditingController.text)
@@ -2035,16 +2167,21 @@ makeApiRequest is used to update the data with latest data
         });
   }
 
+  // Closes Sheela's input dialog and stops speech listening
   closeSheelaInputDialogAndStopListening() {
     try {
       Get.back();
+      // Set the flag indicating that Sheela's input dialog is not showing
       isSheelaInputDialogShowing.value = false;
+      // Stop speech listening
       stopSpeechListening();
     } catch (e, stackTrace) {
+      // Handle any exceptions that occur during the closing process and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
+  // Handles the response received from Sheela's input
   handleSheelaInputResponse(String? response) async {
     try {
       isMicListening.value = false;
@@ -2333,6 +2470,7 @@ makeApiRequest is used to update the data with latest data
       }
       scrollToEnd();
     } catch (e, stackTrace) {
+      // Handle any exceptions that occur during the closing process and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }

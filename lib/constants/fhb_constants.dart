@@ -946,6 +946,7 @@ const String KEY_IS_Vitals_ManualRecording_Restricted =
 const String strVoiceClonePatientAssignment =
     'voiceClonePatientAssignment';
 
+// Flutter Speech-to-text
 const String strListening = 'Listening';
 const String strSeconds = 'seconds';
 const String strPleaseEnterValidInput = 'Please enter a valid input';
