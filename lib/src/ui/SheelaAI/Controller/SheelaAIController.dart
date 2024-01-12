@@ -2111,7 +2111,7 @@ makeApiRequest is used to update the data with latest data
                         margin: EdgeInsets.all(10),
                         padding: EdgeInsets.only(
                             right: (CommonUtil().isTablet ?? false) ? 7 : 5,
-                            left: (CommonUtil().isTablet ?? false) ? 7 : 5,
+                            left: (CommonUtil().isTablet ?? false) ? 10 : 5,
                             top: (CommonUtil().isTablet ?? false) ? 7 : 2,
                             bottom: (CommonUtil().isTablet ?? false) ? 7 : 2),
                         decoration: BoxDecoration(
