@@ -2446,7 +2446,8 @@ makeApiRequest is used to update the data with latest data
                             buttonText: button?.title,
                             payload: button?.payload,
                             buttons: button,
-                            isFromImageUpload: true);
+                            isFromImageUpload: true,
+                            requestFileType: strImage); // add requestFileType
                         // Delay for 3 seconds and then unselect the button
                         Future.delayed(const Duration(seconds: 3), () {
                           button?.isSelected = false;
