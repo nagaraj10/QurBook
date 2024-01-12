@@ -1278,17 +1278,17 @@ class _MyFHBState extends State<MyFHB> {
   Widget build(BuildContext context) {
     final nsSettingsForAndroid =
         AndroidInitializationSettings(variable.strLauncher);
-    final nsSettingsForIOS = IOSInitializationSettings();
+    final nsSettingsForIOS = DarwinInitializationSettings();
     final platform = InitializationSettings(
         android: nsSettingsForAndroid, iOS: nsSettingsForIOS);
 
-    Future notificationAction(String? payload) async {
+    Future notificationAction(NotificationResponse details) async {
       await Navigator.push(
           context, MaterialPageRoute(builder: (context) => AddReminder()));
     }
 
     flutterLocalNotificationsPlugin.initialize(platform,
-        onSelectNotification: notificationAction);
+        onDidReceiveNotificationResponse: notificationAction);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ConnectivityBloc>(

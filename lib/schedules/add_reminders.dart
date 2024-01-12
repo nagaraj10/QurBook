@@ -376,10 +376,10 @@ class _AddReminderState extends State<AddReminder> {
     final androidPlatformChannelSpecifies = AndroidNotificationDetails(
         variable.strAppPackage,
         variable.strAPP_NAME,
-        variable.strHealthRecordChannel,
+        channelDescription:variable.strHealthRecordChannel,
         importance: Importance.max,
         priority: Priority.high);
-    final iosPlatformChannelSpecifies = IOSNotificationDetails();
+    final iosPlatformChannelSpecifies = DarwinNotificationDetails();
     final platformChannelSpecifies = NotificationDetails();
     final timeArray = model.time!.split(':');
     var hour = int.parse(timeArray[0]);
