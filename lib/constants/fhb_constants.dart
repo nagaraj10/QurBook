@@ -991,7 +991,10 @@ const String strRetake = 'Retake';
 const String strRedirectRetakePicture = 'redirectRetakePicture';
 const String strRedirectToUploadImage = 'redirectUploadBucket';
 
-const String strImageRequestUrl = 'imageRequestUrl';
+// file upload feature in sheela
+const String strRequestFileUrl = 'requestFileUrl';
+const String strRequestType = 'requestFileType';
+const String strImage = 'image';
 const String strImageSizeValidation = 'Unable to upload photo. File size exceeds 5MB';
 
 Future<void> fbaLog({String? eveName, eveParams}) async {
