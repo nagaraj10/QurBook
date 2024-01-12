@@ -437,7 +437,7 @@ class HealthReportListForUserRepository {
       'tags': tagsList
     });
     final response = await _helper.updateDeviceSelection(
-        query.qr_user_profile_no_slash, body);
+        query.qr_user_profile_no_slash + '?toogleVoiceClone=$voiceCloning', body);
     return UpdateDeviceModel.fromJson(response);
   }
 
