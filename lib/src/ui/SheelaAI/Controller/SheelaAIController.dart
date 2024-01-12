@@ -2186,6 +2186,9 @@ makeApiRequest is used to update the data with latest data
       isSheelaInputDialogShowing.value = false;
       // Stop speech listening
       stopSpeechListening();
+      if (isCountDownDialogShowing.value) {
+        closeCountdownTimerDialogAndCleanup();
+      }
     } catch (e, stackTrace) {
       // Handle any exceptions that occur during the closing process and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
