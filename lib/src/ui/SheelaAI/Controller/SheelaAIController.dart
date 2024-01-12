@@ -273,11 +273,13 @@ class SheelaAIController extends GetxController {
     String? buttonText,
     String? payload,
     Buttons? buttons,
-    bool? isFromImageUpload = false
+    bool? isFromImageUpload = false,
+    String? requestFileType,
   }) async {
     stopTTS();
     conversations.add(SheelaResponse(text: buttonText));
-    getAIAPIResponseFor(payload, buttons,isFromImageUpload: isFromImageUpload);
+    getAIAPIResponseFor(payload, buttons,
+        isFromImageUpload: isFromImageUpload, requestFileType: requestFileType);
   }
 
   startSheelaConversation() {
@@ -354,7 +356,8 @@ class SheelaAIController extends GetxController {
     playTTS();
   }
 
-  getAIAPIResponseFor(String? message, Buttons? buttonsList,{bool? isFromImageUpload = false}) async {
+  getAIAPIResponseFor(String? message, Buttons? buttonsList,
+      {bool? isFromImageUpload = false, String? requestFileType}) async {
     try {
       isCallStartFromSheela = false;
       isLoading.value = true;
@@ -362,8 +365,11 @@ class SheelaAIController extends GetxController {
       scrollToEnd();
       final String tzOffset = DateTime.now().timeZoneOffset.toString();
       final splitedArr = tzOffset.split(':');
-      if(isFromImageUpload??false){
-        additionalInfo?[strImageRequestUrl] = imageRequestUrl;
+      // Check if the 'isFromFileUpload' variable is defined and truthy, otherwise default to false
+      if (isFromImageUpload ?? false) {
+        // If it's an image upload, update additionalInfo with the file URL and request type
+        additionalInfo?[strRequestFileUrl] = imageRequestUrl;  // Add file URL to additionalInfo
+        additionalInfo?[strRequestType] = requestFileType;     // Add request type to additionalInfo
       }
       final sheelaRequest = SheelaRequestModel(
         sender: userId,
@@ -1070,7 +1076,7 @@ class SheelaAIController extends GetxController {
                         stopTTS(); // Stop Text-to-Speech
                         isSheelaScreenActive =
                             false; // Deactivate Sheela screen
-                        updateTimer(enable: false);// disable the timer
+                        updateTimer(enable: false); // disable the timer
                         btnTextLocal =
                             button?.title ?? ''; // Set local button text
                         // Show the camera/gallery dialog and handle the result
@@ -1078,7 +1084,7 @@ class SheelaAIController extends GetxController {
                             .then((value) {
                           isSheelaScreenActive =
                               true; // Reactivate Sheela screen after dialog
-                          updateTimer(enable: true);// disable the timer
+                          updateTimer(enable: true); // disable the timer
                         });
                       } else if (button?.btnRedirectTo ==
                           strRedirectRetakePicture) {
@@ -1089,14 +1095,14 @@ class SheelaAIController extends GetxController {
                         stopTTS(); // Stop Text-to-Speech
                         isSheelaScreenActive =
                             false; // Deactivate Sheela screen
-                        updateTimer(enable: false);// disable the timer
+                        updateTimer(enable: false); // disable the timer
                         isRetakeCapture = true; // Set flag for retake capture
                         // Show the camera/gallery dialog and handle the result
                         showCameraGalleryDialog(btnTextLocal ?? '')
                             .then((value) {
                           isSheelaScreenActive =
                               true; // Reactivate Sheela screen after dialog
-                          updateTimer(enable: true);// disable the timer
+                          updateTimer(enable: true); // disable the timer
                         });
                       } else if (button?.btnRedirectTo ==
                           strRedirectToUploadImage) {
@@ -1135,11 +1141,11 @@ class SheelaAIController extends GetxController {
                                   true; // Mark the button as selected
                               // Start Sheela from the button with specified parameters
                               startSheelaFromButton(
-                                buttonText: button?.title,
-                                payload: button?.payload,
-                                buttons: button,
-                                isFromImageUpload: true
-                              );
+                                  buttonText: button?.title,
+                                  payload: button?.payload,
+                                  buttons: button,
+                                  isFromImageUpload: true,
+                                  requestFileType: strImage); // add requestFileType
                               // Delay for 3 seconds and then unselect the button
                               Future.delayed(const Duration(seconds: 3), () {
                                 button?.isSelected = false;
@@ -1965,8 +1971,7 @@ makeApiRequest is used to update the data with latest data
           }
         } else {
           // Display a toast message if the selected image exceeds the maximum allowed size
-          FlutterToast().getToast(
-              strImageSizeValidation, Colors.red);
+          FlutterToast().getToast(strImageSizeValidation, Colors.red);
         }
       }
     });
