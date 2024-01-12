@@ -1576,7 +1576,7 @@ class ChatState extends State<ChatDetail> {
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       fhbBasicWidget.getAudioWidgetForChat(
-                                          chatList.messages?.content,true)
+                                          chatList.messages?.content)
                                     ],
                                   ),
                                 ),
@@ -1861,7 +1861,7 @@ class ChatState extends State<ChatDetail> {
                                                             .getAudioWidgetForChat(
                                                                 chatList
                                                                     .messages
-                                                                    ?.content,true),
+                                                                    ?.content),
                                                       )
                                                     ],
                                                   ),

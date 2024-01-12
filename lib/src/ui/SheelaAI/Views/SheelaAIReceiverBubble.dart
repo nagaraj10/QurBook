@@ -96,12 +96,6 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                               null,
                               isFromSheela: true,
                               isPlayAudioUrl: chat?.playAudioInit ?? false,
-                              onTapPlayAudio: () {
-                                if (controller.isLoading.isTrue) {
-                                  return;
-                                }
-                                controller.stopTTS();
-                              },
                             )
                           : Obx(() {
                               return Row(
@@ -888,8 +882,11 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                 mainAxisAlignment:
                 MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  fhbBasicWidget.getAudioWidgetForChat(
-                      selectedImage,false)
+                  AudioWidget(
+                    chat.audioThumbnailUrl,
+                    null,
+                    isFromSheelaFileUpload: true,
+                  )
                 ],
               ),
             ),
