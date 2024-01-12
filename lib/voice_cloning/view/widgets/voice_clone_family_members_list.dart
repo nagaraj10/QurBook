@@ -119,7 +119,8 @@ class _VoiceCloneFamilyMembersListState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipOval(
-                child: familyMember.child?.profilePicThumbnailUrl == null
+                child: (familyMember.child?.profilePicThumbnailUrl ?? '')
+                        .isEmpty
                     ? Container(
                         width: userProfileImageSize,
                         height: userProfileImageSize,
@@ -142,7 +143,6 @@ class _VoiceCloneFamilyMembersListState
                     : Image.network(
                         familyMember.child?.profilePicThumbnailUrl ?? '',
                         fit: BoxFit.cover,
-                        color: Colors.black,
                         width: userProfileImageSize,
                         height: userProfileImageSize,
                         headers: {
