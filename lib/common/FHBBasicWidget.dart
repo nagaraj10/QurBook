@@ -564,9 +564,9 @@ class FHBBasicWidget {
           );
   }
 
-  Widget getAudioWidgetForChat(String? audioPathMain) {
+  Widget getAudioWidgetForChat(String? audioPathMain, bool isFromChat) {
     return Column(
-      children: <Widget>[AudioWidget(audioPathMain, null, isFromChat: true)],
+      children: <Widget>[AudioWidget(audioPathMain, null, isFromChat: isFromChat)],
     );
   }
 

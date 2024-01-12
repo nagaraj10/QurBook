@@ -28,6 +28,7 @@ class AudioWidget extends StatefulWidget {
   bool isPlayAudioUrl;
 
   Function(bool, String?)? deleteAudioFile;
+  Function()? onTapPlayAudio;
 
   AudioWidget(
     this.audioFile,
@@ -35,6 +36,7 @@ class AudioWidget extends StatefulWidget {
     this.isFromChat = false,
     this.isFromSheela = false,
     this.isPlayAudioUrl = false,
+    this.onTapPlayAudio,
   });
 
   @override
@@ -298,6 +300,7 @@ class AudioWidgetState extends State<AudioWidget> {
   }
 
   void startPlayer() async {
+    widget.onTapPlayAudio!();
     isPlaying = true;
     if (widget.isFromSheela) {
       _sheelaAIController.isLoading.value = true;

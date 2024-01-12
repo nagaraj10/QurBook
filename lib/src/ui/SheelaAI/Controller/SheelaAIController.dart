@@ -121,7 +121,7 @@ class SheelaAIController extends GetxController {
 
   String? btnTextLocal = '';
   bool? isRetakeCapture = false;
-  String? imageRequestUrl = '';
+  String? fileRequestUrl = '';
 
   final ApiBaseHelper _helper = ApiBaseHelper();
 
@@ -368,7 +368,7 @@ class SheelaAIController extends GetxController {
       // Check if the 'isFromFileUpload' variable is defined and truthy, otherwise default to false
       if (isFromImageUpload ?? false) {
         // If it's an image upload, update additionalInfo with the file URL and request type
-        additionalInfo?[strRequestFileUrl] = imageRequestUrl;  // Add file URL to additionalInfo
+        additionalInfo?[strRequestFileUrl] = fileRequestUrl;  // Add file URL to additionalInfo
         additionalInfo?[strRequestType] = requestFileType;     // Add request type to additionalInfo
       }
       final sheelaRequest = SheelaRequestModel(
@@ -1127,7 +1127,7 @@ class SheelaAIController extends GetxController {
                             conversations
                                 .removeLast(); // Remove the loading response from conversations
                             if (value.isSuccess ?? false) {
-                              imageRequestUrl = value.result?.accessUrl ?? '';
+                              fileRequestUrl = value.result?.accessUrl ?? '';
                               if (isLoading.isTrue) {
                                 return; // If loading, do nothing
                               }
@@ -1829,16 +1829,16 @@ makeApiRequest is used to update the data with latest data
   }
 
   // Function to generate a list of button configurations for image preview
-  List<Buttons> sheelaImagePreviewButtons(String? btnTitle) {
+  List<Buttons> sheelaImagePreviewButtons(String? btnTitle,String? requestFileType) {
     List<Buttons> buttons = [
       Buttons(
         title: strCamelYes, // Button title
         payload: btnTitle, // Payload data (optional)
-        btnRedirectTo: strRedirectToUploadImage, // Redirection information
+        btnRedirectTo: getRedirectTo(requestFileType), // Redirection information
       ),
       Buttons(
         title: strRetake, // Button title
-        btnRedirectTo: strRedirectRetakePicture, // Redirection information
+        btnRedirectTo: getRetakeTo(requestFileType), // Redirection information
       ),
       Buttons(
         title: strExit, // Button title
@@ -1849,10 +1849,31 @@ makeApiRequest is used to update the data with latest data
     return buttons;
   }
 
-  // A function to handle the logic for displaying an image thumbnail in the Sheela chat
-  Future<void> sheelaImagePreviewThumbnail({
+  String? getRedirectTo(requestFileType) {
+    switch (requestFileType) {
+      case strImage:
+        return strRedirectToUploadImage;
+      case strAudio:
+        return strRedirectToUploadAudio;
+    }
+    return '';
+  }
+
+  String? getRetakeTo(requestFileType) {
+    switch (requestFileType) {
+      case strImage:
+        return strRedirectRetakePicture;
+      case strAudio:
+        return strRedirectRetakeAudio;
+    }
+    return '';
+  }
+
+  // A function to handle the logic for displaying in the Sheela chat
+  Future<void> sheelaFileStaticConversation({
     String? btnTitle, // Optional button title
     String? selectedImagePath, // Path to the selected image
+    String? requestFileType
   }) async {
     try {
       // Left Sheela card setup
@@ -1869,9 +1890,14 @@ makeApiRequest is used to update the data with latest data
       currentCon.recipientId =
           sheelaRecepId; // Set recipient ID again (duplicated line?)
       currentCon.buttons = sheelaImagePreviewButtons(
-          btnTitle); // Generate buttons for the Sheela card
-      currentCon.imageThumbnailUrl =
-          selectedImagePath; // Set image thumbnail URL
+          btnTitle,requestFileType); // Generate buttons for the Sheela card
+      if (requestFileType == strImage) {
+        currentCon.imageThumbnailUrl =
+            selectedImagePath; // Set image thumbnail URL
+      } else if (requestFileType == strAudio) {
+        currentCon.audioThumbnailUrl =
+            selectedImagePath; // Set audio thumbnail URL
+      }
       if (isRetakeCapture ?? false) {
         isLoading.value = false; // Set loading flag to false
         conversations.removeLast(); // Remove the last conversation (if retake)
@@ -1943,9 +1969,10 @@ makeApiRequest is used to update the data with latest data
           pickedFile.path); // Create a File object from the captured image path
 
       // Trigger the image preview thumbnail with the captured image path
-      sheelaImagePreviewThumbnail(
+      sheelaFileStaticConversation(
         btnTitle: btnTitle, // Optional button title
         selectedImagePath: _image.path, // Path to the captured image
+        requestFileType: strImage
       );
     }
   }
@@ -1964,9 +1991,10 @@ makeApiRequest is used to update the data with latest data
           // Check if the image path is not null or empty
           if (imagePathGallery != null && imagePathGallery != '') {
             // Trigger the image preview thumbnail with the cropped image path
-            sheelaImagePreviewThumbnail(
+            sheelaFileStaticConversation(
               btnTitle: btnTitle, // Optional button title
               selectedImagePath: imagePathGallery, // Path to the cropped image
+              requestFileType: strImage
             );
           }
         } else {

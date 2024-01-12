@@ -26,6 +26,8 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart';
 
+import '../../../Qurhome/Common/GradientAppBarQurhome.dart';
+
 class AudioRecorder extends StatefulWidget {
   AudioScreenArguments? arguments;
   AudioRecorder({this.arguments});
@@ -228,7 +230,9 @@ class _AudioRecorderState extends State<AudioRecorder> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        flexibleSpace: GradientAppBar(),
+        flexibleSpace: (PreferenceUtil.getIfQurhomeisAcive())
+            ? GradientAppBarQurhome()
+            : GradientAppBar(),
         backgroundColor: Colors.transparent,
         leading: InkWell(
           child: Icon(

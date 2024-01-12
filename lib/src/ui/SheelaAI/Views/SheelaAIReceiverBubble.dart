@@ -14,6 +14,7 @@ import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/video_player_screen.dart';
 
 import '../../../../common/CommonUtil.dart';
+import '../../../../common/FHBBasicWidget.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/fhb_constants.dart' as Constants;
@@ -31,6 +32,7 @@ import 'youtube_player.dart';
 class SheelaAIReceiverBubble extends StatelessWidget {
   final SheelaResponse chat;
   SheelaAIController controller = Get.find();
+  FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
   SheelaAIReceiverBubble(
     this.chat,
@@ -94,6 +96,12 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                               null,
                               isFromSheela: true,
                               isPlayAudioUrl: chat?.playAudioInit ?? false,
+                              onTapPlayAudio: () {
+                                if (controller.isLoading.isTrue) {
+                                  return;
+                                }
+                                controller.stopTTS();
+                              },
                             )
                           : Obx(() {
                               return Row(
@@ -127,6 +135,11 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                         (chat.imageThumbnailUrl != null &&
                                             chat.imageThumbnailUrl != '')
                                             ? getImagePreviewThumbnail(chat.imageThumbnailUrl??'')
+                                            : SizedBox.shrink(),
+                                        // Conditional rendering of an image preview thumbnail
+                                        (chat.audioThumbnailUrl != null &&
+                                            chat.audioThumbnailUrl != '')
+                                            ? getAudioCardWidget(chat.audioThumbnailUrl??'')
                                             : SizedBox.shrink(),
                                         buttonWidgets(context)
                                       ],
@@ -496,7 +509,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             controller.isLoading.value = false; // Reset loading flag
                             controller.conversations.removeLast(); // Remove the loading response from conversations
                             if (value.isSuccess ?? false) {
-                              controller.imageRequestUrl =
+                              controller.fileRequestUrl =
                                   value.result?.accessUrl ?? '';
                               if (controller.isLoading.isTrue) {
                                 return; // If loading, do nothing
@@ -542,14 +555,14 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         controller.isLoading.value = true;
                         controller.conversations.add(SheelaResponse(loading: true));
                         controller.scrollToEnd();
-                        if (chat.imageThumbnailUrl != null && chat.imageThumbnailUrl != '') {
+                        if (chat.audioThumbnailUrl != null && chat.audioThumbnailUrl != '') {
                           controller
-                              .saveMediaRegiment(chat.imageThumbnailUrl ?? '', '')
+                              .saveMediaRegiment(chat.audioThumbnailUrl ?? '', '')
                               .then((value) {
                             controller.isLoading.value = false;
                             controller.conversations.removeLast();
                             if (value.isSuccess ?? false) {
-                              controller.imageRequestUrl =
+                              controller.fileRequestUrl =
                                   value.result?.accessUrl ?? '';
                               if (controller.isLoading.isTrue) {
                                 return;
@@ -562,7 +575,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                   buttonText: buttonData?.title,
                                   payload: buttonData?.payload,
                                   buttons: buttonData,
-                                  isFromImageUpload: true
+                                  isFromImageUpload: true,
+                                  requestFileType: strAudio
                               );
                               Future.delayed(const Duration(seconds: 3), () {
                                 buttonData?.isSelected = false;
@@ -858,6 +872,33 @@ class SheelaAIReceiverBubble extends StatelessWidget {
     );
   }
 
+  Widget getAudioCardWidget(String selectedImage) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Material(
+            borderRadius: BorderRadius.circular(10.0),
+            elevation: 2.0,
+            child: Container(
+              padding: EdgeInsets.all(10.0),
+              width: 1.sw / 1.5,
+              child: Row(
+                mainAxisAlignment:
+                MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  fhbBasicWidget.getAudioWidgetForChat(
+                      selectedImage,false)
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   void goToAudioRecordScreen(){
     Get.to(AudioRecorder(
       arguments: AudioScreenArguments(
@@ -868,9 +909,11 @@ class SheelaAIReceiverBubble extends StatelessWidget {
       controller.updateTimer(enable: true);
       var audioPath = results[keyAudioFile];
       if (audioPath != null && audioPath != '') {
-        controller.sheelaImagePreviewThumbnail(
+        controller.sheelaFileStaticConversation(
             btnTitle: controller.btnTextLocal ?? '',
-            selectedImagePath: audioPath);
+            selectedImagePath: audioPath,
+          requestFileType: strAudio
+        );
       }
     });
   }
