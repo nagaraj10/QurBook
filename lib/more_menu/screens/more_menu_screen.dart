@@ -169,8 +169,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   double arrowIcon = CommonUtil().isTablet! ? 20.0.sp : 16.0.sp;
   double switchTrail = CommonUtil().isTablet! ? 1.0 : 0.8;
-  bool isVoiceCloningChanged =
-      false; // bool value to allow navigation when tapped
+  bool? isVoiceCloningChanged; // bool value to allow navigation when tapped
 
   @override
   void initState() {
@@ -896,7 +895,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             allowVitalNotification,
             allowSymptomsNotification,
             preferredMeasurement,
-            voiceCloning)
+            voiceCloning,
+            isVoiceCloningChanged)
         .then((value) async {
       updateDeviceModel = value;
       if (updateDeviceModel!.isSuccess!) {
@@ -1099,7 +1099,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             isSheelaNotificationPref = false;
                             isTouched = true;
                             isVoiceCloningChanged =
-                                false; // to restrict navigation to terms page
+                                null; // to restrict navigation to terms page
 
                             _isdigitRecognition = newValue;
                             createAppColorSelection(preColor, greColor);
@@ -1140,7 +1140,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             isTouched = true;
                             _isdeviceRecognition = newValue;
                             isVoiceCloningChanged =
-                                false; // to restrict navigation to terms page
+                                null; // to restrict navigation to terms page
 
                             createAppColorSelection(preColor, greColor);
                             /*PreferenceUtil.saveString(
@@ -1197,42 +1197,12 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                         trailing: Transform.scale(
                           scale: switchTrail,
                           child: Switch(
-                            value: voiceCloning!,
+                            value: voiceCloning,
                             activeColor: (superAdminAllowedVoiceCloningModule &&
                                     providerAllowedVoiceCloningModule)
                                 ? Color(new CommonUtil().getMyPrimaryColor())
                                 : (Colors.grey),
-                            onChanged: (bool newValue) {
-                              if (superAdminAllowedVoiceCloningModule &&
-                                  providerAllowedVoiceCloningModule) {
-                                setState(() {
-                                  isSkillIntegration = true;
-                                  isCareGiverCommunication = false;
-                                  isVitalPreferences = false;
-                                  isDisplayPreference = false;
-                                  isSheelaNotificationPref = false;
-                                  isTouched = true;
-                                  isVoiceCloningChanged = newValue;
-
-                                  voiceCloning = newValue;
-                                  createAppColorSelection(preColor, greColor)
-                                      .then((value) async {
-                                    //to set toggle button value when app opened for the first tym
-                                    setState(() {});
-                                    //get the values of status to initiate navigation
-                                    await getAppColorValues(
-                                        forNavigation: true);
-                                    if (isVoiceCloningChanged) {
-                                      navigateToTermsOrStatusScreen();
-                                    }
-                                  });
-
-                                  /*PreferenceUtil.saveString(
-                                        Constants.allowDeviceRecognition,
-                                        _isdeviceRecognition.toString());*/
-                                });
-                              }
-                            },
+                            onChanged: handleVoiceCloneSwitch,
                           ),
                         ),
                         onTap: () => navigateToTermsOrStatusScreen()),
@@ -1670,7 +1640,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             isDisplayPreference = true;
                             isSheelaNotificationPref = false;
                             isVoiceCloningChanged =
-                                false; // to restrict navigation to terms page
+                                null; // to restrict navigation to terms page
                           },
                         );
                       },
@@ -1848,7 +1818,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       isDisplayPreference = false;
                       isSheelaNotificationPref = true;
                       isVoiceCloningChanged =
-                          false; // to restrict navigation to terms page
+                          null; // to restrict navigation to terms page
 
                       createAppColorSelection(preColor, greColor).then((value) {
                         setState(() {});
@@ -2157,4 +2127,94 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             : false
         : false;
   }
+
+  void handleVoiceCloneSwitch(bool isEnabled) {
+    if (isEnabled == false) {
+      _confirmVoiceCloneDisable(isEnabled);
+    } else {
+      handleVoiceCloneSwitchAction(isEnabled);
+    }
+  }
+
+  Future<void> handleVoiceCloneSwitchAction(bool isEnabled) async {
+    if (superAdminAllowedVoiceCloningModule &&
+        providerAllowedVoiceCloningModule) {
+      setState(() {
+        isSkillIntegration = true;
+        isCareGiverCommunication = false;
+        isVitalPreferences = false;
+        isDisplayPreference = false;
+        isSheelaNotificationPref = false;
+        isTouched = true;
+        isVoiceCloningChanged = true;
+        voiceCloning = isEnabled;
+      });
+      await createAppColorSelection(
+        preColor,
+        greColor,
+      );
+      //to set toggle button value when app opened for the first tym
+      setState(() {});
+      //get the values of status to initiate navigation
+      await getAppColorValues(forNavigation: true);
+      if (isVoiceCloningChanged ?? false) {
+        navigateToTermsOrStatusScreen();
+      }
+    }
+  }
+
+  Future _confirmVoiceCloneDisable(bool isEnabled) => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Center(
+            child: Text(
+              strConfirmation,
+              style: TextStyle(
+                color: Color(
+                  CommonUtil().getMyPrimaryColor(),
+                ),
+                fontSize: 18.0.sp,
+              ),
+            ),
+          ),
+          content: Text(
+            strConfirmationVoiceCloneDisable,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14.0.sp,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => closeDialog(),
+              child: const Text(
+                strCancel,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: tabHeader4,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                closeDialog();
+                await handleVoiceCloneSwitchAction(isEnabled);
+              },
+              child: Text(
+                strConfirm,
+                style: TextStyle(
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                  fontSize: tabHeader4,
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+
+  void closeDialog() => Navigator.of(
+        context,
+      ).pop();
 }
