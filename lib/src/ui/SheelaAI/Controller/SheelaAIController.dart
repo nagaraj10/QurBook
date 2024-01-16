@@ -146,6 +146,8 @@ class SheelaAIController extends GetxController {
 // Represents a reactive boolean indicating whether Sheela's input dialog is currently showing
   Rx<bool> isSheelaInputDialogShowing = false.obs;
 
+  /// Represents a Sheela Input is Started or not
+  bool isSheelaInputStarted = false;
 
   String? btnTextLocal = '';
   bool? isRetakeCapture = false;
@@ -1805,12 +1807,12 @@ makeApiRequest is used to update the data with latest data
 
 
   // Checks and handles actions upon countdown completion
-  void checkAndHandleCountdownCompletion() {
+  void checkAndHandleCountdownCompletion() async {
     try {
       // Check if the countdown has reached zero
       if (countDownSecondsRemaining.value == 0) {
         // If countdown is complete, close the countdown dialog and perform cleanup
-        closeCountdownTimerDialogAndCleanup();
+       await closeCountdownTimerDialogAndCleanup();
 
         // Stop speech listening as the countdown is complete
         stopSpeechListening();
@@ -1823,8 +1825,10 @@ makeApiRequest is used to update the data with latest data
 
 
   // Closes the countdown timer dialog and performs cleanup
-  void closeCountdownTimerDialogAndCleanup() {
+  Future<void> closeCountdownTimerDialogAndCleanup() async {
     try {
+      // Close the stream controller to release resources
+      await streamEvents.close();
       // Set the flag indicating that the countdown dialog is not showing
       isCountDownDialogShowing.value = false;
 
@@ -1834,9 +1838,6 @@ makeApiRequest is used to update the data with latest data
       // Cancel the countdown timer if it's active
       countDownSecondsTimer?.cancel();
       countDownSecondsTimer = null;
-
-      // Close the stream controller to release resources
-      streamEvents?.close();
     } catch (e, stackTrace) {
       // Handle any exceptions that occur during the cleanup process and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -1955,6 +1956,8 @@ makeApiRequest is used to update the data with latest data
   // Initiates the speech listening process
   initiateSpeechListening() async {
     try {
+      isSheelaInputStarted = true;
+      sheelaInputTextEditingController.text = '';
       // Start listening using the SpeechToText recognizer
       await speechToText?.listen(
         // Callback for speech recognition results
@@ -1975,6 +1978,7 @@ makeApiRequest is used to update the data with latest data
   // Stops the speech listening process
   stopSpeechListening() async {
     try {
+      isSheelaInputStarted = false;
       // Stop the speech recognition using the SpeechToText recognizer
       await speechToText?.stop();
 
@@ -1988,23 +1992,26 @@ makeApiRequest is used to update the data with latest data
 
    // Handles the speech recognition result
   // This method is called when the SpeechToText recognizer provides a recognition result.
-  handleSpeechRecognitionResult(SpeechRecognitionResult result) {
+  handleSpeechRecognitionResult(SpeechRecognitionResult result) async {
     try {
       // Check if the countdown dialog is currently showing and close it if true
       if (isCountDownDialogShowing.value) {
-        closeCountdownTimerDialogAndCleanup();
+        await closeCountdownTimerDialogAndCleanup();
       }
 
       // Check if Sheela's input dialog is not showing, and show it if true
-      if (!isSheelaInputDialogShowing.value) {
+      if (!isSheelaInputDialogShowing.value && isSheelaInputStarted) {
         showSpeechToTextInputDialog();
+      } else {
+        final recognizedWords = result.recognizedWords;
+        sheelaInputTextEditingController.text = '$recognizedWords ';
       }
 
       // Check if the recognition result is final
       if (result?.finalResult ?? false) {
         // Extract recognized words and update the input text
         var recognizedWords = result?.recognizedWords ?? '';
-        sheelaInputTextEditingController.text += '$recognizedWords ';
+        sheelaInputTextEditingController.text = '$recognizedWords ';
 
         // Log the recognized text in debug mode
         if (kDebugMode) {
@@ -2167,15 +2174,16 @@ makeApiRequest is used to update the data with latest data
   }
 
   // Closes Sheela's input dialog and stops speech listening
-  closeSheelaInputDialogAndStopListening() {
+  closeSheelaInputDialogAndStopListening() async {
     try {
-      Get.back();
       // Set the flag indicating that Sheela's input dialog is not showing
       isSheelaInputDialogShowing.value = false;
       // Stop speech listening
-      stopSpeechListening();
+      await stopSpeechListening();
+
+      Get.back();
       if (isCountDownDialogShowing.value) {
-        closeCountdownTimerDialogAndCleanup();
+       await closeCountdownTimerDialogAndCleanup();
       }
     } catch (e, stackTrace) {
       // Handle any exceptions that occur during the closing process and log them
