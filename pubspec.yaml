@@ -24,7 +24,7 @@ dependencies:
     path: ../../qurhealth/fhbCommon
 
   # The following adds the Cupertino Icons font to your application.
-  firebase_core: ^2.5.0
+  firebase_core: ^2.13.1
   rxdart: ^0.27.1
   shimmer: ^2.0.0
   cached_network_image: ^3.0.0
@@ -69,7 +69,7 @@ dependencies:
   google_sign_in: ^5.0.4
   quiver: ^3.0.1
   agora_rtc_engine: ^5.0.0
-  firebase_messaging: ^14.2.2
+  firebase_messaging: ^14.6.2
   flutter_switch: ^0.3.2
   firebase_auth: ^4.2.8
   cloud_firestore: ^4.4.2

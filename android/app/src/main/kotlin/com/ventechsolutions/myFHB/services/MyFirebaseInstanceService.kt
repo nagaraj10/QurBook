@@ -45,7 +45,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         Log.d(TAG, "Notification: " + remoteMessage.notification)
         Log.d(TAG, "Notification: " + remoteMessage.rawData)
         // Check if message contains a data payload.
-        if (remoteMessage.data.isNotEmpty()) {
+       /* if (remoteMessage.data.isNotEmpty()) {
             createNotification(data = remoteMessage.data)
         }
         if (remoteMessage.notification != null) {
@@ -54,7 +54,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             if (t != null && b != null) {
                 createNotification(title = t, body = b)
             }
-        }
+        }*/
 
     }
 
