@@ -5566,11 +5566,29 @@ class CommonUtil {
     }
   }
 
+  // This method is responsible for closing the Sheela dialog and performing related actions
   closeSheelaDialog() {
     try {
-      const platform = MethodChannel(strCloseSheelaDialog);
-      platform.invokeMethod(strCloseSheelaDialog);
+      /*const platform = MethodChannel(strCloseSheelaDialog);
+      platform.invokeMethod(strCloseSheelaDialog);*/
+
+      // Initializing SheelaAIController for additional actions
+      SheelaAIController? sheelaAIController =
+          CommonUtil().onInitSheelaAIController();
+
+      // Checking and closing Sheela input dialog if it is showing
+      if (sheelaAIController.isSheelaInputDialogShowing.value) {
+        sheelaAIController.closeSheelaInputDialogAndStopListening();
+      }
+
+      // Checking and closing countdown timer dialog, and stopping speech listening if it is showing
+      if (sheelaAIController.isCountDownDialogShowing.value) {
+        sheelaAIController
+          ..closeCountdownTimerDialogAndCleanup()
+          ..stopSpeechListening();
+      }
     } catch (e, stackTrace) {
+      // Handling exceptions and logging errors
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
