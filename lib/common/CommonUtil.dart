@@ -7285,6 +7285,8 @@ class CommonUtil {
       Permission.microphone,
       Permission.camera,
       Permission.storage,
+      Permission.photos,
+      Permission.videos,
       //Permission.notification, // integrated native permission for push notificaion
     ].request();
     /*if (statuses[Permission.bluetoothConnect]!.isGranted &&
