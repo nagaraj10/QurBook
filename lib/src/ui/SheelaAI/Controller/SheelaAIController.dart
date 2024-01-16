@@ -1825,7 +1825,7 @@ makeApiRequest is used to update the data with latest data
 
 
   // Closes the countdown timer dialog and performs cleanup
-  Future<void> closeCountdownTimerDialogAndCleanup() async {
+  closeCountdownTimerDialogAndCleanup() async {
     try {
       // Close the stream controller to release resources
       await streamEvents.close();
@@ -1957,7 +1957,9 @@ makeApiRequest is used to update the data with latest data
   initiateSpeechListening() async {
     try {
       isSheelaInputStarted = true;
-      sheelaInputTextEditingController.text = '';
+      if (Platform.isIOS) {
+        sheelaInputTextEditingController.text = '';
+      }
       // Start listening using the SpeechToText recognizer
       await speechToText?.listen(
         // Callback for speech recognition results
@@ -2003,15 +2005,21 @@ makeApiRequest is used to update the data with latest data
       if (!isSheelaInputDialogShowing.value && isSheelaInputStarted) {
         showSpeechToTextInputDialog();
       } else {
-        final recognizedWords = result.recognizedWords;
-        sheelaInputTextEditingController.text = '$recognizedWords ';
+        var recognizedWords = result?.recognizedWords ?? '';
+        if (Platform.isIOS) {
+          sheelaInputTextEditingController.text = '$recognizedWords ';
+        }
       }
 
       // Check if the recognition result is final
       if (result?.finalResult ?? false) {
         // Extract recognized words and update the input text
         var recognizedWords = result?.recognizedWords ?? '';
-        sheelaInputTextEditingController.text = '$recognizedWords ';
+        if (Platform.isIOS) {
+          sheelaInputTextEditingController.text = '$recognizedWords ';
+        } else {
+          sheelaInputTextEditingController.text += '$recognizedWords ';
+        }
 
         // Log the recognized text in debug mode
         if (kDebugMode) {
@@ -2021,8 +2029,9 @@ makeApiRequest is used to update the data with latest data
         // Perform further actions if the region is US
         if (CommonUtil.isUSRegion()) {
           // Extract the response from the input text, trim, and handle it
-          String response =
-          CommonUtil().validString(sheelaInputTextEditingController.text).trim();
+          String response = CommonUtil()
+              .validString(sheelaInputTextEditingController.text)
+              .trim();
 
           // Close Sheela's input dialog and stop listening
           closeSheelaInputDialogAndStopListening();
