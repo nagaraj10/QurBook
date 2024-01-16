@@ -179,6 +179,44 @@ class IosNotificationHandler {
     });
   }
 
+  void handleNotificationResponse(jsonDecode)async{
+    if (!isAlreadyLoaded) {
+      notificationReceivedFromKilledState = true;
+      await Future.delayed(const Duration(seconds: 5));
+      isAlreadyLoaded = true;
+    }
+    final data = Map<String, dynamic>.from(jsonDecode);
+    model = NotificationModel.fromMap(data.containsKey("action")
+        ? Map<String, dynamic>.from(data["data"])
+        : data);
+    if ((model.externalLink ?? '').isNotEmpty) {
+      if (model.externalLink == variable.iOSAppStoreLink) {
+        await LaunchReview.launch(
+            iOSAppId: variable.iOSAppId, writeReview: false);
+      } else {
+        CommonUtil().launchURL(model.externalLink!);
+      }
+    }
+
+    var actionKey = data["action"] ?? '';
+    if (actionKey.isNotEmpty) {
+      renewAction = actionKey == "Renew";
+      callbackAction = actionKey == "Callback";
+      rejectAction = actionKey == "Reject";
+      acceptAction = actionKey == "Accept";
+      declineAction = actionKey == "Decline";
+      escalteAction = actionKey == "Escalate";
+      chatWithCC = actionKey == "chatwithcc";
+      viewRecordAction = actionKey == "viewrecord";
+      viewDetails = actionKey == "ViewDetails";
+      viewMemberAction =
+          actionKey.toLowerCase() == "ViewMember".toLowerCase();
+      communicationSettingAction = actionKey.toLowerCase() ==
+          "Communicationsettings".toLowerCase();
+    }
+    actionForTheNotification();
+  }
+
   void updateStatus(String status) async {
     try {
       await myDB
