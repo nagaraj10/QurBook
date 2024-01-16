@@ -13,6 +13,8 @@ import '../common/CommonUtil.dart';
 import '../constants/fhb_constants.dart' as Constants;
 import '../constants/variable_constant.dart' as variable;
 import '../src/utils/screenutils/size_extensions.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class AddReminder extends StatefulWidget {
   final ReminderModel? model;
@@ -376,10 +378,10 @@ class _AddReminderState extends State<AddReminder> {
     final androidPlatformChannelSpecifies = AndroidNotificationDetails(
         variable.strAppPackage,
         variable.strAPP_NAME,
-        variable.strHealthRecordChannel,
+        channelDescription:variable.strHealthRecordChannel,
         importance: Importance.max,
         priority: Priority.high);
-    final iosPlatformChannelSpecifies = IOSNotificationDetails();
+    final iosPlatformChannelSpecifies = DarwinNotificationDetails();
     final platformChannelSpecifies = NotificationDetails();
     final timeArray = model.time!.split(':');
     var hour = int.parse(timeArray[0]);
@@ -406,34 +408,52 @@ class _AddReminderState extends State<AddReminder> {
     switch (model.interval) {
       case variable.strDay:
         {
-          final time = Time(hour, mintues);
-          await flutterLocalNotificationsPlugin.showDailyAtTime(
-              1, model.title, model.notes, time, platformChannelSpecifies);
+          final time = _nextInstanceOfSpecificTime(hour, mintues);
+          await flutterLocalNotificationsPlugin.zonedSchedule(
+              1, model.title, model.notes, time, platformChannelSpecifies,
+              uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+              matchDateTimeComponents: DateTimeComponents.time);
         }
 
         break;
       case variable.strWeek:
         {
-          final time = Time(hour, mintues);
-          await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
+          final time = _nextInstanceOfSpecificTime(hour, mintues);
+          await flutterLocalNotificationsPlugin.zonedSchedule(
               2,
               model.title,
               model.notes,
-              Day.values[myCurrentDay!],
               time,
-              platformChannelSpecifies);
+              platformChannelSpecifies,
+              uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+              matchDateTimeComponents: DateTimeComponents.time);
         }
         break;
       case variable.strMonth:
         {
           final time = DateTime.parse(widget.model!.date!);
-          await flutterLocalNotificationsPlugin.schedule(
-              3, model.title, model.notes, time, platformChannelSpecifies);
+          await flutterLocalNotificationsPlugin.zonedSchedule(
+              3, model.title, model.notes,
+            tz.TZDateTime.from(time, tz.local),
+            platformChannelSpecifies,
+            uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,);
         }
         break;
       default:
         {}
         break;
     }
+  }
+  tz.TZDateTime _nextInstanceOfSpecificTime(int hour, int minute) {
+    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    tz.TZDateTime scheduledDate =
+    tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+    return scheduledDate;
   }
 }
