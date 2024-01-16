@@ -9,6 +9,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -36,7 +37,6 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart' as youtube;
 
-import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../../common/keysofmodel.dart';
 import '../../../../constants/fhb_constants.dart';
@@ -44,7 +44,6 @@ import '../../../../constants/fhb_parameters.dart';
 import '../../../../constants/variable_constant.dart';
 import '../../../../regiment/view_model/AddRegimentModel.dart';
 import '../../../../regiment/view_model/pickImageController.dart';
-import '../../../../reminders/QurPlanReminders.dart';
 import '../../../blocs/health/HealthReportListForUserBlock.dart';
 import '../../../model/CreateDeviceSelectionModel.dart';
 import '../../../model/GetDeviceSelectionModel.dart';
@@ -60,6 +59,9 @@ import '../Models/sheela_arguments.dart';
 import '../Services/SheelaAIAPIServices.dart';
 import '../Services/SheelaAIBLEServices.dart';
 import 'package:image/image.dart' as img;
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 enum BLEStatus { Searching, Connected, Disabled }
 
@@ -118,6 +120,34 @@ class SheelaAIController extends GetxController {
 
   bool isAllowSheelaLiveReminders = true;
   SheelaBadgeModel? _sheelaBadgeModel;
+
+
+  // Represents the countdown seconds remaining, using the RxInt type
+  RxInt countDownSecondsRemaining = 10.obs;
+
+// Represents a stream controller for handling events of type int
+  StreamController<int> streamEvents = StreamController<int>();
+
+// Represents a timer used for countdown functionality
+  Timer? countDownSecondsTimer;
+
+// Represents an instance of SpeechToText for handling speech-related operations
+  SpeechToText? speechToText = SpeechToText();
+
+// Represents the current language code using Rx (reactive programming)
+  var currentLanguageCode = 'en_US'.obs;
+
+// Represents a reactive boolean indicating whether the countdown dialog is currently showing
+  Rx<bool> isCountDownDialogShowing = false.obs;
+
+// Represents a text editing controller for Sheela's input dialog
+  TextEditingController sheelaInputTextEditingController = TextEditingController();
+
+// Represents a reactive boolean indicating whether Sheela's input dialog is currently showing
+  Rx<bool> isSheelaInputDialogShowing = false.obs;
+
+  /// Represents a Sheela Input is Started or not
+  bool isSheelaInputStarted = false;
 
   String? btnTextLocal = '';
   bool? isRetakeCapture = false;
@@ -728,11 +758,14 @@ class SheelaAIController extends GetxController {
     if (isMicListening.isTrue) {
       isMicListening(false);
     }
-    if (Platform.isIOS) {
+    // Invoking a method from the CommonUtil class to close Sheela's dialog
+    CommonUtil().closeSheelaDialog();
+
+    /*if (Platform.isIOS) {
       voice_platform.invokeMethod(strCloseSheelaDialog);
     } else {
       CommonUtil().closeSheelaDialog();
-    }
+    }*/
     if (currentPlayingConversation != null) {
       currentPlayingConversation!.isPlaying.value = false;
       currentPlayingConversation!.currentButtonPlayingIndex = null;
@@ -847,343 +880,9 @@ class SheelaAIController extends GetxController {
         if (isMicListening.isFalse) {
           isMicListening.value = true;
 
-          String? currentLanCode = getCurrentLanCode();
+          currentLanguageCode.value = getCurrentLanCode() ?? '';
 
-          await voice_platform.invokeMethod(
-            strspeakAssistant,
-            {
-              'langcode': currentLanCode,
-            },
-          ).then((response) async {
-            isMicListening.value = false;
-            if (Platform.isIOS) {
-              await Future.delayed(const Duration(seconds: 1));
-            }
-
-            if ((response ?? '').toString().isNotEmpty) {
-              if ((currentLanCode ?? "").contains("en")) {
-                response = prefixListFiltering(response ?? '');
-              }
-              if ((conversations.isNotEmpty) &&
-                  (conversations.last?.additionalInfoSheelaResponse
-                          ?.reconfirmationFlag ??
-                      false)) {
-                redoCurrentPlayingConversation = conversations.last;
-                freeTextConversation(freeText: response);
-              } else {
-                final newConversation = SheelaResponse(text: response);
-                if (conversations.isNotEmpty &&
-                    ((conversations.last?.buttons?.length ?? 0) > 0)) {
-                  try {
-                    var responseRecived =
-                        response.toString().toLowerCase().trim();
-
-                    dynamic button = null;
-
-                    if (!(conversations.last?.isButtonNumber ?? false)) {
-                      if (responseRecived == carGiverSheela) {
-                        responseRecived = careGiverSheela;
-                      }
-                      button = conversations.last?.buttons.firstWhere(
-                          (element) =>
-                              (element.title ?? "").toLowerCase() ==
-                              responseRecived);
-                    } else if ((conversations.last?.isButtonNumber ?? false)) {
-                      bool isDigit = CommonUtil().isNumeric(responseRecived);
-                      for (int i = 0;
-                          i < conversations.last?.buttons.length;
-                          i++) {
-                        var temp =
-                            conversations.last?.buttons[i].title.split(".");
-                        var realNumber = CommonUtil().realNumber(
-                            int.tryParse(temp[0].toString().trim()));
-                        var optionWithRealNumber =
-                            "Option ${realNumber.toString().trim()}";
-                        var optionWithDigit =
-                            "Option ${temp[0].toString().trim()}";
-                        var numberWithRealNumber =
-                            "Number ${realNumber.toString().trim()}";
-                        var numberWithDigit =
-                            "Number ${temp[0].toString().trim()}";
-                        if (((temp[isDigit ? 0 : 1].toString().trim())
-                                    .toLowerCase() ==
-                                responseRecived) ||
-                            (realNumber.toString().toLowerCase().trim() ==
-                                responseRecived) ||
-                            (optionWithRealNumber
-                                    .toString()
-                                    .toLowerCase()
-                                    .trim() ==
-                                responseRecived) ||
-                            (optionWithDigit.toString().toLowerCase().trim() ==
-                                responseRecived) ||
-                            (numberWithRealNumber
-                                    .toString()
-                                    .toLowerCase()
-                                    .trim() ==
-                                responseRecived) ||
-                            (numberWithDigit.toString().toLowerCase().trim() ==
-                                responseRecived)) {
-                          button = conversations.last?.buttons[i];
-                          break;
-                        }
-                      }
-                    }
-                    if (button != null) {
-                      if (button?.btnRedirectTo == strPreviewScreen) {
-                        if (button?.chatAttachments != null &&
-                            (button?.chatAttachments?.length ?? 0) > 0) {
-                          if (isLoading.isTrue) {
-                            return;
-                          }
-                          stopTTS();
-                          isSheelaScreenActive = false;
-                          CommonUtil()
-                              .onInitQurhomeDashboardController()
-                              .setActiveQurhomeDashboardToChat(status: false);
-                          Get.to(
-                            AttachmentListSheela(
-                                chatAttachments: button?.chatAttachments ?? []),
-                          )?.then((value) {
-                            isSheelaScreenActive = true;
-                            playPauseTTS(
-                                conversations.last ?? SheelaResponse());
-                          });
-                        }
-                      } else if (button?.btnRedirectTo ==
-                          strRedirectToHelpPreview) {
-                        if (button?.videoUrl != null &&
-                            button?.videoUrl != '') {
-                          playYoutube(button?.videoUrl);
-                        } else if (button?.audioUrl != null &&
-                            button?.audioUrl != '') {
-                          playAudioFile(button?.audioUrl);
-                        } else if (button?.imageUrl != null &&
-                            button?.imageUrl != '') {
-                          isSheelaScreenActive = false;
-                          Get.to(FullPhoto(
-                            url: button?.imageUrl ?? '',
-                            titleSheelaPreview: strImageTitle,
-                          ))?.then((value) {
-                            isSheelaScreenActive = true;
-                            playPauseTTS(
-                                conversations.last ?? SheelaResponse());
-                          });
-                        }
-                      } else if (button?.btnRedirectTo == strRedirectRedo) {
-                        final cardResponse =
-                            SheelaResponse(text: button?.title);
-                        conversations.add(cardResponse);
-                        scrollToEnd();
-                        Future.delayed(Duration(seconds: 2), () {
-                          conversations.add(redoCurrentPlayingConversation);
-                          currentPlayingConversation =
-                              redoCurrentPlayingConversation;
-                          isLoading.value = false;
-                          playTTS();
-                          scrollToEnd();
-                        });
-                      } else if ((button?.btnRedirectTo ?? "") ==
-                          strHomeScreenForce.toLowerCase()) {
-                        Get.back();
-                      } else if ((button?.isSnoozeAction ?? false)) {
-                        /// we can true this condition is for if snooze enable from api
-                        try {
-                          var apiReminder;
-                          Reminder reminder = Reminder();
-                          reminder.uformname = conversations
-                                  .last
-                                  ?.additionalInfoSheelaResponse
-                                  ?.snoozeData
-                                  ?.uformName ??
-                              '';
-                          reminder.activityname = conversations
-                                  .last
-                                  ?.additionalInfoSheelaResponse
-                                  ?.snoozeData
-                                  ?.activityName ??
-                              '';
-                          reminder.title = conversations
-                                  .last
-                                  ?.additionalInfoSheelaResponse
-                                  ?.snoozeData
-                                  ?.title ??
-                              '';
-                          reminder.description = conversations
-                                  .last
-                                  ?.additionalInfoSheelaResponse
-                                  ?.snoozeData
-                                  ?.description ??
-                              '';
-                          reminder.eid = conversations
-                                  .last
-                                  ?.additionalInfoSheelaResponse
-                                  ?.snoozeData
-                                  ?.eid ??
-                              '';
-                          reminder.estart = CommonUtil()
-                              .snoozeDataFormat(DateTime.now().add(Duration(
-                                  minutes: int.parse(button?.payload ?? '0'))))
-                              .toString();
-                          reminder.dosemeal = conversations
-                                  .last
-                                  ?.additionalInfoSheelaResponse
-                                  ?.snoozeData
-                                  ?.dosemeal ??
-                              '';
-                          reminder.snoozeTime = CommonUtil()
-                              .getTimeMillsSnooze(button?.payload ?? '');
-                          reminder.tplanid = '0';
-                          reminder.teid_user = '0';
-                          reminder.remindin = '0';
-                          reminder.remindin_type = '0';
-                          reminder.providerid = '0';
-                          reminder.remindbefore = '0';
-                          List<Reminder> data = [reminder];
-                          for (var i = 0; i < data.length; i++) {
-                            apiReminder = data[i];
-                          }
-                          if (Platform.isAndroid) {
-                            // snooze invoke to android native for locally save the reminder data
-                            QurPlanReminders.getTheRemindersFromAPI(
-                                isSnooze: true,
-                                snoozeReminderData: apiReminder);
-
-                            // Start Sheela from button with specified parameters
-                            startSheelaFromButton(
-                                buttonText: button.title,
-                                payload: button.payload,
-                                buttons: button);
-                          } else {
-                            reminderMethodChannel.invokeMethod(
-                                snoozeReminderMethod,
-                                [apiReminder.toMap()]).then((value) {
-                              startSheelaFromButton(
-                                  buttonText: button.title,
-                                  payload: button.payload,
-                                  buttons: button);
-                            });
-                          }
-                        } catch (e, stackTrace) {
-                          CommonUtil()
-                              .appLogs(message: e, stackTrace: stackTrace);
-                        }
-                      } else if (button?.needPhoto ?? false) {
-                        // Check if the button requires a photo
-                        if (isLoading.isTrue) {
-                          return; // If loading, do nothing
-                        }
-                        stopTTS(); // Stop Text-to-Speech
-                        isSheelaScreenActive =
-                            false; // Deactivate Sheela screen
-                        updateTimer(enable: false); // disable the timer
-                        btnTextLocal =
-                            button?.title ?? ''; // Set local button text
-                        // Show the camera/gallery dialog and handle the result
-                        showCameraGalleryDialog(btnTextLocal ?? '')
-                            .then((value) {
-                          isSheelaScreenActive =
-                              true; // Reactivate Sheela screen after dialog
-                          updateTimer(enable: true); // disable the timer
-                        });
-                      } else if (button?.btnRedirectTo ==
-                          strRedirectRetakePicture) {
-                        // Check if the button redirects to retake picture
-                        if (isLoading.isTrue) {
-                          return; // If loading, do nothing
-                        }
-                        stopTTS(); // Stop Text-to-Speech
-                        isSheelaScreenActive =
-                            false; // Deactivate Sheela screen
-                        updateTimer(enable: false); // disable the timer
-                        isRetakeCapture = true; // Set flag for retake capture
-                        // Show the camera/gallery dialog and handle the result
-                        showCameraGalleryDialog(btnTextLocal ?? '')
-                            .then((value) {
-                          isSheelaScreenActive =
-                              true; // Reactivate Sheela screen after dialog
-                          updateTimer(enable: true); // disable the timer
-                        });
-                      } else if (button?.btnRedirectTo ==
-                          strRedirectToUploadImage) {
-                        // Check if the button redirects to upload image
-                        SheelaResponse sheelaLastConversation =
-                            SheelaResponse();
-                        sheelaLastConversation = conversations.last;
-                        isLoading.value = true; // Set loading flag
-                        conversations.add(SheelaResponse(
-                            loading:
-                                true)); // Add loading response to conversations
-                        scrollToEnd(); // Scroll to the end of conversations
-                        if (sheelaLastConversation.imageThumbnailUrl != null &&
-                            sheelaLastConversation.imageThumbnailUrl != '') {
-                          // Check if there is a valid image thumbnail URL
-                          saveMediaRegiment(
-                            sheelaLastConversation.imageThumbnailUrl ?? '',
-                            // Save media regiment
-                            '',
-                          ).then((value) {
-                            isLoading.value = false; // Reset loading flag
-                            conversations
-                                .removeLast(); // Remove the loading response from conversations
-                            if (value.isSuccess ?? false) {
-                              imageRequestUrl = value.result?.accessUrl ?? '';
-                              if (isLoading.isTrue) {
-                                return; // If loading, do nothing
-                              }
-                              if (conversations.last.singleuse != null &&
-                                  conversations.last.singleuse! &&
-                                  conversations.last.isActionDone != null) {
-                                conversations.last.isActionDone =
-                                    true; // Set action done flag if it's a single-use button
-                              }
-                              button?.isSelected =
-                                  true; // Mark the button as selected
-                              // Start Sheela from the button with specified parameters
-                              startSheelaFromButton(
-                                  buttonText: button?.title,
-                                  payload: button?.payload,
-                                  buttons: button,
-                                  isFromImageUpload: true,
-                                  requestFileType: strImage); // add requestFileType
-                              // Delay for 3 seconds and then unselect the button
-                              Future.delayed(const Duration(seconds: 3), () {
-                                button?.isSelected = false;
-                              });
-                            }
-                          });
-                        }
-                      } else {
-                        startSheelaFromButton(
-                            buttonText: button.title,
-                            payload: button.payload,
-                            buttons: button);
-                      }
-                    } else {
-                      lastMsgIsOfButtons = false;
-                      conversations.add(newConversation);
-                      getAIAPIResponseFor(response, button);
-                    }
-                  } catch (e, stackTrace) {
-                    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-
-                    lastMsgIsOfButtons = false;
-                    conversations.add(newConversation);
-                    getAIAPIResponseFor(response, null);
-                  }
-                } else {
-                  lastMsgIsOfButtons = false;
-                  conversations.add(newConversation);
-                  getAIAPIResponseFor(response, null);
-                }
-              }
-            }
-            scrollToEnd();
-          }).whenComplete(() {
-            isMicListening.value = false;
-          }).onError((dynamic error, stackTrace) {
-            isMicListening.value = false;
-          });
+          initiateVoiceAssistantInteraction();
         }
       } else {
         FlutterToast().getToast(strMicAlertMsg, Colors.black);
@@ -2020,4 +1719,780 @@ makeApiRequest is used to update the data with latest data
         await imageFile.lengthSync(); // Get the length (size) of the image file
     return length; // Return the size of the image file
   }
+
+  @override
+  void onClose() {
+    try {
+      // Cancel the countdown timer if it's active
+      countDownSecondsTimer?.cancel();
+      countDownSecondsTimer = null;
+
+      // Close the stream controller to release resources
+      streamEvents.close();
+
+      // Stop speech listening using a method (assuming it's defined in the same class)
+      stopSpeechListening();
+
+      // Call the parent class's onClose method
+      super.onClose();
+    } catch (e, stackTrace) {
+      // Handle any exceptions that occur during cleanup and log them
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+
+  // Initiates the voice assistant interaction process
+  initiateVoiceAssistantInteraction() async {
+    try {
+      // Set up the countdown timer and stream for handling events
+      setupCountdownTimerAndStream();
+
+      // Show a dialog indicating that the voice assistant is listening
+      showListeningCountdownDialog();
+
+      // Initialize and configure the speech recognizer
+      initializeAndConfigureSpeechRecognizer();
+    } catch (e, stackTrace) {
+      // Handle any exceptions that occur during the initiation process and log them
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+
+  // Sets up a countdown timer and stream for handling countdown events
+  void setupCountdownTimerAndStream() {
+    try {
+      // Create a stream controller for handling countdown events of type int
+      streamEvents = StreamController<int>();
+
+      // Initialize the stream with the initial countdown value (e.g., 10 seconds)
+      streamEvents.add(10);
+
+      // Set the initial value of the countdown seconds remaining
+      countDownSecondsRemaining.value = 10;
+
+      // Cancel the existing countdown timer if it's active
+      if (countDownSecondsTimer != null) {
+        countDownSecondsTimer?.cancel();
+      }
+
+      // Set up a new periodic timer to update the countdown
+      countDownSecondsTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        // Check if the stream is still open to avoid unnecessary updates
+        if (!streamEvents.isClosed) {
+          // Decrease the countdown seconds remaining
+          if (countDownSecondsRemaining > 0) {
+            countDownSecondsRemaining.value--;
+          } else {
+            // If countdown is complete, cancel the timer
+            countDownSecondsTimer?.cancel();
+          }
+
+          // Add the updated countdown value to the stream
+          streamEvents.add(countDownSecondsRemaining.value);
+
+          // Check and handle any actions needed upon countdown completion
+          checkAndHandleCountdownCompletion();
+        } else {
+          // If the stream is closed, cancel the timer
+          countDownSecondsTimer?.cancel();
+        }
+      });
+    } catch (e, stackTrace) {
+      // Handle any exceptions that occur during the setup process and log them
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+
+  // Checks and handles actions upon countdown completion
+  void checkAndHandleCountdownCompletion() async {
+    try {
+      // Check if the countdown has reached zero
+      if (countDownSecondsRemaining.value == 0) {
+        // If countdown is complete, close the countdown dialog and perform cleanup
+       await closeCountdownTimerDialogAndCleanup();
+
+        // Stop speech listening as the countdown is complete
+        stopSpeechListening();
+      }
+    } catch (e, stackTrace) {
+      // Handle any exceptions that occur during the completion check and log them
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+
+  // Closes the countdown timer dialog and performs cleanup
+  closeCountdownTimerDialogAndCleanup() async {
+    try {
+      // Close the stream controller to release resources
+      await streamEvents.close();
+      // Set the flag indicating that the countdown dialog is not showing
+      isCountDownDialogShowing.value = false;
+
+      // Close the countdown timer dialog using GetX
+      Get.back();
+
+      // Cancel the countdown timer if it's active
+      countDownSecondsTimer?.cancel();
+      countDownSecondsTimer = null;
+    } catch (e, stackTrace) {
+      // Handle any exceptions that occur during the cleanup process and log them
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+
+  // Shows a dialog indicating that the voice assistant is listening with a countdown timer
+  showListeningCountdownDialog() {
+    // Set the flag indicating that the countdown dialog is currently showing
+    isCountDownDialogShowing.value = true;
+
+    return showDialog<void>(
+      context: Get.context!,
+      barrierDismissible: false,
+      barrierColor: Colors.transparent,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return WillPopScope(
+            // Disable the ability to dismiss the dialog by pressing the back button
+            onWillPop: () async => false,
+            child: AlertDialog(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
+              content: StreamBuilder<int>(
+                // Listen to the countdown stream for updates
+                stream: streamEvents.stream,
+                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                  final double containerSize =
+                      MediaQuery.of(context).size.width * 0.8;
+
+                  return Material(
+                    color: Colors.transparent,
+                    child: Container(
+                      width: containerSize,
+                      height: containerSize,
+                      color: Colors.transparent,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Loading spinner animation
+                          SpinKitDoubleBounce(
+                            size: containerSize,
+                            //color: const Color(0xFF6021de).withOpacity(0.1),
+                            color: PreferenceUtil.getIfQurhomeisAcive()
+                                ? Color(CommonUtil().getQurhomeGredientColor()).withOpacity(0.2)
+                                : Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.2),
+                          ),
+                          // Text displaying 'Listening' and the countdown seconds
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                strListening,
+                                style: TextStyle(
+                                  fontSize: containerSize * 0.07,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                "${(snapshot.data.toString() ?? '0')} $strSeconds",
+                                style: TextStyle(
+                                  fontSize: containerSize * 0.08,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
+
+  // This method handles the Speech to text initialization process, status updates, and errors.
+  initializeAndConfigureSpeechRecognizer() async {
+    try {
+      // Initialize the SpeechToText recognizer
+      await speechToText?.initialize(
+        // Callback for status updates
+        onStatus: (status) {
+          // Check if the status is not 'Listening'
+          if (status.toString().toLowerCase() != strListening.toLowerCase()) {
+            // If Sheela's input dialog is showing, trigger a refresh and start listening
+            if (isSheelaInputDialogShowing.value) {
+              // Initiate the speech listening process
+              initiateSpeechListening();
+            }
+          }
+        },
+        // Callback for errors
+        onError: (error) {
+          // Initiate the speech listening process
+          initiateSpeechListening();
+        },
+      );
+      // Initiate the speech listening process
+      initiateSpeechListening();
+    } catch (e, stackTrace) {
+      // Handle any exceptions that occur during initialization and log them
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  // Initiates the speech listening process
+  initiateSpeechListening() async {
+    try {
+      isSheelaInputStarted = true;
+      if (Platform.isIOS) {
+        sheelaInputTextEditingController.text = '';
+      }
+      // Start listening using the SpeechToText recognizer
+      await speechToText?.listen(
+        // Callback for speech recognition results
+        onResult: handleSpeechRecognitionResult,
+
+        // Set the maximum duration for listening to 2 minutes
+        listenFor: const Duration(minutes: 2),
+
+        // Specify the locale for speech recognition
+        localeId: currentLanguageCode.value,
+      );
+    } catch (e, stackTrace) {
+      // Handle any exceptions that occur during speech listening and log them
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  // Stops the speech listening process
+  stopSpeechListening() async {
+    try {
+      isSheelaInputStarted = false;
+      // Stop the speech recognition using the SpeechToText recognizer
+      await speechToText?.stop();
+
+      // Clear the input text in the Sheela's input text editing controller
+      sheelaInputTextEditingController.text = '';
+    } catch (e, stackTrace) {
+      // Handle any exceptions that occur during stopping speech listening and log them
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+   // Handles the speech recognition result
+  // This method is called when the SpeechToText recognizer provides a recognition result.
+  handleSpeechRecognitionResult(SpeechRecognitionResult result) async {
+    try {
+      // Check if the countdown dialog is currently showing and close it if true
+      if (isCountDownDialogShowing.value) {
+        await closeCountdownTimerDialogAndCleanup();
+      }
+
+      // Check if Sheela's input dialog is not showing, and show it if true
+      if (!isSheelaInputDialogShowing.value && isSheelaInputStarted) {
+        showSpeechToTextInputDialog();
+      } else {
+        var recognizedWords = result?.recognizedWords ?? '';
+        if (Platform.isIOS) {
+          sheelaInputTextEditingController.text = '$recognizedWords ';
+        }
+      }
+
+      // Check if the recognition result is final
+      if (result?.finalResult ?? false) {
+        // Extract recognized words and update the input text
+        var recognizedWords = result?.recognizedWords ?? '';
+        if (Platform.isIOS) {
+          sheelaInputTextEditingController.text = '$recognizedWords ';
+        } else {
+          sheelaInputTextEditingController.text += '$recognizedWords ';
+        }
+
+        // Log the recognized text in debug mode
+        if (kDebugMode) {
+          log('onSpeechResult here ${sheelaInputTextEditingController.text}');
+        }
+
+        // Perform further actions if the region is US
+        if (CommonUtil.isUSRegion()) {
+          // Extract the response from the input text, trim, and handle it
+          String response = CommonUtil()
+              .validString(sheelaInputTextEditingController.text)
+              .trim();
+
+          // Close Sheela's input dialog and stop listening
+          closeSheelaInputDialogAndStopListening();
+
+          // Handle the Sheela's input response
+          handleSheelaInputResponse(response);
+        }
+      }
+    } catch (e, stackTrace) {
+      // Handle any exceptions that occur during result handling and log them
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  // Shows the input dialog for Sheela's speech-to-text interaction
+  showSpeechToTextInputDialog() {
+    // Set the flag indicating that Sheela's input dialog is currently showing
+    isSheelaInputDialogShowing.value = true;
+    return showDialog(
+        context: Get.context!,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return WillPopScope(
+            // Disable the ability to dismiss the dialog by pressing the back button
+            onWillPop: () async => false,
+            child: AlertDialog(
+              insetPadding: EdgeInsets.only(
+                  left: CommonUtil().isTablet! ? 0.0 : 25,
+                  right: CommonUtil().isTablet! ? 0.0 : 25),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              titlePadding: EdgeInsets.zero,
+              contentPadding: EdgeInsets.only(top: 0.0),
+              content: Container(
+                width: CommonUtil().isTablet!
+                    ? MediaQuery.of(context).size.width * 0.6
+                    : MediaQuery.of(context).size.width,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(right: CommonUtil().isTablet!
+                          ?20:10, top: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.close,
+                              color: Color(0xFF282828),
+                              size: CommonUtil().isTablet! ? 35.0.sp : 24.0.sp,
+                            ),
+                            onPressed: () {
+                              // Close Sheela's input dialog and stop listening
+                              closeSheelaInputDialogAndStopListening();
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: CommonUtil().isTablet! ? 20.0 : 10.0,
+                    ),
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        SpinKitDoubleBounce(
+                          size: CommonUtil().isTablet! ? 300.0 : 200.0,
+                          //color: const Color(0xFF6021de).withOpacity(0.1),
+                          color: PreferenceUtil.getIfQurhomeisAcive()
+                              ? Color(CommonUtil().getQurhomeGredientColor()).withOpacity(0.2)
+                              : Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.2),
+                        ),
+                        Image.asset(
+                          icon_mayaMain, // replace with your image
+                          width: CommonUtil().isTablet! ? 200.0 : 100.0,
+                          height: CommonUtil().isTablet! ? 200.0 : 100.0,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: CommonUtil().isTablet! ? 50.0 : 15.0,
+                    ),
+                    Visibility(
+                      visible: !(CommonUtil.isUSRegion()),
+                      child: Container(
+                        margin: EdgeInsets.all(10),
+                        padding: EdgeInsets.only(
+                            right: (CommonUtil().isTablet ?? false) ? 7 : 5,
+                            left: (CommonUtil().isTablet ?? false) ? 10 : 5,
+                            top: (CommonUtil().isTablet ?? false) ? 7 : 2,
+                            bottom: (CommonUtil().isTablet ?? false) ? 7 : 2),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black),
+                          borderRadius: BorderRadius.circular(
+                              CommonUtil().isTablet! ? 40.0 : 20.0),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: sheelaInputTextEditingController,
+                                maxLines: 5,
+                                minLines: 1,
+                                style: TextStyle(
+                                  fontSize: (CommonUtil().isTablet ?? false) ? 18.0.sp : null,
+                                  fontFamily: font_roboto,
+                                  color: Colors
+                                      .black, // Set your desired text color here
+                                ),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                // Process and handle Sheela's input response
+                                String response = CommonUtil()
+                                    .validString(
+                                        sheelaInputTextEditingController.text)
+                                    .trim();
+                                if (response.isEmpty) {
+                                  FlutterToast().getToast(
+                                      strPleaseEnterValidInput, Colors.black54);
+                                } else {
+                                  closeSheelaInputDialogAndStopListening();
+                                  handleSheelaInputResponse(response);
+                                }
+                              },
+                              child: Icon(
+                                Icons.send_sharp,
+                                color: Color(0xFF5E1FE0),
+                                size:
+                                    CommonUtil().isTablet! ? 35.0.sp : 28.0.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  // Closes Sheela's input dialog and stops speech listening
+  closeSheelaInputDialogAndStopListening() async {
+    try {
+      // Set the flag indicating that Sheela's input dialog is not showing
+      isSheelaInputDialogShowing.value = false;
+      // Stop speech listening
+      await stopSpeechListening();
+
+      Get.back();
+      if (isCountDownDialogShowing.value) {
+       await closeCountdownTimerDialogAndCleanup();
+      }
+    } catch (e, stackTrace) {
+      // Handle any exceptions that occur during the closing process and log them
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  // Handles the response received from Sheela's input
+  handleSheelaInputResponse(String? response) async {
+    try {
+      isMicListening.value = false;
+      /*if (Platform.isIOS) {
+        await Future.delayed(const Duration(seconds: 1));
+      }*/
+
+      if ((response ?? '').toString().isNotEmpty) {
+        if ((currentLanguageCode.value ?? "").contains("en")) {
+          response = prefixListFiltering(response ?? '');
+        }
+        if ((conversations.isNotEmpty) &&
+            (conversations
+                    .last?.additionalInfoSheelaResponse?.reconfirmationFlag ??
+                false)) {
+          redoCurrentPlayingConversation = conversations.last;
+          freeTextConversation(freeText: response);
+        } else {
+          final newConversation = SheelaResponse(text: response);
+          if (conversations.isNotEmpty &&
+              ((conversations.last?.buttons?.length ?? 0) > 0)) {
+            try {
+              var responseRecived = response.toString().toLowerCase().trim();
+
+              dynamic button = null;
+
+              if (!(conversations.last?.isButtonNumber ?? false)) {
+                if (responseRecived == carGiverSheela) {
+                  responseRecived = careGiverSheela;
+                }
+                button = conversations.last?.buttons.firstWhere((element) =>
+                    (element.title ?? "").toLowerCase() == responseRecived);
+              } else if ((conversations.last?.isButtonNumber ?? false)) {
+                bool isDigit = CommonUtil().isNumeric(responseRecived);
+                for (int i = 0; i < conversations.last?.buttons.length; i++) {
+                  var temp = conversations.last?.buttons[i].title.split(".");
+                  var realNumber = CommonUtil()
+                      .realNumber(int.tryParse(temp[0].toString().trim()));
+                  var optionWithRealNumber =
+                      "Option ${realNumber.toString().trim()}";
+                  var optionWithDigit = "Option ${temp[0].toString().trim()}";
+                  var numberWithRealNumber =
+                      "Number ${realNumber.toString().trim()}";
+                  var numberWithDigit = "Number ${temp[0].toString().trim()}";
+                  if (((temp[isDigit ? 0 : 1].toString().trim())
+                              .toLowerCase() ==
+                          responseRecived) ||
+                      (realNumber.toString().toLowerCase().trim() ==
+                          responseRecived) ||
+                      (optionWithRealNumber.toString().toLowerCase().trim() ==
+                          responseRecived) ||
+                      (optionWithDigit.toString().toLowerCase().trim() ==
+                          responseRecived) ||
+                      (numberWithRealNumber.toString().toLowerCase().trim() ==
+                          responseRecived) ||
+                      (numberWithDigit.toString().toLowerCase().trim() ==
+                          responseRecived)) {
+                    button = conversations.last?.buttons[i];
+                    break;
+                  }
+                }
+              }
+              if (button != null) {
+                if (button?.btnRedirectTo == strPreviewScreen) {
+                  if (button?.chatAttachments != null &&
+                      (button?.chatAttachments?.length ?? 0) > 0) {
+                    if (isLoading.isTrue) {
+                      return;
+                    }
+                    stopTTS();
+                    isSheelaScreenActive = false;
+                    CommonUtil()
+                        .onInitQurhomeDashboardController()
+                        .setActiveQurhomeDashboardToChat(status: false);
+                    Get.to(
+                      AttachmentListSheela(
+                          chatAttachments: button?.chatAttachments ?? []),
+                    )?.then((value) {
+                      isSheelaScreenActive = true;
+                      playPauseTTS(conversations.last ?? SheelaResponse());
+                    });
+                  }
+                } else if (button?.btnRedirectTo == strRedirectToHelpPreview) {
+                  if (button?.videoUrl != null && button?.videoUrl != '') {
+                    playYoutube(button?.videoUrl);
+                  } else if (button?.audioUrl != null &&
+                      button?.audioUrl != '') {
+                    playAudioFile(button?.audioUrl);
+                  } else if (button?.imageUrl != null &&
+                      button?.imageUrl != '') {
+                    isSheelaScreenActive = false;
+                    Get.to(FullPhoto(
+                      url: button?.imageUrl ?? '',
+                      titleSheelaPreview: strImageTitle,
+                    ))?.then((value) {
+                      isSheelaScreenActive = true;
+                      playPauseTTS(conversations.last ?? SheelaResponse());
+                    });
+                  }
+                } else if (button?.btnRedirectTo == strRedirectRedo) {
+                  final cardResponse = SheelaResponse(text: button?.title);
+                  conversations.add(cardResponse);
+                  scrollToEnd();
+                  Future.delayed(Duration(seconds: 2), () {
+                    conversations.add(redoCurrentPlayingConversation);
+                    currentPlayingConversation = redoCurrentPlayingConversation;
+                    isLoading.value = false;
+                    playTTS();
+                    scrollToEnd();
+                  });
+                } else if ((button?.btnRedirectTo ?? "") ==
+                    strHomeScreenForce.toLowerCase()) {
+                  Get.back();
+                } else if ((button?.isSnoozeAction ?? false)) {
+                  /// we can true this condition is for if snooze enable from api
+                  try {
+                    var apiReminder;
+                    Reminder reminder = Reminder();
+                    reminder.uformname = conversations
+                            .last
+                            ?.additionalInfoSheelaResponse
+                            ?.snoozeData
+                            ?.uformName ??
+                        '';
+                    reminder.activityname = conversations
+                            .last
+                            ?.additionalInfoSheelaResponse
+                            ?.snoozeData
+                            ?.activityName ??
+                        '';
+                    reminder.title = conversations.last
+                            ?.additionalInfoSheelaResponse?.snoozeData?.title ??
+                        '';
+                    reminder.description = conversations
+                            .last
+                            ?.additionalInfoSheelaResponse
+                            ?.snoozeData
+                            ?.description ??
+                        '';
+                    reminder.eid = conversations.last
+                            ?.additionalInfoSheelaResponse?.snoozeData?.eid ??
+                        '';
+                    reminder.estart = CommonUtil()
+                        .snoozeDataFormat(DateTime.now().add(Duration(
+                            minutes: int.parse(button?.payload ?? '0'))))
+                        .toString();
+                    reminder.dosemeal = conversations
+                            .last
+                            ?.additionalInfoSheelaResponse
+                            ?.snoozeData
+                            ?.dosemeal ??
+                        '';
+                    reminder.snoozeTime =
+                        CommonUtil().getTimeMillsSnooze(button?.payload ?? '');
+                    reminder.tplanid = '0';
+                    reminder.teid_user = '0';
+                    reminder.remindin = '0';
+                    reminder.remindin_type = '0';
+                    reminder.providerid = '0';
+                    reminder.remindbefore = '0';
+                    List<Reminder> data = [reminder];
+                    for (var i = 0; i < data.length; i++) {
+                      apiReminder = data[i];
+                    }
+                    if (Platform.isAndroid) {
+                      // snooze invoke to android native for locally save the reminder data
+                      QurPlanReminders.getTheRemindersFromAPI(
+                          isSnooze: true, snoozeReminderData: apiReminder);
+
+                      // Start Sheela from button with specified parameters
+                      startSheelaFromButton(
+                          buttonText: button.title,
+                          payload: button.payload,
+                          buttons: button);
+                    } else {
+                      reminderMethodChannel.invokeMethod(snoozeReminderMethod,
+                          [apiReminder.toMap()]).then((value) {
+                        startSheelaFromButton(
+                            buttonText: button.title,
+                            payload: button.payload,
+                            buttons: button);
+                      });
+                    }
+                  } catch (e, stackTrace) {
+                    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+                  }
+                } else if (button?.needPhoto ?? false) {
+                  // Check if the button requires a photo
+                  if (isLoading.isTrue) {
+                    return; // If loading, do nothing
+                  }
+                  stopTTS(); // Stop Text-to-Speech
+                  isSheelaScreenActive = false; // Deactivate Sheela screen
+                  updateTimer(enable: false); // disable the timer
+                  btnTextLocal = button?.title ?? ''; // Set local button text
+                  // Show the camera/gallery dialog and handle the result
+                  showCameraGalleryDialog(btnTextLocal ?? '').then((value) {
+                    isSheelaScreenActive =
+                        true; // Reactivate Sheela screen after dialog
+                    updateTimer(enable: true); // disable the timer
+                  });
+                } else if (button?.btnRedirectTo == strRedirectRetakePicture) {
+                  // Check if the button redirects to retake picture
+                  if (isLoading.isTrue) {
+                    return; // If loading, do nothing
+                  }
+                  stopTTS(); // Stop Text-to-Speech
+                  isSheelaScreenActive = false; // Deactivate Sheela screen
+                  updateTimer(enable: false); // disable the timer
+                  isRetakeCapture = true; // Set flag for retake capture
+                  // Show the camera/gallery dialog and handle the result
+                  showCameraGalleryDialog(btnTextLocal ?? '').then((value) {
+                    isSheelaScreenActive =
+                        true; // Reactivate Sheela screen after dialog
+                    updateTimer(enable: true); // disable the timer
+                  });
+                } else if (button?.btnRedirectTo == strRedirectToUploadImage) {
+                  // Check if the button redirects to upload image
+                  SheelaResponse sheelaLastConversation = SheelaResponse();
+                  sheelaLastConversation = conversations.last;
+                  isLoading.value = true; // Set loading flag
+                  conversations.add(SheelaResponse(
+                      loading: true)); // Add loading response to conversations
+                  scrollToEnd(); // Scroll to the end of conversations
+                  if (sheelaLastConversation.imageThumbnailUrl != null &&
+                      sheelaLastConversation.imageThumbnailUrl != '') {
+                    // Check if there is a valid image thumbnail URL
+                    saveMediaRegiment(
+                      sheelaLastConversation.imageThumbnailUrl ?? '',
+                      // Save media regiment
+                      '',
+                    ).then((value) {
+                      isLoading.value = false; // Reset loading flag
+                      conversations
+                          .removeLast(); // Remove the loading response from conversations
+                      if (value.isSuccess ?? false) {
+                        imageRequestUrl = value.result?.accessUrl ?? '';
+                        if (isLoading.isTrue) {
+                          return; // If loading, do nothing
+                        }
+                        if (conversations.last.singleuse != null &&
+                            conversations.last.singleuse! &&
+                            conversations.last.isActionDone != null) {
+                          conversations.last.isActionDone =
+                              true; // Set action done flag if it's a single-use button
+                        }
+                        button?.isSelected =
+                            true; // Mark the button as selected
+                        // Start Sheela from the button with specified parameters
+                        startSheelaFromButton(
+                            buttonText: button?.title,
+                            payload: button?.payload,
+                            buttons: button,
+                            isFromImageUpload: true,
+                            requestFileType: strImage); // add requestFileType
+                        // Delay for 3 seconds and then unselect the button
+                        Future.delayed(const Duration(seconds: 3), () {
+                          button?.isSelected = false;
+                        });
+                      }
+                    });
+                  }
+                } else {
+                  startSheelaFromButton(
+                      buttonText: button.title,
+                      payload: button.payload,
+                      buttons: button);
+                }
+              } else {
+                lastMsgIsOfButtons = false;
+                conversations.add(newConversation);
+                getAIAPIResponseFor(response, button);
+              }
+            } catch (e, stackTrace) {
+              CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+
+              lastMsgIsOfButtons = false;
+              conversations.add(newConversation);
+              getAIAPIResponseFor(response, null);
+            }
+          } else {
+            lastMsgIsOfButtons = false;
+            conversations.add(newConversation);
+            getAIAPIResponseFor(response, null);
+          }
+        }
+      }
+      scrollToEnd();
+    } catch (e, stackTrace) {
+      // Handle any exceptions that occur during the closing process and log them
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
 }
+
