@@ -215,6 +215,7 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
 final androidNormalchannel = AndroidNotificationChannel(
   '12345', // id
   'Qurbook_channel', // title
+  enableVibration: false,
   description:
   'This channel is used for important notifications.', //
   sound: RawResourceAndroidNotificationSound('msg_tone'),
@@ -222,7 +223,8 @@ final androidNormalchannel = AndroidNotificationChannel(
 );
 var callChannel = const AndroidNotificationChannel(
   '5678', // id
-  'Qurbook_call_channel', // title
+  'Qurbook_call_channel',
+  enableVibration: false,// title
   description:
   'This channel is used for important notifications.',
   sound: RawResourceAndroidNotificationSound('helium'),// description
