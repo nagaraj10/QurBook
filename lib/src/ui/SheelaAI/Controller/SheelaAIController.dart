@@ -2465,7 +2465,7 @@ makeApiRequest is used to update the data with latest data
                       conversations
                           .removeLast(); // Remove the loading response from conversations
                       if (value.isSuccess ?? false) {
-                        imageRequestUrl = value.result?.accessUrl ?? '';
+                        fileRequestUrl = value.result?.accessUrl ?? '';
                         if (isLoading.isTrue) {
                           return; // If loading, do nothing
                         }
