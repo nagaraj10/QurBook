@@ -5567,7 +5567,7 @@ class CommonUtil {
   }
 
   // This method is responsible for closing the Sheela dialog and performing related actions
-  closeSheelaDialog() {
+  closeSheelaDialog() async {
     try {
       /*const platform = MethodChannel(strCloseSheelaDialog);
       platform.invokeMethod(strCloseSheelaDialog);*/
@@ -5578,14 +5578,13 @@ class CommonUtil {
 
       // Checking and closing Sheela input dialog if it is showing
       if (sheelaAIController.isSheelaInputDialogShowing.value) {
-        sheelaAIController.closeSheelaInputDialogAndStopListening();
+        await sheelaAIController.closeSheelaInputDialogAndStopListening();
       }
 
       // Checking and closing countdown timer dialog, and stopping speech listening if it is showing
       if (sheelaAIController.isCountDownDialogShowing.value) {
-        sheelaAIController
-          ..closeCountdownTimerDialogAndCleanup()
-          ..stopSpeechListening();
+        await sheelaAIController.closeCountdownTimerDialogAndCleanup();
+        await sheelaAIController.stopSpeechListening();
       }
     } catch (e, stackTrace) {
       // Handling exceptions and logging errors
