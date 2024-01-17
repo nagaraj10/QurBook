@@ -50,6 +50,8 @@ import '../../../model/GetDeviceSelectionModel.dart';
 import '../../../model/user/MyProfileModel.dart';
 import '../../../resources/network/ApiBaseHelper.dart';
 import '../../../resources/repository/health/HealthReportListForUserRepository.dart';
+import '../../audio/AudioRecorder.dart';
+import '../../audio/AudioScreenArguments.dart';
 import '../Models/DeviceStatus.dart';
 import '../Models/GoogleTTSRequestModel.dart';
 import '../Models/GoogleTTSResponseModel.dart';
@@ -2491,6 +2493,58 @@ makeApiRequest is used to update the data with latest data
                       }
                     });
                   }
+                }else if (button?.needAudio ?? false) {
+                  if (isLoading.isTrue) {
+                    return;
+                  }
+                  stopTTS();
+                  updateTimer(enable: false);
+                  isSheelaScreenActive = false;
+                  btnTextLocal = button?.title ?? '';
+                  goToAudioRecordScreen();
+                }else if (button?.btnRedirectTo == strRedirectRetakeAudio) {
+                  if (isLoading.isTrue) {
+                    return;
+                  }
+                  stopTTS();
+                  isSheelaScreenActive = false;
+                  updateTimer(enable: false);
+                  isRetakeCapture = true;
+                  goToAudioRecordScreen();
+                }else if (button?.btnRedirectTo == strRedirectToUploadAudio) {
+                  SheelaResponse sheelaLastConversation = SheelaResponse();
+                  sheelaLastConversation = conversations.last;
+                  isLoading.value = true;
+                  conversations.add(SheelaResponse(loading: true));
+                  scrollToEnd();
+                  if (sheelaLastConversation.audioThumbnailUrl != null && sheelaLastConversation.audioThumbnailUrl != '') {
+                        saveMediaRegiment(sheelaLastConversation.audioThumbnailUrl ?? '', '')
+                        .then((value) {
+                      isLoading.value = false;
+                      conversations.removeLast();
+                      if (value.isSuccess ?? false) {
+                        fileRequestUrl =
+                            value.result?.accessUrl ?? '';
+                        if (isLoading.isTrue) {
+                          return;
+                        }
+                        if (conversations.last.singleuse != null && conversations.last.singleuse! && conversations.last.isActionDone != null) {
+                          conversations.last.isActionDone = true;
+                        }
+                        button?.isSelected = true;
+                        startSheelaFromButton(
+                            buttonText: button?.title,
+                            payload: button?.payload,
+                            buttons: button,
+                            isFromImageUpload: true,
+                            requestFileType: strAudio
+                        );
+                        Future.delayed(const Duration(seconds: 3), () {
+                          button?.isSelected = false;
+                        });
+                      }
+                    });
+                  }
                 } else {
                   startSheelaFromButton(
                       buttonText: button.title,
@@ -2521,6 +2575,25 @@ makeApiRequest is used to update the data with latest data
       // Handle any exceptions that occur during the closing process and log them
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
+  }
+
+  void goToAudioRecordScreen(){
+    Get.to(AudioRecorder(
+      arguments: AudioScreenArguments(
+        fromVoice: false,
+      ),
+    ))?.then((results) {
+      isSheelaScreenActive = true;
+      updateTimer(enable: true);
+      var audioPath = results[keyAudioFile];
+      if (audioPath != null && audioPath != '') {
+        sheelaFileStaticConversation(
+            btnTitle: btnTextLocal ?? '',
+            selectedImagePath: audioPath,
+            requestFileType: strAudio
+        );
+      }
+    });
   }
 }
 

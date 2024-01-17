@@ -535,7 +535,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         controller.updateTimer(enable: false);
                         controller.isSheelaScreenActive = false;
                         controller.btnTextLocal = buttonData?.title ?? '';
-                        goToAudioRecordScreen();
+                        controller.goToAudioRecordScreen();
                       }else if (buttonData?.btnRedirectTo == strRedirectRetakeAudio) {
                         if (controller.isLoading.isTrue) {
                           return;
@@ -544,7 +544,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         controller.isSheelaScreenActive = false;
                         controller.updateTimer(enable: false);
                         controller.isRetakeCapture = true;
-                        goToAudioRecordScreen();
+                        controller.goToAudioRecordScreen();
                       }else if (buttonData?.btnRedirectTo == strRedirectToUploadAudio) {
                         controller.isLoading.value = true;
                         controller.conversations.add(SheelaResponse(loading: true));
@@ -894,25 +894,6 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  void goToAudioRecordScreen(){
-    Get.to(AudioRecorder(
-      arguments: AudioScreenArguments(
-        fromVoice: false,
-      ),
-    ))?.then((results) {
-      controller.isSheelaScreenActive = true;
-      controller.updateTimer(enable: true);
-      var audioPath = results[keyAudioFile];
-      if (audioPath != null && audioPath != '') {
-        controller.sheelaFileStaticConversation(
-            btnTitle: controller.btnTextLocal ?? '',
-            selectedImagePath: audioPath,
-          requestFileType: strAudio
-        );
-      }
-    });
   }
 
 }
