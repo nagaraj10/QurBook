@@ -2034,7 +2034,7 @@ makeApiRequest is used to update the data with latest data
               .trim();
 
           // Close Sheela's input dialog and stop listening
-          closeSheelaInputDialogAndStopListening();
+          await closeSheelaInputDialogAndStopListening();
 
           // Handle the Sheela's input response
           handleSheelaInputResponse(response);
@@ -2153,7 +2153,7 @@ makeApiRequest is used to update the data with latest data
                               ),
                             ),
                             GestureDetector(
-                              onTap: () {
+                              onTap: () async {
                                 // Process and handle Sheela's input response
                                 String response = CommonUtil()
                                     .validString(
@@ -2163,7 +2163,7 @@ makeApiRequest is used to update the data with latest data
                                   FlutterToast().getToast(
                                       strPleaseEnterValidInput, Colors.black54);
                                 } else {
-                                  closeSheelaInputDialogAndStopListening();
+                                  await closeSheelaInputDialogAndStopListening();
                                   handleSheelaInputResponse(response);
                                 }
                               },
