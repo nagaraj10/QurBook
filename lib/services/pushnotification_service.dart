@@ -22,14 +22,7 @@ class PushNotificationService {
 
   Future<void> setupNotification() async {
     NotificationSettings settings =
-    await FirebaseMessaging.instance.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
+    await FirebaseMessaging.instance.requestPermission();
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       String? token = await FirebaseMessaging.instance.getToken();
       _tokenStream = FirebaseMessaging.instance.onTokenRefresh;
@@ -62,7 +55,13 @@ class PushNotificationService {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       print(
           '212121 message listen:${message.toMap()}');
-      await showNotification(message);
+      if(message.data['type']=='call' && Platform.isAndroid){
+          showCallNotification(message);
+      }else{
+        await showNotification(message);
+      }
+
+
 
     });
 
@@ -77,15 +76,20 @@ class PushNotificationService {
         notificationCategories: darwinIOSCategories);
     final initializationSettings =
     InitializationSettings(android: androidSettings, iOS: iOSSettings);
-    await localNotificationsPlugin.initialize(initializationSettings,
-        onDidReceiveNotificationResponse: (details) async {
-          if (details.payload != null) {
-            print('8888: onNotificationTaps:$details)}');
-            IosNotificationHandler()..
-            isAlreadyLoaded=true
-            ..handleNotificationResponse(details.payload!);
-          }
-        }, onDidReceiveBackgroundNotificationResponse: notificationTapBackground);
+    try{
+      await localNotificationsPlugin.initialize(initializationSettings,
+          onDidReceiveNotificationResponse: (details)  {
+            if (details.payload != null) {
+              print('8888: onNotificationTaps:$details)}');
+              IosNotificationHandler()..
+              isAlreadyLoaded=true
+                ..handleNotificationResponse(details.payload!);
+            }
+          }, onDidReceiveBackgroundNotificationResponse: notificationTapBackground);
+    }catch(e){
+      print('8888:exception:$e');
+    }
+
   }
 
   setToken(String? token) async {
@@ -127,6 +131,42 @@ Future<void> showNotification(RemoteMessage message) async {
     notificationDetails,
     payload:jsonEncode(message.data),
   );
+}
+
+void showCallNotification(RemoteMessage message)async{
+   AndroidNotificationDetails androidPlatformChannelSpecifics =
+  AndroidNotificationDetails(
+      '${callChannel.id}',
+      '${callChannel.description}',
+      importance: Importance.max,
+      priority: Priority.high,
+      actions: [
+        AndroidNotificationAction(
+          'accept_action', // Replace with your own action ID
+          'Accept', // Replace with your own action label
+          showsUserInterface: true,
+        ),
+        AndroidNotificationAction(
+          'reject_action', // Replace with your own action ID
+          'Reject',
+          showsUserInterface: true, // Replace with your own action label
+        ),
+      ]
+  );
+  final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS:DarwinNotificationDetails(categoryIdentifier:
+      'darwinCall_category'));
+  await localNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(callChannel);
+  localNotificationsPlugin.show(
+      Platform.isIOS? message.notification.hashCode:message.hashCode,
+      Platform.isIOS? message.notification!.title:message.data['title'],
+      Platform.isIOS? message.notification!.body:message.data['body'],
+      platformChannelSpecifics,
+      payload: jsonEncode(message.data));
 }
 
 
@@ -178,5 +218,13 @@ final androidNormalchannel = AndroidNotificationChannel(
   description:
   'This channel is used for important notifications.', //
   sound: RawResourceAndroidNotificationSound('msg_tone'),
+  importance: Importance.high,
+);
+var callChannel = const AndroidNotificationChannel(
+  '5678', // id
+  'Qurbook_call_channel', // title
+  description:
+  'This channel is used for important notifications.',
+  sound: RawResourceAndroidNotificationSound('helium'),// description
   importance: Importance.high,
 );
