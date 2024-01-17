@@ -12,9 +12,9 @@ import Firebase
 
 extension AppDelegate: MessagingDelegate {
     
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        print("Firebase registration token: \(String(describing: fcmToken))")
-    }
+   func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+//        print("Firebase registration token: \(String(describing: fcmToken))")
+   }
     
     //Add Action button the Notification
     func setUpNotificationButtons(){
@@ -119,9 +119,9 @@ extension AppDelegate: MessagingDelegate {
             else if call.method == Constants.removeAllReminderMethod{
                 self.notificationCenter.removeAllDeliveredNotifications()
                 self.notificationCenter.removeAllPendingNotificationRequests()
-                Messaging.messaging().deleteToken { (err) in
-                    print(err?.localizedDescription as Any)
-                }
+//                Messaging.messaging().deleteToken { (err) in
+//                    print(err?.localizedDescription as Any)
+//                }
             }else{
                 result(FlutterMethodNotImplemented)
                 return
@@ -290,7 +290,7 @@ extension AppDelegate: MessagingDelegate {
     override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
         let token = tokenParts.joined()
-        Messaging.messaging().apnsToken = deviceToken
+       Messaging.messaging().apnsToken = deviceToken
     }
     
     override func application(
@@ -304,35 +304,35 @@ extension AppDelegate: MessagingDelegate {
     override func userNotificationCenter(_ center: UNUserNotificationCenter,
                                          willPresent notification: UNNotification,
                                          withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        checkForCallListener(notification: notification)
-         if let userInfo = notification.request.content.userInfo as? NSDictionary,
-                 let type = userInfo["isSheela"] as? String,
-                 let controller = navigationController?.children.first as? FlutterViewController,
-                 UIApplication.shared.applicationState == .active{
-            if(type.lowercased() == "true"){
-                if (ResponseNotificationChannel == nil){
-                    ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
-                }
-                ResponseNotificationChannel.invokeMethod(Constants.notificationResponseMethod, arguments: userInfo)
-                completionHandler([])
-            }else{
-                completionHandler([.alert, .sound])
-            }
-        }else{
-            if let userInfo = notification.request.content.userInfo as? NSDictionary,
-               let type = userInfo["NotificationType"] as? String,
-               type.lowercased() == "reminders",
-               let eid = userInfo["eid"] as? String
-                ,let controller = navigationController?.children.first as? FlutterViewController{
-                let data =
-                [ "eid" : eid]
-                if (ResponseNotificationChannel == nil){
-                    ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
-                }
-                ResponseNotificationChannel.invokeMethod(Constants.navigateToSheelaReminderMethod, arguments: data)
-            }
-            completionHandler([.alert, .sound])
-        }
+       checkForCallListener(notification: notification)
+//         if let userInfo = notification.request.content.userInfo as? NSDictionary,
+//                 let type = userInfo["isSheela"] as? String,
+//                 let controller = navigationController?.children.first as? FlutterViewController,
+//                 UIApplication.shared.applicationState == .active{
+//            if(type.lowercased() == "true"){
+//                if (ResponseNotificationChannel == nil){
+//                    ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
+//                }
+//                ResponseNotificationChannel.invokeMethod(Constants.notificationResponseMethod, arguments: userInfo)
+//                completionHandler([])
+//            }else{
+//                completionHandler([.alert, .sound])
+//            }
+//        }else{
+//            if let userInfo = notification.request.content.userInfo as? NSDictionary,
+//               let type = userInfo["NotificationType"] as? String,
+//               type.lowercased() == "reminders",
+//               let eid = userInfo["eid"] as? String
+//                ,let controller = navigationController?.children.first as? FlutterViewController{
+//                let data =
+//                [ "eid" : eid]
+//                if (ResponseNotificationChannel == nil){
+//                    ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
+//                }
+//                ResponseNotificationChannel.invokeMethod(Constants.navigateToSheelaReminderMethod, arguments: data)
+//            }
+//            completionHandler([.alert, .sound])
+//        }
     }
     
     override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -372,45 +372,45 @@ extension AppDelegate: MessagingDelegate {
                     ReminderMethodChannel.invokeMethod(Constants.callLocalNotificationMethod, arguments: newData)
                 }
             } else {
-                var newData :NSDictionary
-                if (response.actionIdentifier == "Renew" || response.actionIdentifier == "Callback"){
-                    newData  = [
-                        "action" : response.actionIdentifier,
-                        "data" : data
-                    ]
-                }else if (response.actionIdentifier == "Decline" || response.actionIdentifier == "Accept"){
-                    newData  = [
-                        "action" : response.actionIdentifier,
-                        "data" : data
-                    ]
-                }else if (response.actionIdentifier == "Reject" || response.actionIdentifier == "Accept"){
-                    newData  = [
-                        "action" : response.actionIdentifier,
-                        "data" : data
-                    ]
-                }else if (response.actionIdentifier == "chatwithcc" || response.actionIdentifier == "viewrecord"){
-                    newData  = [
-                        "action" : response.actionIdentifier,
-                        "data" : data
-                    ]
-                }else if (response.actionIdentifier == "Escalate" || response.actionIdentifier == "ViewDetails"){
-                    newData  = [
-                        "action" : response.actionIdentifier,
-                        "data" : data
-                    ]
-                }else if (response.actionIdentifier.lowercased() == "communicationsettings" || response.actionIdentifier.lowercased() == "viewmember"){
-                    newData  = [
-                        "action" : response.actionIdentifier,
-                        "data" : data
-                    ]
-                }else{
-                    newData = data
-                }
-                if (ResponseNotificationChannel == nil){
-                    ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
-                    
-                }
-                ResponseNotificationChannel.invokeMethod(Constants.notificationResponseMethod, arguments:newData)
+//                var newData :NSDictionary
+//                if (response.actionIdentifier == "Renew" || response.actionIdentifier == "Callback"){
+//                    newData  = [
+//                        "action" : response.actionIdentifier,
+//                        "data" : data
+//                    ]
+//                }else if (response.actionIdentifier == "Decline" || response.actionIdentifier == "Accept"){
+//                    newData  = [
+//                        "action" : response.actionIdentifier,
+//                        "data" : data
+//                    ]
+//                }else if (response.actionIdentifier == "Reject" || response.actionIdentifier == "Accept"){
+//                    newData  = [
+//                        "action" : response.actionIdentifier,
+//                        "data" : data
+//                    ]
+//                }else if (response.actionIdentifier == "chatwithcc" || response.actionIdentifier == "viewrecord"){
+//                    newData  = [
+//                        "action" : response.actionIdentifier,
+//                        "data" : data
+//                    ]
+//                }else if (response.actionIdentifier == "Escalate" || response.actionIdentifier == "ViewDetails"){
+//                    newData  = [
+//                        "action" : response.actionIdentifier,
+//                        "data" : data
+//                    ]
+//                }else if (response.actionIdentifier.lowercased() == "communicationsettings" || response.actionIdentifier.lowercased() == "viewmember"){
+//                    newData  = [
+//                        "action" : response.actionIdentifier,
+//                        "data" : data
+//                    ]
+//                }else{
+//                    newData = data
+//                }
+//                if (ResponseNotificationChannel == nil){
+//                    ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
+//                    
+//                }
+//                ResponseNotificationChannel.invokeMethod(Constants.notificationResponseMethod, arguments:newData)
             }
         }
     }
