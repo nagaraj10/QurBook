@@ -61,8 +61,6 @@ class PushNotificationService {
         await showNotification(message);
       }
 
-
-
     });
 
   }
@@ -72,23 +70,20 @@ class PushNotificationService {
     AndroidInitializationSettings(
       '@mipmap/ic_launcher',
     );
+
     final iOSSettings = DarwinInitializationSettings(
         notificationCategories: darwinIOSCategories);
     final initializationSettings =
     InitializationSettings(android: androidSettings, iOS: iOSSettings);
-    try{
       await localNotificationsPlugin.initialize(initializationSettings,
-          onDidReceiveNotificationResponse: (details)  {
+          onDidReceiveNotificationResponse: (details) async {
             if (details.payload != null) {
-              print('8888: onNotificationTaps:$details)}');
+              print('8888: onNotificationTaps:${details.payload})}');
               IosNotificationHandler()..
               isAlreadyLoaded=true
-                ..handleNotificationResponse(details.payload!);
+                ..handleNotificationResponse(jsonDecode(details.payload!));
             }
           }, onDidReceiveBackgroundNotificationResponse: notificationTapBackground);
-    }catch(e){
-      print('8888:exception:$e');
-    }
 
   }
 
@@ -100,7 +95,12 @@ class PushNotificationService {
 @pragma('vm:entry-point')
 Future<void> onBackgroundMessageReceived(RemoteMessage message) async {
   try {
-  //  showNotification(message);
+    print('2121 : on Background Message Received ${message.data}');
+    if (message.data['type'] == 'call' && Platform.isAndroid) {
+       showCallNotification(message);
+    } else {
+      showNotification(message);
+    }
   } catch (e) {
     print('2121 catch:$e');
   }
@@ -129,7 +129,7 @@ Future<void> showNotification(RemoteMessage message) async {
     Platform.isIOS ? message.notification!.title : message.data['title'],
     Platform.isIOS ? message.notification!.body : message.data['body'],
     notificationDetails,
-    payload:jsonEncode(message.data),
+    payload:jsonEncode(message.data)
   );
 }
 
@@ -169,7 +169,9 @@ void showCallNotification(RemoteMessage message)async{
       payload: jsonEncode(message.data));
 }
 
+void onDidReceiveLocalNotificationTap(){
 
+}
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
   print('8888: onBackground:${jsonDecode(notificationResponse.payload ?? '')}');

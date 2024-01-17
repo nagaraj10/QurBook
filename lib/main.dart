@@ -300,7 +300,7 @@ class _MyFHBState extends State<MyFHB> {
   var sheelaMethodChannelAndroid = const MethodChannel('sheela.channel');
   static const platform = variable.version_platform;
   String? _responseFromNative = variable.strWaitLoading;
-  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  //final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   static const secure_platform = variable.security;
   static const nav_platform = MethodChannel('navigation.channel');
   String navRoute = '';
@@ -1262,11 +1262,16 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   getMyRoute() async {
-    final route = await nav_platform.invokeMethod('getMyRoute');
-    if (route != null && route != 'null') {
-      setState(() {
-        navRoute = route;
-      });
+    NotificationAppLaunchDetails? didLaunchFromNotification =
+    await localNotificationsPlugin.getNotificationAppLaunchDetails();
+    NotificationResponse? notificationResponse =
+        didLaunchFromNotification?.notificationResponse;
+    FlutterToast().getToast('${notificationResponse}', Colors.red);
+    if (notificationResponse != null) {
+      if (didLaunchFromNotification?.didNotificationLaunchApp == true) {
+        IosNotificationHandler()
+            .handleNotificationResponse(jsonDecode(notificationResponse.payload??''));
+      }
     }
   }
 
@@ -1291,8 +1296,8 @@ class _MyFHBState extends State<MyFHB> {
           context, MaterialPageRoute(builder: (context) => AddReminder()));
     }
 
-    flutterLocalNotificationsPlugin.initialize(platform,
-        onDidReceiveNotificationResponse: notificationAction);
+/*    flutterLocalNotificationsPlugin.initialize(platform,
+        onDidReceiveNotificationResponse: notificationAction);*/
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ConnectivityBloc>(

@@ -1,3 +1,7 @@
+
+
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
@@ -23,6 +27,7 @@ import '../../my_family_detail/models/my_family_detail_arguments.dart';
 import '../../my_family_detail/screens/my_family_detail_screen.dart';
 import '../../regiment/models/regiment_arguments.dart';
 import '../../regiment/view_model/regiment_view_model.dart';
+import '../../services/notification_screen.dart';
 import '../../src/model/home_screen_arguments.dart';
 import '../../src/model/user/user_accounts_arguments.dart';
 import '../../src/ui/SheelaAI/Controller/SheelaAIController.dart';
@@ -179,42 +184,53 @@ class IosNotificationHandler {
     });
   }
 
-  void handleNotificationResponse(jsonDecode)async{
+  void handleNotificationResponse(Map<String,dynamic> jsonDecode)async{
     if (!isAlreadyLoaded) {
       notificationReceivedFromKilledState = true;
       await Future.delayed(const Duration(seconds: 5));
       isAlreadyLoaded = true;
     }
     final data = Map<String, dynamic>.from(jsonDecode);
-    model = NotificationModel.fromMap(data.containsKey("action")
-        ? Map<String, dynamic>.from(data["data"])
-        : data);
-    if ((model.externalLink ?? '').isNotEmpty) {
-      if (model.externalLink == variable.iOSAppStoreLink) {
-        await LaunchReview.launch(
-            iOSAppId: variable.iOSAppId, writeReview: false);
-      } else {
-        CommonUtil().launchURL(model.externalLink!);
+    if(Platform.isAndroid && data.containsKey('type') && data['type']=='call'){
+      if(data['action']!=null){
+        model = NotificationModel.fromMap(data.containsKey("action")
+            ? Map<String, dynamic>.from(data["data"])
+            : data);
+        model.isCall =true;
+      }else{
+        Get.to(NotificationScreen());
       }
-    }
+    }else{
+      model = NotificationModel.fromMap(data.containsKey("action")
+          ? Map<String, dynamic>.from(data["data"])
+          : data);
+      if ((model.externalLink ?? '').isNotEmpty) {
+        if (model.externalLink == variable.iOSAppStoreLink) {
+          await LaunchReview.launch(
+              iOSAppId: variable.iOSAppId, writeReview: false);
+        } else {
+          CommonUtil().launchURL(model.externalLink!);
+        }
+      }
 
-    var actionKey = data["action"] ?? '';
-    if (actionKey.isNotEmpty) {
-      renewAction = actionKey == "Renew";
-      callbackAction = actionKey == "Callback";
-      rejectAction = actionKey == "Reject";
-      acceptAction = actionKey == "Accept";
-      declineAction = actionKey == "Decline";
-      escalteAction = actionKey == "Escalate";
-      chatWithCC = actionKey == "chatwithcc";
-      viewRecordAction = actionKey == "viewrecord";
-      viewDetails = actionKey == "ViewDetails";
-      viewMemberAction =
-          actionKey.toLowerCase() == "ViewMember".toLowerCase();
-      communicationSettingAction = actionKey.toLowerCase() ==
-          "Communicationsettings".toLowerCase();
+      var actionKey = data["action"] ?? '';
+      if (actionKey.isNotEmpty) {
+        renewAction = actionKey == "Renew";
+        callbackAction = actionKey == "Callback";
+        rejectAction = actionKey == "Reject";
+        acceptAction = actionKey == "Accept";
+        declineAction = actionKey == "Decline";
+        escalteAction = actionKey == "Escalate";
+        chatWithCC = actionKey == "chatwithcc";
+        viewRecordAction = actionKey == "viewrecord";
+        viewDetails = actionKey == "ViewDetails";
+        viewMemberAction =
+            actionKey.toLowerCase() == "ViewMember".toLowerCase();
+        communicationSettingAction = actionKey.toLowerCase() ==
+            "Communicationsettings".toLowerCase();
+      }
+      actionForTheNotification();
     }
-    actionForTheNotification();
   }
 
   void updateStatus(String status) async {
