@@ -89,13 +89,24 @@ class QurhomeRegimenController extends GetxController {
   Timer? evryOneMinuteRemainder;
   Timer? updateUITimer;
 
+  // Function to start a timer for updating the UI at regular intervals
   startUpdateUITimer() {
+    // Setting up a periodic timer with a duration of 30 seconds
     updateUITimer = Timer.periodic(const Duration(seconds: 30), (timer) async {
+      // Retrieve the list of regimens from the response model or initialize an empty list if null
       var regimentList = qurHomeRegimenResponseModel?.regimentsList ?? [];
+
+      // Set flags to indicate that data is currently being loaded
       loadingDataWithoutProgress.value = true;
       loadingData.value = true;
+
+      // Introduce a delay of 2 seconds (simulating asynchronous operations)
       await Future.delayed(Duration(seconds: 2));
+
+      // Call a function to refresh the next activity with the retrieved regiment list
       await refreshTheNextActivity(regimentList,null);
+
+      // Reset loading flags as data loading is complete
       loadingData.value = false;
       loadingDataWithoutProgress.value = false;
     });
