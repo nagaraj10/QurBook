@@ -1538,7 +1538,7 @@ makeApiRequest is used to update the data with latest data
         btnRedirectTo: getRedirectTo(requestFileType), // Redirection information
       ),
       Buttons(
-        title: strRecapture, // Button title
+        title: getButtonTitle(requestFileType), // Button title
         btnRedirectTo: getRetakeTo(requestFileType), // Redirection information
       ),
       Buttons(
@@ -1566,6 +1566,16 @@ makeApiRequest is used to update the data with latest data
         return strRedirectRetakePicture;
       case strAudio:
         return strRedirectRetakeAudio;
+    }
+    return '';
+  }
+
+  String? getButtonTitle(requestFileType) {
+    switch (requestFileType) {
+      case strImage:
+        return strRecapture;
+      case strAudio:
+        return strRecordAgain;
     }
     return '';
   }
@@ -2493,7 +2503,7 @@ makeApiRequest is used to update the data with latest data
                       }
                     });
                   }
-                }else if (button?.needAudio ?? false) {
+                } else if (button?.needAudio ?? false) {
                   if (isLoading.isTrue) {
                     return;
                   }
@@ -2501,8 +2511,8 @@ makeApiRequest is used to update the data with latest data
                   updateTimer(enable: false);
                   isSheelaScreenActive = false;
                   btnTextLocal = button?.title ?? '';
-                  goToAudioRecordScreen();
-                }else if (button?.btnRedirectTo == strRedirectRetakeAudio) {
+                  goToAudioRecordScreen(isFromSheelaFileUpload: true);
+                } else if (button?.btnRedirectTo == strRedirectRetakeAudio) {
                   if (isLoading.isTrue) {
                     return;
                   }
@@ -2510,25 +2520,28 @@ makeApiRequest is used to update the data with latest data
                   isSheelaScreenActive = false;
                   updateTimer(enable: false);
                   isRetakeCapture = true;
-                  goToAudioRecordScreen();
-                }else if (button?.btnRedirectTo == strRedirectToUploadAudio) {
+                  goToAudioRecordScreen(isFromSheelaFileUpload: true);
+                } else if (button?.btnRedirectTo == strRedirectToUploadAudio) {
                   SheelaResponse sheelaLastConversation = SheelaResponse();
                   sheelaLastConversation = conversations.last;
                   isLoading.value = true;
                   conversations.add(SheelaResponse(loading: true));
                   scrollToEnd();
-                  if (sheelaLastConversation.audioThumbnailUrl != null && sheelaLastConversation.audioThumbnailUrl != '') {
-                        saveMediaRegiment(sheelaLastConversation.audioThumbnailUrl ?? '', '')
+                  if (sheelaLastConversation.audioThumbnailUrl != null &&
+                      sheelaLastConversation.audioThumbnailUrl != '') {
+                    saveMediaRegiment(
+                            sheelaLastConversation.audioThumbnailUrl ?? '', '')
                         .then((value) {
                       isLoading.value = false;
                       conversations.removeLast();
                       if (value.isSuccess ?? false) {
-                        fileRequestUrl =
-                            value.result?.accessUrl ?? '';
+                        fileRequestUrl = value.result?.accessUrl ?? '';
                         if (isLoading.isTrue) {
                           return;
                         }
-                        if (conversations.last.singleuse != null && conversations.last.singleuse! && conversations.last.isActionDone != null) {
+                        if (conversations.last.singleuse != null &&
+                            conversations.last.singleuse! &&
+                            conversations.last.isActionDone != null) {
                           conversations.last.isActionDone = true;
                         }
                         button?.isSelected = true;
@@ -2537,8 +2550,7 @@ makeApiRequest is used to update the data with latest data
                             payload: button?.payload,
                             buttons: button,
                             isFromImageUpload: true,
-                            requestFileType: strAudio
-                        );
+                            requestFileType: strAudio);
                         Future.delayed(const Duration(seconds: 3), () {
                           button?.isSelected = false;
                         });
@@ -2577,11 +2589,11 @@ makeApiRequest is used to update the data with latest data
     }
   }
 
-  void goToAudioRecordScreen(){
+  void goToAudioRecordScreen({bool? isFromSheelaFileUpload = false}) {
     Get.to(AudioRecorder(
       arguments: AudioScreenArguments(
-        fromVoice: false,
-      ),
+          fromVoice: false,
+          isFromSheelaFileUpload: isFromSheelaFileUpload),
     ))?.then((results) {
       isSheelaScreenActive = true;
       updateTimer(enable: true);
@@ -2590,8 +2602,7 @@ makeApiRequest is used to update the data with latest data
         sheelaFileStaticConversation(
             btnTitle: btnTextLocal ?? '',
             selectedImagePath: audioPath,
-            requestFileType: strAudio
-        );
+            requestFileType: strAudio);
       }
     });
   }

@@ -535,7 +535,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         controller.updateTimer(enable: false);
                         controller.isSheelaScreenActive = false;
                         controller.btnTextLocal = buttonData?.title ?? '';
-                        controller.goToAudioRecordScreen();
+                        controller.goToAudioRecordScreen(isFromSheelaFileUpload: true);
                       }else if (buttonData?.btnRedirectTo == strRedirectRetakeAudio) {
                         if (controller.isLoading.isTrue) {
                           return;
@@ -544,7 +544,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         controller.isSheelaScreenActive = false;
                         controller.updateTimer(enable: false);
                         controller.isRetakeCapture = true;
-                        controller.goToAudioRecordScreen();
+                        controller.goToAudioRecordScreen(isFromSheelaFileUpload: true);
                       }else if (buttonData?.btnRedirectTo == strRedirectToUploadAudio) {
                         controller.isLoading.value = true;
                         controller.conversations.add(SheelaResponse(loading: true));
@@ -892,6 +892,17 @@ class SheelaAIReceiverBubble extends StatelessWidget {
             ),
           ),
         ),
+      ],
+    );
+  }
+
+  Widget getAudioMaxFileReached() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          child: Text('Audio Card dsadasdda-'),
+        )
       ],
     );
   }

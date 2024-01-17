@@ -107,15 +107,28 @@ class _AudioRecorderState extends State<AudioRecorder> {
         (event) {
           setState(
             () {
-              if (event.duration.inSeconds >= 180) {
-                stopRecorder();
-                toast.getToast(
-                  'Maximum duration to record is 3 min',
-                  Colors.red,
-                );
-                this.setState(
-                  () {},
-                );
+              if (widget.arguments?.isFromSheelaFileUpload ?? false) {
+                if (event.duration.inMinutes >= 120) { // // maximum audio size is 100mb
+                  stopRecorder();
+                  toast.getToastForLongTime(
+                    strAudioSizeValidation,
+                    Colors.red,
+                  );
+                  this.setState(
+                    () {},
+                  );
+                }
+              } else {
+                if (event.duration.inSeconds >= 180) {
+                  stopRecorder();
+                  toast.getToast(
+                    'Maximum duration to record is 3 min',
+                    Colors.red,
+                  );
+                  this.setState(
+                    () {},
+                  );
+                }
               }
               _recorderTxt = _printDuration(event.duration);
               _dbLevel = event.decibels;
