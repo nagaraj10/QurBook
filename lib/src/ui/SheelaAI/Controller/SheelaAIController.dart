@@ -1537,7 +1537,7 @@ makeApiRequest is used to update the data with latest data
         btnRedirectTo: strRedirectToUploadImage, // Redirection information
       ),
       Buttons(
-        title: strRetake, // Button title
+        title: strRecapture, // Button title
         btnRedirectTo: strRedirectRetakePicture, // Redirection information
       ),
       Buttons(
