@@ -993,7 +993,7 @@ String doseValueHigh = "2048";
 
 // sheela survey image capture
 
-const String strRetake = 'Retake';
+const String strRecapture = 'Recapture';
 const String strRedirectRetakePicture = 'redirectRetakePicture';
 const String strRedirectRetakeAudio = 'redirectRetakeAudio';
 const String strRedirectToUploadImage = 'redirectUploadBucket';
