@@ -22,6 +22,7 @@ import '../../constants/fhb_parameters.dart' as parameters;
 import '../../constants/router_variable.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../myPlan/view/myPlanDetail.dart';
 import '../../my_family_detail/models/my_family_detail_arguments.dart';
 import '../../my_family_detail/screens/my_family_detail_screen.dart';
@@ -191,28 +192,19 @@ class IosNotificationHandler {
       isAlreadyLoaded = true;
     }
     final data = Map<String, dynamic>.from(jsonDecode);
+    model = NotificationModel.fromMap(data.containsKey("action")
+        ? Map<String, dynamic>.from(data["data"])
+        : data);
     if(Platform.isAndroid && data.containsKey('type') && data['type']=='call'){
+      model.isCall =true;
       if(data['action']!=null){
-        model = NotificationModel.fromMap(data.containsKey("action")
-            ? Map<String, dynamic>.from(data["data"])
-            : data);
-        model.isCall =true;
+        if(data['action']=='Reject'){
+          updateStatus(false);
+        }
       }else{
-        Get.to(NotificationScreen());
+        Get.to(NotificationScreen(model));
       }
     }else{
-      model = NotificationModel.fromMap(data.containsKey("action")
-          ? Map<String, dynamic>.from(data["data"])
-          : data);
-      if ((model.externalLink ?? '').isNotEmpty) {
-        if (model.externalLink == variable.iOSAppStoreLink) {
-          await LaunchReview.launch(
-              iOSAppId: variable.iOSAppId, writeReview: false);
-        } else {
-          CommonUtil().launchURL(model.externalLink!);
-        }
-      }
-
       var actionKey = data["action"] ?? '';
       if (actionKey.isNotEmpty) {
         renewAction = actionKey == "Renew";

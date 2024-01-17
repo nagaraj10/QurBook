@@ -9,6 +9,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../main.dart';
 import '../constants/variable_constant.dart';
 import '../video_call/services/iOS_Notification_Handler.dart';
+import 'notification_helper.dart';
 
 class PushNotificationService {
   late Stream<String> _tokenStream;
@@ -134,24 +135,15 @@ Future<void> showNotification(RemoteMessage message) async {
 }
 
 void showCallNotification(RemoteMessage message)async{
+  listenEvent(message.data['meeting_id']);
    AndroidNotificationDetails androidPlatformChannelSpecifics =
   AndroidNotificationDetails(
       '${callChannel.id}',
       '${callChannel.description}',
       importance: Importance.max,
       priority: Priority.high,
-      actions: [
-        AndroidNotificationAction(
-          'accept_action', // Replace with your own action ID
-          'Accept', // Replace with your own action label
-          showsUserInterface: true,
-        ),
-        AndroidNotificationAction(
-          'reject_action', // Replace with your own action ID
-          'Reject',
-          showsUserInterface: true, // Replace with your own action label
-        ),
-      ]
+      timeoutAfter: 30 * 1000,
+      actions:callAction
   );
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -162,7 +154,7 @@ void showCallNotification(RemoteMessage message)async{
       AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(callChannel);
   localNotificationsPlugin.show(
-      Platform.isIOS? message.notification.hashCode:message.hashCode,
+      Platform.isIOS? message.notification.hashCode:5678,
       Platform.isIOS? message.notification!.title:message.data['title'],
       Platform.isIOS? message.notification!.body:message.data['body'],
       platformChannelSpecifics,
@@ -177,58 +169,27 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
   print('8888: onBackground:${jsonDecode(notificationResponse.payload ?? '')}');
 }
 
-Future<void> updateStatus(bool isAccept, String recordId) async {
-  try {
-    final db = FirebaseFirestore.instance;
 
-    final data = <String, dynamic>{
-      'call_status': isAccept ? 'accept' : 'decline',
-    };
-    await db.collection('call_log').doc(recordId).update(data);
-  } catch (e) {
-    print('firestoreException:${e.toString()}');
-  }
+void listenEvent(String meetingId) {
+   FirebaseFirestore.instance
+      .collection('call_log')
+      .doc(meetingId)
+      .snapshots()
+      .listen((DocumentSnapshot snapshot) {
+    if (snapshot.exists) {
+      String callStatus = snapshot['call_status'];
+
+      if (callStatus == 'call_ended_by_user' ||
+          callStatus == 'accept' ||
+          callStatus == 'decline') {
+        localNotificationsPlugin.cancel(5678);
+      }
+    }
+  }, onError: (Object error) {
+
+  });
 }
 
 
 
-///Ios Notification Categories
-List<DarwinNotificationCategory> darwinIOSCategories = [
-  DarwinNotificationCategory(
-    'darwinCall_category',
-    actions: [
-      DarwinNotificationAction.text(
-        'accept_action',
-        'Accept',
-        buttonTitle: 'Accept',
-      ),
-      DarwinNotificationAction.plain(
-        'reject_action',
-        'Reject',
-        options: <DarwinNotificationActionOption>{
-          DarwinNotificationActionOption.destructive,
-        },
-      ),
-    ],
-  )
-];
 
-///Notification Channel
-final androidNormalchannel = AndroidNotificationChannel(
-  '12345', // id
-  'Qurbook_channel', // title
-  enableVibration: false,
-  description:
-  'This channel is used for important notifications.', //
-  sound: RawResourceAndroidNotificationSound('msg_tone'),
-  importance: Importance.high,
-);
-var callChannel = const AndroidNotificationChannel(
-  '5678', // id
-  'Qurbook_call_channel',
-  enableVibration: false,// title
-  description:
-  'This channel is used for important notifications.',
-  sound: RawResourceAndroidNotificationSound('helium'),// description
-  importance: Importance.high,
-);
