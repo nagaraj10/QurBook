@@ -90,9 +90,14 @@ class QurhomeRegimenController extends GetxController {
   Timer? updateUITimer;
 
   startUpdateUITimer() {
-    updateUITimer = Timer.periodic(const Duration(seconds: 30), (timer) {
+    updateUITimer = Timer.periodic(const Duration(seconds: 30), (timer) async {
       var regimentList = qurHomeRegimenResponseModel?.regimentsList ?? [];
-      refreshTheNextActivity(regimentList, null);
+      loadingDataWithoutProgress.value = true;
+      loadingData.value = true;
+      await Future.delayed(Duration(seconds: 2));
+      await refreshTheNextActivity(regimentList,null);
+      loadingData.value = false;
+      loadingDataWithoutProgress.value = false;
     });
   }
 
