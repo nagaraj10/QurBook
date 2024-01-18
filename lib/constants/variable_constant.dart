@@ -743,8 +743,8 @@ const String strApproved = 'Approved'; //status text for approved
 const String strDeclined = 'Declined'; //status text for declined
 const String strReason = 'Reason : '; //status text for reason,include spacing
 
-const String strSubVoice = 'Submitted voice print'; //String for voice submitted
-const String strProVoice = 'Processed voice print'; //String for voice processed
+const String strSubVoice = 'Submitted voice sample'; //String for voice submitted
+const String strProVoice = 'Processed voice sample'; //String for voice processed
 const String strChangeVoice = 'Change voice sample'; //String for voice print
 
 const String strStart = 'Start';

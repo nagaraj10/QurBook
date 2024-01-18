@@ -116,8 +116,13 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
               : controller.voiceCloneStatusModel?.result != null
                   ? ListView(
                       children: [
+                        Visibility(
+                            visible: controller
+                                    .voiceCloneStatusModel?.result?.status !=
+                                strApproved,
+                            child: SizedBox(height: 50.0.sp)),
                         Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(20),
                           child: Text(
                             controller.voiceCloneStatusModel?.result
                                     ?.description ??
@@ -229,10 +234,11 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                           padding: const EdgeInsets.all(10.0),
                           child: Container(
                             decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
-                              color: Color(CommonUtil().getMyPrimaryColor()),
-                              width: 1.3,
-                            )),
+                                  color: Colors.grey,
+                                  width: 1.3,
+                                )),
                             padding: EdgeInsets.all(
                               15.0.sp,
                             ),
