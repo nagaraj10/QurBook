@@ -194,16 +194,15 @@ class IosNotificationHandler {
       isAlreadyLoaded = true;
     }
     final data = Map<String, dynamic>.from(jsonDecode);
-    print('888:Naga:$data');
     model = NotificationModel.fromMap(data.containsKey("action")
         ? Map<String, dynamic>.from(data["data"]??data)
         : data);
     if (data['type'] == 'call' && Platform.isAndroid) {
-      if(data['action']!=null){
+      if(data.containsKey('action')){
         if(data['action']=='Reject'){
-          updateCallStatus(false,model.meeting_id.toString());
+          await updateCallStatus(false,model.meeting_id.toString());
         }else{
-          updateCallStatus(true,model.meeting_id.toString());
+          await updateCallStatus(true,model.meeting_id.toString());
           if (model.callType!.toLowerCase() == 'audio') {
             Provider.of<AudioCallProvider>(Get.context!, listen: false)
                 .enableAudioCall();

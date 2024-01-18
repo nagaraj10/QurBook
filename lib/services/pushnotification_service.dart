@@ -79,7 +79,6 @@ class PushNotificationService {
     InitializationSettings(android: androidSettings, iOS: iOSSettings);
       await localNotificationsPlugin.initialize(initializationSettings,
           onDidReceiveNotificationResponse: (details) async {
-            print('8888: onActionId:${details.actionId})}');
         final Map<String,dynamic> mapResponse = jsonDecode(details.payload!);
             if (details.payload != null) {
               if(details.actionId!=null){
@@ -147,7 +146,8 @@ void showCallNotification(RemoteMessage message)async{
       importance: Importance.max,
       priority: Priority.high,
       timeoutAfter: 30 * 1000,
-      actions:callAction
+      actions:callAction,
+      ongoing: true,
   );
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -165,9 +165,6 @@ void showCallNotification(RemoteMessage message)async{
       payload: jsonEncode(message.data));
 }
 
-void onDidReceiveLocalNotificationTap(){
-
-}
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
   print('8888: onBackground:${jsonDecode(notificationResponse.payload ?? '')}');
