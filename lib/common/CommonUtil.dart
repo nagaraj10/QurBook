@@ -5566,11 +5566,28 @@ class CommonUtil {
     }
   }
 
-  closeSheelaDialog() {
+  // This method is responsible for closing the Sheela dialog and performing related actions
+  closeSheelaDialog() async {
     try {
-      const platform = MethodChannel(strCloseSheelaDialog);
-      platform.invokeMethod(strCloseSheelaDialog);
+      /*const platform = MethodChannel(strCloseSheelaDialog);
+      platform.invokeMethod(strCloseSheelaDialog);*/
+
+      // Initializing SheelaAIController for additional actions
+      SheelaAIController? sheelaAIController =
+          CommonUtil().onInitSheelaAIController();
+
+      // Checking and closing Sheela input dialog if it is showing
+      if (sheelaAIController.isSheelaInputDialogShowing.value) {
+        await sheelaAIController.closeSheelaInputDialogAndStopListening();
+      }
+
+      // Checking and closing countdown timer dialog, and stopping speech listening if it is showing
+      if (sheelaAIController.isCountDownDialogShowing.value) {
+        await sheelaAIController.closeCountdownTimerDialogAndCleanup();
+        await sheelaAIController.stopSpeechListening();
+      }
     } catch (e, stackTrace) {
+      // Handling exceptions and logging errors
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
@@ -7267,6 +7284,8 @@ class CommonUtil {
       Permission.microphone,
       Permission.camera,
       Permission.storage,
+      Permission.photos,
+      Permission.videos,
       //Permission.notification, // integrated native permission for push notificaion
     ].request();
     /*if (statuses[Permission.bluetoothConnect]!.isGranted &&
