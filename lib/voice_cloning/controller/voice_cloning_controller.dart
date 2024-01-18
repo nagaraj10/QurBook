@@ -29,6 +29,7 @@ class VoiceCloningController extends ChangeNotifier {
   bool isRecording = false;
   String mPath = 'recorder.m4a';
   List<double> audioWaveData = [];
+  List<double> audioWaveVoiceStatusData = [];
   Timer? countDownTimer;
 
   double playPosition = 0.0;
@@ -43,7 +44,6 @@ class VoiceCloningController extends ChangeNotifier {
   late PlayerController playerController;
   late PlayerController playerVoiceStatusController;
   VoiceCloneServices voiceCloneServices = VoiceCloneServices();
-  bool? fromVoiceCloneStatus;
   String recordedPath = '';
   void disposeRecorder() {
     isRecorderView = true;
@@ -87,7 +87,7 @@ class VoiceCloningController extends ChangeNotifier {
       ///Checking the Mic permission before starting recording.
       if (await checkForMicPermission() == true) {
         await recorderController.record(
-            path: (fromVoiceCloneStatus == true) ? recordedPath : mPath);
+            path: mPath);
         isRecording = true;
       }
     }
@@ -110,7 +110,7 @@ class VoiceCloningController extends ChangeNotifier {
   void startRecording() async {
     try {
       await recorderController.record(
-          path: (fromVoiceCloneStatus == true) ? recordedPath : mPath);
+          path: mPath);
       isRecording = true;
       notifyListeners();
     } catch (e) {}
@@ -121,11 +121,7 @@ class VoiceCloningController extends ChangeNotifier {
     /// waves and labels from the UI.
     recorderController.reset();
     recorderController.refresh();
-    if (fromVoiceCloneStatus == true) {
-      recordedPath = (await recorderController.stop(false))!;
-    } else {
-      mPath = (await recorderController.stop(false))!;
-    }
+    mPath = (await recorderController.stop(false))!;
     if (mPath != null) {}
     recordingDurationTxt = '0:00:00';
     isRecorderView = false;
@@ -198,6 +194,7 @@ class VoiceCloningController extends ChangeNotifier {
     isRecorderView = true;
     recordingDurationTxt = '0:00:00';
     audioWaveData.clear();
+    audioWaveVoiceStatusData.clear();
     notifyListeners();
     countDownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (countdown > 0) {
@@ -230,11 +227,11 @@ class VoiceCloningController extends ChangeNotifier {
 
   Future<void> startVoiceStatusPlayer() async {
     setPlayerLoading(true);
-    audioWaveData = await playerVoiceStatusController.extractWaveformData(
-      path: (fromVoiceCloneStatus == true) ? recordedPath : mPath,
+    audioWaveVoiceStatusData = await playerVoiceStatusController.extractWaveformData(
+      path: recordedPath ,
     );
     await playerVoiceStatusController.preparePlayer(
-        path: (fromVoiceCloneStatus == true) ? recordedPath : mPath);
+        path: recordedPath);
     maxPlayerVoiceStatusDuration = playerVoiceStatusController.maxDuration.toDouble();
     setPlayerLoading(false);
 
@@ -255,10 +252,10 @@ class VoiceCloningController extends ChangeNotifier {
   Future<void> startPlayer() async {
     setPlayerLoading(true);
     audioWaveData = await playerController.extractWaveformData(
-      path: (fromVoiceCloneStatus == true) ? recordedPath : mPath,
+      path: mPath,
     );
     await playerController.preparePlayer(
-        path: (fromVoiceCloneStatus == true) ? recordedPath : mPath);
+        path: mPath);
     maxPlayerDuration = playerController.maxDuration.toDouble();
     /*   maxPlayerDuration =
         (await playerController.getDuration(DurationType.max)).toDouble();*/
@@ -318,6 +315,7 @@ class VoiceCloningController extends ChangeNotifier {
   @override
   void dispose() {
     audioWaveData.clear();
+    audioWaveVoiceStatusData.clear();
     super.dispose();
   }
 

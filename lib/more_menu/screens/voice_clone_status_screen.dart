@@ -68,7 +68,6 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
   Widget build(BuildContext context) {
     _voiceCloningController = Provider.of<VoiceCloningController>(context);
     if (_voiceCloningController.isFirsTymVoiceCloningStatus) {
-      _voiceCloningController.fromVoiceCloneStatus = true;
       _voiceCloningController.recordedPath = "";
       _voiceCloningController.mPath = "";
       _voiceCloningController.playerVoiceStatusController = PlayerController();
@@ -77,7 +76,6 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
     return Obx(
       () => WillPopScope(
         onWillPop: () {
-          _voiceCloningController.fromVoiceCloneStatus = false;
           _voiceCloningController.recordedPath = '';
           controller.setBackButton(
               context, widget.arguments?.fromMenu ?? false);
@@ -448,7 +446,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                     size: Size(MediaQuery.of(context).size.width, 100),
                     playerController: _voiceCloningController.playerVoiceStatusController,
                     enableSeekGesture: false,
-                    waveformData: _voiceCloningController.audioWaveData,
+                    waveformData: _voiceCloningController.audioWaveVoiceStatusData,
                     playerWaveStyle: PlayerWaveStyle(
                       fixedWaveColor: Colors.white,
                       liveWaveColor: Color(CommonUtil().getMyPrimaryColor()),
