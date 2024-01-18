@@ -230,10 +230,9 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                 color: Color(CommonUtil().getMyPrimaryColor()),
                                 width: 1.3,
                               )),
-                              padding: EdgeInsets.only(
-                                  left: 15.0.sp,
-                                  right: 15.0.sp,
-                                  bottom: 15.0.sp),
+                              padding: EdgeInsets.all(
+                                15.0.sp,
+                              ),
                               margin: EdgeInsets.all(10.0.sp),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -279,6 +278,11 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                                   !controller
                                                       .isPlayWidgetClicked;
                                             });
+                                            if (controller
+                                                .isPlayWidgetClicked) {
+                                              await _voiceCloningController
+                                                  .playPausePlayer();
+                                            }
                                           })
                                     ],
                                   ),
