@@ -8,12 +8,13 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/more_menu/models/voice_clone_status_model.dart';
-import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
+import 'package:myfhb/voice_cloning/controller/voice_cloning_controller.dart';
 import 'package:myfhb/voice_cloning/model/voice_clone_caregiver_assignment_response.dart';
 import 'package:myfhb/voice_cloning/model/voice_clone_shared_by_users.dart';
 import 'package:myfhb/voice_cloning/services/voice_clone_members_services.dart';
+import 'package:provider/provider.dart';
 
 import '../common/CommonUtil.dart';
 import '../constants/router_variable.dart';
@@ -33,7 +34,10 @@ class VoiceCloneStatusController extends GetxController {
   List<VoiceCloneCaregiverAssignmentResult> selectedFamilyMembers = [];
 
   final _voiceCloneMembersServices = VoiceCloneMembersServices();
+  String audioURL = '';
 
+  VoiceCloningController? voiceCloningController;
+  bool isPlayWidgetClicked = false;
   @override
   void onInit() {
     // TODO: implement onInit
@@ -42,6 +46,8 @@ class VoiceCloneStatusController extends GetxController {
     listOfFamilyMembers.value = [];
     selectedFamilyMembers = [];
     listOfExistingFamilyMembers.value = [];
+    voiceCloningController =
+        Provider.of<VoiceCloningController>(Get!.context!, listen: false);
   }
 
   void getStatusOfUser() {}
@@ -82,6 +88,9 @@ class VoiceCloneStatusController extends GetxController {
     final response = await _helper.getStatusOfVoiceCloning(url);
     voiceCloneStatusModel = VoiceCloneStatusModel.fromJson(response ?? '');
     voiceCloneId.value = voiceCloneStatusModel?.result?.id ?? '';
+    if (voiceCloneStatusModel?.result?.url != "")
+      audioURL = voiceCloneStatusModel?.result?.url ?? '';
+    //await downloadAudioFile(audioURL);
     fetchFamilyMembersList(voiceCloneId.value);
   }
 
@@ -110,12 +119,14 @@ class VoiceCloneStatusController extends GetxController {
   //Set back button functionlaity from mobile back button and top of the screen
   void setBackButton(BuildContext context, bool fromMenu) {
     // to enable navigation from down back button
+
     if (fromMenu == true) {
       Navigator.of(context).pop();
     } else {
       Navigator.popUntil(context, (route) {
         var shouldPop = false;
-        if ([rt_notification_main, rt_more_menu].contains(route.settings.name)) {
+        if ([rt_notification_main, rt_more_menu]
+            .contains(route.settings.name)) {
           shouldPop = true;
         }
         return shouldPop;
@@ -156,8 +167,7 @@ class VoiceCloneStatusController extends GetxController {
         final existingFamilyMembers = selectedFamilyMembers
             .where(
               (element) =>
-                  element.user?.id == sharedByUser.child?.id
-                   &&
+                  element.user?.id == sharedByUser.child?.id &&
                   listOfCareGiverFamilyMembers.contains(sharedByUser.child?.id),
             )
             .toList();
@@ -196,5 +206,9 @@ class VoiceCloneStatusController extends GetxController {
       CommonUtil()
           .appLogs(message: e.toString(), stackTrace: stackTrace.toString());
     }
+  }
+
+  Future<void> downloadAudioFile(String? url) async {
+    if (url != "") voiceCloningController?.downloadAudioFile(url);
   }
 }

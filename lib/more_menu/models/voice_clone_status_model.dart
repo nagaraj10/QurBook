@@ -26,13 +26,15 @@ class Result {
   AdditionalInfo? additionalInfo;
   String? createdOn;
   String? description;
+  String? url;
 
   Result(
       {this.id,
       this.status,
       this.additionalInfo,
       this.createdOn,
-      this.description});
+      this.description,
+      this.url});
 
   Result.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -42,6 +44,7 @@ class Result {
         : null;
     createdOn = json['createdOn'];
     description = json['description'];
+    url = json['url'];
   }
 
   Map<String, dynamic> toJson() {
@@ -53,6 +56,7 @@ class Result {
     }
     data['createdOn'] = this.createdOn;
     data['description'] = this.description;
+    data['url'] = this.url;
     return data;
   }
 }
