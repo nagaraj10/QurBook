@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
 
 const String strAPP_NAME = 'QurHome';
 const String strAppPackage =
@@ -743,6 +742,10 @@ const String strVoiceCloningAddMembersHeader =
 const String strApproved = 'Approved'; //status text for approved
 const String strDeclined = 'Declined'; //status text for declined
 const String strReason = 'Reason : '; //status text for reason,include spacing
+
+const String strSubVoice = 'Submitted voice sample'; //String for voice submitted
+const String strProVoice = 'Processed voice sample'; //String for voice processed
+const String strChangeVoice = 'Change voice sample'; //String for voice print
 
 const String strStart = 'Start';
 const String strDOS = 'Date of submission : ';
