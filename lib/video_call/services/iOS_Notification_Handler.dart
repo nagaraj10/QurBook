@@ -1,3 +1,8 @@
+
+
+import 'dart:io';
+
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
@@ -18,11 +23,14 @@ import '../../constants/fhb_parameters.dart' as parameters;
 import '../../constants/router_variable.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../myPlan/view/myPlanDetail.dart';
 import '../../my_family_detail/models/my_family_detail_arguments.dart';
 import '../../my_family_detail/screens/my_family_detail_screen.dart';
 import '../../regiment/models/regiment_arguments.dart';
 import '../../regiment/view_model/regiment_view_model.dart';
+import '../../services/notification_helper.dart';
+import '../../services/notification_screen.dart';
 import '../../src/model/home_screen_arguments.dart';
 import '../../src/model/user/user_accounts_arguments.dart';
 import '../../src/ui/SheelaAI/Controller/SheelaAIController.dart';
@@ -177,6 +185,66 @@ class IosNotificationHandler {
         }
       }
     });
+  }
+
+  void handleNotificationResponse(Map<String,dynamic> jsonDecode)async{
+    if (!isAlreadyLoaded) {
+      //notificationReceivedFromKilledState = true;
+      await Future.delayed(const Duration(seconds: 5));
+      isAlreadyLoaded = true;
+    }
+    final data = Map<String, dynamic>.from(jsonDecode);
+    model = NotificationModel.fromMap(data.containsKey("action")
+        ? Map<String, dynamic>.from(data["data"]??data)
+        : data);
+    if (data['type'] == 'call' && Platform.isAndroid) {
+      if(data.containsKey('action')){
+        if(data['action']=='Reject'){
+          await updateCallStatus(false,model.meeting_id.toString());
+        }else{
+          await updateCallStatus(true,model.meeting_id.toString());
+          if (model.callType!.toLowerCase() == 'audio') {
+            Provider.of<AudioCallProvider>(Get.context!, listen: false)
+                .enableAudioCall();
+          } else if (model.callType!.toLowerCase() == 'video') {
+            Provider.of<AudioCallProvider>(Get.context!, listen: false)
+                .disableAudioCall();
+          }
+          Get.to(CallMain(
+            doctorName:model?.username??'',
+            doctorId:model?.doctorId??'',
+            doctorPic: model?.doctorPicture??'',
+            patientId:model?.patientId??'',
+            patientName:model?.patientName??'',
+            patientPicUrl:model?.patientPicture??'',
+            channelName:model?.callArguments?.channelName??'',
+            role: ClientRole.Broadcaster,
+            isAppExists: true,
+            isWeb:model?.isWeb??false,
+          ));
+        }
+      }else{
+        Get.to(NotificationScreen(model));
+      }
+    }else{
+      var actionKey = data["action"] ?? '';
+      if (actionKey.isNotEmpty) {
+        renewAction = actionKey == "Renew";
+        callbackAction = actionKey == "Callback";
+        rejectAction = actionKey == "Reject";
+        acceptAction = actionKey == "Accept";
+        declineAction = actionKey == "Decline";
+        escalteAction = actionKey == "Escalate";
+        chatWithCC = actionKey == "chatwithcc";
+        viewRecordAction = actionKey == "viewrecord";
+        viewDetails = actionKey == "ViewDetails";
+        viewMemberAction =
+            actionKey.toLowerCase() == "ViewMember".toLowerCase();
+        communicationSettingAction = actionKey.toLowerCase() ==
+            "Communicationsettings".toLowerCase();
+      }
+      actionForTheNotification();
+    }
   }
 
   void updateStatus(String status) async {

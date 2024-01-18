@@ -5,11 +5,11 @@ import 'package:app_settings/app_settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:path_provider/path_provider.dart';
-import '../../constants/router_variable.dart' as router;
 import '../../main.dart';
+import '../constants/variable_constant.dart';
+import '../video_call/services/iOS_Notification_Handler.dart';
+import 'notification_helper.dart';
 
 class PushNotificationService {
   late Stream<String> _tokenStream;
@@ -23,22 +23,12 @@ class PushNotificationService {
 
   Future<void> setupNotification() async {
     NotificationSettings settings =
-    await FirebaseMessaging.instance.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
+    await FirebaseMessaging.instance.requestPermission();
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       String? token = await FirebaseMessaging.instance.getToken();
       _tokenStream = FirebaseMessaging.instance.onTokenRefresh;
       _tokenStream.listen(setToken);
       if (token == null) {
-        // Token may be null if the server is unable to generate it
-        // or if the app hasn't been configured with FCM correctly.
         print('unable to retrieve FCM token.');
       } else {
         print('FCM generated.');
@@ -62,26 +52,19 @@ class PushNotificationService {
       sound: true,
     );
 
-    // Get the initial message when the app is launched from terminated state
-    final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-    if (initialMessage != null) {
-      print(
-          '212121 message killed:${initialMessage.data} Notification:${initialMessage.notification}');
-    }
-
     FirebaseMessaging.onBackgroundMessage(onBackgroundMessageReceived);
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-      print(
-          '212121 message open:${message.data} Notification:${message.notification}');
-    });
-
-// Called when the app is in foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       print(
-          '212121 message data:${message.data} Notification:${message.notification}');
+          '212121 message listen:${message.toMap()}');
+      if(message.data['type']=='call' && Platform.isAndroid){
+          listenEvent(message.data['meeting_id']);
+          showCallNotification(message);
+      }else{
+        await showNotification(message);
+      }
 
     });
-    // Just handling the notification when App is in background
+
   }
 
   Future initLocalNotification() async {
@@ -89,113 +72,125 @@ class PushNotificationService {
     AndroidInitializationSettings(
       '@mipmap/ic_launcher',
     );
-    List<DarwinNotificationCategory> darwinIOSCategories = [
-      DarwinNotificationCategory(
-        'darwinCall_category',
-        actions: [
-          DarwinNotificationAction.text(
-            'accept_action',
-            'Accept',
-            buttonTitle: 'Accept',
-          ),
-          DarwinNotificationAction.plain(
-            'reject_action',
-            'Reject',
-            options: <DarwinNotificationActionOption>{
-              DarwinNotificationActionOption.destructive,
-            },
-          ),
-        ],
-      )
-    ];
+
     final iOSSettings = DarwinInitializationSettings(
-        requestBadgePermission: false,
-        requestAlertPermission: false,
         notificationCategories: darwinIOSCategories);
     final initializationSettings =
     InitializationSettings(android: androidSettings, iOS: iOSSettings);
-    await localNotificationsPlugin.initialize(initializationSettings,
-        onDidReceiveNotificationResponse: (details) async {
-          print('8888: onforegorun:${jsonDecode(details.payload ?? '')}');
-          if (details.payload != null) {
+      await localNotificationsPlugin.initialize(initializationSettings,
+          onDidReceiveNotificationResponse: (details) async {
+        final Map<String,dynamic> mapResponse = jsonDecode(details.payload!);
+            if (details.payload != null) {
+              if(details.actionId!=null){
+                mapResponse['action'] = details.actionId;
+              }
+              IosNotificationHandler()..
+              isAlreadyLoaded=true
+                ..handleNotificationResponse(mapResponse);
+            }
+          }, onDidReceiveBackgroundNotificationResponse: notificationTapBackground);
 
-          }
-        }, onDidReceiveBackgroundNotificationResponse: notificationTapBackground);
   }
 
   setToken(String? token) async {
     print('FCM Token: $token');
-  }
-
-  Future<void> enableIOSNotifications() async {
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: true, // Required to display a heads up notification
-      badge: true,
-      sound: true,
-    );
   }
 }
 
 @pragma('vm:entry-point')
 Future<void> onBackgroundMessageReceived(RemoteMessage message) async {
   try {
-
+    print('2121 : on Background Message Received ${message.data}');
+    if (message.data['type'] == 'call' && Platform.isAndroid) {
+       showCallNotification(message);
+    } else {
+      showNotification(message);
+    }
   } catch (e) {
     print('2121 catch:$e');
   }
 }
 
 
-Future<void> showNotificationAndroid(RemoteMessage message) async {
-  const channel = AndroidNotificationChannel(
-    '12345', // id
-    'Qurbook_channel', // title
-    description:
-    'This channel is used for important notifications.', // description
-    importance: Importance.high,
-  );
-  const notificationDetails = NotificationDetails(
+Future<void> showNotification(RemoteMessage message) async {
+  final notificationDetails = NotificationDetails(
     android: AndroidNotificationDetails(
-      '12345', // id
-      'Qurbook_channel', // title
+      '${androidNormalchannel.id}', // id
+      '${androidNormalchannel.name}', // title
       priority: Priority.high,
-      channelDescription: 'This channel is used for important notifications.',
+      channelDescription: '${androidNormalchannel.description}',
     ),
+    iOS: const DarwinNotificationDetails(
+      sound: 'ringtone.aiff'
+    )
   );
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
       AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
+      ?.createNotificationChannel(androidNormalchannel);
 
   await localNotificationsPlugin.show(
     Platform.isIOS ? message.notification.hashCode : message.hashCode,
     Platform.isIOS ? message.notification!.title : message.data['title'],
     Platform.isIOS ? message.notification!.body : message.data['body'],
     notificationDetails,
-    payload:
-    jsonEncode(Platform.isAndroid ? message.data : message.notification),
+    payload:jsonEncode(message.data)
   );
 }
 
+void showCallNotification(RemoteMessage message)async{
+   AndroidNotificationDetails androidPlatformChannelSpecifics =
+  AndroidNotificationDetails(
+      '${callChannel.id}',
+      '${callChannel.description}',
+      importance: Importance.max,
+      priority: Priority.high,
+      timeoutAfter: 30 * 1000,
+      actions:callAction,
+      ongoing: true,
+  );
+  final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS:DarwinNotificationDetails(categoryIdentifier:
+      'darwinCall_category'));
+  await localNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(callChannel);
+  localNotificationsPlugin.show(
+      Platform.isIOS? message.notification.hashCode:5678,
+      Platform.isIOS? message.notification!.title:message.data['title'],
+      Platform.isIOS? message.notification!.body:message.data['body'],
+      platformChannelSpecifics,
+      payload: jsonEncode(message.data));
+}
 
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
-  var message = jsonDecode(notificationResponse.payload!);
-  var nsRoute = '';
-  print('7890: onBackground:${jsonDecode(notificationResponse.payload ?? '')}');
+  print('8888: onBackground:${jsonDecode(notificationResponse.payload ?? '')}');
 }
 
-Future<void> updateStatus(bool isAccept, String recordId) async {
-  try {
-    await Firebase.initializeApp();
-    final db = FirebaseFirestore.instance;
 
-    final data = <String, dynamic>{
-      'call_status': isAccept ? 'accept' : 'decline',
-    };
-    await db.collection('call_log').doc(recordId).update(data);
-  } catch (e) {
-    print('firestoreException:${e.toString()}');
-  }
+void listenEvent(String meetingId) {
+   FirebaseFirestore.instance
+      .collection('call_log')
+      .doc(meetingId)
+      .snapshots()
+      .listen((DocumentSnapshot snapshot) {
+    if (snapshot.exists) {
+      String callStatus = snapshot['call_status'];
+
+      if (callStatus == 'call_ended_by_user' ||
+          callStatus == 'accept' ||
+          callStatus == 'decline') {
+        localNotificationsPlugin.cancel(5678);
+      }
+    }
+  }, onError: (Object error) {
+
+  });
 }
+
+
+
+
