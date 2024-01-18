@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
@@ -31,10 +29,14 @@ import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/video_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:uuid/uuid.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart' as youtube;
 
 import '../../../../common/PreferenceUtil.dart';
@@ -60,10 +62,6 @@ import '../Models/SheelaResponse.dart';
 import '../Models/sheela_arguments.dart';
 import '../Services/SheelaAIAPIServices.dart';
 import '../Services/SheelaAIBLEServices.dart';
-import 'package:image/image.dart' as img;
-import 'package:speech_to_text/speech_recognition_result.dart';
-import 'package:speech_to_text/speech_to_text.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 enum BLEStatus { Searching, Connected, Disabled }
 
@@ -1557,6 +1555,8 @@ makeApiRequest is used to update the data with latest data
         return strRedirectToUploadImage;
       case strAudio:
         return strRedirectToUploadAudio;
+      case strVideo:
+        return strRedirectToUploadVideo;
     }
     return '';
   }
@@ -1567,6 +1567,8 @@ makeApiRequest is used to update the data with latest data
         return strRedirectRetakePicture;
       case strAudio:
         return strRedirectRetakeAudio;
+      case strVideo:
+        return strRedirectRetakeVideo;
     }
     return '';
   }
@@ -1576,6 +1578,8 @@ makeApiRequest is used to update the data with latest data
       case strImage:
         return strRecapture;
       case strAudio:
+        return strRecordAgain;
+      case strVideo:
         return strRecordAgain;
     }
     return '';
@@ -1609,6 +1613,9 @@ makeApiRequest is used to update the data with latest data
       } else if (requestFileType == strAudio) {
         currentCon.audioThumbnailUrl =
             selectedImagePath; // Set audio thumbnail URL
+      }else if (requestFileType == strVideo) {
+        currentCon.videoThumbnailUrl =
+            selectedImagePath; // Set audio thumbnail URL
       }
       if (isRetakeCapture ?? false) {
         isLoading.value = false; // Set loading flag to false
@@ -1628,7 +1635,8 @@ makeApiRequest is used to update the data with latest data
   }
 
   // A function to show a dialog with options to choose from Camera or Gallery
-  Future<void> showCameraGalleryDialog(String? btnTitle) {
+  Future<void> showCameraGalleryDialog(
+      String? btnTitle, String? requestFileType) {
     // Show a dialog using the showDialog function
     return showDialog(
       context: Get.context!, // Use Get.context to get the current context
@@ -1642,22 +1650,32 @@ makeApiRequest is used to update the data with latest data
                 // Gallery option with GestureDetector
                 GestureDetector(
                   onTap: () {
-                    getOpenGallery(strGallery,
-                        btnTitle); // Handle action when Gallery is tapped
+                    getOpenGallery(
+                        requestFileType == strImage ? strGallery : strVideo,
+                        btnTitle,
+                        requestFileType); // Handle action when Gallery is tapped
                     Navigator.of(context).pop(); // Close the dialog
                   },
-                  child: Text("Gallery"), // Display "Gallery" text
+                  child: Text(requestFileType == strImage
+                      ? Gallery
+                      : strSelectVideo), // Display "Gallery" text
                 ),
                 Padding(padding: EdgeInsets.all(8)),
                 // Add padding between options
                 // Camera option with GestureDetector
                 GestureDetector(
                   onTap: () {
-                    imgFromCamera(strGallery,
-                        btnTitle); // Handle action when Camera is tapped
+                    if (requestFileType == strImage) {
+                      imgFromCamera(strGallery,
+                          btnTitle); // Handle action when Camera is tapped
+                    } else {
+                      openVideoCamera(btnTitle);
+                    }
                     Navigator.of(context).pop(); // Close the dialog
                   },
-                  child: Text('Camera'), // Display "Camera" text
+                  child: Text(requestFileType == strImage
+                      ? Camera
+                      : strRecordVideo), // Display "Camera" text
                 ),
               ],
             ),
@@ -1690,7 +1708,7 @@ makeApiRequest is used to update the data with latest data
   }
 
   // Function to open the gallery, crop the selected image, and trigger image preview
-  void getOpenGallery(String fromPath, String? btnTitle) {
+  void getOpenGallery(String fromPath, String? btnTitle, String? requestFileType) {
     // Use PickImageController to crop the image from the gallery
     PickImageController.instance
         .cropImageFromFile(fromPath)
@@ -1706,7 +1724,7 @@ makeApiRequest is used to update the data with latest data
             sheelaFileStaticConversation(
               btnTitle: btnTitle, // Optional button title
               selectedImagePath: imagePathGallery, // Path to the cropped image
-              requestFileType: strImage
+              requestFileType: requestFileType
             );
           }
         } else {
@@ -1760,6 +1778,27 @@ makeApiRequest is used to update the data with latest data
         await imageFile.lengthSync(); // Get the length (size) of the image file
     return length; // Return the size of the image file
   }
+
+  openVideoCamera(String? btnTitle) async {
+    late File _video; // Declare a variable to store the captured image
+
+    var picker = ImagePicker(); // Create an instance of ImagePicker
+    var pickedFile = await picker.pickVideo(
+        source: ImageSource.camera); // Capture an image from the camera
+
+    if (pickedFile != null) {
+      _video = File(
+          pickedFile.path); // Create a File object from the captured image path
+
+      // Trigger the image preview thumbnail with the captured image path
+      sheelaFileStaticConversation(
+          btnTitle: btnTitle, // Optional button title
+          selectedImagePath: _video.path, // Path to the captured image
+          requestFileType: strVideo
+      );
+    }
+  }
+
 
   @override
   void onClose() {
@@ -2462,7 +2501,7 @@ makeApiRequest is used to update the data with latest data
                   updateTimer(enable: false); // disable the timer
                   btnTextLocal = button?.title ?? ''; // Set local button text
                   // Show the camera/gallery dialog and handle the result
-                  showCameraGalleryDialog(btnTextLocal ?? '').then((value) {
+                  showCameraGalleryDialog(btnTextLocal ?? '',strImage).then((value) {
                     isSheelaScreenActive =
                         true; // Reactivate Sheela screen after dialog
                     updateTimer(enable: true); // disable the timer
@@ -2477,7 +2516,7 @@ makeApiRequest is used to update the data with latest data
                   updateTimer(enable: false); // disable the timer
                   isRetakeCapture = true; // Set flag for retake capture
                   // Show the camera/gallery dialog and handle the result
-                  showCameraGalleryDialog(btnTextLocal ?? '').then((value) {
+                  showCameraGalleryDialog(btnTextLocal ?? '',strImage).then((value) {
                     isSheelaScreenActive =
                         true; // Reactivate Sheela screen after dialog
                     updateTimer(enable: true); // disable the timer
@@ -2630,6 +2669,16 @@ makeApiRequest is used to update the data with latest data
             requestFileType: strAudio);
       }
     });
+  }
+
+  Future<Uint8List?> getThumbnailImage(path) async {
+    return await VideoThumbnail.thumbnailData(
+      video: path, // video path
+      imageFormat: ImageFormat.JPEG,
+      maxWidth:
+      128, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
+      quality: 40,
+    );
   }
 }
 

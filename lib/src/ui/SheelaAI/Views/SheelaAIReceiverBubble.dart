@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -134,6 +135,10 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                         (chat.audioThumbnailUrl != null &&
                                             chat.audioThumbnailUrl != '')
                                             ? getAudioCardWidget(chat.audioThumbnailUrl??'')
+                                            : SizedBox.shrink(),
+                                        (chat.videoThumbnailUrl != null &&
+                                            chat.videoThumbnailUrl != '')
+                                            ? getVideoCardThumbnail(chat.videoThumbnailUrl??'')
                                             : SizedBox.shrink(),
                                         buttonWidgets(context)
                                       ],
@@ -472,7 +477,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         controller.isSheelaScreenActive = false; // Deactivate Sheela screen
                         controller.btnTextLocal = buttonData?.title ?? ''; // Set local button text
                         // Show the camera/gallery dialog and handle the result
-                        controller.showCameraGalleryDialog(controller.btnTextLocal ?? '').then((value) {
+                        controller.showCameraGalleryDialog(controller.btnTextLocal ?? '',strImage).then((value) {
                           controller.isSheelaScreenActive = true; // Reactivate Sheela screen after dialog
                           controller.updateTimer(enable: true); // enable the timer
                         });
@@ -486,7 +491,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         controller.updateTimer(enable: false); // disable the timer
                         controller.isRetakeCapture = true; // Set flag for retake capture
                         // Show the camera/gallery dialog and handle the result
-                        controller.showCameraGalleryDialog(controller.btnTextLocal ?? '').then((value) {
+                        controller.showCameraGalleryDialog(controller.btnTextLocal ?? '',strImage).then((value) {
                           controller.isSheelaScreenActive = true; // Reactivate Sheela screen after dialog
                           controller.updateTimer(enable: true); // enable the timer
                         });
@@ -578,7 +583,102 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             }
                           });
                         }
-                      }else {
+                      } else if (buttonData?.needVideo ?? false) {
+                        // Check if the button requires a video
+                        if (controller.isLoading.isTrue) {
+                          return; // If loading, do nothing
+                        }
+                        controller.stopTTS(); // Stop Text-to-Speech
+                        controller.updateTimer(
+                            enable: false); // disable the timer
+                        controller.isSheelaScreenActive =
+                            false; // Deactivate Sheela screen
+                        controller.btnTextLocal =
+                            buttonData?.title ?? ''; // Set local button text
+                        // Show the camera/gallery dialog and handle the result
+                        controller
+                            .showCameraGalleryDialog(
+                                controller.btnTextLocal ?? '', strVideo)
+                            .then((value) {
+                          controller.isSheelaScreenActive =
+                              true; // Reactivate Sheela screen after dialog
+                          controller.updateTimer(
+                              enable: true); // enable the timer
+                        });
+                      } else if (buttonData?.btnRedirectTo ==
+                          strRedirectRetakeVideo) {
+                        // Check if the button redirects to retake video
+                        if (controller.isLoading.isTrue) {
+                          return; // If loading, do nothing
+                        }
+                        controller.stopTTS(); // Stop Text-to-Speech
+                        controller.isSheelaScreenActive =
+                            false; // Deactivate Sheela screen
+                        controller.updateTimer(
+                            enable: false); // disable the timer
+                        controller.isRetakeCapture =
+                            true; // Set flag for retake capture
+                        // Show the camera/gallery dialog and handle the result
+                        controller
+                            .showCameraGalleryDialog(
+                                controller.btnTextLocal ?? '', strVideo)
+                            .then((value) {
+                          controller.isSheelaScreenActive =
+                              true; // Reactivate Sheela screen after dialog
+                          controller.updateTimer(
+                              enable: true); // enable the timer
+                        });
+                      } else if (buttonData?.btnRedirectTo ==
+                          strRedirectToUploadVideo) {
+                        // Check if the button redirects to upload video
+                        controller.isLoading.value = true; // Set loading flag
+                        controller.conversations.add(SheelaResponse(
+                            loading:
+                                true)); // Add loading response to conversations
+                        controller
+                            .scrollToEnd(); // Scroll to the end of conversations
+                        if (chat.videoThumbnailUrl != null &&
+                            chat.videoThumbnailUrl != '') {
+                          // Check if there is a valid image thumbnail URL
+                          controller
+                              .saveMediaRegiment(chat.videoThumbnailUrl ?? '',
+                                  '') // Save media regiment
+                              .then((value) {
+                            controller.isLoading.value =
+                                false; // Reset loading flag
+                            controller.conversations
+                                .removeLast(); // Remove the loading response from conversations
+                            if (value.isSuccess ?? false) {
+                              controller.fileRequestUrl =
+                                  value.result?.accessUrl ?? '';
+                              if (controller.isLoading.isTrue) {
+                                return; // If loading, do nothing
+                              }
+                              if (chat.singleuse != null &&
+                                  chat.singleuse! &&
+                                  chat.isActionDone != null) {
+                                chat.isActionDone =
+                                    true; // Set action done flag if it's a single-use button
+                              }
+                              buttonData?.isSelected =
+                                  true; // Mark the button as selected
+                              // Start Sheela from the button with specified parameters
+                              controller.startSheelaFromButton(
+                                  buttonText: buttonData?.title,
+                                  payload: buttonData?.payload,
+                                  buttons: buttonData,
+                                  isFromImageUpload: true,
+                                  requestFileType:
+                                      strVideo // add requestFileType
+                                  );
+                              // Delay for 3 seconds and then unselect the button
+                              Future.delayed(const Duration(seconds: 3), () {
+                                buttonData?.isSelected = false;
+                              });
+                            }
+                          });
+                        }
+                      } else {
                         if (controller.isLoading.isTrue) {
                           return;
                         }
@@ -896,13 +996,22 @@ class SheelaAIReceiverBubble extends StatelessWidget {
     );
   }
 
-  Widget getAudioMaxFileReached() {
+  Widget getVideoCardThumbnail(String selectedImage) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          child: Text('Audio Card dsadasdda-'),
-        )
+        FutureBuilder<Uint8List?>(
+          future: controller.getThumbnailImage(selectedImage),
+          builder: (_, AsyncSnapshot<Uint8List?> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasData) {
+              return Image.memory(snapshot.data!);
+            }
+            return SizedBox.shrink();
+          },
+        ),
       ],
     );
   }

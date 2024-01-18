@@ -73,6 +73,7 @@ class SheelaResponse {
   String? pronunciationText;
   String? imageThumbnailUrl;
   String? audioThumbnailUrl;
+  String? videoThumbnailUrl;
 
   SheelaResponse({this.recipientId,
     this.text,
@@ -109,6 +110,7 @@ class SheelaResponse {
     this.pronunciationText,
     this.imageThumbnailUrl,
     this.audioThumbnailUrl,
+    this.videoThumbnailUrl,
   });
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
@@ -211,6 +213,7 @@ class SheelaResponse {
     data['pronunciationText'] = this.pronunciationText;
     data['imageThumbnailUrl'] = this.imageThumbnailUrl;
     data['audioThumbnailUrl'] = this.audioThumbnailUrl;
+    data['videoThumbnailUrl'] = this.videoThumbnailUrl;
     return data;
   }
 }
