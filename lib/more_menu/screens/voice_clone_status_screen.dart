@@ -105,12 +105,8 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                   child: CircularProgressIndicator(),
                 )
               : controller.voiceCloneStatusModel?.result != null
-                  ? Container(
-                      width: double.infinity,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
+                  ? ListView(
+                    children: [
                           Padding(
                             padding: EdgeInsets.all(10),
                             child: Text(
@@ -170,24 +166,22 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                             '')),
                               ]),
                           Visibility(
-                              visible: controller.voiceCloneStatusModel?.result
-                                          ?.status ==
-                                      strApproved &&
-                                  controller.listOfFamilyMembers.length > 0,
-                              child: Expanded(
-                                child: Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(8, 16, 8, 8),
-                                  child: VoiceCloneFamilyMembersList(
-                                    isShowcaseExisting: true,
-                                    familyMembers:
-                                        controller.listOfFamilyMembers,
-                                    onValueSelected: (value) {},
-                                  ),
-                                ),
-                              )),
-                          Visibility(
-                            visible: controller
+                          visible: controller
+                                      .voiceCloneStatusModel?.result?.status ==
+                                  strApproved &&
+                              controller.listOfFamilyMembers.length > 0,
+                          child: Container(
+                            padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
+                            child: VoiceCloneFamilyMembersList(
+                              isShowcaseExisting: true,
+                              familyMembers: controller.listOfFamilyMembers,
+                              onValueSelected: (value) {},
+                              isScrollParent: true,
+                            ),
+                          ),
+                        ),
+                        Visibility(
+                          visible: controller
                                     .voiceCloneStatusModel?.result?.status ==
                                 strDecline,
                             child: Padding(
@@ -350,9 +344,10 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                               ),
                             ),
                           ),
+                       
                         ],
-                      ),
-                    )
+                      )
+                    
                   : ErrorsWidget(),
         ),
       ),
