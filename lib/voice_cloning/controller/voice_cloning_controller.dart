@@ -29,15 +29,16 @@ class VoiceCloningController extends ChangeNotifier {
   bool isRecording = false;
   String mPath = 'recorder.m4a';
   List<double> audioWaveData = [];
-  List<double> audioWaveVoiceStatusData = [];
+  List<double> audioWaveVoiceStatusData = []; //new wave for downloaded ausio
   Timer? countDownTimer;
 
   double playPosition = 0.0;
-  double playVoiceStatusPosition = 0.0;
+  double playVoiceStatusPosition = 0.0; //new position for recorded voice
 
   double maxPlayerDuration = 1.0;
   double maxPlayerVoiceStatusDuration = 1.0;
-  bool isFirsTymVoiceCloningStatus = true;
+  bool isFirsTymVoiceCloningStatus =
+      true; //check if the player is from status screen
 
   ///Audio And recorder Controllers
   late RecorderController recorderController;
@@ -86,8 +87,7 @@ class VoiceCloningController extends ChangeNotifier {
     } else {
       ///Checking the Mic permission before starting recording.
       if (await checkForMicPermission() == true) {
-        await recorderController.record(
-            path: mPath);
+        await recorderController.record(path: mPath);
         isRecording = true;
       }
     }
@@ -109,8 +109,7 @@ class VoiceCloningController extends ChangeNotifier {
 
   void startRecording() async {
     try {
-      await recorderController.record(
-          path: mPath);
+      await recorderController.record(path: mPath);
       isRecording = true;
       notifyListeners();
     } catch (e) {}
@@ -147,6 +146,7 @@ class VoiceCloningController extends ChangeNotifier {
       setPlayerLoading(false);
       if (data.isSuccess == true) {
         Navigator.pop(Get.context!);
+        recordedPath = mPath;
         Navigator.pushNamed(Get.context!, rt_VoiceCloningStatus,
                 arguments: VoiceCloneStatusArguments(fromMenu: false))
             .then((value) {});
@@ -227,12 +227,13 @@ class VoiceCloningController extends ChangeNotifier {
 
   Future<void> startVoiceStatusPlayer() async {
     setPlayerLoading(true);
-    audioWaveVoiceStatusData = await playerVoiceStatusController.extractWaveformData(
-      path: recordedPath ,
+    audioWaveVoiceStatusData =
+        await playerVoiceStatusController.extractWaveformData(
+      path: recordedPath,
     );
-    await playerVoiceStatusController.preparePlayer(
-        path: recordedPath);
-    maxPlayerVoiceStatusDuration = playerVoiceStatusController.maxDuration.toDouble();
+    await playerVoiceStatusController.preparePlayer(path: recordedPath);
+    maxPlayerVoiceStatusDuration =
+        playerVoiceStatusController.maxDuration.toDouble();
     setPlayerLoading(false);
 
     ///When using Finish mode pause it will allow to play and pause for every time.
@@ -254,8 +255,7 @@ class VoiceCloningController extends ChangeNotifier {
     audioWaveData = await playerController.extractWaveformData(
       path: mPath,
     );
-    await playerController.preparePlayer(
-        path: mPath);
+    await playerController.preparePlayer(path: mPath);
     maxPlayerDuration = playerController.maxDuration.toDouble();
     /*   maxPlayerDuration =
         (await playerController.getDuration(DurationType.max)).toDouble();*/
@@ -274,7 +274,6 @@ class VoiceCloningController extends ChangeNotifier {
     });
     notifyListeners();
   }
-
 
   Future<void> playVoiceStatusPausePlayer() async {
     if (playerVoiceStatusController.playerState.isPlaying) {
@@ -319,6 +318,9 @@ class VoiceCloningController extends ChangeNotifier {
     super.dispose();
   }
 
+  /**
+   * To download the audio url to mobile
+   */
   Future<String> downloadAudioFile(String? audioUrl) async {
     await askForStoragePermission();
     var fileName;
@@ -349,6 +351,7 @@ class VoiceCloningController extends ChangeNotifier {
     return recordedPath;
   }
 
+//ask permission befor downloading file
   static Future<bool> askForStoragePermission() async {
     PermissionStatus storage = await Permission.storage.request();
     if (storage == PermissionStatus.granted) {

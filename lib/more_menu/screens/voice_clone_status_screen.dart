@@ -36,7 +36,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
   final controller = Get.put(VoiceCloneStatusController());
   double subtitle = CommonUtil().isTablet! ? tabHeader2 : mobileHeader2;
   late VoiceCloningController _voiceCloningController;
- 
+
   bool isForceStopPlayer = false;
   @override
   void initState() {
@@ -64,19 +64,28 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
     });
   }
 
+  disposeVoiceControler() async {
+    if (_voiceCloningController.playerVoiceStatusController.playerState !=
+        PlayerState.stopped) {
+      await _voiceCloningController.playerVoiceStatusController.stopPlayer();
+    }
+    _voiceCloningController.disposeRecorder();
+    _voiceCloningController.isPlayerLoading = false;
+    _voiceCloningController.isFirsTymVoiceCloningStatus = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     _voiceCloningController = Provider.of<VoiceCloningController>(context);
     if (_voiceCloningController.isFirsTymVoiceCloningStatus) {
       _voiceCloningController.recordedPath = "";
-      _voiceCloningController.mPath = "";
       _voiceCloningController.playerVoiceStatusController = PlayerController();
     }
 
     return Obx(
       () => WillPopScope(
         onWillPop: () {
-          _voiceCloningController.recordedPath = '';
+          disposeVoiceControler();
           controller.setBackButton(
               context, widget.arguments?.fromMenu ?? false);
           //  Get.off(
@@ -92,6 +101,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                 size: 24.0.sp,
               ),
               onPressed: () {
+                disposeVoiceControler();
                 controller.setBackButton(
                     context, widget.arguments?.fromMenu ?? false);
               },
@@ -105,66 +115,66 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                 )
               : controller.voiceCloneStatusModel?.result != null
                   ? ListView(
-                    children: [
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              controller.voiceCloneStatusModel?.result
-                                      ?.description ??
-                                  strDescStatus,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: mobileFontTitle),
-                            ),
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            controller.voiceCloneStatusModel?.result
+                                    ?.description ??
+                                strDescStatus,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: mobileFontTitle),
                           ),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  strDOS,
+                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                strDOS,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: subtitle,
+                                    color: Colors.grey[600]),
+                              ),
+                              Text(
+                                  changeDateFormat(
+                                      CommonUtil().validString(controller
+                                              .voiceCloneStatusModel
+                                              ?.result
+                                              ?.createdOn ??
+                                          ''),
+                                      isFromAppointment: false),
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: subtitle,
-                                      color: Colors.grey[600]),
-                                ),
-                                Text(
-                                    changeDateFormat(
-                                        CommonUtil().validString(controller
-                                                .voiceCloneStatusModel
-                                                ?.result
-                                                ?.createdOn ??
-                                            ''),
-                                        isFromAppointment: false),
-                                    style: TextStyle(
-                                      fontSize: subtitle,
-                                    )),
-                              ]),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  strStatus,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: subtitle,
-                                      color: Colors.grey[600]),
-                                ),
-                                Text(
-                                    controller.voiceCloneStatusModel?.result
-                                            ?.status ??
-                                        '',
-                                    style: AppBarForVoiceCloning().getTextStyle(
-                                        controller.voiceCloneStatusModel?.result
-                                                ?.status ??
-                                            '')),
-                              ]),
-                          Visibility(
+                                    fontSize: subtitle,
+                                  )),
+                            ]),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                strStatus,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: subtitle,
+                                    color: Colors.grey[600]),
+                              ),
+                              Text(
+                                  controller.voiceCloneStatusModel?.result
+                                          ?.status ??
+                                      '',
+                                  style: AppBarForVoiceCloning().getTextStyle(
+                                      controller.voiceCloneStatusModel?.result
+                                              ?.status ??
+                                          '')),
+                            ]),
+                        Visibility(
                           visible: controller
                                       .voiceCloneStatusModel?.result?.status ==
                                   strApproved &&
@@ -181,88 +191,91 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                         ),
                         Visibility(
                           visible: controller
-                                    .voiceCloneStatusModel?.result?.status ==
-                                strDecline,
-                            child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: RichText(
-                                textAlign: TextAlign.center,
-                                text: TextSpan(
-                                  style: TextStyle(
-                                    fontSize: 17.0.sp,
-                                    color: Colors.black,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: strReason,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: mobileFontTitle,
-                                          color: Colors.grey[600]),
-                                    ),
-                                    TextSpan(
-                                        text: controller
-                                                .voiceCloneStatusModel
-                                                ?.result
-                                                ?.additionalInfo
-                                                ?.reason ??
-                                            '',
-                                        style: TextStyle(
-                                            color: Colors.grey[600],
-                                            fontSize: mobileFontTitle)),
-                                  ],
+                                  .voiceCloneStatusModel?.result?.status ==
+                              strDecline,
+                          child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                style: TextStyle(
+                                  fontSize: 17.0.sp,
+                                  color: Colors.black,
                                 ),
+                                children: [
+                                  TextSpan(
+                                    text: strReason,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: mobileFontTitle,
+                                        color: Colors.grey[600]),
+                                  ),
+                                  TextSpan(
+                                      text: controller
+                                              .voiceCloneStatusModel
+                                              ?.result
+                                              ?.additionalInfo
+                                              ?.reason ??
+                                          '',
+                                      style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: mobileFontTitle)),
+                                ],
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                                width: 1.3,
-                              )),
-                              padding: EdgeInsets.all(
-                                15.0.sp,
-                              ),
-                              margin: EdgeInsets.all(10.0.sp),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          controller.voiceCloneStatusModel
-                                                      ?.result?.status ==
-                                                  strApproved
-                                              ? strProVoice
-                                              : strSubVoice,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: mobileFontTitle,
-                                              color: Colors.grey[600]),
-                                        ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              width: 1.3,
+                            )),
+                            padding: EdgeInsets.all(
+                              15.0.sp,
+                            ),
+                            margin: EdgeInsets.all(10.0.sp),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        controller.voiceCloneStatusModel?.result
+                                                    ?.status ==
+                                                strApproved
+                                            ? strProVoice
+                                            : strSubVoice,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: mobileFontTitle,
+                                            color: Colors.grey[600]),
                                       ),
-                                      InkWell(
-                                          child: Icon(
-                                            controller.isPlayWidgetClicked
-                                                ? Icons
-                                                    .keyboard_arrow_down_rounded
-                                                : Icons.keyboard_arrow_right,
-                                            size: CommonUtil().isTablet!
-                                                ? 20.0.sp
-                                                : 30.0.sp,
-                                          ),
-                                          onTap: () async {
-                                          if (_voiceCloningController.isFirsTymVoiceCloningStatus || isForceStopPlayer) {
-                                            _voiceCloningController.isFirsTymVoiceCloningStatus = false;
+                                    ),
+                                    InkWell(
+                                        child: Icon(
+                                          controller.isPlayWidgetClicked
+                                              ? Icons
+                                                  .keyboard_arrow_down_rounded
+                                              : Icons.keyboard_arrow_right,
+                                          size: CommonUtil().isTablet!
+                                              ? 20.0.sp
+                                              : 30.0.sp,
+                                        ),
+                                        onTap: () async {
+                                          if (_voiceCloningController
+                                                  .isFirsTymVoiceCloningStatus ||
+                                              isForceStopPlayer) {
+                                            _voiceCloningController
+                                                    .isFirsTymVoiceCloningStatus =
+                                                false;
                                             isForceStopPlayer = false;
                                             await _voiceCloningController
                                                 .startVoiceStatusPlayer();
@@ -278,81 +291,76 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                                 .playerVoiceStatusController
                                                 .stopPlayer();
                                           }
-                                          })
-                                    ],
-                                  ),
-                                  controller.isPlayWidgetClicked
-                                      ? SizedBox(height: 20)
-                                      : Container(),
-                                  Visibility(
-                                      visible: controller.isPlayWidgetClicked,
-                                      child: controller.audioURL != ""
-                                          ? (_voiceCloningController
-                                                      ?.recordedPath !=
-                                                  "")
-                                              ? _playerControllerWidget()
-                                              : getFutureAudioURL()
-                                          : SizedBox())
-                                ],
-                              ),
+                                        })
+                                  ],
+                                ),
+                                controller.isPlayWidgetClicked
+                                    ? SizedBox(height: 20)
+                                    : Container(),
+                                Visibility(
+                                    visible: controller.isPlayWidgetClicked,
+                                    child: controller.audioURL != ""
+                                        ? (_voiceCloningController
+                                                    ?.recordedPath !=
+                                                "")
+                                            ? _playerControllerWidget()
+                                            : getFutureAudioURL()
+                                        : SizedBox())
+                              ],
                             ),
                           ),
-                          InkWell(
+                        ),
+                        InkWell(
                           onTap: () async {
                             //Pop the current page and should go back to recording page
-                            controller.isPlayWidgetClicked = false;
-                            isForceStopPlayer = true;
-                            if (_voiceCloningController.playerVoiceStatusController.playerState != PlayerState.stopped){
-                            await _voiceCloningController.playerVoiceStatusController
-                                .stopPlayer();
-                            }
+                            stopAudioPlayer();
                             Navigator.pushNamed(context, rt_record_submission);
                           },
-                            child: Visibility(
-                                visible: true,
-                                child: Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Text(
-                                      strChangeVoice,
-                                      style: TextStyle(
-                                        color: Colors.red,
-                                        decoration: TextDecoration.underline,
-                                        decorationColor: Colors.red, // optional
-                                        decorationThickness: 2, // optional
-                                        decorationStyle: TextDecorationStyle
-                                            .solid, // optional
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ))),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: InkWell(
-                              onTap: _onButtonPressed,
-                              child: Container(
-                                margin: EdgeInsets.only(bottom: 20),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: getColors()),
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: getBackGroundColor(),
-                                ),
-                                child: Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 30.sp,
-                                        right: 30.sp,
-                                        top: 10,
-                                        bottom: 10),
-                                    child: Text(
-                                      getTextBasedOnStatus(),
-                                      style: TextStyle(color: getColors()),
-                                    )),
+                          child: Visibility(
+                              visible: controller
+                                      .voiceCloneStatusModel?.result?.status ==
+                                  strApproved,
+                              child: Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Text(
+                                    strChangeVoice,
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: Colors.red, // optional
+                                      decorationThickness: 2, // optional
+                                      decorationStyle:
+                                          TextDecorationStyle.solid, // optional
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ))),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: InkWell(
+                            onTap: _onButtonPressed,
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: 20),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: getColors()),
+                                borderRadius: BorderRadius.circular(20),
+                                color: getBackGroundColor(),
                               ),
+                              child: Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 30.sp,
+                                      right: 30.sp,
+                                      top: 10,
+                                      bottom: 10),
+                                  child: Text(
+                                    getTextBasedOnStatus(),
+                                    style: TextStyle(color: getColors()),
+                                  )),
                             ),
                           ),
-                       
-                        ],
-                      )
-                    
+                        ),
+                      ],
+                    )
                   : ErrorsWidget(),
         ),
       ),
@@ -406,9 +414,11 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
   _onButtonPressed() async {
     String statusBtn = getTextBasedOnStatus();
     if (statusBtn == 'Revoke Submission') {
+      stopAudioPlayer();
       //revoke the submission of voice clone and navigate to more menu screen
       await controller.revokeSubmission(widget.arguments?.fromMenu ?? false);
     } else if (statusBtn == 'Record Again') {
+      stopAudioPlayer();
       //Pop the current page and should go back to recording page
       Navigator.pushNamed(context, rt_record_submission);
     } else {
@@ -417,6 +427,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
           .map((e) => e.child?.id ?? '')
           .toList();
 
+      stopAudioPlayer();
       Navigator.pushNamed(context, rt_VoiceCloningChooseMemberSubmit,
           arguments: VoiceCloningChooseMemberArguments(
             fromMenu: widget.arguments?.fromMenu ?? false,
@@ -444,9 +455,11 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                 children: [
                   AudioFileWaveforms(
                     size: Size(MediaQuery.of(context).size.width, 100),
-                    playerController: _voiceCloningController.playerVoiceStatusController,
+                    playerController:
+                        _voiceCloningController.playerVoiceStatusController,
                     enableSeekGesture: false,
-                    waveformData: _voiceCloningController.audioWaveVoiceStatusData,
+                    waveformData:
+                        _voiceCloningController.audioWaveVoiceStatusData,
                     playerWaveStyle: PlayerWaveStyle(
                       fixedWaveColor: Colors.white,
                       liveWaveColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -458,7 +471,8 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                         .withOpacity(0.5),
                     inactiveColor: Colors.white,
                     value: _voiceCloningController.playVoiceStatusPosition,
-                    max: _voiceCloningController.maxPlayerVoiceStatusDuration > 0
+                    max: _voiceCloningController.maxPlayerVoiceStatusDuration >
+                            0
                         ? _voiceCloningController.maxPlayerVoiceStatusDuration
                         : 1.0,
                     onChanged: (value) {
@@ -475,18 +489,22 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                         Expanded(
                           child: Text(
                             _voiceCloningController.formatPlayerDuration(
-                                _voiceCloningController.playVoiceStatusPosition),
+                                _voiceCloningController
+                                    .playVoiceStatusPosition),
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
                         Expanded(
                           child: InkWell(
                             onTap: () {
-                              _voiceCloningController.playVoiceStatusPausePlayer();
+                              _voiceCloningController
+                                  .playVoiceStatusPausePlayer();
                             },
                             child: SvgPicture.asset(
                               _voiceCloningController
-                                      .playerVoiceStatusController.playerState.isPlaying
+                                      .playerVoiceStatusController
+                                      .playerState
+                                      .isPlaying
                                   ? icVoicePause
                                   : icVoicePlay,
                               color: Colors.white,
@@ -497,7 +515,8 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                         Expanded(
                           child: Text(
                             _voiceCloningController.formatPlayerDuration(
-                                _voiceCloningController.maxPlayerVoiceStatusDuration),
+                                _voiceCloningController
+                                    .maxPlayerVoiceStatusDuration),
                             textAlign: TextAlign.right,
                             style: const TextStyle(
                               color: Colors.white,
@@ -538,5 +557,15 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
         }
       },
     );
+  }
+
+  //Allow to forcefully stop the audio player
+  void stopAudioPlayer() async {
+    controller.isPlayWidgetClicked = false;
+    isForceStopPlayer = true;
+    if (_voiceCloningController.playerVoiceStatusController.playerState !=
+        PlayerState.stopped) {
+      await _voiceCloningController.playerVoiceStatusController.stopPlayer();
+    }
   }
 }

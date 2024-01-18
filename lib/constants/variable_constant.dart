@@ -745,7 +745,7 @@ const String strReason = 'Reason : '; //status text for reason,include spacing
 
 const String strSubVoice = 'Submitted voice print'; //String for voice submitted
 const String strProVoice = 'Processed voice print'; //String for voice processed
-const String strChangeVoice = 'Change voice print'; //String for voice print
+const String strChangeVoice = 'Change voice sample'; //String for voice print
 
 const String strStart = 'Start';
 const String strDOS = 'Date of submission : ';
