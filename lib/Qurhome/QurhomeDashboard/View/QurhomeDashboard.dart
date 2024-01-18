@@ -125,6 +125,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         qurHomeRegimenController.getSOSButtonStatus();
 
         await CommonUtil().getUserProfileData();
+        await CommonUtil().getMyRoute();
       }
       if (CommonUtil.REGION_CODE == "IN") {
         CommonUtil().requestQurhomeDialog();
