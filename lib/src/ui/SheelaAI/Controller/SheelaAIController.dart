@@ -154,6 +154,7 @@ class SheelaAIController extends GetxController {
   String? imageRequestUrl = '';
 
   final ApiBaseHelper _helper = ApiBaseHelper();
+  Timer? _debounceRecognizedWords;
 
   @override
   void onInit() {
@@ -1536,7 +1537,7 @@ makeApiRequest is used to update the data with latest data
         btnRedirectTo: strRedirectToUploadImage, // Redirection information
       ),
       Buttons(
-        title: strRetake, // Button title
+        title: strRecapture, // Button title
         btnRedirectTo: strRedirectRetakePicture, // Redirection information
       ),
       Buttons(
@@ -2005,21 +2006,43 @@ makeApiRequest is used to update the data with latest data
       if (!isSheelaInputDialogShowing.value && isSheelaInputStarted) {
         showSpeechToTextInputDialog();
       } else {
-        var recognizedWords = result?.recognizedWords ?? '';
+        var recognizedWords = result.recognizedWords;
         if (Platform.isIOS) {
           sheelaInputTextEditingController.text = '$recognizedWords ';
+          print('Mihir Response: ${recognizedWords}');
+          // Perform further actions if the region is US
+          if (CommonUtil.isUSRegion()) {
+            // Extract the response from the input text, trim, and handle it
+            final response = CommonUtil()
+                .validString(sheelaInputTextEditingController.text)
+                .trim();
+            if (_debounceRecognizedWords?.isActive ?? false) {
+              _debounceRecognizedWords?.cancel();
+              print('Mihir Response:  Timer Cancel');
+            }
+            _debounceRecognizedWords =
+                Timer(const Duration(milliseconds: 500), () async {
+              print('Mihir Response:  Timer Called');
+
+              await closeSheelaInputDialogAndStopListening();
+
+              // Handle the Sheela's input response
+              if (result.finalResult) {
+                // Close Sheela's input dialog and stop listening
+                await handleSheelaInputResponse(response);
+                print('Mihir Response: Done');
+              }
+            });
+          }
         }
       }
 
       // Check if the recognition result is final
-      if (result?.finalResult ?? false) {
+      if ((result?.finalResult ?? false) && Platform.isAndroid) {
         // Extract recognized words and update the input text
         var recognizedWords = result?.recognizedWords ?? '';
-        if (Platform.isIOS) {
-          sheelaInputTextEditingController.text = '$recognizedWords ';
-        } else {
-          sheelaInputTextEditingController.text += '$recognizedWords ';
-        }
+
+        sheelaInputTextEditingController.text += '$recognizedWords ';
 
         // Log the recognized text in debug mode
         if (kDebugMode) {
@@ -2034,7 +2057,7 @@ makeApiRequest is used to update the data with latest data
               .trim();
 
           // Close Sheela's input dialog and stop listening
-          closeSheelaInputDialogAndStopListening();
+          await closeSheelaInputDialogAndStopListening();
 
           // Handle the Sheela's input response
           handleSheelaInputResponse(response);
@@ -2149,7 +2172,7 @@ makeApiRequest is used to update the data with latest data
                               ),
                             ),
                             GestureDetector(
-                              onTap: () {
+                              onTap: () async {
                                 // Process and handle Sheela's input response
                                 String response = CommonUtil()
                                     .validString(
@@ -2159,7 +2182,7 @@ makeApiRequest is used to update the data with latest data
                                   FlutterToast().getToast(
                                       strPleaseEnterValidInput, Colors.black54);
                                 } else {
-                                  closeSheelaInputDialogAndStopListening();
+                                  await closeSheelaInputDialogAndStopListening();
                                   handleSheelaInputResponse(response);
                                 }
                               },
@@ -2185,14 +2208,16 @@ makeApiRequest is used to update the data with latest data
   // Closes Sheela's input dialog and stops speech listening
   closeSheelaInputDialogAndStopListening() async {
     try {
+      if (isSheelaInputDialogShowing.value) {
+        Get.back();
+      }
       // Set the flag indicating that Sheela's input dialog is not showing
       isSheelaInputDialogShowing.value = false;
       // Stop speech listening
       await stopSpeechListening();
 
-      Get.back();
       if (isCountDownDialogShowing.value) {
-       await closeCountdownTimerDialogAndCleanup();
+        await closeCountdownTimerDialogAndCleanup();
       }
     } catch (e, stackTrace) {
       // Handle any exceptions that occur during the closing process and log them
