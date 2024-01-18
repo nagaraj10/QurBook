@@ -60,7 +60,7 @@ var callChannel = const AndroidNotificationChannel(
 
 
 
-Future<void> updateStatus(bool isAccept, String recordId) async {
+Future<void> updateCallStatus(bool isAccept, String recordId) async {
   try {
     final db = FirebaseFirestore.instance;
 

@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
@@ -28,6 +29,7 @@ import '../../my_family_detail/models/my_family_detail_arguments.dart';
 import '../../my_family_detail/screens/my_family_detail_screen.dart';
 import '../../regiment/models/regiment_arguments.dart';
 import '../../regiment/view_model/regiment_view_model.dart';
+import '../../services/notification_helper.dart';
 import '../../services/notification_screen.dart';
 import '../../src/model/home_screen_arguments.dart';
 import '../../src/model/user/user_accounts_arguments.dart';
@@ -192,14 +194,37 @@ class IosNotificationHandler {
       isAlreadyLoaded = true;
     }
     final data = Map<String, dynamic>.from(jsonDecode);
+    print('888:Naga:$data');
     model = NotificationModel.fromMap(data.containsKey("action")
         ? Map<String, dynamic>.from(data["data"])
         : data);
     if(Platform.isAndroid && data.containsKey('type') && data['type']=='call'){
-      model.isCall =true;
+       model.isCall =true;
+       model.callArguments?.isAppExists =true;
       if(data['action']!=null){
         if(data['action']=='Reject'){
-          updateStatus(false);
+          updateCallStatus(false,model.meeting_id.toString());
+        }else{
+          updateCallStatus(true,model.meeting_id.toString());
+          if (model.callType!.toLowerCase() == 'audio') {
+            Provider.of<AudioCallProvider>(Get.context!, listen: false)
+                .enableAudioCall();
+          } else if (model.callType!.toLowerCase() == 'video') {
+            Provider.of<AudioCallProvider>(Get.context!, listen: false)
+                .disableAudioCall();
+          }
+          Get.to(CallMain(
+            doctorName:model?.doctorName??'',
+            doctorId:model?.doctorId??'',
+            doctorPic: model?.doctorPicture??'',
+            patientId:model?.patientId??'',
+            patientName:model?.patientName??'',
+            patientPicUrl:model?.patientPicture??'',
+            channelName:model?.callArguments?.channelName??'',
+            role: ClientRole.Broadcaster,
+            isAppExists: true,
+            isWeb:model?.isWeb??false,
+          ));
         }
       }else{
         Get.to(NotificationScreen(model));

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,7 +12,9 @@ import '../../constants/router_variable.dart' as router;
 import '../common/CommonUtil.dart';
 import '../constants/variable_constant.dart';
 import '../main.dart';
+import '../src/utils/PageNavigator.dart';
 import '../video_call/model/CallArguments.dart';
+import '../video_call/pages/callmain.dart';
 import '../video_call/services/iOS_Notification_Handler.dart';
 import '../video_call/utils/audiocall_provider.dart';
 import 'notification_helper.dart';
@@ -137,13 +140,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   void _onDecline() {
     // Handle decline button press
-    updateStatus(false, widget.model?.meeting_id.toString()??'');
+    updateCallStatus(false, widget.model?.meeting_id.toString()??'');
     Navigator.pop(context);
   }
 
   void _onAccept() {
     // Handle accept button press
-    updateStatus(true, widget.model?.meeting_id.toString()??'');
+    updateCallStatus(true, widget.model?.meeting_id.toString()??'');
     if (widget.model!.callType!.toLowerCase() == 'audio') {
       Provider.of<AudioCallProvider>(Get.context!, listen: false)
           .enableAudioCall();
@@ -151,9 +154,19 @@ class _NotificationScreenState extends State<NotificationScreen> {
       Provider.of<AudioCallProvider>(Get.context!, listen: false)
           .disableAudioCall();
     }
-    Get.key.currentState!.pushNamed(
-      router.rt_CallMain,
-      arguments: widget.model?.callArguments,
+     Navigator.pushReplacement(
+         context,MaterialPageRoute(builder:(context)=>CallMain(
+       doctorName:widget.model?.doctorName??'',
+       doctorId:widget.model?.doctorId??'',
+       doctorPic: widget.model?.doctorPicture??'',
+       patientId:widget.model?.patientId??'',
+       patientName:widget.model?.patientName??'',
+       patientPicUrl: widget.model?.patientPicture??'',
+       channelName:widget.model?.callArguments?.channelName??'',
+       role: ClientRole.Broadcaster,
+       isAppExists: true,
+       isWeb: widget.model?.isWeb??false,
+     ))
     );
   }
 
@@ -171,7 +184,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
          if (callStatus == 'call_ended_by_user' ||
              callStatus == 'accept' ||
              callStatus == 'decline') {
-           Navigator.pop(context);
+        //   Navigator.pop(context);
          }
        }
      }, onError: (Object error) {

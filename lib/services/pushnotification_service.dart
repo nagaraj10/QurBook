@@ -78,11 +78,15 @@ class PushNotificationService {
     InitializationSettings(android: androidSettings, iOS: iOSSettings);
       await localNotificationsPlugin.initialize(initializationSettings,
           onDidReceiveNotificationResponse: (details) async {
+            print('8888: onActionId:${details.actionId})}');
+        final Map<String,dynamic> mapResponse = jsonDecode(details.payload!);
             if (details.payload != null) {
-              print('8888: onNotificationTaps:${details.payload})}');
+              if(details.actionId!=null){
+                mapResponse['action'] = details.actionId;
+              }
               IosNotificationHandler()..
               isAlreadyLoaded=true
-                ..handleNotificationResponse(jsonDecode(details.payload!));
+                ..handleNotificationResponse(mapResponse);
             }
           }, onDidReceiveBackgroundNotificationResponse: notificationTapBackground);
 
