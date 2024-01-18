@@ -1461,7 +1461,11 @@ makeApiRequest is used to update the data with latest data
       } else {
         stopTTS();
         currentPlayingConversation = chat;
-        playTTS();
+        if (chat.imageThumbnailUrl != null && chat.imageThumbnailUrl != '') {
+          checkForButtonsAndPlay();
+        } else {
+          playTTS();
+        }
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -1583,6 +1587,7 @@ makeApiRequest is used to update the data with latest data
           currentCon; // Set the current playing conversation
       isLoading.value = false; // Set loading flag to false
       isRetakeCapture = false; // Reset retake flag
+      canSpeak = true;
       checkForButtonsAndPlay(); // Check for buttons and play the conversation
       scrollToEnd(); // Scroll to the end of the conversation
     } catch (e, stackTrace) {
