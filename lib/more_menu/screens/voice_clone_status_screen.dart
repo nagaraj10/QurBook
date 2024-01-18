@@ -36,7 +36,8 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
   final controller = Get.put(VoiceCloneStatusController());
   double subtitle = CommonUtil().isTablet! ? tabHeader2 : mobileHeader2;
   late VoiceCloningController _voiceCloningController;
-  bool isFirsTym = true;
+ 
+  bool isForceStopPlayer = false;
   @override
   void initState() {
     Provider.of<VoiceCloningController>(context, listen: false)
@@ -54,7 +55,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
     controller.dispose();
     _voiceCloningController.disposeRecorder();
     _voiceCloningController.isPlayerLoading = false;
-    _voiceCloningController.dispose();
+    // _voiceCloningController.dispose();
     super.dispose();
     fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
@@ -67,8 +68,9 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
   @override
   Widget build(BuildContext context) {
     _voiceCloningController = Provider.of<VoiceCloningController>(context);
-    if (isFirsTym) {
-      _voiceCloningController.fromVoiceCloneStatus = true;
+
+    if (_voiceCloningController.isFirsTymVoiceCloningStatus) {
+    _voiceCloningController.fromVoiceCloneStatus = true;
       _voiceCloningController.recordedPath = "";
       _voiceCloningController.mPath = "";
     }
@@ -262,21 +264,23 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                                 : 30.0.sp,
                                           ),
                                           onTap: () async {
-                                            if (isFirsTym) {
-                                              isFirsTym = false;
-                                              await _voiceCloningController
-                                                  .startPlayer();
-                                            }
-                                            setState(() {
-                                              controller.isPlayWidgetClicked =
-                                                  !controller
-                                                      .isPlayWidgetClicked;
-                                            });
-                                            if (controller
-                                                .isPlayWidgetClicked) {
-                                              await _voiceCloningController
-                                                  .playPausePlayer();
-                                            }
+                                          if (_voiceCloningController.isFirsTymVoiceCloningStatus || isForceStopPlayer) {
+                                            _voiceCloningController.isFirsTymVoiceCloningStatus = false;
+                                            isForceStopPlayer = false;
+                                            await _voiceCloningController
+                                                .startPlayer();
+                                          }
+                                          setState(() {
+                                            controller.isPlayWidgetClicked =
+                                                !controller.isPlayWidgetClicked;
+                                          });
+
+                                          if (!controller.isPlayWidgetClicked) {
+                                            isForceStopPlayer = true;
+                                            await _voiceCloningController
+                                                .playerController
+                                                .stopPlayer();
+                                          }
                                           })
                                     ],
                                   ),
@@ -297,11 +301,14 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                             ),
                           ),
                           InkWell(
-                            onTap: () {
-                              //Pop the current page and should go back to recording page
-                              Navigator.pushNamed(
-                                  context, rt_record_submission);
-                            },
+                          onTap: () async {
+                            //Pop the current page and should go back to recording page
+                            controller.isPlayWidgetClicked = false;
+                            isForceStopPlayer = true;
+                            await _voiceCloningController.playerController
+                                .stopPlayer();
+                            Navigator.pushNamed(context, rt_record_submission);
+                          },
                             child: Visibility(
                                 visible: controller.voiceCloneStatusModel
                                         ?.result?.status ==
@@ -318,6 +325,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                         decorationStyle: TextDecorationStyle
                                             .solid, // optional
                                       ),
+                                      textAlign: TextAlign.center,
                                     ))),
                           ),
                           Align(
@@ -511,7 +519,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
 
   Widget getFutureAudioURL() {
     return FutureBuilder<String>(
-      future: _voiceCloningController?.downloadAudioFile(controller?.audioURL),
+      future: _voiceCloningController.downloadAudioFile(controller.audioURL),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CommonCircularIndicator();

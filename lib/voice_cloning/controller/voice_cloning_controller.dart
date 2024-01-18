@@ -34,6 +34,7 @@ class VoiceCloningController extends ChangeNotifier {
   double playPosition = 0.0;
 
   double maxPlayerDuration = 1.0;
+  bool isFirsTymVoiceCloningStatus = true;
 
   ///Audio And recorder Controllers
   late RecorderController recorderController;
@@ -287,26 +288,24 @@ class VoiceCloningController extends ChangeNotifier {
       fileName = audioUrl?.split("/").last;
     }
 
-    await FHBUtils.createDir(
+    final filePath = await FHBUtils.createDir(
       stAudioPath,
       fileName,
-      isTempDir: true,
-    ).then((filePath) async {
-      var file = File(filePath);
+    );
+    final file = File(filePath);
 
-      final request = await ApiServices.get(
-        audioUrl ?? '',
-        headers: {
-          HttpHeaders.authorizationHeader: authToken!,
-          KEY_OffSet: CommonUtil().setTimeZone()
-        },
-        timeout: 60,
-      );
-      final bytes = request!.bodyBytes; //close();
-      await file.writeAsBytes(bytes);
-      recordedPath = filePath;
-      print(recordedPath);
-    });
+    final request = await ApiServices.get(
+      audioUrl ?? '',
+      headers: {
+        HttpHeaders.authorizationHeader: authToken!,
+        KEY_OffSet: CommonUtil().setTimeZone()
+      },
+      timeout: 60,
+    );
+    final bytes = request!.bodyBytes; //close();
+    await file.writeAsBytes(bytes);
+    recordedPath = filePath;
+    print(recordedPath);
 
     return recordedPath;
   }
