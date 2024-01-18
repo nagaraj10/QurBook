@@ -704,7 +704,7 @@ const String strNO = 'NO';
 const String strConfirm = 'Confirm';
 const String strConfirmation = 'Confirmation';
 const String strConfirmationVoiceCloneDisable =
-    'Any applied voice prints will be revoked.\n\nAre you sure, you want to deactivate the voice cloning feature?';
+    'Any applied voice sample will be revoked.\n\nAre you sure, you want to deactivate the voice cloning feature?';
 
 const String strBP = 'BP';
 const String strWS = 'WS';

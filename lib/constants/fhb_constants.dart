@@ -946,6 +946,11 @@ const String KEY_IS_Vitals_ManualRecording_Restricted =
 const String strVoiceClonePatientAssignment =
     'voiceClonePatientAssignment';
 
+// Flutter Speech-to-text
+const String strListening = 'Listening';
+const String strSeconds = 'seconds';
+const String strPleaseEnterValidInput = 'Please enter a valid input';
+
 const double tabFontTitle = 25.0;
 const double mobileFontTitle = 18.0;
 
@@ -988,7 +993,7 @@ String doseValueHigh = "2048";
 
 // sheela survey image capture
 
-const String strRetake = 'Retake';
+const String strRecapture = 'Recapture';
 const String strRedirectRetakePicture = 'redirectRetakePicture';
 const String strRedirectToUploadImage = 'redirectUploadBucket';
 
