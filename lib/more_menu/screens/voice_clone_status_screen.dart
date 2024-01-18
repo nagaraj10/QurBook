@@ -55,7 +55,6 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
     controller.dispose();
     _voiceCloningController.disposeRecorder();
     _voiceCloningController.isPlayerLoading = false;
-    // _voiceCloningController.dispose();
     super.dispose();
     fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
@@ -68,11 +67,11 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
   @override
   Widget build(BuildContext context) {
     _voiceCloningController = Provider.of<VoiceCloningController>(context);
-
     if (_voiceCloningController.isFirsTymVoiceCloningStatus) {
-    _voiceCloningController.fromVoiceCloneStatus = true;
+      _voiceCloningController.fromVoiceCloneStatus = true;
       _voiceCloningController.recordedPath = "";
       _voiceCloningController.mPath = "";
+      _voiceCloningController.playerVoiceStatusController = PlayerController();
     }
 
     return Obx(
@@ -268,7 +267,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                             _voiceCloningController.isFirsTymVoiceCloningStatus = false;
                                             isForceStopPlayer = false;
                                             await _voiceCloningController
-                                                .startPlayer();
+                                                .startVoiceStatusPlayer();
                                           }
                                           setState(() {
                                             controller.isPlayWidgetClicked =
@@ -278,7 +277,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                           if (!controller.isPlayWidgetClicked) {
                                             isForceStopPlayer = true;
                                             await _voiceCloningController
-                                                .playerController
+                                                .playerVoiceStatusController
                                                 .stopPlayer();
                                           }
                                           })
@@ -305,14 +304,14 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                             //Pop the current page and should go back to recording page
                             controller.isPlayWidgetClicked = false;
                             isForceStopPlayer = true;
-                            await _voiceCloningController.playerController
+                            if (_voiceCloningController.playerVoiceStatusController.playerState != PlayerState.stopped){
+                            await _voiceCloningController.playerVoiceStatusController
                                 .stopPlayer();
+                            }
                             Navigator.pushNamed(context, rt_record_submission);
                           },
                             child: Visibility(
-                                visible: controller.voiceCloneStatusModel
-                                        ?.result?.status ==
-                                    strApproved,
+                                visible: true,
                                 child: Padding(
                                     padding: EdgeInsets.all(10),
                                     child: Text(
@@ -447,7 +446,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                 children: [
                   AudioFileWaveforms(
                     size: Size(MediaQuery.of(context).size.width, 100),
-                    playerController: _voiceCloningController.playerController,
+                    playerController: _voiceCloningController.playerVoiceStatusController,
                     enableSeekGesture: false,
                     waveformData: _voiceCloningController.audioWaveData,
                     playerWaveStyle: PlayerWaveStyle(
@@ -460,12 +459,12 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                     activeColor: Color(CommonUtil().getMyPrimaryColor())
                         .withOpacity(0.5),
                     inactiveColor: Colors.white,
-                    value: _voiceCloningController.playPosition,
-                    max: _voiceCloningController.maxPlayerDuration > 0
-                        ? _voiceCloningController.maxPlayerDuration
+                    value: _voiceCloningController.playVoiceStatusPosition,
+                    max: _voiceCloningController.maxPlayerVoiceStatusDuration > 0
+                        ? _voiceCloningController.maxPlayerVoiceStatusDuration
                         : 1.0,
                     onChanged: (value) {
-                      _voiceCloningController.playerController
+                      _voiceCloningController.playerVoiceStatusController
                           .seekTo(value.round());
                     },
                   ),
@@ -478,18 +477,18 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                         Expanded(
                           child: Text(
                             _voiceCloningController.formatPlayerDuration(
-                                _voiceCloningController.playPosition),
+                                _voiceCloningController.playVoiceStatusPosition),
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
                         Expanded(
                           child: InkWell(
                             onTap: () {
-                              _voiceCloningController.playPausePlayer();
+                              _voiceCloningController.playVoiceStatusPausePlayer();
                             },
                             child: SvgPicture.asset(
                               _voiceCloningController
-                                      .playerController.playerState.isPlaying
+                                      .playerVoiceStatusController.playerState.isPlaying
                                   ? icVoicePause
                                   : icVoicePlay,
                               color: Colors.white,
@@ -500,7 +499,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                         Expanded(
                           child: Text(
                             _voiceCloningController.formatPlayerDuration(
-                                _voiceCloningController.maxPlayerDuration),
+                                _voiceCloningController.maxPlayerVoiceStatusDuration),
                             textAlign: TextAlign.right,
                             style: const TextStyle(
                               color: Colors.white,

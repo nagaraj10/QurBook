@@ -32,13 +32,16 @@ class VoiceCloningController extends ChangeNotifier {
   Timer? countDownTimer;
 
   double playPosition = 0.0;
+  double playVoiceStatusPosition = 0.0;
 
   double maxPlayerDuration = 1.0;
+  double maxPlayerVoiceStatusDuration = 1.0;
   bool isFirsTymVoiceCloningStatus = true;
 
   ///Audio And recorder Controllers
   late RecorderController recorderController;
   late PlayerController playerController;
+  late PlayerController playerVoiceStatusController;
   VoiceCloneServices voiceCloneServices = VoiceCloneServices();
   bool? fromVoiceCloneStatus;
   String recordedPath = '';
@@ -47,6 +50,7 @@ class VoiceCloningController extends ChangeNotifier {
     isRecording = false;
     recorderController.dispose();
     playerController.dispose();
+    playerVoiceStatusController.dispose();
   }
 
   void getDir() async {
@@ -58,6 +62,7 @@ class VoiceCloningController extends ChangeNotifier {
   void initialiseControllers() {
     canStopRecording = false;
     playerController = PlayerController();
+    playerVoiceStatusController = PlayerController();
     recorderController = RecorderController()
       ..androidEncoder = AndroidEncoder.aac
       ..androidOutputFormat = AndroidOutputFormat.mpeg4
@@ -126,6 +131,7 @@ class VoiceCloningController extends ChangeNotifier {
     isRecorderView = false;
     isRecording = false;
     playPosition = 0.0;
+    playVoiceStatusPosition = 0.0;
     maxPlayerDuration = 1.0;
     notifyListeners();
     startPlayer();
@@ -222,6 +228,30 @@ class VoiceCloningController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> startVoiceStatusPlayer() async {
+    setPlayerLoading(true);
+    audioWaveData = await playerVoiceStatusController.extractWaveformData(
+      path: (fromVoiceCloneStatus == true) ? recordedPath : mPath,
+    );
+    await playerVoiceStatusController.preparePlayer(
+        path: (fromVoiceCloneStatus == true) ? recordedPath : mPath);
+    maxPlayerVoiceStatusDuration = playerVoiceStatusController.maxDuration.toDouble();
+    setPlayerLoading(false);
+
+    ///When using Finish mode pause it will allow to play and pause for every time.
+    await playerVoiceStatusController.startPlayer(finishMode: FinishMode.pause);
+    playerVoiceStatusController.onCompletion.listen((event) {
+      playVoiceStatusPosition = 0.0;
+      notifyListeners();
+    });
+
+    playerVoiceStatusController.onCurrentDurationChanged.listen((event) {
+      playVoiceStatusPosition = event.seconds.inSeconds.toDouble();
+      notifyListeners();
+    });
+    notifyListeners();
+  }
+
   Future<void> startPlayer() async {
     setPlayerLoading(true);
     audioWaveData = await playerController.extractWaveformData(
@@ -245,6 +275,17 @@ class VoiceCloningController extends ChangeNotifier {
       playPosition = event.seconds.inSeconds.toDouble();
       notifyListeners();
     });
+    notifyListeners();
+  }
+
+
+  Future<void> playVoiceStatusPausePlayer() async {
+    if (playerVoiceStatusController.playerState.isPlaying) {
+      await playerVoiceStatusController.pausePlayer();
+    } else {
+      await playerVoiceStatusController.startPlayer(
+          finishMode: FinishMode.pause, forceRefresh: true);
+    }
     notifyListeners();
   }
 
