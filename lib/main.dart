@@ -337,7 +337,7 @@ class _MyFHBState extends State<MyFHB> {
         CommonUtil().askPermissionForNotification();
       });
     });*/
-    getMyRoute();
+    //getMyRoute();
     _enableTimer();
     final res = apiBaseHelper.updateLastVisited();
     isAlreadyLoaded = true;
@@ -1261,22 +1261,7 @@ class _MyFHBState extends State<MyFHB> {
     }
   }
 
-  getMyRoute() async {
-    NotificationAppLaunchDetails? didLaunchFromNotification =
-    await localNotificationsPlugin.getNotificationAppLaunchDetails();
-    NotificationResponse? notificationResponse =
-        didLaunchFromNotification?.notificationResponse;
-    if (notificationResponse != null) {
-      if (didLaunchFromNotification?.didNotificationLaunchApp == true) {
-        var mapResponse = jsonDecode(notificationResponse.payload??'');
-        if(notificationResponse.actionId!=null){
-          mapResponse['action'] = notificationResponse.actionId;
-        }
-        IosNotificationHandler()
-            .handleNotificationResponse(mapResponse);
-      }
-    }
-  }
+
 
   void getProfileData() async {
     try {

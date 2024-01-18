@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_geocoder/model.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -39,6 +40,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
 import 'package:myfhb/landing/controller/landing_screen_controller.dart';
 import 'package:myfhb/chat_socket/model/SheelaReminderResponse.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/main.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
@@ -153,6 +155,7 @@ import '../video_call/model/payload.dart' as vsPayLoad;
 import '../video_call/pages/calling_page.dart';
 import '../video_call/pages/callmain.dart';
 import '../video_call/pages/callmain_makecall.dart';
+import '../video_call/services/iOS_Notification_Handler.dart';
 import '../video_call/utils/audiocall_provider.dart';
 import '../video_call/utils/hideprovider.dart';
 import '../video_call/utils/rtc_engine.dart';
@@ -7499,6 +7502,28 @@ class CommonUtil {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
+
+  getMyRoute() async {
+    try {
+      NotificationAppLaunchDetails? didLaunchFromNotification =
+          await localNotificationsPlugin.getNotificationAppLaunchDetails();
+      NotificationResponse? notificationResponse =
+          didLaunchFromNotification?.notificationResponse;
+      if (notificationResponse != null) {
+        if (didLaunchFromNotification?.didNotificationLaunchApp == true) {
+          var mapResponse = jsonDecode(notificationResponse.payload ?? '');
+          if (notificationResponse.actionId != null) {
+            mapResponse['action'] = notificationResponse.actionId;
+          }
+          IosNotificationHandler().handleNotificationResponse(mapResponse);
+        }
+      }
+    } catch (e, stackTrace) {
+      // Log any errors using appLogs
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
 }
 
 extension CapExtension on String {
