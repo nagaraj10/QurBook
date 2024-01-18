@@ -189,18 +189,16 @@ class IosNotificationHandler {
 
   void handleNotificationResponse(Map<String,dynamic> jsonDecode)async{
     if (!isAlreadyLoaded) {
-      notificationReceivedFromKilledState = true;
+      //notificationReceivedFromKilledState = true;
       await Future.delayed(const Duration(seconds: 5));
       isAlreadyLoaded = true;
     }
     final data = Map<String, dynamic>.from(jsonDecode);
     print('888:Naga:$data');
     model = NotificationModel.fromMap(data.containsKey("action")
-        ? Map<String, dynamic>.from(data["data"])
+        ? Map<String, dynamic>.from(data["data"]??data)
         : data);
-    if(Platform.isAndroid && data.containsKey('type') && data['type']=='call'){
-       model.isCall =true;
-       model.callArguments?.isAppExists =true;
+    if (data['type'] == 'call' && Platform.isAndroid) {
       if(data['action']!=null){
         if(data['action']=='Reject'){
           updateCallStatus(false,model.meeting_id.toString());
@@ -214,7 +212,7 @@ class IosNotificationHandler {
                 .disableAudioCall();
           }
           Get.to(CallMain(
-            doctorName:model?.doctorName??'',
+            doctorName:model?.username??'',
             doctorId:model?.doctorId??'',
             doctorPic: model?.doctorPicture??'',
             patientId:model?.patientId??'',

@@ -156,7 +156,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     }
      Navigator.pushReplacement(
          context,MaterialPageRoute(builder:(context)=>CallMain(
-       doctorName:widget.model?.doctorName??'',
+       doctorName:widget.model?.username??'',
        doctorId:widget.model?.doctorId??'',
        doctorPic: widget.model?.doctorPicture??'',
        patientId:widget.model?.patientId??'',

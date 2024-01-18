@@ -57,6 +57,7 @@ class PushNotificationService {
       print(
           '212121 message listen:${message.toMap()}');
       if(message.data['type']=='call' && Platform.isAndroid){
+          listenEvent(message.data['meeting_id']);
           showCallNotification(message);
       }else{
         await showNotification(message);
@@ -139,7 +140,6 @@ Future<void> showNotification(RemoteMessage message) async {
 }
 
 void showCallNotification(RemoteMessage message)async{
-  listenEvent(message.data['meeting_id']);
    AndroidNotificationDetails androidPlatformChannelSpecifics =
   AndroidNotificationDetails(
       '${callChannel.id}',

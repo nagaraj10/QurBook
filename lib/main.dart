@@ -1266,11 +1266,14 @@ class _MyFHBState extends State<MyFHB> {
     await localNotificationsPlugin.getNotificationAppLaunchDetails();
     NotificationResponse? notificationResponse =
         didLaunchFromNotification?.notificationResponse;
-    FlutterToast().getToast('${notificationResponse}', Colors.red);
     if (notificationResponse != null) {
       if (didLaunchFromNotification?.didNotificationLaunchApp == true) {
+        var mapResponse = jsonDecode(notificationResponse.payload??'');
+        if(notificationResponse.actionId!=null){
+          mapResponse['action'] = notificationResponse.actionId;
+        }
         IosNotificationHandler()
-            .handleNotificationResponse(jsonDecode(notificationResponse.payload??''));
+            .handleNotificationResponse(mapResponse);
       }
     }
   }
