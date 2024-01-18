@@ -1888,12 +1888,11 @@ makeApiRequest is used to update the data with latest data
                           // Loading spinner animation
                           SpinKitDoubleBounce(
                             size: containerSize,
-                            //color: const Color(0xFF6021de).withOpacity(0.1),
-                            color: PreferenceUtil.getIfQurhomeisAcive()
-                                ? Color(CommonUtil().getQurhomeGredientColor())
-                                    .withOpacity(0.2)
-                                : Color(CommonUtil().getMyPrimaryColor())
-                                    .withOpacity(0.2),
+                            // This sets the color using hexadecimal representation (0xFFd6c7f4)
+                            color: Color(0xFFd6c7f4),
+                            /*color: PreferenceUtil.getIfQurhomeisAcive()
+                                ? Color(CommonUtil().getQurhomeGredientColor()).withOpacity(0.2)
+                                : Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.2),*/
                           ),
                           // Text displaying 'Listening' and the countdown seconds
                           Column(
@@ -2128,12 +2127,11 @@ makeApiRequest is used to update the data with latest data
                       children: [
                         SpinKitDoubleBounce(
                           size: CommonUtil().isTablet! ? 300.0 : 200.0,
-                          //color: const Color(0xFF6021de).withOpacity(0.1),
-                          color: PreferenceUtil.getIfQurhomeisAcive()
-                              ? Color(CommonUtil().getQurhomeGredientColor())
-                                  .withOpacity(0.2)
-                              : Color(CommonUtil().getMyPrimaryColor())
-                                  .withOpacity(0.2),
+                          // This sets the color using hexadecimal representation (0xFFd6c7f4)
+                          color: Color(0xFFd6c7f4),
+                          /*color: PreferenceUtil.getIfQurhomeisAcive()
+                              ? Color(CommonUtil().getQurhomeGredientColor()).withOpacity(0.2)
+                              : Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.2),*/
                         ),
                         Image.asset(
                           icon_mayaMain, // replace with your image
