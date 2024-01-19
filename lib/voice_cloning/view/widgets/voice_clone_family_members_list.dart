@@ -18,11 +18,13 @@ class VoiceCloneFamilyMembersList extends StatefulWidget {
   final List<VoiceCloneSharedByUsers> familyMembers;
   final bool isShowcaseExisting;
   final void Function(int) onValueSelected;
+  final bool isScrollParent;
 
   const VoiceCloneFamilyMembersList({
     required this.familyMembers,
     required this.onValueSelected,
     this.isShowcaseExisting = false,
+    this.isScrollParent = false,
   });
 
   @override
@@ -63,19 +65,32 @@ class _VoiceCloneFamilyMembersListState
                 ),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                padding: const EdgeInsets.only(bottom: 20),
-                itemCount: widget.familyMembers.length,
-                itemBuilder: (contextList, index) =>
-                    _getVoiceCloneFamilyMemberWidget(
-                  contextList,
-                  widget.familyMembers[index],
-                  index,
-                ),
-              ),
-            ),
+            widget.isScrollParent
+                ? ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.only(bottom: 20),
+                    itemCount: widget.familyMembers.length,
+                    itemBuilder: (contextList, index) =>
+                        _getVoiceCloneFamilyMemberWidget(
+                      contextList,
+                      widget.familyMembers[index],
+                      index,
+                    ),
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.only(bottom: 20),
+                      itemCount: widget.familyMembers.length,
+                      itemBuilder: (contextList, index) =>
+                          _getVoiceCloneFamilyMemberWidget(
+                        contextList,
+                        widget.familyMembers[index],
+                        index,
+                      ),
+                    ),
+                  ),
           ],
         ),
       );

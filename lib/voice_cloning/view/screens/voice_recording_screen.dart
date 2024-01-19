@@ -1,6 +1,7 @@
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/CommonUtil.dart';
@@ -27,6 +28,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
     ///Initializing the audio and player controllers
     Provider.of<VoiceCloningController>(context, listen: false)
         .initialiseControllers();
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<VoiceCloningController>(context, listen: false).getDir();
       Provider.of<VoiceCloningController>(context, listen: false)
@@ -48,6 +50,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
             size: 24.0.sp,
           ),
           onPressed: () {
+            _voiceCloningController.isFirsTymVoiceCloningStatus = true;
             Navigator.of(context).pop();
           },
         ),
