@@ -195,7 +195,9 @@ class _LandingScreenState extends State<LandingScreen> {
         );
       }
       sheelBadgeController?.isAllowSheelaLiveReminders = true;
+      await CommonUtil().getMyRoute();
     } catch (e, stackTrace) {
+      await CommonUtil().getMyRoute();
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);

@@ -4,13 +4,18 @@ import 'dart:io';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:myfhb/voice_cloning/services/voice_clone_services.dart';
 import 'package:myfhb/voice_cloning/view/widgets/countdown_timer_widget.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../common/CommonUtil.dart';
 
@@ -22,34 +27,43 @@ class VoiceCloningController extends ChangeNotifier {
   bool isPlayerLoading = false;
   bool canStopRecording = false;
   bool isRecording = false;
-  String _mPath = 'recorder.m4a';
+  String mPath = 'recorder.m4a';
   List<double> audioWaveData = [];
+  List<double> audioWaveVoiceStatusData = []; //new wave for downloaded ausio
   Timer? countDownTimer;
 
   double playPosition = 0.0;
+  double playVoiceStatusPosition = 0.0; //new position for recorded voice
 
   double maxPlayerDuration = 1.0;
+  double maxPlayerVoiceStatusDuration = 1.0;
+  bool isFirsTymVoiceCloningStatus =
+      true; //check if the player is from status screen
 
   ///Audio And recorder Controllers
   late RecorderController recorderController;
   late PlayerController playerController;
+  late PlayerController playerVoiceStatusController;
   VoiceCloneServices voiceCloneServices = VoiceCloneServices();
+  String recordedPath = '';
   void disposeRecorder() {
     isRecorderView = true;
     isRecording = false;
     recorderController.dispose();
     playerController.dispose();
+    playerVoiceStatusController.dispose();
   }
 
   void getDir() async {
     var appDirectory = await getApplicationDocumentsDirectory();
-    _mPath = "${appDirectory.path}/recording.m4a";
+    mPath = "${appDirectory.path}/recording.m4a";
     notifyListeners();
   }
 
   void initialiseControllers() {
     canStopRecording = false;
     playerController = PlayerController();
+    playerVoiceStatusController = PlayerController();
     recorderController = RecorderController()
       ..androidEncoder = AndroidEncoder.aac
       ..androidOutputFormat = AndroidOutputFormat.mpeg4
@@ -72,29 +86,30 @@ class VoiceCloningController extends ChangeNotifier {
       isRecording = false;
     } else {
       ///Checking the Mic permission before starting recording.
-      if(await checkForMicPermission()==true){
-    await recorderController.record(path: _mPath);
-    isRecording = true;
-    }
+      if (await checkForMicPermission() == true) {
+        await recorderController.record(path: mPath);
+        isRecording = true;
+      }
     }
     notifyListeners();
   }
-   checkForMicPermission()async{
-    final status = await CommonUtil.askPermissionForCameraAndMic(isAudioCall: true);
+
+  checkForMicPermission() async {
+    final status =
+        await CommonUtil.askPermissionForCameraAndMic(isAudioCall: true);
     if (!status) {
-     FlutterToast().getToast(
+      FlutterToast().getToast(
         strMicPermission,
         Colors.red,
       );
       return false;
     }
     return true;
-
   }
 
   void startRecording() async {
     try {
-      await recorderController.record(path: _mPath);
+      await recorderController.record(path: mPath);
       isRecording = true;
       notifyListeners();
     } catch (e) {}
@@ -105,12 +120,13 @@ class VoiceCloningController extends ChangeNotifier {
     /// waves and labels from the UI.
     recorderController.reset();
     recorderController.refresh();
-    _mPath = (await recorderController.stop(false))!;
-    if (_mPath != null) {}
+    mPath = (await recorderController.stop(false))!;
+    if (mPath != null) {}
     recordingDurationTxt = '0:00:00';
     isRecorderView = false;
     isRecording = false;
     playPosition = 0.0;
+    playVoiceStatusPosition = 0.0;
     maxPlayerDuration = 1.0;
     notifyListeners();
     startPlayer();
@@ -122,13 +138,15 @@ class VoiceCloningController extends ChangeNotifier {
       await playerController.pausePlayer();
     }
     setPlayerLoading(true);
+
     ///Checking the Recorded file is less than 100 MB.
-    var fileInMb = await getFileSizeInMB(_mPath);
+    var fileInMb = await getFileSizeInMB(mPath);
     if (fileInMb <= 100) {
-      var data = await voiceCloneServices.uploadVoiceClone(_mPath);
+      var data = await voiceCloneServices.uploadVoiceClone(mPath);
       setPlayerLoading(false);
       if (data.isSuccess == true) {
         Navigator.pop(Get.context!);
+        recordedPath = mPath;
         Navigator.pushNamed(Get.context!, rt_VoiceCloningStatus,
                 arguments: VoiceCloneStatusArguments(fromMenu: false))
             .then((value) {});
@@ -161,7 +179,7 @@ class VoiceCloningController extends ChangeNotifier {
           );
         }).then((value) async {
       if (value == true) {
-        if(await checkForMicPermission()==true){
+        if (await checkForMicPermission() == true) {
           startRecording();
         }
       } else {
@@ -176,6 +194,7 @@ class VoiceCloningController extends ChangeNotifier {
     isRecorderView = true;
     recordingDurationTxt = '0:00:00';
     audioWaveData.clear();
+    audioWaveVoiceStatusData.clear();
     notifyListeners();
     countDownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (countdown > 0) {
@@ -206,14 +225,39 @@ class VoiceCloningController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> startVoiceStatusPlayer() async {
+    setPlayerLoading(true);
+    audioWaveVoiceStatusData =
+        await playerVoiceStatusController.extractWaveformData(
+      path: recordedPath,
+    );
+    await playerVoiceStatusController.preparePlayer(path: recordedPath);
+    maxPlayerVoiceStatusDuration =
+        playerVoiceStatusController.maxDuration.toDouble();
+    setPlayerLoading(false);
+
+    ///When using Finish mode pause it will allow to play and pause for every time.
+    await playerVoiceStatusController.startPlayer(finishMode: FinishMode.pause);
+    playerVoiceStatusController.onCompletion.listen((event) {
+      playVoiceStatusPosition = 0.0;
+      notifyListeners();
+    });
+
+    playerVoiceStatusController.onCurrentDurationChanged.listen((event) {
+      playVoiceStatusPosition = event.seconds.inSeconds.toDouble();
+      notifyListeners();
+    });
+    notifyListeners();
+  }
+
   Future<void> startPlayer() async {
     setPlayerLoading(true);
     audioWaveData = await playerController.extractWaveformData(
-      path: _mPath,
+      path: mPath,
     );
-    await playerController.preparePlayer(path: _mPath);
-    maxPlayerDuration= playerController.maxDuration.toDouble();
- /*   maxPlayerDuration =
+    await playerController.preparePlayer(path: mPath);
+    maxPlayerDuration = playerController.maxDuration.toDouble();
+    /*   maxPlayerDuration =
         (await playerController.getDuration(DurationType.max)).toDouble();*/
     setPlayerLoading(false);
 
@@ -228,6 +272,16 @@ class VoiceCloningController extends ChangeNotifier {
       playPosition = event.seconds.inSeconds.toDouble();
       notifyListeners();
     });
+    notifyListeners();
+  }
+
+  Future<void> playVoiceStatusPausePlayer() async {
+    if (playerVoiceStatusController.playerState.isPlaying) {
+      await playerVoiceStatusController.pausePlayer();
+    } else {
+      await playerVoiceStatusController.startPlayer(
+          finishMode: FinishMode.pause, forceRefresh: true);
+    }
     notifyListeners();
   }
 
@@ -260,6 +314,50 @@ class VoiceCloningController extends ChangeNotifier {
   @override
   void dispose() {
     audioWaveData.clear();
+    audioWaveVoiceStatusData.clear();
     super.dispose();
+  }
+
+  /**
+   * To download the audio url to mobile
+   */
+  Future<String> downloadAudioFile(String? audioUrl) async {
+    await askForStoragePermission();
+    var fileName;
+    var authToken = await PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
+    if (audioUrl != "") {
+      fileName = audioUrl?.split("/").last;
+    }
+
+    final filePath = await FHBUtils.createDir(
+      stAudioPath,
+      fileName,
+    );
+    final file = File(filePath);
+
+    final request = await ApiServices.get(
+      audioUrl ?? '',
+      headers: {
+        HttpHeaders.authorizationHeader: authToken!,
+        KEY_OffSet: CommonUtil().setTimeZone()
+      },
+      timeout: 60,
+    );
+    final bytes = request!.bodyBytes; //close();
+    await file.writeAsBytes(bytes);
+    recordedPath = filePath;
+    print(recordedPath);
+
+    return recordedPath;
+  }
+
+//ask permission befor downloading file
+  static Future<bool> askForStoragePermission() async {
+    PermissionStatus storage = await Permission.storage.request();
+    if (storage == PermissionStatus.granted) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
