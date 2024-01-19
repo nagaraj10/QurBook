@@ -2655,6 +2655,99 @@ makeApiRequest is used to update the data with latest data
                       }
                     });
                   }
+                }else if (button?.needVideo ?? false) {
+                  // Check if the button requires a video
+                  if (isLoading.isTrue) {
+                    return; // If loading, do nothing
+                  }
+                  stopTTS(); // Stop Text-to-Speech
+                  updateTimer(
+                      enable: false); // disable the timer
+                  isSheelaScreenActive =
+                  false; // Deactivate Sheela screen
+                  btnTextLocal =
+                      button?.title ?? ''; // Set local button text
+                  // Show the camera/gallery dialog and handle the result
+                       showCameraGalleryDialog(
+                      btnTextLocal ?? '', strVideo)
+                      .then((value) {
+                    /*controller.isSheelaScreenActive =
+                              true; // Reactivate Sheela screen after dialog
+                          controller.updateTimer(
+                              enable: true);*/ // enable the timer
+                  });
+                } else if (button?.btnRedirectTo ==
+                    strRedirectRetakeVideo) {
+                  // Check if the button redirects to retake video
+                  if (isLoading.isTrue) {
+                    return; // If loading, do nothing
+                  }
+                  stopTTS(); // Stop Text-to-Speech
+                  isSheelaScreenActive =
+                  false; // Deactivate Sheela screen
+                  updateTimer(
+                      enable: false); // disable the timer
+                  isRetakeCapture =
+                  true; // Set flag for retake capture
+                  // Show the camera/gallery dialog and handle the result
+                       showCameraGalleryDialog(
+                      btnTextLocal ?? '', strVideo)
+                      .then((value) {
+                    /*controller.isSheelaScreenActive =
+                              true; // Reactivate Sheela screen after dialog
+                          controller.updateTimer(
+                              enable: true); // enable the timer*/
+                  });
+                } else if (button?.btnRedirectTo ==
+                    strRedirectToUploadVideo) {
+                  SheelaResponse sheelaLastConversation = SheelaResponse();
+                  sheelaLastConversation = conversations.last;
+                  // Check if the button redirects to upload video
+                  isLoading.value = true; // Set loading flag
+                  conversations.add(SheelaResponse(
+                      loading:
+                      true)); // Add loading response to conversations
+                       scrollToEnd(); // Scroll to the end of conversations
+                  if (sheelaLastConversation.videoThumbnailUrl != null &&
+                      sheelaLastConversation.videoThumbnailUrl != '') {
+                    // Check if there is a valid image thumbnail URL
+                        saveMediaRegiment(sheelaLastConversation.videoThumbnailUrl ?? '',
+                        '') // Save media regiment
+                        .then((value) {
+                      isLoading.value =
+                      false; // Reset loading flag
+                      conversations
+                          .removeLast(); // Remove the loading response from conversations
+                      if (value.isSuccess ?? false) {
+                        fileRequestUrl =
+                            value.result?.accessUrl ?? '';
+                        if (isLoading.isTrue) {
+                          return; // If loading, do nothing
+                        }
+                        if (conversations.last.singleuse != null &&
+                            conversations.last.singleuse! &&
+                            conversations.last.isActionDone != null) {
+                          conversations.last.isActionDone =
+                          true; // Set action done flag if it's a single-use button
+                        }
+                        button?.isSelected =
+                        true; // Mark the button as selected
+                        // Start Sheela from the button with specified parameters
+                        startSheelaFromButton(
+                            buttonText: button?.title,
+                            payload: button?.payload,
+                            buttons: button,
+                            isFromImageUpload: true,
+                            requestFileType:
+                            strVideo // add requestFileType
+                        );
+                        // Delay for 3 seconds and then unselect the button
+                        Future.delayed(const Duration(seconds: 3), () {
+                          button?.isSelected = false;
+                        });
+                      }
+                    });
+                  }
                 } else {
                   startSheelaFromButton(
                       buttonText: button.title,
