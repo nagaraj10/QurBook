@@ -1007,7 +1007,21 @@ class SheelaAIReceiverBubble extends StatelessWidget {
               return Center(child: CircularProgressIndicator());
             }
             if (snapshot.hasData) {
-              return Image.memory(snapshot.data!);
+              return InkWell(onTap: (){
+                controller.isPlayPauseView.value = false;
+                controller.isFullScreenVideoPlayer.value =
+                (CommonUtil().isTablet ?? false) ? true : false;
+                Get.to(
+                  VideoPlayerScreen(
+                    videoURL: selectedImage,
+                    isFromSheelaMedia: true,
+                  ),
+                )!
+                    .then((value) {
+                  controller.updateTimer(enable: true);
+                  controller.isSheelaScreenActive = true;
+                });
+              },child: Container(child: Image.memory(snapshot.data!)));
             }
             return SizedBox.shrink();
           },

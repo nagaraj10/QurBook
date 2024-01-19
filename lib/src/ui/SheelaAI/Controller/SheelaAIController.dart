@@ -1615,7 +1615,7 @@ makeApiRequest is used to update the data with latest data
             selectedImagePath; // Set audio thumbnail URL
       }else if (requestFileType == strVideo) {
         currentCon.videoThumbnailUrl =
-            selectedImagePath; // Set audio thumbnail URL
+            selectedImagePath;// Set audio thumbnail URL
       }
       if (isRetakeCapture ?? false) {
         isLoading.value = false; // Set loading flag to false
@@ -1715,17 +1715,18 @@ makeApiRequest is used to update the data with latest data
         .then((croppedFile) async {
       if (croppedFile != null) {
         // Validate the size of the cropped image
-        if (await validateImageSize(croppedFile)) {
+        if (await validateImageSize(croppedFile, requestFileType)) {
           var imagePathGallery = croppedFile.path;
 
           // Check if the image path is not null or empty
           if (imagePathGallery != null && imagePathGallery != '') {
             // Trigger the image preview thumbnail with the cropped image path
             sheelaFileStaticConversation(
-              btnTitle: btnTitle, // Optional button title
-              selectedImagePath: imagePathGallery, // Path to the cropped image
-              requestFileType: requestFileType
-            );
+                btnTitle: btnTitle,
+                // Optional button title
+                selectedImagePath: imagePathGallery,
+                // Path to the cropped image
+                requestFileType: requestFileType);
           }
         } else {
           // Display a toast message if the selected image exceeds the maximum allowed size
@@ -1750,10 +1751,18 @@ makeApiRequest is used to update the data with latest data
   }
 
   // Function to validate the size of a selected image
-  Future<bool> validateImageSize(var _selectedImage) async {
+  Future<bool> validateImageSize(
+      var _selectedImage, String? requestFileType) async {
     try {
-      int maxSizeInBytes =
-          5 * 1024 * 1024; // Set the maximum allowed size to 5MB
+      int maxSizeInBytes;
+      if (requestFileType == strImage) {
+        maxSizeInBytes =
+            5 * 1024 * 1024; // Set the maximum allowed size to 5MB to image
+      } else {
+        maxSizeInBytes =
+            100 * 1024 * 1024; // Set the maximum allowed size to 100MB to video
+      }
+
       int selectedImageSize = await _getImageSize(
           _selectedImage); // Get the size of the selected image
 
@@ -2677,7 +2686,7 @@ makeApiRequest is used to update the data with latest data
       imageFormat: ImageFormat.JPEG,
       maxWidth:
       128, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
-      quality: 40,
+      quality: 50,
     );
   }
 }
