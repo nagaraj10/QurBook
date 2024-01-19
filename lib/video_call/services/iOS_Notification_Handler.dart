@@ -199,7 +199,7 @@ class IosNotificationHandler {
         : data);
     if (data['type'] == 'call' && Platform.isAndroid) {
       if(data.containsKey('action')){
-        if(data['action']=='Reject'){
+        if(data['action']=='Decline'){
           await updateCallStatus(false,model.meeting_id.toString());
         }else{
           await updateCallStatus(true,model.meeting_id.toString());
