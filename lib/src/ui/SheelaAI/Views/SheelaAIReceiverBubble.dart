@@ -600,10 +600,10 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             .showCameraGalleryDialog(
                                 controller.btnTextLocal ?? '', strVideo)
                             .then((value) {
-                          controller.isSheelaScreenActive =
+                          /*controller.isSheelaScreenActive =
                               true; // Reactivate Sheela screen after dialog
                           controller.updateTimer(
-                              enable: true); // enable the timer
+                              enable: true);*/ // enable the timer
                         });
                       } else if (buttonData?.btnRedirectTo ==
                           strRedirectRetakeVideo) {
@@ -623,10 +623,10 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             .showCameraGalleryDialog(
                                 controller.btnTextLocal ?? '', strVideo)
                             .then((value) {
-                          controller.isSheelaScreenActive =
+                          /*controller.isSheelaScreenActive =
                               true; // Reactivate Sheela screen after dialog
                           controller.updateTimer(
-                              enable: true); // enable the timer
+                              enable: true); // enable the timer*/
                         });
                       } else if (buttonData?.btnRedirectTo ==
                           strRedirectToUploadVideo) {

@@ -1007,6 +1007,7 @@ const String strImage = 'image';
 const String strSelectVideo = 'Select video';
 const String strRecordVideo = 'Record video';
 const String strImageSizeValidation = 'Unable to upload photo. File size exceeds 5MB';
+const String strVideoSizeValidation = 'Unable to upload video. File size exceeds 100MB';
 const String strAudioSizeValidation = 'File size exceeds 100MB';
 const String strVideoPreview = 'Video preview';
 

@@ -1679,7 +1679,7 @@ makeApiRequest is used to update the data with latest data
                       imgFromCamera(strGallery,
                           btnTitle); // Handle action when Camera is tapped
                     } else {
-                      openVideoCamera(btnTitle);
+                      openVideoCamera(btnTitle,requestFileType);
                     }
                     Navigator.of(context).pop(); // Close the dialog
                   },
@@ -1740,7 +1740,7 @@ makeApiRequest is used to update the data with latest data
           }
         } else {
           // Display a toast message if the selected image exceeds the maximum allowed size
-          FlutterToast().getToast(strImageSizeValidation, Colors.red);
+          FlutterToast().getToastForLongTime(strImageSizeValidation, Colors.red);
         }
       }
     });
@@ -1798,26 +1798,39 @@ makeApiRequest is used to update the data with latest data
     return length; // Return the size of the image file
   }
 
-  openVideoCamera(String? btnTitle) async {
-    late File _video; // Declare a variable to store the captured image
+  Future<int> getVideoFileSize(String videoFilePath) async {
+    File videoFile = File(videoFilePath);
+    int fileSizeInBytes = await videoFile.length();
+    // Convert bytes to megabytes
+    int fileSizeInMB = fileSizeInBytes ~/ (1024 * 1024);
+    return fileSizeInMB;
+  }
 
+
+  openVideoCamera(String? btnTitle, String? requestFileType) async {
+    late File _video; // Declare a variable to store the captured image
+    int maxFileSizeMB = 100;
     var picker = ImagePicker(); // Create an instance of ImagePicker
     var pickedFile = await picker.pickVideo(
         source: ImageSource.camera); // Capture an image from the camera
 
     if (pickedFile != null) {
-      _video = File(
-          pickedFile.path); // Create a File object from the captured image path
+      getVideoFileSize(pickedFile.path).then((fileSizeInMB) {
+        if (fileSizeInMB > maxFileSizeMB) {
+          FlutterToast().getToastForLongTime(strVideoSizeValidation, Colors.red);
+        } else {
+          _video = File(pickedFile
+              .path); // Create a File object from the captured image path
 
-      // Trigger the image preview thumbnail with the captured image path
-      sheelaFileStaticConversation(
-          btnTitle: btnTitle, // Optional button title
-          selectedImagePath: _video.path, // Path to the captured image
-          requestFileType: strVideo
-      );
+          // Trigger the image preview thumbnail with the captured image path
+          sheelaFileStaticConversation(
+              btnTitle: btnTitle, // Optional button title
+              selectedImagePath: _video.path, // Path to the captured image
+              requestFileType: strVideo);
+        }
+      });
     }
   }
-
 
   @override
   void onClose() {
