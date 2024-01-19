@@ -112,6 +112,7 @@ class PushNotificationService {
         InitializationSettings(android: androidSettings, iOS: iOSSettings);
     await localNotificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse: (details) async {
+          print('212121 onDidReceiveNotificationResponse details: ${details.payload}');
       final Map<String,dynamic> mapResponse = jsonDecode(details.payload!);
       if (details.payload != null) {
         if(details.actionId!=null){
@@ -208,7 +209,7 @@ void showCallNotification(RemoteMessage message)async{
 
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
-  print('8888: onBackground:${jsonDecode(notificationResponse.payload ?? '')}');
+  print('212121: onBackground:${jsonDecode(notificationResponse.payload ?? '')}');
 }
 
 

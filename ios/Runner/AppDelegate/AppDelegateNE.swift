@@ -8,9 +8,8 @@
 
 import UIKit
 import Flutter
-import Firebase
 
-extension AppDelegate: MessagingDelegate {
+extension AppDelegate {
     
     func setUpReminders(messanger:FlutterBinaryMessenger){
         let notifiationChannel = FlutterMethodChannel(name: reminderChannel, binaryMessenger: messanger)

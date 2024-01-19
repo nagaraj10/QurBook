@@ -101,7 +101,7 @@ import flutter_local_notifications
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         
-        // 1
+                // 1
         // Google Api Key
         GMSServices.provideAPIKey(Constants.googlekey)
 
@@ -128,8 +128,8 @@ import flutter_local_notifications
         application.registerForRemoteNotifications()
         
         // Use Firebase library to configure APIs
-       FirebaseApp.configure()
-        Messaging.messaging().delegate = self
+        // FirebaseApp.configure()
+        // Messaging.messaging().delegate = self
         receiveCallKitMethodFromNative()
         flutterController = window?.rootViewController as! FlutterViewController
 

@@ -26,6 +26,15 @@ final _dismissDestructiveDarwinNotificationAction =
   },
 );
 
+final _payNowDestructiveDarwinNotificationAction =
+    DarwinNotificationAction.plain(
+  'PayNow',
+  'Pay Now',
+  options: <DarwinNotificationActionOption>{
+    DarwinNotificationActionOption.destructive,
+  },
+);
+
 final _renewDarwinNotificationAction = DarwinNotificationAction.plain(
   'Renew',
   'Renew',
