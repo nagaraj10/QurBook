@@ -1459,7 +1459,12 @@ makeApiRequest is used to update the data with latest data
       } else {
         stopTTS();
         currentPlayingConversation = chat;
-        if (chat.imageThumbnailUrl != null && chat.imageThumbnailUrl != '') {
+        if (((chat.imageThumbnailUrl != null) &&
+                (chat.imageThumbnailUrl != '')) ||
+            ((chat.audioThumbnailUrl != null) &&
+                (chat.audioThumbnailUrl != '')) ||
+            ((chat.videoThumbnailUrl != null) &&
+                (chat.videoThumbnailUrl != ''))) {
           checkForButtonsAndPlay();
         } else {
           playTTS();
