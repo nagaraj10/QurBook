@@ -55,26 +55,7 @@ class PushNotificationService {
 
     FirebaseMessaging.onBackgroundMessage(onBackgroundMessageReceived);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      print(
-          '212121 message listen:${message.toMap()}');
-      if(message.data['type']=='call' && Platform.isAndroid){
-          listenEvent(message.data['meeting_id']);
-          showCallNotification(message);
-      }
-      else{
-        if(message.data['templateName']==familyMemberCaregiverRequest){
-          showFamilyMemberNotifications(message);
-        }else if(message.data.containsKey('associationNotificationToCaregiver')){
-          showViewMemberAndCommunication(message);
-        }else if(message.data['templateName']=='notifyCaregiverForMedicalRecord'){
-          showNotificationCaregiverForMedicalRecord(message);
-        }else if(message.data['templateName']=='careGiverTransportRequestReminder'|| message.data['templateName']=='voiceClonePatientAssignment'){
-
-        }else{
-          showNotification(message);
-        }
-
-      }
+      notificationBasedOnCategory(message);
 
     });
 
@@ -109,17 +90,45 @@ class PushNotificationService {
   setToken(String? token) async {
     print('FCM Token: $token');
   }
+
+
+
+}
+
+notificationBasedOnCategory(RemoteMessage message){
+
+  if(message.data['type']=='call' && Platform.isAndroid){
+    listenEvent(message.data['meeting_id']);
+    showCallNotification(message);
+  }
+  else{
+    if(message.data['templateName']==familyMemberCaregiverRequest){
+      showFamilyMemberNotifications(message);
+    }else if(message.data.containsKey('associationNotificationToCaregiver')){
+      showViewMemberAndCommunication(message);
+    }else if(message.data['templateName']=='notifyCaregiverForMedicalRecord'){
+      showNotificationCaregiverForMedicalRecord(message);
+    }else if(message.data['templateName']=='careGiverTransportRequestReminder'|| message.data['templateName']=='voiceClonePatientAssignment'){
+      showNotificationCareGiverTransportRequestReminder(message);
+    }else if(message.data['redirectTo']=='mycartdetails'){
+      showNotificationRenewNotification(message);
+    }
+    else if(message.data['redirectTo']=='escalateToCareCoordinatorToRegimen'){
+      showNotificationEscalate(message);
+    }
+    else if(message.data['redirectTo']=='familyProfile'){
+      showNotificationForFamilyAddition(message);
+    }else{
+      showNotification(message);
+    }
+
+  }
 }
 
 @pragma('vm:entry-point')
 Future<void> onBackgroundMessageReceived(RemoteMessage message) async {
   try {
-    print('2121 : on Background Message Received ${message.data}');
-    if (message.data['type'] == 'call' && Platform.isAndroid) {
-       showCallNotification(message);
-    } else {
-      showNotification(message);
-    }
+    notificationBasedOnCategory(message);
   } catch (e) {
     print('2121 catch:$e');
   }
@@ -253,6 +262,122 @@ void showNotificationCaregiverForMedicalRecord(RemoteMessage message)async{
       android: androidPlatformChannelSpecifics,
       iOS:DarwinNotificationDetails(categoryIdentifier:
       'ChatCCAndViewrecordButtons'));
+
+  await localNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(callChannel);
+  localNotificationsPlugin.show(
+      Platform.isIOS? message.notification.hashCode:message.data.hashCode,
+      Platform.isIOS? message.notification!.title:message.data['title'],
+      Platform.isIOS? message.notification!.body:message.data['body'],
+      platformChannelSpecifics,
+      payload: jsonEncode(message.data));
+}
+
+void showNotificationCareGiverTransportRequestReminder(RemoteMessage message)async{
+  AndroidNotificationDetails androidPlatformChannelSpecifics =
+  AndroidNotificationDetails(
+      '${androidNormalchannel.id}',
+      '${androidNormalchannel.description}',
+      importance: Importance.max,
+      priority: Priority.high,
+      category: AndroidNotificationCategory.reminder,
+      icon:'app_ns_icon',
+      largeIcon:DrawableResourceAndroidBitmap('ic_launcher'),
+      actions: [acceptAction,declineAction]
+  );
+  final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS:DarwinNotificationDetails(categoryIdentifier:
+      'showTransportationNotification'));
+
+  await localNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(callChannel);
+  localNotificationsPlugin.show(
+      Platform.isIOS? message.notification.hashCode:message.data.hashCode,
+      Platform.isIOS? message.notification!.title:message.data['title'],
+      Platform.isIOS? message.notification!.body:message.data['body'],
+      platformChannelSpecifics,
+      payload: jsonEncode(message.data));
+}
+
+void showNotificationRenewNotification(RemoteMessage message)async{
+  AndroidNotificationDetails androidPlatformChannelSpecifics =
+  AndroidNotificationDetails(
+      '${androidNormalchannel.id}',
+      '${androidNormalchannel.description}',
+      importance: Importance.max,
+      priority: Priority.high,
+      category: AndroidNotificationCategory.reminder,
+      icon:'app_ns_icon',
+      largeIcon:DrawableResourceAndroidBitmap('ic_launcher'),
+      actions: [renewalAction,callBackAction]
+  );
+  final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS:DarwinNotificationDetails(categoryIdentifier:
+      'planRenewButton'));
+
+  await localNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(callChannel);
+  localNotificationsPlugin.show(
+      Platform.isIOS? message.notification.hashCode:message.data.hashCode,
+      Platform.isIOS? message.notification!.title:message.data['title'],
+      Platform.isIOS? message.notification!.body:message.data['body'],
+      platformChannelSpecifics,
+      payload: jsonEncode(message.data));
+}
+
+void showNotificationEscalate(RemoteMessage message)async{
+  AndroidNotificationDetails androidPlatformChannelSpecifics =
+  AndroidNotificationDetails(
+      '${androidNormalchannel.id}',
+      '${androidNormalchannel.description}',
+      importance: Importance.max,
+      priority: Priority.high,
+      category: AndroidNotificationCategory.reminder,
+      icon:'app_ns_icon',
+      largeIcon:DrawableResourceAndroidBitmap('ic_launcher'),
+      actions: [escalateAction]
+  );
+  final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS:DarwinNotificationDetails(categoryIdentifier:
+      'escalateToCareCoordinatorButtons'));
+
+  await localNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(callChannel);
+  localNotificationsPlugin.show(
+      Platform.isIOS? message.notification.hashCode:message.data.hashCode,
+      Platform.isIOS? message.notification!.title:message.data['title'],
+      Platform.isIOS? message.notification!.body:message.data['body'],
+      platformChannelSpecifics,
+      payload: jsonEncode(message.data));
+}
+
+void showNotificationForFamilyAddition(RemoteMessage message)async{
+  AndroidNotificationDetails androidPlatformChannelSpecifics =
+  AndroidNotificationDetails(
+      '${androidNormalchannel.id}',
+      '${androidNormalchannel.description}',
+      importance: Importance.max,
+      priority: Priority.high,
+      category: AndroidNotificationCategory.reminder,
+      icon:'app_ns_icon',
+      largeIcon:DrawableResourceAndroidBitmap('ic_launcher'),
+      actions: [viewDetailsAction]
+  );
+  final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS:DarwinNotificationDetails(categoryIdentifier:
+      'viewDetailsButton'));
 
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<

@@ -207,6 +207,30 @@ const viewRecordAction =AndroidNotificationAction(
   showsUserInterface: true,
 );
 
+const renewalAction =AndroidNotificationAction(
+  'Renew', // Replace with your own action ID
+  'Renew', // Replace with your own action label
+  showsUserInterface: true,
+);
+
+const callBackAction =AndroidNotificationAction(
+  'Callback', // Replace with your own action ID
+  'Call back', // Replace with your own action label
+  showsUserInterface: true,
+);
+
+const escalateAction =AndroidNotificationAction(
+  'Escalate', // Replace with your own action ID
+  'Escalate', // Replace with your own action label
+  showsUserInterface: true,
+);
+
+const viewDetailsAction =AndroidNotificationAction(
+  'ViewDetails', // Replace with your own action ID
+  'View Details', // Replace with your own action label
+  showsUserInterface: true,
+);
+
 
 
 ///Notification Channel
