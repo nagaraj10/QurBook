@@ -20,22 +20,217 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
         },
       ),
     ],
-  )
+  ),
+  DarwinNotificationCategory(
+    'showTransportationNotification',
+    actions: [
+      DarwinNotificationAction.plain(
+        'Accept',
+        'Accept',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+      DarwinNotificationAction.plain(
+        'Decline',
+        'Decline',
+        options: <DarwinNotificationActionOption>{
+        },
+      ),
+    ],
+  ),
+  DarwinNotificationCategory(
+    'showBothButtonsCat',
+    actions: [
+      DarwinNotificationAction.plain(
+        'Snooze',
+        'Snooze',
+      ),
+      DarwinNotificationAction.plain(
+        'Dismiss',
+        'Dismiss',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.destructive,
+        },
+      ),
+    ],
+  ),
+  DarwinNotificationCategory(
+    'escalateToCareCoordinatorButtons',
+    actions: [
+      DarwinNotificationAction.plain(
+        'Escalate',
+        'Escalate',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+    ],
+  ),
+  DarwinNotificationCategory(
+    'showViewMemberAndCommunicationButtons',
+    actions: [
+      DarwinNotificationAction.plain(
+        'ViewMember',
+        'View Member',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+      DarwinNotificationAction.plain(
+        'Communicationsettings',
+        'Communication settings',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+    ],
+  ),
+  DarwinNotificationCategory(
+    'showSingleButtonCat',
+    actions: [
+      DarwinNotificationAction.plain(
+        'Dismiss',
+        'Dismiss',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.destructive,
+        },
+      )
+    ],
+  ),
+  DarwinNotificationCategory(
+    'planRenewButton',
+    actions: [
+      DarwinNotificationAction.plain(
+        'Renew',
+        'Renew',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+      DarwinNotificationAction.plain(
+        'Callback',
+        'Call back',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+    ],
+  ),
+  DarwinNotificationCategory(
+    'acceptDeclineButtonsCaregiver',
+    actions: [
+      DarwinNotificationAction.plain(
+        'Accept',
+        'Accept',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+      DarwinNotificationAction.plain(
+        'Reject',
+        'Reject',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.destructive,
+        },
+      ),
+    ],
+  ),
+  DarwinNotificationCategory(
+    'ChatCCAndViewrecordButtons',
+    actions: [
+      DarwinNotificationAction.plain(
+        'chatwithcc',
+        'Chat with cc',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+      DarwinNotificationAction.plain(
+        'viewrecord',
+        'View Record',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+    ],
+  ),
+  DarwinNotificationCategory(
+    'viewDetailsButton',
+    actions: [
+      DarwinNotificationAction.plain(
+        'ViewDetails',
+        'View Details',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      )
+    ],
+  ),
 ];
 
 ///Android ACtionButtons
-const callAction =[
-  AndroidNotificationAction(
-    'Accept', // Replace with your own action ID
-    'Accept', // Replace with your own action label
-    showsUserInterface: true,
-  ),
-  AndroidNotificationAction(
-    'Reject', // Replace with your own action ID
-    'Reject',
-    showsUserInterface: true, // Replace with your own action label
-  ),
-];
+const acceptAction =  AndroidNotificationAction(
+  'Accept', // Replace with your own action ID
+  'Accept', // Replace with your own action label
+  showsUserInterface: true,
+);
+const rejectAction =   AndroidNotificationAction(
+  'Reject', // Replace with your own action ID
+  'Reject',
+  showsUserInterface: true, // Replace with your own action label
+);
+const declineAction =   AndroidNotificationAction(
+  'Decline', // Replace with your own action ID
+  'Decline',
+  showsUserInterface: true, // Replace with your own action label
+);
+
+const viewMemberAction =AndroidNotificationAction(
+  'ViewMember', // Replace with your own action ID
+  'View Member', // Replace with your own action label
+  showsUserInterface: true,
+);
+const communicationSettingAction =AndroidNotificationAction(
+  'Communicationsettings', // Replace with your own action ID
+  'Communication Settings', // Replace with your own action label
+  showsUserInterface: true,
+);
+const chatwithccAction =AndroidNotificationAction(
+  'chatwithcc', // Replace with your own action ID
+  'Chat with CC', // Replace with your own action label
+  showsUserInterface: true,
+);
+const viewRecordAction =AndroidNotificationAction(
+  'viewrecord', // Replace with your own action ID
+  'View Record', // Replace with your own action label
+  showsUserInterface: true,
+);
+
+const renewalAction =AndroidNotificationAction(
+  'Renew', // Replace with your own action ID
+  'Renew', // Replace with your own action label
+  showsUserInterface: true,
+);
+
+const callBackAction =AndroidNotificationAction(
+  'Callback', // Replace with your own action ID
+  'Call back', // Replace with your own action label
+  showsUserInterface: true,
+);
+
+const escalateAction =AndroidNotificationAction(
+  'Escalate', // Replace with your own action ID
+  'Escalate', // Replace with your own action label
+  showsUserInterface: true,
+);
+
+const viewDetailsAction =AndroidNotificationAction(
+  'ViewDetails', // Replace with your own action ID
+  'View Details', // Replace with your own action label
+  showsUserInterface: true,
+);
+
 
 
 ///Notification Channel
