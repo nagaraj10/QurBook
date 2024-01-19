@@ -104,7 +104,7 @@ import flutter_local_notifications
         // 1
         // Google Api Key
         GMSServices.provideAPIKey(Constants.googlekey)
-        
+
         FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
             GeneratedPluginRegistrant.register(with: registry)
         }
@@ -128,8 +128,8 @@ import flutter_local_notifications
         application.registerForRemoteNotifications()
         
         // Use Firebase library to configure APIs
-        FirebaseApp.configure()
-//        Messaging.messaging().delegate = self
+       FirebaseApp.configure()
+        Messaging.messaging().delegate = self
         receiveCallKitMethodFromNative()
         flutterController = window?.rootViewController as! FlutterViewController
 
@@ -149,7 +149,6 @@ import flutter_local_notifications
 //        }
         IQKeyboardManager.shared.enable = true
 
-        setUpNotificationButtons()
         setupTTSMethodChannels()
         setupBLEMethodChannels()
 

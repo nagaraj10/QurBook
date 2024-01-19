@@ -53,6 +53,7 @@ import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
 
+import '../../services/pushnotification_service.dart';
 import '../../voice_cloning/model/voice_clone_status_arguments.dart';
 import '../utils/PageNavigator.dart';
 import '../utils/timezone/timezone_services.dart';
@@ -373,6 +374,7 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                   PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
               Future.delayed(const Duration(seconds: 3), () {
+                PushNotificationService().readInitialMessage();
                 if (!isFirstTime) {
                   PreferenceUtil.saveString(
                       Constants.KEY_INTRO_SLIDER, variable.strtrue);
@@ -1125,6 +1127,7 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                         PageNavigator.goToPermanent(context, router.rt_Landing);
                       });
                     });
+                    
                   }
                 } else {
                   //PageNavigator.goToPermanent(context, router.rt_WebCognito);

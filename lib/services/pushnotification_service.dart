@@ -54,17 +54,50 @@ class PushNotificationService {
 
     FirebaseMessaging.onBackgroundMessage(onBackgroundMessageReceived);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      print(
-          '212121 message listen:${message.toMap()}');
-      if(message.data['type']=='call' && Platform.isAndroid){
-          listenEvent(message.data['meeting_id']);
-          showCallNotification(message);
-      }else{
+      print('212121 message listen:${message.toMap()}');
+      if (message.data['type'] == 'call' && Platform.isAndroid) {
+        listenEvent(message.data['meeting_id']);
+        showCallNotification(message);
+      } else if (Platform.isIOS) {
+      } else {
         await showNotification(message);
       }
-
     });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('212121 onMessageOpenedApp listen:${message.toMap()}');
+      if (Platform.isIOS) {
+        final mapResponse = message.data;
+        if (message.category != null) {
+          mapResponse['action'] = message.category;
+        }
+        IosNotificationHandler()
+          ..isAlreadyLoaded = true
+          ..handleNotificationResponse(mapResponse);
+      }
+    });
+  }
 
+  void readInitialMessage() {
+    FirebaseMessaging.instance.getInitialMessage().then((message) async {
+      if (message != null) {
+        if (message.data['type'] == 'call' && Platform.isAndroid) {
+          listenEvent(message.data['meeting_id']);
+          showCallNotification(message);
+        } else if (Platform.isIOS) {
+          final mapResponse = message.data;
+          if (message.category != null) {
+            mapResponse['action'] = message.category;
+          }
+          IosNotificationHandler()
+            ..isAlreadyLoaded = false
+            ..handleNotificationResponse(mapResponse);
+        } else {
+          await showNotification(message);
+        }
+      }
+    }).onError((error, stackTrace) {
+      print('212121 getInitialMessage onError: ${error.toString()}');
+    });
   }
 
   Future initLocalNotification() async {
@@ -76,19 +109,19 @@ class PushNotificationService {
     final iOSSettings = DarwinInitializationSettings(
         notificationCategories: darwinIOSCategories);
     final initializationSettings =
-    InitializationSettings(android: androidSettings, iOS: iOSSettings);
-      await localNotificationsPlugin.initialize(initializationSettings,
-          onDidReceiveNotificationResponse: (details) async {
-        final Map<String,dynamic> mapResponse = jsonDecode(details.payload!);
-            if (details.payload != null) {
-              if(details.actionId!=null){
-                mapResponse['action'] = details.actionId;
-              }
-              IosNotificationHandler()..
-              isAlreadyLoaded=true
-                ..handleNotificationResponse(mapResponse);
-            }
-          }, onDidReceiveBackgroundNotificationResponse: notificationTapBackground);
+        InitializationSettings(android: androidSettings, iOS: iOSSettings);
+    await localNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse: (details) async {
+      final Map<String,dynamic> mapResponse = jsonDecode(details.payload!);
+      if (details.payload != null) {
+        if(details.actionId!=null){
+          mapResponse['action'] = details.actionId;
+        }
+        IosNotificationHandler()..
+          isAlreadyLoaded=true
+          ..handleNotificationResponse(mapResponse);
+      }
+    }, onDidReceiveBackgroundNotificationResponse: notificationTapBackground);
 
   }
 
@@ -102,7 +135,15 @@ Future<void> onBackgroundMessageReceived(RemoteMessage message) async {
   try {
     print('2121 : on Background Message Received ${message.data}');
     if (message.data['type'] == 'call' && Platform.isAndroid) {
-       showCallNotification(message);
+      showCallNotification(message);
+    } else if (Platform.isIOS) {
+      final mapResponse = message.data;
+      if (message.category != null) {
+        mapResponse['action'] = message.category;
+      }
+      IosNotificationHandler()
+        ..isAlreadyLoaded = true
+        ..handleNotificationResponse(mapResponse);
     } else {
       showNotification(message);
     }
