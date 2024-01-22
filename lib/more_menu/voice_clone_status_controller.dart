@@ -93,6 +93,7 @@ class VoiceCloneStatusController extends GetxController {
     if (voiceCloneStatusModel?.result?.url != "")
       audioURL = voiceCloneStatusModel?.result?.url ?? '';
     fetchFamilyMembersList(voiceCloneId.value);
+    //download path from url every time when api is called
     downloadAudioFile(audioURL);
   }
 
