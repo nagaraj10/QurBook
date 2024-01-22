@@ -118,6 +118,14 @@ notificationBasedOnCategory(RemoteMessage message){
     }
     else if(message.data['redirectTo']=='familyProfile'){
       showNotificationForFamilyAddition(message);
+    }
+    else if(message.data['redirectTo']=='appointmentPayment' && Platform.isAndroid)
+    {
+      showNotificationForAppointmentPayment(message);
+    }
+    else if(message.data['redirectTo']=='mycart' && Platform.isAndroid)
+    {
+      showNotificationForMyCartPayment(message);
     }else{
       showNotification(message);
     }
@@ -378,6 +386,64 @@ void showNotificationForFamilyAddition(RemoteMessage message)async{
       android: androidPlatformChannelSpecifics,
       iOS:DarwinNotificationDetails(categoryIdentifier:
       'viewDetailsButton'));
+
+  await localNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(callChannel);
+  localNotificationsPlugin.show(
+      Platform.isIOS? message.notification.hashCode:message.data.hashCode,
+      Platform.isIOS? message.notification!.title:message.data['title'],
+      Platform.isIOS? message.notification!.body:message.data['body'],
+      platformChannelSpecifics,
+      payload: jsonEncode(message.data));
+}
+
+void showNotificationForAppointmentPayment(RemoteMessage message)async{
+  AndroidNotificationDetails androidPlatformChannelSpecifics =
+  AndroidNotificationDetails(
+      '${androidNormalchannel.id}',
+      '${androidNormalchannel.description}',
+      importance: Importance.max,
+      priority: Priority.high,
+      category: AndroidNotificationCategory.reminder,
+      icon:'app_ns_icon',
+      largeIcon:DrawableResourceAndroidBitmap('ic_launcher'),
+      actions: [payNowAction]
+  );
+  final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS:DarwinNotificationDetails(categoryIdentifier:
+      'payNowButton'));
+
+  await localNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(callChannel);
+  localNotificationsPlugin.show(
+      Platform.isIOS? message.notification.hashCode:message.data.hashCode,
+      Platform.isIOS? message.notification!.title:message.data['title'],
+      Platform.isIOS? message.notification!.body:message.data['body'],
+      platformChannelSpecifics,
+      payload: jsonEncode(message.data));
+}
+
+void showNotificationForMyCartPayment(RemoteMessage message)async{
+  AndroidNotificationDetails androidPlatformChannelSpecifics =
+  AndroidNotificationDetails(
+      '${androidNormalchannel.id}',
+      '${androidNormalchannel.description}',
+      importance: Importance.max,
+      priority: Priority.high,
+      category: AndroidNotificationCategory.reminder,
+      icon:'app_ns_icon',
+      largeIcon:DrawableResourceAndroidBitmap('ic_launcher'),
+      actions: [payNowAction]
+  );
+  final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS:DarwinNotificationDetails(categoryIdentifier:
+      'payNowButton'));
 
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
