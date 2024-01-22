@@ -167,6 +167,19 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
       )
     ],
   ),
+
+  DarwinNotificationCategory(
+    'payNowButton',
+    actions: [
+      DarwinNotificationAction.plain(
+        'PayNow',
+        'Pay Now',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      )
+    ],
+  ),
 ];
 
 ///Android ACtionButtons
@@ -228,6 +241,12 @@ const escalateAction =AndroidNotificationAction(
 const viewDetailsAction =AndroidNotificationAction(
   'ViewDetails', // Replace with your own action ID
   'View Details', // Replace with your own action label
+  showsUserInterface: true,
+);
+
+const payNowAction =AndroidNotificationAction(
+  'PayNow', // Replace with your own action ID
+  'Pay Now', // Replace with your own action label
   showsUserInterface: true,
 );
 
