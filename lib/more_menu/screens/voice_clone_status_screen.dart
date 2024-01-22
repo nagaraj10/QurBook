@@ -47,6 +47,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
     //Api to get health organzation id and also the status of voice cloning
     controller.getUserHealthOrganizationId();
     controller.isPlayWidgetClicked = false;
+    isForceStopPlayer = true;
     super.initState();
   }
 
