@@ -276,6 +276,11 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                               : 30.0.sp,
                                         ),
                                         onTap: () async {
+                                          setState(() {
+                                            controller.isPlayWidgetClicked =
+                                                !controller.isPlayWidgetClicked;
+                                          });
+
                                           if (_voiceCloningController
                                                   .isFirsTymVoiceCloningStatus ||
                                               isForceStopPlayer) {
@@ -286,10 +291,6 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                             await _voiceCloningController
                                                 .startVoiceStatusPlayer();
                                           }
-                                          setState(() {
-                                            controller.isPlayWidgetClicked =
-                                                !controller.isPlayWidgetClicked;
-                                          });
 
                                           if (!controller.isPlayWidgetClicked) {
                                             isForceStopPlayer = true;
@@ -309,9 +310,12 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                         ? (_voiceCloningController
                                                     ?.recordedPath !=
                                                 "")
-                                            ? _playerControllerWidget()
-                                            : getFutureAudioURL()
-                                        : SizedBox())
+                                            ? _voiceCloningController
+                                                    .isPlayerLoading
+                                                ? CircularProgressIndicator()
+                                                : _playerControllerWidget()
+                                            : CircularProgressIndicator()
+                                        : CircularProgressIndicator())
                               ],
                             ),
                           ),

@@ -37,8 +37,7 @@ class VoiceCloneStatusController extends GetxController {
   String audioURL = '';
 
   VoiceCloningController? voiceCloningController;
-  bool isPlayWidgetClicked =
-      false;
+  bool isPlayWidgetClicked = false;
   var loadingAudioData = false.obs;
 //to check if the audi widget is clicked to view
   @override
@@ -94,6 +93,7 @@ class VoiceCloneStatusController extends GetxController {
     if (voiceCloneStatusModel?.result?.url != "")
       audioURL = voiceCloneStatusModel?.result?.url ?? '';
     fetchFamilyMembersList(voiceCloneId.value);
+    downloadAudioFile(audioURL);
   }
 
   revokeSubmission(bool fromMenu) async {
