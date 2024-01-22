@@ -46,8 +46,7 @@ class VoiceCloneStatusController extends GetxController {
 //to check if the audi widget is clicked to view
 
   late PlayerController playerVoiceStatusController;
-  Rx<List<double>> audioWaveVoiceStatusData =
-      [].obs as Rx<List<double>>; //new wave for downloaded music
+  List<double> audioWaveVoiceStatusData = []; //new wave for downloaded music
   Rx<String> recordedPath = ''.obs;
   Rx<double> maxPlayerVoiceStatusDuration = 1.0.obs;
   Rx<double> playVoiceStatusPosition =
@@ -56,7 +55,7 @@ class VoiceCloneStatusController extends GetxController {
   Rx<bool> isPlayerLoading = false.obs;
   bool isFirsTymVoiceCloningStatus =
       true; //check if the player is from status screen
-
+  Rx<bool> isPlaying = true.obs; // to update the play and pause button
   @override
   void onInit() {
     // TODO: implement onInit
@@ -269,7 +268,8 @@ class VoiceCloneStatusController extends GetxController {
 
   Future<void> startVoiceStatusPlayer() async {
     setPlayerLoading(true);
-    audioWaveVoiceStatusData.value =
+    isPlaying.value = true;
+    audioWaveVoiceStatusData =
         await playerVoiceStatusController.extractWaveformData(
       path: recordedPath.value,
     );
@@ -282,6 +282,7 @@ class VoiceCloneStatusController extends GetxController {
     await playerVoiceStatusController.startPlayer(finishMode: FinishMode.pause);
     playerVoiceStatusController.onCompletion.listen((event) {
       playVoiceStatusPosition.value = 0.0;
+      isPlaying.value = false;
     });
 
     playerVoiceStatusController.onCurrentDurationChanged.listen((event) {
@@ -312,8 +313,10 @@ class VoiceCloneStatusController extends GetxController {
 //start or stop player
   Future<void> playVoiceStatusPausePlayer() async {
     if (playerVoiceStatusController.playerState.isPlaying) {
+      isPlaying.value = false;
       await playerVoiceStatusController.pausePlayer();
     } else {
+      isPlaying.value = true;
       await playerVoiceStatusController.startPlayer(
           finishMode: FinishMode.pause, forceRefresh: true);
     }
