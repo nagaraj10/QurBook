@@ -454,7 +454,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                     size: Size(MediaQuery.of(context).size.width, 100),
                     playerController: controller.playerVoiceStatusController,
                     enableSeekGesture: false,
-                    waveformData: controller.audioWaveVoiceStatusData.value,
+                    waveformData: controller.audioWaveVoiceStatusData,
                     playerWaveStyle: PlayerWaveStyle(
                       fixedWaveColor: Colors.white,
                       liveWaveColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -493,8 +493,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                               controller.playVoiceStatusPausePlayer();
                             },
                             child: SvgPicture.asset(
-                              controller.playerVoiceStatusController.playerState
-                                      .isPlaying
+                              controller.isPlaying.value
                                   ? icVoicePause
                                   : icVoicePlay,
                               color: Colors.white,
@@ -552,6 +551,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
   void stopAudioPlayer() async {
     controller.isPlayWidgetClicked = false;
     isForceStopPlayer = true;
+    controller.isPlaying.value = false;
     if (controller.playerVoiceStatusController.playerState !=
         PlayerState.stopped) {
       await controller.playerVoiceStatusController.stopPlayer();
