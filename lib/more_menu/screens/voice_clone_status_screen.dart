@@ -12,11 +12,9 @@ import 'package:myfhb/more_menu/screens/terms_and_conditon.dart';
 import 'package:myfhb/more_menu/voice_clone_status_controller.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart';
-import 'package:myfhb/voice_cloning/controller/voice_cloning_controller.dart';
 import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:myfhb/voice_cloning/model/voice_cloning_choose_member_arguments.dart';
 import 'package:myfhb/voice_cloning/view/widgets/voice_clone_family_members_list.dart';
-import 'package:provider/provider.dart';
 
 import '../../common/common_circular_indicator.dart';
 
@@ -35,26 +33,24 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
   bool isLoading = true;
   final controller = Get.put(VoiceCloneStatusController());
   double subtitle = CommonUtil().isTablet! ? tabHeader2 : mobileHeader2;
-  late VoiceCloningController _voiceCloningController;
 
   bool isForceStopPlayer = false;
   @override
   void initState() {
-    Provider.of<VoiceCloningController>(context, listen: false)
-        .initialiseControllers();
     mInitialTime = DateTime.now();
     controller.onInit();
+    controller.initialiseControllers(); //initialize player
     //Api to get health organzation id and also the status of voice cloning
     controller.getUserHealthOrganizationId();
     controller.isPlayWidgetClicked = false;
+    //To start the player once again
+    isForceStopPlayer = true;
     super.initState();
   }
 
   @override
   void dispose() {
     controller.dispose();
-    _voiceCloningController.disposeRecorder();
-    _voiceCloningController.isPlayerLoading = false;
     super.dispose();
     fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
@@ -65,23 +61,17 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
   }
 
   disposeVoiceControler() async {
-    if (_voiceCloningController.playerVoiceStatusController.playerState !=
+    if (controller.playerVoiceStatusController.playerState !=
         PlayerState.stopped) {
-      await _voiceCloningController.playerVoiceStatusController.stopPlayer();
+      await controller.playerVoiceStatusController.stopPlayer();
     }
-    _voiceCloningController.disposeRecorder();
-    _voiceCloningController.isPlayerLoading = false;
-    _voiceCloningController.isFirsTymVoiceCloningStatus = true;
+    controller.disposeRecorder();
+    controller.isPlayerLoading.value = false;
+    controller.isFirsTymVoiceCloningStatus = true;
   }
 
   @override
   Widget build(BuildContext context) {
-    _voiceCloningController = Provider.of<VoiceCloningController>(context);
-    if (_voiceCloningController.isFirsTymVoiceCloningStatus) {
-      _voiceCloningController.recordedPath = "";
-      _voiceCloningController.playerVoiceStatusController = PlayerController();
-    }
-
     return Obx(
       () => WillPopScope(
         onWillPop: () {
@@ -276,24 +266,25 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                               : 30.0.sp,
                                         ),
                                         onTap: () async {
-                                          if (_voiceCloningController
-                                                  .isFirsTymVoiceCloningStatus ||
-                                              isForceStopPlayer) {
-                                            _voiceCloningController
-                                                    .isFirsTymVoiceCloningStatus =
-                                                false;
-                                            isForceStopPlayer = false;
-                                            await _voiceCloningController
-                                                .startVoiceStatusPlayer();
-                                          }
                                           setState(() {
                                             controller.isPlayWidgetClicked =
                                                 !controller.isPlayWidgetClicked;
                                           });
 
+                                          if (controller
+                                                  .isFirsTymVoiceCloningStatus ||
+                                              isForceStopPlayer) {
+                                            controller
+                                                    .isFirsTymVoiceCloningStatus =
+                                                false;
+                                            isForceStopPlayer = false;
+                                            await controller
+                                                .startVoiceStatusPlayer();
+                                          }
+
                                           if (!controller.isPlayWidgetClicked) {
                                             isForceStopPlayer = true;
-                                            await _voiceCloningController
+                                            await controller
                                                 .playerVoiceStatusController
                                                 .stopPlayer();
                                           }
@@ -306,12 +297,12 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                 Visibility(
                                     visible: controller.isPlayWidgetClicked,
                                     child: controller.audioURL != ""
-                                        ? (_voiceCloningController
-                                                    ?.recordedPath !=
-                                                "")
-                                            ? _playerControllerWidget()
-                                            : getFutureAudioURL()
-                                        : SizedBox())
+                                        ? (controller?.recordedPath != "")
+                                            ? controller.isPlayerLoading.value
+                                                ? CircularProgressIndicator()
+                                                : _playerControllerWidget()
+                                            : CircularProgressIndicator()
+                                        : CircularProgressIndicator())
                               ],
                             ),
                           ),
@@ -447,7 +438,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
         width: double.infinity,
         color: const Color(0xFF333232),
         padding: EdgeInsets.only(top: 20.h, bottom: 20.h),
-        child: _voiceCloningController.isPlayerLoading
+        child: controller.isPlayerLoading.value
             ? Container(
                 alignment: Alignment.center,
                 height: 150,
@@ -461,11 +452,9 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                 children: [
                   AudioFileWaveforms(
                     size: Size(MediaQuery.of(context).size.width, 100),
-                    playerController:
-                        _voiceCloningController.playerVoiceStatusController,
+                    playerController: controller.playerVoiceStatusController,
                     enableSeekGesture: false,
-                    waveformData:
-                        _voiceCloningController.audioWaveVoiceStatusData,
+                    waveformData: controller.audioWaveVoiceStatusData,
                     playerWaveStyle: PlayerWaveStyle(
                       fixedWaveColor: Colors.white,
                       liveWaveColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -476,13 +465,12 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                     activeColor: Color(CommonUtil().getMyPrimaryColor())
                         .withOpacity(0.5),
                     inactiveColor: Colors.white,
-                    value: _voiceCloningController.playVoiceStatusPosition,
-                    max: _voiceCloningController.maxPlayerVoiceStatusDuration >
-                            0
-                        ? _voiceCloningController.maxPlayerVoiceStatusDuration
+                    value: controller.playVoiceStatusPosition.value,
+                    max: controller.maxPlayerVoiceStatusDuration.value > 0
+                        ? controller.maxPlayerVoiceStatusDuration.value
                         : 1.0,
                     onChanged: (value) {
-                      _voiceCloningController.playerVoiceStatusController
+                      controller.playerVoiceStatusController
                           .seekTo(value.round());
                     },
                   ),
@@ -494,23 +482,18 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                       children: [
                         Expanded(
                           child: Text(
-                            _voiceCloningController.formatPlayerDuration(
-                                _voiceCloningController
-                                    .playVoiceStatusPosition),
+                            controller.formatPlayerDuration(
+                                controller.playVoiceStatusPosition.value),
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
                         Expanded(
                           child: InkWell(
                             onTap: () {
-                              _voiceCloningController
-                                  .playVoiceStatusPausePlayer();
+                              controller.playVoiceStatusPausePlayer();
                             },
                             child: SvgPicture.asset(
-                              _voiceCloningController
-                                      .playerVoiceStatusController
-                                      .playerState
-                                      .isPlaying
+                              controller.isPlaying.value
                                   ? icVoicePause
                                   : icVoicePlay,
                               color: Colors.white,
@@ -520,9 +503,8 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                         ),
                         Expanded(
                           child: Text(
-                            _voiceCloningController.formatPlayerDuration(
-                                _voiceCloningController
-                                    .maxPlayerVoiceStatusDuration),
+                            controller.formatPlayerDuration(
+                                controller.maxPlayerVoiceStatusDuration.value),
                             textAlign: TextAlign.right,
                             style: const TextStyle(
                               color: Colors.white,
@@ -540,8 +522,8 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
       );
 
   Widget getFutureAudioURL() {
-    return FutureBuilder<String>(
-      future: _voiceCloningController.downloadAudioFile(controller.audioURL),
+    return FutureBuilder<Rx<String>>(
+      future: controller.downloadAudioFile(controller.audioURL),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CommonCircularIndicator();
@@ -569,9 +551,10 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
   void stopAudioPlayer() async {
     controller.isPlayWidgetClicked = false;
     isForceStopPlayer = true;
-    if (_voiceCloningController.playerVoiceStatusController.playerState !=
+    controller.isPlaying.value = false;
+    if (controller.playerVoiceStatusController.playerState !=
         PlayerState.stopped) {
-      await _voiceCloningController.playerVoiceStatusController.stopPlayer();
+      await controller.playerVoiceStatusController.stopPlayer();
     }
   }
 }
