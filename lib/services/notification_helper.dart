@@ -1,124 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-const _showBothButtonsCat = 'showBothButtonsCat';
-const _showSingleButtonCat = 'showSingleButtonCat';
-const _showVCAcceptRejectedButtons = 'showVCAcceptRejectedButtons';
-const _planRenewButton = 'planRenewButton';
-const _escalateToCareCoordinatorButtons = 'escalateToCareCoordinatorButtons';
-const _showTransportationNotification =
-    'transportationRequestAcceptDeclineButtons';
-const _acceptDeclineButtonsCaregiver = 'showAcceptDeclineButtonsCaregiver';
-const _ChatCCAndViewrecordButtons = 'showChatCCAndViewrecordButtons';
-const _viewDetailsButton = 'memberviewDetailsButtons';
-const _showViewMemberAndCommunicationButtons =
-    'showViewMemberAndCommunicationButtons';
-
-///IOS Notification ActionButtons
-final _snoozeDarwinNotificationAction =
-    DarwinNotificationAction.plain('Snooze', 'Snooze');
-final _dismissDestructiveDarwinNotificationAction =
-    DarwinNotificationAction.plain(
-  'Dismiss',
-  'Dismiss',
-  options: <DarwinNotificationActionOption>{
-    DarwinNotificationActionOption.destructive,
-  },
-);
-
-final _payNowDestructiveDarwinNotificationAction =
-    DarwinNotificationAction.plain(
-  'PayNow',
-  'Pay Now',
-  options: <DarwinNotificationActionOption>{
-    DarwinNotificationActionOption.destructive,
-  },
-);
-
-final _renewDarwinNotificationAction = DarwinNotificationAction.plain(
-  'Renew',
-  'Renew',
-  options: <DarwinNotificationActionOption>{
-    DarwinNotificationActionOption.foreground
-  },
-);
-final _escalateDarwinNotificationAction = DarwinNotificationAction.plain(
-  'Escalate',
-  'Escalate',
-  options: <DarwinNotificationActionOption>{
-    DarwinNotificationActionOption.foreground
-  },
-);
-final _callbackDarwinNotificationAction = DarwinNotificationAction.plain(
-  'Callback',
-  'Call back',
-  options: <DarwinNotificationActionOption>{
-    DarwinNotificationActionOption.foreground
-  },
-);
-final _rejectDarwinNotificationAction = DarwinNotificationAction.plain(
-  'Reject',
-  'Reject',
-  options: <DarwinNotificationActionOption>{
-    DarwinNotificationActionOption.destructive,
-  },
-);
-final _acceptDarwinNotificationAction = DarwinNotificationAction.plain(
-  'Accept',
-  'Accept',
-  options: <DarwinNotificationActionOption>{
-    DarwinNotificationActionOption.foreground
-  },
-);
-final _chatwithccDarwinNotificationAction = DarwinNotificationAction.plain(
-  'chatwithcc',
-  'Chat with CC',
-  options: <DarwinNotificationActionOption>{
-    DarwinNotificationActionOption.foreground
-  },
-);
-final _viewRecordDarwinNotificationAction = DarwinNotificationAction.plain(
-  'viewrecord',
-  'View Record',
-  options: <DarwinNotificationActionOption>{
-    DarwinNotificationActionOption.foreground
-  },
-);
-final _viewMemberDarwinNotificationAction = DarwinNotificationAction.plain(
-  'ViewMember',
-  'View Member',
-  options: <DarwinNotificationActionOption>{
-    DarwinNotificationActionOption.foreground
-  },
-);
-final _viewDetailsDarwinNotificationAction = DarwinNotificationAction.plain(
-  'ViewDetails',
-  'ViewDetails',
-  options: <DarwinNotificationActionOption>{
-    DarwinNotificationActionOption.foreground
-  },
-);
-final _communicationsettingsDarwinNotificationAction =
-    DarwinNotificationAction.plain(
-  'Communicationsettings',
-  'Communication settings',
-  options: <DarwinNotificationActionOption>{
-    DarwinNotificationActionOption.foreground
-  },
-);
-final _declineNewDarwinNotificationAction = DarwinNotificationAction.plain(
-  'Decline',
-  'Decline',
-);
-final _declineForegroundDarwinNotificationAction =
-    DarwinNotificationAction.plain(
-  'Decline',
-  'Decline',
-  options: <DarwinNotificationActionOption>{
-    DarwinNotificationActionOption.foreground
-  },
-);
-
 ///Ios Notification Categories
 List<DarwinNotificationCategory> darwinIOSCategories = [
   DarwinNotificationCategory(
@@ -138,87 +20,231 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
     ],
   ),
   DarwinNotificationCategory(
-    _showTransportationNotification,
+    'showTransportationNotification',
     actions: [
-      _acceptDarwinNotificationAction,
-      _declineNewDarwinNotificationAction,
+      DarwinNotificationAction.plain(
+        'Accept',
+        'Accept',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+      DarwinNotificationAction.plain(
+        'Decline',
+        'Decline',
+        options: <DarwinNotificationActionOption>{},
+      ),
     ],
   ),
   DarwinNotificationCategory(
-    _showVCAcceptRejectedButtons,
+    'showBothButtonsCat',
     actions: [
-      _acceptDarwinNotificationAction,
-      _declineForegroundDarwinNotificationAction,
+      DarwinNotificationAction.plain(
+        'Snooze',
+        'Snooze',
+      ),
+      DarwinNotificationAction.plain(
+        'Dismiss',
+        'Dismiss',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.destructive,
+        },
+      ),
     ],
   ),
   DarwinNotificationCategory(
-    _showBothButtonsCat,
+    'escalateToCareCoordinatorButtons',
     actions: [
-      _snoozeDarwinNotificationAction,
-      _dismissDestructiveDarwinNotificationAction,
+      DarwinNotificationAction.plain(
+        'Escalate',
+        'Escalate',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
     ],
   ),
   DarwinNotificationCategory(
-    _escalateToCareCoordinatorButtons,
+    'showViewMemberAndCommunicationButtons',
     actions: [
-      _escalateDarwinNotificationAction,
+      DarwinNotificationAction.plain(
+        'ViewMember',
+        'View Member',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+      DarwinNotificationAction.plain(
+        'Communicationsettings',
+        'Communication settings',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
     ],
   ),
   DarwinNotificationCategory(
-    _showViewMemberAndCommunicationButtons,
+    'showSingleButtonCat',
     actions: [
-      _viewMemberDarwinNotificationAction,
-      _communicationsettingsDarwinNotificationAction,
+      DarwinNotificationAction.plain(
+        'Dismiss',
+        'Dismiss',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.destructive,
+        },
+      )
     ],
   ),
   DarwinNotificationCategory(
-    _showSingleButtonCat,
+    'planRenewButton',
     actions: [
-      _dismissDestructiveDarwinNotificationAction,
+      DarwinNotificationAction.plain(
+        'Renew',
+        'Renew',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+      DarwinNotificationAction.plain(
+        'Callback',
+        'Call back',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
     ],
   ),
   DarwinNotificationCategory(
-    _planRenewButton,
+    'acceptDeclineButtonsCaregiver',
     actions: [
-      _renewDarwinNotificationAction,
-      _callbackDarwinNotificationAction,
+      DarwinNotificationAction.plain(
+        'Accept',
+        'Accept',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+      DarwinNotificationAction.plain(
+        'Reject',
+        'Reject',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.destructive,
+        },
+      ),
     ],
   ),
   DarwinNotificationCategory(
-    _acceptDeclineButtonsCaregiver,
+    'ChatCCAndViewrecordButtons',
     actions: [
-      _acceptDarwinNotificationAction,
-      _rejectDarwinNotificationAction,
+      DarwinNotificationAction.plain(
+        'chatwithcc',
+        'Chat with cc',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+      DarwinNotificationAction.plain(
+        'viewrecord',
+        'View Record',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
     ],
   ),
   DarwinNotificationCategory(
-    _ChatCCAndViewrecordButtons,
+    'viewDetailsButton',
     actions: [
-      _chatwithccDarwinNotificationAction,
-      _viewRecordDarwinNotificationAction,
+      DarwinNotificationAction.plain(
+        'ViewDetails',
+        'View Details',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      )
     ],
   ),
   DarwinNotificationCategory(
-    _viewDetailsButton,
+    'payNowButton',
     actions: [
-      _viewDetailsDarwinNotificationAction,
+      DarwinNotificationAction.plain(
+        'PayNow',
+        'Pay Now',
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      )
     ],
   ),
 ];
 
 ///Android ACtionButtons
-const callAction = [
-  AndroidNotificationAction(
-    'Accept', // Replace with your own action ID
-    'Accept', // Replace with your own action label
-    showsUserInterface: true,
-  ),
-  AndroidNotificationAction(
-    'Reject', // Replace with your own action ID
-    'Reject',
-    showsUserInterface: true, // Replace with your own action label
-  ),
-];
+const acceptAction = AndroidNotificationAction(
+  'Accept', // Replace with your own action ID
+  'Accept', // Replace with your own action label
+  showsUserInterface: true,
+);
+const rejectAction = AndroidNotificationAction(
+  'Reject', // Replace with your own action ID
+  'Reject',
+  showsUserInterface: true, // Replace with your own action label
+);
+const declineAction = AndroidNotificationAction(
+  'Decline', // Replace with your own action ID
+  'Decline',
+  showsUserInterface: true, // Replace with your own action label
+);
+
+const viewMemberAction = AndroidNotificationAction(
+  'ViewMember', // Replace with your own action ID
+  'View Member', // Replace with your own action label
+  showsUserInterface: true,
+);
+const communicationSettingAction = AndroidNotificationAction(
+  'Communicationsettings', // Replace with your own action ID
+  'Communication Settings', // Replace with your own action label
+  showsUserInterface: true,
+);
+const chatwithccAction = AndroidNotificationAction(
+  'chatwithcc', // Replace with your own action ID
+  'Chat with CC', // Replace with your own action label
+  showsUserInterface: true,
+);
+const viewRecordAction = AndroidNotificationAction(
+  'viewrecord', // Replace with your own action ID
+  'View Record', // Replace with your own action label
+  showsUserInterface: true,
+);
+
+const renewalAction = AndroidNotificationAction(
+  'Renew', // Replace with your own action ID
+  'Renew', // Replace with your own action label
+  showsUserInterface: true,
+);
+
+const callBackAction = AndroidNotificationAction(
+  'Callback', // Replace with your own action ID
+  'Call back', // Replace with your own action label
+  showsUserInterface: true,
+);
+
+const escalateAction = AndroidNotificationAction(
+  'Escalate', // Replace with your own action ID
+  'Escalate', // Replace with your own action label
+  showsUserInterface: true,
+);
+
+const viewDetailsAction = AndroidNotificationAction(
+  'ViewDetails', // Replace with your own action ID
+  'View Details', // Replace with your own action label
+  showsUserInterface: true,
+);
+
+const payNowAction = AndroidNotificationAction(
+  'PayNow', // Replace with your own action ID
+  'Pay Now', // Replace with your own action label
+  showsUserInterface: true,
+);
 
 ///Notification Channel
 const androidNormalchannel = AndroidNotificationChannel(

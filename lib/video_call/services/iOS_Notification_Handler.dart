@@ -38,6 +38,7 @@ import '../../src/ui/SheelaAI/Models/sheela_arguments.dart';
 import '../../src/ui/SplashScreen.dart';
 import '../../src/ui/settings/CaregiverSettng.dart';
 import '../../src/utils/PageNavigator.dart';
+import '../../telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import '../../telehealth/features/Notifications/services/notification_services.dart';
 import '../../telehealth/features/Notifications/view/notification_main.dart';
 import '../../telehealth/features/appointments/controller/AppointmentDetailsController.dart';
@@ -201,7 +202,7 @@ class IosNotificationHandler {
         print('21212 NotificationModel: ${model.toMap()}');
     if (data['type'] == 'call' && Platform.isAndroid) {
       if(data.containsKey('action')){
-        if(data['action']=='Reject'){
+        if(data['action']=='Decline'){
           await updateCallStatus(false,model.meeting_id.toString());
         }else{
           await updateCallStatus(true,model.meeting_id.toString());
@@ -228,7 +229,23 @@ class IosNotificationHandler {
       }else{
         Get.to(NotificationScreen(model));
       }
-    }else{
+    } else if (data['redirectTo'] == 'appointmentPayment' && Platform.isAndroid) {
+      Get.to(BookingConfirmation(
+        isFromPaymentNotification: true,
+        appointmentId: model?.appointmentId ?? '',
+      ));
+      model = NotificationModel();
+    } else if (data['redirectTo'] == 'mycart' && Platform.isAndroid) {
+      Get.to(CheckoutPage(
+        isFromNotification: true,
+        cartUserId: model?.userId ?? '',
+        bookingId: model?.bookingId ?? '',
+        notificationListId: model?.createdBy ?? '',
+        cartId: model?.bookingId ?? '',
+        patientName: model?.patientName ?? '',
+      ));
+      model = NotificationModel();
+    } else{
       var actionKey = data["action"] ?? '';
       if (actionKey.isNotEmpty) {
       print('21212 actionKey: ${actionKey}');

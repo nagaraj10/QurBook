@@ -7503,19 +7503,47 @@ class CommonUtil {
     }
   }
 
+  // Asynchronous function to retrieve and handle the route based on notification
   getMyRoute() async {
     try {
+      // Get details if the app was launched from a notification
       NotificationAppLaunchDetails? didLaunchFromNotification =
           await localNotificationsPlugin.getNotificationAppLaunchDetails();
+
+      // Get the notification response if available
       NotificationResponse? notificationResponse =
           didLaunchFromNotification?.notificationResponse;
+
+      // Check if there is a notification response
       if (notificationResponse != null) {
-        if (didLaunchFromNotification?.didNotificationLaunchApp == true) {
-          var mapResponse = jsonDecode(notificationResponse.payload ?? '');
-          if (notificationResponse.actionId != null) {
-            mapResponse['action'] = notificationResponse.actionId;
+        // Initialize the controller for handling notifications
+        var qurhomeDashboardController =
+            CommonUtil().onInitQurhomeDashboardController();
+
+        // Get the notification id from the response
+        var tempNotificationId = (notificationResponse?.id ?? '').toString();
+        var currentNotificationId =
+            qurhomeDashboardController?.currentNotificationId.value ?? '';
+
+        // Check if the current notification is different from the previous one
+        if (tempNotificationId != currentNotificationId) {
+          // Check if the app was launched by tapping on the notification
+          if (didLaunchFromNotification?.didNotificationLaunchApp == true) {
+            // Decode the payload and handle the notification response
+            var mapResponse = jsonDecode(notificationResponse.payload ?? '');
+
+            // If there is an action id, add it to the map
+            if (notificationResponse.actionId != null) {
+              mapResponse['action'] = notificationResponse.actionId;
+            }
+
+            // Handle the notification response for iOS
+            IosNotificationHandler().handleNotificationResponse(mapResponse);
+
+            // Update the current notification id to avoid processing it again
+            qurhomeDashboardController?.currentNotificationId.value =
+                tempNotificationId;
           }
-          IosNotificationHandler().handleNotificationResponse(mapResponse);
         }
       }
     } catch (e, stackTrace) {
@@ -7523,7 +7551,6 @@ class CommonUtil {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
-
 }
 
 extension CapExtension on String {
