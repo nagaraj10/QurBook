@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/CommonUtil.dart';
 import '../constants/HeaderRequest.dart';
@@ -111,6 +112,18 @@ class QurPlanReminders {
       var dataToSave = {'reminders': dataTosave};
       var dataToJson = json.encode(dataToSave);
       await file.writeAsString(dataToJson);
+      // Check if the platform is Android
+      if (Platform.isAndroid) {
+        // Get SharedPreferences instance
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        // Encode the dataToSave object to a JSON string
+        dataToJson = json.encode(dataToSave);
+
+        // Save the JSON string to SharedPreferences with the key 'remindersPref'
+        prefs.setString('remindersPref', dataToJson);
+      }
+
       return true;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -167,7 +180,6 @@ class QurPlanReminders {
   static Future<bool> updateReminderswithLocal(List<Reminder> data,
       {bool isSnooze = false}) async {
     var localReminders = await getLocalReminder();
-
     if (isSnooze) {
       for (var i = 0; i < data.length; i++) {
         var apiReminder = data[i];
@@ -337,6 +349,7 @@ class QurPlanReminders {
   }
 
   static Future<List<Reminder>> getLocalReminder() async {
+    var notifications = <Reminder>[];
     try {
       var directory = Platform.isIOS
           ? await FHBUtils.createFolderInAppDocDirForIOS('reminders')
@@ -350,7 +363,7 @@ class QurPlanReminders {
 
       final List<dynamic> myJson = decodedData['reminders'];
 
-      final notifications = <Reminder>[];
+      notifications = <Reminder>[];
       for (var i = 0; i < myJson.length; i++) {
         var val = Reminder.fromJson(myJson[i]);
         //final newData = Reminder.fromMap(val);
@@ -358,11 +371,43 @@ class QurPlanReminders {
       }
       return notifications;
     } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      try {
+        // Get SharedPreferences instance
+        SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      print(e.toString());
-      return [];
+        // Retrieve the JSON string from SharedPreferences
+        String? jsonData = prefs.getString('remindersPref');
+
+        // Check if the JSON string is not null
+        if (jsonData != null) {
+          // Decode the JSON string into a Dart object
+          var retrievedData = await json.decode(jsonData);
+
+          // Extract the 'reminders' list from the decoded data
+          final List<dynamic> myJson = retrievedData['reminders'];
+
+          // Initialize an empty list to store Reminder objects
+          notifications = <Reminder>[];
+
+          // Iterate over the 'reminders' list and convert each item to a Reminder object
+          for (var i = 0; i < myJson.length; i++) {
+            // Convert the current JSON object to a Reminder object using the fromJson method
+            var val = Reminder.fromJson(myJson[i]);
+
+            // Add the converted Reminder object to the notifications list
+            notifications.add(val);
+          }
+
+          // Return the list of Reminder objects
+          return notifications;
+        }
+      } catch (e, stackTrace) {
+        // Handle any exceptions that may occur during the process
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      }
+
     }
+    return notifications;
   }
 
   static deleteAllLocalReminders() async {
