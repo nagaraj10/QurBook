@@ -151,7 +151,7 @@ Future<void> showNotification(RemoteMessage message) async {
       priority: Priority.high,
       channelDescription: '${androidNormalchannel.description}',
       icon:'app_ns_icon',
-      largeIcon:DrawableResourceAndroidBitmap('ic_launcher'),
+      largeIcon:DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
     ),
     iOS: const DarwinNotificationDetails(
       sound: 'ringtone.aiff'
@@ -178,7 +178,7 @@ void showCallNotification(RemoteMessage message)async{
       '${callChannel.description}',
       importance: Importance.max,
       icon:'app_ns_icon',
-      largeIcon:DrawableResourceAndroidBitmap('ic_launcher'),
+      largeIcon:DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
       priority: Priority.high,
       timeoutAfter: 30 * 1000,
       actions:[acceptAction,declineAction],
@@ -209,7 +209,7 @@ void showFamilyMemberNotifications(RemoteMessage message)async{
     priority: Priority.high,
     actions: [acceptAction,rejectAction],
     icon:'app_ns_icon',
-    largeIcon:DrawableResourceAndroidBitmap('ic_launcher'),
+    largeIcon:DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
   );
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -234,7 +234,7 @@ void showViewMemberAndCommunication(RemoteMessage message)async{
     importance: Importance.max,
     priority: Priority.high,
       icon:'app_ns_icon',
-      largeIcon:DrawableResourceAndroidBitmap('ic_launcher'),
+      largeIcon:DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
     actions: [viewMemberAction,communicationSettingAction]
   );
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
@@ -263,7 +263,7 @@ void showNotificationCaregiverForMedicalRecord(RemoteMessage message)async{
       priority: Priority.high,
       category: AndroidNotificationCategory.reminder,
       icon:'app_ns_icon',
-      largeIcon:DrawableResourceAndroidBitmap('ic_launcher'),
+      largeIcon:DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
       actions: [chatwithccAction,viewRecordAction]
   );
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
@@ -292,7 +292,7 @@ void showNotificationCareGiverTransportRequestReminder(RemoteMessage message)asy
       priority: Priority.high,
       category: AndroidNotificationCategory.reminder,
       icon:'app_ns_icon',
-      largeIcon:DrawableResourceAndroidBitmap('ic_launcher'),
+      largeIcon:DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
       actions: [acceptAction,declineAction]
   );
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
@@ -321,7 +321,7 @@ void showNotificationRenewNotification(RemoteMessage message)async{
       priority: Priority.high,
       category: AndroidNotificationCategory.reminder,
       icon:'app_ns_icon',
-      largeIcon:DrawableResourceAndroidBitmap('ic_launcher'),
+      largeIcon:DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
       actions: [renewalAction,callBackAction]
   );
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
@@ -350,7 +350,7 @@ void showNotificationEscalate(RemoteMessage message)async{
       priority: Priority.high,
       category: AndroidNotificationCategory.reminder,
       icon:'app_ns_icon',
-      largeIcon:DrawableResourceAndroidBitmap('ic_launcher'),
+      largeIcon:DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
       actions: [escalateAction]
   );
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
@@ -379,7 +379,7 @@ void showNotificationForFamilyAddition(RemoteMessage message)async{
       priority: Priority.high,
       category: AndroidNotificationCategory.reminder,
       icon:'app_ns_icon',
-      largeIcon:DrawableResourceAndroidBitmap('ic_launcher'),
+      largeIcon:DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
       actions: [viewDetailsAction]
   );
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
@@ -408,7 +408,7 @@ void showNotificationForAppointmentPayment(RemoteMessage message)async{
       priority: Priority.high,
       category: AndroidNotificationCategory.reminder,
       icon:'app_ns_icon',
-      largeIcon:DrawableResourceAndroidBitmap('ic_launcher'),
+      largeIcon:DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
       actions: [payNowAction]
   );
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
@@ -437,7 +437,7 @@ void showNotificationForMyCartPayment(RemoteMessage message)async{
       priority: Priority.high,
       category: AndroidNotificationCategory.reminder,
       icon:'app_ns_icon',
-      largeIcon:DrawableResourceAndroidBitmap('ic_launcher'),
+      largeIcon:DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
       actions: [payNowAction]
   );
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
