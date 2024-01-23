@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/CommonUtil.dart';
 import '../constants/HeaderRequest.dart';
@@ -111,6 +112,11 @@ class QurPlanReminders {
       var dataToSave = {'reminders': dataTosave};
       var dataToJson = json.encode(dataToSave);
       await file.writeAsString(dataToJson);
+      if(Platform.isAndroid){
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        dataToJson = json.encode(dataToSave);
+        prefs.setString('remindersPref', dataToJson);
+      }
       return true;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -167,7 +173,6 @@ class QurPlanReminders {
   static Future<bool> updateReminderswithLocal(List<Reminder> data,
       {bool isSnooze = false}) async {
     var localReminders = await getLocalReminder();
-
     if (isSnooze) {
       for (var i = 0; i < data.length; i++) {
         var apiReminder = data[i];
@@ -337,6 +342,7 @@ class QurPlanReminders {
   }
 
   static Future<List<Reminder>> getLocalReminder() async {
+    var notifications = <Reminder>[];
     try {
       var directory = Platform.isIOS
           ? await FHBUtils.createFolderInAppDocDirForIOS('reminders')
@@ -350,7 +356,7 @@ class QurPlanReminders {
 
       final List<dynamic> myJson = decodedData['reminders'];
 
-      final notifications = <Reminder>[];
+      notifications = <Reminder>[];
       for (var i = 0; i < myJson.length; i++) {
         var val = Reminder.fromJson(myJson[i]);
         //final newData = Reminder.fromMap(val);
@@ -358,11 +364,31 @@ class QurPlanReminders {
       }
       return notifications;
     } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      try {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? jsonData = prefs.getString('remindersPref');
+        if (jsonData != null) {
+                json.decode(jsonData);
+              }
+        var retrievedData = await json.decode(jsonData!);
+        final List<dynamic> myJson = retrievedData['reminders'];
 
-      print(e.toString());
-      return [];
+        notifications = <Reminder>[];
+        for (var i = 0; i < myJson.length; i++) {
+          var val = Reminder.fromJson(myJson[i]);
+          //final newData = Reminder.fromMap(val);
+          notifications.add(val);
+        }
+        return notifications;
+      } catch (e) {
+        print(e);
+      }
+      //CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+
+      //print(e.toString());
+     // return [];
     }
+    return notifications;
   }
 
   static deleteAllLocalReminders() async {
