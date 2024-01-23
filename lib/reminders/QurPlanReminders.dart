@@ -112,11 +112,18 @@ class QurPlanReminders {
       var dataToSave = {'reminders': dataTosave};
       var dataToJson = json.encode(dataToSave);
       await file.writeAsString(dataToJson);
-      if(Platform.isAndroid){
+      // Check if the platform is Android
+      if (Platform.isAndroid) {
+        // Get SharedPreferences instance
         SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        // Encode the dataToSave object to a JSON string
         dataToJson = json.encode(dataToSave);
+
+        // Save the JSON string to SharedPreferences with the key 'remindersPref'
         prefs.setString('remindersPref', dataToJson);
       }
+
       return true;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
