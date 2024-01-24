@@ -55,7 +55,17 @@ class PushNotificationService {
 
     FirebaseMessaging.onBackgroundMessage(onBackgroundMessageReceived);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      notificationBasedOnCategory(message);
+      if (Platform.isIOS) {
+        final mapResponse = message.data;
+        if (message.category != null) {
+          mapResponse['action'] = message.category;
+        }
+        IosNotificationHandler()
+          ..isAlreadyLoaded = true
+          ..handleNotificationResponse(mapResponse);
+      } else {
+        notificationBasedOnCategory(message);
+      }
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('212121 onMessageOpenedApp listen:${message.toMap()}');
@@ -162,7 +172,17 @@ notificationBasedOnCategory(RemoteMessage message) {
 @pragma('vm:entry-point')
 Future<void> onBackgroundMessageReceived(RemoteMessage message) async {
   try {
-    notificationBasedOnCategory(message);
+    if (Platform.isIOS) {
+      final mapResponse = message.data;
+      if (message.category != null) {
+        mapResponse['action'] = message.category;
+      }
+      IosNotificationHandler()
+        ..isAlreadyLoaded = true
+        ..handleNotificationResponse(mapResponse);
+    } else {
+      notificationBasedOnCategory(message);
+    }
   } catch (e) {
     print('2121 catch:$e');
   }
