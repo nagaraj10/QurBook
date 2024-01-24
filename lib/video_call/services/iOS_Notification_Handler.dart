@@ -189,81 +189,96 @@ class IosNotificationHandler {
   }
 
   void handleNotificationResponse(Map<String, dynamic> jsonDecode) async {
-    print('21212 handleNotificationResponse: ${jsonDecode}');
-    if (!isAlreadyLoaded) {
-      //notificationReceivedFromKilledState = true;
-      await Future.delayed(const Duration(seconds: 5));
-      isAlreadyLoaded = true;
-    }
-    final data = Map<String, dynamic>.from(jsonDecode);
-    model = NotificationModel.fromMap(data.containsKey("action")
-        ? Map<String, dynamic>.from(data["data"]??data)
-        : data);
-        print('21212 NotificationModel: ${model.toMap()}');
-    if (data['type'] == 'call' && Platform.isAndroid) {
-      if(data.containsKey('action')){
-        if(data['action']=='Decline'){
-          await updateCallStatus(false,model.meeting_id.toString());
-        }else{
-          await updateCallStatus(true,model.meeting_id.toString());
-          if (model.callType!.toLowerCase() == 'audio') {
-            Provider.of<AudioCallProvider>(Get.context!, listen: false)
-                .enableAudioCall();
-          } else if (model.callType!.toLowerCase() == 'video') {
-            Provider.of<AudioCallProvider>(Get.context!, listen: false)
-                .disableAudioCall();
+    // Create an instance of the QurhomeDashboardController using the onInitQurhomeDashboardController method
+    var qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
+
+    // Extract the notification ID from the JSON data or use '0' if not present
+    var tempNotificationId = jsonDecode[parameters.notificationListId] ?? '0';
+
+    // Get the current notification ID from the QurhomeDashboardController, or an empty string if not set
+    var currentNotificationId = qurhomeDashboardController?.currentNotificationId.value ?? '';
+
+    // Check if the temporary notification ID is different from the current notification ID
+    if (tempNotificationId != currentNotificationId)
+    {
+      // If different, update the current notification ID in the QurhomeDashboardController
+      qurhomeDashboardController?.currentNotificationId.value =
+          tempNotificationId;
+      if (!isAlreadyLoaded) {
+        //notificationReceivedFromKilledState = true;
+        await Future.delayed(const Duration(seconds: 5));
+        isAlreadyLoaded = true;
+      }
+      final data = Map<String, dynamic>.from(jsonDecode);
+      model = NotificationModel.fromMap(data.containsKey("action")
+          ? Map<String, dynamic>.from(data["data"]??data)
+          : data);
+      print('21212 NotificationModel: ${model.toMap()}');
+      if (data['type'] == 'call' && Platform.isAndroid) {
+        if(data.containsKey('action')){
+          if(data['action']=='Decline'){
+            await updateCallStatus(false,model.meeting_id.toString());
+          }else{
+            await updateCallStatus(true,model.meeting_id.toString());
+            if (model.callType!.toLowerCase() == 'audio') {
+              Provider.of<AudioCallProvider>(Get.context!, listen: false)
+                  .enableAudioCall();
+            } else if (model.callType!.toLowerCase() == 'video') {
+              Provider.of<AudioCallProvider>(Get.context!, listen: false)
+                  .disableAudioCall();
+            }
+            Get.to(CallMain(
+              doctorName:model?.username??'',
+              doctorId:model?.doctorId??'',
+              doctorPic: model?.doctorPicture??'',
+              patientId:model?.patientId??'',
+              patientName:model?.patientName??'',
+              patientPicUrl:model?.patientPicture??'',
+              channelName:model?.callArguments?.channelName??'',
+              role: ClientRole.Broadcaster,
+              isAppExists: true,
+              isWeb:model?.isWeb??false,
+            ));
           }
-          Get.to(CallMain(
-            doctorName:model?.username??'',
-            doctorId:model?.doctorId??'',
-            doctorPic: model?.doctorPicture??'',
-            patientId:model?.patientId??'',
-            patientName:model?.patientName??'',
-            patientPicUrl:model?.patientPicture??'',
-            channelName:model?.callArguments?.channelName??'',
-            role: ClientRole.Broadcaster,
-            isAppExists: true,
-            isWeb:model?.isWeb??false,
-          ));
+        }else{
+          Get.to(NotificationScreen(model));
         }
-      }else{
-        Get.to(NotificationScreen(model));
+      } else if (data['redirectTo'] == 'appointmentPayment' && Platform.isAndroid) {
+        Get.to(BookingConfirmation(
+          isFromPaymentNotification: true,
+          appointmentId: model?.appointmentId ?? '',
+        ));
+        model = NotificationModel();
+      } else if (data['redirectTo'] == 'mycart' && Platform.isAndroid) {
+        Get.to(CheckoutPage(
+          isFromNotification: true,
+          cartUserId: model?.userId ?? '',
+          bookingId: model?.bookingId ?? '',
+          notificationListId: model?.createdBy ?? '',
+          cartId: model?.bookingId ?? '',
+          patientName: model?.patientName ?? '',
+        ));
+        model = NotificationModel();
+      } else{
+        var actionKey = data["action"] ?? '';
+        if (actionKey.isNotEmpty) {
+          print('21212 actionKey: ${actionKey}');
+          renewAction = actionKey == "Renew";
+          callbackAction = actionKey == "Callback";
+          rejectAction = actionKey == "Reject";
+          acceptAction = actionKey == "Accept";
+          declineAction = actionKey == "Decline";
+          escalteAction = actionKey == "Escalate";
+          chatWithCC = actionKey == "chatwithcc";
+          viewRecordAction = actionKey == "viewrecord";
+          viewDetails = actionKey == "ViewDetails";
+          viewMemberAction =
+              actionKey.toLowerCase() == "ViewMember".toLowerCase();
+          communicationSettingAction = actionKey.toLowerCase() ==
+              "Communicationsettings".toLowerCase();
+        }
+        await actionForTheNotification();
       }
-    } else if (data['redirectTo'] == 'appointmentPayment' && Platform.isAndroid) {
-      Get.to(BookingConfirmation(
-        isFromPaymentNotification: true,
-        appointmentId: model?.appointmentId ?? '',
-      ));
-      model = NotificationModel();
-    } else if (data['redirectTo'] == 'mycart' && Platform.isAndroid) {
-      Get.to(CheckoutPage(
-        isFromNotification: true,
-        cartUserId: model?.userId ?? '',
-        bookingId: model?.bookingId ?? '',
-        notificationListId: model?.createdBy ?? '',
-        cartId: model?.bookingId ?? '',
-        patientName: model?.patientName ?? '',
-      ));
-      model = NotificationModel();
-    } else{
-      var actionKey = data["action"] ?? '';
-      if (actionKey.isNotEmpty) {
-      print('21212 actionKey: ${actionKey}');
-        renewAction = actionKey == "Renew";
-        callbackAction = actionKey == "Callback";
-        rejectAction = actionKey == "Reject";
-        acceptAction = actionKey == "Accept";
-        declineAction = actionKey == "Decline";
-        escalteAction = actionKey == "Escalate";
-        chatWithCC = actionKey == "chatwithcc";
-        viewRecordAction = actionKey == "viewrecord";
-        viewDetails = actionKey == "ViewDetails";
-        viewMemberAction =
-            actionKey.toLowerCase() == "ViewMember".toLowerCase();
-        communicationSettingAction = actionKey.toLowerCase() ==
-            "Communicationsettings".toLowerCase();
-      }
-      await actionForTheNotification();
     }
   }
 
@@ -976,6 +991,9 @@ class IosNotificationHandler {
           model.userId,
           model.uid,
           model.patientPhoneNumber);
+    } else if (model.templateName ==
+        parameters.stringAssignOrUpdatePersonalPlanActivities) {
+      //No Navigation required
     } else {
       isAlreadyLoaded
           ? PageNavigator.goTo(
