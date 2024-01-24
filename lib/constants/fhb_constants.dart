@@ -939,6 +939,11 @@ const String KEY_IS_Vitals_ManualRecording_Restricted =
 // Define a constant for the key related to voice clone patient assignment
 const String strVoiceClonePatientAssignment = 'voiceClonePatientAssignment';
 
+// Flutter Speech-to-text
+const String strListening = 'Listening';
+const String strSeconds = 'seconds';
+const String strPleaseEnterValidInput = 'Please enter a valid input';
+
 const double tabFontTitle = 25.0;
 const double mobileFontTitle = 18.0;
 
@@ -978,3 +983,17 @@ const double imageMobileMaya = 70.0;
 
 String doseValueless = "128";
 String doseValueHigh = "2048";
+
+// sheela survey image capture
+
+const String strRecapture = 'Recapture';
+const String strRedirectRetakePicture = 'redirectRetakePicture';
+const String strRedirectToUploadImage = 'redirectUploadBucket';
+
+// file upload feature in sheela
+const String strRequestFileUrl = 'requestFileUrl';
+const String strRequestType = 'requestFileType';
+const String strImage = 'image';
+const String strImageSizeValidation = 'Unable to upload photo. File size exceeds 5MB';
+
+

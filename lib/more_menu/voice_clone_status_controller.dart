@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -8,15 +10,18 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/more_menu/models/voice_clone_status_model.dart';
-import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
+import 'package:myfhb/voice_cloning/controller/voice_cloning_controller.dart';
 import 'package:myfhb/voice_cloning/model/voice_clone_caregiver_assignment_response.dart';
 import 'package:myfhb/voice_cloning/model/voice_clone_shared_by_users.dart';
 import 'package:myfhb/voice_cloning/services/voice_clone_members_services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../common/CommonUtil.dart';
 import '../constants/router_variable.dart';
+import '../src/resources/network/api_services.dart';
+import '../src/utils/FHBUtils.dart';
 
 class VoiceCloneStatusController extends GetxController {
   var loadingData = false.obs;
@@ -33,7 +38,24 @@ class VoiceCloneStatusController extends GetxController {
   List<VoiceCloneCaregiverAssignmentResult> selectedFamilyMembers = [];
 
   final _voiceCloneMembersServices = VoiceCloneMembersServices();
+  String audioURL = '';
 
+  VoiceCloningController? voiceCloningController;
+  bool isPlayWidgetClicked = false;
+  var loadingAudioData = false.obs;
+//to check if the audi widget is clicked to view
+
+  late PlayerController playerVoiceStatusController;
+  List<double> audioWaveVoiceStatusData = []; //new wave for downloaded music
+  Rx<String> recordedPath = ''.obs;
+  Rx<double> maxPlayerVoiceStatusDuration = 1.0.obs;
+  Rx<double> playVoiceStatusPosition =
+      0.0.obs; //new position for recorded voice
+
+  Rx<bool> isPlayerLoading = false.obs;
+  bool isFirsTymVoiceCloningStatus =
+      true; //check if the player is from status screen
+  Rx<bool> isPlaying = true.obs; // to update the play and pause button
   @override
   void onInit() {
     // TODO: implement onInit
@@ -82,7 +104,11 @@ class VoiceCloneStatusController extends GetxController {
     final response = await _helper.getStatusOfVoiceCloning(url);
     voiceCloneStatusModel = VoiceCloneStatusModel.fromJson(response ?? '');
     voiceCloneId.value = voiceCloneStatusModel?.result?.id ?? '';
+    if (voiceCloneStatusModel?.result?.url != "")
+      audioURL = voiceCloneStatusModel?.result?.url ?? '';
     fetchFamilyMembersList(voiceCloneId.value);
+    //download path from url every time when api is called
+    downloadAudioFile(audioURL);
   }
 
   revokeSubmission(bool fromMenu) async {
@@ -110,12 +136,14 @@ class VoiceCloneStatusController extends GetxController {
   //Set back button functionlaity from mobile back button and top of the screen
   void setBackButton(BuildContext context, bool fromMenu) {
     // to enable navigation from down back button
+
     if (fromMenu == true) {
       Navigator.of(context).pop();
     } else {
       Navigator.popUntil(context, (route) {
         var shouldPop = false;
-        if ([rt_notification_main, rt_more_menu].contains(route.settings.name)) {
+        if ([rt_notification_main, rt_more_menu]
+            .contains(route.settings.name)) {
           shouldPop = true;
         }
         return shouldPop;
@@ -156,8 +184,7 @@ class VoiceCloneStatusController extends GetxController {
         final existingFamilyMembers = selectedFamilyMembers
             .where(
               (element) =>
-                  element.user?.id == sharedByUser.child?.id
-                   &&
+                  element.user?.id == sharedByUser.child?.id &&
                   listOfCareGiverFamilyMembers.contains(sharedByUser.child?.id),
             )
             .toList();
@@ -196,5 +223,119 @@ class VoiceCloneStatusController extends GetxController {
       CommonUtil()
           .appLogs(message: e.toString(), stackTrace: stackTrace.toString());
     }
+  }
+
+  /**
+   * To download the audio url to mobile
+   */
+  Future<Rx<String>> downloadAudioFile(String? audioUrl) async {
+    await askForStoragePermission();
+    var fileName;
+    var authToken = await PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
+    if (audioUrl != "") {
+      fileName = audioUrl?.split("/").last;
+    }
+
+    final filePath = await FHBUtils.createDir(
+      stAudioPath,
+      fileName,
+    );
+    final file = File(filePath);
+
+    final request = await ApiServices.get(
+      audioUrl ?? '',
+      headers: {
+        HttpHeaders.authorizationHeader: authToken!,
+        KEY_OffSet: CommonUtil().setTimeZone()
+      },
+      timeout: 60,
+    );
+    final bytes = request!.bodyBytes; //close();
+    await file.writeAsBytes(bytes);
+    recordedPath.value = filePath;
+    print(recordedPath);
+
+    return recordedPath;
+  }
+
+  void setValue() {
+    isPlayWidgetClicked = !isPlayWidgetClicked;
+  }
+
+  void initialiseControllers() {
+    playerVoiceStatusController = PlayerController();
+  }
+
+  Future<void> startVoiceStatusPlayer() async {
+    setPlayerLoading(true);
+    isPlaying.value = true;
+    audioWaveVoiceStatusData =
+        await playerVoiceStatusController.extractWaveformData(
+      path: recordedPath.value,
+    );
+    await playerVoiceStatusController.preparePlayer(path: recordedPath.value);
+    maxPlayerVoiceStatusDuration.value =
+        playerVoiceStatusController.maxDuration.toDouble();
+    setPlayerLoading(false);
+
+    ///When using Finish mode pause it will allow to play and pause for every time.
+    await playerVoiceStatusController.startPlayer(finishMode: FinishMode.pause);
+    playerVoiceStatusController.onCompletion.listen((event) {
+      playVoiceStatusPosition.value = 0.0;
+      isPlaying.value = false;
+    });
+
+    playerVoiceStatusController.onCurrentDurationChanged.listen((event) {
+      playVoiceStatusPosition.value = event.seconds.inSeconds.toDouble();
+    });
+  }
+
+  //ask permission befor downloading file
+  static Future<bool> askForStoragePermission() async {
+    PermissionStatus storage = await Permission.storage.request();
+    if (storage == PermissionStatus.granted) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //loader for startiing voice player
+  void setPlayerLoading(bool value) {
+    this.isPlayerLoading.value = value;
+  }
+
+  //dispose recorder
+  disposeRecorder() {
+    playerVoiceStatusController.dispose();
+  }
+
+//start or stop player
+  Future<void> playVoiceStatusPausePlayer() async {
+    if (playerVoiceStatusController.playerState.isPlaying) {
+      isPlaying.value = false;
+      await playerVoiceStatusController.pausePlayer();
+    } else {
+      isPlaying.value = true;
+      await playerVoiceStatusController.startPlayer(
+          finishMode: FinishMode.pause, forceRefresh: true);
+    }
+  }
+
+  //format duration
+  String formatPlayerDuration(double seconds) {
+    ///This function will give the duration to hh:mm:ss from double value.
+    Duration duration = Duration(milliseconds: seconds.toInt());
+    String formattedDuration = '';
+
+    if (duration.inHours > 0) {
+      formattedDuration += '${duration.inHours.toString().padLeft(2, '0')}:';
+    }
+    formattedDuration +=
+        '${duration.inMinutes.remainder(60).toString().padLeft(2, '0')}:';
+    formattedDuration +=
+        (duration.inSeconds.remainder(60)).toString().padLeft(2, '0');
+
+    return formattedDuration;
   }
 }

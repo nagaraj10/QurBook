@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
 
 const String strAPP_NAME = 'QurBook';
 const String strAppPackage =
@@ -702,6 +701,9 @@ const String strChoose = 'Choose';
 const String strYES = 'YES';
 const String strNO = 'NO';
 const String strConfirm = 'Confirm';
+const String strConfirmation = 'Confirmation';
+const String strConfirmationVoiceCloneDisable =
+    'Any applied voice sample will be revoked.\n\nAre you sure, you want to deactivate the voice cloning feature?';
 
 const String strBP = 'BP';
 const String strWS = 'WS';
@@ -740,6 +742,10 @@ const String strVoiceCloningAddMembersHeader =
 const String strApproved = 'Approved'; //status text for approved
 const String strDeclined = 'Declined'; //status text for declined
 const String strReason = 'Reason : '; //status text for reason,include spacing
+
+const String strSubVoice = 'Submitted voice sample'; //String for voice submitted
+const String strProVoice = 'Processed voice sample'; //String for voice processed
+const String strChangeVoice = 'Change voice sample'; //String for voice print
 
 const String strStart = 'Start';
 const String strDOS = 'Date of submission : ';

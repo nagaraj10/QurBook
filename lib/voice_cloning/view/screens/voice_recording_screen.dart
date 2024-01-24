@@ -27,6 +27,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
     ///Initializing the audio and player controllers
     Provider.of<VoiceCloningController>(context, listen: false)
         .initialiseControllers();
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<VoiceCloningController>(context, listen: false).getDir();
       Provider.of<VoiceCloningController>(context, listen: false)
