@@ -188,16 +188,18 @@ class IosNotificationHandler {
     });
   }
 
-  void handleNotificationResponse(Map<String,dynamic> jsonDecode)async{
+  void handleNotificationResponse(Map<String, dynamic> jsonDecode) async {
+    print('21212 handleNotificationResponse: ${jsonDecode}');
     if (!isAlreadyLoaded) {
       //notificationReceivedFromKilledState = true;
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 5));
       isAlreadyLoaded = true;
     }
     final data = Map<String, dynamic>.from(jsonDecode);
     model = NotificationModel.fromMap(data.containsKey("action")
         ? Map<String, dynamic>.from(data["data"]??data)
         : data);
+        print('21212 NotificationModel: ${model.toMap()}');
     if (data['type'] == 'call' && Platform.isAndroid) {
       if(data.containsKey('action')){
         if(data['action']=='Decline'){
@@ -246,6 +248,7 @@ class IosNotificationHandler {
     } else{
       var actionKey = data["action"] ?? '';
       if (actionKey.isNotEmpty) {
+      print('21212 actionKey: ${actionKey}');
         renewAction = actionKey == "Renew";
         callbackAction = actionKey == "Callback";
         rejectAction = actionKey == "Reject";
@@ -260,7 +263,7 @@ class IosNotificationHandler {
         communicationSettingAction = actionKey.toLowerCase() ==
             "Communicationsettings".toLowerCase();
       }
-      actionForTheNotification();
+      await actionForTheNotification();
     }
   }
 
@@ -319,6 +322,7 @@ class IosNotificationHandler {
   }
 
   actionForTheNotification() async {
+    print('21212 actionForTheNotification: ${model.toMap()}');
     if (model.isCall!) {
       updateStatus(model.status!.toLowerCase());
       // updateStatus(parameters.accept.toLowerCase());
@@ -982,5 +986,6 @@ class IosNotificationHandler {
                 nsRoute: '',
               ));
     }
+    print('21212 actionForTheNotification: Done');
   }
 }

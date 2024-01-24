@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -7,10 +6,9 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
   DarwinNotificationCategory(
     'darwinCall_category',
     actions: [
-      DarwinNotificationAction.text(
+      DarwinNotificationAction.plain(
         'accept_action',
         'Accept',
-        buttonTitle: 'Accept',
       ),
       DarwinNotificationAction.plain(
         'reject_action',
@@ -34,8 +32,7 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
       DarwinNotificationAction.plain(
         'Decline',
         'Decline',
-        options: <DarwinNotificationActionOption>{
-        },
+        options: <DarwinNotificationActionOption>{},
       ),
     ],
   ),
@@ -167,7 +164,6 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
       )
     ],
   ),
-
   DarwinNotificationCategory(
     'payNowButton',
     actions: [
@@ -183,96 +179,90 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
 ];
 
 ///Android ACtionButtons
-const acceptAction =  AndroidNotificationAction(
+const acceptAction = AndroidNotificationAction(
   'Accept', // Replace with your own action ID
   'Accept', // Replace with your own action label
   showsUserInterface: true,
 );
-const rejectAction =   AndroidNotificationAction(
+const rejectAction = AndroidNotificationAction(
   'Reject', // Replace with your own action ID
   'Reject',
   showsUserInterface: true, // Replace with your own action label
 );
-const declineAction =   AndroidNotificationAction(
+const declineAction = AndroidNotificationAction(
   'Decline', // Replace with your own action ID
   'Decline',
   showsUserInterface: true, // Replace with your own action label
 );
 
-const viewMemberAction =AndroidNotificationAction(
+const viewMemberAction = AndroidNotificationAction(
   'ViewMember', // Replace with your own action ID
   'View Member', // Replace with your own action label
   showsUserInterface: true,
 );
-const communicationSettingAction =AndroidNotificationAction(
+const communicationSettingAction = AndroidNotificationAction(
   'Communicationsettings', // Replace with your own action ID
   'Communication Settings', // Replace with your own action label
   showsUserInterface: true,
 );
-const chatwithccAction =AndroidNotificationAction(
+const chatwithccAction = AndroidNotificationAction(
   'chatwithcc', // Replace with your own action ID
   'Chat with CC', // Replace with your own action label
   showsUserInterface: true,
 );
-const viewRecordAction =AndroidNotificationAction(
+const viewRecordAction = AndroidNotificationAction(
   'viewrecord', // Replace with your own action ID
   'View Record', // Replace with your own action label
   showsUserInterface: true,
 );
 
-const renewalAction =AndroidNotificationAction(
+const renewalAction = AndroidNotificationAction(
   'Renew', // Replace with your own action ID
   'Renew', // Replace with your own action label
   showsUserInterface: true,
 );
 
-const callBackAction =AndroidNotificationAction(
+const callBackAction = AndroidNotificationAction(
   'Callback', // Replace with your own action ID
   'Call back', // Replace with your own action label
   showsUserInterface: true,
 );
 
-const escalateAction =AndroidNotificationAction(
+const escalateAction = AndroidNotificationAction(
   'Escalate', // Replace with your own action ID
   'Escalate', // Replace with your own action label
   showsUserInterface: true,
 );
 
-const viewDetailsAction =AndroidNotificationAction(
+const viewDetailsAction = AndroidNotificationAction(
   'ViewDetails', // Replace with your own action ID
   'View Details', // Replace with your own action label
   showsUserInterface: true,
 );
 
-const payNowAction =AndroidNotificationAction(
+const payNowAction = AndroidNotificationAction(
   'PayNow', // Replace with your own action ID
   'Pay Now', // Replace with your own action label
   showsUserInterface: true,
 );
-
-
 
 ///Notification Channel
 const androidNormalchannel = AndroidNotificationChannel(
   '12345', // id
   'Qurbook_channel', // title
   enableVibration: false,
-  description:
-  'This channel is used for important notifications.', //
+  description: 'This channel is used for important notifications.', //
   sound: RawResourceAndroidNotificationSound('msg_tone'),
   importance: Importance.high,
 );
 var callChannel = const AndroidNotificationChannel(
   '5678', // id
   'Qurbook_call_channel',
-  enableVibration: false,// title
-  description:
-  'This channel is used for important notifications.',
-  sound: RawResourceAndroidNotificationSound('helium'),// description
+  enableVibration: false, // title
+  description: 'This channel is used for important notifications.',
+  sound: RawResourceAndroidNotificationSound('helium'), // description
   importance: Importance.high,
 );
-
-
 
 Future<void> updateCallStatus(bool isAccept, String recordId) async {
   try {
@@ -286,7 +276,3 @@ Future<void> updateCallStatus(bool isAccept, String recordId) async {
     print('firestoreException:${e.toString()}');
   }
 }
-
-
-
-
