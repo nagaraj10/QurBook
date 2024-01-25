@@ -527,8 +527,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             }
                           });
                         }
-                      }
-                      if (buttonData?.needAudio ?? false) {
+                      }else if (buttonData?.needAudio ?? false) {
                         // Check if loading is in progress, if true, return without performing any action
                         if (controller.isLoading.isTrue) {
                           return;
