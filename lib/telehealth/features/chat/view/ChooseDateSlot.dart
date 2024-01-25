@@ -186,6 +186,8 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
                 margin: EdgeInsets.symmetric(horizontal: 120, vertical: 5),
                 width: double.infinity,
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(CommonUtil().getMyPrimaryColor())),
                   child: Text('Ok', style: TextStyle(fontSize: 20,color: Colors.white)),
                   onPressed: () {
                     try {
