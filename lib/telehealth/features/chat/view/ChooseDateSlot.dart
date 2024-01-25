@@ -187,6 +187,7 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                    // Set the background color using the CommonUtil method to get the primary color
                       backgroundColor: Color(CommonUtil().getMyPrimaryColor())),
                   child: Text('Ok', style: TextStyle(fontSize: 20,color: Colors.white)),
                   onPressed: () {
