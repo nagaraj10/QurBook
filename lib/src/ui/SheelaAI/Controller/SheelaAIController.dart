@@ -2845,14 +2845,17 @@ makeApiRequest is used to update the data with latest data
     });
   }
 
+  // Define a function to get the thumbnail image data from a video path
   Future<Uint8List?> getThumbnailImage(path) async {
+    // Use the VideoThumbnail package to generate thumbnail data from the video path
     return await VideoThumbnail.thumbnailData(
-      video: path, // video path
-      imageFormat: ImageFormat.JPEG,
+      video: path, // Specify the video path
+      imageFormat: ImageFormat.JPEG, // Set the image format to JPEG
       maxWidth:
-      128, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
-      quality: 50,
+      128, // Specify the width of the thumbnail; let the height auto-scaled to keep the source aspect ratio
+      quality: 50, // Set the quality of the thumbnail
     );
   }
+
 }
 

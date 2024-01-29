@@ -620,7 +620,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         }
                         controller.stopTTS(); // Stop Text-to-Speech
                         controller.updateTimer(
-                            enable: false); // disable the timer
+                            enable: false); // Disable the timer
                         controller.isSheelaScreenActive =
                         false; // Deactivate Sheela screen
                         controller.btnTextLocal =
@@ -630,9 +630,9 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             controller.btnTextLocal ?? '', strVideo)
                             .then((value) {
                           /*controller.isSheelaScreenActive =
-                              true; // Reactivate Sheela screen after dialog
-                          controller.updateTimer(
-                              enable: true);*/ // enable the timer
+            true; // Reactivate Sheela screen after dialog
+        controller.updateTimer(
+            enable: true);*/ // Enable the timer
                         });
                       } else if (buttonData?.btnRedirectTo ==
                           strRedirectRetakeVideo) {
@@ -644,7 +644,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         controller.isSheelaScreenActive =
                         false; // Deactivate Sheela screen
                         controller.updateTimer(
-                            enable: false); // disable the timer
+                            enable: false); // Disable the timer
                         controller.isRetakeCapture =
                         true; // Set flag for retake capture
                         // Show the camera/gallery dialog and handle the result
@@ -652,9 +652,9 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             controller.btnTextLocal ?? '', strVideo)
                             .then((value) {
                           /*controller.isSheelaScreenActive =
-                              true; // Reactivate Sheela screen after dialog
-                          controller.updateTimer(
-                              enable: true); // enable the timer*/
+            true; // Reactivate Sheela screen after dialog
+        controller.updateTimer(
+            enable: true); // Enable the timer*/
                         });
                       } else if (buttonData?.btnRedirectTo ==
                           strRedirectToUploadVideo) {
@@ -697,7 +697,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                   buttons: buttonData,
                                   isFromImageUpload: true,
                                   requestFileType:
-                                  strVideo // add requestFileType
+                                  strVideo // Add requestFileType
                               );
                               // Delay for 3 seconds and then unselect the button
                               Future.delayed(const Duration(seconds: 3), () {
