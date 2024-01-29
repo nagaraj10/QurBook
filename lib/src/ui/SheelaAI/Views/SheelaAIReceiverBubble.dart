@@ -14,11 +14,14 @@ import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/video_player_screen.dart';
 
 import '../../../../common/CommonUtil.dart';
+import '../../../../common/FHBBasicWidget.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/fhb_constants.dart' as Constants;
 import '../../../../constants/variable_constant.dart';
 import '../../../utils/screenutils/size_extensions.dart';
+import '../../audio/AudioRecorder.dart';
+import '../../audio/AudioScreenArguments.dart';
 import '../../imageSlider.dart';
 import '../Controller/SheelaAIController.dart';
 import '../Models/SheelaResponse.dart';
@@ -29,6 +32,7 @@ import 'youtube_player.dart';
 class SheelaAIReceiverBubble extends StatelessWidget {
   final SheelaResponse chat;
   SheelaAIController controller = Get.find();
+  FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
   SheelaAIReceiverBubble(
     this.chat,
@@ -125,6 +129,11 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                         (chat.imageThumbnailUrl != null &&
                                             chat.imageThumbnailUrl != '')
                                             ? getImagePreviewThumbnail(chat.imageThumbnailUrl??'')
+                                            : SizedBox.shrink(),
+                                        // Conditional rendering of an audio preview thumbnail
+                                        (chat.audioThumbnailUrl != null &&
+                                            chat.audioThumbnailUrl != '')
+                                            ? getAudioCardWidget(chat.audioThumbnailUrl??'')
                                             : SizedBox.shrink(),
                                         buttonWidgets(context)
                                       ],
@@ -494,7 +503,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             controller.isLoading.value = false; // Reset loading flag
                             controller.conversations.removeLast(); // Remove the loading response from conversations
                             if (value.isSuccess ?? false) {
-                              controller.imageRequestUrl =
+                              controller.fileRequestUrl =
                                   value.result?.accessUrl ?? '';
                               if (controller.isLoading.isTrue) {
                                 return; // If loading, do nothing
@@ -518,7 +527,88 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             }
                           });
                         }
-                      }else {
+                      }else if (buttonData?.needAudio ?? false) {
+                        // Check if loading is in progress, if true, return without performing any action
+                        if (controller.isLoading.isTrue) {
+                          return;
+                        }
+
+                        // Stop Text-to-Speech, update timer, and set Sheela screen as inactive
+                        controller.stopTTS();
+                        controller.updateTimer(enable: false);
+                        controller.isSheelaScreenActive = false;
+                        controller.btnTextLocal = buttonData?.title ?? '';
+
+                        // Navigate to the audio record screen
+                        controller.goToAudioRecordScreen(
+                            isFromSheelaFileUpload: true);
+                      } else if (buttonData?.btnRedirectTo ==
+                          strRedirectRetakeAudio) {
+                        // Check if loading is in progress, if true, return without performing any action
+                        if (controller.isLoading.isTrue) {
+                          return;
+                        }
+
+                        // Stop Text-to-Speech, set Sheela screen as inactive, update timer, and set retake capture to true
+                        controller.stopTTS();
+                        controller.isSheelaScreenActive = false;
+                        controller.updateTimer(enable: false);
+                        controller.isRetakeCapture = true;
+
+                        // Navigate to the audio record screen
+                        controller.goToAudioRecordScreen(
+                            isFromSheelaFileUpload: true);
+                      } else if (buttonData?.btnRedirectTo ==
+                          strRedirectToUploadAudio) {
+                        // Set loading state and add a loading response to conversations
+                        controller.isLoading.value = true;
+                        controller.conversations
+                            .add(SheelaResponse(loading: true));
+                        controller.scrollToEnd();
+
+                        // Check if audioThumbnailUrl is available
+                        if (chat.audioThumbnailUrl != null &&
+                            chat.audioThumbnailUrl != '') {
+                          controller
+                              .saveMediaRegiment(
+                                  chat.audioThumbnailUrl ?? '', '')
+                              .then((value) {
+                            controller.isLoading.value = false;
+                            controller.conversations.removeLast();
+
+                            // Check if the media saving operation was successful
+                            if (value.isSuccess ?? false) {
+                              // Set fileRequestUrl and check loading state
+                              controller.fileRequestUrl =
+                                  value.result?.accessUrl ?? '';
+                              if (controller.isLoading.isTrue) {
+                                return;
+                              }
+
+                              // Check if singleuse is true and isActionDone is not null, then set isActionDone to true
+                              if (chat.singleuse != null &&
+                                  chat.singleuse! &&
+                                  chat.isActionDone != null) {
+                                chat.isActionDone = true;
+                              }
+
+                              // Set button isSelected to true, start Sheela from the button, and delay setting isSelected to false
+                              buttonData?.isSelected = true;
+                              controller.startSheelaFromButton(
+                                  buttonText: buttonData?.title,
+                                  payload: buttonData?.payload,
+                                  buttons: buttonData,
+                                  isFromImageUpload: true,
+                                  requestFileType: strAudio);
+
+                              // Delay setting isSelected to false by 3 seconds
+                              Future.delayed(const Duration(seconds: 3), () {
+                                buttonData?.isSelected = false;
+                              });
+                            }
+                          });
+                        }
+                      } else {
                         if (controller.isLoading.isTrue) {
                           return;
                         }
@@ -805,5 +895,43 @@ class SheelaAIReceiverBubble extends StatelessWidget {
       ],
     );
   }
+
+  // Widget function to create an audio card with a selected image
+  Widget getAudioCardWidget(String selectedImage) {
+    // Return a Column widget with crossAxisAlignment set to start
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Padding around the Material widget
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Material(
+            // Apply borderRadius and elevation to create a card-like appearance
+            borderRadius: BorderRadius.circular(10.0),
+            elevation: 2.0,
+            child: Container(
+              // Padding within the container
+              padding: EdgeInsets.all(10.0),
+              // Set the width of the container to 1.5 times the screen width
+              width: 1.sw / 1.5,
+              child: Row(
+                // Align children in a row with space evenly distributed between them
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  // AudioWidget widget with parameters
+                  AudioWidget(
+                    chat.audioThumbnailUrl, // audioThumbnailUrl parameter
+                    null, // Second parameter (not provided in the code)
+                    isFromSheelaFileUpload: true, // isFromSheelaFileUpload parameter set to true
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
 
 }
