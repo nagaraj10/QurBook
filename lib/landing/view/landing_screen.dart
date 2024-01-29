@@ -120,9 +120,10 @@ class _LandingScreenState extends State<LandingScreen> {
       WidgetsBinding.instance?.addObserver(
         LifecycleEventHandler(
           resumeCallBack: () async {
+            // Call the updateDataFor method from FirestoreServices
             FirestoreServices().updateDataFor(
-              'all',
-              withLoading: true,
+              'all', // Pass the parameter 'all'
+              withLoading: true, // Pass the parameter withLoading as true
             );
             await TimezoneServices().checkUpdateTimezone();
 

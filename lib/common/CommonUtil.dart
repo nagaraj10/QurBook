@@ -6234,6 +6234,8 @@ class CommonUtil {
       var regController = CommonUtil().onInitQurhomeRegimenController();
       regController.getRegimenList();
       FirestoreServices().setupListenerForFirestoreChanges();
+      // Schedule the cron job to run at midnight for
+      //getting the latest regiment
       CronJobServices().scheduleUpdateForData();
       if (!Get.isRegistered<PDFViewController>()) {
         Get.lazyPut(
