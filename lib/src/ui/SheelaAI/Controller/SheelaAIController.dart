@@ -2393,7 +2393,7 @@ makeApiRequest is used to update the data with latest data
                     for (var i = 0; i < data.length; i++) {
                       apiReminder = data[i];
                     }
-                    if (Platform.isAndroid) {
+                    /*if (Platform.isAndroid) {
                       // snooze invoke to android native for locally save the reminder data
                       QurPlanReminders.getTheRemindersFromAPI(
                           isSnooze: true, snoozeReminderData: apiReminder);
@@ -2411,7 +2411,18 @@ makeApiRequest is used to update the data with latest data
                             payload: button.payload,
                             buttons: button);
                       });
-                    }
+                    }*/
+
+                    // snooze invoke to android native for locally save the reminder data
+                    QurPlanReminders.getTheRemindersFromAPI(
+                        isSnooze: true, snoozeReminderData: apiReminder);
+
+                    // Start Sheela from button with specified parameters
+                    startSheelaFromButton(
+                        buttonText: button.title,
+                        payload: button.payload,
+                        buttons: button);
+
                   } catch (e, stackTrace) {
                     CommonUtil().appLogs(message: e, stackTrace: stackTrace);
                   }

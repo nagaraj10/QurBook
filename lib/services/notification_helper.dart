@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 
 ///Ios Notification Categories
 List<DarwinNotificationCategory> darwinIOSCategories = [
@@ -40,12 +41,12 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
     'showBothButtonsCat',
     actions: [
       DarwinNotificationAction.plain(
-        'Snooze',
-        'Snooze',
+        stringSnooze,
+        stringSnooze,
       ),
       DarwinNotificationAction.plain(
-        'Dismiss',
-        'Dismiss',
+        stringDismiss,
+        stringDismiss,
         options: <DarwinNotificationActionOption>{
           DarwinNotificationActionOption.destructive,
         },
@@ -246,6 +247,22 @@ const payNowAction = AndroidNotificationAction(
   showsUserInterface: true,
 );
 
+
+// Define a constant for the snooze action configuration.
+const snoozeAction = AndroidNotificationAction(
+  stringSnooze, // Action ID (replace with your own action ID)
+  stringSnooze, // Action label (replace with your own action label)
+  showsUserInterface: true, // Indicates whether the action should display in the notification UI
+);
+
+// Define a constant for the dismiss action configuration.
+const dismissAction = AndroidNotificationAction(
+  stringDismiss, // Action ID (replace with your own action ID)
+  stringDismiss, // Action label (replace with your own action label)
+  showsUserInterface: true, // Indicates whether the action should display in the notification UI
+);
+
+
 ///Notification Channel
 const androidNormalchannel = AndroidNotificationChannel(
   '12345', // id
@@ -263,6 +280,27 @@ var callChannel = const AndroidNotificationChannel(
   sound: RawResourceAndroidNotificationSound('helium'), // description
   importance: Importance.high,
 );
+
+// Define a constant for the remainder schedule notification channel.
+var remainderScheduleChannel = const AndroidNotificationChannel(
+  'remainderScheduleChannel', // ID for the channel
+  'qurbook_remainder_schedule_channel', // Title of the channel
+  enableVibration: false, // Enable or disable vibration
+  description: 'This channel is used for important remainder schedule notifications.', // Description of the channel
+  sound: RawResourceAndroidNotificationSound('msg_tone'), // Sound for notifications
+  importance: Importance.high, // Importance level of the channel
+);
+
+// Define a constant for the remainder schedulev3 notification channel.
+var remainderScheduleV3Channel = const AndroidNotificationChannel(
+  'remainderScheduleV3Channel', // ID for the channel
+  'qurbook_remainder_schedulev3_channel', // Title of the channel
+  enableVibration: false, // Enable or disable vibration
+  description: 'This channel is used for important remainder schedulev3 notifications.', // Description of the channel
+  sound: RawResourceAndroidNotificationSound('beep_beep'), // Sound for notifications
+  importance: Importance.high, // Importance level of the channel
+);
+
 
 Future<void> updateCallStatus(bool isAccept, String recordId) async {
   try {

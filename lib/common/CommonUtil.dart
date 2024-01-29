@@ -41,6 +41,7 @@ import 'package:myfhb/landing/controller/landing_screen_controller.dart';
 import 'package:myfhb/chat_socket/model/SheelaReminderResponse.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/main.dart';
+import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
@@ -172,6 +173,7 @@ import 'keysofmodel.dart' as keysConstant;
 import 'package:myfhb/more_menu/trouble_shoot_controller.dart';
 
 import 'widgets/CommonWidgets.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -7535,6 +7537,36 @@ class CommonUtil {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
+
+  // Convert an integer to a signed 32-bit integer.
+  int toSigned32BitInt(int value) {
+    // Apply bitwise AND operation to ensure the result is a signed 32-bit integer.
+    return value & 0xFFFFFFFF;
+  }
+
+// Parse a date-time string into a timezone-aware DateTime object.
+  tz.TZDateTime parseDateTimeFromString(String dateTimeString) {
+    // Split the date and time components from the input string.
+    var date = dateTimeString.split(' ')[0];
+    var time = dateTimeString.split(' ')[1];
+
+    // Parse the date-time string and create a DateTime object.
+    var dateTime = DateTime.parse('$date $time');
+
+    // Convert the DateTime object to a timezone-aware TZDateTime using the local timezone.
+    return tz.TZDateTime.from(dateTime, tz.local);
+  }
+
+// Calculate a notification ID based on the reminder and a subtraction flag.
+  int calculateNotificationId(Reminder reminder, bool subtract) {
+    // Create a base ID by prefixing with '0' or '1' based on the subtraction flag.
+    var baseId = subtract ? '0${reminder.eid}' : '1${reminder.eid}';
+
+    // Convert the base ID to a signed 32-bit integer using the toSigned32BitInt function.
+    return CommonUtil().toSigned32BitInt(int.tryParse(baseId) ?? 0);
+  }
+
+
 }
 
 extension CapExtension on String {

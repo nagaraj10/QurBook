@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/main.dart';
+import 'package:myfhb/services/pushnotification_service.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/CommonUtil.dart';
 import '../constants/HeaderRequest.dart';
@@ -88,16 +91,6 @@ class QurPlanReminders {
     }
   }
 
-  static Future<bool>? addReminder(Reminder data) {
-    var reminderMap = data.toMap();
-    if (Platform.isIOS) {
-      reminderMethodChannel.invokeMethod(addReminderMethod, [reminderMap]);
-    } else {
-      reminderMethodChannelAndroid
-          .invokeMethod(addReminderMethod, {'data': jsonEncode(reminderMap)});
-    }
-  }
-
   static Future<bool> saveRemindersLocally(
       List<Reminder> notificationToSave) async {
     final directory = Platform.isIOS
@@ -111,6 +104,16 @@ class QurPlanReminders {
       var dataToSave = {'reminders': dataTosave};
       var dataToJson = json.encode(dataToSave);
       await file.writeAsString(dataToJson);
+
+      // Get SharedPreferences instance
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      // Encode the dataToSave object to a JSON string
+      dataToJson = json.encode(dataToSave);
+
+      // Save the JSON string to SharedPreferences with the key 'remindersPref'
+      prefs.setString('remindersPref', dataToJson);
+
       return true;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -119,6 +122,7 @@ class QurPlanReminders {
       return false;
     }
   }
+
 
   static Future<bool?> updateRemindersLocally(Reminder data) async {
     final reminders = await getLocalReminder();
@@ -130,35 +134,7 @@ class QurPlanReminders {
       }
 
       if (foundTheMatched != null) {
-        if (Platform.isIOS) {
-          reminderMethodChannel
-              .invokeMethod(removeReminderMethod, [foundTheMatched.eid]);
-          var beforeInt = int.parse(foundTheMatched.remindbefore!);
-          if (beforeInt != null && beforeInt > 0) {
-            var id = foundTheMatched.eid! + "00000";
-            reminderMethodChannel.invokeMethod(removeReminderMethod, [id]);
-          }
-          var afterInt = int.parse(foundTheMatched.remindin!);
-          if (afterInt != null && afterInt > 0) {
-            var id = foundTheMatched.eid! + "11111";
-            reminderMethodChannel.invokeMethod(removeReminderMethod, [id]);
-          }
-        } else {
-          await reminderMethodChannelAndroid.invokeMethod(
-              removeReminderMethod, {'data': foundTheMatched.eid});
-          var beforeInt = int.parse(foundTheMatched.remindbefore!);
-          if (beforeInt != null && beforeInt > 0) {
-            var id = foundTheMatched.eid! + "000";
-            await reminderMethodChannelAndroid
-                .invokeMethod(removeReminderMethod, {'data': id});
-          }
-          var afterInt = int.parse(foundTheMatched.remindin!);
-          if (afterInt != null && afterInt > 0) {
-            var id = foundTheMatched.eid! + "111";
-            await reminderMethodChannelAndroid
-                .invokeMethod(removeReminderMethod, {'data': id});
-          }
-        }
+        await cancelLocalReminders(foundTheMatched);
       }
       reminders.add(data);
     }
@@ -171,8 +147,9 @@ class QurPlanReminders {
     if (isSnooze) {
       for (var i = 0; i < data.length; i++) {
         var apiReminder = data[i];
-        await reminderMethodChannelAndroid.invokeMethod(
-            addReminderMethod, {'data': jsonEncode(apiReminder.toMap())});
+        await onInitScheduleNotification(apiReminder);
+        /*await reminderMethodChannelAndroid.invokeMethod(
+            addReminderMethod, {'data': jsonEncode(apiReminder.toMap())});*/
       }
     } else {
       try {
@@ -184,98 +161,30 @@ class QurPlanReminders {
             if (apiReminder.eid == localReminder.eid) {
               found = true;
               if (apiReminder == localReminder) {
-                if (Platform.isIOS) {
+                /*if (Platform.isIOS) {
                   apiReminder.alreadyScheduled = true;
                   reminderMethodChannel
                       .invokeMethod(addReminderMethod, [apiReminder.toMap()]);
                 } else {
                   // resolved multiple deuplicates reminders in tray
                   break;
-                }
+                }*/
                 break;
               } else {
-                if (Platform.isIOS) {
-                  reminderMethodChannel
-                      .invokeMethod(removeReminderMethod, [localReminder.eid]);
-                  var beforeInt = int.parse(localReminder.remindbefore!);
-                  if (beforeInt != null && beforeInt > 0) {
-                    var id = localReminder.eid! + "00000";
-                    reminderMethodChannel
-                        .invokeMethod(removeReminderMethod, [id]);
-                  }
-                  var afterInt = int.parse(localReminder.remindin!);
-                  if (afterInt != null && afterInt > 0) {
-                    var id = localReminder.eid! + "11111";
-                    reminderMethodChannel
-                        .invokeMethod(removeReminderMethod, [id]);
-                  }
-                  reminderMethodChannel
-                      .invokeMethod(addReminderMethod, [apiReminder.toMap()]);
-                } else {
-                  await reminderMethodChannelAndroid.invokeMethod(
-                      removeReminderMethod, {'data': localReminder.eid});
-                  var beforeInt = int.parse(localReminder.remindbefore!);
-                  if (beforeInt != null && beforeInt > 0) {
-                    var id = localReminder.eid! + "000";
-                    await reminderMethodChannelAndroid
-                        .invokeMethod(removeReminderMethod, {'data': id});
-                  }
-                  var afterInt = int.parse(localReminder.remindin!);
-                  if (afterInt != null && afterInt > 0) {
-                    var id = localReminder.eid! + "111";
-                    await reminderMethodChannelAndroid
-                        .invokeMethod(removeReminderMethod, {'data': id});
-                  }
-                  await reminderMethodChannelAndroid.invokeMethod(
-                      addReminderMethod,
-                      {'data': jsonEncode(apiReminder.toMap())});
-                }
+                await cancelLocalReminders(localReminder);
+                await onInitScheduleNotification(apiReminder);
               }
             }
           }
           if (!found) {
-            if (Platform.isIOS) {
-              reminderMethodChannel
-                  .invokeMethod(addReminderMethod, [apiReminder.toMap()]);
-            } else {
-              await reminderMethodChannelAndroid.invokeMethod(
-                  addReminderMethod, {'data': jsonEncode(apiReminder.toMap())});
-            }
+            await onInitScheduleNotification(apiReminder);
           }
         }
 
         for (var i = 0; i < localReminders.length; i++) {
           var localReminder = localReminders[i];
           if (!data.contains(localReminder)) {
-            if (Platform.isIOS) {
-              reminderMethodChannel
-                  .invokeMethod(removeReminderMethod, [localReminder.eid]);
-              var beforeInt = int.parse(localReminder.remindbefore!);
-              if (beforeInt != null && beforeInt > 0) {
-                var id = localReminder.eid! + "00000";
-                reminderMethodChannel.invokeMethod(removeReminderMethod, [id]);
-              }
-              var afterInt = int.parse(localReminder.remindin!);
-              if (afterInt != null && afterInt > 0) {
-                var id = localReminder.eid! + "11111";
-                reminderMethodChannel.invokeMethod(removeReminderMethod, [id]);
-              }
-            } else {
-              await reminderMethodChannelAndroid.invokeMethod(
-                  removeReminderMethod, {'data': localReminder.eid});
-              var beforeInt = int.parse(localReminder.remindbefore!);
-              if (beforeInt != null && beforeInt > 0) {
-                var id = localReminder.eid! + "000";
-                await reminderMethodChannelAndroid
-                    .invokeMethod(removeReminderMethod, {'data': id});
-              }
-              var afterInt = int.parse(localReminder.remindin!);
-              if (afterInt != null && afterInt > 0) {
-                var id = localReminder.eid! + "111";
-                await reminderMethodChannelAndroid
-                    .invokeMethod(removeReminderMethod, {'data': id});
-              }
-            }
+            await cancelLocalReminders(localReminder);
           }
         }
         return await saveRemindersLocally(data);
@@ -300,35 +209,7 @@ class QurPlanReminders {
       }
 
       if (foundTheMatched != null) {
-        if (Platform.isIOS) {
-          reminderMethodChannel
-              .invokeMethod(removeReminderMethod, [foundTheMatched.eid]);
-          var beforeInt = int.parse(foundTheMatched.remindbefore!);
-          if (beforeInt != null && beforeInt > 0) {
-            var id = foundTheMatched.eid! + "00000";
-            reminderMethodChannel.invokeMethod(removeReminderMethod, [id]);
-          }
-          var afterInt = int.parse(foundTheMatched.remindin!);
-          if (afterInt != null && afterInt > 0) {
-            var id = foundTheMatched.eid! + "11111";
-            reminderMethodChannel.invokeMethod(removeReminderMethod, [id]);
-          }
-        } else {
-          await reminderMethodChannelAndroid.invokeMethod(
-              removeReminderMethod, {'data': foundTheMatched.eid});
-          var beforeInt = int.parse(foundTheMatched.remindbefore!);
-          if (beforeInt != null && beforeInt > 0) {
-            var id = foundTheMatched.eid! + "000";
-            await reminderMethodChannelAndroid
-                .invokeMethod(removeReminderMethod, {'data': id});
-          }
-          var afterInt = int.parse(foundTheMatched.remindin!);
-          if (afterInt != null && afterInt > 0) {
-            var id = foundTheMatched.eid! + "111";
-            await reminderMethodChannelAndroid
-                .invokeMethod(removeReminderMethod, {'data': id});
-          }
-        }
+        await cancelLocalReminders(foundTheMatched);
         return true;
       } else {
         return false;
@@ -366,27 +247,44 @@ class QurPlanReminders {
   }
 
   static deleteAllLocalReminders() async {
-    if (Platform.isIOS) {
-      reminderMethodChannel.invokeMethod(removeAllReminderMethod);
-    } else {
-      var reminders = await getLocalReminder();
-      for (var r in reminders) {
-        await reminderMethodChannelAndroid
-            .invokeMethod(removeReminderMethod, {'data': r.eid});
-        var beforeInt = int.parse(r.remindbefore!);
-        if (beforeInt != null && beforeInt > 0) {
-          var id = r.eid! + "000";
-          await reminderMethodChannelAndroid
-              .invokeMethod(removeReminderMethod, {'data': id});
-        }
-        var afterInt = int.parse(r.remindin!);
-        if (afterInt != null && afterInt > 0) {
-          var id = r.eid! + "111";
-          await reminderMethodChannelAndroid
-              .invokeMethod(removeReminderMethod, {'data': id});
-        }
-      }
+    var reminders = await getLocalReminder();
+    for (var r in reminders) {
+      await cancelLocalReminders(r);
     }
     return await saveRemindersLocally([]);
   }
+
+
+  // Cancel local reminder notifications
+  static Future<void> cancelLocalReminders(Reminder foundTheMatched) async {
+    try {
+      var id = foundTheMatched.eid;
+
+      // Cancel the main notification
+      var mainNotificationId = int.tryParse('$id') ?? 0;
+      await localNotificationsPlugin.cancel(mainNotificationId);
+
+      // Cancel reminder notifications if beforeInt is greater than 0
+      var beforeInt = int.tryParse(foundTheMatched.remindbefore!);
+      if (beforeInt != null && beforeInt > 0) {
+        var baseId = '0$id';
+        var beforeNotificationId = int.tryParse(baseId) ?? 0;
+        await localNotificationsPlugin.cancel(beforeNotificationId);
+      }
+
+      // Cancel reminder notifications if afterInt is greater than 0
+      var afterInt = int.tryParse(foundTheMatched.remindin!);
+      if (afterInt != null && afterInt > 0) {
+        var baseId = '1$id';
+        var afterNotificationId = int.tryParse(baseId) ?? 0;
+        await localNotificationsPlugin.cancel(afterNotificationId);
+      }
+
+    } catch (e, stackTrace) {
+      // Log any errors and their stack traces
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+
 }

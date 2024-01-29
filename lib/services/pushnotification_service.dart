@@ -3,15 +3,17 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:app_settings/app_settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
+import '../reminders/ReminderModel.dart';
 import '../../main.dart';
 import '../common/CommonUtil.dart';
 import '../constants/fhb_parameters.dart';
-import '../constants/variable_constant.dart';
 import '../video_call/services/iOS_Notification_Handler.dart';
 import 'notification_helper.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest_all.dart' as tz;
 
 class PushNotificationService {
   late Stream<String> _tokenStream;
@@ -41,8 +43,13 @@ class PushNotificationService {
       // User denied permission to receive notifications.
       print('User denied permission to receive notifications.');
     }
-    await initPushNotification();
-    await initLocalNotification();
+    List<Future<dynamic>> conCurrentCalls = [
+      initPushNotification(),
+      initLocalNotification(),
+      configureLocalTimeZone(),
+    ];
+
+    await Future.wait(conCurrentCalls);
   }
 
   Future initPushNotification() async {
@@ -528,3 +535,148 @@ getIconBasedOnRegion({required bool isSmallIcon}) {
     return 'ic_launcher_qurbook';
   }
 }
+
+// Initialize the local time zone.
+configureLocalTimeZone() async {
+  tz.initializeTimeZones();
+  final String? timeZoneName = await FlutterTimezone.getLocalTimezone();
+  final timeZoneTemp = tz.getLocation(timeZoneName!);
+  tz.setLocalLocation(timeZoneTemp);
+}
+
+// Initialize scheduling of notifications based on a Reminder object.
+onInitScheduleNotification(Reminder? reminder) async {
+  try {
+    if (reminder == null) {
+      return; // Handle null reminder case
+    }
+
+    var eventDateTime = reminder.estart ?? '';
+    var scheduledDate = CommonUtil().parseDateTimeFromString(eventDateTime);
+
+    if (scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
+      final notificationId =
+      CommonUtil().toSigned32BitInt(int.tryParse('${reminder.eid}') ?? 0);
+      await zonedScheduleNotification(
+          reminder, notificationId, scheduledDate, true, false);
+    }
+
+    List<Future<dynamic>> conCurrentCalls = [
+      scheduleReminder(reminder.remindbefore, reminder, subtract: true),
+      scheduleReminder(reminder.remindin, reminder, subtract: false),
+    ];
+
+    await Future.wait(conCurrentCalls);
+  } catch (e, stackTrace) {
+    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+  }
+}
+
+// Schedule a reminder based on the specified duration before or after the event.
+scheduleReminder(String? remindDuration, Reminder reminder,
+    {bool subtract = false}) async {
+  try {
+    if (remindDuration != null && (int.tryParse(remindDuration) ?? 0) > 0) {
+      var eventDateTime = reminder.estart ?? '';
+      var scheduledDate = CommonUtil().parseDateTimeFromString(eventDateTime);
+
+      var remindDurationInMinutes = int.parse(remindDuration);
+      scheduledDate = subtract
+          ? scheduledDate.subtract(Duration(minutes: remindDurationInMinutes))
+          : scheduledDate.add(Duration(minutes: remindDurationInMinutes));
+
+      if (scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
+        final notificationId =
+        CommonUtil().calculateNotificationId(reminder, subtract);
+        await zonedScheduleNotification(
+            reminder, notificationId, scheduledDate, false, false);
+      }
+    }
+  } catch (e, stackTrace) {
+    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+  }
+}
+
+// Schedule a notification using FlutterLocalNotificationsPlugin with specified configurations.
+zonedScheduleNotification(
+    Reminder? reminder,
+    int notificationId,
+    tz.TZDateTime scheduledDateTime,
+    bool isButtonShown,
+    bool isSnoozePress) async {
+  try {
+    var isDismissButtonOnlyShown = false;
+    var channelId = remainderScheduleChannel.id;
+    var channelName = remainderScheduleChannel.name;
+    var channelDescription = remainderScheduleChannel.description;
+
+    // Use V3 channel for high importance reminders.
+    if (reminder?.importance == '2') {
+      channelId = remainderScheduleV3Channel.id;
+      channelName = remainderScheduleV3Channel.name;
+      channelDescription = remainderScheduleV3Channel.description;
+    }
+
+    reminder?.redirectTo = stringRegimentScreen;
+    reminder?.notificationListId = notificationId.toString();
+    reminder?.snoozeTapCountTime = (isButtonShown & isSnoozePress)
+        ? (reminder?.snoozeTapCountTime ?? 0) + 1
+        : 0;
+
+    // Adjust scheduled time for snooze actions.
+    if (isSnoozePress && (reminder?.snoozeTapCountTime ?? 0) <= 1) {
+      var now = tz.TZDateTime.now(tz.local);
+      scheduledDateTime = now.add(const Duration(minutes: 5));
+    } else if (isButtonShown & isSnoozePress) {
+      var now = tz.TZDateTime.now(tz.local);
+      scheduledDateTime = now.add(const Duration(minutes: 5));
+      isDismissButtonOnlyShown = true;
+    }
+
+    var payLoadData = jsonEncode(reminder?.toMap());
+
+    final notificationDetails = NotificationDetails(
+        android: AndroidNotificationDetails(
+          channelId, // ID
+          channelName, // Title
+          priority: Priority.high,
+          channelDescription: channelDescription,
+          icon: getIconBasedOnRegion(isSmallIcon: true),
+          largeIcon: DrawableResourceAndroidBitmap(
+              getIconBasedOnRegion(isSmallIcon: false)),
+          actions: isButtonShown
+              ? isDismissButtonOnlyShown
+              ? [dismissAction]
+              : [dismissAction, snoozeAction]
+              : null,
+        ),
+        iOS: isButtonShown
+            ? isDismissButtonOnlyShown
+            ? DarwinNotificationDetails(
+            categoryIdentifier: 'showSingleButtonCat')
+            : DarwinNotificationDetails(
+            categoryIdentifier: 'showBothButtonsCat')
+            : DarwinNotificationDetails(sound: 'ringtone.aiff'));
+    await localNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(reminder?.importance == '2'
+        ? remainderScheduleV3Channel
+        : remainderScheduleChannel);
+
+    await localNotificationsPlugin.zonedSchedule(
+        notificationId,
+        reminder?.title ?? 'scheduled title',
+        reminder?.description ?? 'scheduled body',
+        scheduledDateTime,
+        notificationDetails,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation.absoluteTime,
+        payload: payLoadData);
+    print('Sadham Hussain notificationId $notificationId');
+  } catch (e, stackTrace) {
+    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+  }
+}
+
