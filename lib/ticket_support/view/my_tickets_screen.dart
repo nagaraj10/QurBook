@@ -65,7 +65,7 @@ class _MyTicketsListScreenState extends State<MyTicketsListScreen> {
             onBackPressed(context);
           },
         ),
-        title: Text(strMyTickets,
+        title: Text(strServiceRequests,
             style: TextStyle(
                 fontSize: (CommonUtil().isTablet ?? false)
                     ? tabFontTitle
