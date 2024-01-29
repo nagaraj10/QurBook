@@ -809,6 +809,7 @@ const String DEVICE_TYPE = 'deviceType';
 const String USER_HUB_ID = 'userHubId';
 const String USER_ID = 'userId';
 const String DEVICE_NAME = 'deviceName';
+const String DEVICE_SOURCE = 'source';
 const String SHEELA_REMAINDER_START = 'SheelaRemainderStart';
 const String SHEELA_REMAINDER_END = 'SheelaRemainderEnd';
 const String SHEELA_REMAINDER_TIME = 'SheelaReminderTime';
@@ -994,14 +995,18 @@ String doseValueHigh = "2048";
 // sheela survey image capture
 
 const String strRecapture = 'Recapture';
+const String strRecordAgain = 'Record again';
 const String strRedirectRetakePicture = 'redirectRetakePicture';
+const String strRedirectRetakeAudio = 'redirectRetakeAudio';
 const String strRedirectToUploadImage = 'redirectUploadBucket';
+const String strRedirectToUploadAudio = 'redirectUploadBucketAudio';
 
 // file upload feature in sheela
 const String strRequestFileUrl = 'requestFileUrl';
 const String strRequestType = 'requestFileType';
 const String strImage = 'image';
 const String strImageSizeValidation = 'Unable to upload photo. File size exceeds 5MB';
+const String strAudioSizeValidation = 'File size exceeds 100MB';
 
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {
