@@ -1629,6 +1629,10 @@ makeApiRequest is used to update the data with latest data
       }else if (requestFileType == strVideo) {
         currentCon.videoThumbnailUrl =
             selectedImagePath;// Set audio thumbnail URL
+        Future.delayed(const Duration(seconds: 1)).then(
+              (_) => scrollToEnd()
+        );
+
       }
       if (isRetakeCapture ?? false) {
         isLoading.value = false; // Set loading flag to false
