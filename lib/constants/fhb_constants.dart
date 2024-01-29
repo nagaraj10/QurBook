@@ -996,25 +996,45 @@ String doseValueHigh = "2048";
 
 // sheela survey image capture
 
-const String strRecapture = 'Recapture';
-const String strRecordAgain = 'Record again';
-const String strRedirectRetakePicture = 'redirectRetakePicture';
-const String strRedirectRetakeAudio = 'redirectRetakeAudio';
-const String strRedirectRetakeVideo = 'redirectRetakeVideo';
-const String strRedirectToUploadImage = 'redirectUploadBucket';
-const String strRedirectToUploadAudio = 'redirectUploadBucketAudio';
-const String strRedirectToUploadVideo = 'redirectUploadBucketVideo';
+// Define constant strings for various messages or actions
+const String strRecapture = 'Recapture';  // Message for recapturing something
+const String strRecordAgain = 'Record again';  // Message for recording again
+const String strRedirectRetakePicture = 'redirectRetakePicture';  // Action for redirecting to retake a picture
+const String strRedirectRetakeAudio = 'redirectRetakeAudio';  // Action for redirecting to retake audio
+const String strRedirectRetakeVideo = 'redirectRetakeVideo';  // Action for redirecting to retake a video
+const String strRedirectToUploadImage = 'redirectUploadBucket';  // Action for redirecting to upload an image
+const String strRedirectToUploadAudio = 'redirectUploadBucketAudio';  // Action for redirecting to upload audio
+const String strRedirectToUploadVideo = 'redirectUploadBucketVideo';  // Action for redirecting to upload a video
+
 
 // file upload feature in sheela
+// Constant for requesting a file URL
 const String strRequestFileUrl = 'requestFileUrl';
+
+// Constant for requesting the file type
 const String strRequestType = 'requestFileType';
+
+// Constant representing the 'image' file type
 const String strImage = 'image';
+
+// Constant for the label 'Select video'
 const String strSelectVideo = 'Select video';
+
+// Constant for the label 'Record video'
 const String strRecordVideo = 'Record video';
+
+// Constant for the error message when image size exceeds 5MB
 const String strImageSizeValidation = 'Unable to upload photo. File size exceeds 5MB';
+
+// Constant for the error message when video size exceeds 100MB
 const String strVideoSizeValidation = 'Unable to upload video. File size exceeds 100MB';
+
+// Constant for the error message when audio file size exceeds 100MB
 const String strAudioSizeValidation = 'File size exceeds 100MB';
+
+// Constant for the label 'Video preview'
 const String strVideoPreview = 'Video preview';
+
 
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {

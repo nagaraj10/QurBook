@@ -1463,14 +1463,14 @@ makeApiRequest is used to update the data with latest data
       } else {
         stopTTS();
         currentPlayingConversation = chat;
-        if (((chat.imageThumbnailUrl != null) &&
-                (chat.imageThumbnailUrl != '')) ||
-            ((chat.audioThumbnailUrl != null) &&
-                (chat.audioThumbnailUrl != '')) ||
-            ((chat.videoThumbnailUrl != null) &&
-                (chat.videoThumbnailUrl != ''))) {
+        // Check if any of the thumbnail URLs (image, audio, or video) is not null or empty
+        if (((chat.imageThumbnailUrl != null) && (chat.imageThumbnailUrl != '')) ||
+            ((chat.audioThumbnailUrl != null) && (chat.audioThumbnailUrl != '')) ||
+            ((chat.videoThumbnailUrl != null) && (chat.videoThumbnailUrl != ''))) {
+          // If at least one thumbnail URL is present, call the function to check for buttons and play
           checkForButtonsAndPlay();
         } else {
+          // If none of the thumbnail URLs are present, call the function to play Text-to-Speech (TTS)
           playTTS();
         }
       }
@@ -1562,6 +1562,7 @@ makeApiRequest is used to update the data with latest data
     return buttons;
   }
 
+  // Get the redirect action based on the request file type
   String? getRedirectTo(requestFileType) {
     switch (requestFileType) {
       case strImage:
@@ -1571,9 +1572,11 @@ makeApiRequest is used to update the data with latest data
       case strVideo:
         return strRedirectToUploadVideo;
     }
+    // Return an empty string if the request file type is not recognized
     return '';
   }
 
+// Get the retake action based on the request file type
   String? getRetakeTo(requestFileType) {
     switch (requestFileType) {
       case strImage:
@@ -1583,9 +1586,11 @@ makeApiRequest is used to update the data with latest data
       case strVideo:
         return strRedirectRetakeVideo;
     }
+    // Return an empty string if the request file type is not recognized
     return '';
   }
 
+// Get the button title based on the request file type
   String? getButtonTitle(requestFileType) {
     switch (requestFileType) {
       case strImage:
@@ -1595,8 +1600,10 @@ makeApiRequest is used to update the data with latest data
       case strVideo:
         return strRecordAgain;
     }
+    // Return an empty string if the request file type is not recognized
     return '';
   }
+
 
   // A function to handle the logic for displaying in the Sheela chat
   Future<void> sheelaFileStaticConversation({
@@ -1806,13 +1813,21 @@ makeApiRequest is used to update the data with latest data
     return length; // Return the size of the image file
   }
 
+  // Asynchronously get the file size of a video given its file path
   Future<int> getVideoFileSize(String videoFilePath) async {
+    // Create a File object using the provided video file path
     File videoFile = File(videoFilePath);
+
+    // Get the length (size) of the video file in bytes
     int fileSizeInBytes = await videoFile.length();
-    // Convert bytes to megabytes
+
+    // Convert the file size from bytes to megabytes
     int fileSizeInMB = fileSizeInBytes ~/ (1024 * 1024);
+
+    // Return the file size in megabytes
     return fileSizeInMB;
   }
+
 
 
   openVideoCamera(String? btnTitle, String? requestFileType) async {

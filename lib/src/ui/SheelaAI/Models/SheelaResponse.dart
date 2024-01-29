@@ -76,7 +76,7 @@ class SheelaResponse {
   String? imageThumbnailUrl;
   String? audioThumbnailUrl;
   String? videoThumbnailUrl;
-  Uint8List? videoThumbnailUrlData;
+  Uint8List? videoThumbnailUrlData; // this for the videoThumbnail avoid loading issue
 
   SheelaResponse({this.recipientId,
     this.text,

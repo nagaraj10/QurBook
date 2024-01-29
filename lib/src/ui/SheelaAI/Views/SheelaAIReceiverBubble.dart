@@ -1031,65 +1031,76 @@ class SheelaAIReceiverBubble extends StatelessWidget {
     );
   }
 
+  // Widget to display a video card thumbnail based on the selected video image
   Widget getVideoCardThumbnail(String selectedImage) {
     return chat.videoThumbnailUrlData != null
-        ? getVideoCardThumbnailDataWidget(
-            chat.videoThumbnailUrlData!, selectedImage)
+    // If videoThumbnailUrlData is already available, use the data to create the widget
+        ? getVideoCardThumbnailDataWidget(chat.videoThumbnailUrlData!, selectedImage)
         : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FutureBuilder<Uint8List?>(
-                future: controller.getThumbnailImage(selectedImage),
-                builder: (_, AsyncSnapshot<Uint8List?> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  if (snapshot.hasData) {
-                    chat.videoThumbnailUrlData = snapshot.data!;
-                    return getVideoCardThumbnailDataWidget(
-                        snapshot.data!, selectedImage);
-                  }
-                  return SizedBox.shrink();
-                },
-              ),
-            ],
-          );
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // FutureBuilder to asynchronously load the video thumbnail data
+        FutureBuilder<Uint8List?>(
+          future: controller.getThumbnailImage(selectedImage),
+          builder: (_, AsyncSnapshot<Uint8List?> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Display a loading indicator while waiting for the thumbnail data
+              return Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasData) {
+              // If thumbnail data is available, update chat.videoThumbnailUrlData
+              chat.videoThumbnailUrlData = snapshot.data!;
+              // Use the data to create the widget
+              return getVideoCardThumbnailDataWidget(snapshot.data!, selectedImage);
+            }
+            // If no data is available, return an empty SizedBox
+            return SizedBox.shrink();
+          },
+        ),
+      ],
+    );
   }
 
+// Widget to display the video card thumbnail with an InkWell for interaction
   Widget getVideoCardThumbnailDataWidget(
       Uint8List? videoThumbnailUrlData, String selectedImage) {
     return InkWell(
-        onTap: () {
-          controller.isPlayPauseView.value = false;
-          controller.isFullScreenVideoPlayer.value =
-              (CommonUtil().isTablet ?? false) ? true : false;
-          controller.updateTimer(enable: false);
-          controller.isSheelaScreenActive = false;
-          Get.to(
-            VideoPlayerScreen(
-              videoURL: selectedImage,
-              isFromSheelaMedia: true,
-            ),
-          )!
-              .then((value) {
-            controller.updateTimer(enable: true);
-            controller.isSheelaScreenActive = true;
-          });
-        },
-        child: Container(child: Stack(
+      onTap: () {
+        // Handle tap event to play the video
+        controller.isPlayPauseView.value = false;
+        controller.isFullScreenVideoPlayer.value =
+        (CommonUtil().isTablet ?? false) ? true : false;
+        controller.updateTimer(enable: false);
+        controller.isSheelaScreenActive = false;
+        // Navigate to the VideoPlayerScreen with the selected video URL
+        Get.to(
+          VideoPlayerScreen(
+            videoURL: selectedImage,
+            isFromSheelaMedia: true,
+          ),
+        )!.then((value) {
+          controller.updateTimer(enable: true);
+          controller.isSheelaScreenActive = true;
+        });
+      },
+      child: Container(
+        child: Stack(
           alignment: Alignment.center,
           children: [
+            // Display the video thumbnail image
             Image.memory(videoThumbnailUrlData!),
+            // Display a play icon on top of the thumbnail
             Icon(
               Icons.play_circle,
               size: 28,
               color: PreferenceUtil.getIfQurhomeisAcive()
-                  ? Color(CommonUtil()
-                  .getQurhomeGredientColor()) // Qurhome gradient color when Qurhome is active
-                  : Color(CommonUtil()
-                  .getMyPrimaryColor()),
+                  ? Color(CommonUtil().getQurhomeGredientColor()) // Qurhome gradient color when Qurhome is active
+                  : Color(CommonUtil().getMyPrimaryColor()),
             ),
           ],
-        )));
+        ),
+      ),
+    );
   }
+
 }
