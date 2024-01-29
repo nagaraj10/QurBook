@@ -6,11 +6,13 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/reminders/ReminderModel.dart';
+import 'package:myfhb/services/pushnotification_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../QurHub/Controller/HubListViewController.dart';
 import '../../QurHub/View/HubListView.dart';
-import '../../Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import '../../caregiverAssosication/caregiverAPIProvider.dart';
 import '../../chat_socket/view/ChatDetail.dart';
 import '../../chat_socket/view/ChatUserList.dart';
@@ -40,7 +42,6 @@ import '../../src/ui/settings/CaregiverSettng.dart';
 import '../../src/utils/PageNavigator.dart';
 import '../../telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import '../../telehealth/features/Notifications/services/notification_services.dart';
-import '../../telehealth/features/Notifications/view/notification_main.dart';
 import '../../telehealth/features/appointments/controller/AppointmentDetailsController.dart';
 import '../../telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import '../../ticket_support/view/detail_ticket_view_screen.dart';
@@ -61,7 +62,7 @@ class IosNotificationHandler {
   bool escalteAction = false;
   bool rejectAction = false;
   bool declineAction = false;
-  bool? viewMemberAction, viewDetails = false;
+  bool? viewMemberAction, snoozeAction,dismissAction,viewDetails = false;
   bool communicationSettingAction = false;
   bool notificationReceivedFromKilledState = false;
   bool? viewRecordAction, chatWithCC = false;
@@ -70,6 +71,8 @@ class IosNotificationHandler {
 
   SheelaAIController? sheelaAIController =
       CommonUtil().onInitSheelaAIController();
+
+  Map<String, dynamic> tempJsonDecode = Map<String, dynamic>();
 
   setUpListerForTheNotification() {
     variable.reponseToRemoteNotificationMethodChannel.setMethodCallHandler(
@@ -153,57 +156,27 @@ class IosNotificationHandler {
       if (call.method == variable.callLocalNotificationMethod) {
         final data = Map<String, dynamic>.from(call.arguments);
         if (data != null) {
-          var eventId = data['eid'];
-          var estart = data['estart'];
-          var dosemeal = data['dosemeal'];
-
-          if (CommonUtil.isUSRegion() && estart != null) {
-            var qurhomeDashboardController =
-                CommonUtil().onInitQurhomeDashboardController();
-            qurhomeDashboardController.eventId.value = eventId;
-            qurhomeDashboardController.estart.value = estart;
-            if (dosemeal == doseValueless || dosemeal == doseValueHigh) {
-              qurhomeDashboardController.isOnceInAPlanActivity.value = true;
-            } else {
-              qurhomeDashboardController.isOnceInAPlanActivity.value = false;
-            }
-            qurhomeDashboardController.updateTabIndex(0);
-            PageNavigator.goToPermanent(Get.context!, router.rt_Landing);
-            // await Get.to(() => QurhomeDashboard())?.then((value) =>
-            //     PageNavigator.goToPermanent(Get.context!, router.rt_Landing));
-          } else {
-            // await Get.toNamed(router.rt_Regimen,
-            //     arguments: RegimentArguments(eventId: eventId));
-            Provider.of<RegimentViewModel>(
-              Get.context!,
-              listen: false,
-            ).regimentMode = RegimentMode.Schedule;
-            Provider.of<RegimentViewModel>(Get.context!, listen: false)
-                .regimentFilter = RegimentFilter.Missed;
-            PageNavigator.goToPermanent(Get.context!, router.rt_Regimen,
-                arguments: RegimentArguments(eventId: eventId));
-          }
+          callRegimenScreen(data);
         }
       }
     });
   }
 
   void handleNotificationResponse(Map<String, dynamic> jsonDecode) async {
-    // Create an instance of the QurhomeDashboardController using the onInitQurhomeDashboardController method
-    var qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
 
     // Extract the notification ID from the JSON data or use '0' if not present
-    var tempNotificationId = jsonDecode[parameters.notificationListId] ?? '0';
+    var tempNotificationId = jsonDecode[parameters.notificationListId] ?? getMyMeetingID().toString();
 
-    // Get the current notification ID from the QurhomeDashboardController, or an empty string if not set
-    var currentNotificationId = qurhomeDashboardController?.currentNotificationId.value ?? '';
+    // Get the current notification ID from the PreferenceUtil, or an empty string if not set
+    var currentNotificationId = PreferenceUtil.getStringValue(strCurrentNotificationId)??'';
 
     // Check if the temporary notification ID is different from the current notification ID
     if (tempNotificationId != currentNotificationId)
     {
-      // If different, update the current notification ID in the QurhomeDashboardController
-      qurhomeDashboardController?.currentNotificationId.value =
-          tempNotificationId;
+
+      await PreferenceUtil.saveString(strCurrentNotificationId, tempNotificationId);
+
+      tempJsonDecode = jsonDecode;
       if (!isAlreadyLoaded) {
         //notificationReceivedFromKilledState = true;
         await Future.delayed(const Duration(seconds: 5));
@@ -213,7 +186,6 @@ class IosNotificationHandler {
       model = NotificationModel.fromMap(data.containsKey("action")
           ? Map<String, dynamic>.from(data["data"]??data)
           : data);
-      print('21212 NotificationModel: ${model.toMap()}');
       if (data['type'] == 'call' && Platform.isAndroid) {
         if(data.containsKey('action')){
           if(data['action']=='Decline'){
@@ -259,10 +231,15 @@ class IosNotificationHandler {
           patientName: model?.patientName ?? '',
         ));
         model = NotificationModel();
+      } else if (data[strRedirectTo] == stringRegimentScreen &&
+          data["action"] == null) {
+        // Check if the redirect target is the regiment screen and no specific action is provided.
+
+        // If the conditions are met, call the function to navigate to the regiment screen.
+        callRegimenScreen(data);
       } else{
         var actionKey = data["action"] ?? '';
         if (actionKey.isNotEmpty) {
-          print('21212 actionKey: ${actionKey}');
           renewAction = actionKey == "Renew";
           callbackAction = actionKey == "Callback";
           rejectAction = actionKey == "Reject";
@@ -276,6 +253,12 @@ class IosNotificationHandler {
               actionKey.toLowerCase() == "ViewMember".toLowerCase();
           communicationSettingAction = actionKey.toLowerCase() ==
               "Communicationsettings".toLowerCase();
+          // Check if the actionKey, when converted to lowercase, matches the "Snooze" action.
+          snoozeAction = actionKey.toLowerCase() == stringSnooze.toLowerCase();
+
+          // Check if the actionKey, when converted to lowercase, matches the "Dismiss" action.
+          dismissAction = actionKey.toLowerCase() == stringDismiss.toLowerCase();
+
         }
         await actionForTheNotification();
       }
@@ -337,7 +320,6 @@ class IosNotificationHandler {
   }
 
   actionForTheNotification() async {
-    print('21212 actionForTheNotification: ${model.toMap()}');
     if (model.isCall!) {
       updateStatus(model.status!.toLowerCase());
       // updateStatus(parameters.accept.toLowerCase());
@@ -739,7 +721,7 @@ class IosNotificationHandler {
                 renewAction = false;
               })
             : Get.to(() => SplashScreen(
-                      nsRoute: 'regiment_screen',
+                      nsRoute: '',
                     ))!
                 .then((value) {
                 renewAction = false;
@@ -855,7 +837,7 @@ class IosNotificationHandler {
           : Get.to(() => SplashScreen(
                 nsRoute: 'my_record',
               ));
-    } else if (model.redirect == 'regiment_screen') {
+    } /*else if (model.redirect == 'regiment_screen') {
       await fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',
         'ns_type': CommonUtil.isUSRegion()
@@ -885,7 +867,7 @@ class IosNotificationHandler {
               nsRoute: 'regiment_screen',
             ));
       }
-    } else if (model.redirect == 'mycart') {
+    } */else if (model.redirect == 'mycart') {
       await fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',
         'ns_type': 'my cart',
@@ -906,7 +888,7 @@ class IosNotificationHandler {
           ? PageNavigator.goToPermanent(
               Get.key.currentContext!, router.rt_Landing)
           : Get.to(() => SplashScreen(
-                nsRoute: 'regiment_screen',
+                nsRoute: '',
               ));
     } else if (model.redirect == 'th_provider_hospital') {
       await fbaLog(eveParams: {
@@ -994,7 +976,44 @@ class IosNotificationHandler {
     } else if (model.templateName ==
         parameters.stringAssignOrUpdatePersonalPlanActivities) {
       //No Navigation required
-    } else {
+    } else if ((snoozeAction ?? false) && (model.redirect == parameters.stringRegimentScreen)) {
+      // Check if snoozeAction is true (or defaults to false if null) and the model redirect is to the regiment screen.
+
+      // Extract notification list ID from the model and initialize a temporary ID.
+      var tempNotificationListId = int.tryParse('${model.notificationListId}') ?? 0;
+
+      // Cancel the existing notification with the extracted notification list ID.
+      await localNotificationsPlugin.cancel(tempNotificationListId);
+
+      // Extract reminder data from the temporary JSON and obtain the event date-time.
+      var reminderData = Reminder.fromMap(tempJsonDecode);
+      var eventDateTime = reminderData.estart ?? '';
+
+      // Parse the event date-time into a DateTime object.
+      var scheduledDate = CommonUtil().parseDateTimeFromString(eventDateTime);
+
+      // Generate a new notification ID based on the canceled notification and snooze tap count.
+      var baseId = '${tempNotificationListId.toString()}${(reminderData.snoozeTapCountTime ?? 0).toString()}';
+      tempNotificationListId = int.tryParse(baseId) ?? 0;
+
+      // Schedule a new notification with the updated ID and other details.
+      await zonedScheduleNotification(reminderData, tempNotificationListId, scheduledDate, true, true);
+
+      // Reset snoozeAction and dismissAction to false.
+      snoozeAction = false;
+      dismissAction = false;
+    }
+    // Check if dismissAction is true (or defaults to false if null) and the model redirect is to the regiment screen.
+    else if ((dismissAction ?? false) && (model.redirect == parameters.stringRegimentScreen)) {
+      // Extract notification list ID from the model and cancel the corresponding notification.
+      var tempNotificationListId = int.tryParse('${model.notificationListId}') ?? 0;
+      await localNotificationsPlugin.cancel(tempNotificationListId);
+
+      // Reset snoozeAction and dismissAction to false.
+      snoozeAction = false;
+      dismissAction = false;
+    }
+    else {
       isAlreadyLoaded
           ? PageNavigator.goTo(
               Get.context!,
@@ -1004,6 +1023,49 @@ class IosNotificationHandler {
                 nsRoute: '',
               ));
     }
-    print('21212 actionForTheNotification: Done');
   }
+
+
+  // Function to handle redirection to the regiment screen based on provided data.
+  void callRegimenScreen(Map<String, dynamic> tempData) {
+    try {
+      var eventId = tempData['eid'];
+      var estart = tempData['estart'];
+      var dosemeal = tempData['dosemeal'];
+
+      // Check if the region is US and estart is not null.
+      if (CommonUtil.isUSRegion() && estart != null) {
+        // Initialize the QurhomeDashboardController and set its values.
+        var qurhomeDashboardController =
+        CommonUtil().onInitQurhomeDashboardController();
+        qurhomeDashboardController.eventId.value = eventId;
+        qurhomeDashboardController.estart.value = estart;
+
+        // Check dosemeal values for special cases and update the controller accordingly.
+        if (dosemeal == doseValueless || dosemeal == doseValueHigh) {
+          qurhomeDashboardController.isOnceInAPlanActivity.value = true;
+        } else {
+          qurhomeDashboardController.isOnceInAPlanActivity.value = false;
+        }
+
+        // Update the tab index and navigate to the permanent landing page.
+        qurhomeDashboardController.updateTabIndex(0);
+        PageNavigator.goToPermanent(Get.context!, router.rt_Landing);
+      } else {
+        // For non-US regions or when estart is null, navigate to the Regiment screen.
+        Provider.of<RegimentViewModel>(
+          Get.context!,
+          listen: false,
+        ).regimentMode = RegimentMode.Schedule;
+        Provider.of<RegimentViewModel>(Get.context!, listen: false)
+            .regimentFilter = RegimentFilter.Missed;
+        PageNavigator.goToPermanent(Get.context!, router.rt_Regimen,
+            arguments: RegimentArguments(eventId: eventId));
+      }
+    } catch (e, stackTrace) {
+      // Handle any exceptions and log them.
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
 }

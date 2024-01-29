@@ -1003,6 +1003,9 @@ const String strRequestType = 'requestFileType';
 const String strImage = 'image';
 const String strImageSizeValidation = 'Unable to upload photo. File size exceeds 5MB';
 
+// Define a constant string for storing the current notification ID.
+const String strCurrentNotificationId = 'currentNotificationId';
+
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {
     await _firebaseAnalytics.logEvent(

@@ -23,6 +23,15 @@ class Reminder {
   String? ack_local;
   String? dosemeal;
   String? snoozeTime;
+  // Nullable string to store the notification list ID associated with the notification.
+  String? notificationListId;
+
+  // Nullable string to store the redirection target when the notification is tapped.
+  String? redirectTo;
+
+  // Nullable integer to store the count of times the snooze action is tapped for the notification.
+  int? snoozeTapCountTime;
+
 
   Reminder(
       {this.eid,
@@ -43,7 +52,7 @@ class Reminder {
       this.importance = "0",
       this.ack = "",
       this.snoozeTime = '',
-      this.ack_local = "",this.dosemeal});
+      this.ack_local = "",this.dosemeal,this.notificationListId,this.redirectTo,this.snoozeTapCountTime});
 
   Reminder copyWith(
       {String? eid,
@@ -64,7 +73,7 @@ class Reminder {
       int? importance,
       String? ack,
       String? snoozeTime,
-      String? ack_local,String? dosemeal}) {
+      String? ack_local,String? dosemeal,String? notificationListId,String? redirectTo,int? snoozeTapCountTime}) {
     return Reminder(
       eid: eid ?? this.eid,
       title: title ?? this.title,
@@ -86,6 +95,9 @@ class Reminder {
       snoozeTime: snoozeTime ?? this.snoozeTime,
       ack_local: ack_local ?? this.ack_local,
       dosemeal: dosemeal ?? this.dosemeal,
+      notificationListId: notificationListId ?? this.notificationListId,
+      redirectTo: redirectTo ?? this.redirectTo,
+      snoozeTapCountTime: snoozeTapCountTime ?? this.snoozeTapCountTime,
     );
   }
 
@@ -112,6 +124,9 @@ class Reminder {
       'snoozeTime': snoozeTime,
       'ack_local': ack_local,
       'dosemeal': dosemeal,
+      'notificationListId': notificationListId,
+      'redirectTo': redirectTo,
+      'snoozeTapCountTime': snoozeTapCountTime,
     };
   }
 
@@ -125,9 +140,9 @@ class Reminder {
       teid_user: map['teid_user'],
       activityname: map['activityname'],
       uformname: map['uformname'],
-      remindin: map['remindin'],
+      remindin: (map['remindin']??'0'),
       remindin_type: map['remindin_type'],
-      remindbefore: map['remindbefore'],
+      remindbefore: (map['remindbefore']??'0'),
       remindbefore_type: map['remindbefore_type'],
       providerid: map['providerid'],
       providername: map['providername'],
@@ -137,6 +152,9 @@ class Reminder {
       snoozeTime: map['snoozeTime'],
       ack_local: map['ack_local'],
       dosemeal: map['dosemeal'],
+      notificationListId: map['notificationListId'],
+      redirectTo: map['redirectTo'],
+      snoozeTapCountTime: map['snoozeTapCountTime'],
     );
   }
 
@@ -147,7 +165,7 @@ class Reminder {
 
   @override
   String toString() {
-    return 'Reminder(eid: $eid, title: $title, description: $description, estart: $estart, tplanid: $tplanid, teid_user: $teid_user, activityname: $activityname, uformname: $uformname, remindin: $remindin, remindin_type: $remindin_type, providerid: $providerid, providername: $providername, evDisabled: $evDisabled,ack: $ack,ack_local: $ack_local,dosemeal: $dosemeal,snoozeTime: $snoozeTime)';
+    return 'Reminder(eid: $eid, title: $title, description: $description, estart: $estart, tplanid: $tplanid, teid_user: $teid_user, activityname: $activityname, uformname: $uformname, remindin: $remindin, remindin_type: $remindin_type, providerid: $providerid, providername: $providername, evDisabled: $evDisabled,ack: $ack,ack_local: $ack_local,dosemeal: $dosemeal,snoozeTime: $snoozeTime,notificationListId: $notificationListId,redirectTo: $redirectTo,snoozeTapCountTime: $snoozeTapCountTime)';
   }
 
   @override
@@ -174,7 +192,10 @@ class Reminder {
         other.ack == ack &&
         other.snoozeTime == snoozeTime &&
         other.ack_local == ack_local&&
-        other.dosemeal == dosemeal;
+        other.dosemeal == dosemeal&&
+        other.notificationListId == notificationListId&&
+        other.redirectTo == redirectTo&&
+        other.snoozeTapCountTime == snoozeTapCountTime;
   }
 
   @override
@@ -196,6 +217,9 @@ class Reminder {
         snoozeTime.hashCode ^
         ack_local.hashCode ^
         dosemeal.hashCode ^
+        notificationListId.hashCode ^
+        redirectTo.hashCode ^
+        snoozeTapCountTime.hashCode ^
         evDisabled.hashCode;
   }
 }

@@ -409,7 +409,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                           for (var i = 0; i < data.length; i++) {
                             apiReminder = data[i];
                           }
-                          if (Platform.isAndroid) {
+                          /*if (Platform.isAndroid) {
                               QurPlanReminders.getTheRemindersFromAPI(
                                   isSnooze: true,
                                   snoozeReminderData: apiReminder);
@@ -448,7 +448,38 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                 buttonData?.isSelected = false;
                               });
                             });
+                          }*/
+                          // Trigger the API call to get reminders with snooze option, using provided reminder data.
+                          QurPlanReminders.getTheRemindersFromAPI(
+                            isSnooze: true,
+                            snoozeReminderData: apiReminder,
+                          );
+
+                          // Check if the controller is currently in a loading state; if so, return without further processing.
+                          if (controller.isLoading.isTrue) {
+                            return;
                           }
+
+                          // If the chat has a single-use property set to true and an action has not been done yet, mark the action as done.
+                          if (chat.singleuse != null && chat.singleuse! && chat.isActionDone != null) {
+                            chat.isActionDone = true;
+                          }
+
+                          // Mark the associated button as selected.
+                          buttonData?.isSelected = true;
+
+                          // Start the Sheela process with information from the selected button.
+                          controller.startSheelaFromButton(
+                            buttonText: buttonData?.title,
+                            payload: buttonData?.payload,
+                            buttons: buttonData,
+                          );
+
+                          // Delayed execution to reset the selected state of the button after 3 seconds.
+                          Future.delayed(const Duration(seconds: 3), () {
+                            buttonData?.isSelected = false;
+                          });
+
                         } catch (e,  stackTrace) {
                           print("");
                             CommonUtil().appLogs(message: e, stackTrace: stackTrace);
