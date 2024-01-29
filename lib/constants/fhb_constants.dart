@@ -12,6 +12,9 @@ const String demoINURL = "https://thd1vqpl04nzmlaioqkss.vsolgmi.com/api1/";
 const String demoUSURL = "https://usuatnfnkjflaknlk.vsolgmi.com/api/";
 const String testUSURL = "https://ustestaktokskpped.vsolgmi.com/api/";
 
+const String refreshTokenEndPoint = 'auth/refresh-token';
+
+
 const String appQurbookBundleId = 'com.ventechsolutions.myFHB';
 const String appQurhomeBundleId = 'com.qurhealth.qurbook.us';
 const String appQurdayBundleId = 'com.qurhealth.patient.qurdemo';

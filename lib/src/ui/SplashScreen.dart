@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
+import 'package:myfhb/authentication/constants/constants.dart' as authConst;
 import 'package:get/get.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
