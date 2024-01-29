@@ -26,6 +26,7 @@ class AudioWidget extends StatefulWidget {
   bool isFromChat;
   bool isFromSheela;
   bool isPlayAudioUrl;
+  bool isFromSheelaFileUpload;
 
   Function(bool, String?)? deleteAudioFile;
 
@@ -35,6 +36,7 @@ class AudioWidget extends StatefulWidget {
     this.isFromChat = false,
     this.isFromSheela = false,
     this.isPlayAudioUrl = false,
+    this.isFromSheelaFileUpload = false,
   });
 
   @override
@@ -59,9 +61,12 @@ class AudioWidgetState extends State<AudioWidget> {
   final Codec _codec = Codec.aacADTS;
 
   bool isPlaying = false;
-  late SheelaAIController _sheelaAIController;
 
   String? audioUrl = '';
+
+  SheelaAIController? sheelaAIcontroller =
+  CommonUtil().onInitSheelaAIController();
+
 
   @override
   void initState() {
@@ -72,12 +77,9 @@ class AudioWidgetState extends State<AudioWidget> {
     audioUrl = widget.audioUrl;
     if (!widget.isPlayAudioUrl) {
       if (widget.isFromSheela) {
-        _sheelaAIController = Get.find();
         Future.delayed(const Duration(milliseconds: 5))
             .then((value) => onStartPlayerPressed());
       }
-    } else {
-      _sheelaAIController = Get.find();
     }
   }
 
@@ -106,7 +108,9 @@ class AudioWidgetState extends State<AudioWidget> {
   Widget build(BuildContext context) {
     return widget.isFromSheela
         ? getAudioWidgetWithPlayerForSheela()
-        : getAudioWidgetWithPlayer();
+        : widget.isFromSheelaFileUpload
+            ? getAudioWidgetSheelaFileUpload()
+            : getAudioWidgetWithPlayer();
   }
 
   Widget getAudioWidgetWithPlayerForSheela() {
@@ -131,7 +135,7 @@ class AudioWidgetState extends State<AudioWidget> {
                   onPressed: () {
                     isPlaying ? onPausePlayerPressed() : onStartPlayerPressed();
                     if (isPlaying) {
-                      _sheelaAIController.isLoading.value = true;
+                      sheelaAIcontroller?.isLoading.value = true;
                     }
                   },
                   icon: !isPlaying
@@ -226,7 +230,7 @@ class AudioWidgetState extends State<AudioWidget> {
               ),
             ),
             Expanded(
-              flex: 7,
+              flex: 3,
               child: Container(
                 height: 30.0.h,
                 child: Slider(
@@ -291,6 +295,72 @@ class AudioWidgetState extends State<AudioWidget> {
         ),
       );
 
+  Widget getAudioWidgetSheelaFileUpload(){
+    return Container(
+      width: CommonUtil().isTablet! ? 1.sw / 1.6 : 1.sw / 1.9,
+      color: Colors.grey[200],
+      padding: EdgeInsets.all(5),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            height: 30.h,
+            width: 30.w,
+            child: IconButton(
+              onPressed: () {
+                sheelaAIcontroller?.isSheelaScreenActive = false;
+                isPlaying ? onPausePlayerPressed() : onStartPlayerPressed();
+              },
+              padding: EdgeInsets.all(2),
+              icon: !isPlaying
+                  ? Icon(
+                Icons.play_arrow,
+                size: 30,
+              )
+                  : Icon(
+                Icons.pause,
+                size: 30,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 4,
+            child: Container(
+              height: 30.0.h,
+              child: Slider(
+                activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                inactiveColor: Colors.grey,
+                value: sliderCurrentPosition,
+                min: 0,
+                max: maxDuration,
+                onChanged: (value) async {
+                  await flutterSound!.seekToPlayer(
+                    Duration(
+                      seconds: value.round(),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Center(
+              child: Text(
+                _playerTxt,
+                style: TextStyle(
+                  fontSize: 14.0.sp,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+        ],
+        mainAxisAlignment: MainAxisAlignment.center,
+      ),
+    );
+  }
+
   onStartPlayerPressed() {
     return flutterSound!.playerState == PlayerState.isPaused
         ? pausePlayer()
@@ -300,7 +370,13 @@ class AudioWidgetState extends State<AudioWidget> {
   void startPlayer() async {
     isPlaying = true;
     if (widget.isFromSheela) {
-      _sheelaAIController.isLoading.value = true;
+      sheelaAIcontroller?.isLoading.value = true;
+    }
+    if (widget.isFromSheelaFileUpload) {
+      // Check if the widget indicates that the file is from Sheela File Upload
+
+      // If the condition is true, stop the Text-to-Speech (TTS) controller associated with Sheela
+      sheelaAIcontroller?.stopTTS();
     }
 
     try {
@@ -315,6 +391,16 @@ class AudioWidgetState extends State<AudioWidget> {
             Duration? DuarationOfFile = await (flutterSound!.startPlayer(
               fromDataBuffer: buffer,
               whenFinished: () {
+                if (widget.isFromSheelaFileUpload) {
+                  // Check if the widget indicates that the file is from Sheela File Upload
+
+                  // If true, update the timer in the Sheela AI controller (presumably to indicate some time-related information)
+                  sheelaAIcontroller?.updateTimer(enable: true);
+
+                  // Also, set Sheela screen as active
+                  sheelaAIcontroller?.isSheelaScreenActive = true;
+                }
+
                 stopPlayer();
               },
             ));
@@ -326,6 +412,15 @@ class AudioWidgetState extends State<AudioWidget> {
           fromURI: path,
           codec: Codec.aacMP4,
           whenFinished: () {
+            if (widget.isFromSheelaFileUpload) {
+              // Check if the widget indicates that the file is from Sheela File Upload
+
+              // If true, update the timer in the Sheela AI controller (presumably to indicate some time-related information)
+              sheelaAIcontroller?.updateTimer(enable: true);
+
+              // Also, set Sheela screen as active
+              sheelaAIcontroller?.isSheelaScreenActive = true;
+            }
             stopPlayer();
           },
         ));
@@ -433,7 +528,7 @@ class AudioWidgetState extends State<AudioWidget> {
       if (flutterSound!.playerState == PlayerState.isPaused) {
         await flutterSound!.resumePlayer();
         if (widget.isFromSheela) {
-          _sheelaAIController.isLoading.value = true;
+          sheelaAIcontroller?.isLoading.value = true;
         }
 
         print("Inside pause player resume");
@@ -441,7 +536,7 @@ class AudioWidgetState extends State<AudioWidget> {
       } else {
         await flutterSound!.pausePlayer();
         if (widget.isFromSheela) {
-          _sheelaAIController.isLoading.value = false;
+          sheelaAIcontroller?.isLoading.value = false;
         }
 
         print("Inside pause player pause");
@@ -465,7 +560,7 @@ class AudioWidgetState extends State<AudioWidget> {
   void stopPlayer() async {
     try {
       if (widget.isFromSheela) {
-        _sheelaAIController.isLoading.value = false;
+        sheelaAIcontroller?.isLoading.value = false;
       }
 
       await flutterSound!.stopPlayer();

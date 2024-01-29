@@ -122,7 +122,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
             }
           },
         ),
-        title: Text(strConstants.strMyTickets),
+        title: Text(strConstants.strServiceRequests),
       ),
       body: getData(),
     );
