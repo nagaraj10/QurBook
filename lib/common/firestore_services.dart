@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../constants/HeaderRequest.dart';
@@ -102,7 +101,7 @@ class FirestoreServices {
   }
 
   /// Updates data based on the specified [event].
-  void updateDataFor(String event) {
+  void updateDataFor(String event, {bool withLoading = false}) {
     //activity_vital_sos_1701347623184
     switch (event) {
       // Update data for 'activity' event
@@ -128,7 +127,7 @@ class FirestoreServices {
 
       // Default case: Update data for all events
       default:
-        qurhomeRegimenController.updateRegimentData();
+        qurhomeRegimenController.updateRegimentData(isLoading: withLoading);
         QurPlanReminders.getTheRemindersFromAPI();
         qurhomeRegimenController.getSOSButtonStatus();
         qurhomeDashboardController.getModuleAccess();

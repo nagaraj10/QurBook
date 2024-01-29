@@ -104,7 +104,7 @@ class QurhomeRegimenController extends GetxController {
       await Future.delayed(Duration(seconds: 2));
 
       // Call a function to refresh the next activity with the retrieved regiment list
-      await refreshTheNextActivity(regimentList,null);
+      await refreshTheNextActivity(regimentList, null);
 
       // Reset loading flags as data loading is complete
       loadingData.value = false;
@@ -498,19 +498,19 @@ class QurhomeRegimenController extends GetxController {
     isSOSAgentCallDialogOpen.value = newStatus;
   }
 
-  void updateRegimentData() {
+  void updateRegimentData({bool isLoading = false}) {
     try {
       dateHeader.value = getFormatedDate();
       if (qurhomeDashboardController.forPatientList.value) {
         getRegimenList(
-            isLoading: false,
+            isLoading: isLoading,
             patientId:
                 qurhomeDashboardController.careGiverPatientListResult!.childId);
       } else {
-        getRegimenList(isLoading: false);
+        getRegimenList(isLoading: isLoading);
       }
       if (!isTodaySelected.value) {
-        isTodaySelected.value = false;
+        isTodaySelected.value = isLoading;
         statusText.value =
             "${stringViewTotalNumberOfActivites} ${qurHomeRegimenResponseModel?.regimentsList?.length ?? 0}";
         update(["refershStatusText"]);
