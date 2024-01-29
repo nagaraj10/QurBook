@@ -65,6 +65,7 @@ class HubApiProvider {
     String nickName,
     String userId,
     String deviceType,
+    String source,
   ) async {
     http.Response responseJson;
     final data = {
@@ -73,7 +74,8 @@ class HubApiProvider {
       //USER_HUB_ID: hubId,
       USER_ID: userId,
       DEVICE_NAME: nickName,
-      ADDITION_DETAILS: {}
+      ADDITION_DETAILS: {},
+      DEVICE_SOURCE: source,
     };
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:package_info/package_info.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import '../../src/model/common_response_model.dart';
 import 'HubListViewController.dart';
@@ -35,6 +36,16 @@ class AddDeviceViewController extends GetxController {
   }
 
   saveDevice() async {
+    var source = '';
+    final packageInfo = await PackageInfo.fromPlatform();
+    if (packageInfo.packageName == appQurbookBundleId) {
+      source = strAppTypeQurbook;
+    } else if (packageInfo.packageName == appQurhomeBundleId) {
+      source = strAppTypeQurhome;
+    } else if (packageInfo.packageName == appQurdayBundleId) {
+      source = strAppTypeQurday;
+    }
+
     try {
       loadingData(true);
       final data = {
@@ -43,6 +54,7 @@ class AddDeviceViewController extends GetxController {
         //USER_HUB_ID: listController.hubListResponse?.result?.id,
         USER_ID: selectedId,
         DEVICE_NAME: " ",
+        DEVICE_SOURCE: source,
         ADDITION_DETAILS: {"manufacturer": listController.manufacturer}
       };
       final res = await _hubApiProvider.saveNewDevice(data);

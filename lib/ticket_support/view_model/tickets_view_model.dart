@@ -1,6 +1,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/claim/model/members/MembershipDetails.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -23,10 +24,24 @@ class TicketViewModel extends ChangeNotifier {
         var userTicketModel = await userTicketService.getTicketList();
         return userTicketModel;
       } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
         print('Exception in getting list of Ticket VM Model : ${e.toString()}');
       }
     }
+  }
+
+  Future<MemberShipDetails?> getMemberShip() async {
+    MemberShipDetails? memberShipDetailsResult;
+    final userId =
+        PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    if (userId != null) {
+      try {
+        memberShipDetailsResult = await userTicketService.getMemberShip(userId);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      }
+    }
+    return memberShipDetailsResult;
   }
 
   Future<TicketDetailResponseModel?> getTicketDetail(String sId) async {
@@ -36,7 +51,7 @@ class TicketViewModel extends ChangeNotifier {
         var userTicketModel = await userTicketService.getTicketDetails(sId);
         return userTicketModel;
       } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         print('Exception in getting list of Ticket VM Model : ${e.toString()}');
       }
@@ -51,7 +66,7 @@ class TicketViewModel extends ChangeNotifier {
         var userTicketTypesModel = await userTicketService.getTicketTypesList();
         return userTicketTypesModel;
       } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         print(
             'Exception in Get ticket category Ticket VM Model : ${e.toString()}');
@@ -67,7 +82,7 @@ class TicketViewModel extends ChangeNotifier {
       try {
         createTicketModel = await userTicketService.createTicket();
       } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         print('Exception in Craete Ticket VM Model : ${e.toString()}');
       }
@@ -84,7 +99,7 @@ class TicketViewModel extends ChangeNotifier {
         var commentTicketModel = await userTicketService.commentTicket();
         return commentTicketModel;
       } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
         print('Exception in Comment Ticket VM Model : ${e.toString()}');
       }
