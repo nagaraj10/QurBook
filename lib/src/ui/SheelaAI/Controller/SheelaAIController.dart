@@ -62,6 +62,10 @@ import '../Models/SheelaResponse.dart';
 import '../Models/sheela_arguments.dart';
 import '../Services/SheelaAIAPIServices.dart';
 import '../Services/SheelaAIBLEServices.dart';
+import 'package:image/image.dart' as img;
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 enum BLEStatus { Searching, Connected, Disabled }
 
@@ -2601,54 +2605,83 @@ makeApiRequest is used to update the data with latest data
                       }
                     });
                   }
-                } else if (button?.needAudio ?? false) {
+                } // Check if the button requires audio
+                else if (button?.needAudio ?? false) {
+                  // Check if loading is in progress, if true, return without performing any action
                   if (isLoading.isTrue) {
                     return;
                   }
+
+                  // Stop Text-to-Speech, update timer, set Sheela screen as inactive, and set button text
                   stopTTS();
                   updateTimer(enable: false);
                   isSheelaScreenActive = false;
                   btnTextLocal = button?.title ?? '';
+
+                  // Navigate to the audio record screen with Sheela file upload option
                   goToAudioRecordScreen(isFromSheelaFileUpload: true);
-                } else if (button?.btnRedirectTo == strRedirectRetakeAudio) {
+                }
+// Check if the button redirects to retake audio
+                else if (button?.btnRedirectTo == strRedirectRetakeAudio) {
+                  // Check if loading is in progress, if true, return without performing any action
                   if (isLoading.isTrue) {
                     return;
                   }
+
+                  // Stop Text-to-Speech, set Sheela screen as inactive, update timer, and set retake capture to true
                   stopTTS();
                   isSheelaScreenActive = false;
                   updateTimer(enable: false);
                   isRetakeCapture = true;
+
+                  // Navigate to the audio record screen with Sheela file upload option
                   goToAudioRecordScreen(isFromSheelaFileUpload: true);
-                } else if (button?.btnRedirectTo == strRedirectToUploadAudio) {
+                }
+// Check if the button redirects to upload audio
+                else if (button?.btnRedirectTo == strRedirectToUploadAudio) {
+                  // Retrieve the last Sheela conversation
                   SheelaResponse sheelaLastConversation = SheelaResponse();
                   sheelaLastConversation = conversations.last;
+
+                  // Set loading state and add a loading response to conversations
                   isLoading.value = true;
                   conversations.add(SheelaResponse(loading: true));
                   scrollToEnd();
+
+                  // Check if the last Sheela conversation has a valid audioThumbnailUrl
                   if (sheelaLastConversation.audioThumbnailUrl != null &&
                       sheelaLastConversation.audioThumbnailUrl != '') {
+                    // Save media regiment and handle the result
                     saveMediaRegiment(
                             sheelaLastConversation.audioThumbnailUrl ?? '', '')
                         .then((value) {
                       isLoading.value = false;
                       conversations.removeLast();
+
+                      // Check if the media saving operation was successful
                       if (value.isSuccess ?? false) {
+                        // Set fileRequestUrl and check loading state
                         fileRequestUrl = value.result?.accessUrl ?? '';
                         if (isLoading.isTrue) {
                           return;
                         }
+
+                        // Check if the last Sheela conversation is singleuse and isActionDone is not null, then set isActionDone to true
                         if (conversations.last.singleuse != null &&
                             conversations.last.singleuse! &&
                             conversations.last.isActionDone != null) {
                           conversations.last.isActionDone = true;
                         }
+
+                        // Set button isSelected to true, start Sheela from the button, and delay setting isSelected to false
                         button?.isSelected = true;
                         startSheelaFromButton(
-                            buttonText: button?.title,
-                            payload: button?.payload,
-                            buttons: button,
-                            isFromImageUpload: true,
-                            requestFileType: strAudio);
+                          buttonText: button?.title,
+                          payload: button?.payload,
+                          buttons: button,
+                          isFromImageUpload: true,
+                          requestFileType: strAudio,
+                        );
                         Future.delayed(const Duration(seconds: 3), () {
                           button?.isSelected = false;
                         });
@@ -2780,20 +2813,30 @@ makeApiRequest is used to update the data with latest data
     }
   }
 
+  // Function to navigate to the AudioRecorder screen
   void goToAudioRecordScreen({bool? isFromSheelaFileUpload = false}) {
+    // Use Get.to to navigate to the AudioRecorder screen and pass AudioScreenArguments
     Get.to(AudioRecorder(
       arguments: AudioScreenArguments(
-          fromVoice: false,
-          isFromSheelaFileUpload: isFromSheelaFileUpload),
+        fromVoice: false,
+        isFromSheelaFileUpload: isFromSheelaFileUpload,
+      ),
     ))?.then((results) {
+      // Set isSheelaScreenActive to true and enable the timer
       isSheelaScreenActive = true;
       updateTimer(enable: true);
+
+      // Retrieve the audioPath from the results
       var audioPath = results[keyAudioFile];
+
+      // Check if audioPath is not null and not empty
       if (audioPath != null && audioPath != '') {
+        // Call sheelaFileStaticConversation with provided parameters
         sheelaFileStaticConversation(
-            btnTitle: btnTextLocal ?? '',
-            selectedImagePath: audioPath,
-            requestFileType: strAudio);
+          btnTitle: btnTextLocal ?? '', // Use btnTextLocal or an empty string if null
+          selectedImagePath: audioPath,
+          requestFileType: strAudio,
+        );
       }
     });
   }
