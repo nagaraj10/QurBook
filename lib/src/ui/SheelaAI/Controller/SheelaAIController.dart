@@ -50,6 +50,8 @@ import '../../../model/GetDeviceSelectionModel.dart';
 import '../../../model/user/MyProfileModel.dart';
 import '../../../resources/network/ApiBaseHelper.dart';
 import '../../../resources/repository/health/HealthReportListForUserRepository.dart';
+import '../../audio/AudioRecorder.dart';
+import '../../audio/AudioScreenArguments.dart';
 import '../Models/DeviceStatus.dart';
 import '../Models/GoogleTTSRequestModel.dart';
 import '../Models/GoogleTTSResponseModel.dart';
@@ -151,7 +153,7 @@ class SheelaAIController extends GetxController {
 
   String? btnTextLocal = '';
   bool? isRetakeCapture = false;
-  String? imageRequestUrl = '';
+  String? fileRequestUrl = '';
 
   final ApiBaseHelper _helper = ApiBaseHelper();
   Timer? _debounceRecognizedWords;
@@ -399,7 +401,7 @@ class SheelaAIController extends GetxController {
       // Check if the 'isFromFileUpload' variable is defined and truthy, otherwise default to false
       if (isFromImageUpload ?? false) {
         // If it's an image upload, update additionalInfo with the file URL and request type
-        additionalInfo?[strRequestFileUrl] = imageRequestUrl;  // Add file URL to additionalInfo
+        additionalInfo?[strRequestFileUrl] = fileRequestUrl;  // Add file URL to additionalInfo
         additionalInfo?[strRequestType] = requestFileType;     // Add request type to additionalInfo
       }
       final sheelaRequest = SheelaRequestModel(
@@ -1459,7 +1461,10 @@ makeApiRequest is used to update the data with latest data
       } else {
         stopTTS();
         currentPlayingConversation = chat;
-        if (chat.imageThumbnailUrl != null && chat.imageThumbnailUrl != '') {
+        if (((chat.imageThumbnailUrl != null) &&
+            (chat.imageThumbnailUrl != '')) ||
+            ((chat.audioThumbnailUrl != null) &&
+                (chat.audioThumbnailUrl != ''))) {
           checkForButtonsAndPlay();
         } else {
           playTTS();
@@ -1533,16 +1538,16 @@ makeApiRequest is used to update the data with latest data
   }
 
   // Function to generate a list of button configurations for image preview
-  List<Buttons> sheelaImagePreviewButtons(String? btnTitle) {
+  List<Buttons> sheelaImagePreviewButtons(String? btnTitle,String? requestFileType) {
     List<Buttons> buttons = [
       Buttons(
         title: strCamelYes, // Button title
         payload: btnTitle, // Payload data (optional)
-        btnRedirectTo: strRedirectToUploadImage, // Redirection information
+        btnRedirectTo: getRedirectTo(requestFileType), // Redirection information
       ),
       Buttons(
-        title: strRecapture, // Button title
-        btnRedirectTo: strRedirectRetakePicture, // Redirection information
+        title: getButtonTitle(requestFileType), // Button title
+        btnRedirectTo: getRetakeTo(requestFileType), // Redirection information
       ),
       Buttons(
         title: strExit, // Button title
@@ -1553,10 +1558,41 @@ makeApiRequest is used to update the data with latest data
     return buttons;
   }
 
-  // A function to handle the logic for displaying an image thumbnail in the Sheela chat
-  Future<void> sheelaImagePreviewThumbnail({
+  String? getRedirectTo(requestFileType) {
+    switch (requestFileType) {
+      case strImage:
+        return strRedirectToUploadImage;
+      case strAudio:
+        return strRedirectToUploadAudio;
+    }
+    return '';
+  }
+
+  String? getRetakeTo(requestFileType) {
+    switch (requestFileType) {
+      case strImage:
+        return strRedirectRetakePicture;
+      case strAudio:
+        return strRedirectRetakeAudio;
+    }
+    return '';
+  }
+
+  String? getButtonTitle(requestFileType) {
+    switch (requestFileType) {
+      case strImage:
+        return strRecapture;
+      case strAudio:
+        return strRecordAgain;
+    }
+    return '';
+  }
+
+  // A function to handle the logic for displaying in the Sheela chat
+  Future<void> sheelaFileStaticConversation({
     String? btnTitle, // Optional button title
     String? selectedImagePath, // Path to the selected image
+    String? requestFileType
   }) async {
     try {
       // Left Sheela card setup
@@ -1573,9 +1609,14 @@ makeApiRequest is used to update the data with latest data
       currentCon.recipientId =
           sheelaRecepId; // Set recipient ID again (duplicated line?)
       currentCon.buttons = sheelaImagePreviewButtons(
-          btnTitle); // Generate buttons for the Sheela card
-      currentCon.imageThumbnailUrl =
-          selectedImagePath; // Set image thumbnail URL
+          btnTitle,requestFileType); // Generate buttons for the Sheela card
+      if (requestFileType == strImage) {
+        currentCon.imageThumbnailUrl =
+            selectedImagePath; // Set image thumbnail URL
+      } else if (requestFileType == strAudio) {
+        currentCon.audioThumbnailUrl =
+            selectedImagePath; // Set audio thumbnail URL
+      }
       if (isRetakeCapture ?? false) {
         isLoading.value = false; // Set loading flag to false
         conversations.removeLast(); // Remove the last conversation (if retake)
@@ -1648,9 +1689,10 @@ makeApiRequest is used to update the data with latest data
           pickedFile.path); // Create a File object from the captured image path
 
       // Trigger the image preview thumbnail with the captured image path
-      sheelaImagePreviewThumbnail(
+      sheelaFileStaticConversation(
         btnTitle: btnTitle, // Optional button title
         selectedImagePath: _image.path, // Path to the captured image
+        requestFileType: strImage
       );
     }
   }
@@ -1669,9 +1711,10 @@ makeApiRequest is used to update the data with latest data
           // Check if the image path is not null or empty
           if (imagePathGallery != null && imagePathGallery != '') {
             // Trigger the image preview thumbnail with the cropped image path
-            sheelaImagePreviewThumbnail(
+            sheelaFileStaticConversation(
               btnTitle: btnTitle, // Optional button title
               selectedImagePath: imagePathGallery, // Path to the cropped image
+              requestFileType: strImage
             );
           }
         } else {
@@ -2469,7 +2512,7 @@ makeApiRequest is used to update the data with latest data
                       conversations
                           .removeLast(); // Remove the loading response from conversations
                       if (value.isSuccess ?? false) {
-                        imageRequestUrl = value.result?.accessUrl ?? '';
+                        fileRequestUrl = value.result?.accessUrl ?? '';
                         if (isLoading.isTrue) {
                           return; // If loading, do nothing
                         }
@@ -2489,6 +2532,89 @@ makeApiRequest is used to update the data with latest data
                             isFromImageUpload: true,
                             requestFileType: strImage); // add requestFileType
                         // Delay for 3 seconds and then unselect the button
+                        Future.delayed(const Duration(seconds: 3), () {
+                          button?.isSelected = false;
+                        });
+                      }
+                    });
+                  }
+                } // Check if the button requires audio
+                else if (button?.needAudio ?? false) {
+                  // Check if loading is in progress, if true, return without performing any action
+                  if (isLoading.isTrue) {
+                    return;
+                  }
+
+                  // Stop Text-to-Speech, update timer, set Sheela screen as inactive, and set button text
+                  stopTTS();
+                  updateTimer(enable: false);
+                  isSheelaScreenActive = false;
+                  btnTextLocal = button?.title ?? '';
+
+                  // Navigate to the audio record screen with Sheela file upload option
+                  goToAudioRecordScreen(isFromSheelaFileUpload: true);
+                }
+// Check if the button redirects to retake audio
+                else if (button?.btnRedirectTo == strRedirectRetakeAudio) {
+                  // Check if loading is in progress, if true, return without performing any action
+                  if (isLoading.isTrue) {
+                    return;
+                  }
+
+                  // Stop Text-to-Speech, set Sheela screen as inactive, update timer, and set retake capture to true
+                  stopTTS();
+                  isSheelaScreenActive = false;
+                  updateTimer(enable: false);
+                  isRetakeCapture = true;
+
+                  // Navigate to the audio record screen with Sheela file upload option
+                  goToAudioRecordScreen(isFromSheelaFileUpload: true);
+                }
+// Check if the button redirects to upload audio
+                else if (button?.btnRedirectTo == strRedirectToUploadAudio) {
+                  // Retrieve the last Sheela conversation
+                  SheelaResponse sheelaLastConversation = SheelaResponse();
+                  sheelaLastConversation = conversations.last;
+
+                  // Set loading state and add a loading response to conversations
+                  isLoading.value = true;
+                  conversations.add(SheelaResponse(loading: true));
+                  scrollToEnd();
+
+                  // Check if the last Sheela conversation has a valid audioThumbnailUrl
+                  if (sheelaLastConversation.audioThumbnailUrl != null &&
+                      sheelaLastConversation.audioThumbnailUrl != '') {
+                    // Save media regiment and handle the result
+                    saveMediaRegiment(
+                            sheelaLastConversation.audioThumbnailUrl ?? '', '')
+                        .then((value) {
+                      isLoading.value = false;
+                      conversations.removeLast();
+
+                      // Check if the media saving operation was successful
+                      if (value.isSuccess ?? false) {
+                        // Set fileRequestUrl and check loading state
+                        fileRequestUrl = value.result?.accessUrl ?? '';
+                        if (isLoading.isTrue) {
+                          return;
+                        }
+
+                        // Check if the last Sheela conversation is singleuse and isActionDone is not null, then set isActionDone to true
+                        if (conversations.last.singleuse != null &&
+                            conversations.last.singleuse! &&
+                            conversations.last.isActionDone != null) {
+                          conversations.last.isActionDone = true;
+                        }
+
+                        // Set button isSelected to true, start Sheela from the button, and delay setting isSelected to false
+                        button?.isSelected = true;
+                        startSheelaFromButton(
+                          buttonText: button?.title,
+                          payload: button?.payload,
+                          buttons: button,
+                          isFromImageUpload: true,
+                          requestFileType: strAudio,
+                        );
                         Future.delayed(const Duration(seconds: 3), () {
                           button?.isSelected = false;
                         });
@@ -2526,5 +2652,34 @@ makeApiRequest is used to update the data with latest data
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
+
+  // Function to navigate to the AudioRecorder screen
+  void goToAudioRecordScreen({bool? isFromSheelaFileUpload = false}) {
+    // Use Get.to to navigate to the AudioRecorder screen and pass AudioScreenArguments
+    Get.to(AudioRecorder(
+      arguments: AudioScreenArguments(
+        fromVoice: false,
+        isFromSheelaFileUpload: isFromSheelaFileUpload,
+      ),
+    ))?.then((results) {
+      // Set isSheelaScreenActive to true and enable the timer
+      isSheelaScreenActive = true;
+      updateTimer(enable: true);
+
+      // Retrieve the audioPath from the results
+      var audioPath = results[keyAudioFile];
+
+      // Check if audioPath is not null and not empty
+      if (audioPath != null && audioPath != '') {
+        // Call sheelaFileStaticConversation with provided parameters
+        sheelaFileStaticConversation(
+          btnTitle: btnTextLocal ?? '', // Use btnTextLocal or an empty string if null
+          selectedImagePath: audioPath,
+          requestFileType: strAudio,
+        );
+      }
+    });
+  }
+
 }
 

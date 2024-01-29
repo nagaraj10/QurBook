@@ -26,6 +26,8 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart';
 
+import '../../../Qurhome/Common/GradientAppBarQurhome.dart';
+
 class AudioRecorder extends StatefulWidget {
   AudioScreenArguments? arguments;
   AudioRecorder({this.arguments});
@@ -105,15 +107,28 @@ class _AudioRecorderState extends State<AudioRecorder> {
         (event) {
           setState(
             () {
-              if (event.duration.inSeconds >= 180) {
-                stopRecorder();
-                toast.getToast(
-                  'Maximum duration to record is 3 min',
-                  Colors.red,
-                );
-                this.setState(
-                  () {},
-                );
+              if (widget.arguments?.isFromSheelaFileUpload ?? false) {
+                if (event.duration.inMinutes >= 120) { // // maximum audio size is 100mb
+                  stopRecorder();
+                  toast.getToastForLongTime(
+                    strAudioSizeValidation,
+                    Colors.red,
+                  );
+                  this.setState(
+                    () {},
+                  );
+                }
+              } else {
+                if (event.duration.inSeconds >= 180) {
+                  stopRecorder();
+                  toast.getToast(
+                    'Maximum duration to record is 3 min',
+                    Colors.red,
+                  );
+                  this.setState(
+                    () {},
+                  );
+                }
               }
               _recorderTxt = _printDuration(event.duration);
               _dbLevel = event.decibels;
@@ -228,7 +243,9 @@ class _AudioRecorderState extends State<AudioRecorder> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        flexibleSpace: GradientAppBar(),
+        flexibleSpace: (PreferenceUtil.getIfQurhomeisAcive())
+            ? GradientAppBarQurhome()
+            : GradientAppBar(),
         backgroundColor: Colors.transparent,
         leading: InkWell(
           child: Icon(
