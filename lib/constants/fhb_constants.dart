@@ -12,6 +12,7 @@ const String demoINURL = "https://thd1vqpl04nzmlaioqkss.vsolgmi.com/api1/";
 const String demoUSURL = "https://usuatnfnkjflaknlk.vsolgmi.com/api/";
 const String APP_NAME = 'QurHome';
 const String testUSURL = "https://ustestaktokskpped.vsolgmi.com/api/";
+const String refreshTokenEndPoint = 'auth/refresh-token';
 const String appQurbookBundleId = 'com.ventechsolutions.myFHB';
 const String appQurhomeBundleId = 'com.qurhealth.qurbook.us';
 const String appQurdayBundleId = 'com.qurhealth.patient.qurdemo';
@@ -340,7 +341,7 @@ const String ic_gold_member = 'assets/user/gold-member.png';
 
 //Voice Cloning
 const String icVoicePlay = 'assets/voice_clone/play_icon.svg';
-const String icVoiceMic= 'assets/voice_clone/mic_icon.svg';
+const String icVoiceMic = 'assets/voice_clone/mic_icon.svg';
 const String icVoicePause = 'assets/voice_clone/pause_icon.svg';
 const String icVoiceStop = 'assets/voice_clone/stop_icon.svg';
 
@@ -746,14 +747,14 @@ const String strThereAreNoPreferredLabsInYourProfile =
 
 const String strPreferredDoctors = 'Preferred Doctors';
 
-
-
 //Voice cloning
-const String makeSureNotInNoiseDescription ='Make sure your are not in a noisy environment.';
-const String rec ='REC';
-const String fileShouldLess ='Error file should be less than 100 Mb';
-const String reRecord ='Re-Record';
-const String readTheDisplayContentDescription ='Read the displayed content on the screen once the timer concludes to record your voice';
+const String makeSureNotInNoiseDescription =
+    'Make sure your are not in a noisy environment.';
+const String rec = 'REC';
+const String fileShouldLess = 'Error file should be less than 100 Mb';
+const String reRecord = 'Re-Record';
+const String readTheDisplayContentDescription =
+    'Read the displayed content on the screen once the timer concludes to record your voice';
 
 var tckTitle = '';
 String? tckTitleOpt = '';
@@ -944,8 +945,7 @@ const String KEY_IS_Vitals_ManualRecording_Restricted =
     'isVitalsManualRecordingRestricted';
 
 // Define a constant for the key related to voice clone patient assignment
-const String strVoiceClonePatientAssignment =
-    'voiceClonePatientAssignment';
+const String strVoiceClonePatientAssignment = 'voiceClonePatientAssignment';
 
 // Flutter Speech-to-text
 const String strListening = 'Listening';
@@ -1005,7 +1005,8 @@ const String strRedirectToUploadAudio = 'redirectUploadBucketAudio';
 const String strRequestFileUrl = 'requestFileUrl';
 const String strRequestType = 'requestFileType';
 const String strImage = 'image';
-const String strImageSizeValidation = 'Unable to upload photo. File size exceeds 5MB';
+const String strImageSizeValidation =
+    'Unable to upload photo. File size exceeds 5MB';
 const String strAudioSizeValidation = 'File size exceeds 100MB';
 
 Future<void> fbaLog({String? eveName, eveParams}) async {

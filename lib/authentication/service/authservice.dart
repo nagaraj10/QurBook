@@ -13,6 +13,7 @@ import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/HeaderRequest.dart';
 import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/variable_constant.dart' as variable;
 
 class AuthService {
   final String _auth_base_url = CommonUtil.BASE_URL_FROM_RES + 'auth/';
@@ -56,6 +57,10 @@ class AuthService {
         final String responseString = responseResult[strResult];
         await PreferenceUtil.saveString(
             Constants.KEY_AUTHTOKEN, responseString);
+         var refToken= responseResult[strRefreshToken];
+         if(refToken!=null && refToken!=''){
+           await PreferenceUtil.saveString(strRefreshToken,refToken);
+         }
         return responseResult;
       } else if (response.statusCode == 500) {
         final responseResult = jsonDecode(response.body);
@@ -209,8 +214,12 @@ class AuthService {
       if (response!.statusCode == 200) {
         final responseResult = jsonDecode(response.body);
         final String responseString = responseResult[strResult];
+        final String responseRefreshToken = responseResult[strRefreshToken];
         await PreferenceUtil.saveString(
             Constants.KEY_AUTHTOKEN, responseString);
+        ///Saving the refreshToken and token expiry during the signup process
+        await PreferenceUtil.saveString(strRefreshToken,responseRefreshToken);
+        await PreferenceUtil.saveInt(strAuthExpiration,variable.parseJwtPayLoad(responseString)[strAuthExpiration]);
         return responseResult;
       } else {
         return createErrorJsonString(response);
@@ -237,6 +246,8 @@ class AuthService {
         final String responseString = responseResult[strResult];
         await PreferenceUtil.saveString(
             Constants.KEY_AUTHTOKEN, responseString);
+        var refToken= responseResult[strRefreshToken];
+        await PreferenceUtil.saveString(strRefreshToken,refToken);
         return responseResult;
       } else {
         return createErrorJsonString(response);

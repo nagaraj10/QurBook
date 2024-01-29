@@ -181,6 +181,8 @@ const String strIsVirtualNumberUser = 'isVirtualNumberUser';
 const String strUserName = 'userName';
 const String strProviderPayLoad = 'providerPayload';
 const String strIdToken = 'IdToken';
+const String strAuthExpiration = 'exp';
+const String strJwtToken = 'jwtToken';
 const String strphonenumber = 'phone_number';
 const String strConfirmDialog = 'Confirmation Dialog';
 const String strUserDetails = 'user_details';
@@ -204,6 +206,9 @@ const String primaryNumber = 'Primary Number';
 const String accept = 'Accept';
 const String dismiss = 'Dismiss';
 const String alternateNumber = 'Alternate Number';
+
+///Refresh token
+const String strRefreshToken ='refreshToken';
 
 //Strings used in ChangePassword
 const String strNewPassword = 'newPassword';
