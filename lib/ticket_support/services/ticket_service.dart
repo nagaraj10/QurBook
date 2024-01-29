@@ -10,6 +10,7 @@ import 'package:myfhb/ticket_support/model/ticket_details_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/TicketsListResponse.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 import 'package:myfhb/ticket_support/model/user_comments_model.dart';
+import 'package:myfhb/claim/model/members/MembershipDetails.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
 
 class UserTicketService {
@@ -53,6 +54,14 @@ class UserTicketService {
     print(
         'User Ticket Types Reponse : ${_ticketTypesModel.ticketTypeResults!.asMap()}');
     return _ticketTypesModel;
+  }
+
+  Future<MemberShipDetails> getMemberShip(String userId) async {
+    final responseQuery =
+        '${query.qr_membership}$userId';
+    var  response = await _helper.getMemberShipDetails(responseQuery);
+
+    return MemberShipDetails.fromJson(response);
   }
 
   // Create Ticket
