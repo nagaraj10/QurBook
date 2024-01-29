@@ -631,7 +631,7 @@ const strYourProviders = 'Providers';
 const strNoProvider = 'No providers added';
 const strProviderActive = 'Providers';
 const strHowVideos = 'Help';
-const strHelpDesk = 'Help Desk';
+const strServices = 'Services';
 const strNoVideos = 'No videos available';
 const strTrueDeskTickets = 'True Desk Tickets';
 const strVideosAvailable = 'videos available';
@@ -731,7 +731,8 @@ const String strCamelNo = 'No';
 const String Rmarks_HINT = "Remarks";
 
 // True desk
-const String strMyTickets = 'Tickets';
+const String strServiceRequests = 'Service Requests';
+const String strNewServiceRequests = 'New Service Request';
 const String strAddMyTicket = 'Create Ticket';
 const String strSubmitNewTicket = 'SUBMIT';
 const String strTicketTitle = 'Title';
