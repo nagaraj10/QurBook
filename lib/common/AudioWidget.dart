@@ -297,7 +297,7 @@ class AudioWidgetState extends State<AudioWidget> {
 
   Widget getAudioWidgetSheelaFileUpload(){
     return Container(
-      width: 1.sw / 1.9,
+      width: CommonUtil().isTablet! ? 1.sw / 1.6 : 1.sw / 1.9,
       color: Colors.grey[200],
       padding: EdgeInsets.all(5),
       child: Row(
