@@ -12,6 +12,9 @@ const String demoINURL = "https://thd1vqpl04nzmlaioqkss.vsolgmi.com/api1/";
 const String demoUSURL = "https://usuatnfnkjflaknlk.vsolgmi.com/api/";
 const String testUSURL = "https://ustestaktokskpped.vsolgmi.com/api/";
 
+const String refreshTokenEndPoint = 'auth/refresh-token';
+
+
 const String appQurbookBundleId = 'com.ventechsolutions.myFHB';
 const String appQurhomeBundleId = 'com.qurhealth.qurbook.us';
 const String appQurdayBundleId = 'com.qurhealth.patient.qurdemo';
@@ -806,6 +809,7 @@ const String DEVICE_TYPE = 'deviceType';
 const String USER_HUB_ID = 'userHubId';
 const String USER_ID = 'userId';
 const String DEVICE_NAME = 'deviceName';
+const String DEVICE_SOURCE = 'source';
 const String SHEELA_REMAINDER_START = 'SheelaRemainderStart';
 const String SHEELA_REMAINDER_END = 'SheelaRemainderEnd';
 const String SHEELA_REMAINDER_TIME = 'SheelaReminderTime';
