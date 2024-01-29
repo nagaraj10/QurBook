@@ -43,6 +43,7 @@ import 'or_divider.dart';
 class VerifyPatient extends StatefulWidget {
   VerifyPatient(
       {this.PhoneNumber,
+        this.pwd,
       this.from,
       this.fName,
       this.lName,
@@ -58,6 +59,7 @@ class VerifyPatient extends StatefulWidget {
       this.isVirtualNumber = false});
 
   final String? PhoneNumber;
+  final String? pwd;
   final String? from;
   final String? fName;
   final String? mName;
@@ -514,6 +516,7 @@ class _VerifyPatientState extends State<VerifyPatient>
               : PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         );
         var map = logInModel.toJson();
+        map['password']=widget.pwd;
         var response = await authViewModel.verifyPatient(map);
         print(response.toString());
         _checkResponse(response);
@@ -677,6 +680,9 @@ class _VerifyPatientState extends State<VerifyPatient>
       id_token_string = parseJwtPayLoad(decodesstring!)[strToken]
           [strProviderPayLoad][strIdToken];
       final idTokens = parseJwtPayLoad(id_token_string!);
+      ///Added for token refresh
+      await PreferenceUtil.saveInt(strAuthExpiration,parseJwtPayLoad(decodesstring!)[strAuthExpiration]);
+    ///
       print(idTokens);
       user_mobile_no = idTokens[strphonenumber];
       print(idTokens[strphonenumber]);
