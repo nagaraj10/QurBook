@@ -81,8 +81,7 @@ class _ChatUserListState extends State<ChatUserList> {
 
   final controller = Get.put(ChatUserListController());
 
-  var qurhomeDashboardController =
-      CommonUtil().onInitQurhomeDashboardController();
+  var qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
 
   @override
   initState() {
@@ -104,8 +103,7 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   void getFamilyListMap() async {
-    familyListModel = await (controller.getFamilyMappingList()
-        as Future<dynamic>); //FUcrash Future<CaregiverPatientChatModel?>
+    familyListModel = await (controller.getFamilyMappingList() as Future<dynamic>); //FUcrash Future<CaregiverPatientChatModel?>
     if (familyListModel != null) {
       if (familyListModel!.result != null) {
         if (familyListModel!.result!.isNotEmpty) {
@@ -128,9 +126,7 @@ class _ChatUserListState extends State<ChatUserList> {
         .socket
         ?.off(message);*/
 
-    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        .socket
-        ?.off(notifyChatList);
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false).socket?.off(notifyChatList);
 
     if (isLoad) {
       setState(() {
@@ -148,9 +144,7 @@ class _ChatUserListState extends State<ChatUserList> {
 
     emitGetUserList(careGiverIds, isLoad);
 
-    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-        .socket
-        ?.on(notifyChatList, (data) {
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false).socket?.on(notifyChatList, (data) {
       if (data != null) {
         emitGetUserList(careGiverIds, isLoad);
       }
@@ -161,15 +155,9 @@ class _ChatUserListState extends State<ChatUserList> {
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false).socket != null
         ? Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
             .socket
-            ?.emitWithAck(getChatsList, {
-            'userId': userId,
-            'isCaregiverFilter': (careGiverIds?.length ?? 0) > 0 ? true : false,
-            'careGiverList': careGiverIds ?? [],
-            'limit': 'all'
-          }, ack: (userList) {
+            ?.emitWithAck(getChatsList, {'userId': userId, 'isCaregiverFilter': (careGiverIds?.length ?? 0) > 0 ? true : false, 'careGiverList': careGiverIds ?? [], 'limit': 'all'}, ack: (userList) {
             if (userList != null) {
-              UserChatListModel userChatList =
-                  UserChatListModel.fromJson(userList);
+              UserChatListModel userChatList = UserChatListModel.fromJson(userList);
               if (userChatList != null) {
                 controller.updateChatUserList(userChatList);
               }
@@ -193,9 +181,7 @@ class _ChatUserListState extends State<ChatUserList> {
         appBar: widget.isHome
             ? null
             : AppBar(
-                flexibleSpace: widget.isFromQurDay
-                    ? GradientAppBarQurhome()
-                    : GradientAppBar(),
+                flexibleSpace: widget.isFromQurDay ? GradientAppBarQurhome() : GradientAppBar(),
                 leading: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios,
@@ -207,10 +193,7 @@ class _ChatUserListState extends State<ChatUserList> {
                 elevation: 0.0,
                 backgroundColor: Colors.transparent,
                 title: Text(
-                  ((widget.careGiversList?.length ?? 0) > 0 ||
-                          widget.isDynamicLink)
-                      ? CAREPROVIDERS
-                      : CHAT,
+                  ((widget.careGiversList?.length ?? 0) > 0 || widget.isDynamicLink) ? CAREPROVIDERS : CHAT,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.0.sp,
@@ -234,8 +217,7 @@ class _ChatUserListState extends State<ChatUserList> {
               ),
         floatingActionButton: (widget.careGiversList?.length ?? 0) > 0
             ? null
-            : Obx(() => controller.shownNewChatFloat.isTrue &&
-                    controller.isSelfUser()
+            : Obx(() => controller.shownNewChatFloat.isTrue && controller.isSelfUser()
                 ? FloatingActionButton(
                     backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
                     child: Icon(
@@ -271,9 +253,7 @@ class _ChatUserListState extends State<ChatUserList> {
       if (familyListModel!.result != null) {
         if (familyListModel!.result!.length > 0) {
           return Container(
-            decoration: BoxDecoration(
-                color: const Color(fhbColors.bgColorContainer),
-                borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(color: const Color(fhbColors.bgColorContainer), borderRadius: BorderRadius.circular(10)),
             margin: EdgeInsets.all(20),
             padding: EdgeInsets.all(10),
             child: Column(
@@ -285,8 +265,7 @@ class _ChatUserListState extends State<ChatUserList> {
                     children: <Widget>[
                       Text(
                         strNewChatLabel,
-                        style: TextStyle(
-                            fontSize: 18.0.sp, fontWeight: FontWeight.w500),
+                        style: TextStyle(fontSize: 18.0.sp, fontWeight: FontWeight.w500),
                       ),
                       IconButton(
                         icon: Icon(
@@ -307,8 +286,7 @@ class _ChatUserListState extends State<ChatUserList> {
                   ),
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemBuilder: (c, i) =>
-                        getCardWidgetForFamilyList(familyListModel!.result![i]),
+                    itemBuilder: (c, i) => getCardWidgetForFamilyList(familyListModel!.result![i]),
                     itemCount: familyListModel?.result?.length ?? 0,
                   ),
                 ),
@@ -355,12 +333,10 @@ class _ChatUserListState extends State<ChatUserList> {
 
     if (data.isCarecoordinator!) {
       try {
-        if (data.carecoordinatorfirstName != null &&
-            data.carecoordinatorfirstName != '') {
+        if (data.carecoordinatorfirstName != null && data.carecoordinatorfirstName != '') {
           ccName = data.carecoordinatorfirstName;
         }
-        if (data.carecoordinatorLastName != null &&
-            data.carecoordinatorLastName != '') {
+        if (data.carecoordinatorLastName != null && data.carecoordinatorLastName != '') {
           ccName = ccName! + ' ' + data.carecoordinatorLastName!;
         }
       } catch (e, stackTrace) {
@@ -372,19 +348,13 @@ class _ChatUserListState extends State<ChatUserList> {
       child: InkWell(
           onTap: () {
             try {
-              String strLastDate = (data.chatListItem?.deliveredOn != null &&
-                      data.chatListItem?.deliveredOn != '')
-                  ? CommonUtil().getFormattedDateTime(
-                      data.chatListItem?.deliveredOn ?? '')
-                  : '';
+              String strLastDate = (data.chatListItem?.deliveredOn != null && data.chatListItem?.deliveredOn != '') ? CommonUtil().getFormattedDateTime(data.chatListItem?.deliveredOn ?? '') : '';
               Get.back();
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => ChatDetail(
-                          peerId: (data.isCarecoordinator ?? false)
-                              ? data.carecoordinatorId
-                              : data.id,
+                          peerId: (data.isCarecoordinator ?? false) ? data.carecoordinatorId : data.id,
                           peerAvatar: data.profilePicThumbnailUrl,
                           peerName: getFamilyName(data),
                           patientId: '',
@@ -395,9 +365,7 @@ class _ChatUserListState extends State<ChatUserList> {
                           isFromFamilyListChat: true,
                           isFromCareCoordinator: data.isCarecoordinator,
                           carecoordinatorId: data.carecoordinatorId,
-                          isCareGiver: (widget.careGiversList?.length ?? 0) > 0
-                              ? true
-                              : false,
+                          isCareGiver: (widget.careGiversList?.length ?? 0) > 0 ? true : false,
                           groupId: data.chatListItem?.id ?? '',
                           lastDate: strLastDate))).then((value) {
                 if (value ?? false) {
@@ -414,8 +382,7 @@ class _ChatUserListState extends State<ChatUserList> {
           child: Container(
               margin: EdgeInsets.only(bottom: 6),
               padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
               child: Row(
                 children: <Widget>[
                   ClipOval(
@@ -426,13 +393,8 @@ class _ChatUserListState extends State<ChatUserList> {
                               color: Color(fhbColors.bgColorContainer),
                               child: Center(
                                 child: Text(
-                                  data != null
-                                      ? data.firstName![0].toUpperCase()
-                                      : '',
-                                  style: TextStyle(
-                                      fontSize: 22.0.sp,
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor())),
+                                  data != null ? data.firstName![0].toUpperCase() : '',
+                                  style: TextStyle(fontSize: 22.0.sp, color: Color(CommonUtil().getMyPrimaryColor())),
                                 ),
                               ),
                             )
@@ -442,25 +404,17 @@ class _ChatUserListState extends State<ChatUserList> {
                               width: 45.0.h,
                               height: 45.0.h,
                               headers: {
-                                HttpHeaders.authorizationHeader:
-                                    PreferenceUtil.getStringValue(
-                                        KEY_AUTHTOKEN)!,
+                                HttpHeaders.authorizationHeader: PreferenceUtil.getStringValue(KEY_AUTHTOKEN)!,
                               },
                               errorBuilder: (context, exception, stackTrace) {
                                 return Container(
                                   height: 45.0.h,
                                   width: 45.0.h,
-                                  color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
+                                  color: Color(CommonUtil().getMyPrimaryColor()),
                                   child: Center(
                                       child: Text(
-                                    data.firstName != null &&
-                                            data.lastName != null
-                                        ? data.firstName![0].toUpperCase() +
-                                            (data.lastName!.length > 0
-                                                ? data.lastName![0]
-                                                    .toUpperCase()
-                                                : '')
+                                    data.firstName != null && data.lastName != null
+                                        ? data.firstName![0].toUpperCase() + (data.lastName!.length > 0 ? data.lastName![0].toUpperCase() : '')
                                         : data.firstName != null
                                             ? data.firstName![0].toUpperCase()
                                             : '',
@@ -486,13 +440,7 @@ class _ChatUserListState extends State<ChatUserList> {
                           children: [
                             Expanded(
                               child: Text(
-                                fulName != null
-                                    ? CommonUtil()
-                                            .titleCase(fulName.toLowerCase()) +
-                                        (data.isCarecoordinator!
-                                            ? CARE_COORDINATOR_STRING
-                                            : '')
-                                    : '',
+                                fulName != null ? CommonUtil().titleCase(fulName.toLowerCase()) + (data.isCarecoordinator! ? CARE_COORDINATOR_STRING : '') : '',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 16.0.sp,
@@ -521,31 +469,16 @@ class _ChatUserListState extends State<ChatUserList> {
                         ),
                         data.isCarecoordinator!
                             ? Text(
-                                ccName != null
-                                    ? 'Name: ' +
-                                        CommonUtil()
-                                            .titleCase(ccName.toLowerCase())
-                                    : '',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                ccName != null ? 'Name: ' + CommonUtil().titleCase(ccName.toLowerCase()) : '',
+                                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.0.sp, color: Color(CommonUtil().getMyPrimaryColor())),
                                 // softWrap: false,
                                 // overflow: TextOverflow.ellipsis,
                               )
                             : Text(
-                                (data.relationshipName != null &&
-                                        data.relationshipName != '')
-                                    ? data.relationshipName ?? ''
-                                    : '',
+                                (data.relationshipName != null && data.relationshipName != '') ? data.relationshipName ?? '' : '',
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: false,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 16.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16.0.sp, color: Color(CommonUtil().getMyPrimaryColor())),
                               )
                       ],
                     ),
@@ -580,8 +513,7 @@ class _ChatUserListState extends State<ChatUserList> {
                 child: (controller.userChatList.length) > 0
                     ? ListView.builder(
                         padding: EdgeInsets.all(10.0),
-                        itemBuilder: (context, index) =>
-                            buildItem(context, controller.userChatList[index]),
+                        itemBuilder: (context, index) => buildItem(context, controller.userChatList[index]),
                         itemCount: controller.userChatList.length,
                       )
                     : Container(
@@ -591,8 +523,7 @@ class _ChatUserListState extends State<ChatUserList> {
                           children: <Widget>[
                             Text(
                               strNoMessage,
-                              style: TextStyle(
-                                  fontSize: 16.0.sp, color: Colors.grey[800]),
+                              style: TextStyle(fontSize: 16.0.sp, color: Colors.grey[800]),
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -637,23 +568,13 @@ class _ChatUserListState extends State<ChatUserList> {
                         patientPicture: '',
                         isFromVideoCall: false,
                         isNormalChatUserList: 'true',
-                        carecoordinatorId:
-                            userChatList.isFamilyUserCareCoordinator!
-                                ? userChatList.peerId
-                                : '',
+                        carecoordinatorId: userChatList.isFamilyUserCareCoordinator! ? userChatList.peerId : '',
                         familyUserId: userChatList.familyUserId,
-                        isFromCareCoordinator:
-                            userChatList.isFamilyUserCareCoordinator,
-                        isCareGiver: (widget.careGiversList?.length ?? 0) > 0
-                            ? true
-                            : false,
+                        isFromCareCoordinator: userChatList.isFamilyUserCareCoordinator,
+                        isCareGiver: (widget.careGiversList?.length ?? 0) > 0 ? true : false,
                         groupId: userChatList.id,
-                        lastDate: userChatList.deliveredTimeStamp != null &&
-                                userChatList.deliveredTimeStamp != ''
-                            ? getFormattedDateTime(
-                                DateTime.fromMillisecondsSinceEpoch(int.parse(
-                                        userChatList.deliveredTimeStamp!))
-                                    .toString())
+                        lastDate: userChatList.deliveredTimeStamp != null && userChatList.deliveredTimeStamp != ''
+                            ? getFormattedDateTime(DateTime.fromMillisecondsSinceEpoch(int.parse(userChatList.deliveredTimeStamp!)).toString())
                             : ''))).then((value) {
               if (value) {
                 initSocket(true);
@@ -687,17 +608,10 @@ class _ChatUserListState extends State<ChatUserList> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  CommonUtil().capitalizeFirstofEach(
-                                          getDocName(userChatList)) +
-                                      (userChatList.isFamilyUserCareCoordinator!
-                                          ? CARE_COORDINATOR_STRING
-                                          : ''),
+                                  CommonUtil().capitalizeFirstofEach(getDocName(userChatList)) + (userChatList.isFamilyUserCareCoordinator! ? CARE_COORDINATOR_STRING : ''),
                                   // overflow: TextOverflow.ellipsis,
                                   // softWrap: true,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 15.0.sp,
-                                      fontFamily: variable.font_poppins),
+                                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15.0.sp, fontFamily: variable.font_poppins),
                                 ),
                               ),
                             ],
@@ -705,15 +619,8 @@ class _ChatUserListState extends State<ChatUserList> {
                         ),
                         userChatList.isFamilyUserCareCoordinator!
                             ? Text(
-                                ccName != null
-                                    ? 'Name: ' +
-                                        CommonUtil()
-                                            .titleCase(ccName.toLowerCase())
-                                    : '',
-                                style: TextStyle(
-                                    fontSize: 14.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                ccName != null ? 'Name: ' + CommonUtil().titleCase(ccName.toLowerCase()) : '',
+                                style: TextStyle(fontSize: 14.0.sp, color: Color(CommonUtil().getMyPrimaryColor())),
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
                               )
@@ -726,8 +633,7 @@ class _ChatUserListState extends State<ChatUserList> {
                             padding: const EdgeInsets.only(bottom: 4),
                             child: userChatList.messages != null
                                 ? userChatList.messages?.content != null
-                                    ? userChatList.messages!.content!
-                                            .contains(STR_HTTPS)
+                                    ? userChatList.messages!.content!.contains(STR_HTTPS)
                                         ? Row(
                                             children: [
                                               Icon(
@@ -741,24 +647,14 @@ class _ChatUserListState extends State<ChatUserList> {
                                               Text(
                                                 STR_FILE,
                                                 overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    color: Colors.grey[600],
-                                                    fontSize: 14.0.sp,
-                                                    fontFamily:
-                                                        variable.font_poppins),
+                                                style: TextStyle(color: Colors.grey[600], fontSize: 14.0.sp, fontFamily: variable.font_poppins),
                                               )
                                             ],
                                           )
                                         : Text(
-                                            userChatList.messages?.content ??
-                                                '',
+                                            userChatList.messages?.content ?? '',
                                             overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.grey[600],
-                                                fontSize: 14.0.sp,
-                                                fontFamily:
-                                                    variable.font_poppins),
+                                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[600], fontSize: 14.0.sp, fontFamily: variable.font_poppins),
                                           )
                                     : SizedBox.shrink()
                                 : SizedBox.shrink()),
@@ -768,33 +664,18 @@ class _ChatUserListState extends State<ChatUserList> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 4),
                           child: Text(
-                            userChatList.deliveredTimeStamp != null &&
-                                    userChatList.deliveredTimeStamp != ''
-                                ? LAST_RECEIVED +
-                                    getFormattedDateTime(
-                                        (DateTime.fromMillisecondsSinceEpoch(
-                                                int.parse(userChatList
-                                                    .deliveredTimeStamp!))
-                                            .toString()))
+                            userChatList.deliveredTimeStamp != null && userChatList.deliveredTimeStamp != ''
+                                ? LAST_RECEIVED + getFormattedDateTime((DateTime.fromMillisecondsSinceEpoch(int.parse(userChatList.deliveredTimeStamp!)).toString()))
                                 : '',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                color: Colors.grey[600],
-                                fontSize: 12.0.sp,
-                                fontFamily: variable.font_poppins),
+                            style: TextStyle(fontWeight: FontWeight.w300, color: Colors.grey[600], fontSize: 12.0.sp, fontFamily: variable.font_poppins),
                           ),
                         ),
-                        if ((widget.careGiversList?.length ?? 0) > 0 &&
-                            userChatList.isDisable != null &&
-                            userChatList.isDisable == true)
+                        if ((widget.careGiversList?.length ?? 0) > 0 && userChatList.isDisable != null && userChatList.isDisable == true)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: Text(
                               STR_NOT_AVAILABLE,
-                              style: TextStyle(
-                                  color: Colors.redAccent,
-                                  fontSize: 14.0.sp,
-                                  fontFamily: variable.font_poppins),
+                              style: TextStyle(color: Colors.redAccent, fontSize: 14.0.sp, fontFamily: variable.font_poppins),
                             ),
                           )
                       ],
@@ -809,42 +690,32 @@ class _ChatUserListState extends State<ChatUserList> {
                     children: [
                       Padding(
                           padding: const EdgeInsets.fromLTRB(0, 8, 4, 0),
-                          child: (userChatList.unReadCount != null &&
-                                  userChatList.unReadCount != '' &&
-                                  !userChatList.unReadCount!.contains('0'))
+                          child: (userChatList.unReadCount != null && userChatList.unReadCount != '' && !userChatList.unReadCount!.contains('0'))
                               ? Container(
                                   width: 60,
                                   height: 50,
                                   child: Column(
                                     children: <Widget>[
                                       Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              0, 5, 0, 0),
+                                          padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                                           child: CircleAvatar(
-                                            radius: 10,
+                                            radius: CommonUtil().isTablet != null && CommonUtil().isTablet! ? 18 : 15,
                                             child: Text(
                                               userChatList.unReadCount ?? '',
                                               style: TextStyle(
                                                 fontSize: 12.0.sp,
                                               ),
                                             ),
-                                            backgroundColor: Color(CommonUtil()
-                                                .getMyPrimaryColor()),
+                                            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
                                             foregroundColor: Colors.white,
                                           )),
                                     ],
                                   ),
                                 )
                               : Text('')),
-                      if (CommonUtil.isUSRegion() &&
-                          userChatList.isPrimaryCareCoordinator!)
+                      if (CommonUtil.isUSRegion() && userChatList.isPrimaryCareCoordinator!)
                         Container(
-                          child: Text(primary_chat,
-                              style: TextStyle(
-                                  color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
-                                  fontSize: 15.sp,
-                                  fontWeight: FontWeight.w600)),
+                          child: Text(primary_chat, style: TextStyle(color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 15.sp, fontWeight: FontWeight.w600)),
                         ),
                     ],
                   ),
@@ -872,9 +743,7 @@ class _ChatUserListState extends State<ChatUserList> {
     patientId = PreferenceUtil.getStringValue(KEY_USERID);
 
     MyProfileModel myProfile = PreferenceUtil.getProfileData(KEY_PROFILE)!;
-    patientName = myProfile.result != null
-        ? myProfile.result!.firstName! + myProfile.result!.firstName!
-        : '';
+    patientName = myProfile.result != null ? myProfile.result!.firstName! + myProfile.result!.firstName! : '';
     return patientId;
   }
 
@@ -901,13 +770,9 @@ class _ChatUserListState extends State<ChatUserList> {
     String name = '';
     if (userChatList != null) {
       if (userChatList.isFamilyUserCareCoordinator!) {
-        if (userChatList.familyUserFirstName != null &&
-            userChatList.familyUserFirstName != '') {
-          if (userChatList.familyUserLastName != null &&
-              userChatList.familyUserLastName != '') {
-            name = userChatList.familyUserFirstName! +
-                ' ' +
-                userChatList.familyUserLastName!;
+        if (userChatList.familyUserFirstName != null && userChatList.familyUserFirstName != '') {
+          if (userChatList.familyUserLastName != null && userChatList.familyUserLastName != '') {
+            name = userChatList.familyUserFirstName! + ' ' + userChatList.familyUserLastName!;
           } else {
             name = (userChatList.familyUserFirstName ?? '').toString();
           }
@@ -959,19 +824,12 @@ class _ChatUserListState extends State<ChatUserList> {
   void dispose() {
     super.dispose();
     //socket.disconnect();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Chat Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
+    fbaLog(eveName: 'qurbook_screen_event', eveParams: {'eventTime': '${DateTime.now()}', 'pageName': 'Chat Screen', 'screenSessionTime': '${DateTime.now().difference(mInitialTime).inSeconds} secs'});
   }
 
 //Removed the expanded widget as the images were little stretch for tablet alone
   getIconWidget(PayloadChat userChatList) {
-    return CommonUtil().isTablet!
-        ? getIcon(userChatList)
-        : Expanded(child: getIcon(userChatList));
+    return CommonUtil().isTablet! ? getIcon(userChatList) : Expanded(child: getIcon(userChatList));
   }
 
   getIcon(PayloadChat userChatList) {
@@ -994,9 +852,7 @@ class _ChatUserListState extends State<ChatUserList> {
                     color: Colors.grey[200],
                     child: Center(
                         child: Text(
-                      userChatList.firstName != null
-                          ? userChatList.firstName![0].toString().toUpperCase()
-                          : '',
+                      userChatList.firstName != null ? userChatList.firstName![0].toString().toUpperCase() : '',
                       style: TextStyle(
                         color: Color(new CommonUtil().getMyPrimaryColor()),
                         fontSize: 16.0.sp,

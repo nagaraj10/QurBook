@@ -72,6 +72,7 @@ class SheelaResponse {
   bool? isButtonNumber;
   String? pronunciationText;
   String? imageThumbnailUrl;
+  String? audioThumbnailUrl;
 
   SheelaResponse({this.recipientId,
     this.text,
@@ -106,7 +107,9 @@ class SheelaResponse {
     this.playAudioInit,
     this.isButtonNumber,
     this.pronunciationText,
-    this.imageThumbnailUrl});
+    this.imageThumbnailUrl,
+    this.audioThumbnailUrl,
+  });
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
     try {
@@ -207,6 +210,7 @@ class SheelaResponse {
     data['IsButtonNumber'] = this.isButtonNumber;
     data['pronunciationText'] = this.pronunciationText;
     data['imageThumbnailUrl'] = this.imageThumbnailUrl;
+    data['audioThumbnailUrl'] = this.audioThumbnailUrl;
     return data;
   }
 }
