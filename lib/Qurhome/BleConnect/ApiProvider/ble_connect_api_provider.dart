@@ -18,13 +18,15 @@ class BleConnectApiProvider {
     String deviceId,
     String nickName,
     String userId,
+    String source,
   ) async {
     http.Response responseJson;
     final data = {
       "deviceId": deviceId,
       "userHubId": hubId,
       "userId": userId,
-      "additionalDetails": {}
+      "additionalDetails": {},
+      'source': source,
     };
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
