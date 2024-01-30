@@ -120,6 +120,9 @@ dependencies:
   # The following line specifies the version of the speech_to_text package
   speech_to_text: ^6.5.1
 
+  # The following line specifies the version of the cron package
+  cron: ^0.6.0
+
   # below plugin is used for video thumbnail showing in sheela media
   video_thumbnail: ^0.5.3
 
