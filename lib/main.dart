@@ -56,6 +56,7 @@ import 'regiment/models/regiment_arguments.dart';
 import 'regiment/view/manage_activities/manage_activities_screen.dart';
 import 'regiment/view_model/regiment_view_model.dart';
 import 'schedules/add_reminders.dart';
+import 'services/notification_helper.dart';
 import 'src/blocs/Category/CategoryListBlock.dart';
 import 'src/model/home_screen_arguments.dart';
 import 'src/model/user/user_accounts_arguments.dart';
@@ -1275,7 +1276,9 @@ class _MyFHBState extends State<MyFHB> {
   Widget build(BuildContext context) {
     final nsSettingsForAndroid =
         AndroidInitializationSettings(variable.strLauncher);
-    final nsSettingsForIOS = DarwinInitializationSettings();
+        
+    final nsSettingsForIOS = DarwinInitializationSettings(
+        notificationCategories: darwinIOSCategories);
     final platform = InitializationSettings(
         android: nsSettingsForAndroid, iOS: nsSettingsForIOS);
 
