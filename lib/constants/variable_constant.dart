@@ -1002,6 +1002,20 @@ const String strDeviceTypeConnectedDeviceScreen = 'Device Type - ';
 const String strLTE = '4G LTE';
 const String sheelaText = 'Sheela';
 
+const String strAvailableServices = 'Available Services';
+const String strAvailableBalance = 'Available balance';
+const String strShowAvailableBenefits = 'Show available benefits';
+
+const String strBenefitFamilyMembers = 'Family Members';
+const String strBenefitHomecareService = 'Homecare Service';
+const String strBenefitHealthPlan = 'Health Plan';
+const String strBenefitCareDietPlans = 'Care/Diet Plans';
+const String strBenefitAmbulanceService = 'Ambulance Service';
+const String strBenefitTransportation = 'Transportation';
+const String strBenefitOrderMedicine = 'Order Medicine';
+const String strBenefitMedicineOrdering = 'Medicine Ordering';
+const String strBenefitLabAppointment = 'Lab Appointment';
+const String strBenefitDoctorAppointment = 'Doctor Appointment';
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   var parts = token.split('.');
