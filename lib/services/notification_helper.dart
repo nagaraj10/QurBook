@@ -15,7 +15,7 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
         'reject_action',
         'Reject',
         options: <DarwinNotificationActionOption>{
-          DarwinNotificationActionOption.destructive,
+          DarwinNotificationActionOption.foreground,
         },
       ),
     ],
@@ -48,7 +48,7 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
         stringDismiss,
         stringDismiss,
         options: <DarwinNotificationActionOption>{
-          DarwinNotificationActionOption.destructive,
+          DarwinNotificationActionOption.foreground,
         },
       ),
     ],
@@ -91,7 +91,7 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
         'Dismiss',
         'Dismiss',
         options: <DarwinNotificationActionOption>{
-          DarwinNotificationActionOption.destructive,
+          DarwinNotificationActionOption.foreground,
         },
       )
     ],
@@ -129,7 +129,7 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
         'Reject',
         'Reject',
         options: <DarwinNotificationActionOption>{
-          DarwinNotificationActionOption.destructive,
+          DarwinNotificationActionOption.foreground,
         },
       ),
     ],

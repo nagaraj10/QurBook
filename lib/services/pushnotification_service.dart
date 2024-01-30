@@ -641,22 +641,28 @@ zonedScheduleNotification(
           channelName, // Title
           priority: Priority.high,
           channelDescription: channelDescription,
-          icon: getIconBasedOnRegion(isSmallIcon: true),
-          largeIcon: DrawableResourceAndroidBitmap(
-              getIconBasedOnRegion(isSmallIcon: false)),
-          actions: isButtonShown
-              ? isDismissButtonOnlyShown
-              ? [dismissAction]
-              : [dismissAction, snoozeAction]
-              : null,
-        ),
-        iOS: isButtonShown
+        icon: getIconBasedOnRegion(isSmallIcon: true),
+        largeIcon: DrawableResourceAndroidBitmap(
+            getIconBasedOnRegion(isSmallIcon: false)),
+        actions: isButtonShown
             ? isDismissButtonOnlyShown
-            ? DarwinNotificationDetails(
-            categoryIdentifier: 'showSingleButtonCat')
-            : DarwinNotificationDetails(
-            categoryIdentifier: 'showBothButtonsCat')
-            : DarwinNotificationDetails(sound: 'ringtone.aiff'));
+                ? [dismissAction]
+                : [dismissAction, snoozeAction]
+            : null,
+      ),
+      iOS: isButtonShown
+          ? isDismissButtonOnlyShown
+              ? const DarwinNotificationDetails(
+                  categoryIdentifier: 'showSingleButtonCat',
+                )
+              : const DarwinNotificationDetails(
+                  categoryIdentifier: 'showBothButtonsCat',
+                )
+          : const DarwinNotificationDetails(
+              sound: 'ringtone.aiff',
+              categoryIdentifier: 'showSingleButtonCat',
+            ),
+    );
     await localNotificationsPlugin
         .resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>()
