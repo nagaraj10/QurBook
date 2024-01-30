@@ -735,6 +735,7 @@ const String Rmarks_HINT = "Remarks";
 // True desk
 const String strServiceRequests = 'Service Requests';
 const String strNewServiceRequests = 'New Service Request';
+const String strMembershipBenefits = 'Membership Benefits';
 const String strAddMyTicket = 'Create Ticket';
 const String strSubmitNewTicket = 'SUBMIT';
 const String strTicketTitle = 'Title';

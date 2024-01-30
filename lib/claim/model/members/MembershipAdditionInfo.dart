@@ -1,5 +1,5 @@
-
-import 'package:myfhb/common/CommonUtil.dart';
+import '../../../common/CommonUtil.dart';
+import 'MemberShipAdditionalInfoBenefitType.dart';
 
 class MemberShipAdditionalInfo {
   String? remarks;
@@ -13,19 +13,21 @@ class MemberShipAdditionalInfo {
   String? terminationDate;
   String? prescribedDoctor;
   String? planPackageCategoryName;
+  List<MemberShipAdditionalInfoBenefitType>? benefitType;
 
   MemberShipAdditionalInfo(
       {this.remarks,
-        this.planTags,
-        this.isRenewal,
-        this.paymentId,
-        this.planEndDate,
-        this.isTerminated,
-        this.planStartDate,
-        this.packageDuration,
-        this.terminationDate,
-        this.prescribedDoctor,
-        this.planPackageCategoryName});
+      this.planTags,
+      this.isRenewal,
+      this.paymentId,
+      this.planEndDate,
+      this.isTerminated,
+      this.planStartDate,
+      this.packageDuration,
+      this.terminationDate,
+      this.prescribedDoctor,
+      this.planPackageCategoryName,
+      this.benefitType});
 
   MemberShipAdditionalInfo.fromJson(Map<String, dynamic> json) {
     try {
@@ -40,6 +42,10 @@ class MemberShipAdditionalInfo {
       terminationDate = json['terminationDate'];
       prescribedDoctor = json['prescribedDoctor'];
       planPackageCategoryName = json['planPackageCategoryName'];
+      benefitType = json['benefitType'] == null
+          ? []
+          : List<MemberShipAdditionalInfoBenefitType>.from(json['benefitType']!
+              .map((x) => MemberShipAdditionalInfoBenefitType.fromJson(x)));
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -58,6 +64,9 @@ class MemberShipAdditionalInfo {
     data['terminationDate'] = this.terminationDate;
     data['prescribedDoctor'] = this.prescribedDoctor;
     data['planPackageCategoryName'] = this.planPackageCategoryName;
+    data['benefitType'] = benefitType == null
+        ? []
+        : List<dynamic>.from(benefitType!.map((x) => x.toJson()));
     return data;
   }
 }
