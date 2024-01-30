@@ -399,6 +399,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                             SizedBox(height: 25.h),
                             getColumnBody(widget.ticketList!),
                             SizedBox(height: 25.h),
+                          //  noteBox(),
+                            SizedBox(height: 25.h),
                             getWidgetForCreateButton()
                           ],
                         ),
@@ -409,8 +411,26 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               )));
   }
 
+  /*Widget noteBox(){
+    return DottedContainer(
+      padding: EdgeInsets.all(10),
+        borderRadius: 40.h,
+        child:Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Note:'),
+        SizedBox(width: 10,),
+        Expanded(child: Text('Please understand this is not a final booking.The request will be processed by the care coordinator and you\'ll be notified on the progress or confirmation'))]
+    ));
+  }*/
+
   Widget getColumnBody(TicketTypesResult ticketTypesResult) {
     List<Widget> widgetForColumn = [];
+    if(ticketTypesResult.name ==variable.strDoctorAppointment){
+      ticketTypesResult.additionalInfo!.field!.forEach((field) {
+        String? displayName = displayFieldName(field);
+      });
+    }
     try {
       if (ticketTypesResult.additionalInfo != null) {
         for (int i = 0;
