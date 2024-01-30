@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_geocoder/model.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -39,6 +40,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
 import 'package:myfhb/landing/controller/landing_screen_controller.dart';
 import 'package:myfhb/chat_socket/model/SheelaReminderResponse.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/main.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
@@ -154,6 +156,7 @@ import '../video_call/model/payload.dart' as vsPayLoad;
 import '../video_call/pages/calling_page.dart';
 import '../video_call/pages/callmain.dart';
 import '../video_call/pages/callmain_makecall.dart';
+import '../video_call/services/iOS_Notification_Handler.dart';
 import '../video_call/utils/audiocall_provider.dart';
 import '../video_call/utils/hideprovider.dart';
 import '../video_call/utils/rtc_engine.dart';
@@ -6233,10 +6236,6 @@ class CommonUtil {
       await getMyProfilesetting();
       var regController = CommonUtil().onInitQurhomeRegimenController();
       regController.getRegimenList();
-      FirestoreServices().setupListenerForFirestoreChanges();
-      // Schedule the cron job to run at midnight for
-      //getting the latest regiment
-      CronJobServices().scheduleUpdateForData();
       if (!Get.isRegistered<PDFViewController>()) {
         Get.lazyPut(
           () => PDFViewController(),
@@ -6244,6 +6243,7 @@ class CommonUtil {
       }
       // Record the user's last access time
       saveUserLastAccessTime();
+      FirestoreServices().setupListenerForFirestoreChanges();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
@@ -7498,6 +7498,39 @@ class CommonUtil {
       // Call the saveVoiceClonePatientAssignmentStatus method on QurHomeApiProvider
       await apiResponse.saveVoiceClonePatientAssignmentStatus(
           strVoiceCloneId: voiceCloneId, isAccept: isAcceptTemp);
+    } catch (e, stackTrace) {
+      // Log any errors using appLogs
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  // Asynchronous function to retrieve and handle the route based on notification
+  getMyRoute() async {
+    try {
+      // Get details if the app was launched from a notification
+      NotificationAppLaunchDetails? didLaunchFromNotification =
+      await localNotificationsPlugin.getNotificationAppLaunchDetails();
+
+      // Get the notification response if available
+      NotificationResponse? notificationResponse =
+          didLaunchFromNotification?.notificationResponse;
+
+      // Check if there is a notification response
+      if (notificationResponse != null) {
+        // Check if the app was launched by tapping on the notification
+        if (didLaunchFromNotification?.didNotificationLaunchApp == true) {
+          // Decode the payload and handle the notification response
+          var mapResponse = jsonDecode(notificationResponse.payload ?? '');
+
+          // If there is an action id, add it to the map
+          if (notificationResponse.actionId != null) {
+            mapResponse['action'] = notificationResponse.actionId;
+          }
+
+          // Handle the notification response for iOS
+          IosNotificationHandler().handleNotificationResponse(mapResponse);
+        }
+      }
     } catch (e, stackTrace) {
       // Log any errors using appLogs
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);

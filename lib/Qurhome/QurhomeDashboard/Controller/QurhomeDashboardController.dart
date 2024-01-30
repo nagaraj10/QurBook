@@ -61,6 +61,9 @@ class QurhomeDashboardController extends GetxController {
   int currentIndex = 0;
   var isOnceInAPlanActivity = false.obs;
 
+  // Observable variable to track the current notification id
+  var currentNotificationId = ' '.obs;
+
   @override
   void onInit() {
     if (!Get.isRegistered<SheelaAIController>()) {

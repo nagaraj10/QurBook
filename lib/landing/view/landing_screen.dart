@@ -17,7 +17,6 @@ import '../../common/firestore_services.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/SuperMaya.dart';
-import 'package:myfhb/src/utils/lifecycle_state_provider.dart';
 import '../../chat_socket/view/ChatDetail.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +29,6 @@ import 'corp_users_welcome_dialog.dart';
 import '../../src/blocs/Category/CategoryListBlock.dart';
 import '../../src/model/user/MyProfileResult.dart';
 import '../../src/utils/dynamic_links.dart';
-import '../../src/utils/timezone/timezone_services.dart';
 import '../../telehealth/features/chat/view/PDFViewerController.dart';
 import '../../user_plans/view_model/user_plans_view_model.dart';
 
@@ -117,21 +115,6 @@ class _LandingScreenState extends State<LandingScreen> {
   void initState() {
     try {
       super.initState();
-      WidgetsBinding.instance?.addObserver(
-        LifecycleEventHandler(
-          resumeCallBack: () async {
-            // Call the updateDataFor method from FirestoreServices
-            FirestoreServices().updateDataFor(
-              'all', // Pass the parameter 'all'
-              withLoading: true, // Pass the parameter withLoading as true
-            );
-            await TimezoneServices().checkUpdateTimezone();
-
-            // Record the user's last access time
-            CommonUtil().saveUserLastAccessTime();
-          },
-        ),
-      );
       Future.delayed(Duration.zero, () async {
         onInit();
       });
@@ -200,7 +183,9 @@ class _LandingScreenState extends State<LandingScreen> {
         );
       }
       sheelBadgeController?.isAllowSheelaLiveReminders = true;
+      await CommonUtil().getMyRoute();
     } catch (e, stackTrace) {
+      await CommonUtil().getMyRoute();
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
