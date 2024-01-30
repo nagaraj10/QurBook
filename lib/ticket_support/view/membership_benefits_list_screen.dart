@@ -8,12 +8,17 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
 import 'get_membership_data_widget.dart';
 
+/// This Widget is used for to show Membership Benefit List to patient whose use corporate accounts.
 class MembershipBenefitListScreen extends StatefulWidget {
   const MembershipBenefitListScreen({
     super.key,
     this.membershipBenefitListModel,
   });
 
+  /// This object contains two objects
+  /// 1.  Map<String, String?>? iconsUrls;
+  /// 2. MemberShipResult? memberShipResult;
+  /// which use for Full Membership Benefits.
   final MembershipBenefitListModel? membershipBenefitListModel;
 
   @override

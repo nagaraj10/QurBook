@@ -9,6 +9,7 @@ import '../../common/common_circular_indicator.dart';
 import '../../constants/variable_constant.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 
+/// This Commonly use on New Service Request And Membership Benefits
 class GetMembershipDataWidget extends StatefulWidget {
   GetMembershipDataWidget({
     this.onPressed,
@@ -17,9 +18,17 @@ class GetMembershipDataWidget extends StatefulWidget {
     this.iconsUrls,
     this.isShowingBenefits = false,
   });
+
+  /// Object contains All require Membership details which we need to showcase to patients. Object is Optional type.
   MemberShipResult? memberShipResult;
+
+  /// Function contains on Show Benefits button action. Function is Optional type.
   Function()? onPressed;
+
+  /// bool Contains wheather Membership Benefits is showing to patients or not. bool is Optional type.
   bool? isShowingBenefits;
+
+  /// Map Contains benefits name with iconsurl to show icons. Map is Optional type.
   Map<String, String?>? iconsUrls;
 
   @override
@@ -28,8 +37,10 @@ class GetMembershipDataWidget extends StatefulWidget {
 }
 
 class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
+  /// Curreant Currency symbol as per current region
   String _currentCurrency = '';
 
+  /// common TextStyle for amount text widget
   final _amountTextStyle = TextStyle(
     fontSize: 18.0.sp,
     fontWeight: FontWeight.w600,
@@ -38,10 +49,12 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
 
   @override
   Widget build(BuildContext context) {
+    /// From String to DateTime conversion.
     final planEndDateTime = DateFormat('yyyy-MM-dd').parse(
       widget.memberShipResult?.planEndDate ?? '',
     );
 
+    /// Curreant Currency symbol as per current region
     _currentCurrency =
         CommonUtil.REGION_CODE != 'IN' ? '$strDollar ' : '\u{20B9} ';
     return Column(
@@ -210,6 +223,12 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
     );
   }
 
+  /// Widget Return icon
+  /// Based on which MemberShipAdditionalInfoBenefitType is passed
+  /// if type is 'Family Members'
+  ///    then we set local icons
+  /// else
+  ///    then fetch from API or set default icon
   Widget getIcon(MemberShipAdditionalInfoBenefitType? type) {
     final iconsUrl = widget.iconsUrls?[getTitle(type)];
     if (type?.fieldName == strBenefitFamilyMembers) {
@@ -244,6 +263,8 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
     }
   }
 
+  /// Widget Return Text
+  /// Based on which MemberShipAdditionalInfoBenefitType is passed
   Widget getBalanceAmount(MemberShipAdditionalInfoBenefitType? type) {
     var amount = 0;
 
@@ -276,6 +297,8 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
     );
   }
 
+  /// Method Return String for Title
+  /// Based on which MemberShipAdditionalInfoBenefitType is passed
   String getTitle(MemberShipAdditionalInfoBenefitType? type) {
     var _title = '';
     switch (type?.fieldName) {

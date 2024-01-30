@@ -10,6 +10,7 @@ class MemberShipResult {
   String? planStartDate;
   String? planEndDate;
   String? planSubscriptionInfoId;
+  /// New Parameters added for Membership Benefits
   int? planId;
   String? creditAmount;
   int? noOfCarePlans;

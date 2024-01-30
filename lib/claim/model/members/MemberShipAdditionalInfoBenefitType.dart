@@ -1,3 +1,4 @@
+/// A class representing the additional information related to a membership benefit type.
 class MemberShipAdditionalInfoBenefitType {
   String? id;
   String? code;

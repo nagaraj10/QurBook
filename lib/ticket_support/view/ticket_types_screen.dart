@@ -126,6 +126,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
               final _memberShipResult = snapshot.data?.result?.first;
 
               if (_memberShipResult != null) {
+                /// We need to showcase only selected benefitType only.
                 _memberShipResult.additionalInfo?.benefitType?.removeWhere(
                   (element) => ![
                     variable.strBenefitDoctorAppointment,
@@ -139,6 +140,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                 return GetMembershipDataWidget(
                   memberShipResult: _memberShipResult,
                   onPressed: () {
+                    /// Navigate to Membership Benefit List Screen.
                     Navigator.pushNamed(
                       context,
                       router.rt_membership_benefits_screen,
@@ -180,6 +182,8 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                   bottom: 8.0.h,
                 ),
                 itemBuilder: (ctx, i) {
+                  /// this _iconsurls object
+                  /// Use later to pass iconsurl to MembershipBenefitsListScreen.
                   _iconsurls[ticketTypesList[i].name ?? ''] =
                       ticketTypesList[i].iconUrl ?? '';
                   return myTicketTypesListItem(ctx, i, ticketTypesList);

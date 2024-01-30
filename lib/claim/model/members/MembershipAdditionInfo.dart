@@ -13,6 +13,7 @@ class MemberShipAdditionalInfo {
   String? terminationDate;
   String? prescribedDoctor;
   String? planPackageCategoryName;
+  /// Add New Parameter for MemberShip Benefit.
   List<MemberShipAdditionalInfoBenefitType>? benefitType;
 
   MemberShipAdditionalInfo(
