@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
@@ -31,10 +29,14 @@ import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/video_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:uuid/uuid.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart' as youtube;
 
 import '../../../../common/PreferenceUtil.dart';
@@ -1461,12 +1463,14 @@ makeApiRequest is used to update the data with latest data
       } else {
         stopTTS();
         currentPlayingConversation = chat;
-        if (((chat.imageThumbnailUrl != null) &&
-            (chat.imageThumbnailUrl != '')) ||
-            ((chat.audioThumbnailUrl != null) &&
-                (chat.audioThumbnailUrl != ''))) {
+        // Check if any of the thumbnail URLs (image, audio, or video) is not null or empty
+        if (((chat.imageThumbnailUrl != null) && (chat.imageThumbnailUrl != '')) ||
+            ((chat.audioThumbnailUrl != null) && (chat.audioThumbnailUrl != '')) ||
+            ((chat.videoThumbnailUrl != null) && (chat.videoThumbnailUrl != ''))) {
+          // If at least one thumbnail URL is present, call the function to check for buttons and play
           checkForButtonsAndPlay();
         } else {
+          // If none of the thumbnail URLs are present, call the function to play Text-to-Speech (TTS)
           playTTS();
         }
       }
@@ -1558,35 +1562,48 @@ makeApiRequest is used to update the data with latest data
     return buttons;
   }
 
+  // Get the redirect action based on the request file type
   String? getRedirectTo(requestFileType) {
     switch (requestFileType) {
       case strImage:
         return strRedirectToUploadImage;
       case strAudio:
         return strRedirectToUploadAudio;
+      case strVideo:
+        return strRedirectToUploadVideo;
     }
+    // Return an empty string if the request file type is not recognized
     return '';
   }
 
+// Get the retake action based on the request file type
   String? getRetakeTo(requestFileType) {
     switch (requestFileType) {
       case strImage:
         return strRedirectRetakePicture;
       case strAudio:
         return strRedirectRetakeAudio;
+      case strVideo:
+        return strRedirectRetakeVideo;
     }
+    // Return an empty string if the request file type is not recognized
     return '';
   }
 
+// Get the button title based on the request file type
   String? getButtonTitle(requestFileType) {
     switch (requestFileType) {
       case strImage:
         return strRecapture;
       case strAudio:
         return strRecordAgain;
+      case strVideo:
+        return strRecordAgain;
     }
+    // Return an empty string if the request file type is not recognized
     return '';
   }
+
 
   // A function to handle the logic for displaying in the Sheela chat
   Future<void> sheelaFileStaticConversation({
@@ -1616,6 +1633,13 @@ makeApiRequest is used to update the data with latest data
       } else if (requestFileType == strAudio) {
         currentCon.audioThumbnailUrl =
             selectedImagePath; // Set audio thumbnail URL
+      }else if (requestFileType == strVideo) {
+        currentCon.videoThumbnailUrl =
+            selectedImagePath;// Set audio thumbnail URL
+        Future.delayed(const Duration(seconds: 1)).then(
+              (_) => scrollToEnd()
+        );
+
       }
       if (isRetakeCapture ?? false) {
         isLoading.value = false; // Set loading flag to false
@@ -1636,7 +1660,8 @@ makeApiRequest is used to update the data with latest data
   }
 
   // A function to show a dialog with options to choose from Camera or Gallery
-  Future<void> showCameraGalleryDialog(String? btnTitle) {
+  Future<void> showCameraGalleryDialog(
+      String? btnTitle, String? requestFileType) {
     // Show a dialog using the showDialog function
     return showDialog(
       context: Get.context!, // Use Get.context to get the current context
@@ -1650,22 +1675,32 @@ makeApiRequest is used to update the data with latest data
                 // Gallery option with GestureDetector
                 GestureDetector(
                   onTap: () {
-                    getOpenGallery(strGallery,
-                        btnTitle); // Handle action when Gallery is tapped
+                    getOpenGallery(
+                        requestFileType == strImage ? strGallery : strVideo,
+                        btnTitle,
+                        requestFileType); // Handle action when Gallery is tapped
                     Navigator.of(context).pop(); // Close the dialog
                   },
-                  child: Text("Gallery"), // Display "Gallery" text
+                  child: Text(requestFileType == strImage
+                      ? Gallery
+                      : strSelectVideo), // Display "Gallery" text
                 ),
                 Padding(padding: EdgeInsets.all(8)),
                 // Add padding between options
                 // Camera option with GestureDetector
                 GestureDetector(
                   onTap: () {
-                    imgFromCamera(strGallery,
-                        btnTitle); // Handle action when Camera is tapped
+                    if (requestFileType == strImage) {
+                      imgFromCamera(strGallery,
+                          btnTitle); // Handle action when Camera is tapped
+                    } else {
+                      openVideoCamera(btnTitle,requestFileType);
+                    }
                     Navigator.of(context).pop(); // Close the dialog
                   },
-                  child: Text('Camera'), // Display "Camera" text
+                  child: Text(requestFileType == strImage
+                      ? Camera
+                      : strRecordVideo), // Display "Camera" text
                 ),
               ],
             ),
@@ -1698,28 +1733,29 @@ makeApiRequest is used to update the data with latest data
   }
 
   // Function to open the gallery, crop the selected image, and trigger image preview
-  void getOpenGallery(String fromPath, String? btnTitle) {
+  void getOpenGallery(String fromPath, String? btnTitle, String? requestFileType) {
     // Use PickImageController to crop the image from the gallery
     PickImageController.instance
         .cropImageFromFile(fromPath)
         .then((croppedFile) async {
       if (croppedFile != null) {
         // Validate the size of the cropped image
-        if (await validateImageSize(croppedFile)) {
+        if (await validateImageSize(croppedFile, requestFileType)) {
           var imagePathGallery = croppedFile.path;
 
           // Check if the image path is not null or empty
           if (imagePathGallery != null && imagePathGallery != '') {
             // Trigger the image preview thumbnail with the cropped image path
             sheelaFileStaticConversation(
-              btnTitle: btnTitle, // Optional button title
-              selectedImagePath: imagePathGallery, // Path to the cropped image
-              requestFileType: strImage
-            );
+                btnTitle: btnTitle,
+                // Optional button title
+                selectedImagePath: imagePathGallery,
+                // Path to the cropped image
+                requestFileType: requestFileType);
           }
         } else {
           // Display a toast message if the selected image exceeds the maximum allowed size
-          FlutterToast().getToast(strImageSizeValidation, Colors.red);
+          FlutterToast().getToastForLongTime(strImageSizeValidation, Colors.red);
         }
       }
     });
@@ -1740,10 +1776,18 @@ makeApiRequest is used to update the data with latest data
   }
 
   // Function to validate the size of a selected image
-  Future<bool> validateImageSize(var _selectedImage) async {
+  Future<bool> validateImageSize(
+      var _selectedImage, String? requestFileType) async {
     try {
-      int maxSizeInBytes =
-          5 * 1024 * 1024; // Set the maximum allowed size to 5MB
+      int maxSizeInBytes;
+      if (requestFileType == strImage) {
+        maxSizeInBytes =
+            5 * 1024 * 1024; // Set the maximum allowed size to 5MB to image
+      } else {
+        maxSizeInBytes =
+            100 * 1024 * 1024; // Set the maximum allowed size to 100MB to video
+      }
+
       int selectedImageSize = await _getImageSize(
           _selectedImage); // Get the size of the selected image
 
@@ -1767,6 +1811,48 @@ makeApiRequest is used to update the data with latest data
     int length =
         await imageFile.lengthSync(); // Get the length (size) of the image file
     return length; // Return the size of the image file
+  }
+
+  // Asynchronously get the file size of a video given its file path
+  Future<int> getVideoFileSize(String videoFilePath) async {
+    // Create a File object using the provided video file path
+    File videoFile = File(videoFilePath);
+
+    // Get the length (size) of the video file in bytes
+    int fileSizeInBytes = await videoFile.length();
+
+    // Convert the file size from bytes to megabytes
+    int fileSizeInMB = fileSizeInBytes ~/ (1024 * 1024);
+
+    // Return the file size in megabytes
+    return fileSizeInMB;
+  }
+
+
+
+  openVideoCamera(String? btnTitle, String? requestFileType) async {
+    late File _video; // Declare a variable to store the captured image
+    int maxFileSizeMB = 100;
+    var picker = ImagePicker(); // Create an instance of ImagePicker
+    var pickedFile = await picker.pickVideo(
+        source: ImageSource.camera); // Capture an image from the camera
+
+    if (pickedFile != null) {
+      getVideoFileSize(pickedFile.path).then((fileSizeInMB) {
+        if (fileSizeInMB > maxFileSizeMB) {
+          FlutterToast().getToastForLongTime(strVideoSizeValidation, Colors.red);
+        } else {
+          _video = File(pickedFile
+              .path); // Create a File object from the captured image path
+
+          // Trigger the image preview thumbnail with the captured image path
+          sheelaFileStaticConversation(
+              btnTitle: btnTitle, // Optional button title
+              selectedImagePath: _video.path, // Path to the captured image
+              requestFileType: strVideo);
+        }
+      });
+    }
   }
 
   @override
@@ -2472,7 +2558,7 @@ makeApiRequest is used to update the data with latest data
                   updateTimer(enable: false); // disable the timer
                   btnTextLocal = button?.title ?? ''; // Set local button text
                   // Show the camera/gallery dialog and handle the result
-                  showCameraGalleryDialog(btnTextLocal ?? '').then((value) {
+                  showCameraGalleryDialog(btnTextLocal ?? '',strImage).then((value) {
                     isSheelaScreenActive =
                         true; // Reactivate Sheela screen after dialog
                     updateTimer(enable: true); // disable the timer
@@ -2487,7 +2573,7 @@ makeApiRequest is used to update the data with latest data
                   updateTimer(enable: false); // disable the timer
                   isRetakeCapture = true; // Set flag for retake capture
                   // Show the camera/gallery dialog and handle the result
-                  showCameraGalleryDialog(btnTextLocal ?? '').then((value) {
+                  showCameraGalleryDialog(btnTextLocal ?? '',strImage).then((value) {
                     isSheelaScreenActive =
                         true; // Reactivate Sheela screen after dialog
                     updateTimer(enable: true); // disable the timer
@@ -2621,6 +2707,99 @@ makeApiRequest is used to update the data with latest data
                       }
                     });
                   }
+                }else if (button?.needVideo ?? false) {
+                  // Check if the button requires a video
+                  if (isLoading.isTrue) {
+                    return; // If loading, do nothing
+                  }
+                  stopTTS(); // Stop Text-to-Speech
+                  updateTimer(
+                      enable: false); // disable the timer
+                  isSheelaScreenActive =
+                  false; // Deactivate Sheela screen
+                  btnTextLocal =
+                      button?.title ?? ''; // Set local button text
+                  // Show the camera/gallery dialog and handle the result
+                       showCameraGalleryDialog(
+                      btnTextLocal ?? '', strVideo)
+                      .then((value) {
+                    /*controller.isSheelaScreenActive =
+                              true; // Reactivate Sheela screen after dialog
+                          controller.updateTimer(
+                              enable: true);*/ // enable the timer
+                  });
+                } else if (button?.btnRedirectTo ==
+                    strRedirectRetakeVideo) {
+                  // Check if the button redirects to retake video
+                  if (isLoading.isTrue) {
+                    return; // If loading, do nothing
+                  }
+                  stopTTS(); // Stop Text-to-Speech
+                  isSheelaScreenActive =
+                  false; // Deactivate Sheela screen
+                  updateTimer(
+                      enable: false); // disable the timer
+                  isRetakeCapture =
+                  true; // Set flag for retake capture
+                  // Show the camera/gallery dialog and handle the result
+                       showCameraGalleryDialog(
+                      btnTextLocal ?? '', strVideo)
+                      .then((value) {
+                    /*controller.isSheelaScreenActive =
+                              true; // Reactivate Sheela screen after dialog
+                          controller.updateTimer(
+                              enable: true); // enable the timer*/
+                  });
+                } else if (button?.btnRedirectTo ==
+                    strRedirectToUploadVideo) {
+                  SheelaResponse sheelaLastConversation = SheelaResponse();
+                  sheelaLastConversation = conversations.last;
+                  // Check if the button redirects to upload video
+                  isLoading.value = true; // Set loading flag
+                  conversations.add(SheelaResponse(
+                      loading:
+                      true)); // Add loading response to conversations
+                       scrollToEnd(); // Scroll to the end of conversations
+                  if (sheelaLastConversation.videoThumbnailUrl != null &&
+                      sheelaLastConversation.videoThumbnailUrl != '') {
+                    // Check if there is a valid image thumbnail URL
+                        saveMediaRegiment(sheelaLastConversation.videoThumbnailUrl ?? '',
+                        '') // Save media regiment
+                        .then((value) {
+                      isLoading.value =
+                      false; // Reset loading flag
+                      conversations
+                          .removeLast(); // Remove the loading response from conversations
+                      if (value.isSuccess ?? false) {
+                        fileRequestUrl =
+                            value.result?.accessUrl ?? '';
+                        if (isLoading.isTrue) {
+                          return; // If loading, do nothing
+                        }
+                        if (conversations.last.singleuse != null &&
+                            conversations.last.singleuse! &&
+                            conversations.last.isActionDone != null) {
+                          conversations.last.isActionDone =
+                          true; // Set action done flag if it's a single-use button
+                        }
+                        button?.isSelected =
+                        true; // Mark the button as selected
+                        // Start Sheela from the button with specified parameters
+                        startSheelaFromButton(
+                            buttonText: button?.title,
+                            payload: button?.payload,
+                            buttons: button,
+                            isFromImageUpload: true,
+                            requestFileType:
+                            strVideo // add requestFileType
+                        );
+                        // Delay for 3 seconds and then unselect the button
+                        Future.delayed(const Duration(seconds: 3), () {
+                          button?.isSelected = false;
+                        });
+                      }
+                    });
+                  }
                 } else {
                   startSheelaFromButton(
                       buttonText: button.title,
@@ -2679,6 +2858,18 @@ makeApiRequest is used to update the data with latest data
         );
       }
     });
+  }
+
+  // Define a function to get the thumbnail image data from a video path
+  Future<Uint8List?> getThumbnailImage(path) async {
+    // Use the VideoThumbnail package to generate thumbnail data from the video path
+    return await VideoThumbnail.thumbnailData(
+      video: path, // Specify the video path
+      imageFormat: ImageFormat.JPEG, // Set the image format to JPEG
+      maxWidth:
+      128, // Specify the width of the thumbnail; let the height auto-scaled to keep the source aspect ratio
+      quality: 50, // Set the quality of the thumbnail
+    );
   }
 
 }
