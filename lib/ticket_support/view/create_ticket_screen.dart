@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -45,6 +46,7 @@ import 'package:open_filex/open_filex.dart';
 //import 'package:open_file/open_file.dart'; FU2.5
 import 'package:provider/provider.dart';
 import '../../constants/fhb_constants.dart' as tckConstants;
+import '../../constants/variable_constant.dart';
 import '../../widgets/GradientAppBar.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'my_tickets_screen.dart';
@@ -1268,6 +1270,37 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 fontSize: 18.sp,
                 color: Colors.black,
                 fontWeight: isbold ? FontWeight.bold : FontWeight.w400)),
+      ],
+    );
+  }
+
+  Widget getIconTextField(){
+    return Row(
+      children: [
+        SvgPicture.asset(
+          icon_modified,
+          width: 20.0.sp,
+          height: 20.0.sp,
+        ),
+        SizedBox(width: 20.w,),
+        TextField(
+          textCapitalization: TextCapitalization.sentences,
+          autofocus: false,
+          controller: titleController,
+          decoration: InputDecoration(
+    label: RichText(
+    text: TextSpan(
+    text: 'Nom',
+    style: TextStyle(
+    color: Colors.green,
+    ),
+    children: [
+    TextSpan(
+    text: '*',
+    style: TextStyle(color: Colors.yellow))
+    ]),
+          ),
+          ),
       ],
     );
   }
