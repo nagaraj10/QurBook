@@ -1230,7 +1230,6 @@ makeApiRequest is used to update the data with latest data
         )!
             .then((value) {
           updateTimer(enable: true);
-          playPauseTTS(conversations.last ?? SheelaResponse());
         });
       } else {
         isPlayPauseView.value = false;
@@ -1243,7 +1242,6 @@ makeApiRequest is used to update the data with latest data
         )!
             .then((value) {
           updateTimer(enable: true);
-          playPauseTTS(conversations.last ?? SheelaResponse());
         });
       }
     } catch (e, stackTrace) {
@@ -1262,7 +1260,6 @@ makeApiRequest is used to update the data with latest data
       ))!
           .then((value) {
         updateTimer(enable: true);
-        playPauseTTS(conversations.last ?? SheelaResponse());
       });
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -2441,7 +2438,6 @@ makeApiRequest is used to update the data with latest data
                           chatAttachments: button?.chatAttachments ?? []),
                     )?.then((value) {
                       isSheelaScreenActive = true;
-                      playPauseTTS(conversations.last ?? SheelaResponse());
                     });
                   }
                 } else if (button?.btnRedirectTo == strRedirectToHelpPreview) {
@@ -2458,7 +2454,6 @@ makeApiRequest is used to update the data with latest data
                       titleSheelaPreview: strImageTitle,
                     ))?.then((value) {
                       isSheelaScreenActive = true;
-                      playPauseTTS(conversations.last ?? SheelaResponse());
                     });
                   }
                 } else if (button?.btnRedirectTo == strRedirectRedo) {
