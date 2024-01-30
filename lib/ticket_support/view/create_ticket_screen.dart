@@ -46,7 +46,6 @@ import 'package:open_filex/open_filex.dart';
 //import 'package:open_file/open_file.dart'; FU2.5
 import 'package:provider/provider.dart';
 import '../../constants/fhb_constants.dart' as tckConstants;
-import '../../constants/variable_constant.dart';
 import '../../widgets/GradientAppBar.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'my_tickets_screen.dart';
@@ -1278,7 +1277,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     return Row(
       children: [
         SvgPicture.asset(
-          icon_modified,
+          variable.icon_modified,
           width: 20.0.sp,
           height: 20.0.sp,
         ),
@@ -1287,29 +1286,31 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           textCapitalization: TextCapitalization.sentences,
           autofocus: false,
           controller: titleController,
-          decoration: InputDecoration(
-    label: RichText(
-    text: TextSpan(
-    text: 'Nom',
-    style: TextStyle(
-    color: Colors.green,
-    ),
-    children: [
-    TextSpan(
-    text: '*',
-    style: TextStyle(color: Colors.yellow))
-    ]),
+          decoration:InputDecoration(
+            label: RichText(
+              text: TextSpan(
+                  text: 'Nom',
+                  style: TextStyle(
+                    color: Colors.green,
+                  ),
+                  children: [
+                    TextSpan(
+                        text: '*',
+                        style: TextStyle(color: Colors.yellow))
+                  ]),
+            ),
           ),
-          ),
+        )
+
       ],
     );
   }
 
-  Widget getWidgetForTitleValue() {
+  Widget getWidgetForTitleValue({String? strName,bool?enabled}) {
     return TextField(
       textCapitalization: TextCapitalization.sentences,
       autofocus: false,
-      controller: titleController,
+      controller: textEditingControllers[strName],
       decoration: InputDecoration(
         fillColor: Colors.white,
         filled: true,
