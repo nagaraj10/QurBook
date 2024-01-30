@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:camera/camera.dart';
+import 'package:myfhb/services/pushnotification_service.dart';
 import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -109,6 +110,8 @@ late List<CameraDescription> listOfCameras;
 
 //variable for all outer
 late var routes;
+final FlutterLocalNotificationsPlugin localNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
   var reminderMethodChannelAndroid =
@@ -134,6 +137,7 @@ Future<void> main() async {
     });
 
     PreferenceUtil.init();
+    await PushNotificationService().setupNotification();
 
     await DatabaseUtil.getDBLength().then((length) {
       if (length == 0) {
@@ -300,7 +304,7 @@ class _MyFHBState extends State<MyFHB> {
   var sheelaMethodChannelAndroid = const MethodChannel('sheela.channel');
   static const platform = variable.version_platform;
   String? _responseFromNative = variable.strWaitLoading;
-  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  //final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   static const secure_platform = variable.security;
   static const nav_platform = MethodChannel('navigation.channel');
   String navRoute = '';
@@ -337,7 +341,7 @@ class _MyFHBState extends State<MyFHB> {
         CommonUtil().askPermissionForNotification();
       });
     });*/
-    getMyRoute();
+    //getMyRoute();
     _enableTimer();
     final res = apiBaseHelper.updateLastVisited();
     isAlreadyLoaded = true;
@@ -1299,14 +1303,7 @@ class _MyFHBState extends State<MyFHB> {
     }
   }
 
-  getMyRoute() async {
-    final route = await nav_platform.invokeMethod('getMyRoute');
-    if (route != null && route != 'null') {
-      setState(() {
-        navRoute = route;
-      });
-    }
-  }
+
 
   void getProfileData() async {
     try {
@@ -1320,17 +1317,17 @@ class _MyFHBState extends State<MyFHB> {
   Widget build(BuildContext context) {
     final nsSettingsForAndroid =
         AndroidInitializationSettings(variable.strLauncher);
-    final nsSettingsForIOS = IOSInitializationSettings();
+    final nsSettingsForIOS = DarwinInitializationSettings();
     final platform = InitializationSettings(
         android: nsSettingsForAndroid, iOS: nsSettingsForIOS);
 
-    Future notificationAction(String? payload) async {
+    Future notificationAction(NotificationResponse details) async {
       await Navigator.push(
           context, MaterialPageRoute(builder: (context) => AddReminder()));
     }
 
-    flutterLocalNotificationsPlugin.initialize(platform,
-        onSelectNotification: notificationAction);
+/*    flutterLocalNotificationsPlugin.initialize(platform,
+        onDidReceiveNotificationResponse: notificationAction);*/
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ConnectivityBloc>(
@@ -1390,7 +1387,7 @@ class _MyFHBState extends State<MyFHB> {
             themeMode: ThemeMode.light,
             theme: AppTheme().themeData,
             //home: navRoute.isEmpty ? SplashScreen() : StartTheCall(),
-            home: findHomeWidget(navRoute),
+            home: SplashScreen(),
             navigatorObservers: [MyFHB.routeObserver],
             routes: routes,
             debugShowCheckedModeBanner: false,

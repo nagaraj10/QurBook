@@ -871,3 +871,6 @@ const String strAppVersion = 'App Version';
 const String strOSVersion = 'OS Version';
 const String strErrorLog = 'Error Log';
 const String stringConnectedDevicesScreen = 'connectedDevicesScreen';
+
+// Define a constant string for a specific operation related to personal plan activities
+const String stringAssignOrUpdatePersonalPlanActivities = 'assign_or_update_personal_plan_activities';
