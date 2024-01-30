@@ -6233,10 +6233,6 @@ class CommonUtil {
       await getMyProfilesetting();
       var regController = CommonUtil().onInitQurhomeRegimenController();
       regController.getRegimenList();
-      FirestoreServices().setupListenerForFirestoreChanges();
-      // Schedule the cron job to run at midnight for
-      //getting the latest regiment
-      CronJobServices().scheduleUpdateForData();
       if (!Get.isRegistered<PDFViewController>()) {
         Get.lazyPut(
           () => PDFViewController(),
@@ -6244,6 +6240,7 @@ class CommonUtil {
       }
       // Record the user's last access time
       saveUserLastAccessTime();
+      FirestoreServices().setupListenerForFirestoreChanges();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
