@@ -327,7 +327,6 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                     buttonData?.chatAttachments ?? []),
                           )?.then((value) {
                             controller.isSheelaScreenActive = true;
-                            controller.playPauseTTS(chat);
                           });
                         }
                       } else if (buttonData?.btnRedirectTo ==
@@ -347,7 +346,6 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             titleSheelaPreview: strImageTitle,
                           ))?.then((value) {
                             controller.isSheelaScreenActive = true;
-                            controller.playPauseTTS(chat);
                           });
                         }
                       } else if (buttonData?.btnRedirectTo == strRedirectRedo) {
@@ -765,7 +763,6 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                           imageURl: (buttonData?.media ?? ''), // Pass the image link to the ImageSlider widget.
                                         ))?.then((value) {
                                       controller.isSheelaScreenActive = true;
-                                      controller.playPauseTTS(chat);
                                     });
                                   },
                                   child: FadeInImage.assetNetwork(
@@ -883,7 +880,6 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         )!
             .then((value) {
           controller.updateTimer(enable: true);
-          controller.playPauseTTS(chat);
         });
       } else {
         controller.isPlayPauseView.value = false;
@@ -896,7 +892,6 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         )!
             .then((value) {
           controller.updateTimer(enable: true);
-          controller.playPauseTTS(chat);
         });
       }
     } catch (e, stackTrace) {
@@ -915,7 +910,6 @@ class SheelaAIReceiverBubble extends StatelessWidget {
       ))!
           .then((value) {
         controller.updateTimer(enable: true);
-        controller.playPauseTTS(chat);
       });
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
