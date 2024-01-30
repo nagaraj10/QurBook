@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -73,6 +75,8 @@ class SheelaResponse {
   String? pronunciationText;
   String? imageThumbnailUrl;
   String? audioThumbnailUrl;
+  String? videoThumbnailUrl;
+  Uint8List? videoThumbnailUrlData; // this for the videoThumbnail avoid loading issue
 
   SheelaResponse({this.recipientId,
     this.text,
@@ -109,6 +113,8 @@ class SheelaResponse {
     this.pronunciationText,
     this.imageThumbnailUrl,
     this.audioThumbnailUrl,
+    this.videoThumbnailUrl,
+    this.videoThumbnailUrlData,
   });
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
@@ -211,6 +217,7 @@ class SheelaResponse {
     data['pronunciationText'] = this.pronunciationText;
     data['imageThumbnailUrl'] = this.imageThumbnailUrl;
     data['audioThumbnailUrl'] = this.audioThumbnailUrl;
+    data['videoThumbnailUrl'] = this.videoThumbnailUrl;
     return data;
   }
 }

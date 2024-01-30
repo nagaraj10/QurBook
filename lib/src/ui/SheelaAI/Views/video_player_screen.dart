@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -10,10 +12,13 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../../constants/fhb_constants.dart';
+
 class VideoPlayerScreen extends StatefulWidget {
   final String? videoURL;
+  final bool? isFromSheelaMedia;
 
-  VideoPlayerScreen({this.videoURL});
+  VideoPlayerScreen({this.videoURL,this.isFromSheelaMedia = false});
 
   @override
   _VideoPlayerState createState() => _VideoPlayerState();
@@ -28,11 +33,19 @@ class _VideoPlayerState extends State<VideoPlayerScreen> {
     try {
       super.initState();
       sheelaAIController.onStopTTSWithDelay();
-      videoPlayerController =
-          VideoPlayerController.network((widget.videoURL ?? ""))
-            ..addListener(() => setState(() {}))
-            ..setLooping(false)
-            ..initialize().then((_) => videoPlayerController?.play());
+      if (widget.isFromSheelaMedia ?? false) {
+        videoPlayerController =
+            VideoPlayerController.file(File(widget.videoURL ?? ''))
+              ..addListener(() => setState(() {}))
+              ..setLooping(false)
+              ..initialize().then((_) => videoPlayerController?.play());
+      } else {
+        videoPlayerController =
+            VideoPlayerController.network((widget.videoURL ?? ""))
+              ..addListener(() => setState(() {}))
+              ..setLooping(false)
+              ..initialize().then((_) => videoPlayerController?.play());
+      }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -89,7 +102,9 @@ class _VideoPlayerState extends State<VideoPlayerScreen> {
               elevation: 0.0,
               backgroundColor: Colors.transparent,
               title: Text(
-                strVideoTitle,
+                (widget.isFromSheelaMedia ?? false)
+                    ? strVideoPreview
+                    : strVideoTitle,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0.sp,
