@@ -48,6 +48,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
+          width: MediaQuery.sizeOf(context).width,
           margin: const EdgeInsets.all(10),
           padding: const EdgeInsets.all(10),
           height: !(widget.isShowingBenefits ?? false) ? 150.h : null,
