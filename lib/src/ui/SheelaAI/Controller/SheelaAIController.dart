@@ -2141,7 +2141,6 @@ makeApiRequest is used to update the data with latest data
         var recognizedWords = result.recognizedWords;
         if (Platform.isIOS) {
           sheelaInputTextEditingController.text = '$recognizedWords ';
-          print('Mihir Response: ${recognizedWords}');
           // Perform further actions if the region is US
           if (CommonUtil.isUSRegion()) {
             // Extract the response from the input text, trim, and handle it
@@ -2150,11 +2149,9 @@ makeApiRequest is used to update the data with latest data
                 .trim();
             if (_debounceRecognizedWords?.isActive ?? false) {
               _debounceRecognizedWords?.cancel();
-              print('Mihir Response:  Timer Cancel');
             }
             _debounceRecognizedWords =
                 Timer(const Duration(milliseconds: 500), () async {
-              print('Mihir Response:  Timer Called');
 
               await closeSheelaInputDialogAndStopListening();
 
@@ -2162,7 +2159,6 @@ makeApiRequest is used to update the data with latest data
               if (result.finalResult) {
                 // Close Sheela's input dialog and stop listening
                 await handleSheelaInputResponse(response);
-                print('Mihir Response: Done');
               }
             });
           }

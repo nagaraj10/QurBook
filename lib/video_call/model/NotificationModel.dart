@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import '../../constants/fhb_parameters.dart' as parameters;
@@ -53,6 +55,8 @@ class NotificationModel {
   String? eventType;
   String? others;
   String? appointmentId;
+  String? bookingId;
+  String? createdBy;
   String? status;
   String? voiceCloneId;
   // Nullable variable to store the Voice Clone ID.
@@ -102,6 +106,8 @@ class NotificationModel {
       this.eventType,
       this.others,
       this.appointmentId,
+      this.bookingId,
+      this.createdBy,
       this.status,
       this.voiceCloneId,
       this.voiceCloneStatus});
@@ -144,6 +150,8 @@ class NotificationModel {
       'eventType': eventType,
       'others': others,
       'appointmentId': appointmentId,
+      'bookingId': bookingId,
+      'createdBy': createdBy,
       'voiceCloneId': voiceCloneId,
       'voiceCloneStatus': voiceCloneStatus,
     };
@@ -184,7 +192,8 @@ class NotificationModel {
       others = message['others'];
       viewRecordAction = message['viewRecordAction'];
       chatWithCC = message['chatWithCC'];
-      appointmentId = message['appointmentId'];
+      bookingId = message['bookingId'];
+      createdBy = message['createdBy'];
       voiceCloneId = message['voiceCloneId'];
       voiceCloneStatus = message['voiceCloneStatus'];
     } catch (e, stackTrace) {
@@ -313,6 +322,14 @@ class NotificationModel {
 
         if ((message[parameters.appointmentId] ?? '').isNotEmpty) {
           appointmentId = message[parameters.appointmentId];
+        }
+
+        if ((message[parameters.strBookingId_S] ?? '').isNotEmpty) {
+          bookingId = message[parameters.strBookingId_S];
+        }
+
+        if ((message[parameters.strCreatedBy] ?? '').isNotEmpty) {
+          createdBy = message[parameters.strCreatedBy];
         }
 
         if (message[parameters.externalLink] != null) {
@@ -509,6 +526,14 @@ class NotificationModel {
 
     if ((message[parameters.appointmentId] ?? '').isNotEmpty) {
       appointmentId = message[parameters.appointmentId];
+    }
+
+    if ((message[parameters.strBookingId_S] ?? '').isNotEmpty) {
+      bookingId = message[parameters.strBookingId_S];
+    }
+
+    if ((message[parameters.strCreatedBy] ?? '').isNotEmpty) {
+      createdBy = message[parameters.strCreatedBy];
     }
 
     if (message[parameters.strMessage] != null) {
