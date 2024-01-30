@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
+import '../../claim/model/members/MembershipBenefitListModel.dart';
 import '../../claim/model/members/MembershipDetails.dart';
-import '../../claim/model/members/MembershipResult.dart';
 import '../../common/CommonUtil.dart';
-import '../../constants/fhb_constants.dart' as constants;
-import '../../constants/variable_constant.dart' as variable;
-import '../../widgets/GradientAppBar.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
 import '../../common/errors_widget.dart';
-
+import '../../constants/fhb_constants.dart' as constants;
+import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart' as variable;
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/GradientAppBar.dart';
 import 'create_ticket_screen.dart';
+import 'get_membership_data_widget.dart';
 
 class TicketTypesScreen extends StatefulWidget {
   @override
@@ -28,6 +28,7 @@ class TicketTypesScreen extends StatefulWidget {
 class _TicketTypesScreenState extends State<TicketTypesScreen> {
   TicketViewModel ticketViewModel = TicketViewModel();
   TicketTypesModel ticketTypesModel = TicketTypesModel();
+  Map<String,String?> _iconsurls = Map<String,String?>();
 
   @override
   Widget build(BuildContext context) {
@@ -122,91 +123,33 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
             if (snapshot.hasData &&
                 snapshot.data!.result != null &&
                 snapshot.data!.result!.isNotEmpty) {
-              MemberShipResult? memberShipResult = snapshot.data?.result?.first;
+              final _memberShipResult = snapshot.data?.result?.first;
 
-              if (memberShipResult != null) {
-                DateTime planEndDateTime = DateFormat("yyyy-MM-dd")
-                    .parse(memberShipResult.planEndDate ?? '');
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      padding: const EdgeInsets.all(15),
-                      height: 150.h,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Color(CommonUtil().getMyPrimaryColor()),
-                            Color(CommonUtil().getMyGredientColor())
-                          ],
-                        ),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(12.0)),
-                        border: Border.all(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
-                        ),
+              if (_memberShipResult != null) {
+                /// We need to showcase only selected benefitType only.
+                _memberShipResult.additionalInfo?.benefitType?.removeWhere(
+                  (element) => ![
+                    variable.strBenefitDoctorAppointment,
+                    variable.strBenefitLabAppointment,
+                    variable.strBenefitMedicineOrdering,
+                    variable.strBenefitTransportation,
+                    variable.strBenefitCareDietPlans,
+                    variable.strBenefitFamilyMembers,
+                  ].contains(element.fieldName),
+                );
+                return GetMembershipDataWidget(
+                  memberShipResult: _memberShipResult,
+                  onPressed: () {
+                    /// Navigate to Membership Benefit List Screen.
+                    Navigator.pushNamed(
+                      context,
+                      router.rt_membership_benefits_screen,
+                      arguments: MembershipBenefitListModel(
+                        memberShipResult: _memberShipResult,
+                        iconsUrls: _iconsurls,
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            memberShipResult.planName ?? '',
-                            overflow: TextOverflow.visible,
-                            style: TextStyle(
-                              fontSize: 21.0.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            'Validity info (Valid till ${DateFormat("dd-MM-yyyy").format(
-                              planEndDateTime,
-                            )} (${CommonUtil().calculateDifference(
-                              planEndDateTime,
-                            )} days remaining)',
-                            overflow: TextOverflow.visible,
-                            style: TextStyle(
-                              fontSize: 14.0.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const Spacer(),
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              'Show available benefits',
-                              overflow: TextOverflow.visible,
-                              style: TextStyle(
-                                fontSize: 14.0.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                                decoration: TextDecoration.underline,
-                                decorationStyle: TextDecorationStyle.solid,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 6, 15, 0),
-                      child: Text(
-                        'Available Services',
-                        overflow: TextOverflow.visible,
-                        style: TextStyle(
-                          fontSize: 18.0.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
+                    );
+                  },
                 );
               } else {
                 return Container();
@@ -239,6 +182,10 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                   bottom: 8.0.h,
                 ),
                 itemBuilder: (ctx, i) {
+                  /// this _iconsurls object
+                  /// Use later to pass iconsurl to MembershipBenefitsListScreen.
+                  _iconsurls[ticketTypesList[i].name ?? ''] =
+                      ticketTypesList[i].iconUrl ?? '';
                   return myTicketTypesListItem(ctx, i, ticketTypesList);
                 },
                 itemCount: ticketTypesList.length,
@@ -366,7 +313,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
             ),
           )),
     );
-  }
+}
 
   Widget getTicketTypeImages(
       BuildContext context, TicketTypesResult ticketListData) {
