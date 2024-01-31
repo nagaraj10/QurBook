@@ -548,6 +548,7 @@ class FHBUtils {
     String formattedDate = '';
 
     if (strDate != null && strDate != '') {
+      ///If isDatetime it will return the date and time string example: 01-02-2024 07:57 pm
       if(isDateTime==true){
         DateTime dateTime = DateTime.parse(strDate);
         if (CURRENT_DATE_CODE == 'MDY') {

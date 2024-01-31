@@ -471,7 +471,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     child: Row(
                       children: [
                         SvgPicture.asset(
-                          getIconType(field),
+                          _getIconType(field),
                           width: 30.h,
                           height: 30.h,
                           fit: BoxFit.cover,
@@ -480,7 +480,6 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         SizedBox(width: 20.w,),
                         Expanded(
                           child: getDropDownFields(field,
-                          hideArrow: true,
                           customButton:Expanded(
                             child: getIconTextField(
                                 fieldName:CommonUtil().getFieldName(field.name),
@@ -496,7 +495,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     ),
                   ));
             }
-            else if(field.name.toString().toLowerCase()==tckConstants.tckPrefferedDate && field.type.toString().toLowerCase()==tckConstants.tckDateTime){
+            else if(field.name.toString().toLowerCase()==tckConstants.tckPrefferedDate && field.type.toString().toLowerCase()==tckConstants.tckTypeDateTime){
               widgetForColumn.add(Container(
                 margin: EdgeInsets.only(top: 20.h),
                 child: GestureDetector(
@@ -506,7 +505,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     );
                   },
                   child: getIconTextField(
-                      icon: getIconType(field),
+                      icon: _getIconType(field),
                       fieldName:CommonUtil().getFieldName(field.name),
                       displayName: field.displayName,
                       isRequired: field.isRequired,
@@ -524,7 +523,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         setState: setState);
                   },
                   child: getIconTextField(
-                      icon: getIconType(field),
+                      icon: _getIconType(field),
                       fieldName:CommonUtil().getFieldName(field.name),
                       displayName: field.displayName,
                       isRequired: field.isRequired,
@@ -536,7 +535,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               widgetForColumn.add(Container(
                 margin: EdgeInsets.only(top: 30.h),
                 child: getIconTextField(
-                    icon: getIconType(field),
+                    icon: _getIconType(field),
                     fieldName:CommonUtil().getFieldName(field.name),
                     displayName: field.displayName,
                     isRequired: field.isRequired,
@@ -776,13 +775,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     Expanded(
                       flex: 2,
                       child:getDropDownFields(field,
-                        hideArrow: false,
                         customButton: fhbBasicWidget.getTextFiledWithHint(
                           context,
                           placeHolderName,
                           textEditingControllers[
                           CommonUtil().getFieldName(field.name)],
-                          enabled: false),
+                          enabled: false,
+                        suffix: getIconButton()),
                       ),)
                   ],
                 ),
@@ -3064,12 +3063,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       ],
     );
 
-  String getIconType(Field field) {
+  String _getIconType(Field field) {
     Map<String, String> iconMappings = {
-      'preferred_date': variable.icon_dateTime,
-      'mode_of_service': variable.icon_modeOfService,
-      'choose_doctor': variable.icon_chooseDoctor,
-      'description': variable.icon_information,
+      tckConstants.tckPrefferedDate: variable.icon_dateTime,
+      tckConstants.tckTypeModeOfService: variable.icon_modeOfService,
+      tckConstants.tckChooseDoctor: variable.icon_chooseDoctor,
+      tckConstants.tckMainDescription: variable.icon_information,
     };
     return iconMappings[field.name] ?? ''; // Use the null-aware operator to handle cases where field.name is not found in the map.
   }
@@ -3297,7 +3296,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     }
   }
 
-  getDropDownFields(Field field, {Offset? offset,Widget? customButton,bool? hideArrow}) {
+  getDropDownFields(Field field, {Widget? customButton}) {
     if (field.selValueDD != null) {
       for (var modeOfServiceObj in field.fieldData!) {
         if (modeOfServiceObj.id == field.selValueDD!.id) {
@@ -3311,9 +3310,6 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           customButton: customButton,
           isExpanded: true,
           isDense: true,
-          iconStyleData: IconStyleData(
-              icon:getIconButton()
-          ),
           value: field.selValueDD,
           items: field.fieldData!=null?field.fieldData!
               .mapIndexed((index,item) => DropdownMenuItem<FieldData>(
@@ -3412,20 +3408,23 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   }
 
   Future<void> _selectDateTime(BuildContext context, String? fieldName) async {
+    // Show date picker dialog and wait for user input
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now().add(Duration(days:1)),
-      firstDate:DateTime.now().add(Duration(days:1)),
-      lastDate: DateTime(2100),
+      initialDate: DateTime.now().add(Duration(days: 1)), // Set initial date to tomorrow
+      firstDate: DateTime.now().add(Duration(days: 1)), // Allow selecting dates from tomorrow onwards
+      lastDate: DateTime(2100), // Limit selection up to year 2100
     );
 
     if (pickedDate != null) {
+      // Show time picker dialog and wait for user input
       final TimeOfDay? pickedTime = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay.now(),
+        initialTime: TimeOfDay.now(), // Set initial time to current time
       );
 
       if (pickedTime != null) {
+        // Combine selected date and time into a single DateTime object
         final DateTime selectedDateTime = DateTime(
           pickedDate.year,
           pickedDate.month,
@@ -3433,8 +3432,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           pickedTime.hour,
           pickedTime.minute,
         );
+        // Update UI state with the selected date and time
         setState(() {
-          textEditingControllers[fieldName]?.text = FHBUtils().getPreferredDateString(selectedDateTime.toString(),isDateTime:true);
+          // Set the text field value using a formatted date string
+          textEditingControllers[fieldName]?.text = FHBUtils().getPreferredDateString(selectedDateTime.toString(), isDateTime: true);
         });
       }
     }
