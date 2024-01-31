@@ -47,6 +47,8 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
     color: Colors.white,
   );
 
+  final _membershipFontSize = CommonUtil().isTablet! ? 25.0.sp : 20.0.sp;
+
   @override
   Widget build(BuildContext context) {
     /// From String to DateTime conversion.
@@ -88,7 +90,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
                 widget.memberShipResult?.planName ?? '',
                 overflow: TextOverflow.visible,
                 style: TextStyle(
-                  fontSize: 21.0.sp,
+                  fontSize: _membershipFontSize,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
                 ),

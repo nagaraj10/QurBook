@@ -30,6 +30,9 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
   TicketTypesModel ticketTypesModel = TicketTypesModel();
   Map<String,String?> _iconsurls = Map<String,String?>();
 
+  final _membershipFontSize = CommonUtil().isTablet! ? 25.0.sp : 20.0.sp;
+  final _iconHeight = CommonUtil().isTablet! ? 80.0 : 60.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -175,7 +178,6 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: (itemWidth / itemHeight),
                 ),
                 shrinkWrap: true,
                 padding: EdgeInsets.only(
@@ -290,13 +292,12 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                       ),
                     ],
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Text(
-                    ticketList[i].name!,
+                    (ticketList[i].name!).replaceAll(' ', '\n'),
                     maxLines: 2,
-                    // overflow: TextOverflow.visible,
                     style: TextStyle(
-                      fontSize: 21.0.sp,
+                      fontSize: _membershipFontSize,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
 
@@ -315,16 +316,16 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
     if (ticketListData.iconUrl?.isNotEmpty ?? false) {
       return SvgPicture.network(
         ticketListData.iconUrl!,
-        height: 70,
-        // width: 60,
+        height: _iconHeight,
+        width: _iconHeight,
         placeholderBuilder: (context) => CommonCircularIndicator(),
         color: Colors.white.withAlpha(200),
       );
     } else {
       return Image.asset(
         'assets/icons/10.png',
-        width: 60,
-        height: 60,
+        width: _iconHeight,
+        height: _iconHeight,
         color: Colors.white.withAlpha(200),
       );
     }
