@@ -106,6 +106,7 @@ const String bookAnAppointment = 'Book an appointment';
 const String add_providers = 'add_providers';
 const String choose_address = 'Please choose the address';
 const String cancer_speciality = 'Cancer Speciality Hospital';
+const String request_sent_successfully = 'Request sent successfully';
 const String apollo_email = 'apollo@sample.com';
 const String preferred_descrip =
     'We allow only one preferred provider for a user. To remove your preference, please set another Provider as Preferred.';

@@ -481,12 +481,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         Expanded(
                           child: getDropDownFields(field,
                           hideArrow: true,
-                          customButton:getIconTextField(
-                              fieldName:CommonUtil().getFieldName(field.name),
-                              displayName: field.displayName,
-                              isRequired: field.isRequired,
-                              readonly: true
-                          ),
+                          customButton:Expanded(
+                            child: getIconTextField(
+                                fieldName:CommonUtil().getFieldName(field.name),
+                                displayName: field.displayName,
+                                isRequired: field.isRequired,
+                                readonly: true
+                            ),
+                          )
                           ),
                         ),
                         
@@ -2618,7 +2620,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 imagePaths)
                 .then((values) {
               FlutterToast()
-                  .getToast('Ticket Created Successfully', Colors.grey);
+                  .getToast(isDoctor?variable.request_sent_successfully:'Ticket Created Successfully', Colors.grey);
               Navigator.of(context).pop();
               Navigator.of(context).pop();
               //print('Hitting API .. : ${value.toJson()}');
@@ -3310,7 +3312,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           isExpanded: true,
           isDense: true,
           iconStyleData: IconStyleData(
-              icon: hideArrow==true?SizedBox():getIconButton()
+              icon:getIconButton()
           ),
           value: field.selValueDD,
           items: field.fieldData!=null?field.fieldData!
