@@ -2881,7 +2881,7 @@ makeApiRequest is used to update the data with latest data
     await Future.delayed(const Duration(milliseconds: 500));
     final sheelaAIController = CommonUtil().onInitSheelaAIController();
     // Construct an array of values for the reminder invocation
-    var strValue = 'activityRemainderInvokeSheela&${reminder.eid}';
+    var strValue = '$strActivityRemainderInvokeSheela${reminder.eid}';
     final passedValArr = strValue.split('&');
     // Invoke the method to handle the reminder invocation
     CommonUtil().getActivityRemainderInvokeSheela(passedValArr, sheelaAIController);
