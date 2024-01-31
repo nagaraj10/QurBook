@@ -2619,7 +2619,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 imagePaths)
                 .then((values) {
               FlutterToast()
-                  .getToast(isDoctor?variable.request_sent_successfully:'Ticket Created Successfully', Colors.grey);
+                  .getToast('Ticket Created Successfully', Colors.grey);
               Navigator.of(context).pop();
               Navigator.of(context).pop();
               //print('Hitting API .. : ${value.toJson()}');
@@ -2630,7 +2630,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               );
             } as FutureOr<List<dynamic>> Function(dynamic));
           } else {
-            FlutterToast().getToast('Ticket Created Successfully', Colors.grey);
+            FlutterToast().getToast(isDoctor?variable.request_sent_successfully:'Ticket Created Successfully', Colors.grey);
             Navigator.of(context).pop();
             Navigator.of(context).pop();
             //print('Hitting API .. : ${value.toJson()}');
