@@ -7567,40 +7567,45 @@ class CommonUtil {
   }
 
 
-  getActivityRemainderInvokeSheela(var passedValArr,SheelaAIController sheelaAIController) {
-    //// allow the user for auto redirect to sheela screen on time
+  // This function is responsible for handling the Sheela activity remainder invocation.
+  getActivityRemainderInvokeSheela(var passedValArr, SheelaAIController sheelaAIController) {
+    // Check if auto redirect to Sheela screen is allowed
     if (CommonUtil().isAllowSheelaLiveReminders()) {
-      // live reminder On deafult existing flow
+      // Live reminder on default existing flow
       if (sheelaAIController.isSheelaScreenActive) {
+        // If Sheela screen is active, send a reminder notification
         var reqJson = {
           KIOSK_task: KIOSK_remind,
-          KIOSK_eid: passedValArr[1].toString()
+          KIOSK_eid: passedValArr[1].toString(),
         };
         CommonUtil().callQueueNotificationPostApi(reqJson);
       } else {
+        // If Sheela screen is not active and queue dialog is showing, dismiss it
         if (sheelaAIController.isQueueDialogShowing.value) {
           Get.back();
           sheelaAIController.isQueueDialogShowing.value = false;
         }
+        // Delayed navigation to Sheela screen
         Future.delayed(Duration(milliseconds: 500), () async {
-          CommonUtil().getToSheelaNavigate(passedValArr,sheelaAIController,
+          CommonUtil().getToSheelaNavigate(passedValArr, sheelaAIController,
               isFromActivityRemainderInvokeSheela: true);
         });
       }
     } else {
-      // live reminder off only queue flow working
+      // Live reminder off, only queue flow is working
       var reqJson = {
         KIOSK_task: KIOSK_remind,
-        KIOSK_eid: passedValArr[1].toString()
+        KIOSK_eid: passedValArr[1].toString(),
       };
       CommonUtil().callQueueNotificationPostApi(reqJson);
     }
   }
 
-  getToSheelaNavigate(var passedValArr,SheelaAIController sheelaAIController,
-      {bool isFromAudio = false,
-        bool isFromActivityRemainderInvokeSheela = false}) {
+// This function is responsible for navigating to the Sheela screen based on various conditions.
+  getToSheelaNavigate(var passedValArr, SheelaAIController sheelaAIController,
+      {bool isFromAudio = false, bool isFromActivityRemainderInvokeSheela = false}) {
     if (isFromActivityRemainderInvokeSheela) {
+      // If invoked from activity remainder, navigate to Sheela screen with arguments
       Get.toNamed(
         rt_Sheela,
         arguments: SheelaArgument(eId: passedValArr[1].toString()),
@@ -7614,7 +7619,9 @@ class CommonUtil {
       });
       return;
     }
+
     if (isFromAudio) {
+      // If invoked from audio, navigate to Sheela screen with audio-related arguments
       Get.toNamed(
         router.rt_Sheela,
         arguments: SheelaArgument(
@@ -7634,6 +7641,7 @@ class CommonUtil {
         }
       });
     } else {
+      // Delayed navigation to Sheela screen with default arguments
       Future.delayed(Duration(milliseconds: 500), () async {
         Get.toNamed(
           rt_Sheela,
@@ -7662,6 +7670,7 @@ class CommonUtil {
       });
     }
   }
+
 
 
 }

@@ -163,14 +163,14 @@ class QurPlanReminders {
       {bool isSnooze = false}) async {
     var localReminders = await getLocalReminder();
 
-    if (isSnooze) {
+    /*if (isSnooze) {
       for (var i = 0; i < data.length; i++) {
         var apiReminder = data[i];
         await onInitScheduleNotification(apiReminder);
-        /*await reminderMethodChannelAndroid.invokeMethod(
-            addReminderMethod, {'data': jsonEncode(apiReminder.toMap())});*/
+        *//*await reminderMethodChannelAndroid.invokeMethod(
+            addReminderMethod, {'data': jsonEncode(apiReminder.toMap())});*//*
       }
-    } else {
+    } else {*/
       try {
         for (var i = 0; i < data.length; i++) {
           var apiReminder = data[i];
@@ -210,7 +210,7 @@ class QurPlanReminders {
       } catch (e) {
         print(e);
       }
-    }
+    //}
     return await saveRemindersLocally(data);
   }
 

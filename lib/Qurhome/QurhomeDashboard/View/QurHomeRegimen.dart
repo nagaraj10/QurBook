@@ -1092,10 +1092,15 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             reminder.remindbefore = regimen.remindin.toString();
                             reminder.dosemeal =
                                 regimen.doseMealString.toString();
-                            final notificationId =
-                            CommonUtil().toSigned32BitInt(int.tryParse('${reminder?.eid}') ?? 0);
+                            // Calculate a unique notification ID by converting the reminder's 'eid' to a signed 32-bit integer.
+                            final notificationId = CommonUtil().toSigned32BitInt(int.tryParse('${reminder?.eid}') ?? 0);
+
+                            // Assign the calculated notification ID to the reminder's notificationListId property.
                             reminder?.notificationListId = notificationId.toString();
+
+                            // Assign the value of fhbParameters.stringRegimentScreen to the reminder's redirectTo property.
                             reminder?.redirectTo = fhbParameters.stringRegimentScreen;
+
                             List<Reminder> data = [reminder];
                             String snoozedText =
                                 "Snoozed for ${int.parse(time[0]).toString()} minutes";

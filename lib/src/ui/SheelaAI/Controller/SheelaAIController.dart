@@ -157,6 +157,8 @@ class SheelaAIController extends GetxController {
   final ApiBaseHelper _helper = ApiBaseHelper();
   Timer? _debounceRecognizedWords;
 
+  // Create a Map to store reminder timers. The keys are String identifiers (presumably related to reminders),
+ // and the values are Timer objects that will be used for managing timing events associated with reminders.
   Map<String, Timer> reminderTimers = {};
 
   @override
@@ -2878,45 +2880,53 @@ makeApiRequest is used to update the data with latest data
     );
   }
 
-  Timer createTimer(Reminder remainder, tz.TZDateTime scheduledDateTime) {
+  // Create a timer based on the scheduled time for a reminder.
+  Timer createTimer(Reminder reminder, tz.TZDateTime scheduledDateTime) {
     // Calculate the duration until the scheduled time
-    Duration durationUntilScheduledTime =
-        scheduledDateTime!.difference(DateTime.now());
+    Duration durationUntilScheduledTime = scheduledDateTime!.difference(DateTime.now());
 
     // Schedule the method to be called after the calculated duration
     return Timer(durationUntilScheduledTime, () {
-      scheduledMethod(remainder);
+      // Call the scheduled method passing the reminder
+      scheduledMethod(reminder);
       // Optional: Reschedule the method for the next occurrence
       // rescheduleMethod(index);
     });
   }
 
-  scheduledMethod(Reminder remainder) async {
+// Method called when the timer expires, triggers the reminder-related logic.
+  scheduledMethod(Reminder reminder) async {
+    // Add a slight delay before invoking the Sheela AI-related logic
     await Future.delayed(const Duration(milliseconds: 500));
     final sheelaAIController = CommonUtil().onInitSheelaAIController();
-    var strValue = 'activityRemainderInvokeSheela&${remainder.eid}';
+    // Construct an array of values for the reminder invocation
+    var strValue = 'activityRemainderInvokeSheela&${reminder.eid}';
     final passedValArr = strValue.split('&');
-    CommonUtil()
-        .getActivityRemainderInvokeSheela(passedValArr, sheelaAIController);
+    // Invoke the method to handle the reminder invocation
+    CommonUtil().getActivityRemainderInvokeSheela(passedValArr, sheelaAIController);
   }
 
-  addScheduledTime(Reminder remainder, tz.TZDateTime scheduledDateTime) {
+// Add or update the timer associated with a reminder based on its scheduled time.
+  addScheduledTime(Reminder reminder, tz.TZDateTime scheduledDateTime) {
     // Check if a timer already exists for the same reminder.id
-    if (reminderTimers.containsKey(remainder.notificationListId)) {
-      reminderTimers[remainder.notificationListId]?.cancel();
-      reminderTimers.remove(remainder.notificationListId);
+    if (reminderTimers.containsKey(reminder.notificationListId)) {
+      // If a timer exists, cancel it and remove it from the map
+      reminderTimers[reminder.notificationListId]?.cancel();
+      reminderTimers.remove(reminder.notificationListId);
     }
 
-    // Create a new timer for the new scheduled time
-    final newTimer = createTimer(remainder, scheduledDateTime);
-    reminderTimers[remainder.notificationListId!] = newTimer;
+    // Create a new timer for the new scheduled time and add it to the map
+    final newTimer = createTimer(reminder, scheduledDateTime);
+    reminderTimers[reminder.notificationListId!] = newTimer;
   }
 
+// Cancel and clear all timers associated with reminders.
   clearAllTimers() {
     for (var timer in reminderTimers.values) {
       timer.cancel();
     }
     reminderTimers.clear();
   }
+
 }
 

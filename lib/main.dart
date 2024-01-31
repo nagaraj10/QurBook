@@ -1225,7 +1225,8 @@ class _MyFHBState extends State<MyFHB> {
   Widget build(BuildContext context) {
     final nsSettingsForAndroid =
         AndroidInitializationSettings(variable.strLauncher);
-        
+
+    // Create an instance of DarwinInitializationSettings with notificationCategories
     final nsSettingsForIOS = DarwinInitializationSettings(
         notificationCategories: darwinIOSCategories);
     final platform = InitializationSettings(

@@ -601,21 +601,25 @@ zonedScheduleNotification(
     int notificationId,
     tz.TZDateTime scheduledDateTime,
     bool isButtonShown,
-    bool isSnoozePress) async {
+    bool isSnoozePress,
+    ) async {
   try {
-
+    // Get the list of pending notifications
     List<PendingNotificationRequest> pendingNotifications =
     await localNotificationsPlugin.pendingNotificationRequests();
 
+    // Check if the notification with the given ID is already scheduled
     bool isScheduled = pendingNotifications.any(
-            (notification) => notification.id == notificationId);
+          (notification) => notification.id == notificationId,
+    );
 
+    // If already scheduled, cancel the existing notification with the same ID
     if (isScheduled) {
       await localNotificationsPlugin.cancel(notificationId);
     }
 
-    final sheelaAIController =
-    CommonUtil().onInitSheelaAIController();
+    // Initialize SheelaAIController
+    final sheelaAIController = CommonUtil().onInitSheelaAIController();
 
     var isDismissButtonOnlyShown = false;
     var channelId = remainderScheduleChannel.id;
@@ -629,75 +633,74 @@ zonedScheduleNotification(
       channelDescription = remainderScheduleV3Channel.description;
     }
 
-    reminder?.snoozeTapCountTime = (isButtonShown & isSnoozePress)
-        ? (reminder?.snoozeTapCountTime ?? 0) + 1
-        : null;
+    // Increment snoozeTapCountTime if snooze button is pressed
+    reminder?.snoozeTapCountTime =
+    (isButtonShown & isSnoozePress) ? (reminder?.snoozeTapCountTime ?? 0) + 1 : null;
 
-    // Adjust scheduled time for snooze actions.
+    // Adjust scheduled time for snooze actions
     if (isSnoozePress && (reminder?.snoozeTapCountTime ?? 0) <= 1) {
       var now = tz.TZDateTime.now(tz.local);
-      scheduledDateTime = now.add(const Duration(minutes: 5));
+      scheduledDateTime = now.add(const Duration(minutes: 1));
     } else if (isButtonShown & isSnoozePress) {
       var now = tz.TZDateTime.now(tz.local);
-      scheduledDateTime = now.add(const Duration(minutes: 5));
+      scheduledDateTime = now.add(const Duration(minutes: 1));
       isDismissButtonOnlyShown = true;
     }
 
+    // Create a copy of the reminder and update the notificationListId property
     Reminder reminderTemp = Reminder.fromJson(reminder!.toJson());
-
-    // Update the notificationListId property in the copy
     reminderTemp.notificationListId = notificationId.toString();
 
+    // Encode the reminder data to JSON
     var payLoadData = jsonEncode(reminderTemp?.toMap());
 
+    // Create notification details based on platform
     final notificationDetails = NotificationDetails(
-        android: AndroidNotificationDetails(
-          channelId, // ID
-          channelName, // Title
-          priority: Priority.high,
-          channelDescription: channelDescription,
+      android: AndroidNotificationDetails(
+        channelId,
+        channelName,
+        priority: Priority.high,
+        channelDescription: channelDescription,
         icon: getIconBasedOnRegion(isSmallIcon: true),
-        largeIcon: DrawableResourceAndroidBitmap(
-            getIconBasedOnRegion(isSmallIcon: false)),
+        largeIcon: DrawableResourceAndroidBitmap(getIconBasedOnRegion(isSmallIcon: false)),
         actions: isButtonShown
             ? isDismissButtonOnlyShown
-                ? [dismissAction]
-                : [dismissAction, snoozeAction]
+            ? [dismissAction]
+            : [dismissAction, snoozeAction]
             : null,
       ),
       iOS: isButtonShown
           ? isDismissButtonOnlyShown
-              ? const DarwinNotificationDetails(
-                  categoryIdentifier: 'showSingleButtonCat',
-                )
-              : const DarwinNotificationDetails(
-                  categoryIdentifier: 'showBothButtonsCat',
-                )
-          : const DarwinNotificationDetails(
-              sound: 'ringtone.aiff',
-              categoryIdentifier: 'showSingleButtonCat',
-            ),
+          ? const DarwinNotificationDetails(categoryIdentifier: 'showSingleButtonCat')
+          : const DarwinNotificationDetails(categoryIdentifier: 'showBothButtonsCat')
+          : const DarwinNotificationDetails(sound: 'ringtone.aiff', categoryIdentifier: 'showSingleButtonCat'),
     );
-    await localNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(reminderTemp?.importance == '2'
-        ? remainderScheduleV3Channel
-        : remainderScheduleChannel);
 
+    // Resolve Android specific implementation to create the notification channel
+    await localNotificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(
+      reminderTemp?.importance == '2' ? remainderScheduleV3Channel : remainderScheduleChannel,
+    );
+
+    // Schedule the notification
     await localNotificationsPlugin.zonedSchedule(
-        notificationId,
-        reminderTemp?.title ?? 'scheduled title',
-        reminderTemp?.description ?? 'scheduled body',
-        scheduledDateTime,
-        notificationDetails,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.absoluteTime,
-        payload: payLoadData);
-    sheelaAIController.addScheduledTime(reminderTemp!,scheduledDateTime);
+      notificationId,
+      reminderTemp?.title ?? 'scheduled title',
+      reminderTemp?.description ?? 'scheduled body',
+      scheduledDateTime,
+      notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      payload: payLoadData,
+    );
+
+    // Add the scheduled time to SheelaAIController
+    sheelaAIController.addScheduledTime(reminderTemp!, scheduledDateTime);
   } catch (e, stackTrace) {
+    // Handle exceptions and log errors
     CommonUtil().appLogs(message: e, stackTrace: stackTrace);
   }
 }
+
 
