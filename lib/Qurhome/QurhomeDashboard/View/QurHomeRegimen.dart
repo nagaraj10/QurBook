@@ -31,6 +31,7 @@ import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
+import 'package:myfhb/services/pushnotification_service.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
@@ -1093,7 +1094,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             reminder.dosemeal =
                                 regimen.doseMealString.toString();
                             // Calculate a unique notification ID by converting the reminder's 'eid' to a signed 32-bit integer.
-                            final notificationId = CommonUtil().toSigned32BitInt(int.tryParse('${reminder?.eid}') ?? 0);
+                            final notificationId = toSigned32BitInt(int.tryParse('${reminder?.eid}') ?? 0);
 
                             // Assign the calculated notification ID to the reminder's notificationListId property.
                             reminder?.notificationListId = notificationId.toString();

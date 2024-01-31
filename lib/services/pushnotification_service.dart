@@ -554,7 +554,7 @@ onInitScheduleNotification(Reminder? reminder) async {
     await scheduleReminder(reminder.remindbefore, reminder, subtract: true);
 
     var eventDateTime = reminder.estart ?? '';
-    var scheduledDate = CommonUtil().parseDateTimeFromString(eventDateTime);
+    var scheduledDate = parseDateTimeFromString(eventDateTime);
 
     if (scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
       final notificationId =
@@ -576,7 +576,7 @@ scheduleReminder(String? remindDuration, Reminder reminder,
   try {
     if (remindDuration != null && (int.tryParse(remindDuration) ?? 0) > 0) {
       var eventDateTime = reminder.estart ?? '';
-      var scheduledDate = CommonUtil().parseDateTimeFromString(eventDateTime);
+      var scheduledDate = parseDateTimeFromString(eventDateTime);
 
       var remindDurationInMinutes = int.parse(remindDuration);
       scheduledDate = subtract
@@ -585,7 +585,7 @@ scheduleReminder(String? remindDuration, Reminder reminder,
 
       if (scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
         final notificationId =
-        CommonUtil().calculateNotificationId(reminder, subtract);
+        calculateNotificationId(reminder, subtract);
         await zonedScheduleNotification(
             reminder, notificationId, scheduledDate, false, false);
       }
@@ -701,6 +701,35 @@ zonedScheduleNotification(
     // Handle exceptions and log errors
     CommonUtil().appLogs(message: e, stackTrace: stackTrace);
   }
+}
+
+
+// Convert an integer to a signed 32-bit integer.
+int toSigned32BitInt(int value) {
+  // Apply bitwise AND operation to ensure the result is a signed 32-bit integer.
+  return value & 0xFFFFFFFF;
+}
+
+// Parse a date-time string into a timezone-aware DateTime object.
+tz.TZDateTime parseDateTimeFromString(String dateTimeString) {
+  // Split the date and time components from the input string.
+  var date = dateTimeString.split(' ')[0];
+  var time = dateTimeString.split(' ')[1];
+
+  // Parse the date-time string and create a DateTime object.
+  var dateTime = DateTime.parse('$date $time');
+
+  // Convert the DateTime object to a timezone-aware TZDateTime using the local timezone.
+  return tz.TZDateTime.from(dateTime, tz.local);
+}
+
+// Calculate a notification ID based on the reminder and a subtraction flag.
+int calculateNotificationId(Reminder reminder, bool subtract) {
+  // Create a base ID by prefixing with '0' or '1' based on the subtraction flag.
+  var baseId = subtract ? '${reminder.eid}00' : '${reminder.eid}11';
+
+  // Convert the base ID to a signed 32-bit integer using the toSigned32BitInt function.
+  return toSigned32BitInt(int.tryParse(baseId) ?? 0);
 }
 
 

@@ -45,48 +45,10 @@ class QurPlanReminders {
       var dataArray = await json.decode(responseFromApi!.body);
       final List<dynamic> data = dataArray['result'] ?? [];
       var reminders = <Reminder>[];
-      /*if (Platform.isIOS) {
-        deleteAllLocalReminders();
-        var notificationsCount = 0;
-        data.forEach((element) {
-          if (notificationsCount > 63) {
-            return;
-          }
-          var newData = Reminder.fromMap(element);
-          if (!newData.evDisabled) {
-            if (newData.ack_local == '' || newData.ack_local == null) {
-              if ((newData.estart ?? '').isNotEmpty) {
-                DateTime estartAsDateTime = DateTime.parse(newData.estart!);
-                if (estartAsDateTime.isAfter(DateTime.now())) {
-                  notificationsCount = notificationsCount + 1;
-                  reminders.add(newData);
-                } else {
-                  var afterInt = int.parse(newData.remindin!);
-                  if (afterInt != null && afterInt > 0) {
-                    notificationsCount = notificationsCount + 1;
-                    reminders.add(newData);
-                  }
-                }
-              }
-            }
-          }
-        });
-      } else {
-        data.forEach((element) {
-          var newData = Reminder.fromMap(element);
-          if (!newData.evDisabled) {
-            if (newData.ack_local == '' || newData.ack_local == null)
-              reminders.add(newData);
-          }
-        });
-        if (isSnooze) {
-          reminders.add(snoozeReminderData ?? Reminder());
-        }
-      }*/
       data.forEach((element) {
         var newData = Reminder.fromMap(element);
         final notificationId =
-        CommonUtil().toSigned32BitInt(int.tryParse('${newData.eid}') ?? 0);
+        toSigned32BitInt(int.tryParse('${newData.eid}') ?? 0);
         newData.notificationListId = notificationId.toString();
         newData?.redirectTo = stringRegimentScreen;
         if (!newData.evDisabled) {
@@ -96,7 +58,7 @@ class QurPlanReminders {
       });
       if (isSnooze) {
         final notificationId =
-        CommonUtil().toSigned32BitInt(int.tryParse('${snoozeReminderData?.eid}') ?? 0);
+        toSigned32BitInt(int.tryParse('${snoozeReminderData?.eid}') ?? 0);
         snoozeReminderData?.notificationListId = notificationId.toString();
         snoozeReminderData?.redirectTo = stringRegimentScreen;
         reminders.add(snoozeReminderData ?? Reminder());
@@ -163,14 +125,7 @@ class QurPlanReminders {
       {bool isSnooze = false}) async {
     var localReminders = await getLocalReminder();
 
-    /*if (isSnooze) {
-      for (var i = 0; i < data.length; i++) {
-        var apiReminder = data[i];
-        await onInitScheduleNotification(apiReminder);
-        *//*await reminderMethodChannelAndroid.invokeMethod(
-            addReminderMethod, {'data': jsonEncode(apiReminder.toMap())});*//*
-      }
-    } else {*/
+
       try {
         for (var i = 0; i < data.length; i++) {
           var apiReminder = data[i];
@@ -180,14 +135,6 @@ class QurPlanReminders {
             if (apiReminder.eid == localReminder.eid) {
               found = true;
               if (apiReminder == localReminder) {
-                /*if (Platform.isIOS) {
-                  apiReminder.alreadyScheduled = true;
-                  reminderMethodChannel
-                      .invokeMethod(addReminderMethod, [apiReminder.toMap()]);
-                } else {
-                  // resolved multiple deuplicates reminders in tray
-                  break;
-                }*/
                 break;
               } else {
                 await cancelLocalReminders(localReminder);
@@ -210,7 +157,7 @@ class QurPlanReminders {
       } catch (e) {
         print(e);
       }
-    //}
+
     return await saveRemindersLocally(data);
   }
 

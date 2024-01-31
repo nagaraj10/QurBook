@@ -2523,25 +2523,6 @@ makeApiRequest is used to update the data with latest data
                     for (var i = 0; i < data.length; i++) {
                       apiReminder = data[i];
                     }
-                    /*if (Platform.isAndroid) {
-                      // snooze invoke to android native for locally save the reminder data
-                      QurPlanReminders.getTheRemindersFromAPI(
-                          isSnooze: true, snoozeReminderData: apiReminder);
-
-                      // Start Sheela from button with specified parameters
-                      startSheelaFromButton(
-                          buttonText: button.title,
-                          payload: button.payload,
-                          buttons: button);
-                    } else {
-                      reminderMethodChannel.invokeMethod(snoozeReminderMethod,
-                          [apiReminder.toMap()]).then((value) {
-                        startSheelaFromButton(
-                            buttonText: button.title,
-                            payload: button.payload,
-                            buttons: button);
-                      });
-                    }*/
 
                     // snooze invoke to android native for locally save the reminder data
                     QurPlanReminders.getTheRemindersFromAPI(

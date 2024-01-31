@@ -421,46 +421,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                           for (var i = 0; i < data.length; i++) {
                             apiReminder = data[i];
                           }
-                          /*if (Platform.isAndroid) {
-                              QurPlanReminders.getTheRemindersFromAPI(
-                                  isSnooze: true,
-                                  snoozeReminderData: apiReminder);
-                              if (controller.isLoading.isTrue) {
-                                return;
-                              }
-                              if (chat.singleuse != null &&
-                                  chat.singleuse! &&
-                                  chat.isActionDone != null) {
-                                chat.isActionDone = true;
-                              }
-                              buttonData?.isSelected = true;
-                              controller.startSheelaFromButton(
-                                  buttonText: buttonData?.title,
-                                  payload: buttonData?.payload,
-                                  buttons: buttonData);
-                              Future.delayed(const Duration(seconds: 3), () {
-                                buttonData?.isSelected = false;
-                              });
-                          } else {
-                            reminderMethodChannel.invokeMethod(snoozeReminderMethod, [apiReminder.toMap()]).then((value) {
-                              if (controller.isLoading.isTrue) {
-                                return;
-                              }
-                              if (chat.singleuse != null &&
-                                  chat.singleuse! &&
-                                  chat.isActionDone != null) {
-                                chat.isActionDone = true;
-                              }
-                              buttonData?.isSelected = true;
-                              controller.startSheelaFromButton(
-                                  buttonText: buttonData?.title,
-                                  payload: buttonData?.payload,
-                                  buttons: buttonData);
-                              Future.delayed(const Duration(seconds: 3), () {
-                                buttonData?.isSelected = false;
-                              });
-                            });
-                          }*/
+
                           // Trigger the API call to get reminders with snooze option, using provided reminder data.
                           QurPlanReminders.getTheRemindersFromAPI(
                             isSnooze: true,

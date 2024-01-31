@@ -1039,6 +1039,19 @@ const String strVideoPreview = 'Video preview';
 const String strCurrentNotificationId = 'currentNotificationId';
 
 
+// Define constant strings for various actions
+const String strAction = 'action'; // General action string
+const String strCallback = 'Callback'; // Callback action string
+const String strChatwithcc = 'chatwithcc'; // Chat with customer care action string
+const String strViewrecord = 'viewrecord'; // View record action string
+const String strViewDetails = 'ViewDetails'; // View details action string
+const String strViewMember = 'ViewMember'; // View member action string
+const String strCommunicationsettings = 'Communicationsettings'; // Communication settings action string
+
+
+
+
+
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {
     await _firebaseAnalytics.logEvent(

@@ -67,7 +67,6 @@ class IosNotificationHandler {
   bool notificationReceivedFromKilledState = false;
   bool? viewRecordAction, chatWithCC = false;
 
-  //SheelaAIController sheelaAIController = Get.find();
 
   SheelaAIController? sheelaAIController =
       CommonUtil().onInitSheelaAIController();
@@ -96,21 +95,21 @@ class IosNotificationHandler {
             }
           }
 
-          var actionKey = data["action"] ?? '';
+          var actionKey = data[strAction] ?? '';
           if (actionKey.isNotEmpty) {
-            renewAction = actionKey == "Renew";
-            callbackAction = actionKey == "Callback";
-            rejectAction = actionKey == "Reject";
-            acceptAction = actionKey == "Accept";
-            declineAction = actionKey == "Decline";
-            escalteAction = actionKey == "Escalate";
-            chatWithCC = actionKey == "chatwithcc";
-            viewRecordAction = actionKey == "viewrecord";
-            viewDetails = actionKey == "ViewDetails";
+            renewAction = actionKey == strIsRenew;
+            callbackAction = actionKey == strCallback;
+            rejectAction = actionKey == parameters.reject;
+            acceptAction = actionKey == parameters.accept;
+            declineAction = actionKey == parameters.decline;
+            escalteAction = actionKey == variable.strEscalate;
+            chatWithCC = actionKey == strChatwithcc;
+            viewRecordAction = actionKey == strViewrecord;
+            viewDetails = actionKey == strViewDetails;
             viewMemberAction =
-                actionKey.toLowerCase() == "ViewMember".toLowerCase();
+                actionKey.toLowerCase() == strViewMember.toLowerCase();
             communicationSettingAction = actionKey.toLowerCase() ==
-                "Communicationsettings".toLowerCase();
+                strCommunicationsettings.toLowerCase();
           }
           actionForTheNotification();
         } else if (call.method == variable.listenToCallStatusMethod) {
@@ -238,21 +237,21 @@ class IosNotificationHandler {
         // If the conditions are met, call the function to navigate to the regiment screen.
         callRegimenScreen(data);
       } else{
-        var actionKey = data["action"] ?? '';
+        var actionKey = data[strAction] ?? '';
         if (actionKey.isNotEmpty) {
-          renewAction = actionKey == "Renew";
-          callbackAction = actionKey == "Callback";
-          rejectAction = actionKey == "Reject";
-          acceptAction = actionKey == "Accept";
-          declineAction = actionKey == "Decline";
-          escalteAction = actionKey == "Escalate";
-          chatWithCC = actionKey == "chatwithcc";
-          viewRecordAction = actionKey == "viewrecord";
-          viewDetails = actionKey == "ViewDetails";
+          renewAction = actionKey == strIsRenew;
+          callbackAction = actionKey == strCallback;
+          rejectAction = actionKey == parameters.reject;
+          acceptAction = actionKey == parameters.accept;
+          declineAction = actionKey == parameters.decline;
+          escalteAction = actionKey == variable.strEscalate;
+          chatWithCC = actionKey == strChatwithcc;
+          viewRecordAction = actionKey == strViewrecord;
+          viewDetails = actionKey == strViewDetails;
           viewMemberAction =
-              actionKey.toLowerCase() == "ViewMember".toLowerCase();
+              actionKey.toLowerCase() == strViewMember.toLowerCase();
           communicationSettingAction = actionKey.toLowerCase() ==
-              "Communicationsettings".toLowerCase();
+              strCommunicationsettings.toLowerCase();
           // Check if the actionKey, when converted to lowercase, matches the "Snooze" action.
           snoozeAction = actionKey.toLowerCase() == stringSnooze.toLowerCase();
 
@@ -837,37 +836,7 @@ class IosNotificationHandler {
           : Get.to(() => SplashScreen(
                 nsRoute: 'my_record',
               ));
-    } /*else if (model.redirect == 'regiment_screen') {
-      await fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': CommonUtil.isUSRegion()
-            ? 'QurHomeRegimenScreen'
-            : 'regiment_screen',
-        'navigationPage': 'Regimen Screen',
-      });
-      if (isAlreadyLoaded) {
-        if (model.eventId != null) {
-          if (CommonUtil.isUSRegion()) {
-            var qurhomeDashboardController =
-                CommonUtil().onInitQurhomeDashboardController();
-            qurhomeDashboardController.eventId.value = model.eventId!;
-            await Get.to(() => QurhomeDashboard())?.then((value) =>
-                PageNavigator.goToPermanent(Get.context!, router.rt_Landing));
-          } else {
-            await Get.toNamed(router.rt_Regimen,
-                arguments: RegimentArguments(eventId: model.eventId));
-          }
-        } else {
-          await Get.to(() => SplashScreen(
-                nsRoute: 'regiment_screen',
-              ));
-        }
-      } else {
-        await Get.to(() => SplashScreen(
-              nsRoute: 'regiment_screen',
-            ));
-      }
-    } */else if (model.redirect == 'mycart') {
+    } else if (model.redirect == 'mycart') {
       await fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',
         'ns_type': 'my cart',
@@ -990,7 +959,7 @@ class IosNotificationHandler {
       var eventDateTime = reminderData.estart ?? '';
 
       // Parse the event date-time into a DateTime object.
-      var scheduledDate = CommonUtil().parseDateTimeFromString(eventDateTime);
+      var scheduledDate = parseDateTimeFromString(eventDateTime);
 
       // Generate a new notification ID based on the canceled notification and snooze tap count.
       var baseId = '${tempNotificationListId.toString()}${(reminderData.snoozeTapCountTime ?? 0).toString()}';
