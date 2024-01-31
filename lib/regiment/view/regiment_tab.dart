@@ -300,6 +300,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         } else if (uformName == Uformname.PULSE) {
           isDefault = false;
           cardIcon = 'assets/devices/os_dashboard.png';
+        } else {
+          cardIcon = 'assets/Qurhome/Qurhome.png';
         }
         break;
       case Activityname.MEDICATION:

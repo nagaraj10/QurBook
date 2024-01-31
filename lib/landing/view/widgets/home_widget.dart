@@ -443,10 +443,10 @@ class _HomeWidgetState extends State<HomeWidget> {
                       // },
                     ),
                     LandingCard(
-                      title: constants.strHelpDesk,
+                      title: constants.strServices,
                       lastStatus: '',
                       alerts: '' /*constants.strTrueDeskTickets*/,
-                      icon: variable.icon_true_desk,
+                      icon: variable.icon_service,
                       color: Color(CommonConstants.pulselightColor),
                       onPressed: () {
                         Navigator.push(

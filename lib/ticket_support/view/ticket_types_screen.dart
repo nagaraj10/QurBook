@@ -1,19 +1,22 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
+import '../../claim/model/members/MembershipBenefitListModel.dart';
+import '../../claim/model/members/MembershipDetails.dart';
 import '../../common/CommonUtil.dart';
-import '../../constants/fhb_constants.dart' as constants;
-import '../../constants/variable_constant.dart' as variable;
-import '../../widgets/GradientAppBar.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
 import '../../common/errors_widget.dart';
-
+import '../../constants/fhb_constants.dart' as constants;
+import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart' as variable;
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/GradientAppBar.dart';
 import 'create_ticket_screen.dart';
+import 'get_membership_data_widget.dart';
 
 class TicketTypesScreen extends StatefulWidget {
   @override
@@ -25,6 +28,7 @@ class TicketTypesScreen extends StatefulWidget {
 class _TicketTypesScreenState extends State<TicketTypesScreen> {
   TicketViewModel ticketViewModel = TicketViewModel();
   TicketTypesModel ticketTypesModel = TicketTypesModel();
+  Map<String,String?> _iconsurls = Map<String,String?>();
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +45,13 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
             Navigator.pop(context);
           },
         ),
-        title: Text(constants.strMyTickets,
-            style: TextStyle(
-                fontSize: (CommonUtil().isTablet ?? false)
-                    ? constants.tabFontTitle
-                    : constants.mobileFontTitle)),
+        title: Text(
+          constants.strNewServiceRequests,
+          style: TextStyle(
+              fontSize: (CommonUtil().isTablet ?? false)
+                  ? constants.tabFontTitle
+                  : constants.mobileFontTitle),
+        ),
       ),
       body: Container(
         child: getTicketTypes(),
@@ -77,8 +83,12 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
           if (snapshot.hasData &&
               snapshot.data!.ticketTypeResults != null &&
               snapshot.data!.ticketTypeResults!.isNotEmpty) {
-            return Container(
-                child: ticketTypesList(snapshot.data!.ticketTypeResults));
+            return ListView(
+              children: [
+                getMembershipDataUI(),
+                ticketTypesList(snapshot.data!.ticketTypeResults),
+              ],
+            );
           } else {
             return SafeArea(
               child: SizedBox(
@@ -101,6 +111,56 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
     );
   }
 
+  Widget getMembershipDataUI() => FutureBuilder<MemberShipDetails?>(
+        future: ticketViewModel.getMemberShip(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container();
+          } else if (snapshot.hasError) {
+            return ErrorsWidget();
+          } else {
+            //return ticketTypeListTest(context);
+            if (snapshot.hasData &&
+                snapshot.data!.result != null &&
+                snapshot.data!.result!.isNotEmpty) {
+              final _memberShipResult = snapshot.data?.result?.first;
+
+              if (_memberShipResult != null) {
+                /// We need to showcase only selected benefitType only.
+                _memberShipResult.additionalInfo?.benefitType?.removeWhere(
+                  (element) => ![
+                    variable.strBenefitDoctorAppointment,
+                    variable.strBenefitLabAppointment,
+                    variable.strBenefitMedicineOrdering,
+                    variable.strBenefitTransportation,
+                    variable.strBenefitCareDietPlans,
+                    variable.strBenefitFamilyMembers,
+                  ].contains(element.fieldName),
+                );
+                return GetMembershipDataWidget(
+                  memberShipResult: _memberShipResult,
+                  onPressed: () {
+                    /// Navigate to Membership Benefit List Screen.
+                    Navigator.pushNamed(
+                      context,
+                      router.rt_membership_benefits_screen,
+                      arguments: MembershipBenefitListModel(
+                        memberShipResult: _memberShipResult,
+                        iconsUrls: _iconsurls,
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return Container();
+              }
+            } else {
+              return Container();
+            }
+          }
+        },
+      );
+
   Widget ticketTypesList(List<TicketTypesResult>? ticketTypesList) {
     var size = MediaQuery.of(context).size;
 
@@ -112,6 +172,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
             padding: const EdgeInsets.all(8.0),
             child: Container(
               child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio: (itemWidth / itemHeight),
@@ -121,6 +182,10 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                   bottom: 8.0.h,
                 ),
                 itemBuilder: (ctx, i) {
+                  /// this _iconsurls object
+                  /// Use later to pass iconsurl to MembershipBenefitsListScreen.
+                  _iconsurls[ticketTypesList[i].name ?? ''] =
+                      ticketTypesList[i].iconUrl ?? '';
                   return myTicketTypesListItem(ctx, i, ticketTypesList);
                 },
                 itemCount: ticketTypesList.length,
@@ -189,50 +254,56 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                                 CreateTicketScreen(ticketList[i])),
                       )
                     : null;
-              } catch (e,stackTrace) {
+              } catch (e, stackTrace) {
                 //print(e);
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                CommonUtil().appLogs(message: e, stackTrace: stackTrace);
               }
             },
             child: Container(
               height: 150.h,
               width: MediaQuery.of(context).size.width / 2.6,
               decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Color(CommonUtil().getMyPrimaryColor()),
+                    Color(CommonUtil().getMyGredientColor())
+                  ],
+                ),
                 borderRadius: BorderRadius.all(Radius.circular(
                         12.0) //                 <--- border radius here
                     ),
                 border: Border.all(
                   color: Color(CommonUtil().getMyPrimaryColor()),
                 ),
-                color: Colors.transparent,
               ),
               padding: EdgeInsets.all(
                 15.0.sp,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ShaderMask(
-                    shaderCallback: (bounds) {
-                      return LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: [
-                            Color(CommonUtil().getMyPrimaryColor()),
-                            Color(CommonUtil().getMyGredientColor())
-                          ]).createShader(bounds);
-                    },
-                    blendMode: BlendMode.srcATop,
-                    child: getTicketTypeImages(context, ticketList[i]),
+                  SizedBox(
+                    height: 60,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Spacer(),
+                        getTicketTypeImages(
+                          context,
+                          ticketList[i],
+                        ),
+                      ],
+                    ),
                   ),
                   Text(
                     ticketList[i].name!,
                     overflow: TextOverflow.visible,
                     style: TextStyle(
-                      fontSize: 14.0.sp,
-                      fontWeight: FontWeight.w500,
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      fontSize: 21.0.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
 
                       // fontWeight: FontWeight.w600,
                     ),
@@ -242,33 +313,24 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
             ),
           )),
     );
-  }
+}
 
-  Widget getTicketTypeImages(BuildContext context, var ticketListData) {
-    if (ticketListData.iconUrl != null) {
-      return CachedNetworkImage(
-        imageUrl: ticketListData.iconUrl,
-        placeholder: (context, url) => CommonCircularIndicator(),
-        errorWidget: (context, url, error) => Image.asset(
-          'assets/icons/10.png',
-          height: 60,
-          width: 60,
-          color: Color(CommonUtil().getMyPrimaryColor()),
-        ),
-        imageBuilder: (context, imageProvider) => Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
-          ),
-        ),
+  Widget getTicketTypeImages(
+      BuildContext context, TicketTypesResult ticketListData) {
+    if (ticketListData.iconUrl?.isNotEmpty ?? false) {
+      return SvgPicture.network(
+        ticketListData.iconUrl!,
+        height: 60,
+        width: 60,
+        placeholderBuilder: (context) => CommonCircularIndicator(),
+        color: Colors.white.withAlpha(200),
       );
     } else {
       return Image.asset(
         'assets/icons/10.png',
         width: 60,
         height: 60,
-        color: Color(CommonUtil().getMyPrimaryColor()),
+        color: Colors.white.withAlpha(200),
       );
     }
   }

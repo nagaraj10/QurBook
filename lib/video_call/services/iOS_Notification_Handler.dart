@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
@@ -18,11 +21,14 @@ import '../../constants/fhb_parameters.dart' as parameters;
 import '../../constants/router_variable.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../myPlan/view/myPlanDetail.dart';
 import '../../my_family_detail/models/my_family_detail_arguments.dart';
 import '../../my_family_detail/screens/my_family_detail_screen.dart';
 import '../../regiment/models/regiment_arguments.dart';
 import '../../regiment/view_model/regiment_view_model.dart';
+import '../../services/notification_helper.dart';
+import '../../services/notification_screen.dart';
 import '../../src/model/home_screen_arguments.dart';
 import '../../src/model/user/user_accounts_arguments.dart';
 import '../../src/ui/SheelaAI/Controller/SheelaAIController.dart';
@@ -30,6 +36,7 @@ import '../../src/ui/SheelaAI/Models/sheela_arguments.dart';
 import '../../src/ui/SplashScreen.dart';
 import '../../src/ui/settings/CaregiverSettng.dart';
 import '../../src/utils/PageNavigator.dart';
+import '../../telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import '../../telehealth/features/Notifications/services/notification_services.dart';
 import '../../telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import '../../ticket_support/view/detail_ticket_view_screen.dart';
@@ -169,7 +176,103 @@ class IosNotificationHandler {
     });
   }
 
-  Future<void> updateStatus(String status) async {
+  void handleNotificationResponse(Map<String, dynamic> jsonDecode) async {
+    // Create an instance of the QurhomeDashboardController using the onInitQurhomeDashboardController method
+    var qurhomeDashboardController =
+        CommonUtil().onInitQurhomeDashboardController();
+
+    // Extract the notification ID from the JSON data or use '0' if not present
+    var tempNotificationId = jsonDecode[parameters.notificationListId] ?? '0';
+
+    // Get the current notification ID from the QurhomeDashboardController, or an empty string if not set
+    var currentNotificationId =
+        qurhomeDashboardController?.currentNotificationId.value ?? '';
+
+    // Check if the temporary notification ID is different from the current notification ID
+    if (tempNotificationId != currentNotificationId) {
+      // If different, update the current notification ID in the QurhomeDashboardController
+      qurhomeDashboardController?.currentNotificationId.value =
+          tempNotificationId;
+      if (!isAlreadyLoaded) {
+        //notificationReceivedFromKilledState = true;
+        await Future.delayed(const Duration(seconds: 5));
+        isAlreadyLoaded = true;
+      }
+      final data = Map<String, dynamic>.from(jsonDecode);
+      model = NotificationModel.fromMap(data.containsKey("action")
+          ? Map<String, dynamic>.from(data["data"] ?? data)
+          : data);
+      print('21212 NotificationModel: ${model.toMap()}');
+      if (data['type'] == 'call' && Platform.isAndroid) {
+        if (data.containsKey('action')) {
+          if (data['action'] == 'Decline') {
+            await updateCallStatus(false, model.meeting_id.toString());
+          } else {
+            await updateCallStatus(true, model.meeting_id.toString());
+            if (model.callType!.toLowerCase() == 'audio') {
+              Provider.of<AudioCallProvider>(Get.context!, listen: false)
+                  .enableAudioCall();
+            } else if (model.callType!.toLowerCase() == 'video') {
+              Provider.of<AudioCallProvider>(Get.context!, listen: false)
+                  .disableAudioCall();
+            }
+            Get.to(CallMain(
+              doctorName: model?.username ?? '',
+              doctorId: model?.doctorId ?? '',
+              doctorPic: model?.doctorPicture ?? '',
+              patientId: model?.patientId ?? '',
+              patientName: model?.patientName ?? '',
+              patientPicUrl: model?.patientPicture ?? '',
+              channelName: model?.callArguments?.channelName ?? '',
+              role: ClientRole.Broadcaster,
+              isAppExists: true,
+              isWeb: model?.isWeb ?? false,
+            ));
+          }
+        } else {
+          Get.to(NotificationScreen(model));
+        }
+      } else if (data['redirectTo'] == 'appointmentPayment' &&
+          Platform.isAndroid) {
+        Get.to(BookingConfirmation(
+          isFromPaymentNotification: true,
+          appointmentId: model?.appointmentId ?? '',
+        ));
+        model = NotificationModel();
+      } else if (data['redirectTo'] == 'mycart' && Platform.isAndroid) {
+        Get.to(CheckoutPage(
+          isFromNotification: true,
+          cartUserId: model?.userId ?? '',
+          bookingId: model?.bookingId ?? '',
+          notificationListId: model?.createdBy ?? '',
+          cartId: model?.bookingId ?? '',
+          patientName: model?.patientName ?? '',
+        ));
+        model = NotificationModel();
+      } else {
+        var actionKey = data["action"] ?? '';
+        if (actionKey.isNotEmpty) {
+          print('21212 actionKey: ${actionKey}');
+          renewAction = actionKey == "Renew";
+          callbackAction = actionKey == "Callback";
+          rejectAction = actionKey == "Reject";
+          acceptAction = actionKey == "Accept";
+          declineAction = actionKey == "Decline";
+          escalteAction = actionKey == "Escalate";
+          chatWithCC = actionKey == "chatwithcc";
+          viewRecordAction = actionKey == "viewrecord";
+          viewDetails = actionKey == "ViewDetails";
+          viewMemberAction =
+              actionKey.toLowerCase() == "ViewMember".toLowerCase();
+          communicationSettingAction =
+              actionKey.toLowerCase() == "Communicationsettings".toLowerCase();
+        }
+        await actionForTheNotification();
+      }
+    }
+  }
+
+  void updateStatus(String status) async {
     try {
       await myDB
           .collection('call_log')
@@ -220,9 +323,10 @@ class IosNotificationHandler {
         );
   }
 
-  Future<void> actionForTheNotification() async {
+  actionForTheNotification() async {
+    print('21212 actionForTheNotification: ${model.toMap()}');
     if (model.isCall!) {
-      await updateStatus(model.status!.toLowerCase());
+      updateStatus(model.status!.toLowerCase());
     } else if (callbackAction) {
       callbackAction = false;
       model.redirect = '';
@@ -812,6 +916,9 @@ class IosNotificationHandler {
           model.userId,
           model.uid,
           model.patientPhoneNumber);
+    } else if (model.templateName ==
+        parameters.stringAssignOrUpdatePersonalPlanActivities) {
+      //No Navigation required
     } else {
       isAlreadyLoaded
           ? PageNavigator.goTo(
@@ -824,5 +931,6 @@ class IosNotificationHandler {
               ),
             );
     }
+    print('21212 actionForTheNotification: Done');
   }
 }

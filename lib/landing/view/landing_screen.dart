@@ -28,12 +28,13 @@ import '../../common/SwitchProfile.dart';
 import '../../common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
 import '../../common/firestore_services.dart';
+import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_constants.dart' as constants;
-import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_parameters.dart';
-import '../../constants/variable_constant.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../constants/variable_constant.dart';
 import '../../src/blocs/Category/CategoryListBlock.dart';
 import '../../src/model/GetDeviceSelectionModel.dart';
 import '../../src/model/user/MyProfileModel.dart';
@@ -45,9 +46,7 @@ import '../../src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import '../../src/ui/SheelaAI/Views/SuperMaya.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/dynamic_links.dart';
-import '../../src/utils/lifecycle_state_provider.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
-import '../../src/utils/timezone/timezone_services.dart';
 import '../../telehealth/features/appointments/view/appointmentsMain.dart';
 import '../../telehealth/features/chat/view/BadgeIcon.dart';
 import '../../telehealth/features/chat/view/PDFViewerController.dart';
@@ -115,16 +114,6 @@ class _LandingScreenState extends State<LandingScreen> {
   void initState() {
     try {
       super.initState();
-      WidgetsBinding.instance?.addObserver(
-        LifecycleEventHandler(
-          resumeCallBack: () async {
-            await TimezoneServices().checkUpdateTimezone();
-
-            // Record the user's last access time
-            CommonUtil().saveUserLastAccessTime();
-          },
-        ),
-      );
       Future.delayed(Duration.zero, () async {
         onInit();
       });
@@ -179,7 +168,9 @@ class _LandingScreenState extends State<LandingScreen> {
         );
       }
       sheelBadgeController?.isAllowSheelaLiveReminders = true;
+      await CommonUtil().getMyRoute();
     } catch (e, stackTrace) {
+      await CommonUtil().getMyRoute();
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }

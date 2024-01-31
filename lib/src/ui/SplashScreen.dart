@@ -18,8 +18,8 @@ import '../../chat_socket/viewModel/chat_socket_view_model.dart';
 import '../../claim/screen/ClaimRecordDisplay.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
-import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_parameters.dart' as parameters;
 import '../../constants/fhb_parameters.dart';
 import '../../constants/router_variable.dart';
@@ -33,6 +33,7 @@ import '../../my_family_detail/models/my_family_detail_arguments.dart';
 import '../../regiment/models/regiment_arguments.dart';
 import '../../regiment/view/manage_activities/manage_activities_screen.dart';
 import '../../regiment/view_model/regiment_view_model.dart';
+import '../../services/pushnotification_service.dart';
 import '../../telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import '../../telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import '../../telehealth/features/Notifications/services/notification_services.dart';
@@ -377,6 +378,7 @@ class _SplashScreenState extends State<SplashScreen>
                   PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
               Future.delayed(const Duration(seconds: 3), () {
+                PushNotificationService().readInitialMessage();
                 if (!isFirstTime) {
                   PreferenceUtil.saveString(
                       Constants.KEY_INTRO_SLIDER, variable.strtrue);

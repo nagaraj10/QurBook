@@ -567,6 +567,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
             userConfirm: false,
             fromSignUp: true,
             emailId: emailController.text.trim(),
+            pwd:passwordController.text.trim().toString(),
           ),
         ),
       );

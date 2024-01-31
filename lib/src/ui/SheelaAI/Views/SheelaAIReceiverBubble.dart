@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -14,11 +15,14 @@ import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/video_player_screen.dart';
 
 import '../../../../common/CommonUtil.dart';
+import '../../../../common/FHBBasicWidget.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/fhb_constants.dart' as Constants;
 import '../../../../constants/variable_constant.dart';
 import '../../../utils/screenutils/size_extensions.dart';
+import '../../audio/AudioRecorder.dart';
+import '../../audio/AudioScreenArguments.dart';
 import '../../imageSlider.dart';
 import '../Controller/SheelaAIController.dart';
 import '../Models/SheelaResponse.dart';
@@ -29,6 +33,7 @@ import 'youtube_player.dart';
 class SheelaAIReceiverBubble extends StatelessWidget {
   final SheelaResponse chat;
   SheelaAIController controller = Get.find();
+  FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
   SheelaAIReceiverBubble(
     this.chat,
@@ -123,8 +128,39 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                         getImageURLFromCondition(),
                                         // Conditional rendering of an image preview thumbnail
                                         (chat.imageThumbnailUrl != null &&
-                                            chat.imageThumbnailUrl != '')
-                                            ? getImagePreviewThumbnail(chat.imageThumbnailUrl??'')
+                                                chat.imageThumbnailUrl != '')
+                                            ? Column(
+                                                children: [
+                                                  SizedBox(height: 5.h),
+                                                  getImagePreviewThumbnail(
+                                                      chat.imageThumbnailUrl ??
+                                                          ''),
+                                                ],
+                                              )
+                                            : SizedBox.shrink(),
+                                        // Conditional rendering of an audio preview thumbnail
+                                        (chat.audioThumbnailUrl != null &&
+                                                chat.audioThumbnailUrl != '')
+                                            ? Column(
+                                                children: [
+                                                  SizedBox(height: 5.h),
+                                                  getAudioCardWidget(
+                                                      chat.audioThumbnailUrl ??
+                                                          ''),
+                                                ],
+                                              )
+                                            : SizedBox.shrink(),
+                                        //// Conditional rendering of an video preview thumbnail
+                                        (chat.videoThumbnailUrl != null &&
+                                                chat.videoThumbnailUrl != '')
+                                            ? Column(
+                                                children: [
+                                                  SizedBox(height: 5.h),
+                                                  getVideoCardThumbnail(
+                                                      chat.videoThumbnailUrl ??
+                                                          ''),
+                                                ],
+                                              )
                                             : SizedBox.shrink(),
                                         buttonWidgets(context)
                                       ],
@@ -313,7 +349,6 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                     buttonData?.chatAttachments ?? []),
                           )?.then((value) {
                             controller.isSheelaScreenActive = true;
-                            controller.playPauseTTS(chat);
                           });
                         }
                       } else if (buttonData?.btnRedirectTo ==
@@ -333,7 +368,6 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             titleSheelaPreview: strImageTitle,
                           ))?.then((value) {
                             controller.isSheelaScreenActive = true;
-                            controller.playPauseTTS(chat);
                           });
                         }
                       } else if (buttonData?.btnRedirectTo == strRedirectRedo) {
@@ -463,7 +497,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         controller.isSheelaScreenActive = false; // Deactivate Sheela screen
                         controller.btnTextLocal = buttonData?.title ?? ''; // Set local button text
                         // Show the camera/gallery dialog and handle the result
-                        controller.showCameraGalleryDialog(controller.btnTextLocal ?? '').then((value) {
+                        controller.showCameraGalleryDialog(controller.btnTextLocal ?? '',strImage).then((value) {
                           controller.isSheelaScreenActive = true; // Reactivate Sheela screen after dialog
                           controller.updateTimer(enable: true); // enable the timer
                         });
@@ -477,7 +511,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         controller.updateTimer(enable: false); // disable the timer
                         controller.isRetakeCapture = true; // Set flag for retake capture
                         // Show the camera/gallery dialog and handle the result
-                        controller.showCameraGalleryDialog(controller.btnTextLocal ?? '').then((value) {
+                        controller.showCameraGalleryDialog(controller.btnTextLocal ?? '',strImage).then((value) {
                           controller.isSheelaScreenActive = true; // Reactivate Sheela screen after dialog
                           controller.updateTimer(enable: true); // enable the timer
                         });
@@ -494,7 +528,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             controller.isLoading.value = false; // Reset loading flag
                             controller.conversations.removeLast(); // Remove the loading response from conversations
                             if (value.isSuccess ?? false) {
-                              controller.imageRequestUrl =
+                              controller.fileRequestUrl =
                                   value.result?.accessUrl ?? '';
                               if (controller.isLoading.isTrue) {
                                 return; // If loading, do nothing
@@ -518,7 +552,181 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             }
                           });
                         }
-                      }else {
+                      }else if (buttonData?.needAudio ?? false) {
+                        // Check if loading is in progress, if true, return without performing any action
+                        if (controller.isLoading.isTrue) {
+                          return;
+                        }
+
+                        // Stop Text-to-Speech, update timer, and set Sheela screen as inactive
+                        controller.stopTTS();
+                        controller.updateTimer(enable: false);
+                        controller.isSheelaScreenActive = false;
+                        controller.btnTextLocal = buttonData?.title ?? '';
+
+                        // Navigate to the audio record screen
+                        controller.goToAudioRecordScreen(
+                            isFromSheelaFileUpload: true);
+                      } else if (buttonData?.btnRedirectTo ==
+                          strRedirectRetakeAudio) {
+                        // Check if loading is in progress, if true, return without performing any action
+                        if (controller.isLoading.isTrue) {
+                          return;
+                        }
+
+                        // Stop Text-to-Speech, set Sheela screen as inactive, update timer, and set retake capture to true
+                        controller.stopTTS();
+                        controller.isSheelaScreenActive = false;
+                        controller.updateTimer(enable: false);
+                        controller.isRetakeCapture = true;
+
+                        // Navigate to the audio record screen
+                        controller.goToAudioRecordScreen(
+                            isFromSheelaFileUpload: true);
+                      } else if (buttonData?.btnRedirectTo ==
+                          strRedirectToUploadAudio) {
+                        // Set loading state and add a loading response to conversations
+                        controller.isLoading.value = true;
+                        controller.conversations
+                            .add(SheelaResponse(loading: true));
+                        controller.scrollToEnd();
+
+                        // Check if audioThumbnailUrl is available
+                        if (chat.audioThumbnailUrl != null &&
+                            chat.audioThumbnailUrl != '') {
+                          controller
+                              .saveMediaRegiment(
+                                  chat.audioThumbnailUrl ?? '', '')
+                              .then((value) {
+                            controller.isLoading.value = false;
+                            controller.conversations.removeLast();
+
+                            // Check if the media saving operation was successful
+                            if (value.isSuccess ?? false) {
+                              // Set fileRequestUrl and check loading state
+                              controller.fileRequestUrl =
+                                  value.result?.accessUrl ?? '';
+                              if (controller.isLoading.isTrue) {
+                                return;
+                              }
+
+                              // Check if singleuse is true and isActionDone is not null, then set isActionDone to true
+                              if (chat.singleuse != null &&
+                                  chat.singleuse! &&
+                                  chat.isActionDone != null) {
+                                chat.isActionDone = true;
+                              }
+
+                              // Set button isSelected to true, start Sheela from the button, and delay setting isSelected to false
+                              buttonData?.isSelected = true;
+                              controller.startSheelaFromButton(
+                                  buttonText: buttonData?.title,
+                                  payload: buttonData?.payload,
+                                  buttons: buttonData,
+                                  isFromImageUpload: true,
+                                  requestFileType: strAudio);
+
+                              // Delay setting isSelected to false by 3 seconds
+                              Future.delayed(const Duration(seconds: 3), () {
+                                buttonData?.isSelected = false;
+                              });
+                            }
+                          });
+                        }
+                      } else if (buttonData?.needVideo ?? false) {
+                        // Check if the button requires a video
+                        if (controller.isLoading.isTrue) {
+                          return; // If loading, do nothing
+                        }
+                        controller.stopTTS(); // Stop Text-to-Speech
+                        controller.updateTimer(
+                            enable: false); // Disable the timer
+                        controller.isSheelaScreenActive =
+                        false; // Deactivate Sheela screen
+                        controller.btnTextLocal =
+                            buttonData?.title ?? ''; // Set local button text
+                        // Show the camera/gallery dialog and handle the result
+                        controller.showCameraGalleryDialog(
+                            controller.btnTextLocal ?? '', strVideo)
+                            .then((value) {
+                          /*controller.isSheelaScreenActive =
+            true; // Reactivate Sheela screen after dialog
+        controller.updateTimer(
+            enable: true);*/ // Enable the timer
+                        });
+                      } else if (buttonData?.btnRedirectTo ==
+                          strRedirectRetakeVideo) {
+                        // Check if the button redirects to retake video
+                        if (controller.isLoading.isTrue) {
+                          return; // If loading, do nothing
+                        }
+                        controller.stopTTS(); // Stop Text-to-Speech
+                        controller.isSheelaScreenActive =
+                        false; // Deactivate Sheela screen
+                        controller.updateTimer(
+                            enable: false); // Disable the timer
+                        controller.isRetakeCapture =
+                        true; // Set flag for retake capture
+                        // Show the camera/gallery dialog and handle the result
+                        controller.showCameraGalleryDialog(
+                            controller.btnTextLocal ?? '', strVideo)
+                            .then((value) {
+                          /*controller.isSheelaScreenActive =
+            true; // Reactivate Sheela screen after dialog
+        controller.updateTimer(
+            enable: true); // Enable the timer*/
+                        });
+                      } else if (buttonData?.btnRedirectTo ==
+                          strRedirectToUploadVideo) {
+                        SheelaResponse sheelaLastConversation = SheelaResponse();
+                        sheelaLastConversation = controller.conversations.last;
+                        // Check if the button redirects to upload video
+                        controller.isLoading.value = true; // Set loading flag
+                        controller.conversations.add(SheelaResponse(
+                            loading:
+                            true)); // Add loading response to conversations
+                        controller.scrollToEnd(); // Scroll to the end of conversations
+                        if (sheelaLastConversation.videoThumbnailUrl != null &&
+                            sheelaLastConversation.videoThumbnailUrl != '') {
+                          // Check if there is a valid image thumbnail URL
+                          controller.saveMediaRegiment(sheelaLastConversation.videoThumbnailUrl ?? '',
+                              '') // Save media regiment
+                              .then((value) {
+                            controller.isLoading.value =
+                            false; // Reset loading flag
+                            controller.conversations
+                                .removeLast(); // Remove the loading response from conversations
+                            if (value.isSuccess ?? false) {
+                              controller.fileRequestUrl =
+                                  value.result?.accessUrl ?? '';
+                              if (controller.isLoading.isTrue) {
+                                return; // If loading, do nothing
+                              }
+                              if (controller.conversations.last.singleuse != null &&
+                                  controller.conversations.last.singleuse! &&
+                                  controller.conversations.last.isActionDone != null) {
+                                controller.conversations.last.isActionDone =
+                                true; // Set action done flag if it's a single-use button
+                              }
+                              buttonData?.isSelected =
+                              true; // Mark the button as selected
+                              // Start Sheela from the button with specified parameters
+                              controller.startSheelaFromButton(
+                                  buttonText: buttonData?.title,
+                                  payload: buttonData?.payload,
+                                  buttons: buttonData,
+                                  isFromImageUpload: true,
+                                  requestFileType:
+                                  strVideo // Add requestFileType
+                              );
+                              // Delay for 3 seconds and then unselect the button
+                              Future.delayed(const Duration(seconds: 3), () {
+                                buttonData?.isSelected = false;
+                              });
+                            }
+                          });
+                        }
+                      } else {
                         if (controller.isLoading.isTrue) {
                           return;
                         }
@@ -577,7 +785,6 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                           imageURl: (buttonData?.media ?? ''), // Pass the image link to the ImageSlider widget.
                                         ))?.then((value) {
                                       controller.isSheelaScreenActive = true;
-                                      controller.playPauseTTS(chat);
                                     });
                                   },
                                   child: FadeInImage.assetNetwork(
@@ -695,7 +902,6 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         )!
             .then((value) {
           controller.updateTimer(enable: true);
-          controller.playPauseTTS(chat);
         });
       } else {
         controller.isPlayPauseView.value = false;
@@ -708,7 +914,6 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         )!
             .then((value) {
           controller.updateTimer(enable: true);
-          controller.playPauseTTS(chat);
         });
       }
     } catch (e, stackTrace) {
@@ -727,7 +932,6 @@ class SheelaAIReceiverBubble extends StatelessWidget {
       ))!
           .then((value) {
         controller.updateTimer(enable: true);
-        controller.playPauseTTS(chat);
       });
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -803,6 +1007,115 @@ class SheelaAIReceiverBubble extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  // Widget function to create an audio card with a selected image
+  Widget getAudioCardWidget(String selectedImage) {
+    // Return a Column widget with crossAxisAlignment set to start
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Padding around the Material widget
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Material(
+            // Apply borderRadius and elevation to create a card-like appearance
+            borderRadius: BorderRadius.circular(10.0),
+            elevation: 2.0,
+            child: Container(
+              // Padding within the container
+              padding: EdgeInsets.all(10.0),
+              // Set the width of the container to 1.5 times the screen width
+              width: 1.sw / 1.5,
+              child: Row(
+                // Align children in a row with space evenly distributed between them
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  // AudioWidget widget with parameters
+                  AudioWidget(
+                    chat.audioThumbnailUrl, // audioThumbnailUrl parameter
+                    null, // Second parameter (not provided in the code)
+                    isFromSheelaFileUpload: true, // isFromSheelaFileUpload parameter set to true
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Widget to display a video card thumbnail based on the selected video image
+  Widget getVideoCardThumbnail(String selectedImage) {
+    return chat.videoThumbnailUrlData != null
+    // If videoThumbnailUrlData is already available, use the data to create the widget
+        ? getVideoCardThumbnailDataWidget(chat.videoThumbnailUrlData!, selectedImage)
+        : Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // FutureBuilder to asynchronously load the video thumbnail data
+        FutureBuilder<Uint8List?>(
+          future: controller.getThumbnailImage(selectedImage),
+          builder: (_, AsyncSnapshot<Uint8List?> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Display a loading indicator while waiting for the thumbnail data
+              return Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasData) {
+              // If thumbnail data is available, update chat.videoThumbnailUrlData
+              chat.videoThumbnailUrlData = snapshot.data!;
+              // Use the data to create the widget
+              return getVideoCardThumbnailDataWidget(snapshot.data!, selectedImage);
+            }
+            // If no data is available, return an empty SizedBox
+            return SizedBox.shrink();
+          },
+        ),
+      ],
+    );
+  }
+
+// Widget to display the video card thumbnail with an InkWell for interaction
+  Widget getVideoCardThumbnailDataWidget(
+      Uint8List? videoThumbnailUrlData, String selectedImage) {
+    return InkWell(
+      onTap: () {
+        // Handle tap event to play the video
+        controller.isPlayPauseView.value = false;
+        controller.isFullScreenVideoPlayer.value =
+        (CommonUtil().isTablet ?? false) ? true : false;
+        controller.updateTimer(enable: false);
+        controller.isSheelaScreenActive = false;
+        // Navigate to the VideoPlayerScreen with the selected video URL
+        Get.to(
+          VideoPlayerScreen(
+            videoURL: selectedImage,
+            isFromSheelaMedia: true,
+          ),
+        )!.then((value) {
+          controller.updateTimer(enable: true);
+          controller.isSheelaScreenActive = true;
+        });
+      },
+      child: Container(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // Display the video thumbnail image
+            Image.memory(videoThumbnailUrlData!),
+            // Display a play icon on top of the thumbnail
+            Icon(
+              Icons.play_circle,
+              size: 28,
+              color: PreferenceUtil.getIfQurhomeisAcive()
+                  ? Color(CommonUtil().getQurhomeGredientColor()) // Qurhome gradient color when Qurhome is active
+                  : Color(CommonUtil().getMyPrimaryColor()),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

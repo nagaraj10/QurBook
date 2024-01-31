@@ -106,7 +106,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
   void configLocalNotification() {
     var initializationSettingsAndroid =
         AndroidInitializationSettings(STR_MIP_MAP_LAUNCHER);
-    var initializationSettingsIOS = IOSInitializationSettings();
+    var initializationSettingsIOS = DarwinInitializationSettings();
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
@@ -118,13 +118,13 @@ class HomeScreenState extends State<ChatHomeScreen> {
           ? 'com.ventechsolutions.myFHB'
           : 'com.ventechsolutions.myFHB',
       'Flutter chat demo',
-      'your channel description',
+      channelDescription: 'your channel description',
       playSound: true,
       enableVibration: true,
       importance: Importance.max,
       priority: Priority.high,
     );
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var iOSPlatformChannelSpecifics = DarwinNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);

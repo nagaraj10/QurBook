@@ -817,7 +817,11 @@ class _ChatUserListState extends State<ChatUserList> {
                                           padding: const EdgeInsets.fromLTRB(
                                               0, 5, 0, 0),
                                           child: CircleAvatar(
-                                            radius: 10,
+                                            radius:
+                                                CommonUtil().isTablet != null &&
+                                                        CommonUtil().isTablet!
+                                                    ? 18
+                                                    : 15,
                                             child: Text(
                                               userChatList.unReadCount ?? '',
                                               style: TextStyle(

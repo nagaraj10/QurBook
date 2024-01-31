@@ -364,6 +364,11 @@ class _PatientSignInValidationScreenState
         print(idTokens[strGivenName]);
         saveuser.email = idTokens[stremail];
         print(idTokens[stremail]);
+
+        ///Added Refresh Token expiration for MFA enabled accounts
+        await PreferenceUtil.saveInt(strAuthExpiration,parseJwtPayLoad(decodesstring??'')[strAuthExpiration]);
+       ///
+
         await PreferenceUtil.saveString(Constants.MOB_NUM, user_mobile_no!)
             .then((onValue) {});
         await PreferenceUtil.saveString(

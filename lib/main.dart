@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:camera/camera.dart';
+import 'package:myfhb/services/pushnotification_service.dart';
 import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -36,6 +37,7 @@ import 'common/CommonUtil.dart';
 import 'common/DatabseUtil.dart';
 import 'common/PreferenceUtil.dart';
 import 'common/firebase_analytics_service.dart';
+import 'common/firestore_services.dart';
 import 'constants/fhb_constants.dart' as Constants;
 import 'constants/fhb_constants.dart';
 import 'constants/fhb_parameters.dart';
@@ -69,12 +71,15 @@ import 'src/ui/connectivity_bloc.dart';
 import 'src/ui/settings/CaregiverSettng.dart';
 import 'src/utils/FHBUtils.dart';
 import 'src/utils/PageNavigator.dart';
+import 'src/utils/cron_jobs.dart';
 import 'src/utils/dynamic_links.dart';
 import 'src/utils/language/app_localizations.dart';
 import 'src/utils/language/language_utils.dart';
 import 'src/utils/language/languages.dart';
 import 'src/utils/language/view_model/language_view_model.dart';
+import 'src/utils/lifecycle_state_provider.dart';
 import 'src/utils/screenutils/screenutil.dart';
+import 'src/utils/timezone/timezone_services.dart';
 import 'telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'telehealth/features/Notifications/services/notification_services.dart';
@@ -105,6 +110,8 @@ late List<CameraDescription> listOfCameras;
 
 //variable for all outer
 late var routes;
+final FlutterLocalNotificationsPlugin localNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
   var reminderMethodChannelAndroid =
@@ -130,6 +137,7 @@ Future<void> main() async {
     });
 
     PreferenceUtil.init();
+    await PushNotificationService().setupNotification();
 
     await DatabaseUtil.getDBLength().then((length) {
       if (length == 0) {
@@ -292,7 +300,7 @@ class _MyFHBState extends State<MyFHB> {
   var sheelaMethodChannelAndroid = const MethodChannel('sheela.channel');
   static const platform = variable.version_platform;
   String? _responseFromNative = variable.strWaitLoading;
-  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  //final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   static const secure_platform = variable.security;
   static const nav_platform = MethodChannel('navigation.channel');
   String navRoute = '';
@@ -324,8 +332,6 @@ class _MyFHBState extends State<MyFHB> {
     CheckForShowingTheIntroScreens();
     chatViewModel.setCurrentChatRoomID('none');
     super.initState();
-
-    getMyRoute();
     _enableTimer();
     final res = apiBaseHelper.updateLastVisited();
     isAlreadyLoaded = true;
@@ -351,6 +357,44 @@ class _MyFHBState extends State<MyFHB> {
     //initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    // Function to set up cron job and event listeners which is called after
+    //some delay to make sure all the environment related data are setup.
+    Future.delayed(const Duration(seconds: 4)).then(
+      (value) => setUpCronJobAndListeners(),
+    );
+  }
+
+// Function to set up cron job and event listeners
+  void setUpCronJobAndListeners() {
+    try {
+      // Schedule the cron job to run at midnight for
+      //getting the latest regiment
+      CronJobServices().scheduleUpdateForData();
+
+      // Add an observer to handle lifecycle events,
+      // specifically when the app is resumed
+      WidgetsBinding.instance.addObserver(
+        LifecycleEventHandler(
+          // Callback executed upon app resumption
+          resumeCallBack: () async {
+            // Update Firestore data for 'all' with loading indicator
+            FirestoreServices().updateDataFor(
+              'all',
+              withLoading: true,
+            );
+
+            // Check and update the timezone information
+            await TimezoneServices().checkUpdateTimezone();
+
+            // Record the user's last access time
+            CommonUtil().saveUserLastAccessTime();
+          },
+        ),
+      );
+    } catch (e, stackTrace) {
+      // Handle and log any exceptions that occur during setup
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 
   CheckForShowingTheIntroScreens() async {
@@ -1058,15 +1102,6 @@ class _MyFHBState extends State<MyFHB> {
     }
   }
 
-  getMyRoute() async {
-    final route = await nav_platform.invokeMethod('getMyRoute');
-    if (route != null && route != 'null') {
-      setState(() {
-        navRoute = route;
-      });
-    }
-  }
-
   void getProfileData() async {
     try {
       await CommonUtil().getUserProfileData();
@@ -1079,17 +1114,17 @@ class _MyFHBState extends State<MyFHB> {
   Widget build(BuildContext context) {
     final nsSettingsForAndroid =
         AndroidInitializationSettings(variable.strLauncher);
-    final nsSettingsForIOS = IOSInitializationSettings();
+    final nsSettingsForIOS = DarwinInitializationSettings();
     final platform = InitializationSettings(
         android: nsSettingsForAndroid, iOS: nsSettingsForIOS);
 
-    Future notificationAction(String? payload) async {
+    Future notificationAction(NotificationResponse details) async {
       await Navigator.push(
           context, MaterialPageRoute(builder: (context) => AddReminder()));
     }
 
-    flutterLocalNotificationsPlugin.initialize(platform,
-        onSelectNotification: notificationAction);
+/*    flutterLocalNotificationsPlugin.initialize(platform,
+        onDidReceiveNotificationResponse: notificationAction);*/
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ConnectivityBloc>(
@@ -1150,7 +1185,7 @@ class _MyFHBState extends State<MyFHB> {
             themeMode: ThemeMode.light,
             theme: AppTheme().themeData,
             //home: navRoute.isEmpty ? SplashScreen() : StartTheCall(),
-            home: findHomeWidget(navRoute),
+            home: SplashScreen(),
             navigatorObservers: [MyFHB.routeObserver],
             routes: routes,
             debugShowCheckedModeBanner: false,
