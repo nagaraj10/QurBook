@@ -260,20 +260,15 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
               }
             },
             child: Container(
-              height: 150.h,
               width: MediaQuery.of(context).size.width / 2.6,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
                   colors: [
                     Color(CommonUtil().getMyPrimaryColor()),
                     Color(CommonUtil().getMyGredientColor())
                   ],
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(
-                        12.0) //                 <--- border radius here
-                    ),
+                borderRadius: const BorderRadius.all(Radius.circular(12),),
                 border: Border.all(
                   color: Color(CommonUtil().getMyPrimaryColor()),
                 ),
@@ -283,23 +278,23 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    height: 60,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Spacer(),
-                        getTicketTypeImages(
-                          context,
-                          ticketList[i],
-                        ),
-                      ],
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Spacer(),
+                      getTicketTypeImages(
+                        context,
+                        ticketList[i],
+                      ),
+                    ],
                   ),
+                  Spacer(),
                   Text(
                     ticketList[i].name!,
-                    overflow: TextOverflow.visible,
+                    maxLines: 2,
+                    // overflow: TextOverflow.visible,
                     style: TextStyle(
                       fontSize: 21.0.sp,
                       fontWeight: FontWeight.w600,
@@ -320,8 +315,8 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
     if (ticketListData.iconUrl?.isNotEmpty ?? false) {
       return SvgPicture.network(
         ticketListData.iconUrl!,
-        height: 60,
-        width: 60,
+        height: 70,
+        // width: 60,
         placeholderBuilder: (context) => CommonCircularIndicator(),
         color: Colors.white.withAlpha(200),
       );

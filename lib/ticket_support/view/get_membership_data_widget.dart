@@ -88,7 +88,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
                 widget.memberShipResult?.planName ?? '',
                 overflow: TextOverflow.visible,
                 style: TextStyle(
-                  fontSize: 20.0.sp,
+                  fontSize: 21.0.sp,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
                 ),
@@ -118,6 +118,9 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
               Visibility(
                 visible: !(widget.isShowingBenefits ?? false),
                 child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.only(left: 0),
+                  ),
                   onPressed: widget.onPressed,
                   child: Text(
                     strShowAvailableBenefits,
