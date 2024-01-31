@@ -1009,6 +1009,18 @@ const String strRedirectToUploadAudio =
 const String strRedirectToUploadVideo =
     'redirectUploadBucketVideo'; // Action for redirecting to upload a video
 
+// Constant representing the confirmation title for image files
+const String strImageConfirmTitle =
+    'Please confirm if the image is okay to proceed?';
+
+// Constant representing the confirmation title for audio files
+const String strAudioConfirmTitle =
+    'Please confirm if the audio is okay to proceed?';
+
+// Constant representing the confirmation title for video files
+const String strVideoConfirmTitle =
+    'Please confirm if the video is okay to proceed?';
+
 // file upload feature in sheela
 // Constant for requesting a file URL
 const String strRequestFileUrl = 'requestFileUrl';
