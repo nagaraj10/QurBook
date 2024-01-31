@@ -551,22 +551,20 @@ onInitScheduleNotification(Reminder? reminder) async {
       return; // Handle null reminder case
     }
 
+    await scheduleReminder(reminder.remindbefore, reminder, subtract: true);
+
     var eventDateTime = reminder.estart ?? '';
     var scheduledDate = CommonUtil().parseDateTimeFromString(eventDateTime);
 
     if (scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
       final notificationId =
-      CommonUtil().toSigned32BitInt(int.tryParse('${reminder.eid}') ?? 0);
+          int.tryParse('${reminder?.notificationListId}') ?? 0;
       await zonedScheduleNotification(
           reminder, notificationId, scheduledDate, true, false);
     }
 
-    List<Future<dynamic>> conCurrentCalls = [
-      scheduleReminder(reminder.remindbefore, reminder, subtract: true),
-      scheduleReminder(reminder.remindin, reminder, subtract: false),
-    ];
+    await scheduleReminder(reminder.remindin, reminder, subtract: false);
 
-    await Future.wait(conCurrentCalls);
   } catch (e, stackTrace) {
     CommonUtil().appLogs(message: e, stackTrace: stackTrace);
   }
@@ -605,6 +603,20 @@ zonedScheduleNotification(
     bool isButtonShown,
     bool isSnoozePress) async {
   try {
+
+    List<PendingNotificationRequest> pendingNotifications =
+    await localNotificationsPlugin.pendingNotificationRequests();
+
+    bool isScheduled = pendingNotifications.any(
+            (notification) => notification.id == notificationId);
+
+    if (isScheduled) {
+      await localNotificationsPlugin.cancel(notificationId);
+    }
+
+    final sheelaAIController =
+    CommonUtil().onInitSheelaAIController();
+
     var isDismissButtonOnlyShown = false;
     var channelId = remainderScheduleChannel.id;
     var channelName = remainderScheduleChannel.name;
@@ -617,11 +629,9 @@ zonedScheduleNotification(
       channelDescription = remainderScheduleV3Channel.description;
     }
 
-    reminder?.redirectTo = stringRegimentScreen;
-    reminder?.notificationListId = notificationId.toString();
     reminder?.snoozeTapCountTime = (isButtonShown & isSnoozePress)
         ? (reminder?.snoozeTapCountTime ?? 0) + 1
-        : 0;
+        : null;
 
     // Adjust scheduled time for snooze actions.
     if (isSnoozePress && (reminder?.snoozeTapCountTime ?? 0) <= 1) {
@@ -633,7 +643,12 @@ zonedScheduleNotification(
       isDismissButtonOnlyShown = true;
     }
 
-    var payLoadData = jsonEncode(reminder?.toMap());
+    Reminder reminderTemp = Reminder.fromJson(reminder!.toJson());
+
+    // Update the notificationListId property in the copy
+    reminderTemp.notificationListId = notificationId.toString();
+
+    var payLoadData = jsonEncode(reminderTemp?.toMap());
 
     final notificationDetails = NotificationDetails(
         android: AndroidNotificationDetails(
@@ -666,21 +681,21 @@ zonedScheduleNotification(
     await localNotificationsPlugin
         .resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(reminder?.importance == '2'
+        ?.createNotificationChannel(reminderTemp?.importance == '2'
         ? remainderScheduleV3Channel
         : remainderScheduleChannel);
 
     await localNotificationsPlugin.zonedSchedule(
         notificationId,
-        reminder?.title ?? 'scheduled title',
-        reminder?.description ?? 'scheduled body',
+        reminderTemp?.title ?? 'scheduled title',
+        reminderTemp?.description ?? 'scheduled body',
         scheduledDateTime,
         notificationDetails,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
         UILocalNotificationDateInterpretation.absoluteTime,
         payload: payLoadData);
-    print('Sadham Hussain notificationId $notificationId');
+    sheelaAIController.addScheduledTime(reminderTemp!,scheduledDateTime);
   } catch (e, stackTrace) {
     CommonUtil().appLogs(message: e, stackTrace: stackTrace);
   }

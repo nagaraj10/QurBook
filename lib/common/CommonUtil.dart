@@ -139,7 +139,6 @@ import '../src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
 import '../src/utils/FHBUtils.dart';
 import '../src/utils/PageNavigator.dart';
 import '../src/utils/colors_utils.dart';
-import '../src/utils/cron_jobs.dart';
 import '../src/utils/language/language_utils.dart';
 import '../src/utils/screenutils/size_extensions.dart';
 import '../telehealth/features/Notifications/services/notification_services.dart';
@@ -6238,6 +6237,7 @@ class CommonUtil {
       await getMyProfilesetting();
       var regController = CommonUtil().onInitQurhomeRegimenController();
       regController.getRegimenList();
+      FirestoreServices().setupListenerForFirestoreChanges();
       if (!Get.isRegistered<PDFViewController>()) {
         Get.lazyPut(
           () => PDFViewController(),
@@ -6245,7 +6245,6 @@ class CommonUtil {
       }
       // Record the user's last access time
       saveUserLastAccessTime();
-      FirestoreServices().setupListenerForFirestoreChanges();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
@@ -7561,10 +7560,107 @@ class CommonUtil {
 // Calculate a notification ID based on the reminder and a subtraction flag.
   int calculateNotificationId(Reminder reminder, bool subtract) {
     // Create a base ID by prefixing with '0' or '1' based on the subtraction flag.
-    var baseId = subtract ? '0${reminder.eid}' : '1${reminder.eid}';
+    var baseId = subtract ? '${reminder.eid}00' : '${reminder.eid}11';
 
     // Convert the base ID to a signed 32-bit integer using the toSigned32BitInt function.
     return CommonUtil().toSigned32BitInt(int.tryParse(baseId) ?? 0);
+  }
+
+
+  getActivityRemainderInvokeSheela(var passedValArr,SheelaAIController sheelaAIController) {
+    //// allow the user for auto redirect to sheela screen on time
+    if (CommonUtil().isAllowSheelaLiveReminders()) {
+      // live reminder On deafult existing flow
+      if (sheelaAIController.isSheelaScreenActive) {
+        var reqJson = {
+          KIOSK_task: KIOSK_remind,
+          KIOSK_eid: passedValArr[1].toString()
+        };
+        CommonUtil().callQueueNotificationPostApi(reqJson);
+      } else {
+        if (sheelaAIController.isQueueDialogShowing.value) {
+          Get.back();
+          sheelaAIController.isQueueDialogShowing.value = false;
+        }
+        Future.delayed(Duration(milliseconds: 500), () async {
+          CommonUtil().getToSheelaNavigate(passedValArr,sheelaAIController,
+              isFromActivityRemainderInvokeSheela: true);
+        });
+      }
+    } else {
+      // live reminder off only queue flow working
+      var reqJson = {
+        KIOSK_task: KIOSK_remind,
+        KIOSK_eid: passedValArr[1].toString()
+      };
+      CommonUtil().callQueueNotificationPostApi(reqJson);
+    }
+  }
+
+  getToSheelaNavigate(var passedValArr,SheelaAIController sheelaAIController,
+      {bool isFromAudio = false,
+        bool isFromActivityRemainderInvokeSheela = false}) {
+    if (isFromActivityRemainderInvokeSheela) {
+      Get.toNamed(
+        rt_Sheela,
+        arguments: SheelaArgument(eId: passedValArr[1].toString()),
+      )!
+          .then((value) {
+        try {
+          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+        }
+      });
+      return;
+    }
+    if (isFromAudio) {
+      Get.toNamed(
+        router.rt_Sheela,
+        arguments: SheelaArgument(
+          allowBackBtnPress: true,
+          audioMessage: passedValArr[3].toString(),
+          eventIdViaSheela: passedValArr[4].toString(),
+        ),
+      )!
+          .then((value) {
+        try {
+          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+          if (kDebugMode) {
+            print(e);
+          }
+        }
+      });
+    } else {
+      Future.delayed(Duration(milliseconds: 500), () async {
+        Get.toNamed(
+          rt_Sheela,
+          arguments: SheelaArgument(
+              allowBackBtnPress: true,
+              isSheelaFollowup: true,
+              textSpeechSheela: (passedValArr[2] != null &&
+                  passedValArr[2] != 'null' &&
+                  passedValArr[2] != '')
+                  ? passedValArr[2]
+                  : passedValArr[1],
+              audioMessage: '',
+              isNeedPreferredLangauge: true,
+              eventIdViaSheela: passedValArr[4]),
+        )!
+            .then((value) {
+          try {
+            sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+            if (kDebugMode) {
+              print(e);
+            }
+          }
+        });
+      });
+    }
   }
 
 

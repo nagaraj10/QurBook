@@ -1035,6 +1035,9 @@ const String strAudioSizeValidation = 'File size exceeds 100MB';
 // Constant for the label 'Video preview'
 const String strVideoPreview = 'Video preview';
 
+// Define a constant string for storing the current notification ID.
+const String strCurrentNotificationId = 'currentNotificationId';
+
 
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {

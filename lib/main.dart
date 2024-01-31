@@ -115,15 +115,15 @@ final FlutterLocalNotificationsPlugin localNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
-  var reminderMethodChannelAndroid =
-      const MethodChannel('android/notification');
+  /*var reminderMethodChannelAndroid =
+      const MethodChannel('android/notification');*/
 
   await runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
     var cameras = await availableCameras();
     listOfCameras = cameras;
-    reminderMethodChannelAndroid.invokeMethod('testingNotification');
+    //reminderMethodChannelAndroid.invokeMethod('testingNotification');
     // Get a specific camera from the list of available cameras.
     firstCamera = cameras[0];
     routes = await router.setRouter(listOfCameras);
@@ -478,32 +478,7 @@ class _MyFHBState extends State<MyFHB> {
       }
       if (passedValArr[0] == 'activityRemainderInvokeSheela') {
         //// allow the user for auto redirect to sheela screen on time
-        if (CommonUtil().isAllowSheelaLiveReminders()) {
-          // live reminder On deafult existing flow
-          if (sheelaAIController.isSheelaScreenActive) {
-            var reqJson = {
-              KIOSK_task: KIOSK_remind,
-              KIOSK_eid: passedValArr[1].toString()
-            };
-            CommonUtil().callQueueNotificationPostApi(reqJson);
-          } else {
-            if (sheelaAIController.isQueueDialogShowing.value) {
-              Get.back();
-              sheelaAIController.isQueueDialogShowing.value = false;
-            }
-            Future.delayed(Duration(milliseconds: 500), () async {
-              getToSheelaNavigate(passedValArr,
-                  isFromActivityRemainderInvokeSheela: true);
-            });
-          }
-        } else {
-          // live reminder off only queue flow working
-          var reqJson = {
-            KIOSK_task: KIOSK_remind,
-            KIOSK_eid: passedValArr[1].toString()
-          };
-          CommonUtil().callQueueNotificationPostApi(reqJson);
-        }
+        CommonUtil().getActivityRemainderInvokeSheela(passedValArr,sheelaAIController);
       }
       if (passedValArr[0] == 'isSheelaFollowup') {
         /*if (sheelaAIController.isSheelaScreenActive) {
@@ -530,22 +505,22 @@ class _MyFHBState extends State<MyFHB> {
             if (sheelaAIController.isQueueDialogShowing.value) {
               Get.back();
               Future.delayed(Duration(milliseconds: 500), () async {
-                getToSheelaNavigate(passedValArr, isFromAudio: true);
+                CommonUtil().getToSheelaNavigate(passedValArr, sheelaAIController,isFromAudio: true);
               });
             } else {
               Future.delayed(Duration(milliseconds: 500), () async {
-                getToSheelaNavigate(passedValArr, isFromAudio: true);
+                CommonUtil().getToSheelaNavigate(passedValArr, sheelaAIController,isFromAudio: true);
               });
             }
           } else {
             if (sheelaAIController.isQueueDialogShowing.value) {
               Get.back();
               Future.delayed(Duration(milliseconds: 500), () async {
-                getToSheelaNavigate(passedValArr);
+                CommonUtil().getToSheelaNavigate(passedValArr,sheelaAIController);
               });
             } else {
               Future.delayed(Duration(milliseconds: 500), () async {
-                getToSheelaNavigate(passedValArr);
+                CommonUtil().getToSheelaNavigate(passedValArr,sheelaAIController);
               });
             }
             //}
@@ -1237,74 +1212,6 @@ class _MyFHBState extends State<MyFHB> {
       }
     }
   }
-
-  getToSheelaNavigate(var passedValArr,
-      {bool isFromAudio = false,
-      bool isFromActivityRemainderInvokeSheela = false}) {
-    if (isFromActivityRemainderInvokeSheela) {
-      Get.toNamed(
-        rt_Sheela,
-        arguments: SheelaArgument(eId: passedValArr[1].toString()),
-      )!
-          .then((value) {
-        try {
-          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
-        } catch (e, stackTrace) {
-          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-        }
-      });
-      return;
-    }
-    if (isFromAudio) {
-      Get.toNamed(
-        router.rt_Sheela,
-        arguments: SheelaArgument(
-          allowBackBtnPress: true,
-          audioMessage: passedValArr[3].toString(),
-          eventIdViaSheela: passedValArr[4].toString(),
-        ),
-      )!
-          .then((value) {
-        try {
-          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
-        } catch (e, stackTrace) {
-          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-          if (kDebugMode) {
-            print(e);
-          }
-        }
-      });
-    } else {
-      Future.delayed(Duration(milliseconds: 500), () async {
-        Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(
-              allowBackBtnPress: true,
-              isSheelaFollowup: true,
-              textSpeechSheela: (passedValArr[2] != null &&
-                      passedValArr[2] != 'null' &&
-                      passedValArr[2] != '')
-                  ? passedValArr[2]
-                  : passedValArr[1],
-              audioMessage: '',
-              isNeedPreferredLangauge: true,
-              eventIdViaSheela: passedValArr[4]),
-        )!
-            .then((value) {
-          try {
-            sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
-          } catch (e, stackTrace) {
-            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-            if (kDebugMode) {
-              print(e);
-            }
-          }
-        });
-      });
-    }
-  }
-
-
 
   void getProfileData() async {
     try {

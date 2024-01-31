@@ -62,10 +62,7 @@ import '../Models/SheelaResponse.dart';
 import '../Models/sheela_arguments.dart';
 import '../Services/SheelaAIAPIServices.dart';
 import '../Services/SheelaAIBLEServices.dart';
-import 'package:image/image.dart' as img;
-import 'package:speech_to_text/speech_recognition_result.dart';
-import 'package:speech_to_text/speech_to_text.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 enum BLEStatus { Searching, Connected, Disabled }
 
@@ -160,6 +157,8 @@ class SheelaAIController extends GetxController {
   final ApiBaseHelper _helper = ApiBaseHelper();
   Timer? _debounceRecognizedWords;
 
+  Map<String, Timer> reminderTimers = {};
+
   @override
   void onInit() {
     super.onInit();
@@ -191,6 +190,8 @@ class SheelaAIController extends GetxController {
         _chatSocketService
             .getUnreadChatWithMsgId(arguments?.eventIdViaSheela ?? '');
       }
+      // Initialize timers list
+      reminderTimers = {};
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -1865,6 +1866,9 @@ makeApiRequest is used to update the data with latest data
       // Stop speech listening using a method (assuming it's defined in the same class)
       stopSpeechListening();
 
+      // Cancel all timers when the widget is disposed
+      clearAllTimers();
+
       // Call the parent class's onClose method
       super.onClose();
     } catch (e, stackTrace) {
@@ -2874,5 +2878,45 @@ makeApiRequest is used to update the data with latest data
     );
   }
 
+  Timer createTimer(Reminder remainder, tz.TZDateTime scheduledDateTime) {
+    // Calculate the duration until the scheduled time
+    Duration durationUntilScheduledTime =
+        scheduledDateTime!.difference(DateTime.now());
+
+    // Schedule the method to be called after the calculated duration
+    return Timer(durationUntilScheduledTime, () {
+      scheduledMethod(remainder);
+      // Optional: Reschedule the method for the next occurrence
+      // rescheduleMethod(index);
+    });
+  }
+
+  scheduledMethod(Reminder remainder) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    final sheelaAIController = CommonUtil().onInitSheelaAIController();
+    var strValue = 'activityRemainderInvokeSheela&${remainder.eid}';
+    final passedValArr = strValue.split('&');
+    CommonUtil()
+        .getActivityRemainderInvokeSheela(passedValArr, sheelaAIController);
+  }
+
+  addScheduledTime(Reminder remainder, tz.TZDateTime scheduledDateTime) {
+    // Check if a timer already exists for the same reminder.id
+    if (reminderTimers.containsKey(remainder.notificationListId)) {
+      reminderTimers[remainder.notificationListId]?.cancel();
+      reminderTimers.remove(remainder.notificationListId);
+    }
+
+    // Create a new timer for the new scheduled time
+    final newTimer = createTimer(remainder, scheduledDateTime);
+    reminderTimers[remainder.notificationListId!] = newTimer;
+  }
+
+  clearAllTimers() {
+    for (var timer in reminderTimers.values) {
+      timer.cancel();
+    }
+    reminderTimers.clear();
+  }
 }
 

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/main.dart';
 import 'package:myfhb/services/pushnotification_service.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
@@ -9,10 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/CommonUtil.dart';
 import '../constants/HeaderRequest.dart';
-import '../constants/variable_constant.dart';
 import 'ReminderModel.dart';
 import '../src/utils/FHBUtils.dart';
-import 'package:myfhb/src/resources/network/api_services.dart';
 import '../constants/fhb_constants.dart' as Constants;
 
 class QurPlanReminders {
@@ -46,7 +45,7 @@ class QurPlanReminders {
       var dataArray = await json.decode(responseFromApi!.body);
       final List<dynamic> data = dataArray['result'] ?? [];
       var reminders = <Reminder>[];
-      if (Platform.isIOS) {
+      /*if (Platform.isIOS) {
         deleteAllLocalReminders();
         var notificationsCount = 0;
         data.forEach((element) {
@@ -83,6 +82,24 @@ class QurPlanReminders {
         if (isSnooze) {
           reminders.add(snoozeReminderData ?? Reminder());
         }
+      }*/
+      data.forEach((element) {
+        var newData = Reminder.fromMap(element);
+        final notificationId =
+        CommonUtil().toSigned32BitInt(int.tryParse('${newData.eid}') ?? 0);
+        newData.notificationListId = notificationId.toString();
+        newData?.redirectTo = stringRegimentScreen;
+        if (!newData.evDisabled) {
+          if (newData.ack_local == '' || newData.ack_local == null)
+            reminders.add(newData);
+        }
+      });
+      if (isSnooze) {
+        final notificationId =
+        CommonUtil().toSigned32BitInt(int.tryParse('${snoozeReminderData?.eid}') ?? 0);
+        snoozeReminderData?.notificationListId = notificationId.toString();
+        snoozeReminderData?.redirectTo = stringRegimentScreen;
+        reminders.add(snoozeReminderData ?? Reminder());
       }
       await updateReminderswithLocal(reminders,isSnooze: isSnooze);
     } catch (e, stackTrace) {
@@ -302,7 +319,7 @@ class QurPlanReminders {
       // Cancel reminder notifications if beforeInt is greater than 0
       var beforeInt = int.tryParse(foundTheMatched.remindbefore!);
       if (beforeInt != null && beforeInt > 0) {
-        var baseId = '0$id';
+        var baseId = '${id}00';
         var beforeNotificationId = int.tryParse(baseId) ?? 0;
         await localNotificationsPlugin.cancel(beforeNotificationId);
       }
@@ -310,7 +327,7 @@ class QurPlanReminders {
       // Cancel reminder notifications if afterInt is greater than 0
       var afterInt = int.tryParse(foundTheMatched.remindin!);
       if (afterInt != null && afterInt > 0) {
-        var baseId = '1$id';
+        var baseId = '${id}11';
         var afterNotificationId = int.tryParse(baseId) ?? 0;
         await localNotificationsPlugin.cancel(afterNotificationId);
       }

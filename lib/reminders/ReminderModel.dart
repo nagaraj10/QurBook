@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'package:timezone/timezone.dart' as tz;
 
 class Reminder {
   String? eid;
@@ -31,6 +32,8 @@ class Reminder {
 
   // Nullable integer to store the count of times the snooze action is tapped for the notification.
   int? snoozeTapCountTime;
+
+
 
 
   Reminder(
@@ -73,7 +76,7 @@ class Reminder {
       int? importance,
       String? ack,
       String? snoozeTime,
-      String? ack_local,String? dosemeal,String? notificationListId,String? redirectTo,int? snoozeTapCountTime}) {
+      String? ack_local,String? dosemeal,String? notificationListId,String? redirectTo,int? snoozeTapCountTime,tz.TZDateTime? scheduledDateTime}) {
     return Reminder(
       eid: eid ?? this.eid,
       title: title ?? this.title,
