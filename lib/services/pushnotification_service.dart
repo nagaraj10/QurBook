@@ -6,14 +6,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import '../reminders/ReminderModel.dart';
 import '../../main.dart';
 import '../common/CommonUtil.dart';
-import '../constants/fhb_parameters.dart';
+import '../constants/fhb_parameters.dart'as parameters;
 import '../video_call/services/iOS_Notification_Handler.dart';
 import 'notification_helper.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:myfhb/constants/variable_constant.dart'as variable;
 
 class PushNotificationService {
   late Stream<String> _tokenStream;
@@ -65,7 +67,7 @@ class PushNotificationService {
       if (Platform.isIOS) {
         final mapResponse = message.data;
         if (message.category != null) {
-          mapResponse['action'] = message.category;
+          mapResponse[strAction] = message.category;
         }
         IosNotificationHandler()
           ..isAlreadyLoaded = true
@@ -75,11 +77,10 @@ class PushNotificationService {
       }
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('212121 onMessageOpenedApp listen:${message.toMap()}');
       if (Platform.isIOS) {
         final mapResponse = message.data;
         if (message.category != null) {
-          mapResponse['action'] = message.category;
+          mapResponse[strAction] = message.category;
         }
         IosNotificationHandler()
           ..isAlreadyLoaded = true
@@ -91,13 +92,13 @@ class PushNotificationService {
   void readInitialMessage() {
     FirebaseMessaging.instance.getInitialMessage().then((message) async {
       if (message != null) {
-        if (message.data['type'] == 'call' && Platform.isAndroid) {
-          listenEvent(message.data['meeting_id']);
+        if (message.data[STR_TYPE] == variable.strCall.toLowerCase() && Platform.isAndroid) {
+          listenEvent(message.data[strMeetingId]);
           showCallNotification(message);
         } else if (Platform.isIOS) {
           final mapResponse = message.data;
           if (message.category != null) {
-            mapResponse['action'] = message.category;
+            mapResponse[strAction] = message.category;
           }
           IosNotificationHandler()
             ..isAlreadyLoaded = false
@@ -114,7 +115,7 @@ class PushNotificationService {
   Future initLocalNotification() async {
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
+          strMipmapIcLauncher,
     );
 
     final iOSSettings = DarwinInitializationSettings(
@@ -123,12 +124,10 @@ class PushNotificationService {
         InitializationSettings(android: androidSettings, iOS: iOSSettings);
     await localNotificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse: (details) async {
-      print(
-          '212121 onDidReceiveNotificationResponse details: ${details.payload}');
       final Map<String, dynamic> mapResponse = jsonDecode(details.payload!);
       if (details.payload != null) {
         if (details.actionId != null) {
-          mapResponse['action'] = details.actionId;
+          mapResponse[strAction] = details.actionId;
         }
         IosNotificationHandler()
           ..isAlreadyLoaded = true
@@ -143,32 +142,32 @@ class PushNotificationService {
 }
 
 notificationBasedOnCategory(RemoteMessage message) {
-  if (message.data['type'] == 'call' && Platform.isAndroid) {
-    listenEvent(message.data['meeting_id']);
+  if (message.data['type'] == variable.strCall.toLowerCase && Platform.isAndroid) {
+    listenEvent(message.data[strMeetingId]);
     showCallNotification(message);
   } else {
-    if (message.data['templateName'] == familyMemberCaregiverRequest) {
+    if (message.data[strTemplateName] == parameters.familyMemberCaregiverRequest) {
       showFamilyMemberNotifications(message);
-    } else if (message.data.containsKey('associationNotificationToCaregiver')) {
+    } else if (message.data.containsKey(parameters.associationNotificationToCaregiver)) {
       showViewMemberAndCommunication(message);
-    } else if (message.data['templateName'] ==
-        'notifyCaregiverForMedicalRecord') {
+    } else if (message.data[strTemplateName] ==
+        parameters.notifyCaregiverForMedicalRecord) {
       showNotificationCaregiverForMedicalRecord(message);
-    } else if (message.data['templateName'] ==
-            'careGiverTransportRequestReminder' ||
-        message.data['templateName'] == 'voiceClonePatientAssignment') {
+    } else if (message.data[strTemplateName] ==
+        parameters.careGiverTransportRequestReminder ||
+        message.data[strTemplateName] == strVoiceClonePatientAssignment) {
       showNotificationCareGiverTransportRequestReminder(message);
-    } else if (message.data['redirectTo'] == 'mycartdetails') {
+    } else if (message.data[parameters.strRedirectTo] == parameters.myCartDetails) {
       showNotificationRenewNotification(message);
-    } else if (message.data['redirectTo'] ==
-        'escalateToCareCoordinatorToRegimen') {
+    } else if (message.data[parameters.strRedirectTo] ==
+        parameters.escalateToCareCoordinatorToRegimen) {
       showNotificationEscalate(message);
-    } else if (message.data['redirectTo'] == 'familyProfile') {
+    } else if (message.data[parameters.strRedirectTo] == strFamilyProfile) {
       showNotificationForFamilyAddition(message);
-    } else if (message.data['redirectTo'] == 'appointmentPayment' &&
+    } else if (message.data[parameters.strRedirectTo] == strAppointmentPayment &&
         Platform.isAndroid) {
       showNotificationForAppointmentPayment(message);
-    } else if (message.data['redirectTo'] == 'mycart' && Platform.isAndroid) {
+    } else if (message.data[parameters.strRedirectTo] == strMycart && Platform.isAndroid) {
       showNotificationForMyCartPayment(message);
     } else {
       showNotification(message);
@@ -182,7 +181,7 @@ Future<void> onBackgroundMessageReceived(RemoteMessage message) async {
     if (Platform.isIOS) {
       final mapResponse = message.data;
       if (message.category != null) {
-        mapResponse['action'] = message.category;
+        mapResponse[strAction] = message.category;
       }
       IosNotificationHandler()
         ..isAlreadyLoaded = true
@@ -206,7 +205,7 @@ Future<void> showNotification(RemoteMessage message) async {
         largeIcon: DrawableResourceAndroidBitmap(
             getIconBasedOnRegion(isSmallIcon: false)),
       ),
-      iOS: const DarwinNotificationDetails(sound: 'ringtone.aiff'));
+      iOS: const DarwinNotificationDetails(sound: strRingtoneIOS));
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
@@ -214,8 +213,8 @@ Future<void> showNotification(RemoteMessage message) async {
 
   await localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.hashCode,
-      Platform.isIOS ? message.notification!.title : message.data['title'],
-      Platform.isIOS ? message.notification!.body : message.data['body'],
+      Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
+      Platform.isIOS ? message.notification!.body : message.data[parameters.body],
       notificationDetails,
       payload: jsonEncode(message.data));
 }
@@ -237,15 +236,15 @@ void showCallNotification(RemoteMessage message) async {
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS:
-          DarwinNotificationDetails(categoryIdentifier: 'darwinCall_category'));
+          DarwinNotificationDetails(categoryIdentifier: strDarwinCallCategory));
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(callChannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : 5678,
-      Platform.isIOS ? message.notification!.title : message.data['title'],
-      Platform.isIOS ? message.notification!.body : message.data['body'],
+      Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
+      Platform.isIOS ? message.notification!.body : message.data[parameters.body],
       platformChannelSpecifics,
       payload: jsonEncode(message.data));
 }
@@ -265,15 +264,15 @@ void showFamilyMemberNotifications(RemoteMessage message) async {
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS:
-          DarwinNotificationDetails(categoryIdentifier: 'darwinCall_category'));
+          DarwinNotificationDetails(categoryIdentifier: strDarwinCallCategory));
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(callChannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
-      Platform.isIOS ? message.notification!.title : message.data['title'],
-      Platform.isIOS ? message.notification!.body : message.data['body'],
+      Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
+      Platform.isIOS ? message.notification!.body : message.data[parameters.body],
       platformChannelSpecifics,
       payload: jsonEncode(message.data));
 }
@@ -291,7 +290,7 @@ void showViewMemberAndCommunication(RemoteMessage message) async {
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: DarwinNotificationDetails(
-          categoryIdentifier: 'showViewMemberAndCommunicationButtons'));
+          categoryIdentifier: strShowViewMemberAndCommunicationButtons));
 
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
@@ -299,8 +298,8 @@ void showViewMemberAndCommunication(RemoteMessage message) async {
       ?.createNotificationChannel(callChannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
-      Platform.isIOS ? message.notification!.title : message.data['title'],
-      Platform.isIOS ? message.notification!.body : message.data['body'],
+      Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
+      Platform.isIOS ? message.notification!.body : message.data[parameters.body],
       platformChannelSpecifics,
       payload: jsonEncode(message.data));
 }
@@ -319,7 +318,7 @@ void showNotificationCaregiverForMedicalRecord(RemoteMessage message) async {
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: DarwinNotificationDetails(
-          categoryIdentifier: 'ChatCCAndViewrecordButtons'));
+          categoryIdentifier: strChatCCAndViewrecordButtons));
 
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
@@ -327,8 +326,8 @@ void showNotificationCaregiverForMedicalRecord(RemoteMessage message) async {
       ?.createNotificationChannel(callChannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
-      Platform.isIOS ? message.notification!.title : message.data['title'],
-      Platform.isIOS ? message.notification!.body : message.data['body'],
+      Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
+      Platform.isIOS ? message.notification!.body : message.data[parameters.body],
       platformChannelSpecifics,
       payload: jsonEncode(message.data));
 }
@@ -348,7 +347,7 @@ void showNotificationCareGiverTransportRequestReminder(
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: DarwinNotificationDetails(
-          categoryIdentifier: 'showTransportationNotification'));
+          categoryIdentifier: strShowTransportationNotification));
 
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
@@ -356,8 +355,8 @@ void showNotificationCareGiverTransportRequestReminder(
       ?.createNotificationChannel(callChannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
-      Platform.isIOS ? message.notification!.title : message.data['title'],
-      Platform.isIOS ? message.notification!.body : message.data['body'],
+      Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
+      Platform.isIOS ? message.notification!.body : message.data[parameters.body],
       platformChannelSpecifics,
       payload: jsonEncode(message.data));
 }
@@ -375,7 +374,7 @@ void showNotificationRenewNotification(RemoteMessage message) async {
           actions: [renewalAction, callBackAction]);
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
-      iOS: DarwinNotificationDetails(categoryIdentifier: 'planRenewButton'));
+      iOS: DarwinNotificationDetails(categoryIdentifier: strPlanRenewButton));
 
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
@@ -383,8 +382,8 @@ void showNotificationRenewNotification(RemoteMessage message) async {
       ?.createNotificationChannel(callChannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
-      Platform.isIOS ? message.notification!.title : message.data['title'],
-      Platform.isIOS ? message.notification!.body : message.data['body'],
+      Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
+      Platform.isIOS ? message.notification!.body : message.data[parameters.body],
       platformChannelSpecifics,
       payload: jsonEncode(message.data));
 }
@@ -403,7 +402,7 @@ void showNotificationEscalate(RemoteMessage message) async {
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: DarwinNotificationDetails(
-          categoryIdentifier: 'escalateToCareCoordinatorButtons'));
+          categoryIdentifier: strEscalateToCareCoordinatorButtons));
 
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
@@ -411,8 +410,8 @@ void showNotificationEscalate(RemoteMessage message) async {
       ?.createNotificationChannel(callChannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
-      Platform.isIOS ? message.notification!.title : message.data['title'],
-      Platform.isIOS ? message.notification!.body : message.data['body'],
+      Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
+      Platform.isIOS ? message.notification!.body : message.data[parameters.body],
       platformChannelSpecifics,
       payload: jsonEncode(message.data));
 }
@@ -430,7 +429,7 @@ void showNotificationForFamilyAddition(RemoteMessage message) async {
           actions: [viewDetailsAction]);
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
-      iOS: DarwinNotificationDetails(categoryIdentifier: 'viewDetailsButton'));
+      iOS: DarwinNotificationDetails(categoryIdentifier: strViewDetailsButton));
 
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
@@ -438,8 +437,8 @@ void showNotificationForFamilyAddition(RemoteMessage message) async {
       ?.createNotificationChannel(callChannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
-      Platform.isIOS ? message.notification!.title : message.data['title'],
-      Platform.isIOS ? message.notification!.body : message.data['body'],
+      Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
+      Platform.isIOS ? message.notification!.body : message.data[parameters.body],
       platformChannelSpecifics,
       payload: jsonEncode(message.data));
 }
@@ -457,7 +456,7 @@ void showNotificationForAppointmentPayment(RemoteMessage message) async {
           actions: [payNowAction]);
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
-      iOS: DarwinNotificationDetails(categoryIdentifier: 'payNowButton'));
+      iOS: DarwinNotificationDetails(categoryIdentifier: strPayNowButton));
 
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
@@ -465,8 +464,8 @@ void showNotificationForAppointmentPayment(RemoteMessage message) async {
       ?.createNotificationChannel(callChannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
-      Platform.isIOS ? message.notification!.title : message.data['title'],
-      Platform.isIOS ? message.notification!.body : message.data['body'],
+      Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
+      Platform.isIOS ? message.notification!.body : message.data[parameters.body],
       platformChannelSpecifics,
       payload: jsonEncode(message.data));
 }
@@ -484,7 +483,7 @@ void showNotificationForMyCartPayment(RemoteMessage message) async {
           actions: [payNowAction]);
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
-      iOS: DarwinNotificationDetails(categoryIdentifier: 'payNowButton'));
+      iOS: DarwinNotificationDetails(categoryIdentifier: strPayNowButton));
 
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
@@ -492,30 +491,28 @@ void showNotificationForMyCartPayment(RemoteMessage message) async {
       ?.createNotificationChannel(callChannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
-      Platform.isIOS ? message.notification!.title : message.data['title'],
-      Platform.isIOS ? message.notification!.body : message.data['body'],
+      Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
+      Platform.isIOS ? message.notification!.body : message.data[parameters.body],
       platformChannelSpecifics,
       payload: jsonEncode(message.data));
 }
 
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
-  print(
-      '212121: onBackground:${jsonDecode(notificationResponse.payload ?? '')}');
 }
 
 void listenEvent(String meetingId) {
   FirebaseFirestore.instance
-      .collection('call_log')
+      .collection(strCallLog)
       .doc(meetingId)
       .snapshots()
       .listen((DocumentSnapshot snapshot) {
     if (snapshot.exists) {
-      String callStatus = snapshot['call_status'];
+      String callStatus = snapshot[strCallStatus];
 
-      if (callStatus == 'call_ended_by_user' ||
-          callStatus == 'accept' ||
-          callStatus == 'decline') {
+      if (callStatus == strCallEndedByUser ||
+          callStatus == parameters.accept.toLowerCase() ||
+          callStatus == parameters.decline.toLowerCase()) {
         localNotificationsPlugin.cancel(5678);
       }
     }
@@ -525,14 +522,14 @@ void listenEvent(String meetingId) {
 getIconBasedOnRegion({required bool isSmallIcon}) {
   if (isSmallIcon) {
     if (CommonUtil.isUSRegion()) {
-      return 'app_ns_qurhome_icon';
+      return strAppNsQurhomeIcon;
     }
-    return 'app_ns_qurbook_icon';
+    return strAppNsQurbookIcon;
   } else {
     if (CommonUtil.isUSRegion()) {
-      return 'ic_launcher_qurhome';
+      return strIcLauncherQurhome;
     }
-    return 'ic_launcher_qurbook';
+    return strIcLauncherQurbook;
   }
 }
 
@@ -671,9 +668,9 @@ zonedScheduleNotification(
       ),
       iOS: isButtonShown
           ? isDismissButtonOnlyShown
-          ? const DarwinNotificationDetails(categoryIdentifier: 'showSingleButtonCat')
-          : const DarwinNotificationDetails(categoryIdentifier: 'showBothButtonsCat')
-          : const DarwinNotificationDetails(sound: 'ringtone.aiff', categoryIdentifier: 'showSingleButtonCat'),
+          ? const DarwinNotificationDetails(categoryIdentifier: strShowSingleButtonCat)
+          : const DarwinNotificationDetails(categoryIdentifier: strShowBothButtonsCat)
+          : const DarwinNotificationDetails(sound: strRingtoneIOS, categoryIdentifier: strShowSingleButtonCat),
     );
 
     // Resolve Android specific implementation to create the notification channel
@@ -686,8 +683,8 @@ zonedScheduleNotification(
     // Schedule the notification
     await localNotificationsPlugin.zonedSchedule(
       notificationId,
-      reminderTemp?.title ?? 'scheduled title',
-      reminderTemp?.description ?? 'scheduled body',
+      reminderTemp?.title ?? strScheduledtitle,
+      reminderTemp?.description ?? strScheduledbody,
       scheduledDateTime,
       notificationDetails,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
