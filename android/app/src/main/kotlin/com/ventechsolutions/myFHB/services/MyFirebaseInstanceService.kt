@@ -45,7 +45,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         Log.d(TAG, "Notification: " + remoteMessage.notification)
         Log.d(TAG, "Notification: " + remoteMessage.rawData)
         // Check if message contains a data payload.
-        if (remoteMessage.data.isNotEmpty()) {
+       /* if (remoteMessage.data.isNotEmpty()) {
             createNotification(data = remoteMessage.data)
         }
         if (remoteMessage.notification != null) {
@@ -54,7 +54,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             if (t != null && b != null) {
                 createNotification(title = t, body = b)
             }
-        }
+        }*/
 
     }
 
@@ -324,6 +324,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             createNotification4MissedEvents(data)
         } else if (data["templateName"] == "notifyCaregiverForMedicalRecord") {
             createNotificationCaregiverForMedicalRecord(data)
+            //<-Test Notification->
         } else if ((data["templateName"] == "careGiverTransportRequestReminder") || (data[Constants.PROP_TEMP_NAME] == getString(R.string.voice_clone_patient_assignment))) {
             // Handle the case when the templateName is "careGiverTransportRequestReminder"
             // OR when PROP_TEMP_NAME is equal to the string resource "voice_clone_patient_assignment"
