@@ -1102,6 +1102,7 @@ const String strMycart = 'mycart'; // My cart
 const String strCallEndedByUser = 'call_ended_by_user'; // Call ended by user
 const String strAndroidNormalchannelId = 'androidNormalchannelId'; // Android normal channel ID
 const String strAndroidNormalCallchannelId = 'androidNormalCallchannelId'; // Android normal call channel ID
+const String strActivityRemainderInvokeSheela = 'activityRemainderInvokeSheela&'; // Android normal call channel ID
 
 
 
