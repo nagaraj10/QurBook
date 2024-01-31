@@ -63,8 +63,11 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
   }
 
   Widget getTicketTypes() {
-    return FutureBuilder<TicketTypesModel?>(
-      future: ticketViewModel.getTicketTypesList(),
+    return FutureBuilder(
+      future: Future.wait([
+        ticketViewModel.getTicketTypesList(),
+        ticketViewModel.getMemberShip(),
+      ]),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
@@ -82,14 +85,16 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
+          final ticketTypesModel = snapshot.data?.first as TicketTypesModel?;
+          final memberShipDetails = snapshot.data?.last as MemberShipDetails?;
           //return ticketTypeListTest(context);
           if (snapshot.hasData &&
-              snapshot.data!.ticketTypeResults != null &&
-              snapshot.data!.ticketTypeResults!.isNotEmpty) {
+              ticketTypesModel?.ticketTypeResults != null &&
+              (ticketTypesModel?.ticketTypeResults?.isNotEmpty ?? false)) {
             return ListView(
               children: [
-                getMembershipDataUI(),
-                ticketTypesList(snapshot.data!.ticketTypeResults),
+                getMembershipDataUI(memberShipDetails),
+                ticketTypesList(ticketTypesModel?.ticketTypeResults),
               ],
             );
           } else {
@@ -114,55 +119,38 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
     );
   }
 
-  Widget getMembershipDataUI() => FutureBuilder<MemberShipDetails?>(
-        future: ticketViewModel.getMemberShip(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container();
-          } else if (snapshot.hasError) {
-            return ErrorsWidget();
-          } else {
-            //return ticketTypeListTest(context);
-            if (snapshot.hasData &&
-                snapshot.data!.result != null &&
-                snapshot.data!.result!.isNotEmpty) {
-              final _memberShipResult = snapshot.data?.result?.first;
-
-              if (_memberShipResult != null) {
-                /// We need to showcase only selected benefitType only.
-                _memberShipResult.additionalInfo?.benefitType?.removeWhere(
-                  (element) => ![
-                    variable.strBenefitDoctorAppointment,
-                    variable.strBenefitLabAppointment,
-                    variable.strBenefitMedicineOrdering,
-                    variable.strBenefitTransportation,
-                    variable.strBenefitCareDietPlans,
-                    variable.strBenefitFamilyMembers,
-                  ].contains(element.fieldName),
-                );
-                return GetMembershipDataWidget(
-                  memberShipResult: _memberShipResult,
-                  onPressed: () {
-                    /// Navigate to Membership Benefit List Screen.
-                    Navigator.pushNamed(
-                      context,
-                      router.rt_membership_benefits_screen,
-                      arguments: MembershipBenefitListModel(
-                        memberShipResult: _memberShipResult,
-                        iconsUrls: _iconsurls,
-                      ),
-                    );
-                  },
-                );
-              } else {
-                return Container();
-              }
-            } else {
-              return Container();
-            }
-          }
+  Widget getMembershipDataUI(MemberShipDetails? memberShipDetails) {
+    final _memberShipResult = memberShipDetails?.result?.first;
+    if (_memberShipResult != null) {
+      /// We need to showcase only selected benefitType only.
+      _memberShipResult.additionalInfo?.benefitType?.removeWhere(
+        (element) => ![
+          variable.strBenefitDoctorAppointment,
+          variable.strBenefitLabAppointment,
+          variable.strBenefitMedicineOrdering,
+          variable.strBenefitTransportation,
+          variable.strBenefitCareDietPlans,
+          variable.strBenefitFamilyMembers,
+        ].contains(element.fieldName),
+      );
+      return GetMembershipDataWidget(
+        memberShipResult: _memberShipResult,
+        onPressed: () {
+          /// Navigate to Membership Benefit List Screen.
+          Navigator.pushNamed(
+            context,
+            router.rt_membership_benefits_screen,
+            arguments: MembershipBenefitListModel(
+              memberShipResult: _memberShipResult,
+              iconsUrls: _iconsurls,
+            ),
+          );
         },
       );
+    } else {
+      return Container();
+    }
+  }
 
   Widget ticketTypesList(List<TicketTypesResult>? ticketTypesList) {
     var size = MediaQuery.of(context).size;
