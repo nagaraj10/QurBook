@@ -139,6 +139,7 @@ import '../src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
 import '../src/utils/FHBUtils.dart';
 import '../src/utils/PageNavigator.dart';
 import '../src/utils/colors_utils.dart';
+import '../src/utils/cron_jobs.dart';
 import '../src/utils/language/language_utils.dart';
 import '../src/utils/screenutils/size_extensions.dart';
 import '../telehealth/features/Notifications/services/notification_services.dart';
@@ -6237,7 +6238,6 @@ class CommonUtil {
       await getMyProfilesetting();
       var regController = CommonUtil().onInitQurhomeRegimenController();
       regController.getRegimenList();
-      FirestoreServices().setupListenerForFirestoreChanges();
       if (!Get.isRegistered<PDFViewController>()) {
         Get.lazyPut(
           () => PDFViewController(),
@@ -6245,6 +6245,7 @@ class CommonUtil {
       }
       // Record the user's last access time
       saveUserLastAccessTime();
+      FirestoreServices().setupListenerForFirestoreChanges();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 

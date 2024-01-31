@@ -37,6 +37,7 @@ import 'common/CommonUtil.dart';
 import 'common/DatabseUtil.dart';
 import 'common/PreferenceUtil.dart';
 import 'common/firebase_analytics_service.dart';
+import 'common/firestore_services.dart';
 import 'constants/fhb_constants.dart' as Constants;
 import 'constants/fhb_constants.dart';
 import 'constants/fhb_parameters.dart';
@@ -71,12 +72,15 @@ import 'src/ui/connectivity_bloc.dart';
 import 'src/ui/settings/CaregiverSettng.dart';
 import 'src/utils/FHBUtils.dart';
 import 'src/utils/PageNavigator.dart';
+import 'src/utils/cron_jobs.dart';
 import 'src/utils/dynamic_links.dart';
 import 'src/utils/language/app_localizations.dart';
 import 'src/utils/language/language_utils.dart';
 import 'src/utils/language/languages.dart';
 import 'src/utils/language/view_model/language_view_model.dart';
+import 'src/utils/lifecycle_state_provider.dart';
 import 'src/utils/screenutils/screenutil.dart';
+import 'src/utils/timezone/timezone_services.dart';
 import 'telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'telehealth/features/Notifications/services/notification_services.dart';
@@ -363,6 +367,44 @@ class _MyFHBState extends State<MyFHB> {
     //initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    // Function to set up cron job and event listeners which is called after
+    //some delay to make sure all the environment related data are setup.
+    Future.delayed(const Duration(seconds: 4)).then(
+      (value) => setUpCronJobAndListeners(),
+    );
+  }
+
+// Function to set up cron job and event listeners
+  void setUpCronJobAndListeners() {
+    try {
+      // Schedule the cron job to run at midnight for
+      //getting the latest regiment
+      CronJobServices().scheduleUpdateForData();
+
+      // Add an observer to handle lifecycle events,
+      // specifically when the app is resumed
+      WidgetsBinding.instance.addObserver(
+        LifecycleEventHandler(
+          // Callback executed upon app resumption
+          resumeCallBack: () async {
+            // Update Firestore data for 'all' with loading indicator
+            FirestoreServices().updateDataFor(
+              'all',
+              withLoading: true,
+            );
+
+            // Check and update the timezone information
+            await TimezoneServices().checkUpdateTimezone();
+
+            // Record the user's last access time
+            CommonUtil().saveUserLastAccessTime();
+          },
+        ),
+      );
+    } catch (e, stackTrace) {
+      // Handle and log any exceptions that occur during setup
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 
   CheckForShowingTheIntroScreens() async {
