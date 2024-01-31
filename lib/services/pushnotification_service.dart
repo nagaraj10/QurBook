@@ -640,10 +640,10 @@ zonedScheduleNotification(
     // Adjust scheduled time for snooze actions
     if (isSnoozePress && (reminder?.snoozeTapCountTime ?? 0) <= 1) {
       var now = tz.TZDateTime.now(tz.local);
-      scheduledDateTime = now.add(const Duration(minutes: 1));
+      scheduledDateTime = now.add(const Duration(minutes: 5));
     } else if (isButtonShown & isSnoozePress) {
       var now = tz.TZDateTime.now(tz.local);
-      scheduledDateTime = now.add(const Duration(minutes: 1));
+      scheduledDateTime = now.add(const Duration(minutes: 5));
       isDismissButtonOnlyShown = true;
     }
 
