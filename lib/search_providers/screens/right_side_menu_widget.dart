@@ -59,7 +59,7 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
   Map<String, List<String>> selectedFilters = {};
   TextEditingController searchController = TextEditingController();
   List<String> searchFilterOption = [];
-  // bool isSearch = false;
+  bool isSearch = false;
 
   @override
   void initState() {
@@ -124,8 +124,10 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
                             )
                             .toList();
                         FocusManager.instance.primaryFocus?.unfocus();
+                        isSearch = true;
                         setState(() {});
                       } else {
+                        isSearch = false;
                         searchFilterOption.clear();
                         setState(() {});
                       }
@@ -152,17 +154,14 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 10, right: 5, top: 10),
                 child: widget.filterOptions.isEmpty
-                    ? Container(
-                        color: const Color(fhbColors.bgColorContainer),
-                        child: const Center(
-                          child: Text(variable.strNodata),
-                        ),
+                    ? const Center(
+                        child: Text(variable.strNodata),
                       )
                     : ListView.builder(
                         shrinkWrap: true,
-                        itemCount: searchFilterOption.isNotEmpty ? searchFilterOption.length : widget.filterOptions.length,
+                        itemCount: isSearch ? searchFilterOption.length : widget.filterOptions.length,
                         itemBuilder: (BuildContext context, int index) {
-                          final itemName = searchFilterOption.isNotEmpty ? searchFilterOption[index] : widget.filterOptions[index];
+                          final itemName = isSearch ? searchFilterOption[index] : widget.filterOptions[index];
                           return Row(
                             children: [
                               Checkbox(
