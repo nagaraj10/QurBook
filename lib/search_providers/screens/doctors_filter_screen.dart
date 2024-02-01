@@ -20,10 +20,12 @@ class DoctorsFilterScreen extends StatefulWidget {
   final List<int> selectedBrandOption;
   final List<int> selectedCategoryOption;
   final FilteredSelectedModel selectedItems;
+  final int filterMenuCount;
 
   const DoctorsFilterScreen({
     super.key,
     required this.filterApplied,
+    required this.filterMenuCount,
     required this.selectedItems,
     this.selectedBrandOption = const [],
     this.selectedCategoryOption = const [],
@@ -66,6 +68,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
   void initState() {
     super.initState();
     selectdFilterItemIndex = widget.selectedItems;
+    filterMenuCount = widget.filterMenuCount;
   }
 
   @override

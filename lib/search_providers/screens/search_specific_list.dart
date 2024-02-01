@@ -300,6 +300,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         onTap: () {
                           Get.to(DoctorsFilterScreen(
                             selectedItems: selectedItems,
+                            filterMenuCount: filterMenuCount,
                             filterApplied: (int count, List<DoctorsListResult> list, FilteredSelectedModel items) {
                               doctorFilterList = list;
                               selectedItems = items;
