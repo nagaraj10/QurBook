@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:package_info/package_info.dart';
 import '../reminders/ReminderModel.dart';
 import '../../main.dart';
 import '../common/CommonUtil.dart';
@@ -20,7 +21,7 @@ import 'package:myfhb/constants/variable_constant.dart'as variable;
 class PushNotificationService {
   late Stream<String> _tokenStream;
   static final PushNotificationService _instance =
-      PushNotificationService._internal();
+  PushNotificationService._internal();
 
   factory PushNotificationService() {
     return _instance;
@@ -177,7 +178,15 @@ notificationBasedOnCategory(RemoteMessage message) {
 
 @pragma('vm:entry-point')
 Future<void> onBackgroundMessageReceived(RemoteMessage message) async {
+  ///We are Binding values to identify the region on main.dart file
+  ///that will works only in background and in Foreground
+  ///To identify in killed state i have used the packageInfo library which already exists
+  ///Based on app name we can bind Icons.
   try {
+    if(CommonUtil.AppName.trim().isEmpty){
+      var packageInfo = await PackageInfo.fromPlatform();
+      CommonUtil.AppName= packageInfo.appName;
+    }
     if (Platform.isIOS) {
       final mapResponse = message.data;
       if (message.category != null) {
@@ -520,13 +529,14 @@ void listenEvent(String meetingId) {
 }
 
 getIconBasedOnRegion({required bool isSmallIcon}) {
+
   if (isSmallIcon) {
-    if (CommonUtil.isUSRegion()) {
+    if (CommonUtil.AppName.toLowerCase()==AppNameConstants.QURHOME) {
       return strAppNsQurhomeIcon;
     }
     return strAppNsQurbookIcon;
   } else {
-    if (CommonUtil.isUSRegion()) {
+    if (CommonUtil.AppName.toLowerCase()==AppNameConstants.QURHOME) {
       return strIcLauncherQurhome;
     }
     return strIcLauncherQurbook;

@@ -19,6 +19,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/app_theme.dart';
 import 'package:myfhb/voice_cloning/controller/voice_cloning_controller.dart';
+import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
@@ -126,6 +127,9 @@ Future<void> main() async {
     routes = await router.setRouter(listOfCameras);
     //get secret from resource
     final resList = <dynamic>[];
+    ///Added to identify the app name for foreground and Background.
+    var packageInfo = await PackageInfo.fromPlatform();
+    CommonUtil.AppName= packageInfo.appName;
     await CommonUtil.getResourceLoader().then((value) {
       final Map mSecretMap = value;
       mSecretMap.values.forEach((element) {

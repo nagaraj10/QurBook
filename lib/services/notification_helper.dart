@@ -4,6 +4,11 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 
+class AppNameConstants{
+  static const String QURHOME ='qurhome';
+  static const String QURBOOK ='qurbook';
+}
+
 ///Ios Notification Categories
 List<DarwinNotificationCategory> darwinIOSCategories = [
   DarwinNotificationCategory(
