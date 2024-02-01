@@ -775,13 +775,19 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     Expanded(
                       flex: 2,
                       child:getDropDownFields(field,
-                        customButton: fhbBasicWidget.getTextFiledWithHint(
-                          context,
-                          placeHolderName,
-                          textEditingControllers[
-                          CommonUtil().getFieldName(field.name)],
-                          enabled: false,
-                        suffix: getIconButton()),
+                        customButton: Row(
+                          children: [
+                            Expanded(
+                              child: fhbBasicWidget.getTextFiledWithHint(
+                                  context,
+                                  placeHolderName,
+                                  textEditingControllers[
+                                  CommonUtil().getFieldName(field.name)],
+                                  enabled: false),
+                            ),
+                            getIconButton()
+                          ],
+                        ),
                       ),)
                   ],
                 ),
