@@ -30,6 +30,9 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
   TicketTypesModel ticketTypesModel = TicketTypesModel();
   Map<String,String?> _iconsurls = Map<String,String?>();
 
+  final _membershipFontSize = CommonUtil().isTablet! ? 25.0.sp : 20.0.sp;
+  final _iconHeight = CommonUtil().isTablet! ? 80.0 : 60.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,8 +63,11 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
   }
 
   Widget getTicketTypes() {
-    return FutureBuilder<TicketTypesModel?>(
-      future: ticketViewModel.getTicketTypesList(),
+    return FutureBuilder(
+      future: Future.wait([
+        ticketViewModel.getTicketTypesList(),
+        ticketViewModel.getMemberShip(),
+      ]),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
@@ -79,14 +85,16 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
+          final ticketTypesModel = snapshot.data?.first as TicketTypesModel?;
+          final memberShipDetails = snapshot.data?.last as MemberShipDetails?;
           //return ticketTypeListTest(context);
           if (snapshot.hasData &&
-              snapshot.data!.ticketTypeResults != null &&
-              snapshot.data!.ticketTypeResults!.isNotEmpty) {
+              ticketTypesModel?.ticketTypeResults != null &&
+              (ticketTypesModel?.ticketTypeResults?.isNotEmpty ?? false)) {
             return ListView(
               children: [
-                getMembershipDataUI(),
-                ticketTypesList(snapshot.data!.ticketTypeResults),
+                getMembershipDataUI(memberShipDetails),
+                ticketTypesList(ticketTypesModel?.ticketTypeResults),
               ],
             );
           } else {
@@ -111,55 +119,38 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
     );
   }
 
-  Widget getMembershipDataUI() => FutureBuilder<MemberShipDetails?>(
-        future: ticketViewModel.getMemberShip(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container();
-          } else if (snapshot.hasError) {
-            return ErrorsWidget();
-          } else {
-            //return ticketTypeListTest(context);
-            if (snapshot.hasData &&
-                snapshot.data!.result != null &&
-                snapshot.data!.result!.isNotEmpty) {
-              final _memberShipResult = snapshot.data?.result?.first;
-
-              if (_memberShipResult != null) {
-                /// We need to showcase only selected benefitType only.
-                _memberShipResult.additionalInfo?.benefitType?.removeWhere(
-                  (element) => ![
-                    variable.strBenefitDoctorAppointment,
-                    variable.strBenefitLabAppointment,
-                    variable.strBenefitMedicineOrdering,
-                    variable.strBenefitTransportation,
-                    variable.strBenefitCareDietPlans,
-                    variable.strBenefitFamilyMembers,
-                  ].contains(element.fieldName),
-                );
-                return GetMembershipDataWidget(
-                  memberShipResult: _memberShipResult,
-                  onPressed: () {
-                    /// Navigate to Membership Benefit List Screen.
-                    Navigator.pushNamed(
-                      context,
-                      router.rt_membership_benefits_screen,
-                      arguments: MembershipBenefitListModel(
-                        memberShipResult: _memberShipResult,
-                        iconsUrls: _iconsurls,
-                      ),
-                    );
-                  },
-                );
-              } else {
-                return Container();
-              }
-            } else {
-              return Container();
-            }
-          }
+  Widget getMembershipDataUI(MemberShipDetails? memberShipDetails) {
+    final _memberShipResult = memberShipDetails?.result?.first;
+    if (_memberShipResult != null) {
+      /// We need to showcase only selected benefitType only.
+      _memberShipResult.additionalInfo?.benefitType?.removeWhere(
+        (element) => ![
+          variable.strBenefitDoctorAppointment,
+          variable.strBenefitLabAppointment,
+          variable.strBenefitMedicineOrdering,
+          variable.strBenefitTransportation,
+          variable.strBenefitCareDietPlans,
+          variable.strBenefitFamilyMembers,
+        ].contains(element.fieldName),
+      );
+      return GetMembershipDataWidget(
+        memberShipResult: _memberShipResult,
+        onPressed: () {
+          /// Navigate to Membership Benefit List Screen.
+          Navigator.pushNamed(
+            context,
+            router.rt_membership_benefits_screen,
+            arguments: MembershipBenefitListModel(
+              memberShipResult: _memberShipResult,
+              iconsUrls: _iconsurls,
+            ),
+          );
         },
       );
+    } else {
+      return Container();
+    }
+  }
 
   Widget ticketTypesList(List<TicketTypesResult>? ticketTypesList) {
     var size = MediaQuery.of(context).size;
@@ -175,7 +166,6 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: (itemWidth / itemHeight),
                 ),
                 shrinkWrap: true,
                 padding: EdgeInsets.only(
@@ -260,20 +250,15 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
               }
             },
             child: Container(
-              height: 150.h,
               width: MediaQuery.of(context).size.width / 2.6,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
                   colors: [
                     Color(CommonUtil().getMyPrimaryColor()),
                     Color(CommonUtil().getMyGredientColor())
                   ],
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(
-                        12.0) //                 <--- border radius here
-                    ),
+                borderRadius: const BorderRadius.all(Radius.circular(12),),
                 border: Border.all(
                   color: Color(CommonUtil().getMyPrimaryColor()),
                 ),
@@ -283,25 +268,24 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    height: 60,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Spacer(),
-                        getTicketTypeImages(
-                          context,
-                          ticketList[i],
-                        ),
-                      ],
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Spacer(),
+                      getTicketTypeImages(
+                        context,
+                        ticketList[i],
+                      ),
+                    ],
                   ),
+                  const Spacer(),
                   Text(
-                    ticketList[i].name!,
-                    overflow: TextOverflow.visible,
+                    (ticketList[i].name!).replaceAll(' ', '\n'),
+                    maxLines: 2,
                     style: TextStyle(
-                      fontSize: 21.0.sp,
+                      fontSize: _membershipFontSize,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
 
@@ -320,16 +304,16 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
     if (ticketListData.iconUrl?.isNotEmpty ?? false) {
       return SvgPicture.network(
         ticketListData.iconUrl!,
-        height: 60,
-        width: 60,
+        height: _iconHeight,
+        width: _iconHeight,
         placeholderBuilder: (context) => CommonCircularIndicator(),
         color: Colors.white.withAlpha(200),
       );
     } else {
       return Image.asset(
         'assets/icons/10.png',
-        width: 60,
-        height: 60,
+        width: _iconHeight,
+        height: _iconHeight,
         color: Colors.white.withAlpha(200),
       );
     }

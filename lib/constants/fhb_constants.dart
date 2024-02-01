@@ -687,6 +687,11 @@ const String strThereAreNoPreferredLabsInYourProfile = 'There are no preferred l
 
 const String strPreferredDoctors = 'Preferred Doctors';
 
+//Create ticketNote
+const String strNote = 'Note:';
+const String strDoctorAppoinmetRequest = 'Doctor Appointment Request';
+const String strTicketNoteDesc = 'Please understand this is not a final booking.The request will be processed by the care coordinator and you\'ll be notified on the progress or confirmation.';
+
 //Voice cloning
 const String makeSureNotInNoiseDescription = 'Make sure your are not in a noisy environment.';
 const String rec = 'REC';
@@ -722,6 +727,9 @@ var tckTypeDate = 'date';
 var tckTypeTime = 'time';
 var tckTypeFile = "file";
 var tckPackageTitle = "package_title";
+var tckChooseDoctor = "choose_doctor";
+var tckTypeDateTime = "datetime";
+var tckPrefferedDate = "preferred_date";
 var tckMainTitle = "title";
 var tckMainDescription = "description";
 var tckTypeModeOfService = "mode_of_service";
@@ -933,6 +941,15 @@ const String strRedirectRetakeVideo = 'redirectRetakeVideo'; // Action for redir
 const String strRedirectToUploadImage = 'redirectUploadBucket'; // Action for redirecting to upload an image
 const String strRedirectToUploadAudio = 'redirectUploadBucketAudio'; // Action for redirecting to upload audio
 const String strRedirectToUploadVideo = 'redirectUploadBucketVideo'; // Action for redirecting to upload a video
+
+// Constant representing the confirmation title for image files
+const String strImageConfirmTitle = 'Please confirm if the image is okay to proceed?';
+
+// Constant representing the confirmation title for audio files
+const String strAudioConfirmTitle = 'Please confirm if the audio is okay to proceed?';
+
+// Constant representing the confirmation title for video files
+const String strVideoConfirmTitle = 'Please confirm if the video is okay to proceed?';
 
 // file upload feature in sheela
 // Constant for requesting a file URL
