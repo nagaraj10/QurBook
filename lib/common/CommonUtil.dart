@@ -194,6 +194,8 @@ class CommonUtil {
   static String WEB_URL = '';
   static String PORTAL_URL = '';
 
+  static String AppName ='';
+
   static String UNIT_CONFIGURATION_URL =
       'system-configuration/unit-configuration';
   static String PUSH_KIT_TOKEN = '';
