@@ -30,10 +30,11 @@ class GetDoctorSpecializationList extends DoctorsFilterEvent {
 class ApplyFilters extends DoctorsFilterEvent {
   // Selected filter items
 
-  ApplyFilters({required this.selectedItems});
+  ApplyFilters({required this.selectedItems, required this.count});
   final Map<String, List<String>> selectedItems;
+  final int count;
 
   // Override props getter to compare equality of objects
   @override
-  List<Object?> get props => [selectedItems];
+  List<Object?> get props => [selectedItems, count];
 }

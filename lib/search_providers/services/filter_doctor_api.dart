@@ -102,19 +102,19 @@ class FilterDoctorApi {
     DoctorFilterRequestModel doctorFilterRequestModel,
   ) async {
     final doctorFilterList = <DoctorsListResult>[];
-    // Fetch filtered doctor list from API
-    final response = await ApiBaseHelper().doctorFilterList('doctor/service-request/list', json.encode(doctorFilterRequestModel));
-
-    doctorFilterList.clear();
-    if (response['isSuccess']) {
-      if (response['result']['data']['isSuccess']) {
-        response['result']['data']['entities'].forEach(
-          (f) {
-            doctorFilterList.add(DoctorsListResult.fromJson(f));
-          },
-        );
+    try {
+      final response = await ApiBaseHelper().doctorFilterList('doctor/service-request/list', json.encode(doctorFilterRequestModel));
+      doctorFilterList.clear();
+      if (response['isSuccess']) {
+        if (response['result']['data']['isSuccess']) {
+          response['result']['data']['entities'].forEach(
+            (f) {
+              doctorFilterList.add(DoctorsListResult.fromJson(f));
+            },
+          );
+        }
       }
-    }
+    } catch (e) {}
     return doctorFilterList.toList();
   }
 

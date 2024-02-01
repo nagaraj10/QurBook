@@ -69,6 +69,8 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
     super.initState();
     selectdFilterItemIndex = widget.selectedItems;
     filterMenuCount = widget.filterMenuCount;
+    selectedState = selectdFilterItemIndex.selectedStateIndex.isEmpty ? "" : selectdFilterItemIndex.selectedStateIndex.first;
+    selectedCity = selectdFilterItemIndex.selectedCityIndex.isEmpty ? "" : selectdFilterItemIndex.selectedCityIndex.first;
   }
 
   @override
@@ -90,7 +92,13 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
               LoaderClass.showLoadingDialog(context);
             } else if (state is ShowDoctorFilterList) {
               doctorFilterList = state.doctorFilterList;
-              filterMenuCount = state.filterMenuCount;
+              filterMenuCount = (selectdFilterItemIndex.selectedGenderIndex.length) +
+                  (selectdFilterItemIndex.selectedLanguageIndex.length) +
+                  (selectdFilterItemIndex.selectedSpecializationeIndex.length) +
+                  (selectdFilterItemIndex.selectedCityIndex.length) +
+                  (selectdFilterItemIndex.selectedStateIndex.length) +
+                  (selectdFilterItemIndex.selectedHospitalIndex.length) +
+                  selectdFilterItemIndex.selectedYOEIndex.length;
               widget.filterApplied(filterMenuCount, doctorFilterList, selectdFilterItemIndex);
               Navigator.pop(context);
             }
@@ -155,7 +163,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
+                      padding: const EdgeInsets.only(top: 10, bottom: 30, left: 20, right: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -205,6 +213,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                                 BlocProvider.of<DoctorsFilterBloc>(context).add(
                                   ApplyFilters(
                                     selectedItems: selectedItems,
+                                    count: widget.filterMenuCount,
                                   ),
                                 );
                               },

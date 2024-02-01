@@ -307,7 +307,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                               filterMenuCount = count;
                             },
                           ))?.then((value) {
-                            // getAllDatasInDoctorsList(doctorFilterList);
                             setState(() {});
                           });
                         },
