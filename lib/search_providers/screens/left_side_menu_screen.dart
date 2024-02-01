@@ -29,12 +29,10 @@ class _LeftSideMenuWidgetState extends State<LeftSideMenuWidget> {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.only(
-          top: 16,
-        ),
+        padding: const EdgeInsets.only(top: 16),
         width: MediaQuery.of(context).size.width / 2.5,
         decoration: const BoxDecoration(
-          color: Color.fromRGBO(191, 198, 215, 0.20),
+          color: Color.fromRGBO(241, 235, 250, 1),
         ),
         child: ListView(
           physics: const ScrollPhysics(),

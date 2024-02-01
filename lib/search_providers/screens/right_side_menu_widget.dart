@@ -30,14 +30,14 @@ class RightSideMenuWidget extends StatefulWidget {
   final List<String> filterOptions;
   final FilteredSelectedModel filterSelectdModel;
   final int selectedMenuIndex;
-  final Function(String searchQuery, int index) search;
+  final List<String> searchFilterOption;
 
   const RightSideMenuWidget({
     required this.selectedFilterOption,
     required this.filterOptions,
     required this.filterSelectdModel,
     required this.selectedMenuIndex,
-    required this.search,
+    required this.searchFilterOption,
     Key? key,
   }) : super(key: key);
 
@@ -56,11 +56,33 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
   Map<String, List<String>> selectedFilters = {};
   TextEditingController searchController = TextEditingController();
   List<String> searchFilterOption = [];
-  bool isSearch = false;
+  // bool isSearch = false;
 
   @override
   void initState() {
     super.initState();
+    selectedGenderItems = widget.filterSelectdModel.selectedGenderIndex;
+    selectedLanguageItems = widget.filterSelectdModel.selectedLanguageIndex;
+    selectedSpecializationItems = widget.filterSelectdModel.selectedSpecializationeIndex;
+    selectedStateItems = widget.filterSelectdModel.selectedStateIndex;
+    selectedCityItems = widget.filterSelectdModel.selectedCityIndex;
+    selectedHospitalItems = widget.filterSelectdModel.selectedHospitalIndex;
+    selectedYOEItems = widget.filterSelectdModel.selectedYOEIndex;
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant RightSideMenuWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.filterOptions != oldWidget.filterOptions) {
+      searchFilterOption.clear();
+      searchController.clear();
+    }
     selectedGenderItems = widget.filterSelectdModel.selectedGenderIndex;
     selectedLanguageItems = widget.filterSelectdModel.selectedLanguageIndex;
     selectedSpecializationItems = widget.filterSelectdModel.selectedSpecializationeIndex;
@@ -85,7 +107,7 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   child: TextField(
-                    // controller: searchController,
+                    controller: searchController,
                     style: const TextStyle(
                       fontSize: 13,
                       color: Colors.black,
@@ -98,10 +120,10 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
                               (item) => item.toLowerCase().contains(val.toLowerCase()),
                             )
                             .toList();
-                        isSearch = true;
+                        FocusManager.instance.primaryFocus?.unfocus();
                         setState(() {});
                       } else {
-                        isSearch = false;
+                        searchFilterOption.clear();
                         setState(() {});
                       }
                     },
@@ -128,9 +150,9 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
                 padding: const EdgeInsets.only(left: 10, right: 5, top: 10),
                 child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: isSearch ? searchFilterOption.length : widget.filterOptions.length,
+                    itemCount: searchFilterOption.isNotEmpty ? searchFilterOption.length : widget.filterOptions.length,
                     itemBuilder: (BuildContext context, int index) {
-                      String itemName = isSearch ? searchFilterOption[index] : widget.filterOptions[index];
+                      final itemName = searchFilterOption.isNotEmpty ? searchFilterOption[index] : widget.filterOptions[index];
                       return Row(
                         children: [
                           Checkbox(
@@ -160,10 +182,13 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
                             onChanged: (bool? value) {
                               if (value != null) {
                                 if (widget.selectedMenuIndex == 0) {
-                                  selectedGenderItems.clear();
-                                  selectedGenderItems.add(itemName);
+                                  if (!selectedGenderItems.contains(itemName)) {
+                                    selectedGenderItems.clear();
+                                    selectedGenderItems.add(itemName);
+                                  } else {
+                                    selectedGenderItems.remove(itemName);
+                                  }
                                   selectedFilters['gender'] = selectedGenderItems;
-                                  print(selectedFilters);
                                 } else if (widget.selectedMenuIndex == 1) {
                                   if (selectedLanguageItems.isEmpty) {
                                     selectedLanguageItems.add(itemName);
@@ -174,16 +199,28 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
                                   }
                                   selectedFilters['languageSpoken'] = selectedLanguageItems;
                                 } else if (widget.selectedMenuIndex == 2) {
-                                  selectedSpecializationItems.clear();
-                                  selectedSpecializationItems.add(itemName);
+                                  if (!selectedSpecializationItems.contains(itemName)) {
+                                    selectedSpecializationItems.clear();
+                                    selectedSpecializationItems.add(itemName);
+                                  } else {
+                                    selectedSpecializationItems.remove(itemName);
+                                  }
                                   selectedFilters['specialization'] = selectedSpecializationItems;
                                 } else if (widget.selectedMenuIndex == 3) {
-                                  selectedStateItems.clear();
-                                  selectedStateItems.add(itemName);
+                                  if (!selectedStateItems.contains(itemName)) {
+                                    selectedStateItems.clear();
+                                    selectedStateItems.add(itemName);
+                                  } else {
+                                    selectedStateItems.remove(itemName);
+                                  }
                                   selectedFilters['state'] = selectedStateItems;
                                 } else if (widget.selectedMenuIndex == 4) {
-                                  selectedCityItems.clear();
-                                  selectedCityItems.add(itemName);
+                                  if (!selectedCityItems.contains(itemName)) {
+                                    selectedCityItems.clear();
+                                    selectedCityItems.add(itemName);
+                                  } else {
+                                    selectedCityItems.remove(itemName);
+                                  }
                                   selectedFilters['city'] = selectedCityItems;
                                 } else if (widget.selectedMenuIndex == 5) {
                                   if (selectedHospitalItems.isEmpty) {
@@ -195,8 +232,13 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
                                   }
                                   selectedFilters['hospital'] = selectedHospitalItems;
                                 } else if (widget.selectedMenuIndex == 6) {
-                                  selectedYOEItems.clear();
                                   selectedYOEItems.add(itemName);
+                                  if (!selectedYOEItems.contains(itemName)) {
+                                    selectedYOEItems.clear();
+                                    selectedYOEItems.add(itemName);
+                                  } else {
+                                    selectedYOEItems.remove(itemName);
+                                  }
                                   selectedFilters['experience'] = selectedYOEItems;
                                 }
 

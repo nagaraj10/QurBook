@@ -15,6 +15,7 @@ import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/search_providers/models/CityListModel.dart' as cityListModel;
+import 'package:myfhb/search_providers/models/doctor_filter_response_model.dart';
 import 'package:myfhb/search_providers/screens/doctors_filter_screen.dart';
 import 'package:myfhb/search_providers/services/hospital_list_repository.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
@@ -266,37 +267,41 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               height: 50,
               padding: const EdgeInsets.all(3.0),
               decoration: BoxDecoration(
-                border: Border.all(color: Color(CommonUtil().getMyGredientColor())),
+                border: Border.all(color: Color(CommonUtil().getMyPrimaryColor())),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => Navigator.pop(context),
                     child: Text(
                       'Sort',
                       style: TextStyle(
-                        color: Color(CommonUtil().getMyGredientColor()),
+                        color: Color(CommonUtil().getMyPrimaryColor()),
                       ),
                     ),
                   ),
                   // Spacer(),
                   Container(
-                    color: Color(CommonUtil().getMyGredientColor()),
+                    color: Color(CommonUtil().getMyPrimaryColor()),
                     width: 1,
                   ),
-                  // Spacer(),
                   Center(
-                    child: TextButton(
-                      onPressed: () {
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
                         Get.to(DoctorsFilterScreen(
-                          clearAllOnChange: () {},
+                          filterApplied: (int filterMenuCount, List<Entity> doctorFilterList) {
+                            print(filterMenuCount);
+                            print(doctorFilterList);
+                          },
                         ));
                       },
                       child: Text(
                         'Filter',
                         style: TextStyle(
-                          color: Color(CommonUtil().getMyGredientColor()),
+                          color: Color(CommonUtil().getMyPrimaryColor()),
                         ),
                       ),
                     ),

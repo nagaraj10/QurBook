@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/language/repository/LanguageRepository.dart';
+import 'package:myfhb/search_providers/models/doctor_filter_response_model.dart';
 import 'package:myfhb/search_providers/models/doctors_list_response.dart';
 import 'package:myfhb/search_providers/screens/doctor_filter_request_model.dart';
 import 'package:myfhb/search_providers/screens/right_side_menu_widget.dart';
@@ -19,7 +20,7 @@ class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
     on<GetDoctorSpecializationList>(_onGetDoctorSpecializationList);
   }
 
-  List<DoctorsListResponse> doctorSpecialization = [];
+  List<Entity> doctorFilterList = [];
 
   Future<FutureOr<void>> _onApplyFilters(ApplyFilters event, emit) async {
     final filters = <Map<String, dynamic>>[];
@@ -54,13 +55,10 @@ class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
         };
         if (values.length == 1) {
           filter['value'] = values.first;
-        } else {
-          filter['value'] = values;
+          filters.add(filter);
         }
-        filters.add(filter);
       }
     });
-
     final doctorFilterRequestModel = DoctorFilterRequestModel(
       page: 1,
       size: 10,
@@ -69,13 +67,20 @@ class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
     );
     final response = await ApiBaseHelper().doctorFilterList('doctor/service-request/list', json.encode(doctorFilterRequestModel));
     if (response['isSuccess']) {
-      response['result'].forEach(
-        (f) {
-          doctorSpecialization.add(DoctorsListResponse.fromJson(f));
-        },
-      );
-      print(doctorSpecialization);
+      if (response['result']['data']["isSuccess"]) {
+        response['result']['data']["entities"].forEach(
+          (f) {
+            doctorFilterList.add(Entity.fromJson(f));
+          },
+        );
+      }
+
+      print(doctorFilterList);
     }
+    emit(ShowDoctorFilterList(
+      doctorFilterList: doctorFilterList,
+      filterMenuCount: filters.length,
+    ));
   }
 
   Future<FutureOr<void>> _onGetDoctorSpecializationList(GetDoctorSpecializationList event, emit) async {

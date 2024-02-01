@@ -15,3 +15,12 @@ class ShowMenuItemList extends DoctorsFilterState {
     required this.selectedIndex,
   });
 }
+
+class ShowDoctorFilterList extends DoctorsFilterState {
+  final List<Entity> doctorFilterList;
+  final int filterMenuCount;
+  ShowDoctorFilterList({
+    required this.doctorFilterList,
+    required this.filterMenuCount,
+  });
+}

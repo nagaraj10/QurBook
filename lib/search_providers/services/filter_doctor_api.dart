@@ -13,14 +13,14 @@ class FilterDoctorApi {
     final cityList = <City>[];
     final stateBasedCityList = <City>[];
     final uniqueCity = <String>{};
-    final response = await ApiBaseHelper().getCityList("city");
+    final response = await ApiBaseHelper().getCityList('city');
     if (response['isSuccess']) {
       cityList.clear();
       for (var code in response['result']) {
-        if (code["state"]["name"] == stateName) {
-          stateBasedCityList.add(City(name: code["name"]));
+        if (code['state']['name'] == stateName) {
+          stateBasedCityList.add(City(name: code['name']));
         } else {
-          cityList.add(City(name: code["name"]));
+          cityList.add(City(name: code['name']));
         }
       }
     }
@@ -35,17 +35,31 @@ class FilterDoctorApi {
 
   Future<List<String>> getStateList(String cityName) async {
     final uniqueState = <String>{};
-    List<s.State> stateList = <s.State>[];
+    final stateList = <s.State>[];
+    final cityBasedStateList = <s.State>[];
+
+    //
+    // for (final city in stateBasedCityList.isEmpty ? cityList : stateBasedCityList) {
+    //   if (city.name != null && city.name!.isNotEmpty) {
+    //     uniqueCity.add(city.name!);
+    //   }
+    // }
 
     final response = await ApiBaseHelper().getStateList('state');
     if (response['isSuccess']) {
-      response['result'].forEach(
-        (f) {
-          stateList.add(s.State.fromJson(f));
-        },
-      );
+      stateList.clear();
+      for (var code in response['result']) {
+        for (var city in code['cityCollection']) {
+          if (city['name'] == cityName) {
+            cityBasedStateList.add(s.State(name: code['name']));
+          } else {
+            stateList.add(s.State(name: code['name']));
+          }
+        }
+      }
     }
-    for (final stateName in stateList) {
+
+    for (final stateName in cityBasedStateList.isNotEmpty ? cityBasedStateList : stateList) {
       if (stateName.name != null && stateName.name!.isNotEmpty) {
         uniqueState.add(stateName.name!);
       }
@@ -78,14 +92,33 @@ class FilterDoctorApi {
     const limit = 50;
     const skip = 1;
     final hospitalList = <String>[];
+    final stateBasedHospitalList = <String>[];
+    final uniqueHospital = <String>{};
     var response = await ApiBaseHelper().getHospitalListFromSearchNew(
         "${query.qr_patient_update_default}${query.qr_list}${query.qr_healthOrganizationList}${query.qr_skip}${skip.toString()}${query.qr_And}${query.qr_limit}${limit.toString()}${query.qr_And}${query.qr_halthOrganization}${Constants.STR_HEALTHORG_HOSPID}");
     final hospitalListResponse = HospitalsSearchListResponse.fromJson(response);
     for (final hospital in hospitalListResponse.result ?? []) {
-      if (hospital.cityName == cityName || hospital.stateName == stateName) {
+      if (cityName.isNotEmpty && stateName.isNotEmpty) {
+        if (hospital.cityName == cityName && hospital.stateName == stateName) {
+          stateBasedHospitalList.add(hospital.healthOrganizationName);
+        }
+      } else if (cityName.isNotEmpty) {
+        if (hospital.cityName == cityName) {
+          stateBasedHospitalList.add(hospital.healthOrganizationName);
+        }
+      } else if (stateName.isNotEmpty) {
+        if (hospital.stateName == stateName) {
+          stateBasedHospitalList.add(hospital.healthOrganizationName);
+        }
+      } else {
         hospitalList.add(hospital.healthOrganizationName);
       }
     }
-    return hospitalList;
+    for (final city in stateBasedHospitalList.isEmpty ? hospitalList : stateBasedHospitalList) {
+      if (city.isNotEmpty) {
+        uniqueHospital.add(city);
+      }
+    }
+    return uniqueHospital.toList();
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:myfhb/search_providers/models/doctor_filter_response_model.dart';
 import 'package:myfhb/search_providers/screens/left_side_menu_screen.dart';
 import 'package:myfhb/search_providers/screens/right_side_menu_widget.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
@@ -9,13 +10,13 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import '../doctors_filter_bloc/doctors_filter_bloc.dart';
 
 class DoctorsFilterScreen extends StatefulWidget {
-  final Function() clearAllOnChange;
+  final Function(int filterMenuCount, List<Entity> doctorFilterList) filterApplied;
   final List<int> selectedBrandOption;
   final List<int> selectedCategoryOption;
 
   const DoctorsFilterScreen({
     super.key,
-    required this.clearAllOnChange,
+    required this.filterApplied,
     this.selectedBrandOption = const [],
     this.selectedCategoryOption = const [],
   });
@@ -48,8 +49,11 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
     selectedHospitalIndex: [],
     selectedYOEIndex: [],
   );
+  List<Entity> doctorFilterList = [];
+  int filterMenuCount = 0;
 
   Map<String, List<String>> selectedItems = {};
+  List<String> searchFilterOption = [];
 
   @override
   Widget build(BuildContext context) => BlocProvider(
@@ -64,6 +68,10 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
               selectedMenu = state.selectedMenu;
               menuItems = state.menuItemList;
               selectedIndex = state.selectedIndex;
+            } else if (state is ShowDoctorFilterList) {
+              doctorFilterList = state.doctorFilterList;
+              filterMenuCount = state.filterMenuCount;
+              widget.filterApplied(filterMenuCount, doctorFilterList);
             }
           },
           child: BlocBuilder<DoctorsFilterBloc, DoctorsFilterState>(
@@ -100,6 +108,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                           },
                         ),
                         RightSideMenuWidget(
+                          searchFilterOption: [],
                           filterOptions: menuItems,
                           selectedMenuIndex: selectedIndex,
                           filterSelectdModel: selectdFilterItemIndex,
@@ -109,13 +118,12 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                             String city,
                             String state,
                           ) {
-                            selectedItems = value;
+                            selectedItems.addAll(value);
                             selectedState = state;
                             selectedCity = city;
                             selectdFilterItemIndex = selectedIndex;
                             setState(() {});
                           },
-                          search: (String searchQuery, int index) {},
                         )
                       ],
                     ),
@@ -133,44 +141,44 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                           Expanded(
                             child: InkWell(
                               onTap: () async {
-                                Navigator.pop(context);
-                                // widget.filteredSelectedModel(
-                                //   FilteredSelectedModel(
-                                //     selectedBrandFilter: selectedBrandOption,
-                                //     selectedCategoryFilter: selectedCategoryOption,
-                                //     selectedBrandFilterId: selectedBrandOptionId,
-                                //     selectedCategoryFilterId: selectedCategoryOptionId,
-                                //   ),
-                                // );
+                                selectedItems.clear();
+                                selectedState = "";
+                                selectedCity = "";
+                                selectdFilterItemIndex = FilteredSelectedModel(
+                                  selectedGenderIndex: [],
+                                  selectedLanguageIndex: [],
+                                  selectedSpecializationeIndex: [],
+                                  selectedStateIndex: [],
+                                  selectedCityIndex: [],
+                                  selectedHospitalIndex: [],
+                                  selectedYOEIndex: [],
+                                );
+                                setState(() {});
                               },
                               child: Container(
                                 height: 48,
                                 padding: const EdgeInsets.all(10),
-                                decoration: ShapeDecoration(
-                                  shape: RoundedRectangleBorder(
-                                    side: const BorderSide(
-                                      width: 1,
-                                      color: Color(0xFFC8CED9),
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Color(CommonUtil().getMyPrimaryColor()),
                                   ),
+                                  borderRadius: BorderRadius.all(Radius.circular(50)),
                                 ),
-                                child: const Center(
+                                child: Center(
                                   child: Text(
                                     'Reset',
+                                    style: TextStyle(
+                                      color: Color(CommonUtil().getMyPrimaryColor()),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            width: 10,
-                          ),
+                          const SizedBox(width: 10),
                           Expanded(
                             child: InkWell(
                               onTap: () {
-                                // Navigator.pop(context);
-                                // widget.clearAllOnChange();
                                 BlocProvider.of<DoctorsFilterBloc>(context).add(
                                   ApplyFilters(
                                     selectedItems: selectedItems,
@@ -206,21 +214,3 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
         ),
       );
 }
-
-// filterMenuItemList(int selectedIndex, BuildContext context) {
-//   if (selectedIndex == 0) {
-//     return ["Any", "Male", "Female"];
-//   } else if (selectedIndex == 1) {
-//     return ["Tamil", "English", "Hindi"];
-//   } else if (selectedIndex == 2) {
-//     // BlocProvider.of<DoctorsFilterBloc>(context).add(GetDoctorSpecializationList());
-//   } else if (selectedIndex == 3) {
-//     return ["Tamil", "English", "Hindi"];
-//   } else if (selectedIndex == 4) {
-//     return ["Any", "Male", "Female"];
-//   } else if (selectedIndex == 5) {
-//     return ["Tamil", "English", "Hindi"];
-//   } else if (selectedIndex == 6) {
-//     return ["0 to 5 years", "5 to 10 years", "10 to 20 years", "20+ years"];
-//   }
-// }
