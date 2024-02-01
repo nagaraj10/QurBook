@@ -1,31 +1,35 @@
+// ignore_for_file: public_member_api_docs
+
 import 'dart:async';
-import 'dart:convert';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/language/repository/LanguageRepository.dart';
-import 'package:myfhb/search_providers/models/doctor_list_response_new.dart';
-import 'package:myfhb/search_providers/screens/doctor_filter_request_model.dart';
-import 'package:myfhb/search_providers/services/filter_doctor_api.dart';
+
+import '../../common/CommonUtil.dart';
+import '../../constants/fhb_constants.dart';
+import '../../language/repository/LanguageRepository.dart';
+import '../models/doctor_list_response_new.dart';
+import '../screens/doctor_filter_request_model.dart';
+import '../services/filter_doctor_api.dart';
+
 part 'doctors_filter_event.dart';
 part 'doctors_filter_state.dart';
 
 // Constants used for filtering
-const _experience = "experience";
-const _20Years = "20+ years";
-const _field = "field";
+const _experience = 'experience';
+const _20Years = '20+ years';
+const _field = 'field';
 const _type = 'type';
-const _object = "object";
-const _value = "value";
-const _gender = "gender";
-const _any = "Any";
-const _hospital = "hospital";
-const _languageSpoken = "languageSpoken";
-const _array = "array";
-const _string = "string";
-const _min = "min";
-const _max = "max";
+const _object = 'object';
+const _value = 'value';
+const _gender = 'gender';
+const _any = 'Any';
+const _hospital = 'hospital';
+const _languageSpoken = 'languageSpoken';
+const _array = 'array';
+const _string = 'string';
+const _min = 'min';
+const _max = 'max';
 
 // Bloc class for managing doctors filtering
 class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
@@ -36,6 +40,7 @@ class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
 
   // Handles the ApplyFilters event
   Future<FutureOr<void>> _onApplyFilters(ApplyFilters event, emit) async {
+    emit(ShowProgressBar());
     final filters = <Map<String, dynamic>>[];
     event.selectedItems.forEach((field, values) {
       if (field == _experience) {
@@ -67,7 +72,8 @@ class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
         // Handling other filters
         final filter = <String, dynamic>{
           _field: field,
-          _type: field == _hospital || field == _languageSpoken ? _array : _string,
+          _type:
+              field == _hospital || field == _languageSpoken ? _array : _string,
         };
         if (values.length == 1) {
           filter[_value] = values.first;
@@ -83,16 +89,19 @@ class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
       filters: filters.map((json) => Filter.fromJson(json)).toList(),
     );
     // Fetch filtered doctor list
-    final doctorFilterList = await FilterDoctorApi().getFilterDoctorList(doctorFilterRequestModel);
+    final doctorFilterList =
+        await FilterDoctorApi().getFilterDoctorList(doctorFilterRequestModel);
 
     emit(ShowDoctorFilterList(
       doctorFilterList: doctorFilterList,
       filterMenuCount: filters.length,
     ));
+    emit(HideProgressBar());
   }
 
   // Handles the GetDoctorSpecializationList event
-  Future<FutureOr<void>> _onGetDoctorSpecializationList(GetDoctorSpecializationList event, emit) async {
+  Future<FutureOr<void>> _onGetDoctorSpecializationList(
+      GetDoctorSpecializationList event, emit) async {
     emit(ShowProgressBar());
     // Based on selected index, fetch and emit appropriate menu items
     if (event.selectedIndex == 0) {
@@ -109,10 +118,13 @@ class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
       try {
         var languageModelList = await LanguageRepository().getLanguage();
         if (languageModelList.result != null) {
-          for (var languageResultObj in languageModelList.result!) {
-            if (languageResultObj.referenceValueCollection != null && languageResultObj.referenceValueCollection!.isNotEmpty) {
-              for (var referenceValueCollection in languageResultObj.referenceValueCollection!) {
-                if (referenceValueCollection.name != null && referenceValueCollection.code != null) {
+          for (final languageResultObj in languageModelList.result!) {
+            if (languageResultObj.referenceValueCollection != null &&
+                languageResultObj.referenceValueCollection!.isNotEmpty) {
+              for (final referenceValueCollection
+                  in languageResultObj.referenceValueCollection!) {
+                if (referenceValueCollection.name != null &&
+                    referenceValueCollection.code != null) {
                   languageDropdownList.add(referenceValueCollection.name!);
                 }
               }
@@ -131,7 +143,8 @@ class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
       emit(HideProgressBar());
     } else if (event.selectedIndex == 2) {
       // Doctor specialization filter
-      final uniqueSpecializations = await FilterDoctorApi().getDoctorSpecializationList(event.searchText);
+      final uniqueSpecializations =
+          await FilterDoctorApi().getDoctorSpecializationList(event.searchText);
       emit(ShowMenuItemList(
         menuItemList: uniqueSpecializations.toList(),
         selectedMenu: event.selectedMenu,
