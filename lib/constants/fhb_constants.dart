@@ -14,7 +14,6 @@ const String testUSURL = "https://ustestaktokskpped.vsolgmi.com/api/";
 
 const String refreshTokenEndPoint = 'auth/refresh-token';
 
-
 const String appQurbookBundleId = 'com.ventechsolutions.myFHB';
 const String appQurhomeBundleId = 'com.qurhealth.qurbook.us';
 const String appQurdayBundleId = 'com.qurhealth.patient.qurdemo';
@@ -114,8 +113,7 @@ const String STR_HOSPITALDOCUMENT = 'Hospital Documents';
 const String KEY_MEMBERSHIP = 'membership';
 const String GOLD_MEMBERSHIP = 'CORPGOLDQURHL';
 const String KEY_DYNAMIC_URL = 'dynamicURL';
-const String SUCCESSFULLY_DELETED =
-    'User account has been successfully deleted';
+const String SUCCESSFULLY_DELETED = 'User account has been successfully deleted';
 const String OTP_SUCCESS = 'One Time Password sent successfully';
 const String STR_KEY_HEIGHT = 'height';
 const String STR_KEY_WEIGHT = 'weight';
@@ -144,13 +142,10 @@ const String privacy_policy = 'Privacy policy';
 const String help_support = 'Help and support';
 const String STR_MSG_SIGNUP = 'Please signup and then try again';
 const String STR_MSG_SIGNUP1 = 'Please signup then try again';
-const String STR_VERIFY_OTP =
-    'Please complete your registration process, by generating and verifying the One Time Password';
-const String STR_VERIFY_USER =
-    'Please complete your Sign Up process, by generating and verifying the One Time Password';
+const String STR_VERIFY_OTP = 'Please complete your registration process, by generating and verifying the One Time Password';
+const String STR_VERIFY_USER = 'Please complete your Sign Up process, by generating and verifying the One Time Password';
 const String KEY_VOICE_ID = 'Category_ID_VOICE';
-const String STR_OTPMISMATCHED =
-    'Requested operation forbidden. One Time Password Mismatched';
+const String STR_OTPMISMATCHED = 'Requested operation forbidden. One Time Password Mismatched';
 const String STR_OTPMISMATCHED_STRING = 'One Time Password Mismatched';
 const String KEY_INTRO_SLIDER = 'keyIntroSlider';
 const String STR_FEEDBACKS = 'Feedback';
@@ -163,10 +158,8 @@ const String allowDeviceRecognition = 'allowDeviceRecognition';
 const String allowDigitRecognition = 'allowDigitRecognition';
 
 const String audioFileType = 'audio/mp3';
-const String MSG_VERIFYEMAIL_VERIFIED =
-    'Email is already verified by other user.';
-const String MSG_VERIFYEMAIL_SUCCESS =
-    'Verification code have been sent to the email';
+const String MSG_VERIFYEMAIL_VERIFIED = 'Email is already verified by other user.';
+const String MSG_VERIFYEMAIL_SUCCESS = 'Verification code have been sent to the email';
 const String COUNTRY_CODE = 'CountryCode';
 const String MSG_EMAIL_OTP_VERIFIED = 'Verified';
 const String PROFILE_EMAIL = 'Email';
@@ -182,20 +175,15 @@ const String strKeyAlertChildID = 'isFamilyALertChildID';
 const String KEY_DASHBOARD_BANNER = 'dashboardBanner';
 const String MSG_NO_CAMERA_VOICERECORDS = 'No Camera Option Available for';
 const String INTRO_SLIDE_TITLE_1 = 'Click ‘n’ Store';
-const String INTRO_SLIDE_DESC_1 =
-    ' You are just a click away from a healthy family! Start capturing medical records and readings at the touch of a button. ';
+const String INTRO_SLIDE_DESC_1 = ' You are just a click away from a healthy family! Start capturing medical records and readings at the touch of a button. ';
 const String INTRO_SLIDE_TITLE_2 = 'Quick ‘n’ Safe';
-const String INTRO_SLIDE_DESC_2 =
-    'Go paperless! Save your Family Health records in a secured digital vault.  ';
+const String INTRO_SLIDE_DESC_2 = 'Go paperless! Save your Family Health records in a secured digital vault.  ';
 const String INTRO_SLIDE_TITLE_3 = 'Tap ‘n’ Talk';
-const String INTRO_SLIDE_DESC_3 =
-    'Maya, an intelligent virtual health assistant, with conversational capabilities, sets up pill reminders, doctor appointments, among other smart tasks. ';
+const String INTRO_SLIDE_DESC_3 = 'Maya, an intelligent virtual health assistant, with conversational capabilities, sets up pill reminders, doctor appointments, among other smart tasks. ';
 const String INTRO_SLIDE_TITLE_4 = 'Add ‘n’ Tag';
-const String INTRO_SLIDE_DESC_4 =
-    'Add your doctors and get personalized private consultations.';
+const String INTRO_SLIDE_DESC_4 = 'Add your doctors and get personalized private consultations.';
 const String INTRO_SLIDE_TITLE_5 = 'Share ‘n’ Care ';
-const String INTRO_SLIDE_DESC_5 =
-    'Securily and Privately share your medical records with your family,  doctors and caregivers';
+const String INTRO_SLIDE_DESC_5 = 'Securily and Privately share your medical records with your family,  doctors and caregivers';
 const String KEY_SHOWCASE_DASHBOARD = 'KEY_SHOWCASE_DASHBOARD';
 const String KEY_SHOWCASE_HOMESCREEN = 'KEY_SHOWCASE_HOMESCREEN';
 const String KeyShowIntroScreens = 'KeyShowIntroScreens';
@@ -217,81 +205,55 @@ const String CAMERA_DESC = 'Start capturing health records right away!';
 const String CAMERA_TITLE = 'Camera';
 const String VOICE_DESC = 'Add personal voice notes to your records';
 const String VOICE_TITLE = 'Voice Record';
-const String GALLERY_DESC =
-    'And those health records from gallery, you can import them!';
+const String GALLERY_DESC = 'And those health records from gallery, you can import them!';
 const String GALLERY_TITLE = 'Gallery';
-const String ATTACH_DESC =
-    'You can pick health records from phone file storage as well';
+const String ATTACH_DESC = 'You can pick health records from phone file storage as well';
 const String ATTACH_TITLE = 'Attachments';
-const String MULTI_IMG_DESC =
-    'You can also switch from single to multiple capture and vice versa';
+const String MULTI_IMG_DESC = 'You can also switch from single to multiple capture and vice versa';
 const String MULTI_IMG_TITLE = 'Multiple Images';
-const String SWITCH_CATEGORY_DESC =
-    'You can switch categories even while you capture health records';
+const String SWITCH_CATEGORY_DESC = 'You can switch categories even while you capture health records';
 const String SWITCH_CATEGORY_TITLE = 'Switch Category';
 const String KEY_CATEGORYLIST_VISIBLE = 'categoryListDisplay';
 const String MAYA_TITLE = 'Maya';
-const String MAYA_DESC =
-    'Hey there\! I am Maya, Your personalized voice based health assistant';
+const String MAYA_DESC = 'Hey there\! I am Maya, Your personalized voice based health assistant';
 const String PROVIDERS_DESC = 'Manage all your healthcare providers from here';
 const String PROVIDERS_TITLE = 'My Providers';
 const String FAMILY_DESC = 'View and manage your family members profile';
 const String FAMILY_TITLE = 'My Family';
 const String RECORDS_DESC = 'You can get to view all your health records';
 const String RECORDS_TITLE = 'My Records';
-const String NO_DATA_DASHBOARD =
-    'Personalize the environment. \n Upload your favorite cover image..';
-const String NO_DATA_DOCTOR =
-    'Hey, Doctor\'s directory looks empty !! \n Add them now.';
-const String NO_DATA_HOSPITAL =
-    'Hello, Hospital listing looks empty !! \n Add it now.';
-const String NO_DATA_LAB =
-    'Hey, You may need Labs contact coordinates !! \n Add it now.';
-const String NO_DATA_FAMIY =
-    'Looks like you haven\'t added your family members. \n Add them right away.';
-const String NO_DATA_FAMIY_CLONE =
-    'Looks like you haven\'t added your family members.';
-const String NO_DATA_SCHEDULES =
-    'Never miss any schedule. \n Add it to your calendar and get notified.';
-const String NO_DATA_PRESCRIPTION =
-    'Don\'t want to type? \n Take a picture or upload from gallery \nto add prescriptions.';
-const String NO_DATA_DEVICES =
-    'Click \'n\' go (or) tell \"Sheela\" \nand it will record for you.';
+const String NO_DATA_DASHBOARD = 'Personalize the environment. \n Upload your favorite cover image..';
+const String NO_DATA_DOCTOR = 'Hey, Doctor\'s directory looks empty !! \n Add them now.';
+const String NO_DATA_HOSPITAL = 'Hello, Hospital listing looks empty !! \n Add it now.';
+const String NO_DATA_LAB = 'Hey, You may need Labs contact coordinates !! \n Add it now.';
+const String NO_DATA_FAMIY = 'Looks like you haven\'t added your family members. \n Add them right away.';
+const String NO_DATA_FAMIY_CLONE = 'Looks like you haven\'t added your family members.';
+const String NO_DATA_SCHEDULES = 'Never miss any schedule. \n Add it to your calendar and get notified.';
+const String NO_DATA_PRESCRIPTION = 'Don\'t want to type? \n Take a picture or upload from gallery \nto add prescriptions.';
+const String NO_DATA_DEVICES = 'Click \'n\' go (or) tell \"Sheela\" \nand it will record for you.';
 const String NO_DATA_LAB_REPORT = 'Upload your report or click \'n\' go';
-const String NO_DATA_MEDICAL_REPORT =
-    'Sure! Upload your medical reports \n or click \'n\' go';
-const String NO_DATA_BILLS =
-    'Have medical bills in your wallet?? \n Upload them now and go paperless !!';
-const String NO_ID_DOCS =
-    'Click the camera icon or upload ID document from gallery';
-const String NO_VOICE_RECRODS =
-    'Just add personal voice notes \nto your medical records.';
-const String NO_DATA_OTHERS =
-    'Ofcourse! Add files here to store any other medical records';
+const String NO_DATA_MEDICAL_REPORT = 'Sure! Upload your medical reports \n or click \'n\' go';
+const String NO_DATA_BILLS = 'Have medical bills in your wallet?? \n Upload them now and go paperless !!';
+const String NO_ID_DOCS = 'Click the camera icon or upload ID document from gallery';
+const String NO_VOICE_RECRODS = 'Just add personal voice notes \nto your medical records.';
+const String NO_DATA_OTHERS = 'Ofcourse! Add files here to store any other medical records';
 const String COVER_IMG_DESC = 'Add style. \nTap here to add your favorite DP.';
 const String COVER_IMG_TITLE = 'Cover Image';
-const String HospitalDescription =
-    'Choose your Hospital and Tap to see the care plan offered by them';
-const String SubscribeDescription =
-    'Tap on subscribe button to enroll for the care plan and complete Payment Process';
-const String MyPlanCard =
-    'View the list of care plans that you’ve subscribed and tap on the plan name for more Details';
+const String HospitalDescription = 'Choose your Hospital and Tap to see the care plan offered by them';
+const String SubscribeDescription = 'Tap on subscribe button to enroll for the care plan and complete Payment Process';
+const String MyPlanCard = 'View the list of care plans that you’ve subscribed and tap on the plan name for more Details';
 const String SubscribedPlans = 'Subscribed Plans';
 const String Subscribe = 'Subscribe';
-const String GoToRegimentDescription =
-    'Tap here to see your updated Regimen for each Plan’s subscription';
+const String GoToRegimentDescription = 'Tap here to see your updated Regimen for each Plan’s subscription';
 const String SymptomsDescription = 'Tap here to view Symptoms list';
-const String DailyScheduleDescription =
-    'Tap here to make changes to the order of activities';
+const String DailyScheduleDescription = 'Tap here to make changes to the order of activities';
 const String Schedule = 'Schedule';
 const String RegimenSettings = 'Settings';
 const String LogActivity = 'Log Activity';
-const String CardTap =
-    'Tap on the card or Tick mark on it to mark your activity accomplishment';
+const String CardTap = 'Tap on the card or Tick mark on it to mark your activity accomplishment';
 const String Symptoms = 'Symptoms';
 const String LogSymptoms = 'Log Symptoms';
-const String symptomCardTap =
-    'Tap on the card or Tick mark on it to log your Symptoms';
+const String symptomCardTap = 'Tap on the card or Tick mark on it to log your Symptoms';
 const String DailyRegimen = 'Daily Regimen';
 const String HospitalSelection = 'Hospital Selection';
 //Prefrence key for family and provider
@@ -307,8 +269,7 @@ const String KEY_FAMILYREL = 'keyFamilyrel';
 //const String Auth_token='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb3VudHJ5Q29kZSI6Iis5MSIsImV4cGlyeURhdGUiOjE1OTQ0OTI1OTI1MjYsInJvbGVJZCI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsInNlc3Npb25EYXRlIjoxNTk0NDg4OTkyNTI2LCJzZXNzaW9uUm9sZXMiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJzb3VyY2VJbmZvIjp7InN1YlNvdXJjZUlkIjoiMjRlMTViZTMtOTY5NS00NGY3LTgyMjktMzRmZjRlZjgxMzk2IiwiZW50aXR5SWQiOiI5MmJkYzdiMS1kNTAwLTQ5MDEtYmZlOC04ZTE5YTA5ZmZhZDQiLCJyb2xlSWQiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJpc0RldmljZSI6ZmFsc2UsImRldmljZUlkIjoiIn0sInN1YmplY3QiOiI5MTc2MTE3ODc4IiwidXNlcklkIjoiYmRlMTQwZGItMGZmYy00YmU2LWI0YzAtNWU0NGI5ZjU0NTM1IiwiaWF0IjoxNTk0NDg4OTkyLCJleHAiOjE1OTgwODg5OTIsImF1ZCI6ImUxMzAxOWE0LTE0NDYtNDQxYi04YWYxLTcyYzQwYzcyNTU0OCIsImlzcyI6IkZIQiIsImp0aSI6ImE0ZTQ4MzY3LTM0M2EtNDIzNC1hYjEyLTgzMzEyMTZkZDUyYSJ9.qqSTMlm5UQKJ5vrCMQQ2NiPCM9lU8-5OStHAj1Q2Vfk';
 //const String Auth_token_slots='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb3VudHJ5Q29kZSI6Iis5MSIsImV4cGlyeURhdGUiOjE1OTQ1MjkzNzMzNDAsInJvbGVJZCI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsInNlc3Npb25EYXRlIjoxNTk0NTI1NzczMzQwLCJzZXNzaW9uUm9sZXMiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJzb3VyY2VJbmZvIjp7InN1YlNvdXJjZUlkIjoiMjRlMTViZTMtOTY5NS00NGY3LTgyMjktMzRmZjRlZjgxMzk2IiwiZW50aXR5SWQiOiI5MmJkYzdiMS1kNTAwLTQ5MDEtYmZlOC04ZTE5YTA5ZmZhZDQiLCJyb2xlSWQiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJpc0RldmljZSI6ZmFsc2UsImRldmljZUlkIjoiIn0sInN1YmplY3QiOiI5ODQwOTcyMjc1IiwidXNlcklkIjoiYWQ1ZDJkMzctNGVhZi00ZDkxLTk5ZTgtYTA3ODgxZDcyNjQ5IiwiaWF0IjoxNTk0NTI1NzczLCJleHAiOjE1OTgxMjU3NzMsImF1ZCI6ImUxMzAxOWE0LTE0NDYtNDQxYi04YWYxLTcyYzQwYzcyNTU0OCIsImlzcyI6IkZIQiIsImp0aSI6ImExNDUxMzNlLTA4NTctNGQyMi1iNTAwLWY3MjEyMDlmNmI5YiJ9.MGP2eiAC4pYgMsHzFig1nowJObJ9TSfjPLbuRJVQciw';
 const String ADD_NEW_FAMILY_MEMBER = 'Add new family member';
-const unassignedMember =
-    'You are not assigned as a caregiver to any family member.';
+const unassignedMember = 'You are not assigned as a caregiver to any family member.';
 
 const String keyDoctor = 'doctor';
 const String keyHospital = 'hospital';
@@ -333,8 +294,7 @@ const String Receive_OTP = 'Didn\'t receive the One Time Password?';
 const String enter_otp = 'Please enter the received One Time Password';
 const String Successfully = 'Successfully';
 const String OTP_Matched = 'One Time Password matched successfully';
-const String Family_Member_Added =
-    'Your family member has been added successfully';
+const String Family_Member_Added = 'Your family member has been added successfully';
 const String VerifyEmail = 'Tap to verify Email address';
 const String otp_assets = 'assets/icons/otp_icon.png';
 const String planDownload = 'assets/icons/file_download.png';
@@ -345,7 +305,7 @@ const String ic_gold_member = 'assets/user/gold-member.png';
 
 //Voice Cloning
 const String icVoicePlay = 'assets/voice_clone/play_icon.svg';
-const String icVoiceMic= 'assets/voice_clone/mic_icon.svg';
+const String icVoiceMic = 'assets/voice_clone/mic_icon.svg';
 const String icVoicePause = 'assets/voice_clone/pause_icon.svg';
 const String icVoiceStop = 'assets/voice_clone/stop_icon.svg';
 
@@ -372,8 +332,7 @@ const String add_providers = 'add_providers';
 const String choose_address = 'Please choose the address';
 const String cancer_speciality = 'Cancer Speciality Hospital';
 const String apollo_email = 'apollo@sample.com';
-const String preferred_descrip =
-    'We allow only one preferred provider for a user. To remove your preference, please set another Provider as Preferred.';
+const String preferred_descrip = 'We allow only one preferred provider for a user. To remove your preference, please set another Provider as Preferred.';
 
 //ICONS LINK
 const String NOTES_ICON_LINK = 'assets/icons/notes.png';
@@ -428,8 +387,7 @@ const String asgurduserID = '49cdc4be-afd9-419e-b3f9-1bd35207c74f';
 
 const String activateGF = 'activateGF'; // activate googleFit
 const String isFirstTym = 'FirsTym';
-const String isHealthFirstTime =
-    'HealthFirstTime'; // Activating HealthKit For First Time
+const String isHealthFirstTime = 'HealthFirstTime'; // Activating HealthKit For First Time
 const String bpMon = 'bpMon';
 const String glMon = 'GLMon';
 const String oxyMon = 'OxyMon';
@@ -459,8 +417,7 @@ const String PLEASE_ADD_COMMENTS = 'Please add comments';
 const String COMMENTS = 'Comments';
 const String strEmergency = 'Escalate this as emergency';
 
-const String strReasonDiabling =
-    'Are you sure you want to disable the activity?';
+const String strReasonDiabling = 'Are you sure you want to disable the activity?';
 const String strReasonDiablingHint = 'Reasons for disabling the activity';
 const String DISABLE = 'Disable';
 const String strDisableText = 'Disabled by the patient';
@@ -533,54 +490,41 @@ const String SHEELA_LANG = 'sheela_lang';
 const String KIOSK_SHEELA = 'kiosk to sheela communication';
 const String KIOSK_SHEELA_UNREAD_MSG = 'Unread messages';
 
-const String STR_FAMILY_ADD_MSG =
-    'Your doctor will reach the appointee through your app (name) since the user does not have MyFHB app downloaded';
+const String STR_FAMILY_ADD_MSG = 'Your doctor will reach the appointee through your app (name) since the user does not have MyFHB app downloaded';
 
 const String MSG_NO_VOICERECORDS = 'Voice record cannot be added for';
 const String KEY_USERID_BOOK = 'userID_BOOK';
-const String ERR_MSG_RECORD_CREATE =
-    'Unable to save the information as the server rejected the message. Please contact Support';
+const String ERR_MSG_RECORD_CREATE = 'Unable to save the information as the server rejected the message. Please contact Support';
 
-const String STR_USER_PROFILE_SETTING_ALREADY =
-    'User Profile Setting is already exists for this User.';
+const String STR_USER_PROFILE_SETTING_ALREADY = 'User Profile Setting is already exists for this User.';
 const String STR_ARE_SURE = 'Are you sure?';
 const String STR_SURE_CANCEL_PAY = 'Do you want to cancel the payment';
 const String STR_UPDATE_AVAIL = 'We\'ve Upgraded!';
-const String STR_UPDATE_CONTENT =
-    'A newer version of the app is available. Please update to continue.';
+const String STR_UPDATE_CONTENT = 'A newer version of the app is available. Please update to continue.';
 
-const String strQurhomeDefaultUI =
-    'Do you want to retain QurHome as your Default landing screen';
+const String strQurhomeDefaultUI = 'Do you want to retain QurHome as your Default landing screen';
 const String STR_UPDATE_NOW = 'Update Now';
 const String STR_LATER = 'Later';
 const String STR_FIREBASE_REMOTE_KEY = 'force_update_current_version_myfhb';
-const String STR_FIREBASE_REMOTE_KEY_IOS =
-    'force_update_current_version_myfhb_ios';
+const String STR_FIREBASE_REMOTE_KEY_IOS = 'force_update_current_version_myfhb_ios';
 const String STR_IS_FORCE = 'is_force_update_myfhb';
 const String STR_IS_FORCE_IOS = 'is_force_update_myfhb_ios';
 const String QURBOOK_ANDROID = 'qurbookandroid';
 const String QURBOOK_iOS = 'qurbookios';
 
 const APP_STORE_URL = 'https://apps.apple.com/in/app/qurbook/id1526444520';
-const PLAY_STORE_URL =
-    'https://play.google.com/store/apps/details?id=com.ventechsolutions.myFHB';
+const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.ventechsolutions.myFHB';
 
 const String STR_HOS_ID = 'Hospital IDs';
 const String STR_OTHER_ID = 'Other IDs';
 const String STR_INSURE_ID = 'Insurance IDs';
-const String noRegimentScheduleData =
-    'No Activities data available for the selected date';
-const String noRegimentSymptomsData =
-    'No Symptoms associated with your active plans';
-const String plansForFamily =
-    'Regimen plans are not available for family members';
+const String noRegimentScheduleData = 'No Activities data available for the selected date';
+const String noRegimentSymptomsData = 'No Symptoms associated with your active plans';
+const String plansForFamily = 'Regimen plans are not available for family members';
 const String mplansForFamily = 'Plans are not available for family members';
-const String categoriesForFamily =
-    'Categories are not available for family members';
-const String searchTextFirst =
-    'Use the search option to enter a Hospital name or its location that offer care plans for you to subscribe';
-const String searchTextSecond =
-    'Choose Qurhealth as your provider to subscribe to care plans for free';
+const String categoriesForFamily = 'Categories are not available for family members';
+const String searchTextFirst = 'Use the search option to enter a Hospital name or its location that offer care plans for you to subscribe';
+const String searchTextSecond = 'Choose Qurhealth as your provider to subscribe to care plans for free';
 const String okButton = 'OK';
 const String saveButton = 'Save';
 const String laterButton = 'Later';
@@ -700,8 +644,7 @@ const strMemb = 'MEMB';
 
 const goToRegimen = 'Go to Regimen';
 const symptomsError = 'Data for Symptoms cannot be entered for future dates';
-const activitiesError =
-    'Future activities can be logged only 15 minutes before the occurrence';
+const activitiesError = 'Future activities can be logged only 15 minutes before the occurrence';
 const tickInfo = 'Please tap on the check mark to log the activity';
 
 const searchHospitals = 'Search Hospitals';
@@ -716,13 +659,11 @@ const strAllPlans = 'All Plans';
 const String strSendInvite = 'Send Invite';
 const String strContactsLabel = 'Contacts';
 const String strSearchContacts = 'Search Contacts';
-const String strNoContactsSearchlbl =
-    'Looks like there is no contact in this name!!';
+const String strNoContactsSearchlbl = 'Looks like there is no contact in this name!!';
 const String strNoContactsLabel = 'Looks Like There are No Contacts!!!';
 const String strInviteErrorMsg = 'Invite sending failed. Please try again';
 
-const String STR_NOTES_HINT =
-    "Provide details on existing illness, allergies, history of the disease and medication taken";
+const String STR_NOTES_HINT = "Provide details on existing illness, allergies, history of the disease and medication taken";
 
 const String STR_YES = 'yes';
 const String STR_NO = 'no';
@@ -742,24 +683,21 @@ const String strTicketDesc = 'Description';
 const String strTicketPreferredDate = 'Preferred Date';
 const String strTicketPreferredTime = 'Preferred Time';
 const String strDetailsButton = 'Details';
-const String strThereAreNoPreferredLabsInYourProfile =
-    'There are no preferred labs in your profile';
+const String strThereAreNoPreferredLabsInYourProfile = 'There are no preferred labs in your profile';
 
 const String strPreferredDoctors = 'Preferred Doctors';
 
 //Create ticketNote
-const String strNote ='Note:';
-const String strDoctorAppoinmetRequest ='Doctor Appointment Request';
-const String strTicketNoteDesc ='Please understand this is not a final booking.The request will be processed by the care coordinator and you\'ll be notified on the progress or confirmation.';
-
-
+const String strNote = 'Note:';
+const String strDoctorAppoinmetRequest = 'Doctor Appointment Request';
+const String strTicketNoteDesc = 'Please understand this is not a final booking.The request will be processed by the care coordinator and you\'ll be notified on the progress or confirmation.';
 
 //Voice cloning
-const String makeSureNotInNoiseDescription ='Make sure your are not in a noisy environment.';
-const String rec ='REC';
-const String fileShouldLess ='Error file should be less than 100 Mb';
-const String reRecord ='Re-Record';
-const String readTheDisplayContentDescription ='Read the displayed content on the screen once the timer concludes to record your voice';
+const String makeSureNotInNoiseDescription = 'Make sure your are not in a noisy environment.';
+const String rec = 'REC';
+const String fileShouldLess = 'Error file should be less than 100 Mb';
+const String reRecord = 'Re-Record';
+const String readTheDisplayContentDescription = 'Read the displayed content on the screen once the timer concludes to record your voice';
 
 var tckTitle = '';
 String? tckTitleOpt = '';
@@ -806,8 +744,7 @@ const String keyMembershipEndDate = "membershipEndDate";
 
 //QurHub
 const String GET_HUB_ID_URL = 'http://192.168.99.79/gethubid';
-const String HUB_ID_CONFIG_URL =
-    'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-hub';
+const String HUB_ID_CONFIG_URL = 'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-hub';
 const String GET_HUB_ID = 'http://qurhub.local/gethubid';
 const String SERIAL_NUMBER = 'serialNumber';
 const String NICK_NAME = 'nickName';
@@ -853,15 +790,13 @@ const String UnSubscribed = 'UnSubscribed';
 
 const String Expired = 'Expired';
 
-const String msgData =
-    'Values will not have an impact. Are you sure you want to update?';
+const String msgData = 'Values will not have an impact. Are you sure you want to update?';
 
 const String sheelaRecepId = 'Sheela Response';
 
 const String freeTextReply = 'I heard your reply as, ';
 
-const String freeTextReplyConfirm =
-    '. You can say redo to change your response.';
+const String freeTextReplyConfirm = '. You can say redo to change your response.';
 
 const String strContinue = 'Continue';
 const String strRedo = 'Redo';
@@ -878,8 +813,7 @@ const String IND_REG = 'IN';
 
 String strMicPermission = 'Microphone permission is required';
 String strCameraPermission = 'Camera permission is required';
-String strLocationBlePermission =
-    'Location or Bluetooth scan permission is required';
+String strLocationBlePermission = 'Location or Bluetooth scan permission is required';
 String strCallPermission = 'Camera or Microphone permission is required';
 
 double height = 0.0;
@@ -928,35 +862,28 @@ const String strRRTAppointmentLabelChat =
     'Please choose up to three preferred dates or sessions. Your care coordinator will schedule based on your preferences or the earliest available date for the provider will be confirmed and communicated to you.';
 const String strVitalsModule = 'Vitals';
 const String strSymptomsModule = 'Symptoms';
-const String strFeatureNotEnable =
-    'This feature is not enabled for you by your primary provider';
+const String strFeatureNotEnable = 'This feature is not enabled for you by your primary provider';
 
 const String sheela_hdn_btn_yes = 'yes';
-const String activity_removed_regimen =
-    'Activity has been removed from your regimen';
-const String pleaseTurnOnYourBluetoothAndTryAgain =
-    'Please turn on your Bluetooth and try again';
+const String activity_removed_regimen = 'Activity has been removed from your regimen';
+const String pleaseTurnOnYourBluetoothAndTryAgain = 'Please turn on your Bluetooth and try again';
 const String SearchingForDevices = 'Searching for devices';
 const String deviceConnected = 'Device connected';
 
 const String IS_NOTIFICATION_PERMISSION_CHECK = 'notification_permission_check';
-const String activity_completed_regimen =
-    'The activity has been already completed';
+const String activity_completed_regimen = 'The activity has been already completed';
 
 const String StrExit = 'Exit';
 const String str_Undo = 'Undo';
 const String StrUndoAll = 'Undo all';
 
-const String StrSheelaErrorMsg =
-    'There is some issue with Sheela,\n Please try after some time';
+const String StrSheelaErrorMsg = 'There is some issue with Sheela,\n Please try after some time';
 
 // Key to store information about whether manual recording of vitals is restricted in SharedPreferences
-const String KEY_IS_Vitals_ManualRecording_Restricted =
-    'isVitalsManualRecordingRestricted';
+const String KEY_IS_Vitals_ManualRecording_Restricted = 'isVitalsManualRecordingRestricted';
 
 // Define a constant for the key related to voice clone patient assignment
-const String strVoiceClonePatientAssignment =
-    'voiceClonePatientAssignment';
+const String strVoiceClonePatientAssignment = 'voiceClonePatientAssignment';
 
 // Flutter Speech-to-text
 const String strListening = 'Listening';
@@ -1006,14 +933,14 @@ String doseValueHigh = "2048";
 // sheela survey image capture
 
 // Define constant strings for various messages or actions
-const String strRecapture = 'Recapture';  // Message for recapturing something
-const String strRecordAgain = 'Record again';  // Message for recording again
-const String strRedirectRetakePicture = 'redirectRetakePicture';  // Action for redirecting to retake a picture
-const String strRedirectRetakeAudio = 'redirectRetakeAudio';  // Action for redirecting to retake audio
-const String strRedirectRetakeVideo = 'redirectRetakeVideo';  // Action for redirecting to retake a video
-const String strRedirectToUploadImage = 'redirectUploadBucket';  // Action for redirecting to upload an image
-const String strRedirectToUploadAudio = 'redirectUploadBucketAudio';  // Action for redirecting to upload audio
-const String strRedirectToUploadVideo = 'redirectUploadBucketVideo';  // Action for redirecting to upload a video
+const String strRecapture = 'Recapture'; // Message for recapturing something
+const String strRecordAgain = 'Record again'; // Message for recording again
+const String strRedirectRetakePicture = 'redirectRetakePicture'; // Action for redirecting to retake a picture
+const String strRedirectRetakeAudio = 'redirectRetakeAudio'; // Action for redirecting to retake audio
+const String strRedirectRetakeVideo = 'redirectRetakeVideo'; // Action for redirecting to retake a video
+const String strRedirectToUploadImage = 'redirectUploadBucket'; // Action for redirecting to upload an image
+const String strRedirectToUploadAudio = 'redirectUploadBucketAudio'; // Action for redirecting to upload audio
+const String strRedirectToUploadVideo = 'redirectUploadBucketVideo'; // Action for redirecting to upload a video
 
 // Constant representing the confirmation title for image files
 const String strImageConfirmTitle = 'Please confirm if the image is okay to proceed?';
@@ -1023,8 +950,6 @@ const String strAudioConfirmTitle = 'Please confirm if the audio is okay to proc
 
 // Constant representing the confirmation title for video files
 const String strVideoConfirmTitle = 'Please confirm if the video is okay to proceed?';
-
-
 
 // file upload feature in sheela
 // Constant for requesting a file URL
@@ -1054,19 +979,27 @@ const String strAudioSizeValidation = 'File size exceeds 100MB';
 // Constant for the label 'Video preview'
 const String strVideoPreview = 'Video preview';
 
-
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {
     await _firebaseAnalytics.logEvent(
-        name: eveName ?? 'qurbook_ns_event',
-        parameters: eveParams ??
-            {
-              'eventTime': '${DateTime.now()}',
-              'navigationPage': 'Appointment page',
-              'ns_type': 'appointment_list'
-            });
+        name: eveName ?? 'qurbook_ns_event', parameters: eveParams ?? {'eventTime': '${DateTime.now()}', 'navigationPage': 'Appointment page', 'ns_type': 'appointment_list'});
   } catch (e, stackTrace) {
     print(e);
     CommonUtil().appLogs(message: e, stackTrace: stackTrace);
   }
+}
+
+class DoctorFilterConstants {
+  static List<String> yearOfExperienceList = ["0 to 5 years", "5 to 10 years", "10 to 20 years", "20+ years"];
+  static List<String> genderList = ['Any', 'Male', 'Female'];
+  static String languageSpoken = "languageSpoken";
+  static String specialization = "specialization";
+  static String state = "state";
+  static String city = "city";
+  static String hospital = "hospital";
+  static String experience = "experience";
+  static String gender = "gender";
+  static String applyFilters = 'Apply Filters';
+  static String reset = 'Reset';
+  static String filterDoctors = 'Filter Doctors';
 }
