@@ -284,7 +284,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
         amount = widget.memberShipResult?.tranportation ?? 0;
         break;
       case strBenefitFamilyMembers:
-        amount = 0;
+        amount = widget.memberShipResult?.homecareServices ?? 0;
         break;
       case strBenefitMedicineOrdering:
         amount = widget.memberShipResult?.medicineOrdering ?? 0;
