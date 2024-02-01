@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,22 +15,21 @@ import 'right_side_menu_widget.dart';
 
 class DoctorsFilterScreen extends StatefulWidget {
   final Function(
-    int filterMenuCount,
+    Map<String, List<String>> filterMenuCount,
     List<DoctorsListResult> doctorFilterList,
     FilteredSelectedModel selectdFilterItemIndex,
+    int count,
   ) filterApplied;
-  final List<int> selectedBrandOption;
-  final List<int> selectedCategoryOption;
   final FilteredSelectedModel selectedItems;
   final int filterMenuCount;
+  final Map<String, List<String>> filterSelectedItems;
 
   const DoctorsFilterScreen({
     super.key,
     required this.filterApplied,
-    required this.filterMenuCount,
     required this.selectedItems,
-    this.selectedBrandOption = const [],
-    this.selectedCategoryOption = const [],
+    required this.filterMenuCount,
+    required this.filterSelectedItems,
   });
 
   @override
@@ -68,7 +69,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
   void initState() {
     super.initState();
     selectdFilterItemIndex = widget.selectedItems;
-    filterMenuCount = widget.filterMenuCount;
+    selectedItems = widget.filterSelectedItems;
     selectedState = selectdFilterItemIndex.selectedStateIndex.isEmpty ? "" : selectdFilterItemIndex.selectedStateIndex.first;
     selectedCity = selectdFilterItemIndex.selectedCityIndex.isEmpty ? "" : selectdFilterItemIndex.selectedCityIndex.first;
   }
@@ -92,14 +93,8 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
               LoaderClass.showLoadingDialog(context);
             } else if (state is ShowDoctorFilterList) {
               doctorFilterList = state.doctorFilterList;
-              filterMenuCount = (selectdFilterItemIndex.selectedGenderIndex.length) +
-                  (selectdFilterItemIndex.selectedLanguageIndex.length) +
-                  (selectdFilterItemIndex.selectedSpecializationeIndex.length) +
-                  (selectdFilterItemIndex.selectedCityIndex.length) +
-                  (selectdFilterItemIndex.selectedStateIndex.length) +
-                  (selectdFilterItemIndex.selectedHospitalIndex.length) +
-                  selectdFilterItemIndex.selectedYOEIndex.length;
-              widget.filterApplied(filterMenuCount, doctorFilterList, selectdFilterItemIndex);
+              filterMenuCount = state.filterMenuCount;
+              widget.filterApplied(selectedItems, doctorFilterList, selectdFilterItemIndex, filterMenuCount);
               Navigator.pop(context);
             }
           },
@@ -163,7 +158,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 30, left: 20, right: 20),
+                      padding: EdgeInsets.only(top: 10, bottom: Platform.isIOS ? 30 : 10, left: 20, right: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -182,7 +177,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                                   selectedHospitalIndex: [],
                                   selectedYOEIndex: [],
                                 );
-                                widget.filterApplied(0, [], selectdFilterItemIndex);
+                                widget.filterApplied({}, [], selectdFilterItemIndex, 0);
                                 Navigator.pop(context);
                                 setState(() {});
                               },
@@ -213,7 +208,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                                 BlocProvider.of<DoctorsFilterBloc>(context).add(
                                   ApplyFilters(
                                     selectedItems: selectedItems,
-                                    count: widget.filterMenuCount,
+                                    count: 0,
                                   ),
                                 );
                               },

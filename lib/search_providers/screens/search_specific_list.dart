@@ -111,7 +111,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   var regController = CommonUtil().onInitQurhomeRegimenController();
   List<DoctorsListResult> doctorFilterList = [];
-  int filterMenuCount = 0;
+  Map<String, List<String>> filterMenuCount = {};
+  int count = 0;
   FilteredSelectedModel selectedItems = FilteredSelectedModel(
     selectedGenderIndex: [],
     selectedLanguageIndex: [],
@@ -300,12 +301,19 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         onTap: () {
                           Get.to(DoctorsFilterScreen(
                             selectedItems: selectedItems,
-                            filterMenuCount: filterMenuCount,
-                            filterApplied: (int count, List<DoctorsListResult> list, FilteredSelectedModel items) {
+                            filterMenuCount: count != 0 ? count : filterMenuCount.length,
+                            filterApplied: (
+                              Map<String, List<String>> item,
+                              List<DoctorsListResult> list,
+                              FilteredSelectedModel items,
+                              int filterCount,
+                            ) {
                               doctorFilterList = list;
                               selectedItems = items;
-                              filterMenuCount = count;
+                              filterMenuCount = item;
+                              count = filterCount;
                             },
+                            filterSelectedItems: filterMenuCount,
                           ))?.then((value) {
                             setState(() {});
                           });
@@ -322,7 +330,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                               width: 5,
                             ),
                             Visibility(
-                              visible: filterMenuCount != 0,
+                              visible: count != 0,
                               child: Container(
                                 width: 28,
                                 height: 28,
@@ -332,7 +340,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    filterMenuCount.toString(),
+                                    count.toString(),
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                 ),
