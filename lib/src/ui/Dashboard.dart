@@ -98,14 +98,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ).then((value) {
       setState(() {});
     });
-
-    /* Navigator.of(context).push(
-      MaterialPageRoute(
-        settings: RouteSettings(name: router.rt_UserAccounts),
-        builder: (context) => UserAccounts(
-            arguments: UserAccountsArguments(selectedIndex: position)),
-      ),
-    );*/
   }
 
   moveToNextScreen(int position) {

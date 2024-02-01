@@ -66,16 +66,13 @@ import 'src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import 'src/ui/SheelaAI/Views/SuperMaya.dart';
 import 'src/ui/SplashScreen.dart';
-import 'src/ui/connectivity_bloc.dart';
 import 'src/ui/settings/CaregiverSettng.dart';
 import 'src/utils/FHBUtils.dart';
 import 'src/utils/PageNavigator.dart';
 import 'src/utils/cron_jobs.dart';
 import 'src/utils/dynamic_links.dart';
-import 'src/utils/language/app_localizations.dart';
 import 'src/utils/language/language_utils.dart';
 import 'src/utils/language/languages.dart';
-import 'src/utils/language/view_model/language_view_model.dart';
 import 'src/utils/lifecycle_state_provider.dart';
 import 'src/utils/screenutils/screenutil.dart';
 import 'src/utils/timezone/timezone_services.dart';
@@ -1126,9 +1123,6 @@ class _MyFHBState extends State<MyFHB> {
         onDidReceiveNotificationResponse: notificationAction);*/
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<ConnectivityBloc>(
-          create: (_) => ConnectivityBloc(),
-        ),
         ChangeNotifierProvider<CallStatus>(
           create: (_) => CallStatus(),
         ),

@@ -11,6 +11,7 @@ import '../bloc/providers_block.dart';
 import '../models/MyProviderResponseNew.dart';
 import '../widgets/my_providers_appbar.dart';
 import '../widgets/my_providers_tab_bar.dart';
+import '../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 
 class MyProvider extends StatefulWidget {
   @override
@@ -31,6 +32,7 @@ class MyProviderState extends State<MyProvider>
   @override
   void initState() {
     super.initState();
+    FABService.trackCurrentScreen(FBAMyProviderScreen);
 
     _tabController = TabController(length: 3, vsync: this);
     _tabController!.addListener(_setActiveTabIndex);

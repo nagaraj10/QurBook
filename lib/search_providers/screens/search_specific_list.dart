@@ -18,6 +18,7 @@ import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../common/common_circular_indicator.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
@@ -120,6 +121,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   void initState() {
     try {
       super.initState();
+      FABService.trackCurrentScreen(FBADoctorSearchScreen);
+
       USERID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       switchedUserId = USERID;
       _doctorsListBlock = DoctorsListBlock();

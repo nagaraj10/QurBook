@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../../authentication/constants/constants.dart';
@@ -95,6 +96,7 @@ class _MyFamilyState extends State<MyFamily> {
   @override
   void initState() {
     super.initState();
+    FABService.trackCurrentScreen(FBAMyFamilyScreen);
     _familyListBloc = FamilyListBloc();
     //_familyListBloc!.getFamilyMembersListNew();
     _familyListBloc!.getCustomRoles();

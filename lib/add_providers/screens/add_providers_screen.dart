@@ -13,6 +13,7 @@ import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:myfhb/ticket_support/view/create_ticket_screen.dart';
 
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../widgets/dropdown_with_categories.dart';
 import '../../src/blocs/Media/MediaTypeBlock.dart';
 import '../../src/model/Media/media_data_list.dart';
@@ -151,6 +152,7 @@ class AddProvidersState extends State<AddProviders> {
   void initState() {
     try {
       super.initState();
+      FABService.trackCurrentScreen(FBAAddDoctorScreen);
 
       addProvidersBloc = AddProvidersBloc();
       updateProvidersBloc = UpdateProvidersBloc();

@@ -4,8 +4,6 @@ import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 
@@ -13,12 +11,14 @@ import '../../authentication/constants/constants.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
+import '../../common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
 import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/router_variable.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../../regiment/view_model/regiment_view_model.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -70,12 +70,12 @@ class _MyPlanState extends State<MyPlanList> {
 
     isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_MyPlan);
     try {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         Future.delayed(
-            Duration(milliseconds: 1000),
+            const Duration(milliseconds: 1000),
             () => isFirst
                 ? null
-                : ShowCaseWidget.of(_myContext)!.startShowCase([_PlanCardKey]));
+                : ShowCaseWidget.of(_myContext).startShowCase([_PlanCardKey]));
       });
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -83,10 +83,9 @@ class _MyPlanState extends State<MyPlanList> {
   }
 
   Future<void> getConfiguration() async {
-    bool? addplanbutton = await PreferenceUtil.getAddPlanBtn();
-    bool? showRenewOrSubscribeButton =
+    final addplanbutton = await PreferenceUtil.getAddPlanBtn();
+    final showRenewOrSubscribeButton =
         await PreferenceUtil.getUnSubscribeValue();
-    print('addplanbtn: ' + addplanbutton.toString());
     setState(() {
       this.addplanbutton = addplanbutton ?? false;
       this.showRenewOrSubscribeButton = showRenewOrSubscribeButton ?? false;
@@ -116,7 +115,7 @@ class _MyPlanState extends State<MyPlanList> {
                         FocusManager.instance.primaryFocus!.unfocus());
                   },
                   backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.add,
                     color: Colors.white,
                   ),
@@ -234,7 +233,7 @@ class _MyPlanState extends State<MyPlanList> {
     return (planList != null && planList.isNotEmpty)
         ? ListView.builder(
             shrinkWrap: true,
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               bottom: 85.00,
             ),
             itemBuilder: (ctx, i) {
@@ -351,14 +350,14 @@ class _MyPlanState extends State<MyPlanList> {
         });
       },
       child: Container(
-          padding: EdgeInsets.all(4),
-          margin: EdgeInsets.only(left: 12, right: 12, top: 8),
+          padding: const EdgeInsets.all(4),
+          margin: const EdgeInsets.only(left: 12, right: 12, top: 8),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
-              BoxShadow(
-                color: const Color(0xFFe3e2e2),
+              const BoxShadow(
+                color: Color(0xFFe3e2e2),
                 blurRadius: 16, // has the effect of softening the shadow
                 spreadRadius: 5, // has the effect of extending the shadow
                 offset: Offset(
