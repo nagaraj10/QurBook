@@ -1,48 +1,48 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/model/location_data_model.dart';
-import 'package:myfhb/add_providers/bloc/update_providers_bloc.dart';
-import 'package:myfhb/authentication/model/Country.dart';
-import 'package:myfhb/authentication/widgets/country_code_picker.dart';
-import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_family/screens/FamilyListView.dart';
-import 'package:myfhb/search_providers/models/CityListModel.dart'
-    as cityListModel;
-import 'package:myfhb/search_providers/services/hospital_list_repository.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
+
+import '../../Qurhome/QurhomeDashboard/model/location_data_model.dart';
+import '../../add_providers/bloc/update_providers_bloc.dart';
 import '../../add_providers/models/add_providers_arguments.dart';
+import '../../authentication/model/Country.dart';
+import '../../authentication/widgets/country_code_picker.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
+import '../../common/common_circular_indicator.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
+import '../../my_family/bloc/FamilyListBloc.dart';
+import '../../my_family/models/FamilyMembersRes.dart';
+import '../../my_family/screens/FamilyListView.dart';
+import '../../src/blocs/health/HealthReportListForUserBlock.dart';
+import '../../src/model/user/MyProfileModel.dart';
+import '../../src/resources/network/ApiResponse.dart';
+import '../../src/utils/colors_utils.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/GradientAppBar.dart';
+import '../bloc/doctors_list_block.dart';
+import '../bloc/hospital_list_block.dart';
 import '../bloc/labs_list_block.dart';
+import '../models/CityListModel.dart' as cityListModel;
 import '../models/doctor_list_response_new.dart';
 import '../models/hospital_list_response_new.dart';
 import '../models/labs_list_response_new.dart';
 import '../models/search_arguments.dart';
 import '../services/doctors_list_repository.dart';
-import '../../src/blocs/health/HealthReportListForUserBlock.dart';
-import '../../src/resources/network/ApiResponse.dart';
-import '../../src/utils/colors_utils.dart';
-import '../../widgets/GradientAppBar.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-
-import '../bloc/doctors_list_block.dart';
-import '../bloc/hospital_list_block.dart';
+import '../services/hospital_list_repository.dart';
+import 'doctors_filter_screen.dart';
+import 'right_side_menu_widget.dart';
 
 export '../models/hospital_list_response.dart';
 
@@ -53,16 +53,10 @@ class SearchSpecificList extends StatefulWidget {
   bool? isSkipUnknown;
   bool isFromCreateTicket;
 
-  SearchSpecificList(
-      {this.arguments,
-      this.toPreviousScreen,
-      this.isSkipUnknown,
-      this.isFromCreateTicket = false});
+  SearchSpecificList({this.arguments, this.toPreviousScreen, this.isSkipUnknown, this.isFromCreateTicket = false});
 
   @override
-  State<StatefulWidget> createState() {
-    return SearchSpecificListState();
-  }
+  State<StatefulWidget> createState() => SearchSpecificListState();
 }
 
 class SearchSpecificListState extends State<SearchSpecificList> {
@@ -74,11 +68,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   LabsListBlock? _labsListBlock;
 
-  final TextEditingController _textFieldController =
-      TextEditingController(text: '');
+  final TextEditingController _textFieldController = TextEditingController(text: '');
 
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   String? value;
 
   final mobileNoController = TextEditingController();
@@ -118,6 +110,18 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   bool? teleHealthAlertShown = false;
 
   var regController = CommonUtil().onInitQurhomeRegimenController();
+  List<DoctorsListResult> doctorFilterList = [];
+  Map<String, List<String>> filterMenuCount = {};
+  int count = 0;
+  FilteredSelectedModel selectedItems = FilteredSelectedModel(
+    selectedGenderIndex: [],
+    selectedLanguageIndex: [],
+    selectedSpecializationeIndex: [],
+    selectedStateIndex: [],
+    selectedCityIndex: [],
+    selectedHospitalIndex: [],
+    selectedYOEIndex: [],
+  );
 
   @override
   void initState() {
@@ -140,24 +144,19 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       _familyListBloc!.getFamilyMembersListNew();
 
       if (value != '') {
-        _doctorsListBlock!.getDoctorsListNew(
-            _textFieldController.text.toString(), widget.isSkipUnknown);
+        _doctorsListBlock!.getDoctorsListNew(_textFieldController.text.toString(), widget.isSkipUnknown);
       } else {
         if (widget.arguments!.searchWord == CommonConstants.doctors) {
           _doctorsListBlock!.getExistingDoctorList('40');
         } else if (widget.arguments!.searchWord == CommonConstants.hospitals) {
-          _hospitalListBlock!
-              .getExistingHospitalListNew(Constants.STR_HEALTHORG_HOSPID);
-        } else if (widget.arguments!.searchWord == CommonConstants.labs ||
-            widget.arguments!.searchWord == CommonConstants.lab) {
-          _labsListBlock!.getExistingLabsListNew(
-              Constants.STR_HEALTHORG_LABID, widget.isFromCreateTicket);
+          _hospitalListBlock!.getExistingHospitalListNew(Constants.STR_HEALTHORG_HOSPID);
+        } else if (widget.arguments!.searchWord == CommonConstants.labs || widget.arguments!.searchWord == CommonConstants.lab) {
+          _labsListBlock!.getExistingLabsListNew(Constants.STR_HEALTHORG_LABID, widget.isFromCreateTicket);
         } else if (widget.arguments!.searchWord == CommonConstants.keyCity) {
           _labsListBlock!.getCityList('a');
         }
       }
-      WidgetsBinding.instance!.addPostFrameCallback(
-          (_) => _refreshIndicatorKey.currentState?.show());
+      WidgetsBinding.instance!.addPostFrameCallback((_) => _refreshIndicatorKey.currentState?.show());
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
@@ -168,324 +167,353 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   @override
   void dispose() {
     super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Search List Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
+    fbaLog(
+        eveName: 'qurbook_screen_event',
+        eveParams: {'eventTime': '${DateTime.now()}', 'pageName': 'Search List Screen', 'screenSessionTime': '${DateTime.now().difference(mInitialTime).inSeconds} secs'});
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          elevation: 0,
-          flexibleSpace: GradientAppBar(),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 24.0.sp,
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+            elevation: 0,
+            flexibleSpace: GradientAppBar(),
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                size: 24.0.sp,
+              ),
+              onPressed: () {
+                Navigator.pop(context, [1]);
+              },
             ),
-            onPressed: () {
-              Navigator.pop(context, [1]);
-            },
-          ),
-          title: Text('${widget.arguments!.searchWord} ' + variable.strSearch)),
-      // Wait until the controller is initialized before displaying the
-      // camera preview. Use a FutureBuilder to display a loading spinner
-      // until the controller has finished initializing.
-      body: Column(
-        children: <Widget>[
-          Container(
-            //margin: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: <Color>[
-                    Color(CommonUtil().getMyPrimaryColor()),
-                    Color(CommonUtil().getMyGredientColor())
-                  ],
-                  stops: [
-                    0.3,
-                    1
-                  ]),
-            ),
-            padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-            //margin: EdgeInsets.all(5),
-            child: Container(
-              margin: EdgeInsets.only(left: 10, right: 10, bottom: 5),
+            title: Text('${widget.arguments!.searchWord} ' + variable.strSearch)),
+        // Wait until the controller is initialized before displaying the
+        // camera preview. Use a FutureBuilder to display a loading spinner
+        // until the controller has finished initializing.
+        body: Column(
+          children: <Widget>[
+            Container(
+              //margin: EdgeInsets.all(5),
               decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
-              child: TextField(
-                textCapitalization: TextCapitalization.sentences,
-                style: TextStyle(
-                  fontSize: 16.0.sp,
-                ),
-                controller: _textFieldController,
-                autofocus: true,
-                onChanged: (editedValue) {
-                  if (editedValue != '') {
-                    value = editedValue;
-                    widget.arguments!.searchWord == CommonConstants.doctors
-                        ? _doctorsListBlock!
-                            .getDoctorsListNew(value, widget.isSkipUnknown)
-                        : widget.arguments!.searchWord ==
-                                CommonConstants.hospitals
-                            ? _hospitalListBlock!.getHospitalListNew(value)
-                            : widget.arguments!.searchWord! ==
-                                        CommonConstants.labs ||
-                                    widget.arguments!.searchWord ==
-                                        CommonConstants.lab
-                                ? _labsListBlock!.getLabsListNew(
-                                    value!, widget.isFromCreateTicket)
-                                : _labsListBlock!.getCityList(value!);
-                    setState(() {});
-                  } else {
-                    widget.arguments!.searchWord == CommonConstants.doctors
-                        ? _doctorsListBlock!.getExistingDoctorList('50')
-                        : widget.arguments!.searchWord ==
-                                CommonConstants.hospitals
-                            ? _hospitalListBlock!.getExistingHospitalListNew(
-                                Constants.STR_HEALTHORG_HOSPID)
-                            : widget.arguments!.searchWord ==
-                                        CommonConstants.labs ||
-                                    widget.arguments!.searchWord ==
-                                        CommonConstants.lab
-                                ? _labsListBlock!.getExistingLabsListNew(
-                                    Constants.STR_HEALTHORG_LABID,
-                                    widget.isFromCreateTicket)
-                                : _labsListBlock!.getCityList('a');
-                    setState(() {});
-                  }
-                },
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.black54,
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft, end: Alignment.bottomRight, colors: <Color>[Color(CommonUtil().getMyPrimaryColor()), Color(CommonUtil().getMyGredientColor())], stops: [0.3, 1]),
+              ),
+              padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+              //margin: EdgeInsets.all(5),
+              child: Container(
+                margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(30)),
+                child: TextField(
+                  textCapitalization: TextCapitalization.sentences,
+                  style: TextStyle(
+                    fontSize: 16.0.sp,
                   ),
-                  hintText: variable.strSearch,
-                  hintStyle:
-                      TextStyle(color: Colors.black54, fontSize: 16.0.sp),
-                  border: InputBorder.none,
+                  controller: _textFieldController,
+                  autofocus: true,
+                  onChanged: (editedValue) {
+                    if (editedValue != '') {
+                      value = editedValue;
+                      widget.arguments!.searchWord == CommonConstants.doctors
+                          ? _doctorsListBlock!.getDoctorsListNew(value, widget.isSkipUnknown)
+                          : widget.arguments!.searchWord == CommonConstants.hospitals
+                              ? _hospitalListBlock!.getHospitalListNew(value)
+                              : widget.arguments!.searchWord! == CommonConstants.labs || widget.arguments!.searchWord == CommonConstants.lab
+                                  ? _labsListBlock!.getLabsListNew(value!, widget.isFromCreateTicket)
+                                  : _labsListBlock!.getCityList(value!);
+                      setState(() {});
+                    } else {
+                      widget.arguments!.searchWord == CommonConstants.doctors
+                          ? _doctorsListBlock!.getExistingDoctorList('50')
+                          : widget.arguments!.searchWord == CommonConstants.hospitals
+                              ? _hospitalListBlock!.getExistingHospitalListNew(Constants.STR_HEALTHORG_HOSPID)
+                              : widget.arguments!.searchWord == CommonConstants.labs || widget.arguments!.searchWord == CommonConstants.lab
+                                  ? _labsListBlock!.getExistingLabsListNew(Constants.STR_HEALTHORG_LABID, widget.isFromCreateTicket)
+                                  : _labsListBlock!.getCityList('a');
+                      setState(() {});
+                    }
+                  },
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: Colors.black54,
+                    ),
+                    hintText: variable.strSearch,
+                    hintStyle: TextStyle(color: Colors.black54, fontSize: 16.0.sp),
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-              child: value == ''
-                  ?
-                  //getEmptyCard()
-                  /* Container(
+            Expanded(
+                child: value == ''
+                    ?
+                    //getEmptyCard()
+                    /* Container(
                       child: Center(
                         child: Text(variable.strNodata),
                       ),
                     )*/
-                  widget.arguments!.searchWord == CommonConstants.doctors
-                      ? getResponseFromApiWidgetForDoctors()
-                      : widget.arguments!.searchWord ==
-                              CommonConstants.hospitals
-                          ? getResponseFromApiWidgetForHospital()
-                          : widget.arguments!.searchWord ==
-                                      CommonConstants.labs ||
-                                  widget.arguments!.searchWord ==
-                                      CommonConstants.lab
-                              ? getResponseFromApiWidgetForLabs()
-                              : getResponseFromApiWidgetForCity()
-                  : widget.arguments!.searchWord == CommonConstants.doctors
-                      ? getResponseFromApiWidgetForDoctors()
-                      : widget.arguments!.searchWord ==
-                              CommonConstants.hospitals
-                          ? getResponseFromApiWidgetForHospital()
-                          : widget.arguments!.searchWord ==
-                                      CommonConstants.labs ||
-                                  widget.arguments!.searchWord ==
-                                      CommonConstants.lab
-                              ? getResponseFromApiWidgetForLabs()
-                              : getResponseFromApiWidgetForCity()),
-        ],
-      ),
-    );
-  }
+                    widget.arguments!.searchWord == CommonConstants.doctors
+                        ? getResponseFromApiWidgetForDoctors()
+                        : widget.arguments!.searchWord == CommonConstants.hospitals
+                            ? getResponseFromApiWidgetForHospital()
+                            : widget.arguments!.searchWord == CommonConstants.labs || widget.arguments!.searchWord == CommonConstants.lab
+                                ? getResponseFromApiWidgetForLabs()
+                                : getResponseFromApiWidgetForCity()
+                    : widget.arguments!.searchWord == CommonConstants.doctors
+                        ? getResponseFromApiWidgetForDoctors()
+                        : widget.arguments!.searchWord == CommonConstants.hospitals
+                            ? getResponseFromApiWidgetForHospital()
+                            : widget.arguments!.searchWord == CommonConstants.labs || widget.arguments!.searchWord == CommonConstants.lab
+                                ? getResponseFromApiWidgetForLabs()
+                                : getResponseFromApiWidgetForCity()),
+          ],
+        ),
+        bottomNavigationBar: widget.isFromCreateTicket
+            ? Container(
+                height: 50,
+                padding: const EdgeInsets.all(3.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Color(CommonUtil().getMyPrimaryColor())),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => Navigator.pop(context),
+                      child: Text(
+                        'Sort',
+                        style: TextStyle(
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                        ),
+                      ),
+                    ),
+                    // Spacer(),
+                    Container(
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      width: 1,
+                    ),
+                    Center(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          Get.to(DoctorsFilterScreen(
+                            selectedItems: selectedItems,
+                            filterMenuCount: count != 0 ? count : filterMenuCount.length,
+                            filterApplied: (
+                              Map<String, List<String>> item,
+                              List<DoctorsListResult> list,
+                              FilteredSelectedModel items,
+                              int filterCount,
+                            ) {
+                              doctorFilterList = list;
+                              selectedItems = items;
+                              filterMenuCount = item;
+                              count = filterCount;
+                            },
+                            filterSelectedItems: filterMenuCount,
+                          ))?.then((value) {
+                            setState(() {});
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              'Filter',
+                              style: TextStyle(
+                                color: Color(CommonUtil().getMyPrimaryColor()),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Visibility(
+                              visible: count != 0,
+                              child: Container(
+                                width: 28,
+                                height: 28,
+                                decoration: BoxDecoration(
+                                  color: Color(CommonUtil().getMyPrimaryColor()), // border color
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    count.toString(),
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : Container(),
+      );
 
-  Widget getResponseFromApiWidgetForDoctors() {
-    return StreamBuilder<ApiResponse<DoctorsSearchListResponse>>(
-      stream: _doctorsListBlock!.doctorsNewStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return Container();
+  Widget getResponseFromApiWidgetForDoctors() => StreamBuilder<ApiResponse<DoctorsSearchListResponse>>(
+        stream: _doctorsListBlock!.doctorsNewStream,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return Container();
 
-        switch (snapshot.data!.status) {
-          case Status.LOADING:
-            rebuildBlockObject();
-            return Center(
-                child: SizedBox(
-              child: CommonCircularIndicator(),
-              width: 30.0.h,
-              height: 30.0.h,
-            ));
+          switch (snapshot.data!.status) {
+            case Status.LOADING:
+              rebuildBlockObject();
+              return Center(
+                  child: SizedBox(
+                child: CommonCircularIndicator(),
+                width: 30.0.h,
+                height: 30.0.h,
+              ));
 
-            break;
+              break;
 
-          case Status.ERROR:
-            rebuildBlockObject();
-            return Text(
-                variable.strNoDataAvailable + ' ' + CommonConstants.doctors,
-                style: TextStyle(color: Colors.red));
-            break;
+            case Status.ERROR:
+              rebuildBlockObject();
+              return Text(variable.strNoDataAvailable + ' ' + CommonConstants.doctors, style: const TextStyle(color: Colors.red));
+              break;
 
-          case Status.COMPLETED:
-            rebuildBlockObject();
-            return (snapshot.data!.data!.isSuccess == false &&
-                    widget.isSkipUnknown == true)
-                ? Container(
-                    margin: EdgeInsets.all(5),
-                    child: getAllDatasInDoctorsListScrap(snapshot.data!.data!),
-                  )
-                : (snapshot.data!.data!.result == null)
-                    ? /*Container(
+            case Status.COMPLETED:
+              rebuildBlockObject();
+              return (snapshot.data!.data!.isSuccess == false && widget.isSkipUnknown == true)
+                  ? Container(
+                      margin: const EdgeInsets.all(5),
+                      child: getAllDatasInDoctorsListScrap(snapshot.data!.data!),
+                    )
+                  : (snapshot.data!.data!.result == null)
+                      ? /*Container(
                         child: Center(
                           child: Text(variable.strNodata),
                         ),
                       )*/
-                    getEmptyCard(snapshot.data!.data!.diagnostics)
-                    : snapshot.data!.data!.result!.isEmpty
-                        ? Container(
-                            child: Center(
-                              child: Text(variable.strNodata),
-                            ),
-                          )
-                        //getEmptyCard()
-                        : Container(
-                            margin: EdgeInsets.all(5),
-                            child: getAllDatasInDoctorsList(
-                                snapshot.data!.data!.result),
-                          );
-            break;
-        }
-      },
-    );
-  }
+                      getEmptyCard(snapshot.data!.data!.diagnostics)
+                      : snapshot.data!.data!.result!.isEmpty
+                          ? Container(
+                              child: const Center(
+                                child: Text(variable.strNodata),
+                              ),
+                            )
+                          //getEmptyCard()
+                          : Container(
+                              margin: const EdgeInsets.all(5),
+                              child: getAllDatasInDoctorsList(doctorFilterList.isEmpty ? snapshot.data!.data!.result : doctorFilterList),
+                            );
+              break;
+          }
+        },
+      );
 
-  Widget getResponseFromApiWidgetForHospital() {
-    return StreamBuilder<ApiResponse<HospitalsSearchListResponse>>(
-      stream: _hospitalListBlock!.hospitalNewStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return Container();
+  Widget getResponseFromApiWidgetForHospital() => StreamBuilder<ApiResponse<HospitalsSearchListResponse>>(
+        stream: _hospitalListBlock!.hospitalNewStream,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return Container();
 
-        switch (snapshot.data!.status) {
-          case Status.LOADING:
-            rebuildBlockObject();
-            return Center(
-                child: SizedBox(
-              width: 30.0.h,
-              height: 30.0.h,
-              child: CommonCircularIndicator(),
-            ));
+          switch (snapshot.data!.status) {
+            case Status.LOADING:
+              rebuildBlockObject();
+              return Center(
+                  child: SizedBox(
+                width: 30.0.h,
+                height: 30.0.h,
+                child: CommonCircularIndicator(),
+              ));
 
-            break;
+              break;
 
-          case Status.ERROR:
-            rebuildBlockObject();
-            return Text(
-                variable.strNoDataAvailable + ' ' + CommonConstants.hospitals,
-                style: TextStyle(color: Colors.red));
-            break;
+            case Status.ERROR:
+              rebuildBlockObject();
+              return Text(variable.strNoDataAvailable + ' ' + CommonConstants.hospitals, style: const TextStyle(color: Colors.red));
+              break;
 
-          case Status.COMPLETED:
-            rebuildBlockObject();
+            case Status.COMPLETED:
+              rebuildBlockObject();
 
-            return snapshot.data!.data!.result == null
-                ? /*Container(
+              return snapshot.data!.data!.result == null
+                  ? /*Container(
                     child: Center(
                       child: Text(variable.strNodata),
                     ),
                   )*/
-                getEmptyCard(snapshot.data!.data!.diagnostics)
-                : snapshot.data!.data!.result!.isEmpty
-                    ? Container(
-                        child: Center(
-                          child: Text(variable.strNodata),
-                        ),
-                      )
-                    //getEmptyCard()
-                    : Container(
-                        child: getAllDatasInHospitalList(
-                            snapshot.data!.data!.result),
-                        margin: EdgeInsets.all(5),
-                      );
-            break;
-        }
-      },
-    );
-  }
+                  getEmptyCard(snapshot.data!.data!.diagnostics)
+                  : snapshot.data!.data!.result!.isEmpty
+                      ? Container(
+                          child: const Center(
+                            child: Text(variable.strNodata),
+                          ),
+                        )
+                      //getEmptyCard()
+                      : Container(
+                          child: getAllDatasInHospitalList(snapshot.data!.data!.result),
+                          margin: const EdgeInsets.all(5),
+                        );
+              break;
+          }
+        },
+      );
 
-  Widget getResponseFromApiWidgetForLabs() {
-    return StreamBuilder<ApiResponse<LabsSearchListResponse>>(
-      stream: _labsListBlock!.labNewStream,
-      builder: (context, snapshot) {
-        String strText = value ?? "";
-        if (!snapshot.hasData) return Container();
+  Widget getResponseFromApiWidgetForLabs() => StreamBuilder<ApiResponse<LabsSearchListResponse>>(
+        stream: _labsListBlock!.labNewStream,
+        builder: (context, snapshot) {
+          String strText = value ?? "";
+          if (!snapshot.hasData) return Container();
 
-        switch (snapshot.data!.status) {
-          case Status.LOADING:
-            rebuildBlockObject();
-            return Center(
-                child: SizedBox(
-              width: 30.0.h,
-              height: 30.0.h,
-              child: CommonCircularIndicator(),
-            ));
+          switch (snapshot.data!.status) {
+            case Status.LOADING:
+              rebuildBlockObject();
+              return Center(
+                  child: SizedBox(
+                width: 30.0.h,
+                height: 30.0.h,
+                child: CommonCircularIndicator(),
+              ));
 
-            break;
+              break;
 
-          case Status.ERROR:
-            rebuildBlockObject();
-            return Text(
-                variable.strNoDataAvailable + ' ' + CommonConstants.labs,
-                style: TextStyle(color: Colors.red));
-            break;
+            case Status.ERROR:
+              rebuildBlockObject();
+              return Text(variable.strNoDataAvailable + ' ' + CommonConstants.labs, style: const TextStyle(color: Colors.red));
+              break;
 
-          case Status.COMPLETED:
-            rebuildBlockObject();
-            return (strText.trim().isNotEmpty &&
-                    strOthers.toLowerCase().contains(strText))
-                ? Container(
-                    margin: EdgeInsets.all(5),
-                    child: getAllDatasInLabsList(
-                        snapshot.data?.data?.result ?? []),
-                  )
-                : snapshot.data!.data!.result == null
-                    ? Container(
-                        child: Center(
-                          child: Text(variable.strNodata),
-                        ),
-                      )
-                    //getEmptyCard()
-                    : snapshot.data!.data!.result!.isEmpty
-                        ? Container(
-                            child: Center(
-                              child: Text(variable.strNodata),
-                            ),
-                          )
-                        //getEmptyCard()
-                        : Container(
-                            margin: EdgeInsets.all(5),
-                            child: getAllDatasInLabsList(
-                                snapshot.data!.data!.result),
-                          );
+            case Status.COMPLETED:
+              rebuildBlockObject();
+              return (strText.trim().isNotEmpty && strOthers.toLowerCase().contains(strText))
+                  ? Container(
+                      margin: const EdgeInsets.all(5),
+                      child: getAllDatasInLabsList(snapshot.data?.data?.result ?? []),
+                    )
+                  : snapshot.data!.data!.result == null
+                      ? Container(
+                          child: const Center(
+                            child: Text(variable.strNodata),
+                          ),
+                        )
+                      //getEmptyCard()
+                      : snapshot.data!.data!.result!.isEmpty
+                          ? Container(
+                              child: const Center(
+                                child: Text(variable.strNodata),
+                              ),
+                            )
+                          //getEmptyCard()
+                          : Container(
+                              margin: const EdgeInsets.all(5),
+                              child: getAllDatasInLabsList(snapshot.data!.data!.result),
+                            );
 
-            break;
+              break;
 
-          default:
-            break;
-        }
-        // }
-        return Container();
-      },
-    );
-  }
+            default:
+              break;
+          }
+          // }
+          return Container();
+        },
+      );
 
   void rebuildBlockObject() {
     _doctorsListBlock = null;
@@ -498,56 +526,50 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     _labsListBlock = LabsListBlock();
   }
 
-  Widget getEmptyCard(Diagnostics? diagnostics) {
-    return !widget.toPreviousScreen!
-        ? Center(
-            child: Text(
-              'No Records Found ',
-              style: TextStyle(
-                color: ColorUtils.blackcolor,
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.w500,
+  Widget getEmptyCard(Diagnostics? diagnostics) => !widget.toPreviousScreen!
+      ? Center(
+          child: Text(
+            'No Records Found ',
+            style: TextStyle(
+              color: ColorUtils.blackcolor,
+              fontSize: 15.0.sp,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        )
+      : Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'No Records Found ',
+                style: TextStyle(
+                  color: ColorUtils.blackcolor,
+                  fontSize: 15.0.sp,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-          )
-        : Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'No Records Found ',
-                  style: TextStyle(
-                    color: ColorUtils.blackcolor,
-                    fontSize: 15.0.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                fhbBasicWidget.getSaveButton(() {
-                  if (widget.toPreviousScreen!) {
-                    widget.arguments!.searchWord == CommonConstants.doctors
-                        ? saveMediaDialog(context)
-                        : widget.arguments!.searchWord ==
-                                CommonConstants.hospitals
-                            ? saveHospitalDialog(context)
-                            : widget.arguments!.searchWord ==
-                                        CommonConstants.labs ||
-                                    widget.arguments!.searchWord ==
-                                        CommonConstants.lab
-                                ? passLaboratoryValue(null, context)
-                                : passCityValue(null, context);
-                  }
-                }, text: 'Click here to add', width: 150.w),
-              ],
-            ),
-          );
-  }
+              const SizedBox(
+                height: 10,
+              ),
+              fhbBasicWidget.getSaveButton(() {
+                if (widget.toPreviousScreen!) {
+                  widget.arguments!.searchWord == CommonConstants.doctors
+                      ? saveMediaDialog(context)
+                      : widget.arguments!.searchWord == CommonConstants.hospitals
+                          ? saveHospitalDialog(context)
+                          : widget.arguments!.searchWord == CommonConstants.labs || widget.arguments!.searchWord == CommonConstants.lab
+                              ? passLaboratoryValue(null, context)
+                              : passCityValue(null, context);
+                }
+              }, text: 'Click here to add', width: 150.w),
+            ],
+          ),
+        );
 
   Future<void> _refresh() async {
     await _refreshIndicatorKey.currentState?.show(atTop: false);
-    await Future.delayed(Duration(milliseconds: 300));
+    await Future.delayed(const Duration(milliseconds: 300));
   }
 
   Widget _showAddButton(Diagnostics diagnostics) {
@@ -558,8 +580,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               ? passDoctorsValue(diagnostics.errorData, context)
               : widget.arguments!.searchWord == CommonConstants.hospitals
                   ? passHospitalValue(null, context)
-                  : widget.arguments!.searchWord == CommonConstants.labs ||
-                          widget.arguments!.searchWord == CommonConstants.lab
+                  : widget.arguments!.searchWord == CommonConstants.labs || widget.arguments!.searchWord == CommonConstants.lab
                       ? passLaboratoryValue(null, context)
                       : passCityValue(null, context);
         }
@@ -569,9 +590,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         height: 40.0.h,
         decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          borderRadius: BorderRadius.all(Radius.circular(25)),
+          borderRadius: const BorderRadius.all(Radius.circular(25)),
           boxShadow: <BoxShadow>[
-            BoxShadow(
+            const BoxShadow(
               color: Color.fromARGB(15, 0, 0, 0),
               offset: Offset(0, 2),
               blurRadius: 5,
@@ -591,123 +612,95 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       ),
     );
 
-    return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 30),
-        child: loginButtonWithGesture);
+    return Padding(padding: const EdgeInsets.only(left: 20, right: 20, top: 30), child: loginButtonWithGesture);
   }
 
-  Widget getAllDatasInDoctorsList(List<DoctorsListResult>? data) {
-    return RefreshIndicator(
-      key: _refreshIndicatorKey,
-      onRefresh: _refresh,
-      child: data != null
-          ? Container(
-              color: Color(fhbColors.bgColorContainer),
-              child: ListView.builder(
-                itemBuilder: (c, i) => Container(
-                  padding: EdgeInsets.only(top: 2, bottom: 2),
-                  child: getCardToDisplaySearchList(
-                      (data[i].name != null && data[i].name != '')
-                          ? data[i].name!.capitalizeFirstofEach
-                          : data[i].firstName!.capitalizeFirstofEach +
-                              ' ' +
-                              data[i].lastName!.capitalizeFirstofEach,
-                      getDoctorsAddress(data[i]),
-                      data[i].doctorId,
-                      data[i].profilePicThumbnailUrl,
-                      data[i],
-                      HospitalsListResult(),
-                      LabListResult()),
-                ),
-                itemCount: data.length,
-              ))
-          : Container(
-              color: Color(fhbColors.bgColorContainer),
-              child: Center(
-                child: Text(variable.strNodata),
-              ),
-            ),
-    );
-  }
-
-  Widget getAllDatasInDoctorsListScrap(DoctorsSearchListResponse data) {
-    return RefreshIndicator(
-      key: _refreshIndicatorKey,
-      onRefresh: _refresh,
-      child: (data.isSuccess == false &&
-              widget.isSkipUnknown == true &&
-              data.diagnostics?.errorData != null)
-          ? Container(
-              color: Color(fhbColors.bgColorContainer),
-              child: getEmptyCard(data.diagnostics),
-            )
-          : data.result != null
-              ? Container(
-                  color: Color(fhbColors.bgColorContainer),
-                  child: ListView.builder(
-                    itemBuilder: (c, i) => Container(
-                      padding: EdgeInsets.only(top: 2, bottom: 2),
-                      child: getCardToDisplaySearchList(
-                          (data.result![i].name != null &&
-                                  data.result![i].name != '')
-                              ? data.result![i].name!.capitalizeFirstofEach
-                              : data.result![i].firstName!
-                                      .capitalizeFirstofEach +
-                                  ' ' +
-                                  data.result![i].lastName!
-                                      .capitalizeFirstofEach,
-                          getDoctorsAddress(data.result![i]),
-                          data.result![i].doctorId,
-                          data.result![i].profilePicThumbnailUrl,
-                          data.result![i],
-                          HospitalsListResult(),
-                          LabListResult()),
-                    ),
-                    itemCount: data.result!.length,
-                  ))
-              : Container(
-                  color: Color(fhbColors.bgColorContainer),
-                  child: Center(
-                    child: Text(variable.strNodata),
+  Widget getAllDatasInDoctorsList(List<DoctorsListResult>? data) => RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: _refresh,
+        child: data != null
+            ? Container(
+                color: const Color(fhbColors.bgColorContainer),
+                child: ListView.builder(
+                  itemBuilder: (c, i) => Container(
+                    padding: const EdgeInsets.only(top: 2, bottom: 2),
+                    child: getCardToDisplaySearchList(
+                        (data[i].name != null && data[i].name != '') ? data[i].name!.capitalizeFirstofEach : data[i].firstName!.capitalizeFirstofEach + ' ' + data[i].lastName!.capitalizeFirstofEach,
+                        getDoctorsAddress(data[i]),
+                        data[i].doctorId,
+                        data[i].profilePicThumbnailUrl,
+                        data[i],
+                        HospitalsListResult(),
+                        LabListResult()),
                   ),
+                  itemCount: data.length,
+                ))
+            : Container(
+                color: const Color(fhbColors.bgColorContainer),
+                child: const Center(
+                  child: Text(variable.strNodata),
                 ),
-    );
-  }
-
-  getAllDatasInHospitalList(List<HospitalsListResult>? data) {
-    return RefreshIndicator(
-      key: _refreshIndicatorKey,
-      onRefresh: _refresh,
-      color: Color(CommonUtil().getMyPrimaryColor()),
-      child: data != null
-          ? Container(
-              color: Color(fhbColors.bgColorContainer),
-              child: ListView.builder(
-                itemBuilder: (c, i) => Container(
-                  padding: EdgeInsets.only(top: 2, bottom: 2),
-                  child: getCardToDisplaySearchList(
-                      (data[i].name != null && data[i].name != "")
-                          ? data[i].name
-                          : data[i].healthOrganizationName,
-                      data[i].addressLine1,
-                      data[i].healthOrganizationId ??
-                          data[i].healthOrganizationReferenceId,
-                      null,
-                      DoctorsListResult(),
-                      data[i],
-                      LabListResult(),
-                      cityAndState: getHospitalCityAndState(data[i])),
-                ),
-                itemCount: data.length,
-              ))
-          : Container(
-              color: Color(fhbColors.bgColorContainer),
-              child: Center(
-                child: Text(variable.strNodata),
               ),
-            ),
-    );
-  }
+      );
+
+  Widget getAllDatasInDoctorsListScrap(DoctorsSearchListResponse data) => RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: _refresh,
+        child: (data.isSuccess == false && widget.isSkipUnknown == true && data.diagnostics?.errorData != null)
+            ? Container(
+                color: const Color(fhbColors.bgColorContainer),
+                child: getEmptyCard(data.diagnostics),
+              )
+            : data.result != null
+                ? Container(
+                    color: const Color(fhbColors.bgColorContainer),
+                    child: ListView.builder(
+                      itemBuilder: (c, i) => Container(
+                        padding: const EdgeInsets.only(top: 2, bottom: 2),
+                        child: getCardToDisplaySearchList(
+                            (data.result![i].name != null && data.result![i].name != '')
+                                ? data.result![i].name!.capitalizeFirstofEach
+                                : data.result![i].firstName!.capitalizeFirstofEach + ' ' + data.result![i].lastName!.capitalizeFirstofEach,
+                            getDoctorsAddress(data.result![i]),
+                            data.result![i].doctorId,
+                            data.result![i].profilePicThumbnailUrl,
+                            data.result![i],
+                            HospitalsListResult(),
+                            LabListResult()),
+                      ),
+                      itemCount: data.result!.length,
+                    ))
+                : Container(
+                    color: const Color(fhbColors.bgColorContainer),
+                    child: const Center(
+                      child: Text(variable.strNodata),
+                    ),
+                  ),
+      );
+
+  getAllDatasInHospitalList(List<HospitalsListResult>? data) => RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: _refresh,
+        color: Color(CommonUtil().getMyPrimaryColor()),
+        child: data != null
+            ? Container(
+                color: const Color(fhbColors.bgColorContainer),
+                child: ListView.builder(
+                  itemBuilder: (c, i) => Container(
+                    padding: const EdgeInsets.only(top: 2, bottom: 2),
+                    child: getCardToDisplaySearchList((data[i].name != null && data[i].name != "") ? data[i].name : data[i].healthOrganizationName, data[i].addressLine1,
+                        data[i].healthOrganizationId ?? data[i].healthOrganizationReferenceId, null, DoctorsListResult(), data[i], LabListResult(),
+                        cityAndState: getHospitalCityAndState(data[i])),
+                  ),
+                  itemCount: data.length,
+                ))
+            : Container(
+                color: const Color(fhbColors.bgColorContainer),
+                child: const Center(
+                  child: Text(variable.strNodata),
+                ),
+              ),
+      );
 
   Widget getAllDatasInLabsList(List<LabListResult>? data) {
     try {
@@ -728,58 +721,35 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         if (tempLabListResult != null && tempLabListResult.length > 0) {
           if (locationModel != null && locationModel.locality != null) {
             subLocalBasedLabListResult = tempLabListResult
-                .where((item) =>
-                    CommonUtil()
-                        .validString(item.addressLine1)
-                        .trim()
-                        .isNotEmpty &&
-                    CommonUtil().validString(item.addressLine1).contains(
-                        CommonUtil().validString(locationModel.locality)))
+                .where(
+                    (item) => CommonUtil().validString(item.addressLine1).trim().isNotEmpty && CommonUtil().validString(item.addressLine1).contains(CommonUtil().validString(locationModel.locality)))
                 .toList();
           }
           if (locationModel != null && locationModel.subAdminArea != null) {
             cityBasedLabListResult = tempLabListResult
-                .where((item) =>
-                    CommonUtil().validString(item.cityName).trim().isNotEmpty &&
-                    CommonUtil().validString(item.cityName).contains(
-                        CommonUtil().validString(locationModel.subAdminArea)))
+                .where((item) => CommonUtil().validString(item.cityName).trim().isNotEmpty && CommonUtil().validString(item.cityName).contains(CommonUtil().validString(locationModel.subAdminArea)))
                 .toList();
           }
 
           otherLabListResult = tempLabListResult
               .where((item) =>
-                  !CommonUtil().validString(item.addressLine1).contains(
-                      locationModel != null && locationModel.locality != null
-                          ? CommonUtil().validString(locationModel.locality)
-                          : "") ||
-                  !CommonUtil().validString(item.cityName).contains(
-                      locationModel != null &&
-                              locationModel.subAdminArea != null
-                          ? CommonUtil().validString(locationModel.subAdminArea)
-                          : ""))
+                  !CommonUtil().validString(item.addressLine1).contains(locationModel != null && locationModel.locality != null ? CommonUtil().validString(locationModel.locality) : "") ||
+                  !CommonUtil().validString(item.cityName).contains(locationModel != null && locationModel.subAdminArea != null ? CommonUtil().validString(locationModel.subAdminArea) : ""))
               .toList();
 
-          otherLabListResult.sort((a, b) => CommonUtil()
-              .validString(a.healthOrganizationName.toString())
-              .toLowerCase()
-              .compareTo(CommonUtil()
-                  .validString(b.healthOrganizationName.toString())
-                  .toLowerCase()));
+          otherLabListResult
+              .sort((a, b) => CommonUtil().validString(a.healthOrganizationName.toString()).toLowerCase().compareTo(CommonUtil().validString(b.healthOrganizationName.toString()).toLowerCase()));
 
-          finalLabListResult = subLocalBasedLabListResult +
-              cityBasedLabListResult +
-              otherLabListResult;
+          finalLabListResult = subLocalBasedLabListResult + cityBasedLabListResult + otherLabListResult;
           finalLabListResult = finalLabListResult.toSet().toList();
           data = finalLabListResult;
         }
 
         String strText = value ?? "";
 
-        if (strText.trim().isEmpty ||
-            strOthers.toLowerCase().contains(strText)) {
+        if (strText.trim().isEmpty || strOthers.toLowerCase().contains(strText)) {
           LabListResult labListResult = LabListResult();
-          labListResult.healthOrganizationName =
-              toBeginningOfSentenceCase(strOthers);
+          labListResult.healthOrganizationName = toBeginningOfSentenceCase(strOthers);
           labListResult.healthOrganizationId = strOthers;
           data!.add(labListResult);
         }
@@ -795,121 +765,88 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       color: Color(CommonUtil().getMyPrimaryColor()),
       child: data != null
           ? Container(
-              color: Color(fhbColors.bgColorContainer),
+              color: const Color(fhbColors.bgColorContainer),
               child: ListView.builder(
                 itemBuilder: (c, i) => Container(
-                  padding: EdgeInsets.only(top: 2, bottom: 2),
-                  child: getCardToDisplaySearchList(
-                      data![i].healthOrganizationName,
-                      data[i].addressLine1,
-                      data[i].healthOrganizationId ??
-                          data[i].healthOrganizationReferenceId,
-                      '',
-                      DoctorsListResult(),
-                      HospitalsListResult(),
-                      data[i]),
+                  padding: const EdgeInsets.only(top: 2, bottom: 2),
+                  child: getCardToDisplaySearchList(data![i].healthOrganizationName, data[i].addressLine1, data[i].healthOrganizationId ?? data[i].healthOrganizationReferenceId, '',
+                      DoctorsListResult(), HospitalsListResult(), data[i]),
                 ),
                 itemCount: data.length,
               ))
           : Container(
-              color: Color(fhbColors.bgColorContainer),
-              child: Center(
+              color: const Color(fhbColors.bgColorContainer),
+              child: const Center(
                 child: Text(variable.strNodata),
               ),
             ),
     );
   }
 
-  Widget getCardToDisplaySearchList(
-      String? name,
-      String? address,
-      String? id,
-      String? logo,
-      DoctorsListResult data,
-      HospitalsListResult hospitalData,
-      LabListResult labData,
-      {String? cityAndState}) {
-    return GestureDetector(
-        child: Padding(
-            padding: EdgeInsets.only(bottom: 4, left: 10, right: 10),
-            child: Container(
-                padding: EdgeInsets.only(bottom: 2),
-                margin: EdgeInsets.all(0),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: Row(children: <Widget>[
-                  SizedBox(
-                    width: 10.0.w,
-                  ),
-                  ClipOval(
-                      child: Container(
-                    height: 50.0.h,
-                    width: 50.0.h,
-                    color: Color(fhbColors.bgColorContainer),
-                    child:
-                        widget.arguments!.searchWord == CommonConstants.doctors
-                            ? getHospitalLogoImage(logo, data)
-                            : getHospitalLogoImage(logo, data),
-                  )),
-                  SizedBox(width: 10.0.w),
-                  Expanded(
-                      flex: 5,
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: getDataToView(
-                          widget.arguments!.searchWord ==
-                                  CommonConstants.doctors
-                              ? name
-                              : widget.arguments!.searchWord ==
-                                      CommonConstants.hospitals
-                                  ? name
-                                  : labData.healthOrganizationName,
-                          address,
-                          id,
-                          data,
-                          specialization: widget.arguments!.searchWord ==
-                                  CommonConstants.hospitals
-                              ? hospitalData.specialization
-                              : null,
-                        ),
-                      ))
-                ]))),
-        onTap: () {
-          if (widget.toPreviousScreen!) {
-            widget.arguments!.searchWord == CommonConstants.doctors
-                ? passDoctorsValue(data, context)
-                : widget.arguments!.searchWord == CommonConstants.hospitals
-                    ? passHospitalValue(hospitalData, context)
-                    : passLaboratoryValue(labData, context);
-          } else {
-            passdataToNextScreen(
-                data.name, context, data, hospitalData, labData);
-          }
-        });
-  }
+  Widget getCardToDisplaySearchList(String? name, String? address, String? id, String? logo, DoctorsListResult data, HospitalsListResult hospitalData, LabListResult labData, {String? cityAndState}) =>
+      GestureDetector(
+          child: Padding(
+              padding: const EdgeInsets.only(bottom: 4, left: 10, right: 10),
+              child: Container(
+                  padding: const EdgeInsets.only(bottom: 2),
+                  margin: const EdgeInsets.all(0),
+                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                  child: Row(children: <Widget>[
+                    SizedBox(
+                      width: 10.0.w,
+                    ),
+                    ClipOval(
+                        child: Container(
+                      height: 50.0.h,
+                      width: 50.0.h,
+                      color: const Color(fhbColors.bgColorContainer),
+                      child: widget.arguments!.searchWord == CommonConstants.doctors ? getHospitalLogoImage(logo, data) : getHospitalLogoImage(logo, data),
+                    )),
+                    SizedBox(width: 10.0.w),
+                    Expanded(
+                        flex: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: getDataToView(
+                            widget.arguments!.searchWord == CommonConstants.doctors
+                                ? name
+                                : widget.arguments!.searchWord == CommonConstants.hospitals
+                                    ? name
+                                    : labData.healthOrganizationName,
+                            address,
+                            id,
+                            data,
+                            specialization: widget.arguments!.searchWord == CommonConstants.hospitals ? hospitalData.specialization : null,
+                          ),
+                        ))
+                  ]))),
+          onTap: () {
+            if (widget.toPreviousScreen!) {
+              widget.arguments!.searchWord == CommonConstants.doctors
+                  ? passDoctorsValue(data, context)
+                  : widget.arguments!.searchWord == CommonConstants.hospitals
+                      ? passHospitalValue(hospitalData, context)
+                      : passLaboratoryValue(labData, context);
+            } else {
+              passdataToNextScreen(data.name, context, data, hospitalData, labData);
+            }
+          });
 
-  getCorrespondingImageWidget(String id) {
-    return Icon(Icons.verified_user);
-  }
+  getCorrespondingImageWidget(String id) => const Icon(Icons.verified_user);
 
   void passDoctorsValue(DoctorsListResult? doctorData, BuildContext context) {
     Navigator.of(context).pop({Constants.keyDoctor: json.encode(doctorData)});
   }
 
-  void passHospitalValue(
-      HospitalsListResult? hospitaData, BuildContext context) {
-    Navigator.of(context)
-        .maybePop({Constants.keyHospital: json.encode(hospitaData)});
+  void passHospitalValue(HospitalsListResult? hospitaData, BuildContext context) {
+    Navigator.of(context).maybePop({Constants.keyHospital: json.encode(hospitaData)});
   }
 
-  void passLaboratoryValue(
-      LabListResult? laboratoryData, BuildContext context) {
+  void passLaboratoryValue(LabListResult? laboratoryData, BuildContext context) {
     Navigator.of(context).pop({Constants.keyLab: json.encode(laboratoryData)});
   }
 
-  void passCityValue(
-      cityListModel.CityListData? cityData, BuildContext context) {
+  void passCityValue(cityListModel.CityListData? cityData, BuildContext context) {
     Navigator.of(context).pop({Constants.keyCity: cityData});
   }
 
@@ -920,115 +857,90 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     DoctorsListResult data, {
     String? cityAndState,
     String? specialization,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(
-          name != null ? name.capitalizeFirstofEach : '',
-          style: TextStyle(
-              fontSize: 16.0.sp,
-              fontWeight: FontWeight.w500,
-              color: ColorUtils.blackcolor),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        SizedBox(height: 10.0.h),
-        if (address != null)
+  }) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
           Text(
-            address,
-            style: TextStyle(
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.w400,
-                color: ColorUtils.lightgraycolor),
-            maxLines: 2,
+            name != null ? name.capitalizeFirstofEach : '',
+            style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500, color: ColorUtils.blackcolor),
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-        if (cityAndState != null)
-          Text(
-            cityAndState,
-            style: TextStyle(
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.w400,
-                color: ColorUtils.lightgraycolor),
-          ),
-        widget.arguments!.searchWord == CommonConstants.doctors
-            ? (data.specialty != null && data.specialty != '')
-                ? Text(
-                    toBeginningOfSentenceCase(data.specialty ?? '')!,
-                    style: TextStyle(
-                        fontSize: 15.0.sp,
-                        fontWeight: FontWeight.w400,
-                        color: ColorUtils.lightgraycolor),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  )
-                : SizedBox(height: 10.0.h)
-            : (specialization != null && specialization != '')
-                ? Text(
-                    toBeginningOfSentenceCase(specialization)!,
-                    style: TextStyle(
-                        fontSize: 15.0.sp,
-                        fontWeight: FontWeight.w400,
-                        color: ColorUtils.lightgraycolor),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  )
-                : SizedBox(height: 10.0.h),
-      ],
-    );
-  }
+          SizedBox(height: 10.0.h),
+          if (address != null)
+            Text(
+              address,
+              style: TextStyle(fontSize: 15.0.sp, fontWeight: FontWeight.w400, color: ColorUtils.lightgraycolor),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          if (cityAndState != null)
+            Text(
+              cityAndState,
+              style: TextStyle(fontSize: 15.0.sp, fontWeight: FontWeight.w400, color: ColorUtils.lightgraycolor),
+            ),
+          widget.arguments!.searchWord == CommonConstants.doctors
+              ? (data.specialty != null && data.specialty != '')
+                  ? Text(
+                      toBeginningOfSentenceCase(data.specialty ?? '')!,
+                      style: TextStyle(fontSize: 15.0.sp, fontWeight: FontWeight.w400, color: ColorUtils.lightgraycolor),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    )
+                  : SizedBox(height: 10.0.h)
+              : (specialization != null && specialization != '')
+                  ? Text(
+                      toBeginningOfSentenceCase(specialization)!,
+                      style: TextStyle(fontSize: 15.0.sp, fontWeight: FontWeight.w400, color: ColorUtils.lightgraycolor),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    )
+                  : SizedBox(height: 10.0.h),
+        ],
+      );
 
-  getDoctorProfileImageWidget(String id) {
-    return FutureBuilder(
-      future: _healthReportListForUserBlock.getProfilePic(id),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Image.memory(
-            snapshot.data as Uint8List,
-            height: 50.0.h,
-            width: 50.0.h,
-            fit: BoxFit.cover,
-          );
-        } else {
-          return ImageIcon(
-            AssetImage(variable.icon_stetho),
-            size: 40.0.sp,
-            color: Color(CommonUtil().getMyPrimaryColor()),
-          );
-        }
-      },
-    );
-  }
+  getDoctorProfileImageWidget(String id) => FutureBuilder(
+        future: _healthReportListForUserBlock.getProfilePic(id),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Image.memory(
+              snapshot.data as Uint8List,
+              height: 50.0.h,
+              width: 50.0.h,
+              fit: BoxFit.cover,
+            );
+          } else {
+            return ImageIcon(
+              const AssetImage(variable.icon_stetho),
+              size: 40.0.sp,
+              color: Color(CommonUtil().getMyPrimaryColor()),
+            );
+          }
+        },
+      );
 
   Widget getHospitalLogoImage(String? logo, DoctorsListResult docs) {
     if (logo == null || logo == '') {
       return Container();
     } else {
       return Image.network(logo,
-          errorBuilder: (context, exception, stackTrace) {
-        return Container(
-          height: 50.0.h,
-          width: 50.0.h,
-          color: Colors.grey[200],
-          child: Center(
-            child: getFirstLastNameText(docs),
-          ),
-        );
-      });
+          errorBuilder: (context, exception, stackTrace) => Container(
+                height: 50.0.h,
+                width: 50.0.h,
+                color: Colors.grey[200],
+                child: Center(
+                  child: getFirstLastNameText(docs),
+                ),
+              ));
     }
   }
 
   Widget getFirstLastNameText(DoctorsListResult myProfile) {
-    if (myProfile != null &&
-        myProfile.firstName != null &&
-        myProfile.lastName != null) {
+    if (myProfile != null && myProfile.firstName != null && myProfile.lastName != null) {
       return Text(
-        myProfile.firstName![0].toUpperCase() +
-            (myProfile.lastName!.length > 0
-                ? myProfile.lastName![0].toUpperCase()
-                : ''),
+        myProfile.firstName![0].toUpperCase() + (myProfile.lastName!.length > 0 ? myProfile.lastName![0].toUpperCase() : ''),
         style: TextStyle(
           color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
@@ -1056,12 +968,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     }
   }
 
-  void passdataToNextScreen(
-      String? name,
-      BuildContext context,
-      DoctorsListResult data,
-      HospitalsListResult hospitalData,
-      LabListResult labData) {
+  void passdataToNextScreen(String? name, BuildContext context, DoctorsListResult data, HospitalsListResult hospitalData, LabListResult labData) {
     if (widget.arguments!.searchWord == CommonConstants.doctors) {
       if (data.patientAssociationRequest!) {
         selectedFamilyMemberName = null;
@@ -1073,9 +980,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           arguments: AddProvidersArguments(
               data: data,
               searchKeyWord: CommonConstants.doctors,
-              fromClass: widget.arguments!.fromClass == router.cn_AddProvider
-                  ? widget.arguments!.fromClass
-                  : router.rt_TelehealthProvider,
+              fromClass: widget.arguments!.fromClass == router.cn_AddProvider ? widget.arguments!.fromClass : router.rt_TelehealthProvider,
               hasData: true),
         ).then((value) {
           if (value == 1) {
@@ -1090,9 +995,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         arguments: AddProvidersArguments(
             hospitalData: hospitalData,
             searchKeyWord: CommonConstants.hospitals,
-            fromClass: widget.arguments!.fromClass == router.cn_AddProvider
-                ? widget.arguments!.fromClass
-                : router.rt_TelehealthProvider,
+            fromClass: widget.arguments!.fromClass == router.cn_AddProvider ? widget.arguments!.fromClass : router.rt_TelehealthProvider,
             hasData: true),
       ).then((value) {
         if (value == 1) {
@@ -1106,9 +1009,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         arguments: AddProvidersArguments(
             labData: labData,
             searchKeyWord: CommonConstants.labs,
-            fromClass: widget.arguments!.fromClass == router.cn_AddProvider
-                ? widget.arguments!.fromClass
-                : router.rt_TelehealthProvider,
+            fromClass: widget.arguments!.fromClass == router.cn_AddProvider ? widget.arguments!.fromClass : router.rt_TelehealthProvider,
             hasData: true),
       ).then((value) {
         if (value == 1) {
@@ -1146,8 +1047,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           ? passDoctorsValue(diagnostics.errorData, context)
           : widget.arguments!.searchWord == CommonConstants.hospitals
               ? passHospitalValue(null, context)
-              : widget.arguments!.searchWord == CommonConstants.labs ||
-                      widget.arguments!.searchWord == CommonConstants.lab
+              : widget.arguments!.searchWord == CommonConstants.labs || widget.arguments!.searchWord == CommonConstants.lab
                   ? passLaboratoryValue(null, context)
                   : passCityValue(null, context);
     }
@@ -1160,8 +1060,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   passHospitalValueSample(results, BuildContext context) {
-    final HospitalsListResult? jsonDecodeForDoctor =
-        results[Constants.keyHospital];
+    final HospitalsListResult? jsonDecodeForDoctor = results[Constants.keyHospital];
 
     passHospitalValue(jsonDecodeForDoctor, context);
   }
@@ -1211,77 +1110,75 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
     return showDialog<void>(
       context: context,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
-            content: Container(
-                width: 1.sw,
-                height: 1.sh / 1.5,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                IconButton(
-                                    icon: Icon(
-                                      Icons.close,
-                                      size: 24.0.sp,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    })
-                              ],
-                            ),
-
-                            Row(
-                              children: <Widget>[
-                                _showFirstNameTextField(),
-                              ],
-                            ),
-
-                            SizedBox(
-                              height: 10.0.h,
-                            ),
-                            Row(
-                              children: <Widget>[
-                                _showLastNameTextField(),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10.0.h,
-                            ),
-                            Row(
-                              children: <Widget>[
-                                CountryCodePickerPage(
-                                  selectedCountry: _selectedDialogCountry,
-                                  onValuePicked: (country) => setState(
-                                    () => _selectedDialogCountry = country,
+      builder: (context) => StatefulBuilder(builder: (context, setState) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
+          content: Container(
+              width: 1.sw,
+              height: 1.sh / 1.5,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              IconButton(
+                                  icon: Icon(
+                                    Icons.close,
+                                    size: 24.0.sp,
                                   ),
-                                  isEnabled: BASE_URL != prodUSURL,
-                                ),
-                                _ShowMobileNoTextField()
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10.0.h,
-                            ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  })
+                            ],
+                          ),
 
-                            Row(
-                              children: <Widget>[
-                                _showSpecializationTextField(),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10.0.h,
-                            ),
-                            /*Row(
+                          Row(
+                            children: <Widget>[
+                              _showFirstNameTextField(),
+                            ],
+                          ),
+
+                          SizedBox(
+                            height: 10.0.h,
+                          ),
+                          Row(
+                            children: <Widget>[
+                              _showLastNameTextField(),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0.h,
+                          ),
+                          Row(
+                            children: <Widget>[
+                              CountryCodePickerPage(
+                                selectedCountry: _selectedDialogCountry,
+                                onValuePicked: (country) => setState(
+                                  () => _selectedDialogCountry = country,
+                                ),
+                                isEnabled: BASE_URL != prodUSURL,
+                              ),
+                              _ShowMobileNoTextField()
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0.h,
+                          ),
+
+                          Row(
+                            children: <Widget>[
+                              _showSpecializationTextField(),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0.h,
+                          ),
+                          /*Row(
                               children: <Widget>[
                                 _showHospitalNameTextField(false),
                               ],
@@ -1290,25 +1187,24 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                               height: 10.0.h,
                             ),*/
 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                _showAddDoctorButton(),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20.0.h,
-                            ),
-                            // callAddFamilyStreamBuilder(),
-                          ],
-                        ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              _showAddDoctorButton(),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20.0.h,
+                          ),
+                          // callAddFamilyStreamBuilder(),
+                        ],
                       ),
                     ),
-                  ],
-                )),
-          );
-        });
-      },
+                  ),
+                ],
+              )),
+        );
+      }),
     );
   }
 
@@ -1317,239 +1213,187 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
     return showDialog<void>(
       context: context,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
-            content: Container(
-                width: 1.sw,
-                height: 1.sh / 3,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                IconButton(
-                                    icon: Icon(
-                                      Icons.close,
-                                      size: 24.0.sp,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    })
-                              ],
-                            ),
+      builder: (context) => StatefulBuilder(builder: (context, setState) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
+          content: Container(
+              width: 1.sw,
+              height: 1.sh / 3,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              IconButton(
+                                  icon: Icon(
+                                    Icons.close,
+                                    size: 24.0.sp,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  })
+                            ],
+                          ),
 
-                            Row(
-                              children: <Widget>[
-                                _showHospitalNameTextField(true),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10.0.h,
-                            ),
+                          Row(
+                            children: <Widget>[
+                              _showHospitalNameTextField(true),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0.h,
+                          ),
 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                _showAddHospitalButton(),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20.0.h,
-                            ),
-                            // callAddFamilyStreamBuilder(),
-                          ],
-                        ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              _showAddHospitalButton(),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20.0.h,
+                          ),
+                          // callAddFamilyStreamBuilder(),
+                        ],
                       ),
                     ),
-                  ],
-                )),
-          );
-        });
-      },
+                  ),
+                ],
+              )),
+        );
+      }),
     );
   }
 
-  Widget _showFirstNameTextField() {
-    return Expanded(
-        child: TextField(
-      textCapitalization: TextCapitalization.sentences,
-      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-      controller: firstNameController,
-      keyboardType: TextInputType.text,
-      focusNode: firstNameFocus,
-      textInputAction: TextInputAction.done,
-      onSubmitted: (term) {
-        FocusScope.of(context).requestFocus(firstNameFocus);
-      },
-      style: TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 16.0.sp,
-          color: ColorUtils.blackcolor),
-      decoration: InputDecoration(
-        labelText: CommonConstants.firstNameWithStar,
-        hintText: CommonConstants.firstName,
-        labelStyle: TextStyle(
-            fontSize: 15.0.sp,
+  Widget _showFirstNameTextField() => Expanded(
+          child: TextField(
+        textCapitalization: TextCapitalization.sentences,
+        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        controller: firstNameController,
+        keyboardType: TextInputType.text,
+        focusNode: firstNameFocus,
+        textInputAction: TextInputAction.done,
+        onSubmitted: (term) {
+          FocusScope.of(context).requestFocus(firstNameFocus);
+        },
+        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0.sp, color: ColorUtils.blackcolor),
+        decoration: InputDecoration(
+          labelText: CommonConstants.firstNameWithStar,
+          hintText: CommonConstants.firstName,
+          labelStyle: TextStyle(fontSize: 15.0.sp, fontWeight: FontWeight.w400, color: ColorUtils.myFamilyGreyColor),
+          hintStyle: TextStyle(
+            fontSize: 16.0.sp,
+            color: ColorUtils.myFamilyGreyColor,
             fontWeight: FontWeight.w400,
-            color: ColorUtils.myFamilyGreyColor),
-        hintStyle: TextStyle(
-          fontSize: 16.0.sp,
-          color: ColorUtils.myFamilyGreyColor,
-          fontWeight: FontWeight.w400,
+          ),
+          border: UnderlineInputBorder(borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
         ),
-        border: UnderlineInputBorder(
-            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-      ),
-    ));
-  }
+      ));
 
-  Widget _showLastNameTextField() {
-    return Expanded(
-        child: TextField(
-      textCapitalization: TextCapitalization.sentences,
-      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-      controller: lastNameController,
-      keyboardType: TextInputType.text,
-      focusNode: lastNameFocus,
-      textInputAction: TextInputAction.done,
-      onSubmitted: (term) {
-        lastNameFocus.unfocus();
-      },
-      style: TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 16.0.sp,
-          color: ColorUtils.blackcolor),
-      decoration: InputDecoration(
-        labelText: CommonConstants.lastName,
-        hintText: CommonConstants.lastName,
-        labelStyle: TextStyle(
-            fontSize: 15.0.sp,
+  Widget _showLastNameTextField() => Expanded(
+          child: TextField(
+        textCapitalization: TextCapitalization.sentences,
+        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        controller: lastNameController,
+        keyboardType: TextInputType.text,
+        focusNode: lastNameFocus,
+        textInputAction: TextInputAction.done,
+        onSubmitted: (term) {
+          lastNameFocus.unfocus();
+        },
+        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0.sp, color: ColorUtils.blackcolor),
+        decoration: InputDecoration(
+          labelText: CommonConstants.lastName,
+          hintText: CommonConstants.lastName,
+          labelStyle: TextStyle(fontSize: 15.0.sp, fontWeight: FontWeight.w400, color: ColorUtils.myFamilyGreyColor),
+          hintStyle: TextStyle(
+            fontSize: 16.0.sp,
+            color: ColorUtils.myFamilyGreyColor,
             fontWeight: FontWeight.w400,
-            color: ColorUtils.myFamilyGreyColor),
-        hintStyle: TextStyle(
-          fontSize: 16.0.sp,
-          color: ColorUtils.myFamilyGreyColor,
-          fontWeight: FontWeight.w400,
+          ),
+          border: UnderlineInputBorder(borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
         ),
-        border: UnderlineInputBorder(
-            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-      ),
-    ));
-  }
+      ));
 
-  Widget _ShowMobileNoTextField() {
-    return Expanded(
-      child: TextField(
-          textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-          controller: mobileNoController,
-          enabled: true,
-          keyboardType: TextInputType.text,
-          focusNode: mobileNoFocus,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (term) {
-            mobileNoFocus.unfocus();
-          },
-          style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 16.0.sp,
-              color: ColorUtils.blackcolor),
-          decoration: InputDecoration(
-            hintText: CommonConstants.mobile_number,
-            labelStyle: TextStyle(
-                fontSize: 14.0.sp,
+  Widget _ShowMobileNoTextField() => Expanded(
+        child: TextField(
+            textCapitalization: TextCapitalization.sentences,
+            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+            controller: mobileNoController,
+            enabled: true,
+            keyboardType: TextInputType.text,
+            focusNode: mobileNoFocus,
+            textInputAction: TextInputAction.done,
+            onSubmitted: (term) {
+              mobileNoFocus.unfocus();
+            },
+            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0.sp, color: ColorUtils.blackcolor),
+            decoration: InputDecoration(
+              hintText: CommonConstants.mobile_number,
+              labelStyle: TextStyle(fontSize: 14.0.sp, fontWeight: FontWeight.w400, color: ColorUtils.myFamilyGreyColor),
+              hintStyle: TextStyle(
+                fontSize: 16.0.sp,
+                color: ColorUtils.myFamilyGreyColor,
                 fontWeight: FontWeight.w400,
-                color: ColorUtils.myFamilyGreyColor),
-            hintStyle: TextStyle(
-              fontSize: 16.0.sp,
-              color: ColorUtils.myFamilyGreyColor,
-              fontWeight: FontWeight.w400,
-            ),
-            border: UnderlineInputBorder(
-                borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-          )),
-    );
-  }
+              ),
+              border: UnderlineInputBorder(borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
+            )),
+      );
 
-  Widget _showSpecializationTextField() {
-    return Expanded(
-        child: TextField(
-      textCapitalization: TextCapitalization.sentences,
-      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-      controller: specializationController,
-      keyboardType: TextInputType.text,
-      focusNode: specializationFocus,
-      textInputAction: TextInputAction.done,
-      onSubmitted: (term) {
-        FocusScope.of(context).requestFocus(lastNameFocus);
-      },
-      style: TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 16.0.sp,
-          color: ColorUtils.blackcolor),
-      decoration: InputDecoration(
-        labelText: CommonConstants.specialization,
-        hintText: CommonConstants.specialization,
-        labelStyle: TextStyle(
-            fontSize: 15.0.sp,
+  Widget _showSpecializationTextField() => Expanded(
+          child: TextField(
+        textCapitalization: TextCapitalization.sentences,
+        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        controller: specializationController,
+        keyboardType: TextInputType.text,
+        focusNode: specializationFocus,
+        textInputAction: TextInputAction.done,
+        onSubmitted: (term) {
+          FocusScope.of(context).requestFocus(lastNameFocus);
+        },
+        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0.sp, color: ColorUtils.blackcolor),
+        decoration: InputDecoration(
+          labelText: CommonConstants.specialization,
+          hintText: CommonConstants.specialization,
+          labelStyle: TextStyle(fontSize: 15.0.sp, fontWeight: FontWeight.w400, color: ColorUtils.myFamilyGreyColor),
+          hintStyle: TextStyle(
+            fontSize: 16.0.sp,
+            color: ColorUtils.myFamilyGreyColor,
             fontWeight: FontWeight.w400,
-            color: ColorUtils.myFamilyGreyColor),
-        hintStyle: TextStyle(
-          fontSize: 16.0.sp,
-          color: ColorUtils.myFamilyGreyColor,
-          fontWeight: FontWeight.w400,
+          ),
+          border: UnderlineInputBorder(borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
         ),
-        border: UnderlineInputBorder(
-            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-      ),
-    ));
-  }
+      ));
 
-  Widget _showHospitalNameTextField(bool condition) {
-    return Expanded(
-        child: TextField(
-      textCapitalization: TextCapitalization.sentences,
-      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-      controller: hospitalNameController,
-      keyboardType: TextInputType.text,
-      focusNode: hospitalNameFocus,
-      textInputAction: TextInputAction.done,
-      onSubmitted: (term) {
-        FocusScope.of(context).requestFocus(specializationFocus);
-      },
-      style: TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 16.0.sp,
-          color: ColorUtils.blackcolor),
-      decoration: InputDecoration(
-        labelText: condition
-            ? CommonConstants.hospitalNameWithStar
-            : CommonConstants.hospitalName,
-        hintText: condition
-            ? CommonConstants.hospitalNameWithStar
-            : CommonConstants.hospitalName,
-        labelStyle: TextStyle(
-            fontSize: 15.0.sp,
+  Widget _showHospitalNameTextField(bool condition) => Expanded(
+          child: TextField(
+        textCapitalization: TextCapitalization.sentences,
+        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        controller: hospitalNameController,
+        keyboardType: TextInputType.text,
+        focusNode: hospitalNameFocus,
+        textInputAction: TextInputAction.done,
+        onSubmitted: (term) {
+          FocusScope.of(context).requestFocus(specializationFocus);
+        },
+        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0.sp, color: ColorUtils.blackcolor),
+        decoration: InputDecoration(
+          labelText: condition ? CommonConstants.hospitalNameWithStar : CommonConstants.hospitalName,
+          hintText: condition ? CommonConstants.hospitalNameWithStar : CommonConstants.hospitalName,
+          labelStyle: TextStyle(fontSize: 15.0.sp, fontWeight: FontWeight.w400, color: ColorUtils.myFamilyGreyColor),
+          hintStyle: TextStyle(
+            fontSize: 16.0.sp,
+            color: ColorUtils.myFamilyGreyColor,
             fontWeight: FontWeight.w400,
-            color: ColorUtils.myFamilyGreyColor),
-        hintStyle: TextStyle(
-          fontSize: 16.0.sp,
-          color: ColorUtils.myFamilyGreyColor,
-          fontWeight: FontWeight.w400,
+          ),
+          border: UnderlineInputBorder(borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
         ),
-        border: UnderlineInputBorder(
-            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-      ),
-    ));
-  }
+      ));
 
   _showAddDoctorButton() {
     final addButtonWithGesture = GestureDetector(
@@ -1559,9 +1403,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         height: 40.0.h,
         decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          borderRadius: BorderRadius.all(Radius.circular(2)),
+          borderRadius: const BorderRadius.all(Radius.circular(2)),
           boxShadow: <BoxShadow>[
-            BoxShadow(
+            const BoxShadow(
               color: Color.fromARGB(15, 0, 0, 0),
               offset: Offset(0, 2),
               blurRadius: 5,
@@ -1581,9 +1425,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       ),
     );
 
-    return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 30),
-        child: addButtonWithGesture);
+    return Padding(padding: const EdgeInsets.only(left: 20, right: 20, top: 30), child: addButtonWithGesture);
   }
 
   _showAddHospitalButton() {
@@ -1594,9 +1436,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         height: 40.0.h,
         decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          borderRadius: BorderRadius.all(Radius.circular(2)),
+          borderRadius: const BorderRadius.all(Radius.circular(2)),
           boxShadow: <BoxShadow>[
-            BoxShadow(
+            const BoxShadow(
               color: Color.fromARGB(15, 0, 0, 0),
               offset: Offset(0, 2),
               blurRadius: 5,
@@ -1616,9 +1458,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       ),
     );
 
-    return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 30),
-        child: addButtonWithGesture);
+    return Padding(padding: const EdgeInsets.only(left: 20, right: 20, top: 30), child: addButtonWithGesture);
   }
 
   void _addDoctorToList() {
@@ -1627,30 +1467,16 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     if (firstNameController.text.trim() != '') {
-      addDoctorData['firstName'] =
-          toBeginningOfSentenceCase(firstNameController.text);
-      addDoctorData['lastName'] = lastNameController.text.trim() == ''
-          ? ''
-          : toBeginningOfSentenceCase(lastNameController.text);
-      addDoctorData['specialization'] =
-          specializationController.text.trim() == ''
-              ? null
-              : specializationController.text;
-      if (mobileNoController.text.trim() == '' ||
-          mobileNoController.text == null) {
-        addDoctorData['phoneNumber'] = mobileNoController.text.trim() == ''
-            ? null
-            : mobileNoController.text;
+      addDoctorData['firstName'] = toBeginningOfSentenceCase(firstNameController.text);
+      addDoctorData['lastName'] = lastNameController.text.trim() == '' ? '' : toBeginningOfSentenceCase(lastNameController.text);
+      addDoctorData['specialization'] = specializationController.text.trim() == '' ? null : specializationController.text;
+      if (mobileNoController.text.trim() == '' || mobileNoController.text == null) {
+        addDoctorData['phoneNumber'] = mobileNoController.text.trim() == '' ? null : mobileNoController.text;
       } else {
-        final phoneNumber = '+' +
-            _selectedDialogCountry.phoneCode.toString() +
-            '' +
-            mobileNoController.text;
+        final phoneNumber = '+' + _selectedDialogCountry.phoneCode.toString() + '' + mobileNoController.text;
         addDoctorData['phoneNumber'] = phoneNumber;
       }
-      addDoctorData['hospitalName'] = hospitalNameController.text.trim() == ''
-          ? null
-          : hospitalNameController.text;
+      addDoctorData['hospitalName'] = hospitalNameController.text.trim() == '' ? null : hospitalNameController.text;
       addDoctorData['email'] = null;
       addDoctorData['addressLine1'] = null;
       addDoctorData['addressLine2'] = null;
@@ -1671,7 +1497,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     } else {
       showDialog(
           context: context,
-          builder: (context) => AlertDialog(
+          builder: (context) => const AlertDialog(
                 title: Text(variable.strAPP_NAME),
                 content: Text('Enter First Name'),
               ));
@@ -1684,8 +1510,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     if (hospitalNameController.text.trim() != '') {
-      addHospitalData['name'] =
-          toBeginningOfSentenceCase(hospitalNameController.text);
+      addHospitalData['name'] = toBeginningOfSentenceCase(hospitalNameController.text);
 
       hospitalReferenced['id'] = Constants.STR_HEALTHORG_HOSPID;
       addHospitalData['healthOrganizationType'] = hospitalReferenced;
@@ -1717,7 +1542,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                    title: Text(variable.strAPP_NAME),
+                    title: const Text(variable.strAPP_NAME),
                     content: Text(value.isSuccess.toString()),
                   ));
 
@@ -1727,95 +1552,79 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     } else {
       showDialog(
           context: context,
-          builder: (context) => AlertDialog(
+          builder: (context) => const AlertDialog(
                 title: Text(variable.strAPP_NAME),
                 content: Text('Enter hospital Name'),
               ));
     }
   }
 
-  showDialogBoxToAddDoctorWhenPermissionRequired(
-      BuildContext context, DoctorsListResult data) {
+  showDialogBoxToAddDoctorWhenPermissionRequired(BuildContext context, DoctorsListResult data) {
     if (data.isTelehealthEnabled != null) {
       teleHealthAlertShown = data.isTelehealthEnabled;
     }
-    var dialog = StatefulBuilder(builder: (context, setState) {
-      return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
-          title: Container(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                ' Add ' + widget.arguments!.searchWord!,
-                style: TextStyle(
-                    fontSize: 18.0.sp,
-                    fontWeight: FontWeight.w500,
-                    color: ColorUtils.blackcolor),
-              ),
-              IconButton(
-                  icon: Icon(
-                    Icons.close,
-                    size: 24.0.sp,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  }),
-            ],
-          )),
-          content: Container(
-              width: 1.sw,
-              height: 1.sh / 2.5,
-              child:
-                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                      child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      _ShowDoctorTextField((data.name != null
-                          ? data.name
-                              ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.data.name)
-                          : '')!),
-                      SizedBox(height: 10.0.h),
-                      Text(
-                        variable.strAssociateMember,
-                        style: TextStyle(
-                            fontSize: 16.0.sp,
-                            fontWeight: FontWeight.w400,
-                            color: ColorUtils.greycolor1),
-                      ),
-                      SizedBox(height: 10.0.h),
-                      _showUser(setState),
-                      SizedBox(height: 20.0.h),
-                      Text(
-                        variable.strApprovAdd,
-                        style: TextStyle(
-                            fontSize: 16.0.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Color(CommonUtil().getMyPrimaryColor())),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          _showCancelButton(),
-                          _showAddButtonForProvider(data),
-                        ],
-                      ),
-                    ],
-                  )),
-                )
-              ])));
-    });
+    var dialog = StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
+            title: Container(
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  ' Add ' + widget.arguments!.searchWord!,
+                  style: TextStyle(fontSize: 18.0.sp, fontWeight: FontWeight.w500, color: ColorUtils.blackcolor),
+                ),
+                IconButton(
+                    icon: Icon(
+                      Icons.close,
+                      size: 24.0.sp,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    }),
+              ],
+            )),
+            content: Container(
+                width: 1.sw,
+                height: 1.sh / 2.5,
+                child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                        child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        _ShowDoctorTextField((data.name != null
+                            ? data.name?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.data.name)
+                            : '')!),
+                        SizedBox(height: 10.0.h),
+                        Text(
+                          variable.strAssociateMember,
+                          style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w400, color: ColorUtils.greycolor1),
+                        ),
+                        SizedBox(height: 10.0.h),
+                        _showUser(setState),
+                        SizedBox(height: 20.0.h),
+                        Text(
+                          variable.strApprovAdd,
+                          style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w400, color: Color(CommonUtil().getMyPrimaryColor())),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            _showCancelButton(),
+                            _showAddButtonForProvider(data),
+                          ],
+                        ),
+                      ],
+                    )),
+                  )
+                ]))));
 
-    return showDialog(
-        context: context,
-        builder: (context) => dialog,
-        barrierDismissible: false);
+    return showDialog(context: context, builder: (context) => dialog, barrierDismissible: false);
   }
 
   _addBtnTappedProvider(DoctorsListResult doctorModel) {
@@ -1833,8 +1642,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           updateProvidersBloc.userId = USERID;
 
           updateProvidersBloc.providerId = doctorModel.doctorId;
-          updateProvidersBloc.providerReferenceId =
-              doctorModel.doctorReferenceId;
+          updateProvidersBloc.providerReferenceId = doctorModel.doctorReferenceId;
         }
         updateProvidersBloc.selectedCategories = [];
 
@@ -1848,41 +1656,36 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   void showDialogForDoctor(DoctorsListResult data) {
     showDialog(
         context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text(variable.strDisableTeleconsulting),
-            actions: <Widget>[
-              FlatButtonWidget(
-                bgColor: Colors.transparent,
-                isSelected: true,
-                onPress: () {
+        builder: (context) => AlertDialog(
+              content: const Text(variable.strDisableTeleconsulting),
+              actions: <Widget>[
+                FlatButtonWidget(
+                  bgColor: Colors.transparent,
+                  isSelected: true,
+                  onPress: () {
                     Navigator.of(context).pop();
                     teleHealthAlertShown = true;
                     _addBtnTappedProvider(data);
                   },
-                  title: 'Ok',)
-            ],
-          );
-        });
+                  title: 'Ok',
+                )
+              ],
+            ));
   }
 
   updateDoctorsIdWithUserDetails() {
-    updateProvidersBloc
-        .updateDoctorsIdWithUserDetails(isPAR: true)
-        .then((value) async {
+    updateProvidersBloc.updateDoctorsIdWithUserDetails(isPAR: true).then((value) async {
       if (value!.success!) {
         // set up the button
         Navigator.pop(context);
         Widget okButton = TextButton(
-          child: Text("OK"),
+          child: const Text("OK"),
           onPressed: () {
             var routeClassName = '';
 
-            if (widget.arguments!.fromClass == router.cn_AddProvider ||
-                widget.arguments!.fromClass == router.rt_myprovider) {
+            if (widget.arguments!.fromClass == router.cn_AddProvider || widget.arguments!.fromClass == router.rt_myprovider) {
               routeClassName = router.rt_UserAccounts;
-            } else if (widget.arguments!.fromClass ==
-                router.rt_TelehealthProvider) {
+            } else if (widget.arguments!.fromClass == router.rt_TelehealthProvider) {
               routeClassName = router.rt_TelehealthProvider;
             }
 
@@ -1891,8 +1694,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             } else {
               Navigator.popUntil(context, (route) {
                 var shouldPop = false;
-                if (route.settings.name == routeClassName ||
-                    route.settings == null) {
+                if (route.settings.name == routeClassName || route.settings == null) {
                   shouldPop = true;
                 }
                 return shouldPop;
@@ -1901,19 +1703,12 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           },
         );
 
-        showAlertDialog(
-            context,
-            okButton,
-            (value.message != null &&
-                    value.message !=
-                        "New Provider Request has been created successfully.")
-                ? value.message ?? ""
-                : "Request sent successfully");
+        showAlertDialog(context, okButton, (value.message != null && value.message != "New Provider Request has been created successfully.") ? value.message ?? "" : "Request sent successfully");
       } else {
         Navigator.pop(context);
 
         Widget okButton = TextButton(
-            child: Text("OK"),
+            child: const Text("OK"),
             onPressed: () {
               Navigator.pop(context);
             });
@@ -1926,7 +1721,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   showAlertDialog(BuildContext context, Widget widget, String msg) {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text(variable.strAPP_NAME),
+      title: const Text(variable.strAPP_NAME),
       content: Text(msg),
       actions: [
         widget,
@@ -1936,9 +1731,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     // show the dialog
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
+      builder: (BuildContext context) => alert,
     );
   }
 
@@ -1949,12 +1742,12 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       },
       child: Container(
         height: 40.0.h,
-        padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+        padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
         decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          borderRadius: BorderRadius.all(Radius.circular(25)),
+          borderRadius: const BorderRadius.all(Radius.circular(25)),
           boxShadow: <BoxShadow>[
-            BoxShadow(
+            const BoxShadow(
               color: Color.fromARGB(15, 0, 0, 0),
               offset: Offset(0, 2),
               blurRadius: 5,
@@ -1994,24 +1787,17 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         onSubmitted: (term) {
           //_doctorFocus.unfocus();
         },
-        style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 16.0.sp,
-            color: Color(CommonUtil().getMyPrimaryColor())),
+        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0.sp, color: Color(CommonUtil().getMyPrimaryColor())),
         decoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
-              borderSide:
-                  BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+              borderSide: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
             ),
             labelText: widget.arguments!.searchWord,
-            labelStyle: TextStyle(
-                fontSize: 16.0.sp,
-                fontWeight: FontWeight.w400,
-                color: ColorUtils.greycolor1),
+            labelStyle: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w400, color: ColorUtils.greycolor1),
             hintStyle: TextStyle(
               color: ColorUtils.greycolor1,
             ),
-            border: UnderlineInputBorder(borderSide: BorderSide.none)),
+            border: const UnderlineInputBorder(borderSide: BorderSide.none)),
       ),
     );
   }
@@ -2020,15 +1806,13 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     MyProfileModel? primaryUserProfile;
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-      primaryUserProfile =
-          PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+      primaryUserProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     return InkWell(
         onTap: () {
-          CommonUtil.showLoadingDialog(
-              context, _keyLoader, variable.Please_Wait);
+          CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
           if (_familyListBloc != null) {
             _familyListBloc = null;
@@ -2038,12 +1822,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             // Hide Loading
             Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
 
-            if (familyMembersList != null &&
-                familyMembersList.result != null &&
-                familyMembersList.result?.sharedByUsers?.length > 0) {
+            if (familyMembersList != null && familyMembersList.result != null && familyMembersList.result?.sharedByUsers?.length > 0) {
               selectedFamilyMemberName = null;
-              getDialogBoxWithFamilyMemberScrap(
-                  familyMembersList.result, setState);
+              getDialogBoxWithFamilyMemberScrap(familyMembersList.result, setState);
             } else {
               toast.getToast(Constants.NO_DATA_FAMIY_CLONE, Colors.black54);
             }
@@ -2053,14 +1834,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           alignment: Alignment.topLeft,
           child: UnconstrainedBox(
               child: Container(
-            padding: EdgeInsets.all(5),
+            padding: const EdgeInsets.all(5),
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 246, 246, 246),
+              color: const Color.fromARGB(255, 246, 246, 246),
               border: Border.all(
                 width: 0.7356,
-                color: Color.fromARGB(255, 239, 239, 239),
+                color: const Color.fromARGB(255, 239, 239, 239),
               ),
-              borderRadius: BorderRadius.all(Radius.circular(50)),
+              borderRadius: const BorderRadius.all(Radius.circular(50)),
             ),
             child: Row(
               children: [
@@ -2077,34 +1858,18 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                           ? getProfilePicWidget(updatedProfilePic)
                           : Center(
                               child: Text(
-                                (selectedFamilyMemberName == null
-                                    ? myProfile!.result?.lastName!.toUpperCase()
-                                    : selectedFamilyMemberName![0]
-                                        .toUpperCase())!,
-                                style: TextStyle(
-                                    fontSize: 16.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                (selectedFamilyMemberName == null ? myProfile!.result?.lastName!.toUpperCase() : selectedFamilyMemberName![0].toUpperCase())!,
+                                style: TextStyle(fontSize: 16.0.sp, color: Color(CommonUtil().getMyPrimaryColor())),
                               ),
                             )
                       : myProfile != null
                           ? myProfile?.result != null
-                              ? myProfile?.result?.profilePicThumbnailUrl !=
-                                      null
-                                  ? getProfilePicWidget(myProfile
-                                          ?.result?.profilePicThumbnailUrl ??
-                                      '')
+                              ? myProfile?.result?.profilePicThumbnailUrl != null
+                                  ? getProfilePicWidget(myProfile?.result?.profilePicThumbnailUrl ?? '')
                                   : Center(
                                       child: Text(
-                                        (selectedFamilyMemberName == null
-                                            ? myProfile?.result?.lastName!
-                                                .toUpperCase()
-                                            : selectedFamilyMemberName![0]
-                                                .toUpperCase())!,
-                                        style: TextStyle(
-                                            fontSize: 16.0.sp,
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
+                                        (selectedFamilyMemberName == null ? myProfile?.result?.lastName!.toUpperCase() : selectedFamilyMemberName![0].toUpperCase())!,
+                                        style: TextStyle(fontSize: 16.0.sp, color: Color(CommonUtil().getMyPrimaryColor())),
                                       ),
                                     )
                               : Center(
@@ -2113,39 +1878,28 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                         ? myProfile?.result != null
                                             ? myProfile?.result!.lastName ?? ''
                                             : ''
-                                        : selectedFamilyMemberName![0]
-                                            .toUpperCase(),
-                                    style: TextStyle(
-                                        fontSize: 16.0.sp,
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor())),
+                                        : selectedFamilyMemberName![0].toUpperCase(),
+                                    style: TextStyle(fontSize: 16.0.sp, color: Color(CommonUtil().getMyPrimaryColor())),
                                   ),
                                 )
                           : Center(
                               child: Text(
                                 '',
-                                style: TextStyle(
-                                    fontSize: 16.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                style: TextStyle(fontSize: 16.0.sp, color: Color(CommonUtil().getMyPrimaryColor())),
                               ),
                             ),
                 )),
                 SizedBox(width: 10.0.w),
                 Container(
-                  margin: EdgeInsets.only(right: 10),
+                  margin: const EdgeInsets.only(right: 10),
                   child: Text(
                     selectedFamilyMemberName == null
-                        ? (myProfile?.result?.id ==
-                                primaryUserProfile?.result?.id
-                            ? variable.Self
-                            : myProfile?.result?.firstName!)!
-                        : selectedFamilyMemberName!
-                            .capitalizeFirstofEach, //toBeginningOfSentenceCase(selectedFamilyMemberName),
+                        ? (myProfile?.result?.id == primaryUserProfile?.result?.id ? variable.Self : myProfile?.result?.firstName!)!
+                        : selectedFamilyMemberName!.capitalizeFirstofEach, //toBeginningOfSentenceCase(selectedFamilyMemberName),
                     softWrap: true,
                     textAlign: TextAlign.left,
                     style: TextStyle(
-                      color: Color.fromARGB(255, 85, 92, 89),
+                      color: const Color.fromARGB(255, 85, 92, 89),
                       fontWeight: FontWeight.w500,
                       fontSize: 16.0.sp,
                     ),
@@ -2157,34 +1911,28 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         ));
   }
 
-  Future<Widget?> getDialogBoxWithFamilyMemberScrap(
-      FamilyMemberResult? familyData, StateSetter setState) {
-    return FamilyListView(familyData)
-        .getDialogBoxWithFamilyMember(familyData, context, _keyLoader,
-            (context, userId, userName, profilePic) {
-      switchedUserId = userId;
-      selectedFamilyMemberName = userName;
-      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-      updatedProfilePic = profilePic;
-      Navigator.pop(context);
-      setState(() {});
-    }, removeDuplicate: true);
-  }
+  Future<Widget?> getDialogBoxWithFamilyMemberScrap(FamilyMemberResult? familyData, StateSetter setState) =>
+      FamilyListView(familyData).getDialogBoxWithFamilyMember(familyData, context, _keyLoader, (context, userId, userName, profilePic) {
+        switchedUserId = userId;
+        selectedFamilyMemberName = userName;
+        myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+        updatedProfilePic = profilePic;
+        Navigator.pop(context);
+        setState(() {});
+      }, removeDuplicate: true);
 
-  Widget getProfilePicWidget(String? profilePicThumbnail) {
-    return profilePicThumbnail != null
-        ? Image.network(
-            profilePicThumbnail,
-            height: 30.0.h,
-            width: 30.0.h,
-            fit: BoxFit.cover,
-          )
-        : Container(
-            color: Color(fhbColors.bgColorContainer),
-            height: 30.0.h,
-            width: 30.0.h,
-          );
-  }
+  Widget getProfilePicWidget(String? profilePicThumbnail) => profilePicThumbnail != null
+      ? Image.network(
+          profilePicThumbnail,
+          height: 30.0.h,
+          width: 30.0.h,
+          fit: BoxFit.cover,
+        )
+      : Container(
+          color: const Color(fhbColors.bgColorContainer),
+          height: 30.0.h,
+          width: 30.0.h,
+        );
 
   void _cancelBtnTapped() async {
     Navigator.pop(context);
@@ -2198,12 +1946,12 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         height: 40.0.h,
         decoration: BoxDecoration(
           color: ColorUtils.greycolor,
-          borderRadius: BorderRadius.all(Radius.circular(25)),
+          borderRadius: const BorderRadius.all(Radius.circular(25)),
           boxShadow: <BoxShadow>[
             BoxShadow(
               color: ColorUtils.greycolor.withOpacity(0.2),
               blurRadius: 100,
-              offset: Offset(0, 100),
+              offset: const Offset(0, 100),
             ),
           ],
         ),
@@ -2223,152 +1971,142 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     return loginButtonWithGesture;
   }
 
-  Widget getResponseFromApiWidgetForCity() {
-    return StreamBuilder<ApiResponse<cityListModel.CityListModel>>(
-      stream: _labsListBlock!.cityNewStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return Container();
+  Widget getResponseFromApiWidgetForCity() => StreamBuilder<ApiResponse<cityListModel.CityListModel>>(
+        stream: _labsListBlock!.cityNewStream,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return Container();
 
-        switch (snapshot.data!.status) {
-          case Status.LOADING:
-            rebuildBlockObject();
-            return Center(
-                child: SizedBox(
-              width: 30.0.h,
-              height: 30.0.h,
-              child: CommonCircularIndicator(),
-            ));
+          switch (snapshot.data!.status) {
+            case Status.LOADING:
+              rebuildBlockObject();
+              return Center(
+                  child: SizedBox(
+                width: 30.0.h,
+                height: 30.0.h,
+                child: CommonCircularIndicator(),
+              ));
 
-            break;
+              break;
 
-          case Status.ERROR:
-            rebuildBlockObject();
-            return Text(
-                variable.strNoDataAvailable + ' ' + CommonConstants.keyCity,
-                style: TextStyle(color: Colors.red));
-            break;
+            case Status.ERROR:
+              rebuildBlockObject();
+              return Text(variable.strNoDataAvailable + ' ' + CommonConstants.keyCity, style: const TextStyle(color: Colors.red));
+              break;
 
-          case Status.COMPLETED:
-            rebuildBlockObject();
-            return snapshot.data!.data!.result == null
-                ? Container(
-                    child: Center(
-                      child: Text(variable.strNodata),
-                    ),
-                  )
-                //getEmptyCard()
-                : snapshot.data!.data!.result!.isEmpty
-                    ? Container(
-                        child: Center(
-                          child: Text(variable.strNodata),
-                        ),
-                      )
-                    //getEmptyCard()
-                    : Container(
-                        margin: EdgeInsets.all(5),
-                        child:
-                            getAllDatasInCityList(snapshot.data!.data!.result!),
-                      );
+            case Status.COMPLETED:
+              rebuildBlockObject();
+              return snapshot.data!.data!.result == null
+                  ? Container(
+                      child: const Center(
+                        child: Text(variable.strNodata),
+                      ),
+                    )
+                  //getEmptyCard()
+                  : snapshot.data!.data!.result!.isEmpty
+                      ? Container(
+                          child: const Center(
+                            child: Text(variable.strNodata),
+                          ),
+                        )
+                      //getEmptyCard()
+                      : Container(
+                          margin: const EdgeInsets.all(5),
+                          child: getAllDatasInCityList(snapshot.data!.data!.result!),
+                        );
 
-            break;
+              break;
 
-          default:
-            break;
-        }
-        return Container();
-      },
-    );
-  }
+            default:
+              break;
+          }
+          return Container();
+        },
+      );
 
-  Widget getAllDatasInCityList(List<cityListModel.CityListData> data) {
-    return RefreshIndicator(
-      key: _refreshIndicatorKey,
-      onRefresh: _refresh,
-      color: Color(CommonUtil().getMyPrimaryColor()),
-      child: data != null
-          ? Container(
-              color: Color(fhbColors.bgColorContainer),
-              child: ListView.builder(
-                itemBuilder: (c, index) => Container(
-                  padding: EdgeInsets.only(top: 2, bottom: 2),
-                  child: InkWell(
-                    onTap: () {
-                      try {
-                        if (widget.toPreviousScreen!) {
-                          passCityValue(data[index], context);
+  Widget getAllDatasInCityList(List<cityListModel.CityListData> data) => RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: _refresh,
+        color: Color(CommonUtil().getMyPrimaryColor()),
+        child: data != null
+            ? Container(
+                color: const Color(fhbColors.bgColorContainer),
+                child: ListView.builder(
+                  itemBuilder: (c, index) => Container(
+                    padding: const EdgeInsets.only(top: 2, bottom: 2),
+                    child: InkWell(
+                      onTap: () {
+                        try {
+                          if (widget.toPreviousScreen!) {
+                            passCityValue(data[index], context);
+                          }
+                        } catch (e, stackTrace) {
+                          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
                         }
-                      } catch (e, stackTrace) {
-                        CommonUtil()
-                            .appLogs(message: e, stackTrace: stackTrace);
-                      }
-                    },
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      margin: EdgeInsets.only(
-                        top: 5.0.sp,
-                        bottom: 5.0.sp,
-                        left: 10.0.sp,
-                        right: 10.0.sp,
-                      ),
-                      elevation: 0.0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.white,
-                            ),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15.0))),
+                      },
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        margin: EdgeInsets.only(
+                          top: 5.0.sp,
+                          bottom: 5.0.sp,
+                          left: 10.0.sp,
+                          right: 10.0.sp,
+                        ),
+                        elevation: 0.0,
                         child: Container(
-                          padding: EdgeInsets.all(
-                            10.0.sp,
-                          ),
-                          margin: EdgeInsets.only(
-                            left: 8.0.w,
-                            right: 15.0.w,
-                            top: 8.0.h,
-                            bottom: 8.0.h,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Expanded(
-                                flex: 3,
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    right: 4.0.w,
-                                  ),
-                                  child: Text(
-                                    CommonUtil()
-                                        .validString(data[index].name ?? ""),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16.0.sp,
-                                      color: Colors.black,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                color: Colors.white,
+                              ),
+                              borderRadius: const BorderRadius.all(Radius.circular(15.0))),
+                          child: Container(
+                            padding: EdgeInsets.all(
+                              10.0.sp,
+                            ),
+                            margin: EdgeInsets.only(
+                              left: 8.0.w,
+                              right: 15.0.w,
+                              top: 8.0.h,
+                              bottom: 8.0.h,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 3,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      right: 4.0.w,
                                     ),
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
+                                    child: Text(
+                                      CommonUtil().validString(data[index].name ?? ""),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16.0.sp,
+                                        color: Colors.black,
+                                      ),
+                                      softWrap: false,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
+                  itemCount: data.length,
+                ))
+            : Container(
+                color: const Color(fhbColors.bgColorContainer),
+                child: const Center(
+                  child: Text(variable.strNodata),
                 ),
-                itemCount: data.length,
-              ))
-          : Container(
-              color: Color(fhbColors.bgColorContainer),
-              child: Center(
-                child: Text(variable.strNodata),
               ),
-            ),
-    );
-  }
+      );
 }

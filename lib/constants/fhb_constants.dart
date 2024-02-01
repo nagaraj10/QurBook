@@ -1075,3 +1075,23 @@ Future<void> fbaLog({String? eveName, eveParams}) async {
     CommonUtil().appLogs(message: e, stackTrace: stackTrace);
   }
 }
+
+class DoctorFilterConstants {
+  static List<String> yearOfExperienceList = [
+    "0 to 5 years",
+    "5 to 10 years",
+    "10 to 20 years",
+    "20+ years"
+  ];
+  static List<String> genderList = ['Any', 'Male', 'Female'];
+  static String languageSpoken = "languageSpoken";
+  static String specialization = "specialization";
+  static String state = "state";
+  static String city = "city";
+  static String hospital = "hospital";
+  static String experience = "experience";
+  static String gender = "gender";
+  static String applyFilters = 'Apply Filters';
+  static String reset = 'Reset';
+  static String filterDoctors = 'Filter Doctors';
+}
