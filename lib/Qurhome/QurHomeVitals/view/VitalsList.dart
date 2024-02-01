@@ -123,6 +123,7 @@ class _VitalsListState extends State<VitalsList> {
   @override
   void initState() {
     try {
+      deviceValues = null;
       FocusManager.instance.primaryFocus!.unfocus();
 
       if (Platform.isAndroid) {

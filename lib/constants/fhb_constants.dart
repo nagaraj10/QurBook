@@ -743,6 +743,12 @@ const String strThereAreNoPreferredLabsInYourProfile =
 
 const String strPreferredDoctors = 'Preferred Doctors';
 
+//Create ticketNote
+const String strNote = 'Note:';
+const String strDoctorAppoinmetRequest = 'Doctor Appointment Request';
+const String strTicketNoteDesc =
+    'Please understand this is not a final booking.The request will be processed by the care coordinator and you\'ll be notified on the progress or confirmation.';
+
 //Voice cloning
 const String makeSureNotInNoiseDescription =
     'Make sure your are not in a noisy environment.';
@@ -780,6 +786,9 @@ var tckTypeDate = 'date';
 var tckTypeTime = 'time';
 var tckTypeFile = "file";
 var tckPackageTitle = "package_title";
+var tckChooseDoctor = "choose_doctor";
+var tckTypeDateTime = "datetime";
+var tckPrefferedDate = "preferred_date";
 var tckMainTitle = "title";
 var tckMainDescription = "description";
 var tckTypeModeOfService = "mode_of_service";

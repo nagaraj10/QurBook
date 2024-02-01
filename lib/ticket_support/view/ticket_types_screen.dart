@@ -37,6 +37,9 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
     FABService.trackCurrentScreen(FBANewServiceRequestScreen);
   }
 
+  final _membershipFontSize = CommonUtil().isTablet! ? 25.0.sp : 20.0.sp;
+  final _iconHeight = CommonUtil().isTablet! ? 80.0 : 60.0;
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
@@ -64,10 +67,42 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
         ),
       );
 
-  Widget getTicketTypes() => FutureBuilder<TicketTypesModel?>(
-        future: ticketViewModel.getTicketTypesList(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+  Widget getTicketTypes() {
+    return FutureBuilder(
+      future: Future.wait([
+        ticketViewModel.getTicketTypesList(),
+        ticketViewModel.getMemberShip(),
+      ]),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SafeArea(
+            child: SizedBox(
+              height: 1.sh / 4.5,
+              child: Center(
+                child: SizedBox(
+                  width: 30.0.h,
+                  height: 30.0.h,
+                  child: CommonCircularIndicator(),
+                ),
+              ),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return ErrorsWidget();
+        } else {
+          final ticketTypesModel = snapshot.data?.first as TicketTypesModel?;
+          final memberShipDetails = snapshot.data?.last as MemberShipDetails?;
+          //return ticketTypeListTest(context);
+          if (snapshot.hasData &&
+              ticketTypesModel?.ticketTypeResults != null &&
+              (ticketTypesModel?.ticketTypeResults?.isNotEmpty ?? false)) {
+            return ListView(
+              children: [
+                getMembershipDataUI(memberShipDetails),
+                ticketTypesList(ticketTypesModel?.ticketTypeResults),
+              ],
+            );
+          } else {
             return SafeArea(
               child: SizedBox(
                 height: 1.sh / 4.5,
@@ -114,55 +149,38 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
         },
       );
 
-  Widget getMembershipDataUI() => FutureBuilder<MemberShipDetails?>(
-        future: ticketViewModel.getMemberShip(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container();
-          } else if (snapshot.hasError) {
-            return ErrorsWidget();
-          } else {
-            //return ticketTypeListTest(context);
-            if (snapshot.hasData &&
-                snapshot.data!.result != null &&
-                snapshot.data!.result!.isNotEmpty) {
-              final _memberShipResult = snapshot.data?.result?.first;
-
-              if (_memberShipResult != null) {
-                /// We need to showcase only selected benefitType only.
-                _memberShipResult.additionalInfo?.benefitType?.removeWhere(
-                  (element) => ![
-                    variable.strBenefitDoctorAppointment,
-                    variable.strBenefitLabAppointment,
-                    variable.strBenefitMedicineOrdering,
-                    variable.strBenefitTransportation,
-                    variable.strBenefitCareDietPlans,
-                    variable.strBenefitFamilyMembers,
-                  ].contains(element.fieldName),
-                );
-                return GetMembershipDataWidget(
-                  memberShipResult: _memberShipResult,
-                  onPressed: () {
-                    /// Navigate to Membership Benefit List Screen.
-                    Navigator.pushNamed(
-                      context,
-                      router.rt_membership_benefits_screen,
-                      arguments: MembershipBenefitListModel(
-                        memberShipResult: _memberShipResult,
-                        iconsUrls: _iconsurls,
-                      ),
-                    );
-                  },
-                );
-              } else {
-                return Container();
-              }
-            } else {
-              return Container();
-            }
-          }
+  Widget getMembershipDataUI(MemberShipDetails? memberShipDetails) {
+    final _memberShipResult = memberShipDetails?.result?.first;
+    if (_memberShipResult != null) {
+      /// We need to showcase only selected benefitType only.
+      _memberShipResult.additionalInfo?.benefitType?.removeWhere(
+        (element) => ![
+          variable.strBenefitDoctorAppointment,
+          variable.strBenefitLabAppointment,
+          variable.strBenefitMedicineOrdering,
+          variable.strBenefitTransportation,
+          variable.strBenefitCareDietPlans,
+          variable.strBenefitFamilyMembers,
+        ].contains(element.fieldName),
+      );
+      return GetMembershipDataWidget(
+        memberShipResult: _memberShipResult,
+        onPressed: () {
+          /// Navigate to Membership Benefit List Screen.
+          Navigator.pushNamed(
+            context,
+            router.rt_membership_benefits_screen,
+            arguments: MembershipBenefitListModel(
+              memberShipResult: _memberShipResult,
+              iconsUrls: _iconsurls,
+            ),
+          );
         },
       );
+    } else {
+      return Container();
+    }
+  }
 
   Widget ticketTypesList(List<TicketTypesResult>? ticketTypesList) {
     final size = MediaQuery.of(context).size;
@@ -172,12 +190,25 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
     final itemWidth = size.width / 2;
     return (ticketTypesList != null && ticketTypesList.isNotEmpty)
         ? Padding(
-            padding: const EdgeInsets.all(8),
-            child: GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: itemWidth / itemHeight,
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                ),
+                shrinkWrap: true,
+                padding: EdgeInsets.only(
+                  bottom: 8.0.h,
+                ),
+                itemBuilder: (ctx, i) {
+                  /// this _iconsurls object
+                  /// Use later to pass iconsurl to MembershipBenefitsListScreen.
+                  _iconsurls[ticketTypesList[i].name ?? ''] =
+                      ticketTypesList[i].iconUrl ?? '';
+                  return myTicketTypesListItem(ctx, i, ticketTypesList);
+                },
+                itemCount: ticketTypesList.length,
               ),
               shrinkWrap: true,
               padding: EdgeInsets.only(
@@ -260,7 +291,6 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
               }
             },
             child: Container(
-              height: 150.h,
               width: MediaQuery.of(context).size.width / 2.6,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -269,9 +299,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                     Color(CommonUtil().getMyGredientColor())
                   ],
                 ),
-                borderRadius: const BorderRadius.all(Radius.circular(
-                        12) //                 <--- border radius here
-                    ),
+                borderRadius: const BorderRadius.all(Radius.circular(12),),
                 border: Border.all(
                   color: Color(CommonUtil().getMyPrimaryColor()),
                 ),
@@ -281,25 +309,24 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    height: 60,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Spacer(),
-                        getTicketTypeImages(
-                          context,
-                          ticketList[i],
-                        ),
-                      ],
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Spacer(),
+                      getTicketTypeImages(
+                        context,
+                        ticketList[i],
+                      ),
+                    ],
                   ),
+                  const Spacer(),
                   Text(
-                    ticketList[i].name!,
-                    overflow: TextOverflow.visible,
+                    (ticketList[i].name!).replaceAll(' ', '\n'),
+                    maxLines: 2,
                     style: TextStyle(
-                      fontSize: 21.0.sp,
+                      fontSize: _membershipFontSize,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
 
@@ -316,16 +343,16 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
     if (ticketListData.iconUrl?.isNotEmpty ?? false) {
       return SvgPicture.network(
         ticketListData.iconUrl!,
-        height: 60,
-        width: 60,
+        height: _iconHeight,
+        width: _iconHeight,
         placeholderBuilder: (context) => CommonCircularIndicator(),
         color: Colors.white.withAlpha(200),
       );
     } else {
       return Image.asset(
         'assets/icons/10.png',
-        width: 60,
-        height: 60,
+        width: _iconHeight,
+        height: _iconHeight,
         color: Colors.white.withAlpha(200),
       );
     }
