@@ -480,13 +480,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         SizedBox(width: 20.w,),
                         Expanded(
                           child: getDropDownFields(field,
-                          customButton:Expanded(
-                            child: getIconTextField(
-                                fieldName:CommonUtil().getFieldName(field.name),
-                                displayName: field.displayName,
-                                isRequired: field.isRequired,
-                                readonly: true
-                            ),
+                          customButton:getIconTextField(
+                              fieldName:CommonUtil().getFieldName(field.name),
+                              displayName: field.displayName,
+                              isRequired: field.isRequired,
+                              readonly: true
                           )
                           ),
                         ),
