@@ -4,6 +4,7 @@ import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 
 import '../../common/CommonUtil.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart';
 import '../../src/ui/loader_class.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -35,6 +36,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
   @override
   void initState() {
     super.initState();
+    FABService.trackCurrentScreen(FBALoginScreen);
     authViewModel = AuthViewModel();
   }
 

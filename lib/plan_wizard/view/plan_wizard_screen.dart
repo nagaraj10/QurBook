@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../add_new_plan/view/AddNewPlan.dart';
 import '../../add_provider_plan/view/AddProviderPlan.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart';
 import '../../landing/view/landing_arguments.dart';
@@ -31,6 +32,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
   @override
   void initState() {
     super.initState();
+    FABService.trackCurrentScreen(FBAAddPlansCategoryScreen);
     if (!Provider.of<PlanWizardViewModel>(context, listen: false)
         .isDynamicLink) {
       Provider.of<PlanWizardViewModel>(context, listen: false).currentPage = 0;

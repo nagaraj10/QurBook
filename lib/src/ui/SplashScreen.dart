@@ -18,8 +18,9 @@ import '../../chat_socket/viewModel/chat_socket_view_model.dart';
 import '../../claim/screen/ClaimRecordDisplay.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
-import '../../constants/fhb_constants.dart' as Constants;
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_parameters.dart' as parameters;
 import '../../constants/fhb_parameters.dart';
 import '../../constants/router_variable.dart';
@@ -99,20 +100,21 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+    FABService.trackCurrentScreen(FBAAppLaunch);
     PreferenceUtil.init();
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     CommonUtil().ListenForTokenUpdate();
     Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
     CommonUtil().OnInitAction();
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (Platform.isIOS) {
         // Get the iOS push kit Token
         variable.reponseToTriggerPushKitTokenMethodChannel
             .setMethodCallHandler((call) async {
           if (call.method == variable.pushKitTokenMethod) {
             final data = Map<String, dynamic>.from(call.arguments);
-            PreferenceUtil.saveString(
+            await PreferenceUtil.saveString(
                 Constants.KEY_PUSH_KIT_TOKEN, data[isTokenStr]);
           }
         });
@@ -128,11 +130,6 @@ class _SplashScreenState extends State<SplashScreen>
             }
           });
         }
-        // if (kDebugMode) {
-        //   setState(() {
-        //     _loaded = true;
-        //   });
-        // }
       } else {
         callAppLockFeatureMethod(
             widget.nsRoute != null && widget.nsRoute == call ? true : false);

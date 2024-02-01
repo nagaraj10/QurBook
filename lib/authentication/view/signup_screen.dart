@@ -4,6 +4,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 
 import '../../common/CommonUtil.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/variable_constant.dart';
@@ -59,7 +60,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   @override
   void initState() {
     super.initState();
-
+    FABService.trackCurrentScreen(FBASignupScreen);
     authViewModel = AuthViewModel();
     userCollection = [];
     onInit();
@@ -567,7 +568,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
             userConfirm: false,
             fromSignUp: true,
             emailId: emailController.text.trim(),
-            pwd:passwordController.text.trim().toString(),
+            pwd: passwordController.text.trim().toString(),
           ),
         ),
       );

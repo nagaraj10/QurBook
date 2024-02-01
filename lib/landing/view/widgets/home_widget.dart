@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
-import 'package:myfhb/common/firebase_analytics_service.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-
 import 'package:provider/provider.dart';
 
+import '../../../Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import '../../../Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import '../../../chat_socket/view/ChatUserList.dart';
 import '../../../common/CommonConstants.dart';
 import '../../../common/CommonUtil.dart';

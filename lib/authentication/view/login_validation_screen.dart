@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart';
@@ -61,6 +62,7 @@ class _PatientSignInValidationScreenState
   @override
   void initState() {
     super.initState();
+    FABService.trackCurrentScreen(FBAOTPScreen);
     authViewModel = AuthViewModel();
     onInit();
   }
@@ -366,8 +368,10 @@ class _PatientSignInValidationScreenState
         print(idTokens[stremail]);
 
         ///Added Refresh Token expiration for MFA enabled accounts
-        await PreferenceUtil.saveInt(strAuthExpiration,parseJwtPayLoad(decodesstring??'')[strAuthExpiration]);
-       ///
+        await PreferenceUtil.saveInt(strAuthExpiration,
+            parseJwtPayLoad(decodesstring ?? '')[strAuthExpiration]);
+
+        ///
 
         await PreferenceUtil.saveString(Constants.MOB_NUM, user_mobile_no!)
             .then((onValue) {});

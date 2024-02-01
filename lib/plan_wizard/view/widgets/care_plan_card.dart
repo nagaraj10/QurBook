@@ -4,24 +4,22 @@ import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/firebase_analytics_service.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
-import 'package:myfhb/plan_dashboard/view/planDetailsView.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/widgets/checkout_page_provider.dart';
-import 'package:myfhb/widgets/fetching_cart_items_model.dart';
 import 'package:provider/provider.dart';
-import 'Rounded_CheckBox.dart';
+
+import '../../../authentication/constants/constants.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../common/FHBBasicWidget.dart';
+import '../../../constants/fhb_constants.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/styles/styles.dart' as fhbStyles;
+import '../../../constants/variable_constant.dart';
+import '../../../plan_dashboard/model/PlanListModel.dart';
+import '../../../plan_dashboard/view/planDetailsView.dart';
+import '../../../src/utils/colors_utils.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../../styles/styles.dart' as fhbStyles;
+import '../../../widgets/fetching_cart_items_model.dart';
+import '../../view_model/plan_wizard_view_model.dart';
+import 'Rounded_CheckBox.dart';
 
 class CarePlanCard extends StatelessWidget {
   final PlanListResult? planList;

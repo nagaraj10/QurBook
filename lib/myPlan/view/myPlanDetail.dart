@@ -9,6 +9,7 @@ import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart';
 import '../../plan_dashboard/view/plan_pdf_viewer.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -62,7 +63,7 @@ class PlanDetail extends State<MyPlanDetail> {
   @override
   void initState() {
     super.initState();
-
+    FABService.trackCurrentScreen(FBAPlanDetailsScreen);
     getConfiguration();
     planListFetch = myPlanViewModel.getMyPlanListDetail(widget.packageId);
   }

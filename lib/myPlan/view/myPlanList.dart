@@ -14,6 +14,7 @@ import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../common/errors_widget.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/router_variable.dart';
@@ -51,6 +52,7 @@ class _MyPlanState extends State<MyPlanList> {
   @override
   void initState() {
     super.initState();
+    FABService.trackCurrentScreen(FBAMyPlansScreen);
     FocusManager.instance.primaryFocus!.unfocus();
     getConfiguration();
     if (widget.fromDashBoard) {

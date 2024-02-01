@@ -36,7 +36,6 @@ import 'common/CommonConstants.dart';
 import 'common/CommonUtil.dart';
 import 'common/DatabseUtil.dart';
 import 'common/PreferenceUtil.dart';
-import 'common/firebase_analytics_service.dart';
 import 'common/firestore_services.dart';
 import 'constants/fhb_constants.dart' as Constants;
 import 'constants/fhb_constants.dart';

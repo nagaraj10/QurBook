@@ -27,6 +27,7 @@ import '../../common/PreferenceUtil.dart';
 import '../../common/SwitchProfile.dart';
 import '../../common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../common/firestore_services.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
@@ -114,6 +115,7 @@ class _LandingScreenState extends State<LandingScreen> {
   void initState() {
     try {
       super.initState();
+      FABService.trackCurrentScreen(FBALandingScreen);
       Future.delayed(Duration.zero, () async {
         onInit();
       });

@@ -2,6 +2,8 @@
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 
+final FABService = FirebaseAnalyticsService();
+
 class FirebaseAnalyticsService {
   final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
@@ -17,8 +19,9 @@ class FirebaseAnalyticsService {
   }
 
   /// Get the Firebase Analytics observer for integration with Navigator.
-  FirebaseAnalyticsObserver getObserver() =>
-      FirebaseAnalyticsObserver(analytics: _analytics);
+  FirebaseAnalyticsObserver getObserver() => FirebaseAnalyticsObserver(
+        analytics: _analytics,
+      );
 
   /// Set a user ID for analytics tracking.
   Future<void> setUserId(String? uId) async {
@@ -37,13 +40,15 @@ class FirebaseAnalyticsService {
   }
 
   /// Track the current screen viewed by the user.
-  Future<void> trackCurrentScreen({
-    String? currentScreen,
-    String classOverrides = '',
+  Future<void> trackCurrentScreen(
+    String currentScreen, {
+    String? classOverrides,
   }) async {
-    await _analytics.setCurrentScreen(
-      screenName: currentScreen,
-      screenClassOverride: classOverrides,
+    await _analytics.logEvent(
+      name: 'qurbook_screen_view',
+      parameters: {
+        'page_visit': currentScreen,
+      },
     );
   }
 

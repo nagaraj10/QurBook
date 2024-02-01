@@ -18,6 +18,7 @@ import '../../../../chat_socket/view/ChatDetail.dart';
 import '../../../../claim/screen/ClaimRecordDisplay.dart';
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
+import '../../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/fhb_parameters.dart' as parameters;
 import '../../../../constants/router_variable.dart';
@@ -82,6 +83,7 @@ class _NotificationScreen extends State<NotificationScreen> {
     qurhomeController.setActiveQurhomeDashboardToChat(
       status: false,
     );
+    FABService.trackCurrentScreen(FBANotificationsListScreen);
     Provider.of<FetchNotificationViewModel>(context, listen: false)
         .pagingController
         .addPageRequestListener((pageKey) {
