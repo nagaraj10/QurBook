@@ -464,7 +464,7 @@ class FHBBasicWidget {
 
   Widget getTextFiledWithHint(BuildContext context, String hintTextValue,
       TextEditingController? memoController,
-      {bool? enabled}) {
+      {bool? enabled,Widget? suffix,}) {
     return Container(
         width: 1.sw - 60,
         child: TextField(
@@ -474,6 +474,7 @@ class FHBBasicWidget {
             controller: memoController,
             decoration: InputDecoration(
               hintText: hintTextValue,
+              suffixIcon: suffix
             )));
   }
 

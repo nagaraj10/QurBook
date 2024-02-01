@@ -39,6 +39,9 @@ class CreateTicketController extends GetxController {
   var strPincode = "".obs;
    var strStateName = "".obs;
 
+   //doctor appointment
+  var docSpecialization = "".obs;
+
 
   UserTicketService userTicketService = UserTicketService();
 
