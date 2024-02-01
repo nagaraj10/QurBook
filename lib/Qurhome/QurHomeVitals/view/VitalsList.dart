@@ -125,6 +125,7 @@ class _VitalsListState extends State<VitalsList> {
   @override
   void initState() {
     try {
+      deviceValues = null;
       FocusManager.instance.primaryFocus!.unfocus();
       mInitialTime = DateTime.now();
       //onInit();
