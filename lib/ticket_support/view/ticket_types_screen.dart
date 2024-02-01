@@ -8,7 +8,6 @@ import '../../claim/model/members/MembershipDetails.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
-import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart' as constants;
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
@@ -21,51 +20,48 @@ import 'create_ticket_screen.dart';
 import 'get_membership_data_widget.dart';
 
 class TicketTypesScreen extends StatefulWidget {
-  const TicketTypesScreen({super.key});
-
   @override
-  State createState() => _TicketTypesScreenState();
+  State createState() {
+    return _TicketTypesScreenState();
+  }
 }
 
 class _TicketTypesScreenState extends State<TicketTypesScreen> {
   TicketViewModel ticketViewModel = TicketViewModel();
   TicketTypesModel ticketTypesModel = TicketTypesModel();
   Map<String, String?> _iconsurls = Map<String, String?>();
-  @override
-  void initState() {
-    super.initState();
-    FABService.trackCurrentScreen(FBANewServiceRequestScreen);
-  }
 
   final _membershipFontSize = CommonUtil().isTablet! ? 25.0.sp : 20.0.sp;
   final _iconHeight = CommonUtil().isTablet! ? 80.0 : 60.0;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          flexibleSpace: GradientAppBar(),
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-          elevation: 0,
-          leading: IconWidget(
-            icon: Icons.arrow_back_ios,
-            colors: Colors.white,
-            size: 24.0.sp,
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Text(
-            constants.strNewServiceRequests,
-            style: TextStyle(
-                fontSize: (CommonUtil().isTablet ?? false)
-                    ? constants.tabFontTitle
-                    : constants.mobileFontTitle),
-          ),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        flexibleSpace: GradientAppBar(),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        elevation: 0,
+        leading: IconWidget(
+          icon: Icons.arrow_back_ios,
+          colors: Colors.white,
+          size: 24.0.sp,
+          onTap: () {
+            Navigator.pop(context);
+          },
         ),
-        body: Container(
-          child: getTicketTypes(),
+        title: Text(
+          constants.strNewServiceRequests,
+          style: TextStyle(
+              fontSize: (CommonUtil().isTablet ?? false)
+                  ? constants.tabFontTitle
+                  : constants.mobileFontTitle),
         ),
-      );
+      ),
+      body: Container(
+        child: getTicketTypes(),
+      ),
+    );
+  }
 
   Widget getTicketTypes() {
     return FutureBuilder(
@@ -105,49 +101,24 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
           } else {
             return SafeArea(
               child: SizedBox(
-                height: 1.sh / 4.5,
-                child: Center(
-                  child: SizedBox(
-                    width: 30.0.h,
-                    height: 30.0.h,
-                    child: CommonCircularIndicator(),
-                  ),
-                ),
+                height: 1.sh / 1.3,
+                child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 60.w,
+                    ),
+                    child: Center(
+                      child: Text(
+                        variable.strNoTicketTypesAvaliable,
+                        textAlign: TextAlign.center,
+                      ),
+                    )),
               ),
             );
-          } else if (snapshot.hasError) {
-            return ErrorsWidget();
-          } else {
-            //return ticketTypeListTest(context);
-            if (snapshot.hasData &&
-                snapshot.data!.ticketTypeResults != null &&
-                snapshot.data!.ticketTypeResults!.isNotEmpty) {
-              return ListView(
-                children: [
-                  getMembershipDataUI(),
-                  ticketTypesList(snapshot.data!.ticketTypeResults),
-                ],
-              );
-            } else {
-              return SafeArea(
-                child: SizedBox(
-                  height: 1.sh / 1.3,
-                  child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 60.w,
-                      ),
-                      child: const Center(
-                        child: Text(
-                          variable.strNoTicketTypesAvaliable,
-                          textAlign: TextAlign.center,
-                        ),
-                      )),
-                ),
-              );
-            }
           }
-        },
-      );
+        }
+      },
+    );
+  }
 
   Widget getMembershipDataUI(MemberShipDetails? memberShipDetails) {
     final _memberShipResult = memberShipDetails?.result?.first;
@@ -183,11 +154,11 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
   }
 
   Widget ticketTypesList(List<TicketTypesResult>? ticketTypesList) {
-    final size = MediaQuery.of(context).size;
+    var size = MediaQuery.of(context).size;
 
     /*24 is for notification bar on Android*/
-    final itemHeight = (size.height - kToolbarHeight - 24) / 4;
-    final itemWidth = size.width / 2;
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 4;
+    final double itemWidth = size.width / 2;
     return (ticketTypesList != null && ticketTypesList.isNotEmpty)
         ? Padding(
             padding: const EdgeInsets.all(8.0),
@@ -210,25 +181,13 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                 },
                 itemCount: ticketTypesList.length,
               ),
-              shrinkWrap: true,
-              padding: EdgeInsets.only(
-                bottom: 8.0.h,
-              ),
-              itemBuilder: (ctx, i) {
-                /// this _iconsurls object
-                /// Use later to pass iconsurl to MembershipBenefitsListScreen.
-                _iconsurls[ticketTypesList[i].name ?? ''] =
-                    ticketTypesList[i].iconUrl ?? '';
-                return myTicketTypesListItem(ctx, i, ticketTypesList);
-              },
-              itemCount: ticketTypesList.length,
             ),
           )
         : SafeArea(
             child: SizedBox(
                 height: 1.sh / 1.3,
                 child: Container(
-                  child: const Center(
+                  child: Center(
                     child: Text(
                       variable.strNoTicketTypesAvaliable,
                     ),
@@ -238,25 +197,25 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
   }
 
   Widget myTicketTypesListItem(
-          BuildContext context, int i, List<TicketTypesResult> ticketList) =>
-      Padding(
+      BuildContext context, int i, List<TicketTypesResult> ticketList) {
+    return Container(
+      child: Padding(
           padding: EdgeInsets.all(8.0.sp),
           child: InkWell(
             onTap: () {
               try {
-                final createTicketController =
-                    Get.put(CreateTicketController());
+                var createTicketController = Get.put(CreateTicketController());
                 createTicketController.isCTLoading.value = false;
 
                 if (CommonUtil()
                     .validString(ticketList[i].name)
                     .toLowerCase()
-                    .contains('lab appointment')) {
+                    .contains("lab appointment")) {
                   createTicketController.labBookAppointment.value = true;
                   createTicketController.selPrefLab.value =
-                      CommonUtil().validString('Select');
+                      CommonUtil().validString("Select");
                   createTicketController.selPrefLabId.value =
-                      CommonUtil().validString('');
+                      CommonUtil().validString("");
                   createTicketController.getLabList();
                 } else {
                   createTicketController.labBookAppointment.value = false;
@@ -266,12 +225,12 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                 if (CommonUtil()
                     .validString(ticketList[i].name)
                     .toLowerCase()
-                    .contains('doctor appointment')) {
+                    .contains("doctor appointment")) {
                   createTicketController.doctorBookAppointment.value = true;
                   createTicketController.selPrefDoctor.value =
-                      CommonUtil().validString('Select');
+                      CommonUtil().validString("Select");
                   createTicketController.selPrefDoctorId.value =
-                      CommonUtil().validString('');
+                      CommonUtil().validString("");
                   createTicketController.getDoctorList();
                 } else {
                   createTicketController.doctorBookAppointment.value = false;
@@ -287,6 +246,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                       )
                     : null;
               } catch (e, stackTrace) {
+                //print(e);
                 CommonUtil().appLogs(message: e, stackTrace: stackTrace);
               }
             },
@@ -299,7 +259,9 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                     Color(CommonUtil().getMyGredientColor())
                   ],
                 ),
-                borderRadius: const BorderRadius.all(Radius.circular(12),),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(12),
+                ),
                 border: Border.all(
                   color: Color(CommonUtil().getMyPrimaryColor()),
                 ),
@@ -336,7 +298,9 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                 ],
               ),
             ),
-          ));
+          )),
+    );
+  }
 
   Widget getTicketTypeImages(
       BuildContext context, TicketTypesResult ticketListData) {
