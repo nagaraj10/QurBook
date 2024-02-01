@@ -544,21 +544,36 @@ class FHBUtils {
   }
 
   // Preferred date for creating ticket - true desk
-  String getPreferredDateString(String strDate) {
+  String getPreferredDateString(String strDate,{bool? isDateTime,}) {
     String formattedDate = '';
 
     if (strDate != null && strDate != '') {
-      if (CURRENT_DATE_CODE == 'MDY') {
-        formattedDate =
-            DateFormat('MMM dd yyyy').format(DateTime.parse(strDate).toLocal());
-      } else if (CURRENT_DATE_CODE == 'YMD') {
-        formattedDate =
-            DateFormat('yyyy MMM dd').format(DateTime.parse(strDate).toLocal());
-      } else {
-        formattedDate =
-            DateFormat('dd MMM yyyy').format(DateTime.parse(strDate).toLocal());
+      ///If isDatetime it will return the date and time string example: 01-02-2024 07:57 pm
+      if(isDateTime==true){
+        DateTime dateTime = DateTime.parse(strDate);
+        if (CURRENT_DATE_CODE == 'MDY') {
+          formattedDate = DateFormat('MMM dd yyyy hh:mm a').format(dateTime.toLocal());
+        } else if (CURRENT_DATE_CODE == 'YMD') {
+          formattedDate = DateFormat('yyyy MMM dd hh:mm a').format(dateTime.toLocal());
+        } else {
+          formattedDate = DateFormat('dd MMM yyyy hh:mm a').format(dateTime.toLocal());
+        }
+      }else{
+        if (CURRENT_DATE_CODE == 'MDY') {
+          formattedDate =
+              DateFormat('MMM dd yyyy').format(DateTime.parse(strDate).toLocal());
+        } else if (CURRENT_DATE_CODE == 'YMD') {
+          formattedDate =
+              DateFormat('yyyy MMM dd').format(DateTime.parse(strDate).toLocal());
+        } else {
+          formattedDate =
+              DateFormat('dd MMM yyyy').format(DateTime.parse(strDate).toLocal());
+        }
       }
+
     }
     return formattedDate;
   }
+
+
 }
