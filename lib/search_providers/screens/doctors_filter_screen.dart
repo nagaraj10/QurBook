@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/search_providers/models/doctor_list_response_new.dart';
-import 'package:myfhb/search_providers/screens/left_side_menu_widget.dart';
-import 'package:myfhb/search_providers/screens/right_side_menu_widget.dart';
-import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 
+import '../../constants/fhb_constants.dart';
+import '../../src/ui/MyRecord.dart';
+import '../../src/ui/loader_class.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/GradientAppBar.dart';
 import '../doctors_filter_bloc/doctors_filter_bloc.dart';
+import '../models/doctor_list_response_new.dart';
+import 'left_side_menu_widget.dart';
+import 'right_side_menu_widget.dart';
 
 class DoctorsFilterScreen extends StatefulWidget {
   final Function(
@@ -80,6 +81,10 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
               selectedMenu = state.selectedMenu;
               menuItems = state.menuItemList;
               selectedIndex = state.selectedIndex;
+            } else if (state is HideProgressBar) {
+              LoaderClass.hideLoadingDialog(context);
+            } else if (state is ShowProgressBar) {
+              LoaderClass.showLoadingDialog(context);
             } else if (state is ShowDoctorFilterList) {
               doctorFilterList = state.doctorFilterList;
               filterMenuCount = state.filterMenuCount;
@@ -177,7 +182,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                                   border: Border.all(
                                     color: Color(CommonUtil().getMyPrimaryColor()),
                                   ),
-                                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                                  borderRadius: const BorderRadius.all(Radius.circular(50)),
                                 ),
                                 child: Center(
                                   child: Text(
@@ -212,7 +217,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                                 child: Center(
                                   child: Text(
                                     DoctorFilterConstants.applyFilters,
-                                    style: TextStyle(color: Colors.white),
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                 ),
                               ),

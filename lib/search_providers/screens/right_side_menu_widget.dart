@@ -132,7 +132,7 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
                     },
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      suffixIcon: Icon(Icons.search),
+                      suffixIcon: const Icon(Icons.search),
                       hintText: 'Search',
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
@@ -153,8 +153,8 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
                 padding: const EdgeInsets.only(left: 10, right: 5, top: 10),
                 child: widget.filterOptions.isEmpty
                     ? Container(
-                        color: Color(fhbColors.bgColorContainer),
-                        child: Center(
+                        color: const Color(fhbColors.bgColorContainer),
+                        child: const Center(
                           child: Text(variable.strNodata),
                         ),
                       )
@@ -242,7 +242,6 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
                                       }
                                       selectedFilters[DoctorFilterConstants.hospital] = selectedHospitalItems;
                                     } else if (widget.selectedMenuIndex == 6) {
-                                      selectedYOEItems.add(itemName);
                                       if (!selectedYOEItems.contains(itemName)) {
                                         selectedYOEItems.clear();
                                         selectedYOEItems.add(itemName);
