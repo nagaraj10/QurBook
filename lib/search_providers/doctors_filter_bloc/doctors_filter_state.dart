@@ -17,7 +17,7 @@ class ShowMenuItemList extends DoctorsFilterState {
 }
 
 class ShowDoctorFilterList extends DoctorsFilterState {
-  final List<Entity> doctorFilterList;
+  final List<DoctorsListResult> doctorFilterList;
   final int filterMenuCount;
   ShowDoctorFilterList({
     required this.doctorFilterList,

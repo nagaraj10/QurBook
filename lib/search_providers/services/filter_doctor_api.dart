@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:myfhb/my_providers/models/UserAddressCollection.dart';
+import 'package:myfhb/search_providers/models/doctor_list_response_new.dart';
 import 'package:myfhb/search_providers/models/doctor_specialization_model.dart';
 import 'package:myfhb/search_providers/models/hospital_list_response_new.dart';
+import 'package:myfhb/search_providers/screens/doctor_filter_request_model.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/model/user/State.dart' as s;
 import '../../constants/fhb_constants.dart' as Constants;
@@ -86,6 +89,24 @@ class FilterDoctorApi {
       }
     }
     return uniqueSpecializations.toList();
+  }
+
+  Future<List<DoctorsListResult>> getFilterDoctorList(
+    DoctorFilterRequestModel doctorFilterRequestModel,
+  ) async {
+    List<DoctorsListResult> doctorFilterList = [];
+    final response = await ApiBaseHelper().doctorFilterList('doctor/service-request/list', json.encode(doctorFilterRequestModel));
+    doctorFilterList.clear();
+    if (response['isSuccess']) {
+      if (response['result']['data']["isSuccess"]) {
+        response['result']['data']["entities"].forEach(
+          (f) {
+            doctorFilterList.add(DoctorsListResult.fromJson(f));
+          },
+        );
+      }
+    }
+    return doctorFilterList.toList();
   }
 
   Future<List<String>> getHospitalList(String stateName, String cityName) async {

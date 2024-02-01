@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myfhb/search_providers/models/doctor_filter_response_model.dart';
-import 'package:myfhb/search_providers/screens/left_side_menu_screen.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/search_providers/models/doctor_list_response_new.dart';
+import 'package:myfhb/search_providers/screens/left_side_menu_widget.dart';
 import 'package:myfhb/search_providers/screens/right_side_menu_widget.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
@@ -10,13 +11,19 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import '../doctors_filter_bloc/doctors_filter_bloc.dart';
 
 class DoctorsFilterScreen extends StatefulWidget {
-  final Function(int filterMenuCount, List<Entity> doctorFilterList) filterApplied;
+  final Function(
+    int filterMenuCount,
+    List<DoctorsListResult> doctorFilterList,
+    FilteredSelectedModel selectdFilterItemIndex,
+  ) filterApplied;
   final List<int> selectedBrandOption;
   final List<int> selectedCategoryOption;
+  final FilteredSelectedModel selectedItems;
 
   const DoctorsFilterScreen({
     super.key,
     required this.filterApplied,
+    required this.selectedItems,
     this.selectedBrandOption = const [],
     this.selectedCategoryOption = const [],
   });
@@ -49,11 +56,16 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
     selectedHospitalIndex: [],
     selectedYOEIndex: [],
   );
-  List<Entity> doctorFilterList = [];
+  List<DoctorsListResult> doctorFilterList = [];
   int filterMenuCount = 0;
-
   Map<String, List<String>> selectedItems = {};
   List<String> searchFilterOption = [];
+
+  @override
+  void initState() {
+    super.initState();
+    selectdFilterItemIndex = widget.selectedItems;
+  }
 
   @override
   Widget build(BuildContext context) => BlocProvider(
@@ -71,7 +83,8 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
             } else if (state is ShowDoctorFilterList) {
               doctorFilterList = state.doctorFilterList;
               filterMenuCount = state.filterMenuCount;
-              widget.filterApplied(filterMenuCount, doctorFilterList);
+              widget.filterApplied(filterMenuCount, doctorFilterList, selectdFilterItemIndex);
+              Navigator.pop(context);
             }
           },
           child: BlocBuilder<DoctorsFilterBloc, DoctorsFilterState>(
@@ -88,7 +101,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                     Navigator.pop(context, [1]);
                   },
                 ),
-                title: const Text('Filter Doctors'),
+                title: Text(DoctorFilterConstants.filterDoctors),
               ),
               body: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,6 +166,8 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                                   selectedHospitalIndex: [],
                                   selectedYOEIndex: [],
                                 );
+                                widget.filterApplied(0, [], selectdFilterItemIndex);
+                                Navigator.pop(context);
                                 setState(() {});
                               },
                               child: Container(
@@ -166,7 +181,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    'Reset',
+                                    DoctorFilterConstants.reset,
                                     style: TextStyle(
                                       color: Color(CommonUtil().getMyPrimaryColor()),
                                     ),
@@ -194,9 +209,9 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                                     borderRadius: BorderRadius.circular(50),
                                   ),
                                 ),
-                                child: const Center(
+                                child: Center(
                                   child: Text(
-                                    'Apply Filters',
+                                    DoctorFilterConstants.applyFilters,
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),

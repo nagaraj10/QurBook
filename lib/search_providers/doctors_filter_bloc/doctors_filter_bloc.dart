@@ -6,6 +6,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/language/repository/LanguageRepository.dart';
 import 'package:myfhb/search_providers/models/doctor_filter_response_model.dart';
+import 'package:myfhb/search_providers/models/doctor_list_response_new.dart';
 import 'package:myfhb/search_providers/models/doctors_list_response.dart';
 import 'package:myfhb/search_providers/screens/doctor_filter_request_model.dart';
 import 'package:myfhb/search_providers/screens/right_side_menu_widget.dart';
@@ -14,21 +15,34 @@ import '../../src/resources/network/ApiBaseHelper.dart';
 part 'doctors_filter_event.dart';
 part 'doctors_filter_state.dart';
 
+const _experience = "experience";
+const _20Years = "20+ years";
+const _field = "field";
+const _type = 'type';
+const _object = "object";
+const _value = "value";
+const _gender = "gender";
+const _any = "Any";
+const _hospital = "hospital";
+const _languageSpoken = "languageSpoken";
+const _array = "array";
+const _string = "string";
+const _min = "min";
+const _max = "max";
+
 class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
   DoctorsFilterBloc() : super(DoctorsFilterInitial()) {
     on<ApplyFilters>(_onApplyFilters);
     on<GetDoctorSpecializationList>(_onGetDoctorSpecializationList);
   }
 
-  List<Entity> doctorFilterList = [];
-
   Future<FutureOr<void>> _onApplyFilters(ApplyFilters event, emit) async {
     final filters = <Map<String, dynamic>>[];
     event.selectedItems.forEach((field, values) {
-      if (field == "experience") {
+      if (field == _experience) {
         var min = 0;
         var max = 0;
-        if (values.first == "20+ years") {
+        if (values.first == _20Years) {
           min = 20;
           max = 99;
         } else {
@@ -42,19 +56,19 @@ class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
           }
         }
         final filter = <String, dynamic>{
-          'field': field,
-          'type': 'object',
+          _field: field,
+          _type: _object,
         };
-        filter['value'] = {"min": min, "max": max};
+        filter[_value] = {_min: min, _max: max};
         filters.add(filter);
-      } else if (field == "gender" && values.first == "Any") {
+      } else if (field == _gender && values.first == _any) {
       } else {
         final filter = <String, dynamic>{
-          'field': field,
-          'type': field == 'hospital' || field == 'languageSpoken' ? 'array' : 'string',
+          _field: field,
+          _type: field == _hospital || field == _languageSpoken ? _array : _string,
         };
         if (values.length == 1) {
-          filter['value'] = values.first;
+          filter[_value] = values.first;
           filters.add(filter);
         }
       }
@@ -65,18 +79,8 @@ class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
       searchText: '',
       filters: filters.map((json) => Filter.fromJson(json)).toList(),
     );
-    final response = await ApiBaseHelper().doctorFilterList('doctor/service-request/list', json.encode(doctorFilterRequestModel));
-    if (response['isSuccess']) {
-      if (response['result']['data']["isSuccess"]) {
-        response['result']['data']["entities"].forEach(
-          (f) {
-            doctorFilterList.add(Entity.fromJson(f));
-          },
-        );
-      }
+    final doctorFilterList = await FilterDoctorApi().getFilterDoctorList(doctorFilterRequestModel);
 
-      print(doctorFilterList);
-    }
     emit(ShowDoctorFilterList(
       doctorFilterList: doctorFilterList,
       filterMenuCount: filters.length,

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
+import '../../constants/variable_constant.dart' as variable;
 
 class FilteredSelectedModel {
   List<String> selectedGenderIndex;
@@ -148,128 +151,135 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(left: 10, right: 5, top: 10),
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: searchFilterOption.isNotEmpty ? searchFilterOption.length : widget.filterOptions.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final itemName = searchFilterOption.isNotEmpty ? searchFilterOption[index] : widget.filterOptions[index];
-                      return Row(
-                        children: [
-                          Checkbox(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                            side: MaterialStateBorderSide.resolveWith(
-                              (states) => const BorderSide(
-                                width: 1,
-                              ),
-                            ),
-                            checkColor: Colors.white,
-                            activeColor: const Color(0xFF1A4CC0),
-                            value: widget.selectedMenuIndex == 0
-                                ? selectedGenderItems.contains(itemName)
-                                : widget.selectedMenuIndex == 1
-                                    ? selectedLanguageItems.contains(itemName)
-                                    : widget.selectedMenuIndex == 2
-                                        ? selectedSpecializationItems.contains(itemName)
-                                        : widget.selectedMenuIndex == 3
-                                            ? selectedStateItems.contains(itemName)
-                                            : widget.selectedMenuIndex == 4
-                                                ? selectedCityItems.contains(itemName)
-                                                : widget.selectedMenuIndex == 5
-                                                    ? selectedHospitalItems.contains(itemName)
-                                                    : selectedYOEItems.contains(itemName),
-                            onChanged: (bool? value) {
-                              if (value != null) {
-                                if (widget.selectedMenuIndex == 0) {
-                                  if (!selectedGenderItems.contains(itemName)) {
-                                    selectedGenderItems.clear();
-                                    selectedGenderItems.add(itemName);
-                                  } else {
-                                    selectedGenderItems.remove(itemName);
-                                  }
-                                  selectedFilters['gender'] = selectedGenderItems;
-                                } else if (widget.selectedMenuIndex == 1) {
-                                  if (selectedLanguageItems.isEmpty) {
-                                    selectedLanguageItems.add(itemName);
-                                  } else if (!selectedLanguageItems.contains(itemName)) {
-                                    selectedLanguageItems.add(itemName);
-                                  } else {
-                                    selectedLanguageItems.remove(itemName);
-                                  }
-                                  selectedFilters['languageSpoken'] = selectedLanguageItems;
-                                } else if (widget.selectedMenuIndex == 2) {
-                                  if (!selectedSpecializationItems.contains(itemName)) {
-                                    selectedSpecializationItems.clear();
-                                    selectedSpecializationItems.add(itemName);
-                                  } else {
-                                    selectedSpecializationItems.remove(itemName);
-                                  }
-                                  selectedFilters['specialization'] = selectedSpecializationItems;
-                                } else if (widget.selectedMenuIndex == 3) {
-                                  if (!selectedStateItems.contains(itemName)) {
-                                    selectedStateItems.clear();
-                                    selectedStateItems.add(itemName);
-                                  } else {
-                                    selectedStateItems.remove(itemName);
-                                  }
-                                  selectedFilters['state'] = selectedStateItems;
-                                } else if (widget.selectedMenuIndex == 4) {
-                                  if (!selectedCityItems.contains(itemName)) {
-                                    selectedCityItems.clear();
-                                    selectedCityItems.add(itemName);
-                                  } else {
-                                    selectedCityItems.remove(itemName);
-                                  }
-                                  selectedFilters['city'] = selectedCityItems;
-                                } else if (widget.selectedMenuIndex == 5) {
-                                  if (selectedHospitalItems.isEmpty) {
-                                    selectedHospitalItems.add(itemName);
-                                  } else if (!selectedHospitalItems.contains(itemName)) {
-                                    selectedHospitalItems.add(itemName);
-                                  } else {
-                                    selectedHospitalItems.remove(itemName);
-                                  }
-                                  selectedFilters['hospital'] = selectedHospitalItems;
-                                } else if (widget.selectedMenuIndex == 6) {
-                                  selectedYOEItems.add(itemName);
-                                  if (!selectedYOEItems.contains(itemName)) {
-                                    selectedYOEItems.clear();
-                                    selectedYOEItems.add(itemName);
-                                  } else {
-                                    selectedYOEItems.remove(itemName);
-                                  }
-                                  selectedFilters['experience'] = selectedYOEItems;
-                                }
-
-                                widget.selectedFilterOption(
-                                  selectedFilters,
-                                  FilteredSelectedModel(
-                                    selectedGenderIndex: selectedGenderItems,
-                                    selectedLanguageIndex: selectedLanguageItems,
-                                    selectedSpecializationeIndex: selectedSpecializationItems,
-                                    selectedStateIndex: selectedStateItems,
-                                    selectedCityIndex: selectedCityItems,
-                                    selectedHospitalIndex: selectedHospitalItems,
-                                    selectedYOEIndex: selectedYOEItems,
+                child: widget.filterOptions.isEmpty
+                    ? Container(
+                        color: Color(fhbColors.bgColorContainer),
+                        child: Center(
+                          child: Text(variable.strNodata),
+                        ),
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: searchFilterOption.isNotEmpty ? searchFilterOption.length : widget.filterOptions.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final itemName = searchFilterOption.isNotEmpty ? searchFilterOption[index] : widget.filterOptions[index];
+                          return Row(
+                            children: [
+                              Checkbox(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                                side: MaterialStateBorderSide.resolveWith(
+                                  (states) => const BorderSide(
+                                    width: 1,
                                   ),
-                                  selectedCityItems.isNotEmpty ? selectedCityItems.first : '',
-                                  selectedStateItems.isNotEmpty ? selectedStateItems.first : '',
-                                );
-                                setState(() {});
-                              }
-                            },
-                          ),
-                          Expanded(
-                            child: Text(
-                              itemName,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
+                                ),
+                                checkColor: Colors.white,
+                                activeColor: const Color(0xFF1A4CC0),
+                                value: widget.selectedMenuIndex == 0
+                                    ? selectedGenderItems.contains(itemName)
+                                    : widget.selectedMenuIndex == 1
+                                        ? selectedLanguageItems.contains(itemName)
+                                        : widget.selectedMenuIndex == 2
+                                            ? selectedSpecializationItems.contains(itemName)
+                                            : widget.selectedMenuIndex == 3
+                                                ? selectedStateItems.contains(itemName)
+                                                : widget.selectedMenuIndex == 4
+                                                    ? selectedCityItems.contains(itemName)
+                                                    : widget.selectedMenuIndex == 5
+                                                        ? selectedHospitalItems.contains(itemName)
+                                                        : selectedYOEItems.contains(itemName),
+                                onChanged: (bool? value) {
+                                  if (value != null) {
+                                    if (widget.selectedMenuIndex == 0) {
+                                      if (!selectedGenderItems.contains(itemName)) {
+                                        selectedGenderItems.clear();
+                                        selectedGenderItems.add(itemName);
+                                      } else {
+                                        selectedGenderItems.remove(itemName);
+                                      }
+                                      selectedFilters[DoctorFilterConstants.gender] = selectedGenderItems;
+                                    } else if (widget.selectedMenuIndex == 1) {
+                                      if (selectedLanguageItems.isEmpty) {
+                                        selectedLanguageItems.add(itemName);
+                                      } else if (!selectedLanguageItems.contains(itemName)) {
+                                        selectedLanguageItems.add(itemName);
+                                      } else {
+                                        selectedLanguageItems.remove(itemName);
+                                      }
+                                      selectedFilters[DoctorFilterConstants.languageSpoken] = selectedLanguageItems;
+                                    } else if (widget.selectedMenuIndex == 2) {
+                                      if (!selectedSpecializationItems.contains(itemName)) {
+                                        selectedSpecializationItems.clear();
+                                        selectedSpecializationItems.add(itemName);
+                                      } else {
+                                        selectedSpecializationItems.remove(itemName);
+                                      }
+                                      selectedFilters[DoctorFilterConstants.specialization] = selectedSpecializationItems;
+                                    } else if (widget.selectedMenuIndex == 3) {
+                                      if (!selectedStateItems.contains(itemName)) {
+                                        selectedStateItems.clear();
+                                        selectedStateItems.add(itemName);
+                                      } else {
+                                        selectedStateItems.remove(itemName);
+                                      }
+                                      selectedFilters[DoctorFilterConstants.state] = selectedStateItems;
+                                    } else if (widget.selectedMenuIndex == 4) {
+                                      if (!selectedCityItems.contains(itemName)) {
+                                        selectedCityItems.clear();
+                                        selectedCityItems.add(itemName);
+                                      } else {
+                                        selectedCityItems.remove(itemName);
+                                      }
+                                      selectedFilters[DoctorFilterConstants.city] = selectedCityItems;
+                                    } else if (widget.selectedMenuIndex == 5) {
+                                      if (selectedHospitalItems.isEmpty) {
+                                        selectedHospitalItems.add(itemName);
+                                      } else if (!selectedHospitalItems.contains(itemName)) {
+                                        selectedHospitalItems.add(itemName);
+                                      } else {
+                                        selectedHospitalItems.remove(itemName);
+                                      }
+                                      selectedFilters[DoctorFilterConstants.hospital] = selectedHospitalItems;
+                                    } else if (widget.selectedMenuIndex == 6) {
+                                      selectedYOEItems.add(itemName);
+                                      if (!selectedYOEItems.contains(itemName)) {
+                                        selectedYOEItems.clear();
+                                        selectedYOEItems.add(itemName);
+                                      } else {
+                                        selectedYOEItems.remove(itemName);
+                                      }
+                                      selectedFilters[DoctorFilterConstants.experience] = selectedYOEItems;
+                                    }
+
+                                    widget.selectedFilterOption(
+                                      selectedFilters,
+                                      FilteredSelectedModel(
+                                        selectedGenderIndex: selectedGenderItems,
+                                        selectedLanguageIndex: selectedLanguageItems,
+                                        selectedSpecializationeIndex: selectedSpecializationItems,
+                                        selectedStateIndex: selectedStateItems,
+                                        selectedCityIndex: selectedCityItems,
+                                        selectedHospitalIndex: selectedHospitalItems,
+                                        selectedYOEIndex: selectedYOEItems,
+                                      ),
+                                      selectedCityItems.isNotEmpty ? selectedCityItems.first : '',
+                                      selectedStateItems.isNotEmpty ? selectedStateItems.first : '',
+                                    );
+                                    setState(() {});
+                                  }
+                                },
+                              ),
+                              Expanded(
+                                child: Text(
+                                  itemName,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
               ),
             ),
           ],
