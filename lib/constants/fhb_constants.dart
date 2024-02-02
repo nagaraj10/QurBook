@@ -309,6 +309,11 @@ const String icVoiceMic = 'assets/voice_clone/mic_icon.svg';
 const String icVoicePause = 'assets/voice_clone/pause_icon.svg';
 const String icVoiceStop = 'assets/voice_clone/stop_icon.svg';
 
+//
+const String doctorSearchHospital = 'assets/doctor_search/hospital.svg';
+const String doctorSearchLanguage = 'assets/doctor_search/languages.svg';
+const String doctorSpecialization = 'assets/doctor_search/specialization.svg';
+
 // Path to the placeholder image asset.
 const String ic_placeholder = 'assets/icons/placeholder.jpg';
 

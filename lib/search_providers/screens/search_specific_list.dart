@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -195,6 +196,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             Container(
               //margin: EdgeInsets.all(5),
               decoration: BoxDecoration(
+                color: Color.fromRGBO(256, 256, 256, 0),
                 gradient: LinearGradient(
                     begin: Alignment.topLeft, end: Alignment.bottomRight, colors: <Color>[Color(CommonUtil().getMyPrimaryColor()), Color(CommonUtil().getMyGredientColor())], stops: [0.3, 1]),
               ),
@@ -786,40 +788,108 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget getCardToDisplaySearchList(String? name, String? address, String? id, String? logo, DoctorsListResult data, HospitalsListResult hospitalData, LabListResult labData, {String? cityAndState}) =>
       GestureDetector(
           child: Padding(
-              padding: const EdgeInsets.only(bottom: 4, left: 10, right: 10),
-              child: Container(
-                  padding: const EdgeInsets.only(bottom: 2),
-                  margin: const EdgeInsets.all(0),
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
-                  child: Row(children: <Widget>[
-                    SizedBox(
-                      width: 10.0.w,
-                    ),
-                    ClipOval(
-                        child: Container(
-                      height: 50.0.h,
-                      width: 50.0.h,
-                      color: const Color(fhbColors.bgColorContainer),
-                      child: widget.arguments!.searchWord == CommonConstants.doctors ? getHospitalLogoImage(logo, data) : getHospitalLogoImage(logo, data),
-                    )),
-                    SizedBox(width: 10.0.w),
-                    Expanded(
-                        flex: 5,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: getDataToView(
-                            widget.arguments!.searchWord == CommonConstants.doctors
-                                ? name
-                                : widget.arguments!.searchWord == CommonConstants.hospitals
-                                    ? name
-                                    : labData.healthOrganizationName,
-                            address,
-                            id,
-                            data,
-                            specialization: widget.arguments!.searchWord == CommonConstants.hospitals ? hospitalData.specialization : null,
+            padding: const EdgeInsets.only(bottom: 10, top: 5, left: 5, right: 15),
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                color: Colors.white,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1rqPNl2EqXOkWrQFA80mNXBaKwAeE4Hy4rCJjHjSAsoxz950BaTa_82WYl0n99PuXf7g&usqp=CAU",
+                              ),
+                              fit: BoxFit.fill,
+                            ),
                           ),
-                        ))
-                  ]))),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text("5 years"),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 10),
+                        Text(
+                          name != null ? name.capitalizeFirstofEach : '',
+                          // style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500, color: ColorUtils.blackcolor),
+                          // maxLines: 1,
+                          // overflow: TextOverflow.ellipsis,
+                        ),
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              doctorSpecialization,
+                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              height: 15,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              data.specialization ?? '',
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              doctorSpecialization,
+                              height: 20,
+                              color: Color(
+                                CommonUtil().getMyGredientColor(),
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              "${data.healthOrganizationName} - ${data.city} , ${data.state}" ?? '',
+                              // style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500, color: ColorUtils.blackcolor),
+                              // maxLines: 1,
+                              // overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 50,
+                          width: double.infinity,
+                          child: ListView.builder(
+                            itemCount: (data.doctorLanguage ?? []).length,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int lan) => Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.black, //color of border
+                                    width: 2, //width of border
+                                  ),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text("Hi"),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           onTap: () {
             if (widget.toPreviousScreen!) {
               widget.arguments!.searchWord == CommonConstants.doctors
@@ -831,6 +901,55 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               passdataToNextScreen(data.name, context, data, hospitalData, labData);
             }
           });
+
+  // Widget getCardToDisplaySearchList(String? name, String? address, String? id, String? logo, DoctorsListResult data, HospitalsListResult hospitalData, LabListResult labData, {String? cityAndState}) =>
+  //     GestureDetector(
+  //         child: Padding(
+  //             padding: const EdgeInsets.only(bottom: 4, left: 10, right: 10),
+  //             child: Container(
+  //                 padding: const EdgeInsets.only(bottom: 2),
+  //                 margin: const EdgeInsets.all(0),
+  //                 decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+  //                 child: Row(children: <Widget>[
+  //                   SizedBox(
+  //                     width: 10.0.w,
+  //                   ),
+  //                   ClipOval(
+  //                       child: Container(
+  //                     height: 50.0.h,
+  //                     width: 50.0.h,
+  //                     color: const Color(fhbColors.bgColorContainer),
+  //                     child: widget.arguments!.searchWord == CommonConstants.doctors ? getHospitalLogoImage(logo, data) : getHospitalLogoImage(logo, data),
+  //                   )),
+  //                   SizedBox(width: 10.0.w),
+  //                   Expanded(
+  //                       flex: 5,
+  //                       child: Padding(
+  //                         padding: const EdgeInsets.all(10),
+  //                         child: getDataToView(
+  //                           widget.arguments!.searchWord == CommonConstants.doctors
+  //                               ? name
+  //                               : widget.arguments!.searchWord == CommonConstants.hospitals
+  //                                   ? name
+  //                                   : labData.healthOrganizationName,
+  //                           address,
+  //                           id,
+  //                           data,
+  //                           specialization: widget.arguments!.searchWord == CommonConstants.hospitals ? hospitalData.specialization : null,
+  //                         ),
+  //                       ))
+  //                 ]))),
+  //         onTap: () {
+  //           if (widget.toPreviousScreen!) {
+  //             widget.arguments!.searchWord == CommonConstants.doctors
+  //                 ? passDoctorsValue(data, context)
+  //                 : widget.arguments!.searchWord == CommonConstants.hospitals
+  //                     ? passHospitalValue(hospitalData, context)
+  //                     : passLaboratoryValue(labData, context);
+  //           } else {
+  //             passdataToNextScreen(data.name, context, data, hospitalData, labData);
+  //           }
+  //         });
 
   getCorrespondingImageWidget(String id) => const Icon(Icons.verified_user);
 
@@ -1110,75 +1229,75 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
     return showDialog<void>(
       context: context,
-      builder: (context) => StatefulBuilder(builder: (context, setState) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
-          content: Container(
-              width: 1.sw,
-              height: 1.sh / 1.5,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              IconButton(
-                                  icon: Icon(
-                                    Icons.close,
-                                    size: 24.0.sp,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  })
-                            ],
-                          ),
-
-                          Row(
-                            children: <Widget>[
-                              _showFirstNameTextField(),
-                            ],
-                          ),
-
-                          SizedBox(
-                            height: 10.0.h,
-                          ),
-                          Row(
-                            children: <Widget>[
-                              _showLastNameTextField(),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10.0.h,
-                          ),
-                          Row(
-                            children: <Widget>[
-                              CountryCodePickerPage(
-                                selectedCountry: _selectedDialogCountry,
-                                onValuePicked: (country) => setState(
-                                  () => _selectedDialogCountry = country,
+      builder: (context) => StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
+                content: Container(
+                    width: 1.sw,
+                    height: 1.sh / 1.5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    IconButton(
+                                        icon: Icon(
+                                          Icons.close,
+                                          size: 24.0.sp,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        })
+                                  ],
                                 ),
-                                isEnabled: BASE_URL != prodUSURL,
-                              ),
-                              _ShowMobileNoTextField()
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10.0.h,
-                          ),
 
-                          Row(
-                            children: <Widget>[
-                              _showSpecializationTextField(),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10.0.h,
-                          ),
-                          /*Row(
+                                Row(
+                                  children: <Widget>[
+                                    _showFirstNameTextField(),
+                                  ],
+                                ),
+
+                                SizedBox(
+                                  height: 10.0.h,
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    _showLastNameTextField(),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10.0.h,
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    CountryCodePickerPage(
+                                      selectedCountry: _selectedDialogCountry,
+                                      onValuePicked: (country) => setState(
+                                        () => _selectedDialogCountry = country,
+                                      ),
+                                      isEnabled: BASE_URL != prodUSURL,
+                                    ),
+                                    _ShowMobileNoTextField()
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10.0.h,
+                                ),
+
+                                Row(
+                                  children: <Widget>[
+                                    _showSpecializationTextField(),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10.0.h,
+                                ),
+                                /*Row(
                               children: <Widget>[
                                 _showHospitalNameTextField(false),
                               ],
@@ -1187,24 +1306,23 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                               height: 10.0.h,
                             ),*/
 
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              _showAddDoctorButton(),
-                            ],
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    _showAddDoctorButton(),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 20.0.h,
+                                ),
+                                // callAddFamilyStreamBuilder(),
+                              ],
+                            ),
                           ),
-                          SizedBox(
-                            height: 20.0.h,
-                          ),
-                          // callAddFamilyStreamBuilder(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                        ),
+                      ],
+                    )),
               )),
-        );
-      }),
     );
   }
 
@@ -1213,60 +1331,59 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
     return showDialog<void>(
       context: context,
-      builder: (context) => StatefulBuilder(builder: (context, setState) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
-          content: Container(
-              width: 1.sw,
-              height: 1.sh / 3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              IconButton(
-                                  icon: Icon(
-                                    Icons.close,
-                                    size: 24.0.sp,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  })
-                            ],
-                          ),
+      builder: (context) => StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
+                content: Container(
+                    width: 1.sw,
+                    height: 1.sh / 3,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    IconButton(
+                                        icon: Icon(
+                                          Icons.close,
+                                          size: 24.0.sp,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        })
+                                  ],
+                                ),
 
-                          Row(
-                            children: <Widget>[
-                              _showHospitalNameTextField(true),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10.0.h,
-                          ),
+                                Row(
+                                  children: <Widget>[
+                                    _showHospitalNameTextField(true),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10.0.h,
+                                ),
 
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              _showAddHospitalButton(),
-                            ],
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    _showAddHospitalButton(),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 20.0.h,
+                                ),
+                                // callAddFamilyStreamBuilder(),
+                              ],
+                            ),
                           ),
-                          SizedBox(
-                            height: 20.0.h,
-                          ),
-                          // callAddFamilyStreamBuilder(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                        ),
+                      ],
+                    )),
               )),
-        );
-      }),
     );
   }
 
