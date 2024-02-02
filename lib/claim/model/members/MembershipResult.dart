@@ -1,6 +1,5 @@
-
-import 'package:myfhb/claim/model/members/MembershipAdditionInfo.dart';
-import 'package:myfhb/common/CommonUtil.dart';
+import 'MembershipAdditionInfo.dart';
+import '../../../common/CommonUtil.dart';
 
 class MemberShipResult {
   String? id;
@@ -11,16 +10,33 @@ class MemberShipResult {
   String? planStartDate;
   String? planEndDate;
   String? planSubscriptionInfoId;
+  /// New Parameters added for Membership Benefits
+  int? planId;
+  String? creditAmount;
+  int? noOfCarePlans;
+  int? noOfDoctorAppointments;
+  int? labAppointment;
+  int? medicineOrdering;
+  int? tranportation;
+  int? homecareServices;
 
   MemberShipResult(
       {this.id,
-        this.healthOrganizationName,
-        this.healthOrganizationId,
-        this.planName,
-        this.additionalInfo,
-        this.planStartDate,
-        this.planEndDate,
-        this.planSubscriptionInfoId});
+      this.healthOrganizationName,
+      this.healthOrganizationId,
+      this.planName,
+      this.additionalInfo,
+      this.planStartDate,
+      this.planEndDate,
+      this.planSubscriptionInfoId,
+      this.planId,
+      this.creditAmount,
+      this.noOfCarePlans,
+      this.noOfDoctorAppointments,
+      this.labAppointment,
+      this.medicineOrdering,
+      this.tranportation,
+      this.homecareServices});
 
   MemberShipResult.fromJson(Map<String, dynamic> json) {
     try {
@@ -29,11 +45,19 @@ class MemberShipResult {
       healthOrganizationId = json['healthOrganizationId'];
       planName = json['planName'];
       additionalInfo = json['additionalInfo'] != null
-              ? MemberShipAdditionalInfo.fromJson(json['additionalInfo'])
-              : null;
+          ? MemberShipAdditionalInfo.fromJson(json['additionalInfo'])
+          : null;
       planStartDate = json['planStartDate'];
       planEndDate = json['planEndDate'];
       planSubscriptionInfoId = json['planSubscriptionInfoId'];
+      planId = json['planId'];
+      creditAmount = json['creditAmount'];
+      noOfCarePlans = json['noOfCarePlans'];
+      noOfDoctorAppointments = json['noOfDoctorAppointments'];
+      labAppointment = json['labAppointment'];
+      medicineOrdering = json['medicineOrdering'];
+      tranportation = json['tranportation'];
+      homecareServices = json['homecareServices'];
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -51,6 +75,14 @@ class MemberShipResult {
     data['planStartDate'] = this.planStartDate;
     data['planEndDate'] = this.planEndDate;
     data['planSubscriptionInfoId'] = this.planSubscriptionInfoId;
+    data['planId'] = planId;
+    data['creditAmount'] = creditAmount;
+    data['noOfCarePlans'] = noOfCarePlans;
+    data['noOfDoctorAppointments'] = noOfDoctorAppointments;
+    data['labAppointment'] = labAppointment;
+    data['medicineOrdering'] = medicineOrdering;
+    data['tranportation'] = tranportation;
+    data['homecareServices'] = homecareServices;
     return data;
   }
 }

@@ -128,17 +128,39 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                         getImageURLFromCondition(),
                                         // Conditional rendering of an image preview thumbnail
                                         (chat.imageThumbnailUrl != null &&
-                                            chat.imageThumbnailUrl != '')
-                                            ? getImagePreviewThumbnail(chat.imageThumbnailUrl??'')
+                                                chat.imageThumbnailUrl != '')
+                                            ? Column(
+                                                children: [
+                                                  SizedBox(height: 5.h),
+                                                  getImagePreviewThumbnail(
+                                                      chat.imageThumbnailUrl ??
+                                                          ''),
+                                                ],
+                                              )
                                             : SizedBox.shrink(),
                                         // Conditional rendering of an audio preview thumbnail
                                         (chat.audioThumbnailUrl != null &&
-                                            chat.audioThumbnailUrl != '')
-                                            ? getAudioCardWidget(chat.audioThumbnailUrl??'')
+                                                chat.audioThumbnailUrl != '')
+                                            ? Column(
+                                                children: [
+                                                  SizedBox(height: 5.h),
+                                                  getAudioCardWidget(
+                                                      chat.audioThumbnailUrl ??
+                                                          ''),
+                                                ],
+                                              )
                                             : SizedBox.shrink(),
+                                        //// Conditional rendering of an video preview thumbnail
                                         (chat.videoThumbnailUrl != null &&
-                                            chat.videoThumbnailUrl != '')
-                                            ? getVideoCardThumbnail(chat.videoThumbnailUrl??'')
+                                                chat.videoThumbnailUrl != '')
+                                            ? Column(
+                                                children: [
+                                                  SizedBox(height: 5.h),
+                                                  getVideoCardThumbnail(
+                                                      chat.videoThumbnailUrl ??
+                                                          ''),
+                                                ],
+                                              )
                                             : SizedBox.shrink(),
                                         buttonWidgets(context)
                                       ],

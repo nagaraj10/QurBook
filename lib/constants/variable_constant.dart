@@ -106,6 +106,7 @@ const String bookAnAppointment = 'Book an appointment';
 const String add_providers = 'add_providers';
 const String choose_address = 'Please choose the address';
 const String cancer_speciality = 'Cancer Speciality Hospital';
+const String request_sent_successfully = 'Request sent successfully';
 const String apollo_email = 'apollo@sample.com';
 const String preferred_descrip =
     'We allow only one preferred provider for a user. To remove your preference, please set another Provider as Preferred.';
@@ -177,6 +178,10 @@ const String icon_edit = 'assets/icons/record_edit.png';
 const String icon_download = 'assets/icons/record_download.png';
 const String icon_delete = 'assets/icons/record_delete.png';
 const String icon_stetho = 'assets/icons/stetho.png';
+const String icon_dateTime = 'assets/icons/datetime.svg';
+const String icon_chooseDoctor = 'assets/icons/choose_doctor.svg';
+const String icon_modeOfService = 'assets/icons/mode_of_service.svg';
+const String icon_information = 'assets/icons/information.svg';
 const String icon_otp = 'assets/icons/otp_icon.png';
 const String icon_multi = 'assets/icons/img_multi.png';
 const String icon_image_single = 'assets/icons/img_single.png';
@@ -251,6 +256,13 @@ const String icon_location = 'assets/icons/icon_location.png';
 const String icon_validity = 'assets/icons/icon_validity.png';
 const String icon_compatibilty = 'assets/icons/icon_compatibility.png';
 const String icon_camera = 'assets/devices/camera.png';
+
+// Define a constant string representing the file path for the 'choose_lab.svg' icon
+const String icon_choose_lab = 'assets/icons/choose_lab.svg';
+
+// Define a constant string representing the file path for the 'ic_address.svg' icon
+const String icon_address = 'assets/icons/ic_address.svg';
+
 
 //string for troubleshooting
 const String strAppCompatibilty = 'App compatibility';
@@ -1002,6 +1014,26 @@ const String strDeviceTypeConnectedDeviceScreen = 'Device Type - ';
 const String strLTE = '4G LTE';
 const String sheelaText = 'Sheela';
 
+const String strAvailableServices = 'Available Services';
+const String strAvailableBalance = 'Available balance';
+const String strShowAvailableBenefits = 'Show available benefits';
+
+const String strBenefitFamilyMembers = 'Family Members';
+const String strBenefitHomecareService = 'Homecare Service';
+const String strBenefitHomecareServices = 'Homecare Services';
+const String strBenefitHealthPlan = 'Health Plan';
+const String strBenefitHealthPlans = 'Health Plans';
+const String strBenefitCareDietPlans = 'Care/Diet Plans';
+const String strBenefitAmbulanceService = 'Ambulance Service';
+const String strBenefitAmbulanceServices = 'Ambulance Services';
+const String strBenefitTransportation = 'Transportation';
+const String strBenefitOrderMedicine = 'Order Medicine';
+const String strBenefitOrderMedicines = 'Order Medicines';
+const String strBenefitMedicineOrdering = 'Medicine Ordering';
+const String strBenefitLabAppointment = 'Lab Appointment';
+const String strBenefitLabAppointments = 'Lab Appointments';
+const String strBenefitDoctorAppointment = 'Doctor Appointment';
+const String strBenefitDoctorAppointments = 'Doctor Appointments';
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   var parts = token.split('.');
