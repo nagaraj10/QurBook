@@ -874,3 +874,12 @@ const String stringConnectedDevicesScreen = 'connectedDevicesScreen';
 
 // Define a constant string for a specific operation related to personal plan activities
 const String stringAssignOrUpdatePersonalPlanActivities = 'assign_or_update_personal_plan_activities';
+
+// Define a constant string for the regiment screen identifier.
+const String stringRegimentScreen = 'regiment_screen';
+
+// Define a constant string for the "Snooze" action.
+const String stringSnooze = 'Snooze';
+
+// Define a constant string for the "Dismiss" action.
+const String stringDismiss = 'Dismiss';

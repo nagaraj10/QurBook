@@ -41,6 +41,7 @@ import 'package:myfhb/landing/controller/landing_screen_controller.dart';
 import 'package:myfhb/chat_socket/model/SheelaReminderResponse.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/main.dart';
+import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
@@ -138,7 +139,6 @@ import '../src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
 import '../src/utils/FHBUtils.dart';
 import '../src/utils/PageNavigator.dart';
 import '../src/utils/colors_utils.dart';
-import '../src/utils/cron_jobs.dart';
 import '../src/utils/language/language_utils.dart';
 import '../src/utils/screenutils/size_extensions.dart';
 import '../telehealth/features/Notifications/services/notification_services.dart';
@@ -173,6 +173,7 @@ import 'keysofmodel.dart' as keysConstant;
 import 'package:myfhb/more_menu/trouble_shoot_controller.dart';
 
 import 'widgets/CommonWidgets.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -192,6 +193,8 @@ class CommonUtil {
   static String TRUE_DESK_URL = '';
   static String WEB_URL = '';
   static String PORTAL_URL = '';
+
+  static String AppName ='';
 
   static String UNIT_CONFIGURATION_URL =
       'system-configuration/unit-configuration';
@@ -6236,6 +6239,7 @@ class CommonUtil {
       await getMyProfilesetting();
       var regController = CommonUtil().onInitQurhomeRegimenController();
       regController.getRegimenList();
+      FirestoreServices().setupListenerForFirestoreChanges();
       if (!Get.isRegistered<PDFViewController>()) {
         Get.lazyPut(
           () => PDFViewController(),
@@ -6243,7 +6247,6 @@ class CommonUtil {
       }
       // Record the user's last access time
       saveUserLastAccessTime();
-      FirestoreServices().setupListenerForFirestoreChanges();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
@@ -7536,6 +7539,113 @@ class CommonUtil {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
+
+  // This function is responsible for handling the Sheela activity remainder invocation.
+  getActivityRemainderInvokeSheela(var passedValArr, SheelaAIController sheelaAIController) {
+    // Check if auto redirect to Sheela screen is allowed
+    if (CommonUtil().isAllowSheelaLiveReminders()) {
+      // Live reminder on default existing flow
+      if (sheelaAIController.isSheelaScreenActive) {
+        // If Sheela screen is active, send a reminder notification
+        var reqJson = {
+          KIOSK_task: KIOSK_remind,
+          KIOSK_eid: passedValArr[1].toString(),
+        };
+        CommonUtil().callQueueNotificationPostApi(reqJson);
+      } else {
+        // If Sheela screen is not active and queue dialog is showing, dismiss it
+        if (sheelaAIController.isQueueDialogShowing.value) {
+          Get.back();
+          sheelaAIController.isQueueDialogShowing.value = false;
+        }
+        // Delayed navigation to Sheela screen
+        Future.delayed(Duration(milliseconds: 500), () async {
+          CommonUtil().getToSheelaNavigate(passedValArr, sheelaAIController,
+              isFromActivityRemainderInvokeSheela: true);
+        });
+      }
+    } else {
+      // Live reminder off, only queue flow is working
+      var reqJson = {
+        KIOSK_task: KIOSK_remind,
+        KIOSK_eid: passedValArr[1].toString(),
+      };
+      CommonUtil().callQueueNotificationPostApi(reqJson);
+    }
+  }
+
+// This function is responsible for navigating to the Sheela screen based on various conditions.
+  getToSheelaNavigate(var passedValArr, SheelaAIController sheelaAIController,
+      {bool isFromAudio = false, bool isFromActivityRemainderInvokeSheela = false}) {
+    if (isFromActivityRemainderInvokeSheela) {
+      // If invoked from activity remainder, navigate to Sheela screen with arguments
+      Get.toNamed(
+        rt_Sheela,
+        arguments: SheelaArgument(eId: passedValArr[1].toString()),
+      )!
+          .then((value) {
+        try {
+          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+        }
+      });
+      return;
+    }
+
+    if (isFromAudio) {
+      // If invoked from audio, navigate to Sheela screen with audio-related arguments
+      Get.toNamed(
+        router.rt_Sheela,
+        arguments: SheelaArgument(
+          allowBackBtnPress: true,
+          audioMessage: passedValArr[3].toString(),
+          eventIdViaSheela: passedValArr[4].toString(),
+        ),
+      )!
+          .then((value) {
+        try {
+          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+          if (kDebugMode) {
+            print(e);
+          }
+        }
+      });
+    } else {
+      // Delayed navigation to Sheela screen with default arguments
+      Future.delayed(Duration(milliseconds: 500), () async {
+        Get.toNamed(
+          rt_Sheela,
+          arguments: SheelaArgument(
+              allowBackBtnPress: true,
+              isSheelaFollowup: true,
+              textSpeechSheela: (passedValArr[2] != null &&
+                  passedValArr[2] != 'null' &&
+                  passedValArr[2] != '')
+                  ? passedValArr[2]
+                  : passedValArr[1],
+              audioMessage: '',
+              isNeedPreferredLangauge: true,
+              eventIdViaSheela: passedValArr[4]),
+        )!
+            .then((value) {
+          try {
+            sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+            if (kDebugMode) {
+              print(e);
+            }
+          }
+        });
+      });
+    }
+  }
+
+
+
 
   /// Checks if the preferred language is English based on certain conditions.
   ///
