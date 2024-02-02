@@ -761,6 +761,9 @@ const String reRecord = 'Re-Record';
 const String readTheDisplayContentDescription =
     'Read the displayed content on the screen once the timer concludes to record your voice';
 
+// Define a constant string representing the text 'Lab Appointment Request'
+const String strLabAppointmentRequest = 'Lab Appointment Request';
+
 var tckTitle = '';
 String? tckTitleOpt = '';
 var tckDesc = '';
@@ -1055,10 +1058,16 @@ const String strVideoSizeValidation =
     'Unable to upload video. File size exceeds 100MB';
 
 // Constant for the error message when audio file size exceeds 100MB
-const String strAudioSizeValidation = 'Unable to upload audio. File size exceeds 100MB';
+const String strAudioSizeValidation =
+    'Unable to upload audio. File size exceeds 100MB';
 
 // Constant for the label 'Video preview'
 const String strVideoPreview = 'Video preview';
+
+const String strPleaseChoose = 'Please choose';
+const String strPleaseFill = 'Please fill';
+const String strPleaseSelect = 'Please select';
+const String strAddressLine = 'address_line_1';
 
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {

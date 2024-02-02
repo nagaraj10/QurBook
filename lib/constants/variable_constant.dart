@@ -257,6 +257,13 @@ const String icon_validity = 'assets/icons/icon_validity.png';
 const String icon_compatibilty = 'assets/icons/icon_compatibility.png';
 const String icon_camera = 'assets/devices/camera.png';
 
+// Define a constant string representing the file path for the 'choose_lab.svg' icon
+const String icon_choose_lab = 'assets/icons/choose_lab.svg';
+
+// Define a constant string representing the file path for the 'ic_address.svg' icon
+const String icon_address = 'assets/icons/ic_address.svg';
+
+
 //string for troubleshooting
 const String strAppCompatibilty = 'App compatibility';
 const String strSDKCompatibilty = 'SDK compatibility';
