@@ -7,6 +7,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -20,6 +21,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/language/repository/LanguageRepository.dart';
+import 'package:myfhb/main.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
@@ -165,6 +167,7 @@ class SheelaAIController extends GetxController {
   void onInit() {
     super.onInit();
     setDefaultValues();
+    onInitActivitySheelaRemainder();
   }
 
   setDefaultValues() async {
@@ -192,8 +195,6 @@ class SheelaAIController extends GetxController {
         _chatSocketService
             .getUnreadChatWithMsgId(arguments?.eventIdViaSheela ?? '');
       }
-      // Initialize timers list
-      reminderTimers = {};
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -2877,24 +2878,31 @@ makeApiRequest is used to update the data with latest data
 
 // Method called when the timer expires, triggers the reminder-related logic.
   scheduledMethod(Reminder reminder) async {
-    // Add a slight delay before invoking the Sheela AI-related logic
-    await Future.delayed(const Duration(milliseconds: 500));
-    final sheelaAIController = CommonUtil().onInitSheelaAIController();
-    // Construct an array of values for the reminder invocation
-    var strValue = '$strActivityRemainderInvokeSheela${reminder.eid}';
-    final passedValArr = strValue.split('&');
-    // Invoke the method to handle the reminder invocation
-    CommonUtil().getActivityRemainderInvokeSheela(passedValArr, sheelaAIController);
+    final notificationId = int.tryParse('${reminder?.notificationListId}') ?? 0;
+    // Get the list of pending notifications
+    List<PendingNotificationRequest> pendingNotifications =
+        await localNotificationsPlugin.pendingNotificationRequests();
+
+    // Check if the notification with the given ID is already scheduled
+    bool isScheduled = pendingNotifications.any(
+      (notification) => notification.id == notificationId,
+    );
+
+    // If already scheduled, cancel the existing notification with the same ID
+    if (isScheduled) {
+      final sheelaAIController = CommonUtil().onInitSheelaAIController();
+      // Construct an array of values for the reminder invocation
+      var strValue = '$strActivityRemainderInvokeSheela${reminder.eid}';
+      final passedValArr = strValue.split('&');
+      // Invoke the method to handle the reminder invocation
+      CommonUtil()
+          .getActivityRemainderInvokeSheela(passedValArr, sheelaAIController);
+    }
   }
 
 // Add or update the timer associated with a reminder based on its scheduled time.
-  addScheduledTime(Reminder reminder, tz.TZDateTime scheduledDateTime) {
-    // Check if a timer already exists for the same reminder.id
-    if (reminderTimers.containsKey(reminder.notificationListId)) {
-      // If a timer exists, cancel it and remove it from the map
-      reminderTimers[reminder.notificationListId]?.cancel();
-      reminderTimers.remove(reminder.notificationListId);
-    }
+  addScheduledTime(Reminder reminder, tz.TZDateTime scheduledDateTime) async {
+    await clearScheduledTime(reminder.notificationListId!);
 
     // Create a new timer for the new scheduled time and add it to the map
     final newTimer = createTimer(reminder, scheduledDateTime);
@@ -2907,6 +2915,36 @@ makeApiRequest is used to update the data with latest data
       timer.cancel();
     }
     reminderTimers.clear();
+  }
+
+
+  // Function to clear the scheduled time for a reminder
+  clearScheduledTime(String notificationListId) {
+    // Check if a timer already exists for the given notificationListId
+    try {
+      if (reminderTimers.containsKey(notificationListId)) {
+        // If a timer exists, cancel it and remove it from the map
+        reminderTimers[notificationListId]?.cancel();
+        reminderTimers.remove(notificationListId);
+      }
+    } catch (e, stackTrace) {
+      // Handle any exceptions and log them using appLogs method
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+// Function to clear the scheduled time for a reminder
+  onInitActivitySheelaRemainder() async {
+    try {
+      // Initialize timers list
+      reminderTimers = {};
+
+      // Refresh activity reminders
+      await QurPlanReminders.refreshActivityReminders();
+    } catch (e, stackTrace) {
+      // Handle any exceptions and log them using appLogs method
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 
 }

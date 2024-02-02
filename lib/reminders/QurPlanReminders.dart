@@ -257,11 +257,15 @@ class QurPlanReminders {
   // Cancel local reminder notifications
   static Future<void> cancelLocalReminders(Reminder foundTheMatched) async {
     try {
+      var sheelaAIController = CommonUtil().onInitSheelaAIController();
+
       var id = foundTheMatched.eid;
 
       // Cancel the main notification
       var mainNotificationId = int.tryParse('$id') ?? 0;
       await localNotificationsPlugin.cancel(mainNotificationId);
+      await sheelaAIController.clearScheduledTime(mainNotificationId.toString());
+
 
       // Cancel reminder notifications if beforeInt is greater than 0
       var beforeInt = int.tryParse(foundTheMatched.remindbefore!);
@@ -269,6 +273,7 @@ class QurPlanReminders {
         var baseId = '${id}00';
         var beforeNotificationId = int.tryParse(baseId) ?? 0;
         await localNotificationsPlugin.cancel(beforeNotificationId);
+        await sheelaAIController.clearScheduledTime(beforeNotificationId.toString());
       }
 
       // Cancel reminder notifications if afterInt is greater than 0
@@ -277,6 +282,7 @@ class QurPlanReminders {
         var baseId = '${id}11';
         var afterNotificationId = int.tryParse(baseId) ?? 0;
         await localNotificationsPlugin.cancel(afterNotificationId);
+        await sheelaAIController.clearScheduledTime(afterNotificationId.toString());
       }
 
     } catch (e, stackTrace) {
@@ -285,5 +291,26 @@ class QurPlanReminders {
     }
   }
 
+  // Static method to refresh activity reminders
+  static refreshActivityReminders() async {
+    try {
+      // Retrieve the user ID from preferences or use an empty string if not available
+      String userId = PreferenceUtil.getStringValue(KEY_USERID) ?? "";
+
+      // Check if the user ID is valid and not empty
+      if ((CommonUtil().validString(userId ?? "").trim().isNotEmpty)) {
+        // Retrieve local reminders
+        var reminders = await getLocalReminder();
+
+        // Iterate through each reminder and schedule notifications
+        for (var reminder in reminders) {
+          await onInitScheduleNotification(reminder);
+        }
+      }
+    } catch (e, stackTrace) {
+      // Handle any exceptions and log them using appLogs method
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
 
 }

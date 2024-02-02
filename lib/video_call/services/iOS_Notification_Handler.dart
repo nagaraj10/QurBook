@@ -953,6 +953,7 @@ class IosNotificationHandler {
 
       // Cancel the existing notification with the extracted notification list ID.
       await localNotificationsPlugin.cancel(tempNotificationListId);
+      await sheelaAIController?.clearScheduledTime(tempNotificationListId.toString());
 
       // Extract reminder data from the temporary JSON and obtain the event date-time.
       var reminderData = Reminder.fromMap(tempJsonDecode);
@@ -962,7 +963,7 @@ class IosNotificationHandler {
       var scheduledDate = parseDateTimeFromString(eventDateTime);
 
       // Generate a new notification ID based on the canceled notification and snooze tap count.
-      var baseId = '${tempNotificationListId.toString()}${(reminderData.snoozeTapCountTime ?? 0).toString()}';
+      var baseId = tempNotificationListId.toString();
       tempNotificationListId = int.tryParse(baseId) ?? 0;
 
       // Schedule a new notification with the updated ID and other details.
@@ -977,6 +978,7 @@ class IosNotificationHandler {
       // Extract notification list ID from the model and cancel the corresponding notification.
       var tempNotificationListId = int.tryParse('${model.notificationListId}') ?? 0;
       await localNotificationsPlugin.cancel(tempNotificationListId);
+      await sheelaAIController?.clearScheduledTime(tempNotificationListId.toString());
 
       // Reset snoozeAction and dismissAction to false.
       snoozeAction = false;
