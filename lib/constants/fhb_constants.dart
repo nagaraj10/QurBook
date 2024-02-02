@@ -14,6 +14,7 @@ const String testUSURL = "https://ustestaktokskpped.vsolgmi.com/api/";
 
 const String refreshTokenEndPoint = 'auth/refresh-token';
 
+
 const String appQurbookBundleId = 'com.ventechsolutions.myFHB';
 const String appQurhomeBundleId = 'com.qurhealth.qurbook.us';
 const String appQurdayBundleId = 'com.qurhealth.patient.qurdemo';
@@ -699,6 +700,9 @@ const String fileShouldLess = 'Error file should be less than 100 Mb';
 const String reRecord = 'Re-Record';
 const String readTheDisplayContentDescription = 'Read the displayed content on the screen once the timer concludes to record your voice';
 
+// Define a constant string representing the text 'Lab Appointment Request'
+const String strLabAppointmentRequest ='Lab Appointment Request';
+
 var tckTitle = '';
 String? tckTitleOpt = '';
 var tckDesc = '';
@@ -978,6 +982,12 @@ const String strAudioSizeValidation = 'Unable to upload audio. File size exceeds
 
 // Constant for the label 'Video preview'
 const String strVideoPreview = 'Video preview';
+
+const String strPleaseChoose = 'Please choose';
+const String strPleaseFill = 'Please fill';
+const String strPleaseSelect = 'Please select';
+const String strAddressLine = 'address_line_1';
+
 
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {
