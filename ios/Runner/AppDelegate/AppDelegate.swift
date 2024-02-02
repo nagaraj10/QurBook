@@ -113,7 +113,7 @@ import flutter_local_notifications
         // Local Notification
         if #available(iOS 10.0, *) {
             // For iOS 10 display notification (sent via APNS)
-            UNUserNotificationCenter.current().delegate = self
+            UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
             let authOptions: UNAuthorizationOptions = [.alert,  .sound]
             DispatchQueue.main.asyncAfter(deadline: .now()+3, execute:  {
                 UNUserNotificationCenter.current().requestAuthorization(

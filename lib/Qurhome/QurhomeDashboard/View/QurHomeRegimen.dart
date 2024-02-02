@@ -31,6 +31,7 @@ import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
+import 'package:myfhb/services/pushnotification_service.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
@@ -44,6 +45,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_parameters.dart'as fhbParameters;
 
 class QurHomeRegimenScreen extends StatefulWidget {
   bool addAppBar;
@@ -1091,6 +1093,15 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             reminder.remindbefore = regimen.remindin.toString();
                             reminder.dosemeal =
                                 regimen.doseMealString.toString();
+                            // Calculate a unique notification ID by converting the reminder's 'eid' to a signed 32-bit integer.
+                            final notificationId = toSigned32BitInt(int.tryParse('${reminder?.eid}') ?? 0);
+
+                            // Assign the calculated notification ID to the reminder's notificationListId property.
+                            reminder?.notificationListId = notificationId.toString();
+
+                            // Assign the value of fhbParameters.stringRegimentScreen to the reminder's redirectTo property.
+                            reminder?.redirectTo = fhbParameters.stringRegimentScreen;
+
                             List<Reminder> data = [reminder];
                             String snoozedText =
                                 "Snoozed for ${int.parse(time[0]).toString()} minutes";
