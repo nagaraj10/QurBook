@@ -1013,14 +1013,20 @@ const String strShowAvailableBenefits = 'Show available benefits';
 
 const String strBenefitFamilyMembers = 'Family Members';
 const String strBenefitHomecareService = 'Homecare Service';
+const String strBenefitHomecareServices = 'Homecare Services';
 const String strBenefitHealthPlan = 'Health Plan';
+const String strBenefitHealthPlans = 'Health Plans';
 const String strBenefitCareDietPlans = 'Care/Diet Plans';
 const String strBenefitAmbulanceService = 'Ambulance Service';
+const String strBenefitAmbulanceServices = 'Ambulance Services';
 const String strBenefitTransportation = 'Transportation';
 const String strBenefitOrderMedicine = 'Order Medicine';
+const String strBenefitOrderMedicines = 'Order Medicines';
 const String strBenefitMedicineOrdering = 'Medicine Ordering';
 const String strBenefitLabAppointment = 'Lab Appointment';
+const String strBenefitLabAppointments = 'Lab Appointments';
 const String strBenefitDoctorAppointment = 'Doctor Appointment';
+const String strBenefitDoctorAppointments = 'Doctor Appointments';
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   var parts = token.split('.');
