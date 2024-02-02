@@ -1762,8 +1762,14 @@ makeApiRequest is used to update the data with latest data
                 requestFileType: requestFileType);
           }
         } else {
-          // Display a toast message if the selected image exceeds the maximum allowed size
-          FlutterToast().getToastForLongTime(strImageSizeValidation, Colors.red);
+          // Check if the requested file type is an image
+          if (requestFileType == strImage) {
+            // Display a long-duration toast with image size validation message in red
+            FlutterToast().getToastForLongTime(strImageSizeValidation, Colors.red);
+          } else {
+            // Display a long-duration toast with video size validation message in red
+            FlutterToast().getToastForLongTime(strVideoSizeValidation, Colors.red);
+          }
         }
       }
     });
