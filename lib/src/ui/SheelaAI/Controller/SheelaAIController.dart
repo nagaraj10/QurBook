@@ -1464,16 +1464,7 @@ makeApiRequest is used to update the data with latest data
       } else {
         stopTTS();
         currentPlayingConversation = chat;
-        // Check if any of the thumbnail URLs (image, audio, or video) is not null or empty
-        if (((chat.imageThumbnailUrl != null) && (chat.imageThumbnailUrl != '')) ||
-            ((chat.audioThumbnailUrl != null) && (chat.audioThumbnailUrl != '')) ||
-            ((chat.videoThumbnailUrl != null) && (chat.videoThumbnailUrl != ''))) {
-          // If at least one thumbnail URL is present, call the function to check for buttons and play
-          checkForButtonsAndPlay();
-        } else {
-          // If none of the thumbnail URLs are present, call the function to play Text-to-Speech (TTS)
-          playTTS();
-        }
+        playTTS();
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -1591,6 +1582,25 @@ makeApiRequest is used to update the data with latest data
     return '';
   }
 
+  // Function to get the title based on the request file type
+  String? getTitle(requestFileType) {
+    // Using a switch statement to determine the file type
+    switch (requestFileType) {
+      case strImage:
+      // Return the title for an image file
+        return strImageConfirmTitle;
+      case strAudio:
+      // Return the title for an audio file
+        return strAudioConfirmTitle;
+      case strVideo:
+      // Return the title for a video file
+        return strVideoConfirmTitle;
+    }
+    // Return an empty string if the request file type is not recognized
+    return '';
+  }
+
+
 // Get the button title based on the request file type
   String? getButtonTitle(requestFileType) {
     switch (requestFileType) {
@@ -1618,6 +1628,7 @@ makeApiRequest is used to update the data with latest data
       SheelaResponse currentCon =
           SheelaResponse(); // Create a new SheelaResponse instance
       currentCon.recipientId = sheelaRecepId; // Set recipient ID
+      currentCon.text = getTitle(requestFileType); // Set title to that card
       currentCon.endOfConv = false; // Set end of conversation flag to false
       currentCon.endOfConvDiscardDialog =
           false; // Set end of conversation discard dialog flag to false
@@ -1652,7 +1663,7 @@ makeApiRequest is used to update the data with latest data
       isLoading.value = false; // Set loading flag to false
       isRetakeCapture = false; // Reset retake flag
       canSpeak = true;
-      checkForButtonsAndPlay(); // Check for buttons and play the conversation
+      playTTS(); // Check for play the conversation
       scrollToEnd(); // Scroll to the end of the conversation
     } catch (e, stackTrace) {
       // Catch any exceptions and log them
@@ -1755,8 +1766,14 @@ makeApiRequest is used to update the data with latest data
                 requestFileType: requestFileType);
           }
         } else {
-          // Display a toast message if the selected image exceeds the maximum allowed size
-          FlutterToast().getToastForLongTime(strImageSizeValidation, Colors.red);
+          // Check if the requested file type is an image
+          if (requestFileType == strImage) {
+            // Display a long-duration toast with image size validation message in red
+            FlutterToast().getToastForLongTime(strImageSizeValidation, Colors.red);
+          } else {
+            // Display a long-duration toast with video size validation message in red
+            FlutterToast().getToastForLongTime(strVideoSizeValidation, Colors.red);
+          }
         }
       }
     });

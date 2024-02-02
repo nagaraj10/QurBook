@@ -36,7 +36,9 @@ import 'package:myfhb/voice_cloning/model/voice_cloning_choose_member_arguments.
 import 'package:myfhb/voice_cloning/view/screens/voice_clone_choose_members.dart';
 import 'package:path/path.dart';
 import '../add_family_user_info/screens/add_family_user_info_clone.dart';
+import '../claim/model/members/MembershipBenefitListModel.dart';
 import '../telehealth/features/Notifications/view/notification_main.dart';
+import '../ticket_support/view/membership_benefits_list_screen.dart';
 import '../voice_cloning/view/screens/voice_recording_screen.dart';
 import 'router_variable.dart' as router;
 import '../device_integration/viewModel/Device_model.dart';
@@ -208,6 +210,10 @@ setRouter(List<CameraDescription> listOfCameras) async {
               ModalRoute.of(context)!.settings.arguments as Function(bool)?,
         ),
     router.rt_notification_main: (BuildContext context) => NotificationMain(),
+    router.rt_membership_benefits_screen: (BuildContext context) =>
+        MembershipBenefitListScreen(
+            membershipBenefitListModel: ModalRoute.of(context)!.settings.arguments
+                as MembershipBenefitListModel?),
   };
 
   return fhbRouter;

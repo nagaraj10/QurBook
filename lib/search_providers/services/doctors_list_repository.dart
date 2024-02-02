@@ -1,8 +1,8 @@
-
 import '../../constants/fhb_query.dart' as query;
 import '../models/doctor_list_response_new.dart';
 import '../../src/resources/network/ApiBaseHelper.dart';
 
+import '../models/doctor_specialization_model.dart';
 import '../models/doctors_list_response.dart';
 
 class DoctorsListRepository {
@@ -17,8 +17,7 @@ class DoctorsListRepository {
     return DoctorsListResponse.fromJson(response);
   }
 
-  Future<DoctorsSearchListResponse> getDoctorsListFromSearchNew(
-      String? param, bool? isSkipUnknown) async {
+  Future<DoctorsSearchListResponse> getDoctorsListFromSearchNew(String? param, bool? isSkipUnknown) async {
     final offset = 0;
     var limit = 10;
     var response = await _helper.getDoctorsListFromSearchNew(
@@ -32,22 +31,28 @@ class DoctorsListRepository {
     return DoctorsListResponse.fromJson(response);
   }
 
-  Future<DoctorsSearchListResponse> getExistingDoctorsListFromSearchNew(
-      limitValue) async {
+  Future<DoctorsSearchListResponse> getExistingDoctorsListFromSearchNew(limitValue) async {
     final skip = 1;
     var limit = 40;
-    var response = await _helper.getDoctorsListFromSearchNew(
-        "${query.qr_patient_update_default}${query.qr_list}${query.qr_doctorlist}${query.qr_skip}${skip.toString()}${query.qr_And}${query.qr_limit}${limit.toString()}");
+    var response = await _helper
+        .getDoctorsListFromSearchNew("${query.qr_patient_update_default}${query.qr_list}${query.qr_doctorlist}${query.qr_skip}${skip.toString()}${query.qr_And}${query.qr_limit}${limit.toString()}");
 
     return DoctorsSearchListResponse.fromJson(response);
   }
 
   Future<DoctorsListResult?> addDoctorFromProvider(String jsonData) async {
-    var response = await _helper.addDoctorFromProvider(
-        "${query.qr_doctor}${query.qr_reference_doctor}${query.qr_non_qurpro}",
-        jsonData);
+    var response = await _helper.addDoctorFromProvider("${query.qr_doctor}${query.qr_reference_doctor}${query.qr_non_qurpro}", jsonData);
     if (response['isSuccess']) {
       return DoctorsListResult.fromJson(response['result']);
+    }
+  }
+
+  Future<DoctorSpecializationModel?> getDoctorSpecializationList(String searchText) async {
+    var response = await _helper.doctorSpecializationList(
+      "doctor/search-doctor-specialization?searchText=$searchText",
+    );
+    if (response['isSuccess']) {
+      return DoctorSpecializationModel.fromJson(response['result']);
     }
   }
 }

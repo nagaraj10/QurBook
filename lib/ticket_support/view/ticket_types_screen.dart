@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
+import '../../claim/model/members/MembershipBenefitListModel.dart';
 import '../../claim/model/members/MembershipDetails.dart';
-import '../../claim/model/members/MembershipResult.dart';
 import '../../common/CommonUtil.dart';
-import '../../constants/fhb_constants.dart' as constants;
-import '../../constants/variable_constant.dart' as variable;
-import '../../widgets/GradientAppBar.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
 import '../../common/errors_widget.dart';
-
+import '../../constants/fhb_constants.dart' as constants;
+import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart' as variable;
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/GradientAppBar.dart';
 import 'create_ticket_screen.dart';
+import 'get_membership_data_widget.dart';
 
 class TicketTypesScreen extends StatefulWidget {
   @override
@@ -28,6 +28,10 @@ class TicketTypesScreen extends StatefulWidget {
 class _TicketTypesScreenState extends State<TicketTypesScreen> {
   TicketViewModel ticketViewModel = TicketViewModel();
   TicketTypesModel ticketTypesModel = TicketTypesModel();
+  Map<String,String?> _iconsurls = Map<String,String?>();
+
+  final _membershipFontSize = CommonUtil().isTablet! ? 25.0.sp : 20.0.sp;
+  final _iconHeight = CommonUtil().isTablet! ? 80.0 : 60.0;
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +63,11 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
   }
 
   Widget getTicketTypes() {
-    return FutureBuilder<TicketTypesModel?>(
-      future: ticketViewModel.getTicketTypesList(),
+    return FutureBuilder(
+      future: Future.wait([
+        ticketViewModel.getTicketTypesList(),
+        ticketViewModel.getMemberShip(),
+      ]),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
@@ -78,14 +85,16 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
+          final ticketTypesModel = snapshot.data?.first as TicketTypesModel?;
+          final memberShipDetails = snapshot.data?.last as MemberShipDetails?;
           //return ticketTypeListTest(context);
           if (snapshot.hasData &&
-              snapshot.data!.ticketTypeResults != null &&
-              snapshot.data!.ticketTypeResults!.isNotEmpty) {
+              ticketTypesModel?.ticketTypeResults != null &&
+              (ticketTypesModel?.ticketTypeResults?.isNotEmpty ?? false)) {
             return ListView(
               children: [
-                getMembershipDataUI(),
-                ticketTypesList(snapshot.data!.ticketTypeResults),
+                getMembershipDataUI(memberShipDetails),
+                ticketTypesList(ticketTypesModel?.ticketTypeResults),
               ],
             );
           } else {
@@ -110,113 +119,38 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
     );
   }
 
-  Widget getMembershipDataUI() => FutureBuilder<MemberShipDetails?>(
-        future: ticketViewModel.getMemberShip(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container();
-          } else if (snapshot.hasError) {
-            return ErrorsWidget();
-          } else {
-            //return ticketTypeListTest(context);
-            if (snapshot.hasData &&
-                snapshot.data!.result != null &&
-                snapshot.data!.result!.isNotEmpty) {
-              MemberShipResult? memberShipResult = snapshot.data?.result?.first;
-
-              if (memberShipResult != null) {
-                DateTime planEndDateTime = DateFormat("yyyy-MM-dd")
-                    .parse(memberShipResult.planEndDate ?? '');
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      padding: const EdgeInsets.all(15),
-                      height: 150.h,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Color(CommonUtil().getMyPrimaryColor()),
-                            Color(CommonUtil().getMyGredientColor())
-                          ],
-                        ),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(12.0)),
-                        border: Border.all(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            memberShipResult.planName ?? '',
-                            overflow: TextOverflow.visible,
-                            style: TextStyle(
-                              fontSize: 21.0.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            'Validity info (Valid till ${DateFormat("dd-MM-yyyy").format(
-                              planEndDateTime,
-                            )} (${CommonUtil().calculateDifference(
-                              planEndDateTime,
-                            )} days remaining)',
-                            overflow: TextOverflow.visible,
-                            style: TextStyle(
-                              fontSize: 14.0.sp,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const Spacer(),
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              'Show available benefits',
-                              overflow: TextOverflow.visible,
-                              style: TextStyle(
-                                fontSize: 14.0.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                                decoration: TextDecoration.underline,
-                                decorationStyle: TextDecorationStyle.solid,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 6, 15, 0),
-                      child: Text(
-                        'Available Services',
-                        overflow: TextOverflow.visible,
-                        style: TextStyle(
-                          fontSize: 18.0.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              } else {
-                return Container();
-              }
-            } else {
-              return Container();
-            }
-          }
+  Widget getMembershipDataUI(MemberShipDetails? memberShipDetails) {
+    final _memberShipResult = memberShipDetails?.result?.first;
+    if (_memberShipResult != null) {
+      /// We need to showcase only selected benefitType only.
+      _memberShipResult.additionalInfo?.benefitType?.removeWhere(
+        (element) => ![
+          variable.strBenefitDoctorAppointment,
+          variable.strBenefitLabAppointment,
+          variable.strBenefitMedicineOrdering,
+          variable.strBenefitTransportation,
+          variable.strBenefitCareDietPlans,
+          variable.strBenefitFamilyMembers,
+        ].contains(element.fieldName),
+      );
+      return GetMembershipDataWidget(
+        memberShipResult: _memberShipResult,
+        onPressed: () {
+          /// Navigate to Membership Benefit List Screen.
+          Navigator.pushNamed(
+            context,
+            router.rt_membership_benefits_screen,
+            arguments: MembershipBenefitListModel(
+              memberShipResult: _memberShipResult,
+              iconsUrls: _iconsurls,
+            ),
+          );
         },
       );
+    } else {
+      return Container();
+    }
+  }
 
   Widget ticketTypesList(List<TicketTypesResult>? ticketTypesList) {
     var size = MediaQuery.of(context).size;
@@ -232,13 +166,16 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: (itemWidth / itemHeight),
                 ),
                 shrinkWrap: true,
                 padding: EdgeInsets.only(
                   bottom: 8.0.h,
                 ),
                 itemBuilder: (ctx, i) {
+                  /// this _iconsurls object
+                  /// Use later to pass iconsurl to MembershipBenefitsListScreen.
+                  _iconsurls[ticketTypesList[i].name ?? ''] =
+                      ticketTypesList[i].iconUrl ?? '';
                   return myTicketTypesListItem(ctx, i, ticketTypesList);
                 },
                 itemCount: ticketTypesList.length,
@@ -313,20 +250,15 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
               }
             },
             child: Container(
-              height: 150.h,
               width: MediaQuery.of(context).size.width / 2.6,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
                   colors: [
                     Color(CommonUtil().getMyPrimaryColor()),
                     Color(CommonUtil().getMyGredientColor())
                   ],
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(
-                        12.0) //                 <--- border radius here
-                    ),
+                borderRadius: const BorderRadius.all(Radius.circular(12),),
                 border: Border.all(
                   color: Color(CommonUtil().getMyPrimaryColor()),
                 ),
@@ -336,25 +268,24 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    height: 60,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Spacer(),
-                        getTicketTypeImages(
-                          context,
-                          ticketList[i],
-                        ),
-                      ],
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Spacer(),
+                      getTicketTypeImages(
+                        context,
+                        ticketList[i],
+                      ),
+                    ],
                   ),
+                  const Spacer(),
                   Text(
-                    ticketList[i].name!,
-                    overflow: TextOverflow.visible,
+                    (ticketList[i].name!).replaceAll(' ', '\n'),
+                    maxLines: 2,
                     style: TextStyle(
-                      fontSize: 21.0.sp,
+                      fontSize: _membershipFontSize,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
 
@@ -366,23 +297,23 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
             ),
           )),
     );
-  }
+}
 
   Widget getTicketTypeImages(
       BuildContext context, TicketTypesResult ticketListData) {
     if (ticketListData.iconUrl?.isNotEmpty ?? false) {
       return SvgPicture.network(
         ticketListData.iconUrl!,
-        height: 60,
-        width: 60,
+        height: _iconHeight,
+        width: _iconHeight,
         placeholderBuilder: (context) => CommonCircularIndicator(),
         color: Colors.white.withAlpha(200),
       );
     } else {
       return Image.asset(
         'assets/icons/10.png',
-        width: 60,
-        height: 60,
+        width: _iconHeight,
+        height: _iconHeight,
         color: Colors.white.withAlpha(200),
       );
     }
