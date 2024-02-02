@@ -48,6 +48,9 @@
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
+    <!-- Permission for using exact alarms -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+
     <application
         android:name="com.ventechsolutions.myFHB.MyApp"
         android:label="QurHome"
@@ -133,7 +136,10 @@
             android:exported="false"
             tools:node="merge" tools:replace="android:exported" >
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/> <!-- Action triggered when the device completes the boot process -->
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/> <!-- Action triggered when the package of the app is replaced -->
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" /> <!-- Action triggered when the device powers on quickly -->
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/> <!-- Action triggered when the device powers on quickly, specific to HTC devices -->
             </intent-filter>
         </receiver>
         <receiver
@@ -200,6 +206,15 @@
             android:exported="false"
             android:name=".services.ScheduleAppointment"
             android:process=":remote" tools:replace="android:exported" />
+
+        <!-- Service for handling foreground tasks -->
+        <service
+            android:name="com.dexterous.flutterlocalnotifications.ForegroundService"
+            android:exported="false"
+            android:stopWithTask="false"/>
+
+        <!-- Receiver for handling action broadcasts -->
+        <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver" />
 
         <service
             android:name=".services.MyFirebaseInstanceService"
