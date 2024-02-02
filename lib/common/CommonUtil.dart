@@ -7536,6 +7536,23 @@ class CommonUtil {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
+
+  /// Checks if the preferred language is English based on certain conditions.
+  ///
+  /// @param preferredLanguage The preferred language to be checked (nullable).
+  /// @return True if the language is English, false otherwise.
+  bool? checkIsLanguageEnglish(String? preferredLanguage) {
+    // Check if the preferredLanguage is not null and matches one of the English language codes
+    if (preferredLanguage != null &&
+        (preferredLanguage == 'en-IN' ||  // English - India
+            preferredLanguage == 'en' ||   // English
+            preferredLanguage == 'undef')) {  // Undefined language (assuming 'undef' represents a special case)
+      return true;  // If any of the conditions are met, return true
+    } else {
+      return false;  // If none of the conditions are met, return false
+    }
+  }
+
 }
 
 extension CapExtension on String {
