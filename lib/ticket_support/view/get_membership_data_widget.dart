@@ -42,12 +42,18 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
 
   /// common TextStyle for amount text widget
   final _amountTextStyle = TextStyle(
-    fontSize: 18.0.sp,
-    fontWeight: FontWeight.w600,
-    color: Colors.white,
+    fontSize: 21.0.sp,
+    fontWeight: FontWeight.bold,
+    color: Color(CommonUtil().getMyPrimaryColor()),
   );
 
-  final _membershipFontSize = CommonUtil().isTablet! ? 25.0.sp : 20.0.sp;
+  TextStyle _getmemberhipTitleTextStyle({Color color = Colors.white}) {
+    return TextStyle(
+      fontSize: CommonUtil().isTablet! ? 25.0.sp : 20.0.sp,
+      fontWeight: FontWeight.bold,
+      color: color,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,11 +62,16 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
       widget.memberShipResult?.planEndDate ?? '',
     );
 
+    final planStartDateTime = DateFormat('yyyy-MM-dd').parse(
+      widget.memberShipResult?.planStartDate ?? '',
+    );
+
     /// Curreant Currency symbol as per current region
     _currentCurrency =
         CommonUtil.REGION_CODE != 'IN' ? '$strDollar ' : '\u{20B9} ';
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return ListView(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       children: [
         Container(
           width: MediaQuery.sizeOf(context).width,
@@ -89,34 +100,56 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
               Text(
                 widget.memberShipResult?.planName ?? '',
                 overflow: TextOverflow.visible,
-                style: TextStyle(
-                  fontSize: _membershipFontSize,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
+                style: _getmemberhipTitleTextStyle(),
               ),
               const SizedBox(
                 height: 8,
               ),
-              Text(
-                'Valid till ${DateFormat("dd-MM-yyyy").format(
-                  planEndDateTime,
-                )} (${CommonUtil().calculateDifference(
-                  planEndDateTime,
-                )} days remaining)',
-                overflow: TextOverflow.visible,
-                style: TextStyle(
-                  fontSize: 14.0.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
+              RichText(
+                text: TextSpan(
+                  style: TextStyle(
+                    fontSize: 14.0.sp,
+                    color: Colors.white,
+                  ),
+                  children: <TextSpan>[
+                    const TextSpan(
+                        text: 'Valid till',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(
+                      text: ' ${DateFormat("MMM-dd-yyyy").format(
+                        planEndDateTime,
+                      )} (${CommonUtil().calculateDifference(
+                        planEndDateTime,
+                      )} days remaining)',
+                    ),
+                  ],
                 ),
               ),
               if (!(widget.isShowingBenefits ?? false))
                 const Spacer()
               else
-                const SizedBox(
-                  height: 25,
+                RichText(
+                  text: TextSpan(
+                    style: TextStyle(
+                      fontSize: 14.0.sp,
+                      color: Colors.white,
+                    ),
+                    children: <TextSpan>[
+                      const TextSpan(
+                          text: 'Subscribed on',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      const TextSpan(text: ' - '),
+                      TextSpan(
+                        text: DateFormat('MMM-dd-yyyy').format(
+                          planStartDateTime,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+              const SizedBox(
+                height: 15,
+              ),
               Visibility(
                 visible: !(widget.isShowingBenefits ?? false),
                 child: TextButton(
@@ -141,6 +174,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
                 visible: widget.isShowingBenefits ?? false,
                 child: ListView.builder(
                   shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: widget.memberShipResult?.additionalInfo
                           ?.benefitType?.length ??
                       0,
@@ -149,14 +183,8 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
                         .memberShipResult?.additionalInfo?.benefitType?[index];
                     return Container(
                       margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.white,
-                            Color(CommonUtil().getMyGredientColor())
-                          ],
-                        ),
+                        color: Colors.white,
                         borderRadius: const BorderRadius.all(
                           Radius.circular(12),
                         ),
@@ -164,44 +192,60 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
                           color: Color(CommonUtil().getMyPrimaryColor()),
                         ),
                       ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              getIcon(currentMembershipType),
-                              Text(
-                                getTitle(currentMembershipType),
-                                overflow: TextOverflow.visible,
-                                style: TextStyle(
-                                  fontSize: 20.0.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(
-                                    CommonUtil().getMyGredientColor(),
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(12),
+                          ),
+                          gradient: LinearGradient(
+                            colors: [
+                              Color(CommonUtil().getMyPrimaryColor())
+                                  .withOpacity(0.01),
+                              Color(CommonUtil().getMyGredientColor())
+                                  .withAlpha(80)//.withOpacity(0.37)
+                            ],
+                          ),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  getTitle(currentMembershipType),
+                                  overflow: TextOverflow.visible,
+                                  style: _getmemberhipTitleTextStyle(
+                                    color: Color(
+                                      CommonUtil().getMyGredientColor(),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                strAvailableBalance,
-                                overflow: TextOverflow.visible,
-                                style: TextStyle(
-                                  fontSize: 15.0.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                              ],
+                            ),
+                            const Spacer(),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                getIcon(currentMembershipType),
+                                const SizedBox(height: 4),
+                                Text(
+                                  strAvailableBalance,
+                                  overflow: TextOverflow.visible,
+                                  style: TextStyle(
+                                    fontSize: 12.0.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 8),
-                              getBalanceAmount(currentMembershipType)
-                            ],
-                          ),
-                        ],
+                                getBalanceAmount(currentMembershipType)
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -235,35 +279,29 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
   /// else
   ///    then fetch from API or set default icon
   Widget getIcon(MemberShipAdditionalInfoBenefitType? type) {
-    final iconsUrl = widget.iconsUrls?[getTitle(type)];
+    final iconsUrl = widget.iconsUrls?[getIconsTitle(type)];
     if (type?.fieldName == strBenefitFamilyMembers) {
       return SvgPicture.asset(
         'assets/icons/Family-member-01.svg',
-        height: 30,
-        width: 30,
+        height: 40,
+        width: 40,
         placeholderBuilder: (context) => CommonCircularIndicator(),
-        color: Color(
-          CommonUtil().getMyGredientColor(),
-        ).withAlpha(200),
+        color: Color(CommonUtil().getMyGredientColor()).withOpacity(0.3),
       );
     } else if (iconsUrl?.isNotEmpty ?? false) {
       return SvgPicture.network(
         iconsUrl ?? '',
-        height: 30,
-        width: 30,
+        height: 40,
+        width: 40,
         placeholderBuilder: (context) => CommonCircularIndicator(),
-        color: Color(
-          CommonUtil().getMyGredientColor(),
-        ).withAlpha(200),
+        color: Color(CommonUtil().getMyGredientColor()).withOpacity(0.3),
       );
     } else {
       return Image.asset(
         'assets/icons/10.png',
-        width: 30,
-        height: 30,
-        color: Color(
-          CommonUtil().getMyGredientColor(),
-        ).withAlpha(200),
+        width: 40,
+        height: 40,
+        color: Color(CommonUtil().getMyGredientColor()).withOpacity(0.3),
       );
     }
   }
@@ -284,7 +322,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
         amount = widget.memberShipResult?.tranportation ?? 0;
         break;
       case strBenefitFamilyMembers:
-        amount = 0;
+        amount = widget.memberShipResult?.homecareServices ?? 0;
         break;
       case strBenefitMedicineOrdering:
         amount = widget.memberShipResult?.medicineOrdering ?? 0;
@@ -302,16 +340,16 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
     );
   }
 
-  /// Method Return String for Title
+  /// Method Return String for Title for icon
   /// Based on which MemberShipAdditionalInfoBenefitType is passed
-  String getTitle(MemberShipAdditionalInfoBenefitType? type) {
+  String getIconsTitle(MemberShipAdditionalInfoBenefitType? type) {
     var _title = '';
     switch (type?.fieldName) {
       case strBenefitDoctorAppointment:
-        _title = type?.fieldName ?? '';
+        _title = strBenefitDoctorAppointment;
         break;
       case strBenefitLabAppointment:
-        _title = type?.fieldName ?? '';
+        _title = strBenefitLabAppointment;
         break;
       case strBenefitMedicineOrdering:
         _title = strBenefitOrderMedicine;
@@ -324,6 +362,34 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
         break;
       case strBenefitFamilyMembers:
         _title = strBenefitHomecareService;
+        break;
+      default:
+    }
+    return _title;
+  }
+
+  /// Method Return String for Title
+  /// Based on which MemberShipAdditionalInfoBenefitType is passed
+  String getTitle(MemberShipAdditionalInfoBenefitType? type) {
+    var _title = '';
+    switch (type?.fieldName) {
+      case strBenefitDoctorAppointment:
+        _title = strBenefitDoctorAppointments;
+        break;
+      case strBenefitLabAppointment:
+        _title = strBenefitLabAppointments;
+        break;
+      case strBenefitMedicineOrdering:
+        _title = strBenefitOrderMedicines;
+        break;
+      case strBenefitTransportation:
+        _title = strBenefitAmbulanceServices;
+        break;
+      case strBenefitCareDietPlans:
+        _title = strBenefitHealthPlans;
+        break;
+      case strBenefitFamilyMembers:
+        _title = strBenefitHomecareServices;
         break;
       default:
     }

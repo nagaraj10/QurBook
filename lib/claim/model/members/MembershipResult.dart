@@ -18,6 +18,7 @@ class MemberShipResult {
   int? labAppointment;
   int? medicineOrdering;
   int? tranportation;
+  int? homecareServices;
 
   MemberShipResult(
       {this.id,
@@ -34,7 +35,8 @@ class MemberShipResult {
       this.noOfDoctorAppointments,
       this.labAppointment,
       this.medicineOrdering,
-      this.tranportation});
+      this.tranportation,
+      this.homecareServices});
 
   MemberShipResult.fromJson(Map<String, dynamic> json) {
     try {
@@ -55,6 +57,7 @@ class MemberShipResult {
       labAppointment = json['labAppointment'];
       medicineOrdering = json['medicineOrdering'];
       tranportation = json['tranportation'];
+      homecareServices = json['homecareServices'];
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -79,6 +82,7 @@ class MemberShipResult {
     data['labAppointment'] = labAppointment;
     data['medicineOrdering'] = medicineOrdering;
     data['tranportation'] = tranportation;
+    data['homecareServices'] = homecareServices;
     return data;
   }
 }
