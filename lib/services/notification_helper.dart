@@ -1,63 +1,59 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/variable_constant.dart';
+
+class AppNameConstants{
+  static const String QURHOME ='qurhome';
+  static const String QURBOOK ='qurbook';
+}
 
 ///Ios Notification Categories
 List<DarwinNotificationCategory> darwinIOSCategories = [
   DarwinNotificationCategory(
-    'darwinCall_category',
+    strDarwinCallCategory,
     actions: [
       DarwinNotificationAction.plain(
-        'accept_action',
-        'Accept',
+        strAcceptAction,
+        accept,
       ),
       DarwinNotificationAction.plain(
-        'reject_action',
-        'Reject',
+        strRejectAction,
+        reject,
         options: <DarwinNotificationActionOption>{
-          DarwinNotificationActionOption.destructive,
+          DarwinNotificationActionOption.foreground,
         },
       ),
     ],
   ),
   DarwinNotificationCategory(
-    'showTransportationNotification',
+    strShowTransportationNotification,
     actions: [
       DarwinNotificationAction.plain(
-        'Accept',
-        'Accept',
+        accept,
+        accept,
         options: <DarwinNotificationActionOption>{
           DarwinNotificationActionOption.foreground,
         },
       ),
       DarwinNotificationAction.plain(
-        'Decline',
-        'Decline',
+        decline,
+        decline,
         options: <DarwinNotificationActionOption>{},
       ),
     ],
   ),
   DarwinNotificationCategory(
-    'showBothButtonsCat',
+    strShowBothButtonsCat,
     actions: [
       DarwinNotificationAction.plain(
-        'Snooze',
-        'Snooze',
+        stringSnooze,
+        stringSnooze,
       ),
       DarwinNotificationAction.plain(
-        'Dismiss',
-        'Dismiss',
-        options: <DarwinNotificationActionOption>{
-          DarwinNotificationActionOption.destructive,
-        },
-      ),
-    ],
-  ),
-  DarwinNotificationCategory(
-    'escalateToCareCoordinatorButtons',
-    actions: [
-      DarwinNotificationAction.plain(
-        'Escalate',
-        'Escalate',
+        stringDismiss,
+        stringDismiss,
         options: <DarwinNotificationActionOption>{
           DarwinNotificationActionOption.foreground,
         },
@@ -65,18 +61,11 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
     ],
   ),
   DarwinNotificationCategory(
-    'showViewMemberAndCommunicationButtons',
+    strEscalateToCareCoordinatorButtons,
     actions: [
       DarwinNotificationAction.plain(
-        'ViewMember',
-        'View Member',
-        options: <DarwinNotificationActionOption>{
-          DarwinNotificationActionOption.foreground,
-        },
-      ),
-      DarwinNotificationAction.plain(
-        'Communicationsettings',
-        'Communication settings',
+        strEscalate,
+        strEscalate,
         options: <DarwinNotificationActionOption>{
           DarwinNotificationActionOption.foreground,
         },
@@ -84,30 +73,18 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
     ],
   ),
   DarwinNotificationCategory(
-    'showSingleButtonCat',
+    strShowViewMemberAndCommunicationButtons,
     actions: [
       DarwinNotificationAction.plain(
-        'Dismiss',
-        'Dismiss',
-        options: <DarwinNotificationActionOption>{
-          DarwinNotificationActionOption.destructive,
-        },
-      )
-    ],
-  ),
-  DarwinNotificationCategory(
-    'planRenewButton',
-    actions: [
-      DarwinNotificationAction.plain(
-        'Renew',
-        'Renew',
+        strViewMember,
+        strViewMemberSpace,
         options: <DarwinNotificationActionOption>{
           DarwinNotificationActionOption.foreground,
         },
       ),
       DarwinNotificationAction.plain(
-        'Callback',
-        'Call back',
+        strCommunicationsettings,
+        strCommunicationSettingsSpace,
         options: <DarwinNotificationActionOption>{
           DarwinNotificationActionOption.foreground,
         },
@@ -115,49 +92,11 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
     ],
   ),
   DarwinNotificationCategory(
-    'acceptDeclineButtonsCaregiver',
+    strShowSingleButtonCat,
     actions: [
       DarwinNotificationAction.plain(
-        'Accept',
-        'Accept',
-        options: <DarwinNotificationActionOption>{
-          DarwinNotificationActionOption.foreground,
-        },
-      ),
-      DarwinNotificationAction.plain(
-        'Reject',
-        'Reject',
-        options: <DarwinNotificationActionOption>{
-          DarwinNotificationActionOption.destructive,
-        },
-      ),
-    ],
-  ),
-  DarwinNotificationCategory(
-    'ChatCCAndViewrecordButtons',
-    actions: [
-      DarwinNotificationAction.plain(
-        'chatwithcc',
-        'Chat with cc',
-        options: <DarwinNotificationActionOption>{
-          DarwinNotificationActionOption.foreground,
-        },
-      ),
-      DarwinNotificationAction.plain(
-        'viewrecord',
-        'View Record',
-        options: <DarwinNotificationActionOption>{
-          DarwinNotificationActionOption.foreground,
-        },
-      ),
-    ],
-  ),
-  DarwinNotificationCategory(
-    'viewDetailsButton',
-    actions: [
-      DarwinNotificationAction.plain(
-        'ViewDetails',
-        'View Details',
+        stringDismiss,
+        stringDismiss,
         options: <DarwinNotificationActionOption>{
           DarwinNotificationActionOption.foreground,
         },
@@ -165,11 +104,80 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
     ],
   ),
   DarwinNotificationCategory(
-    'payNowButton',
+    strPlanRenewButton,
     actions: [
       DarwinNotificationAction.plain(
-        'PayNow',
-        'Pay Now',
+        strIsRenew,
+        strIsRenew,
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+      DarwinNotificationAction.plain(
+        strCallback,
+        strCallbackSpace,
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+    ],
+  ),
+  DarwinNotificationCategory(
+    strAcceptDeclineButtonsCaregiver,
+    actions: [
+      DarwinNotificationAction.plain(
+        accept,
+        accept,
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+      DarwinNotificationAction.plain(
+        reject,
+        reject,
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+    ],
+  ),
+  DarwinNotificationCategory(
+    strChatCCAndViewrecordButtons,
+    actions: [
+      DarwinNotificationAction.plain(
+        strChatwithcc,
+        strChatwithccSpace,
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+      DarwinNotificationAction.plain(
+        strViewrecord,
+        strViewRecordSpace,
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      ),
+    ],
+  ),
+  DarwinNotificationCategory(
+    strViewDetailsButton,
+    actions: [
+      DarwinNotificationAction.plain(
+        strViewDetails,
+        strViewDetailsSpace,
+        options: <DarwinNotificationActionOption>{
+          DarwinNotificationActionOption.foreground,
+        },
+      )
+    ],
+  ),
+  DarwinNotificationCategory(
+    strPayNowButton,
+    actions: [
+      DarwinNotificationAction.plain(
+        strPayNow,
+        strPayNowSpace,
         options: <DarwinNotificationActionOption>{
           DarwinNotificationActionOption.foreground,
         },
@@ -180,98 +188,135 @@ List<DarwinNotificationCategory> darwinIOSCategories = [
 
 ///Android ACtionButtons
 const acceptAction = AndroidNotificationAction(
-  'Accept', // Replace with your own action ID
-  'Accept', // Replace with your own action label
+  accept, // Replace with your own action ID
+  accept, // Replace with your own action label
   showsUserInterface: true,
 );
 const rejectAction = AndroidNotificationAction(
-  'Reject', // Replace with your own action ID
-  'Reject',
+  reject, // Replace with your own action ID
+  reject,
   showsUserInterface: true, // Replace with your own action label
 );
 const declineAction = AndroidNotificationAction(
-  'Decline', // Replace with your own action ID
-  'Decline',
+  decline, // Replace with your own action ID
+  decline,
   showsUserInterface: true, // Replace with your own action label
 );
 
 const viewMemberAction = AndroidNotificationAction(
-  'ViewMember', // Replace with your own action ID
-  'View Member', // Replace with your own action label
+  strViewMember, // Replace with your own action ID
+  strViewMemberSpace, // Replace with your own action label
   showsUserInterface: true,
 );
 const communicationSettingAction = AndroidNotificationAction(
-  'Communicationsettings', // Replace with your own action ID
-  'Communication Settings', // Replace with your own action label
+  strCommunicationsettings, // Replace with your own action ID
+  strCommunicationSettingsSpace, // Replace with your own action label
   showsUserInterface: true,
 );
 const chatwithccAction = AndroidNotificationAction(
-  'chatwithcc', // Replace with your own action ID
-  'Chat with CC', // Replace with your own action label
+  strChatwithcc, // Replace with your own action ID
+  strChatwithCCSpace, // Replace with your own action label
   showsUserInterface: true,
 );
 const viewRecordAction = AndroidNotificationAction(
-  'viewrecord', // Replace with your own action ID
-  'View Record', // Replace with your own action label
+  strViewrecord, // Replace with your own action ID
+  strViewRecordSpace, // Replace with your own action label
   showsUserInterface: true,
 );
 
 const renewalAction = AndroidNotificationAction(
-  'Renew', // Replace with your own action ID
-  'Renew', // Replace with your own action label
+  strIsRenew, // Replace with your own action ID
+  strIsRenew, // Replace with your own action label
   showsUserInterface: true,
 );
 
 const callBackAction = AndroidNotificationAction(
-  'Callback', // Replace with your own action ID
-  'Call back', // Replace with your own action label
+  strCallback, // Replace with your own action ID
+  strCallbackSpace, // Replace with your own action label
   showsUserInterface: true,
 );
 
 const escalateAction = AndroidNotificationAction(
-  'Escalate', // Replace with your own action ID
-  'Escalate', // Replace with your own action label
+  strEscalate, // Replace with your own action ID
+  strEscalate, // Replace with your own action label
   showsUserInterface: true,
 );
 
 const viewDetailsAction = AndroidNotificationAction(
-  'ViewDetails', // Replace with your own action ID
-  'View Details', // Replace with your own action label
+  strViewDetails, // Replace with your own action ID
+  strViewDetailsSpace, // Replace with your own action label
   showsUserInterface: true,
 );
 
 const payNowAction = AndroidNotificationAction(
-  'PayNow', // Replace with your own action ID
-  'Pay Now', // Replace with your own action label
+  strPayNow, // Replace with your own action ID
+  strPayNowSpace, // Replace with your own action label
   showsUserInterface: true,
 );
 
+
+// Define a constant for the snooze action configuration.
+const snoozeAction = AndroidNotificationAction(
+  stringSnooze, // Action ID (replace with your own action ID)
+  stringSnooze, // Action label (replace with your own action label)
+  showsUserInterface: true, // Indicates whether the action should display in the notification UI
+);
+
+// Define a constant for the dismiss action configuration.
+const dismissAction = AndroidNotificationAction(
+  stringDismiss, // Action ID (replace with your own action ID)
+  stringDismiss, // Action label (replace with your own action label)
+  showsUserInterface: true, // Indicates whether the action should display in the notification UI
+);
+
+
 ///Notification Channel
 const androidNormalchannel = AndroidNotificationChannel(
-  '12345', // id
-  'Qurbook_channel', // title
+  strAndroidNormalchannelId, // id
+  strQurbookChannel, // title
   enableVibration: false,
-  description: 'This channel is used for important notifications.', //
-  sound: RawResourceAndroidNotificationSound('msg_tone'),
+  description: strNormalQurbookChannelDesc, //
+  sound: RawResourceAndroidNotificationSound(strMsgTone),
   importance: Importance.high,
 );
 var callChannel = const AndroidNotificationChannel(
-  '5678', // id
-  'Qurbook_call_channel',
+  strAndroidNormalCallchannelId, // id
+  strQurbookCallChannel,
   enableVibration: false, // title
-  description: 'This channel is used for important notifications.',
-  sound: RawResourceAndroidNotificationSound('helium'), // description
+  description: strNormalQurbookChannelDesc,
+  sound: RawResourceAndroidNotificationSound(strHelium), // description
   importance: Importance.high,
 );
+
+// Define a constant for the remainder schedule notification channel.
+var remainderScheduleChannel = const AndroidNotificationChannel(
+  strRemainderScheduleChannel, // ID for the channel
+  strQurbookRemainderScheduleChannel, // Title of the channel
+  enableVibration: false, // Enable or disable vibration
+  description: strRemainderNotificationChannelDes, // Description of the channel
+  sound: RawResourceAndroidNotificationSound(strMsgTone), // Sound for notifications
+  importance: Importance.high, // Importance level of the channel
+);
+
+// Define a constant for the remainder schedulev3 notification channel.
+var remainderScheduleV3Channel = const AndroidNotificationChannel(
+  strRemainderScheduleV3Channel, // ID for the channel
+  strQurbookRemainderScheduleV3Channel, // Title of the channel
+  enableVibration: false, // Enable or disable vibration
+  description: strRemainderNotificationV3ChannelDes, // Description of the channel
+  sound: RawResourceAndroidNotificationSound(strBeepBeep), // Sound for notifications
+  importance: Importance.high, // Importance level of the channel
+);
+
 
 Future<void> updateCallStatus(bool isAccept, String recordId) async {
   try {
     final db = FirebaseFirestore.instance;
 
     final data = <String, dynamic>{
-      'call_status': isAccept ? 'accept' : 'decline',
+      strCallStatus: isAccept ? accept.toLowerCase() : decline.toLowerCase(),
     };
-    await db.collection('call_log').doc(recordId).update(data);
+    await db.collection(strCallLog).doc(recordId).update(data);
   } catch (e) {
     print('firestoreException:${e.toString()}');
   }

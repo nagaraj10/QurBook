@@ -257,6 +257,13 @@ const String icon_validity = 'assets/icons/icon_validity.png';
 const String icon_compatibilty = 'assets/icons/icon_compatibility.png';
 const String icon_camera = 'assets/devices/camera.png';
 
+// Define a constant string representing the file path for the 'choose_lab.svg' icon
+const String icon_choose_lab = 'assets/icons/choose_lab.svg';
+
+// Define a constant string representing the file path for the 'ic_address.svg' icon
+const String icon_address = 'assets/icons/ic_address.svg';
+
+
 //string for troubleshooting
 const String strAppCompatibilty = 'App compatibility';
 const String strSDKCompatibilty = 'SDK compatibility';
@@ -1013,14 +1020,20 @@ const String strShowAvailableBenefits = 'Show available benefits';
 
 const String strBenefitFamilyMembers = 'Family Members';
 const String strBenefitHomecareService = 'Homecare Service';
+const String strBenefitHomecareServices = 'Homecare Services';
 const String strBenefitHealthPlan = 'Health Plan';
+const String strBenefitHealthPlans = 'Health Plans';
 const String strBenefitCareDietPlans = 'Care/Diet Plans';
 const String strBenefitAmbulanceService = 'Ambulance Service';
+const String strBenefitAmbulanceServices = 'Ambulance Services';
 const String strBenefitTransportation = 'Transportation';
 const String strBenefitOrderMedicine = 'Order Medicine';
+const String strBenefitOrderMedicines = 'Order Medicines';
 const String strBenefitMedicineOrdering = 'Medicine Ordering';
 const String strBenefitLabAppointment = 'Lab Appointment';
+const String strBenefitLabAppointments = 'Lab Appointments';
 const String strBenefitDoctorAppointment = 'Doctor Appointment';
+const String strBenefitDoctorAppointments = 'Doctor Appointments';
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   var parts = token.split('.');

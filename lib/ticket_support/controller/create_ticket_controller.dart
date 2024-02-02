@@ -42,6 +42,9 @@ class CreateTicketController extends GetxController {
    //doctor appointment
   var docSpecialization = "".obs;
 
+  //Selected lab address
+  var selLabAddress = ''.obs;
+
 
   UserTicketService userTicketService = UserTicketService();
 
