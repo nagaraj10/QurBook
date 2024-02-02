@@ -1055,7 +1055,7 @@ const String strVideoSizeValidation =
     'Unable to upload video. File size exceeds 100MB';
 
 // Constant for the error message when audio file size exceeds 100MB
-const String strAudioSizeValidation = 'File size exceeds 100MB';
+const String strAudioSizeValidation = 'Unable to upload audio. File size exceeds 100MB';
 
 // Constant for the label 'Video preview'
 const String strVideoPreview = 'Video preview';
