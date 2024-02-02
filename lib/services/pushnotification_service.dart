@@ -703,7 +703,7 @@ zonedScheduleNotification(
     );
 
     // Add the scheduled time to SheelaAIController
-    sheelaAIController.addScheduledTime(reminderTemp!, scheduledDateTime);
+    await sheelaAIController.addScheduledTime(reminderTemp!, scheduledDateTime);
   } catch (e, stackTrace) {
     // Handle exceptions and log errors
     CommonUtil().appLogs(message: e, stackTrace: stackTrace);
