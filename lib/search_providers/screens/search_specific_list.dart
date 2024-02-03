@@ -272,21 +272,27 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                 : getResponseFromApiWidgetForCity()),
           ],
         ),
-        bottomNavigationBar: widget.isFromCreateTicket
+    bottomNavigationBar: (widget.isFromCreateTicket &&
+                ((widget.arguments!.searchWord == CommonConstants.doctors) ||
+                (widget.arguments!.searchWord == CommonConstants.labs ||
+                    widget.arguments!.searchWord == CommonConstants.lab)))
             ? Container(
                 height: 50,
                 padding: const EdgeInsets.all(3.0),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Color(CommonUtil().getMyPrimaryColor())),
+                  border: Border.all(
+                      color: Color(CommonUtil().getMyPrimaryColor())),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: () => Navigator.pop(context),
+                      onTap: () {
+                        //TODO
+                      },
                       child: Text(
-                        'Sort',
+                        Constants.strSort,
                         style: TextStyle(
                           color: Color(CommonUtil().getMyPrimaryColor()),
                         ),
@@ -303,7 +309,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         onTap: () {
                           Get.to(DoctorsFilterScreen(
                             selectedItems: selectedItems,
-                            filterMenuCount: count != 0 ? count : filterMenuCount.length,
+                            filterMenuCount:
+                                count != 0 ? count : filterMenuCount.length,
                             filterApplied: (
                               Map<String, List<String>> item,
                               List<DoctorsListResult> list,
@@ -323,7 +330,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         child: Row(
                           children: [
                             Text(
-                              'Filter',
+                              Constants.strFilter,
                               style: TextStyle(
                                 color: Color(CommonUtil().getMyPrimaryColor()),
                               ),
@@ -337,7 +344,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                 width: 28,
                                 height: 28,
                                 decoration: BoxDecoration(
-                                  color: Color(CommonUtil().getMyPrimaryColor()), // border color
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor()),
+                                  // border color
                                   shape: BoxShape.circle,
                                 ),
                                 child: Center(
@@ -355,7 +364,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   ],
                 ),
               )
-            : Container(),
+            : const SizedBox.shrink(),
       );
 
   Widget getResponseFromApiWidgetForDoctors() => StreamBuilder<ApiResponse<DoctorsSearchListResponse>>(
