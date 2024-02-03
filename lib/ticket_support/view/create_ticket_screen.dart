@@ -40,7 +40,6 @@ import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
-import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/images_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
@@ -89,7 +88,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   FocusNode preferredDateFocus = FocusNode();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
-  var controller = Get.put(CreateTicketController());
+  var controller = CommonUtil().onInitCreateTicketController();
   var regController = CommonUtil().onInitQurhomeRegimenController();
   Hospitals? selectedLab;
   Doctors? selectedDoctor;
@@ -371,6 +370,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           flexibleSpace: GradientAppBar(),
           backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
           elevation: 0,
+          titleSpacing: 0.0,
           leading: IconWidget(
             icon: Icons.arrow_back_ios,
             colors: Colors.white,
@@ -1020,7 +1020,35 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             //doctor.text = doctorsData[parameters.strName];
             textEditingControllers[CommonUtil().getFieldName(field.name)]?.text = doctorsData[parameters.strName];
             docId = doctorsData[parameters.strDoctorId];
-            controller.docSpecialization.value = doctorsData[parameters.strspecialty];
+
+            // Initialize a variable to store the combined specialization and experience string
+            var docSpecializationExperience = '';
+
+            // Extract and validate the doctor's specialization from the data
+            var docSpecialization = CommonUtil().validString(doctorsData[parameters.strspecialty] ?? '');
+
+            // Extract and validate the doctor's experience from the data
+            var strExperience = CommonUtil().validString(doctorsData[parameters.stringExperience]?.toString() ?? '');
+
+            // Format the experience string with years if it's not empty and not '0'
+            strExperience = (strExperience?.trim().isNotEmpty ?? false)
+                ? (strExperience != '0' ? '$strExperience ${Constants.strYears}' : '')
+                : '';
+
+            // Check if the doctor's specialization is not empty and append it to the result
+            if (docSpecialization.isNotEmpty) {
+              docSpecializationExperience += docSpecialization;
+            }
+
+            // Append the experience to the result if both specialization and experience are not empty
+            docSpecializationExperience +=
+            (docSpecializationExperience.isNotEmpty && strExperience.isNotEmpty)
+                ? ' - $strExperience'
+                : strExperience;
+
+            // Set the combined specialization and experience string to the controller value
+            controller.docSpecialization.value = docSpecializationExperience;
+
           } else if (results.containsKey(tckConstants.keyHospital)) {
             hospitalData = json.decode(results[tckConstants.keyHospital]);
 
@@ -3035,7 +3063,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 style: TextStyle(
                   color: Color(CommonUtil().getMyPrimaryColor()),
                   fontSize: 10.sp
-                ),)
+                ),softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,)
               ],
             ),
           ),

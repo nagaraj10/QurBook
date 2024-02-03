@@ -2792,6 +2792,32 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
+  // Define a function named labFilterList that takes a URL and JSON data as parameters
+  Future<dynamic> labFilterList(String url, String jsonData) async {
+    // Declare a variable to store the JSON response
+    var responseJson;
+
+    try {
+      // Make an HTTP POST request using the ApiServices.post method
+      var response = await ApiServices.post(
+        _baseUrl + url,                    // Combine the base URL and the provided URL
+        body: jsonData,                    // Pass the JSON data in the request body
+        headers: await headerRequest.getRequestHeader(),  // Include headers from headerRequest
+      );
+
+      // Process the response using the _returnResponse method
+      responseJson = _returnResponse(response);
+
+    } on SocketException {
+      // Handle the case when a SocketException occurs (no internet connection)
+      throw FetchDataException(variable.strNoInternet);
+    }
+
+    // Return the processed JSON response or an exception if applicable
+    return responseJson;
+  }
+
 }
 
 void exitFromApp() async {

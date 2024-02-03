@@ -9,12 +9,14 @@ class DoctorFilterRequestModel {
   int? size;
   String? searchText;
   List<Filter>? filters;
+  String? healthOrganizationType;
 
   DoctorFilterRequestModel({
     this.page,
     this.size,
     this.searchText,
     this.filters,
+    this.healthOrganizationType,
   });
 
   factory DoctorFilterRequestModel.fromJson(Map<String, dynamic> json) => DoctorFilterRequestModel(
@@ -22,6 +24,7 @@ class DoctorFilterRequestModel {
         size: json["size"],
         searchText: json["searchText"],
         filters: json["filters"] == null ? [] : List<Filter>.from(json["filters"]!.map((x) => Filter.fromJson(x))),
+        healthOrganizationType: json["healthOrganizationType"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -29,6 +32,7 @@ class DoctorFilterRequestModel {
         "size": size,
         "searchText": searchText,
         "filters": filters == null ? [] : List<dynamic>.from(filters!.map((x) => x.toJson())),
+        "healthOrganizationType": healthOrganizationType,
       };
 }
 

@@ -45,6 +45,7 @@ class LabListResult {
   String? phoneNumberTypeId;
   String? phoneNumberTypeName;
   dynamic healthOrganizationReferenceId;
+  String? logoURL; // Declare a nullable String variable named 'logoURL'
 
   LabListResult(
       {this.healthOrganizationId,
@@ -59,7 +60,7 @@ class LabListResult {
         this.phoneNumber,
         this.phoneNumberTypeId,
         this.phoneNumberTypeName,
-        this.healthOrganizationReferenceId});
+        this.healthOrganizationReferenceId,this.logoURL});
 
   LabListResult.fromJson(Map<String, dynamic> json) {
     try {
@@ -76,6 +77,7 @@ class LabListResult {
       phoneNumberTypeId = json['phoneNumberTypeId'];
       phoneNumberTypeName = json['phoneNumberTypeName'];
       healthOrganizationReferenceId = json['healthOrganizationReferenceId'];
+      logoURL = json['logoURL'];
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -96,6 +98,7 @@ class LabListResult {
     data['phoneNumberTypeId'] = phoneNumberTypeId;
     data['phoneNumberTypeName'] = phoneNumberTypeName;
     data['healthOrganizationReferenceId'] = healthOrganizationReferenceId;
+    data['logoURL'] = this.logoURL;
     return data;
   }
 }

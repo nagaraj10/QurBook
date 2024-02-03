@@ -63,7 +63,7 @@ class DoctorsListResult {
   bool? patientAssociationRequest;
   List<String>? doctorLanguage;
   String? gender;
-  int? experience;
+  dynamic experience;
 
   DoctorsListResult(
       {this.doctorId,
@@ -89,26 +89,32 @@ class DoctorsListResult {
 
   DoctorsListResult.fromJson(Map<String, dynamic> json) {
     try {
-      doctorId = json['doctorId'];
-      userId = json['userId'];
-      name = json['name'];
-      gender = json['gender'];
-      firstName = json['firstName'];
-      lastName = json['lastName'];
-      specialization = json['specialization'];
-      doctorReferenceId = json['doctorReferenceId'];
-      city = json['city'];
-      state = json['state'];
-      experience = json['experience'];
-      addressLine1 = json['addressLine1'];
-      specialty = json['specialty'];
-      addressLine2 = json['addressLine2'];
-      healthOrganizationName = json['healthOrganizationName'];
-      profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
-      isTelehealthEnabled = json['isTelehealthEnabled'];
-      isMciVerified = json['isMciVerified'];
-      patientAssociationRequest = json['patientAssociationRequest'];
+      doctorId = json['doctorId']??'';
+      userId = json['userId']??'';
+      name = json['name']??'';
+      gender = json['gender']??'';
+      firstName = json['firstName']??'';
+      lastName = json['lastName']??'';
+      specialization = json['specialization']??'';
+      doctorReferenceId = json['doctorReferenceId']??'';
+      city = json['city']??'';
+      state = json['state']??'';
+      experience = json['experience']??'0';
+      addressLine1 = json['addressLine1']??'';
+      specialty = json['specialty']??'';
+      addressLine2 = json['addressLine2']??'';
+      healthOrganizationName = json['healthOrganizationName']??'';
+      profilePicThumbnailUrl = json['profilePicThumbnailUrl']??'';
+      isTelehealthEnabled = json['isTelehealthEnabled']??false;
+      isMciVerified = json['isMciVerified']??false;
+      patientAssociationRequest = json['patientAssociationRequest']??false;
       doctorLanguage = List<String>.from(json['doctorLanguage'] ?? []);
+      // Check if doctorLanguage is not null and has elements
+      if (doctorLanguage != null && (doctorLanguage?.length ?? 0) > 0) {
+        // Convert the doctorLanguage list to a Set to remove duplicates, then back to a List
+        doctorLanguage = doctorLanguage?.toSet().toList();
+      }
+
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -132,6 +138,7 @@ class DoctorsListResult {
     data['isTelehealthEnabled'] = isTelehealthEnabled;
     data['isMciVerified'] = isMciVerified;
     data['patientAssociationRequest'] = patientAssociationRequest;
+    data['experience'] = experience;
     return data;
   }
 }

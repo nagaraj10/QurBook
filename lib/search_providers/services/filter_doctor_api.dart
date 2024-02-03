@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/search_providers/models/labs_list_response_new.dart';
+
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_query.dart' as query;
 import '../../my_providers/models/UserAddressCollection.dart';
@@ -101,9 +104,10 @@ class FilterDoctorApi {
   Future<List<DoctorsListResult>> getFilterDoctorList(
     DoctorFilterRequestModel doctorFilterRequestModel,
   ) async {
+
     final doctorFilterList = <DoctorsListResult>[];
     try {
-      final response = await ApiBaseHelper().doctorFilterList('doctor/service-request/list', json.encode(doctorFilterRequestModel));
+      final response = await ApiBaseHelper().doctorFilterList(doctor_service_request_list, json.encode(doctorFilterRequestModel),);
       doctorFilterList.clear();
       if (response['isSuccess']) {
         if (response['result']['data']['isSuccess']) {
@@ -158,4 +162,45 @@ class FilterDoctorApi {
     }
     return uniqueHospital.toList();
   }
+
+
+  // Define a Future method named 'getFilterLabListResult' that takes a 'DoctorFilterRequestModel' as a parameter
+  Future<List<LabListResult>> getFilterLabListResult(
+      DoctorFilterRequestModel doctorFilterRequestModel,
+      ) async {
+    // Create an empty list to store LabListResult objects
+    final labListFilterResult = <LabListResult>[];
+
+    try {
+      // Make an asynchronous call to the labFilterList method from the ApiBaseHelper class
+      final response = await ApiBaseHelper().labFilterList(
+        lab_service_request_list,                  // Use the lab_service_request_list constant as the URL
+        json.encode(doctorFilterRequestModel),    // Encode the DoctorFilterRequestModel as JSON and provide it as the data
+      );
+
+      // Clear the existing labListFilterResult list
+      labListFilterResult.clear();
+
+      // Check if the response indicates success
+      if (response['isSuccess']) {
+        // Check if the inner result indicates success
+        if (response['result']['data']['isSuccess']) {
+          // Iterate through entities in the response and convert them to LabListResult objects
+          response['result']['data']['entities'].forEach(
+                (f) {
+              labListFilterResult.add(LabListResult.fromJson(f));
+            },
+          );
+        }
+      }
+    } catch (e) {
+      // Catch and ignore any exceptions that occur during the process
+    }
+
+    // Return the list of LabListResult objects
+    return labListFilterResult.toList();
+  }
+
+
+
 }
