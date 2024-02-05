@@ -1018,7 +1018,6 @@ const String strAvailableServices = 'Available Services';
 const String strAvailableBalance = 'Available balance';
 const String strShowAvailableBenefits = 'Show available benefits';
 
-const String strBenefitFamilyMembers = 'Family Members';
 const String strBenefitHomecareService = 'Homecare Service';
 const String strBenefitHomecareServices = 'Homecare Services';
 const String strBenefitHealthPlan = 'Health Plan';
