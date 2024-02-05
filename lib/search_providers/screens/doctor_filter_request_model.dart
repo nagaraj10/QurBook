@@ -27,13 +27,20 @@ class DoctorFilterRequestModel {
         healthOrganizationType: json["healthOrganizationType"],
       );
 
-  Map<String, dynamic> toJson() => {
-        "page": page,
-        "size": size,
-        "searchText": searchText,
-        "filters": filters == null ? [] : List<dynamic>.from(filters!.map((x) => x.toJson())),
-        "healthOrganizationType": healthOrganizationType,
-      };
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> json = {
+      "page": page,
+      "size": size,
+      "searchText": searchText,
+      "filters": filters == null ? [] : List<dynamic>.from(filters!.map((x) => x.toJson())),
+    };
+    // Only include healthOrganizationType if it's not null
+    if (healthOrganizationType != null) {
+      json["healthOrganizationType"] = healthOrganizationType;
+    }
+
+    return json;
+  }
 }
 
 class Filter {
