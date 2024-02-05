@@ -1073,6 +1073,13 @@ const String strFilter = 'Filter';
 // Define a constant string for 'Years'
 const String strYears = 'Years';
 
+// Define a constant string for choosing a doctor
+const String strChooseDoctor = 'Choose Doctor';
+
+// Define another constant string for choosing a lab
+const String strChooseLab = 'Choose Lab';
+
+
 
 
 
