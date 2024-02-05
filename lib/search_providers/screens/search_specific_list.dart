@@ -437,7 +437,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           ((widget.arguments!.searchWord == CommonConstants.doctors) ||
               (widget.arguments!.searchWord == CommonConstants.labs ||
                   widget.arguments!.searchWord == CommonConstants.lab)))
-          ? Container(
+          ? 
+      Container(
         height: 50,
         padding: const EdgeInsets.all(3.0),
         decoration: BoxDecoration(
@@ -447,15 +448,20 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {
-                //TODO
-              },
-              child: Text(
-                Constants.strSort,
-                style: TextStyle(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+            Flexible(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  //TODO
+                },
+                child: Center(
+                  child: Text(
+                    Constants.strSort,
+                    style: TextStyle(
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      fontSize: 18,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -464,7 +470,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               color: Color(CommonUtil().getMyPrimaryColor()),
               width: 1,
             ),
-            Center(
+            Flexible(
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
@@ -497,37 +503,41 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     setState(() {});
                   });
                 },
-                child: Row(
-                  children: [
-                    Text(
-                      Constants.strFilter,
-                      style: TextStyle(
-                        color: Color(CommonUtil().getMyPrimaryColor()),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Visibility(
-                      visible: count != 0,
-                      child: Container(
-                        width: 28,
-                        height: 28,
-                        decoration: BoxDecoration(
-                          color:
-                          Color(CommonUtil().getMyPrimaryColor()),
-                          // border color
-                          shape: BoxShape.circle,
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Spacer(),
+                      Text(
+                        Constants.strFilter,
+                        style: TextStyle(
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          fontSize: 18,
                         ),
-                        child: Center(
-                          child: Text(
-                            count.toString(),
-                            style: const TextStyle(color: Colors.white),
+                      ),
+                      SizedBox(width: 5,),
+                      Visibility(
+                        visible: count != 0,
+                        child: Container(
+                          width: 28,
+                          height: 28,
+                          decoration: BoxDecoration(
+                            color:
+                            Color(CommonUtil().getMyPrimaryColor()),
+                            // border color
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Text(
+                              count.toString(),
+                              style: const TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      Spacer(),
+                    ],
+                  ),
                 ),
               ),
             ),
