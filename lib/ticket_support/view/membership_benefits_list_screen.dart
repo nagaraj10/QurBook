@@ -53,7 +53,7 @@ class _MembershipBenefitListScreenState
             ),
           ),
         ),
-        body: SafeArea(
+        body: SingleChildScrollView(
           child: GetMembershipDataWidget(
             memberShipResult:
                 widget.membershipBenefitListModel?.memberShipResult,

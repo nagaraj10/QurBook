@@ -29,6 +29,8 @@ import '../constants/const.dart';
 import '../viewModel/ChatViewModel.dart';
 import 'chat.dart';
 
+import '../../../../services/notification_helper.dart';
+
 class ChatHomeScreen extends StatefulWidget {
   ChatHomeScreen({
     Key? key,
@@ -106,7 +108,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
   void configLocalNotification() {
     var initializationSettingsAndroid =
         AndroidInitializationSettings(STR_MIP_MAP_LAUNCHER);
-    var initializationSettingsIOS = DarwinInitializationSettings();
+    var initializationSettingsIOS = DarwinInitializationSettings(
+        notificationCategories: darwinIOSCategories);
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);

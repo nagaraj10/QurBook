@@ -72,6 +72,7 @@ class FieldModel {
     this.deleted,
     this.value,
     this.strTitleDesc,
+    this.originalTitle,
     this.isSurvey = false,
   });
 
@@ -93,6 +94,7 @@ class FieldModel {
   DateTime? ts;
   dynamic deleted;
   String? value;
+  String? originalTitle; // to get the original title in other languages
   bool isSurvey = false;
   String? strTitleDesc = "";
 
@@ -114,6 +116,7 @@ class FieldModel {
         depth: json['depth'],
         ts: DateTime.tryParse(json['ts'] ?? ''),
         deleted: json['deleted'],
+        originalTitle: (json['originalTitle']??'')
       );
 
   Map<String, dynamic> toJson() => {
@@ -134,6 +137,7 @@ class FieldModel {
         'depth': depth,
         'ts': ts!.toIso8601String(),
         'deleted': deleted,
+        'originalTitle': originalTitle,
       };
 }
 

@@ -345,6 +345,11 @@ const String icVoiceMic = 'assets/voice_clone/mic_icon.svg';
 const String icVoicePause = 'assets/voice_clone/pause_icon.svg';
 const String icVoiceStop = 'assets/voice_clone/stop_icon.svg';
 
+//
+const String doctorSearchHospital = 'assets/doctor_search/hospital.svg';
+const String doctorSearchLanguage = 'assets/doctor_search/languages.svg';
+const String doctorSpecialization = 'assets/doctor_search/specialization.svg';
+
 // Path to the placeholder image asset.
 const String ic_placeholder = 'assets/icons/placeholder.jpg';
 
@@ -758,6 +763,9 @@ const String reRecord = 'Re-Record';
 const String readTheDisplayContentDescription =
     'Read the displayed content on the screen once the timer concludes to record your voice';
 
+// Define a constant string representing the text 'Lab Appointment Request'
+const String strLabAppointmentRequest = 'Lab Appointment Request';
+
 var tckTitle = '';
 String? tckTitleOpt = '';
 var tckDesc = '';
@@ -1051,7 +1059,141 @@ const String strVideoSizeValidation =
     'Unable to upload video. File size exceeds 100MB';
 
 // Constant for the error message when audio file size exceeds 100MB
-const String strAudioSizeValidation = 'File size exceeds 100MB';
+const String strAudioSizeValidation =
+    'Unable to upload audio. File size exceeds 100MB';
 
 // Constant for the label 'Video preview'
 const String strVideoPreview = 'Video preview';
+
+const String strPleaseChoose = 'Please choose';
+const String strPleaseFill = 'Please fill';
+const String strPleaseSelect = 'Please select';
+const String strAddressLine = 'address_line_1';
+
+// Define a constant string for storing the current notification ID.
+const String strCurrentNotificationId = 'currentNotificationId';
+
+// Define constant strings for various actions
+const String strAction = 'action'; // General action string
+const String strCallback = 'Callback'; // Callback action string
+const String strChatwithcc =
+    'chatwithcc'; // Chat with customer care action string
+const String strViewrecord = 'viewrecord'; // View record action string
+const String strViewDetails = 'ViewDetails'; // View details action string
+const String strViewMember = 'ViewMember'; // View member action string
+const String strCommunicationsettings =
+    'Communicationsettings'; // Communication settings action string
+
+// Constant strings for various categories and actions
+const String strShowSingleButtonCat =
+    'showSingleButtonCat'; // Category to show a single button
+const String strShowBothButtonsCat =
+    'showBothButtonsCat'; // Category to show both buttons
+const String strRingtoneIOS = 'ringtone.aiff'; // iOS ringtone file name
+const String strScheduledtitle =
+    'scheduled title'; // Scheduled notification title
+const String strScheduledbody = 'scheduled body'; // Scheduled notification body
+const String strRemainderScheduleChannel =
+    'remainderScheduleChannel'; // Notification channel for remainder schedules
+const String strQurbookRemainderScheduleChannel =
+    'qurbook_remainder_schedule_channel'; // Notification channel for Qurbook remainder schedules
+const String strRemainderNotificationChannelDes =
+    'This channel is used for important remainder schedule notifications.'; // Description for remainder schedule notification channel
+const String strRemainderNotificationV3ChannelDes =
+    'This channel is used for important remainder schedulev3 notifications.'; // Description for remainder schedulev3 notification channel
+const String strRemainderScheduleV3Channel =
+    'remainderScheduleV3Channel'; // Notification channel for remainder schedulev3
+const String strQurbookRemainderScheduleV3Channel =
+    'qurbook_remainder_schedulev3_channel'; // Notification channel for Qurbook remainder schedulev3
+const String strMsgTone = 'msg_tone'; // Message tone
+const String strBeepBeep = 'beep_beep'; // Beep-beep sound
+const String strHelium = 'helium'; // Helium sound
+const String strQurbookChannel =
+    'Qurbook_channel'; // Qurbook notification channel
+const String strQurbookCallChannel =
+    'Qurbook_call_channel'; // Qurbook call notification channel
+const String strNormalQurbookChannelDesc =
+    'This channel is used for important notifications.'; // Description for normal Qurbook notification channel
+const String strDarwinCallCategory =
+    'darwinCall_category'; // Darwin call category
+const String strAcceptAction = 'accept_action'; // Accept action for calls
+const String strRejectAction = 'reject_action'; // Reject action for calls
+const String strShowTransportationNotification =
+    'showTransportationNotification'; // Show transportation notification
+const String strEscalateToCareCoordinatorButtons =
+    'escalateToCareCoordinatorButtons'; // Escalate to care coordinator buttons
+const String strShowViewMemberAndCommunicationButtons =
+    'showViewMemberAndCommunicationButtons'; // Show view member and communication buttons
+const String strViewMemberSpace = 'View Member'; // View member button label
+const String strCommunicationSettingsSpace =
+    'Communication settings'; // Communication settings button label
+const String strPlanRenewButton = 'planRenewButton'; // Plan renew button
+const String strCallbackSpace = 'Call back'; // Callback button label
+const String strAcceptDeclineButtonsCaregiver =
+    'acceptDeclineButtonsCaregiver'; // Accept/decline buttons for caregivers
+const String strChatCCAndViewrecordButtons =
+    'ChatCCAndViewrecordButtons'; // Chat with CC and view record buttons
+const String strChatwithccSpace = 'Chat with cc'; // Chat with CC button label
+const String strViewRecordSpace = 'View Record'; // View record button label
+const String strViewDetailsButton = 'viewDetailsButton'; // View details button
+const String strViewDetailsSpace = 'View Details'; // View details button label
+const String strPayNowButton = 'payNowButton'; // Pay now button
+const String strPayNow = 'PayNow'; // Pay now label
+const String strPayNowSpace = 'Pay Now'; // Pay now button label
+const String strChatwithCCSpace = 'Chat with CC'; // Chat with CC label
+const String strCallStatus = 'call_status'; // Call status
+const String strCallLog = 'call_log'; // Call log
+const String strAppNsQurhomeIcon =
+    'app_ns_qurhome_icon'; // App icon for Qurhome
+const String strAppNsQurbookIcon =
+    'app_ns_qurbook_icon'; // App icon for Qurbook
+const String strIcLauncherQurhome =
+    'ic_launcher_qurhome'; // Launcher icon for Qurhome
+const String strIcLauncherQurbook =
+    'ic_launcher_qurbook'; // Launcher icon for Qurbook
+const String strMeetingId = 'meeting_id'; // Meeting ID
+const String strMipmapIcLauncher =
+    '@mipmap/ic_launcher'; // Mipmap launcher icon
+const String strTemplateName = 'templateName'; // Template name
+const String strFamilyProfile = 'familyProfile'; // Family profile
+const String strAppointmentPayment =
+    'appointmentPayment'; // Appointment payment
+const String strMycart = 'mycart'; // My cart
+const String strCallEndedByUser = 'call_ended_by_user'; // Call ended by user
+const String strAndroidNormalchannelId =
+    'androidNormalchannelId'; // Android normal channel ID
+const String strAndroidNormalCallchannelId =
+    'androidNormalCallchannelId'; // Android normal call channel ID
+// Constant string for invoking a remainder activity related to Sheela
+const String strActivityRemainderInvokeSheela =
+    'activityRemainderInvokeSheela&'; // Activity remainder for invoking Sheela
+
+// Define a constant string for 'Sort'
+const String strSort = 'Sort';
+
+// Define a constant string for 'Filter'
+const String strFilter = 'Filter';
+
+// Define a constant string for 'Years'
+const String strYears = 'Years';
+
+class DoctorFilterConstants {
+  static List<String> yearOfExperienceList = [
+    "0 to 5 years",
+    "5 to 10 years",
+    "10 to 20 years",
+    "20+ years"
+  ];
+  static List<String> genderList = ['Any', 'Male', 'Female'];
+  static String languageSpoken = "languageSpoken";
+  static String specialization = "specialization";
+  static String state = "state";
+  static String city = "city";
+  static String hospital = "hospital";
+  static String experience = "experience";
+  static String gender = "gender";
+  static String applyFilters = 'Apply Filters';
+  static String reset = 'Reset';
+  static String filterDoctors = 'Filter Doctors';
+  static String filterLabs = 'Filter Labs';
+}

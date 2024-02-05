@@ -7,6 +7,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -20,6 +21,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/language/repository/LanguageRepository.dart';
+import 'package:myfhb/main.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
@@ -62,10 +64,7 @@ import '../Models/SheelaResponse.dart';
 import '../Models/sheela_arguments.dart';
 import '../Services/SheelaAIAPIServices.dart';
 import '../Services/SheelaAIBLEServices.dart';
-import 'package:image/image.dart' as img;
-import 'package:speech_to_text/speech_recognition_result.dart';
-import 'package:speech_to_text/speech_to_text.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 enum BLEStatus { Searching, Connected, Disabled }
 
@@ -160,10 +159,15 @@ class SheelaAIController extends GetxController {
   final ApiBaseHelper _helper = ApiBaseHelper();
   Timer? _debounceRecognizedWords;
 
+  // Create a Map to store reminder timers. The keys are String identifiers (presumably related to reminders),
+ // and the values are Timer objects that will be used for managing timing events associated with reminders.
+  Map<String, Timer> reminderTimers = {};
+
   @override
   void onInit() {
     super.onInit();
     setDefaultValues();
+    onInitActivitySheelaRemainder();
   }
 
   setDefaultValues() async {
@@ -1762,8 +1766,14 @@ makeApiRequest is used to update the data with latest data
                 requestFileType: requestFileType);
           }
         } else {
-          // Display a toast message if the selected image exceeds the maximum allowed size
-          FlutterToast().getToastForLongTime(strImageSizeValidation, Colors.red);
+          // Check if the requested file type is an image
+          if (requestFileType == strImage) {
+            // Display a long-duration toast with image size validation message in red
+            FlutterToast().getToastForLongTime(strImageSizeValidation, Colors.red);
+          } else {
+            // Display a long-duration toast with video size validation message in red
+            FlutterToast().getToastForLongTime(strVideoSizeValidation, Colors.red);
+          }
         }
       }
     });
@@ -1875,6 +1885,9 @@ makeApiRequest is used to update the data with latest data
 
       // Stop speech listening using a method (assuming it's defined in the same class)
       stopSpeechListening();
+
+      // Cancel all timers when the widget is disposed
+      clearAllTimers();
 
       // Call the parent class's onClose method
       super.onClose();
@@ -2528,25 +2541,17 @@ makeApiRequest is used to update the data with latest data
                     for (var i = 0; i < data.length; i++) {
                       apiReminder = data[i];
                     }
-                    if (Platform.isAndroid) {
-                      // snooze invoke to android native for locally save the reminder data
-                      QurPlanReminders.getTheRemindersFromAPI(
-                          isSnooze: true, snoozeReminderData: apiReminder);
 
-                      // Start Sheela from button with specified parameters
-                      startSheelaFromButton(
-                          buttonText: button.title,
-                          payload: button.payload,
-                          buttons: button);
-                    } else {
-                      reminderMethodChannel.invokeMethod(snoozeReminderMethod,
-                          [apiReminder.toMap()]).then((value) {
-                        startSheelaFromButton(
-                            buttonText: button.title,
-                            payload: button.payload,
-                            buttons: button);
-                      });
-                    }
+                    // snooze invoke to android native for locally save the reminder data
+                    QurPlanReminders.getTheRemindersFromAPI(
+                        isSnooze: true, snoozeReminderData: apiReminder);
+
+                    // Start Sheela from button with specified parameters
+                    startSheelaFromButton(
+                        buttonText: button.title,
+                        payload: button.payload,
+                        buttons: button);
+
                   } catch (e, stackTrace) {
                     CommonUtil().appLogs(message: e, stackTrace: stackTrace);
                   }
@@ -2872,6 +2877,91 @@ makeApiRequest is used to update the data with latest data
       128, // Specify the width of the thumbnail; let the height auto-scaled to keep the source aspect ratio
       quality: 50, // Set the quality of the thumbnail
     );
+  }
+
+  // Create a timer based on the scheduled time for a reminder.
+  Timer createTimer(Reminder reminder, tz.TZDateTime scheduledDateTime) {
+    // Calculate the duration until the scheduled time
+    Duration durationUntilScheduledTime = scheduledDateTime!.difference(DateTime.now());
+
+    // Schedule the method to be called after the calculated duration
+    return Timer(durationUntilScheduledTime, () {
+      // Call the scheduled method passing the reminder
+      scheduledMethod(reminder);
+      // Optional: Reschedule the method for the next occurrence
+      // rescheduleMethod(index);
+    });
+  }
+
+// Method called when the timer expires, triggers the reminder-related logic.
+  scheduledMethod(Reminder reminder) async {
+    final notificationId = int.tryParse('${reminder?.notificationListId}') ?? 0;
+    // Get the list of pending notifications
+    List<PendingNotificationRequest> pendingNotifications =
+        await localNotificationsPlugin.pendingNotificationRequests();
+
+    // Check if the notification with the given ID is already scheduled
+    bool isScheduled = pendingNotifications.any(
+      (notification) => notification.id == notificationId,
+    );
+
+    // If already scheduled, cancel the existing notification with the same ID
+    if (isScheduled) {
+      final sheelaAIController = CommonUtil().onInitSheelaAIController();
+      // Construct an array of values for the reminder invocation
+      var strValue = '$strActivityRemainderInvokeSheela${reminder.eid}';
+      final passedValArr = strValue.split('&');
+      // Invoke the method to handle the reminder invocation
+      CommonUtil()
+          .getActivityRemainderInvokeSheela(passedValArr, sheelaAIController);
+    }
+  }
+
+// Add or update the timer associated with a reminder based on its scheduled time.
+  addScheduledTime(Reminder reminder, tz.TZDateTime scheduledDateTime) async {
+    await clearScheduledTime(reminder.notificationListId!);
+
+    // Create a new timer for the new scheduled time and add it to the map
+    final newTimer = createTimer(reminder, scheduledDateTime);
+    reminderTimers[reminder.notificationListId!] = newTimer;
+  }
+
+// Cancel and clear all timers associated with reminders.
+  clearAllTimers() {
+    for (var timer in reminderTimers.values) {
+      timer.cancel();
+    }
+    reminderTimers.clear();
+  }
+
+
+  // Function to clear the scheduled time for a reminder
+  clearScheduledTime(String notificationListId) {
+    // Check if a timer already exists for the given notificationListId
+    try {
+      if (reminderTimers.containsKey(notificationListId)) {
+        // If a timer exists, cancel it and remove it from the map
+        reminderTimers[notificationListId]?.cancel();
+        reminderTimers.remove(notificationListId);
+      }
+    } catch (e, stackTrace) {
+      // Handle any exceptions and log them using appLogs method
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+// Function to clear the scheduled time for a reminder
+  onInitActivitySheelaRemainder() async {
+    try {
+      // Initialize timers list
+      reminderTimers = {};
+
+      // Refresh activity reminders
+      await QurPlanReminders.refreshActivityReminders();
+    } catch (e, stackTrace) {
+      // Handle any exceptions and log them using appLogs method
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 
 }
