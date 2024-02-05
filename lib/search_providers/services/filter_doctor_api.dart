@@ -5,6 +5,7 @@ import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/search_providers/models/labs_list_response_new.dart';
 
 import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_parameters.dart'as parameters;
 import '../../constants/fhb_query.dart' as query;
 import '../../my_providers/models/UserAddressCollection.dart';
 import '../../src/model/user/State.dart' as s;
@@ -13,6 +14,7 @@ import '../models/doctor_list_response_new.dart';
 import '../models/doctor_specialization_model.dart';
 import '../models/hospital_list_response_new.dart';
 import '../screens/doctor_filter_request_model.dart';
+
 
 // Class responsible for handling API calls related to doctor filtering
 class FilterDoctorApi {
@@ -109,14 +111,12 @@ class FilterDoctorApi {
     try {
       final response = await ApiBaseHelper().doctorFilterList(doctor_service_request_list, json.encode(doctorFilterRequestModel),);
       doctorFilterList.clear();
-      if (response['isSuccess']) {
-        if (response['result']['data']['isSuccess']) {
-          response['result']['data']['entities'].forEach(
-            (f) {
-              doctorFilterList.add(DoctorsListResult.fromJson(f));
-            },
-          );
-        }
+      if (response[parameters.strSuccess]) {
+        response[parameters.dataResult][parameters.strData].forEach(
+              (f) {
+            doctorFilterList.add(DoctorsListResult.fromJson(f));
+          },
+        );
       }
     } catch (e) {}
     return doctorFilterList.toList();
@@ -182,16 +182,13 @@ class FilterDoctorApi {
       labListFilterResult.clear();
 
       // Check if the response indicates success
-      if (response['isSuccess']) {
-        // Check if the inner result indicates success
-        if (response['result']['data']['isSuccess']) {
-          // Iterate through entities in the response and convert them to LabListResult objects
-          response['result']['data']['entities'].forEach(
-                (f) {
-              labListFilterResult.add(LabListResult.fromJson(f));
-            },
-          );
-        }
+      if (response[parameters.strSuccess]) {
+        // Iterate through entities in the response and convert them to LabListResult objects
+        response[parameters.dataResult][parameters.strData].forEach(
+              (f) {
+            labListFilterResult.add(LabListResult.fromJson(f));
+          },
+        );
       }
     } catch (e) {
       // Catch and ignore any exceptions that occur during the process
