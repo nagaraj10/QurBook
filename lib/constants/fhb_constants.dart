@@ -1103,4 +1103,5 @@ class DoctorFilterConstants {
   static String applyFilters = 'Apply Filters';
   static String reset = 'Reset';
   static String filterDoctors = 'Filter Doctors';
+  static String filterLabs = 'Filter Labs';
 }

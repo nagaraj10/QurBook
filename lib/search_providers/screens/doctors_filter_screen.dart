@@ -130,7 +130,9 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                     Navigator.pop(context, [1]);
                   },
                 ),
-                title: Text(DoctorFilterConstants.filterDoctors),
+                title: Text(createTicketController.searchWord.value ==
+                    CommonConstants.doctors
+                    ?DoctorFilterConstants.filterDoctors:DoctorFilterConstants.filterLabs),
               ),
               body: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
