@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../language/repository/LanguageRepository.dart';
@@ -33,6 +34,8 @@ class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
     on<GetDoctorSpecializationList>(_onGetDoctorSpecializationList);
   }
   int filterMenuCount = 0;
+
+  var createTicketController = CommonUtil().onInitCreateTicketController();
 
   // Handles the ApplyFilters event
   Future<FutureOr<void>> _onApplyFilters(ApplyFilters event, emit) async {
@@ -81,7 +84,7 @@ class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
     });
     // Create DoctorFilterRequestModel based on selected filters
     final doctorFilterRequestModel = DoctorFilterRequestModel(
-      page: 1,
+      page: 0,
       size: 10,
       searchText: '',
       filters: filters.map((json) => Filter.fromJson(json)).toList(),
@@ -92,15 +95,17 @@ class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
     List<DoctorsListResult> doctorFilterList = [];
     doctorFilterList.clear();
     try {
-      doctorFilterList = await FilterDoctorApi().getFilterDoctorList(doctorFilterRequestModel);
+      //doctorFilterList = await FilterDoctorApi().getFilterDoctorList(doctorFilterRequestModel);
       emit(ShowDoctorFilterList(
         doctorFilterList: doctorFilterList,
         filterMenuCount: filters.length,
+        doctorFilterRequestModel: doctorFilterRequestModel,
       ));
     } catch (e) {
       emit(ShowDoctorFilterList(
         doctorFilterList: [],
         filterMenuCount: filters.length,
+        doctorFilterRequestModel: doctorFilterRequestModel,
       ));
     }
     emit(HideProgressBar());
@@ -109,88 +114,117 @@ class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
   // Handles the GetDoctorSpecializationList event
   Future<FutureOr<void>> _onGetDoctorSpecializationList(GetDoctorSpecializationList event, emit) async {
     emit(ShowProgressBar());
-    // Based on selected index, fetch and emit appropriate menu items
-    if (event.selectedIndex == 0) {
-      // Gender filter
-      emit(ShowMenuItemList(
-        menuItemList: DoctorFilterConstants.genderList,
-        selectedMenu: event.selectedMenu,
-        selectedIndex: event.selectedIndex,
-      ));
-      emit(HideProgressBar());
-    } else if (event.selectedIndex == 1) {
-      // Language spoken filter
-      var languageDropdownList = <String>[];
-      try {
-        var languageModelList = await LanguageRepository().getLanguage();
-        if (languageModelList.result != null) {
-          for (final languageResultObj in languageModelList.result!) {
-            if (languageResultObj.referenceValueCollection != null && languageResultObj.referenceValueCollection!.isNotEmpty) {
-              for (final referenceValueCollection in languageResultObj.referenceValueCollection!) {
-                if (referenceValueCollection.name != null && referenceValueCollection.code != null) {
-                  languageDropdownList.add(referenceValueCollection.name!);
+
+    if(createTicketController.searchWord.value == CommonConstants.doctors) {
+      // Based on selected index, fetch and emit appropriate menu items
+      if (event.selectedIndex == 0) {
+        // Gender filter
+        emit(ShowMenuItemList(
+          menuItemList: DoctorFilterConstants.genderList,
+          selectedMenu: event.selectedMenu,
+          selectedIndex: event.selectedIndex,
+        ));
+        emit(HideProgressBar());
+      } else if (event.selectedIndex == 1) {
+        // Language spoken filter
+        var languageDropdownList = <String>[];
+        try {
+          var languageModelList = await LanguageRepository().getLanguage();
+          if (languageModelList.result != null) {
+            for (final languageResultObj in languageModelList.result!) {
+              if (languageResultObj.referenceValueCollection != null &&
+                  languageResultObj.referenceValueCollection!.isNotEmpty) {
+                for (final referenceValueCollection in languageResultObj
+                    .referenceValueCollection!) {
+                  if (referenceValueCollection.name != null &&
+                      referenceValueCollection.code != null) {
+                    languageDropdownList.add(referenceValueCollection.name!);
+                  }
                 }
               }
             }
           }
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         }
-      } catch (e, stackTrace) {
-        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-      }
 
-      emit(ShowMenuItemList(
-        menuItemList: languageDropdownList,
-        selectedMenu: event.selectedMenu,
-        selectedIndex: event.selectedIndex,
-      ));
-      emit(HideProgressBar());
-    } else if (event.selectedIndex == 2) {
-      // Doctor specialization filter
-      final uniqueSpecializations = await FilterDoctorApi().getDoctorSpecializationList(event.searchText);
-      emit(ShowMenuItemList(
-        menuItemList: uniqueSpecializations.toList(),
-        selectedMenu: event.selectedMenu,
-        selectedIndex: event.selectedIndex,
-      ));
-      emit(HideProgressBar());
-    } else if (event.selectedIndex == 3) {
-      // State filter
-      final stateList = await FilterDoctorApi().getStateList(event.cityName);
-      emit(ShowMenuItemList(
-        menuItemList: stateList,
-        selectedMenu: event.selectedMenu,
-        selectedIndex: event.selectedIndex,
-      ));
-      emit(HideProgressBar());
-    } else if (event.selectedIndex == 4) {
-      // City filter
-      final cityList = await FilterDoctorApi().getCityList(event.stateName);
-      emit(ShowMenuItemList(
-        menuItemList: cityList.toList(),
-        selectedMenu: event.selectedMenu,
-        selectedIndex: event.selectedIndex,
-      ));
-      emit(HideProgressBar());
-    } else if (event.selectedIndex == 5) {
-      // Hospital filter
-      final hospitalList = await FilterDoctorApi().getHospitalList(
-        event.stateName,
-        event.cityName,
-      );
-      emit(ShowMenuItemList(
-        menuItemList: hospitalList,
-        selectedMenu: event.selectedMenu,
-        selectedIndex: event.selectedIndex,
-      ));
-      emit(HideProgressBar());
-    } else if (event.selectedIndex == 6) {
-      // Year of experience filter
-      emit(ShowMenuItemList(
-        menuItemList: DoctorFilterConstants.yearOfExperienceList,
-        selectedMenu: event.selectedMenu,
-        selectedIndex: event.selectedIndex,
-      ));
-      emit(HideProgressBar());
+        emit(ShowMenuItemList(
+          menuItemList: languageDropdownList,
+          selectedMenu: event.selectedMenu,
+          selectedIndex: event.selectedIndex,
+        ));
+        emit(HideProgressBar());
+      } else if (event.selectedIndex == 2) {
+        // Doctor specialization filter
+        final uniqueSpecializations = await FilterDoctorApi()
+            .getDoctorSpecializationList(event.searchText);
+        emit(ShowMenuItemList(
+          menuItemList: uniqueSpecializations.toList(),
+          selectedMenu: event.selectedMenu,
+          selectedIndex: event.selectedIndex,
+        ));
+        emit(HideProgressBar());
+      } else if (event.selectedIndex == 3) {
+        // State filter
+        final stateList = await FilterDoctorApi().getStateList(event.cityName);
+        emit(ShowMenuItemList(
+          menuItemList: stateList,
+          selectedMenu: event.selectedMenu,
+          selectedIndex: event.selectedIndex,
+        ));
+        emit(HideProgressBar());
+      } else if (event.selectedIndex == 4) {
+        // City filter
+        final cityList = await FilterDoctorApi().getCityList(event.stateName);
+        emit(ShowMenuItemList(
+          menuItemList: cityList.toList(),
+          selectedMenu: event.selectedMenu,
+          selectedIndex: event.selectedIndex,
+        ));
+        emit(HideProgressBar());
+      } else if (event.selectedIndex == 5) {
+        // Hospital filter
+        final hospitalList = await FilterDoctorApi().getHospitalList(
+          event.stateName,
+          event.cityName,
+        );
+        emit(ShowMenuItemList(
+          menuItemList: hospitalList,
+          selectedMenu: event.selectedMenu,
+          selectedIndex: event.selectedIndex,
+        ));
+        emit(HideProgressBar());
+      } else if (event.selectedIndex == 6) {
+        // Year of experience filter
+        emit(ShowMenuItemList(
+          menuItemList: DoctorFilterConstants.yearOfExperienceList,
+          selectedMenu: event.selectedMenu,
+          selectedIndex: event.selectedIndex,
+        ));
+        emit(HideProgressBar());
+      }
+    }else{
+      if (event.selectedIndex == 0) {
+        // State filter
+        final stateList = await FilterDoctorApi().getStateList(event.cityName);
+        emit(ShowMenuItemList(
+          menuItemList: stateList,
+          selectedMenu: event.selectedMenu,
+          selectedIndex: event.selectedIndex,
+        ));
+        emit(HideProgressBar());
+      } else if (event.selectedIndex == 1) {
+        // City filter
+        final cityList = await FilterDoctorApi().getCityList(event.stateName);
+        emit(ShowMenuItemList(
+          menuItemList: cityList.toList(),
+          selectedMenu: event.selectedMenu,
+          selectedIndex: event.selectedIndex,
+        ));
+        emit(HideProgressBar());
+      }
     }
+
+
   }
 }

@@ -1,11 +1,16 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:gmiwidgetspackage/widgets/sized_box.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/search_providers/screens/doctor_filter_request_model.dart';
 
 import '../../Qurhome/QurhomeDashboard/model/location_data_model.dart';
 import '../../add_providers/bloc/update_providers_bloc.dart';
@@ -123,11 +128,16 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     selectedYOEIndex: [],
   );
 
+  // Create an instance of CommonUtil and call the onInitCreateTicketController method to obtain a createTicketController
+  var createTicketController = CommonUtil().onInitCreateTicketController();
+
+
   @override
   void initState() {
     try {
       mInitialTime = DateTime.now();
       super.initState();
+      createTicketController.searchWord.value = widget.arguments!.searchWord??'';
       USERID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       switchedUserId = USERID;
       _doctorsListBlock = DoctorsListBlock();
@@ -140,23 +150,79 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
       value = _textFieldController.text.toString();
 
+      createTicketController.strSearchText.value = value??'';
+
       _familyListBloc = FamilyListBloc();
       _familyListBloc!.getFamilyMembersListNew();
 
-      if (value != '') {
-        _doctorsListBlock!.getDoctorsListNew(_textFieldController.text.toString(), widget.isSkipUnknown);
+      if (widget.isFromCreateTicket) {
+
+        var searchWord = widget.arguments!.searchWord??'';
+
+        // Create a common filter request model
+        DoctorFilterRequestModel commonFilterRequestModel = DoctorFilterRequestModel(
+          page: 0,
+          size: createTicketController.limit,
+          searchText: CommonUtil().validString(createTicketController.strSearchText.value),
+          filters: [],
+        );
+
+        // Determine the controller and pagingController based on the searchWord
+        if (searchWord == CommonConstants.doctors) {
+          createTicketController.doctorFilterRequestModel = commonFilterRequestModel;
+
+          createTicketController.pagingController = PagingController(
+            firstPageKey: 0,
+            invisibleItemsThreshold: 1,
+          );
+
+          createTicketController.pagingController.addPageRequestListener((pageKey) {
+            createTicketController.fetchDoctorsListData(pageKey);
+          });
+        } else if (searchWord == CommonConstants.labs || searchWord == CommonConstants.lab) {
+          commonFilterRequestModel.healthOrganizationType = CommonConstants.keyLab.toUpperCase();
+          createTicketController.labListFilterRequestModel = commonFilterRequestModel;
+
+          createTicketController.labListResultPagingController = PagingController(
+            firstPageKey: 0,
+            invisibleItemsThreshold: 1,
+          );
+
+          createTicketController.labListResultPagingController.addPageRequestListener((pageKey) {
+            createTicketController.fetchLabListData(pageKey);
+          });
+        }
       } else {
-        if (widget.arguments!.searchWord == CommonConstants.doctors) {
-          _doctorsListBlock!.getExistingDoctorList('40');
-        } else if (widget.arguments!.searchWord == CommonConstants.hospitals) {
-          _hospitalListBlock!.getExistingHospitalListNew(Constants.STR_HEALTHORG_HOSPID);
-        } else if (widget.arguments!.searchWord == CommonConstants.labs || widget.arguments!.searchWord == CommonConstants.lab) {
-          _labsListBlock!.getExistingLabsListNew(Constants.STR_HEALTHORG_LABID, widget.isFromCreateTicket);
-        } else if (widget.arguments!.searchWord == CommonConstants.keyCity) {
-          _labsListBlock!.getCityList('a');
+        if (value != '') {
+          _doctorsListBlock!.getDoctorsListNew(
+              _textFieldController.text.toString(), widget.isSkipUnknown);
+        } else {
+          if (widget.arguments!.searchWord == CommonConstants.doctors) {
+            _doctorsListBlock!.getExistingDoctorList('40');
+          } else if (widget.arguments!.searchWord ==
+              CommonConstants.hospitals) {
+            _hospitalListBlock!
+                .getExistingHospitalListNew(Constants.STR_HEALTHORG_HOSPID);
+          } else if (widget.arguments!.searchWord == CommonConstants.labs ||
+              widget.arguments!.searchWord == CommonConstants.lab) {
+            _labsListBlock!.getExistingLabsListNew(
+                Constants.STR_HEALTHORG_LABID, widget.isFromCreateTicket);
+          } else if (widget.arguments!.searchWord == CommonConstants.keyCity) {
+            _labsListBlock!.getCityList('a');
+          }
         }
       }
-      WidgetsBinding.instance!.addPostFrameCallback((_) => _refreshIndicatorKey.currentState?.show());
+
+      // Execute the following code after the current frame is built
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+
+        // Show the RefreshIndicator programmatically
+        _refreshIndicatorKey.currentState?.show();
+
+        // Hide the keyboard when the page opens
+        FocusManager.instance.primaryFocus?.unfocus();
+      });
+
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
@@ -166,6 +232,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   @override
   void dispose() {
+    createTicketController.strSearchText.value = '';
     super.dispose();
     fbaLog(
         eveName: 'qurbook_screen_event',
@@ -173,190 +240,576 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-            elevation: 0,
-            flexibleSpace: GradientAppBar(),
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios,
-                size: 24.0.sp,
-              ),
-              onPressed: () {
-                Navigator.pop(context, [1]);
-              },
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: widget.isFromCreateTicket ? Colors.grey[200] : null,
+      appBar: AppBar(
+          elevation: 0,
+          flexibleSpace: GradientAppBar(),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              size: 24.0.sp,
             ),
-            title: Text('${widget.arguments!.searchWord} ' + variable.strSearch)),
-        // Wait until the controller is initialized before displaying the
-        // camera preview. Use a FutureBuilder to display a loading spinner
-        // until the controller has finished initializing.
-        body: Column(
-          children: <Widget>[
-            Container(
-              //margin: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft, end: Alignment.bottomRight, colors: <Color>[Color(CommonUtil().getMyPrimaryColor()), Color(CommonUtil().getMyGredientColor())], stops: [0.3, 1]),
-              ),
-              padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-              //margin: EdgeInsets.all(5),
-              child: Container(
-                margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(30)),
-                child: TextField(
-                  textCapitalization: TextCapitalization.sentences,
-                  style: TextStyle(
-                    fontSize: 16.0.sp,
-                  ),
-                  controller: _textFieldController,
-                  autofocus: true,
-                  onChanged: (editedValue) {
-                    if (editedValue != '') {
-                      value = editedValue;
+            onPressed: () {
+              Navigator.pop(context, [1]);
+            },
+          ),
+          title: Text('${widget.arguments!.searchWord} ' + variable.strSearch)),
+      // Wait until the controller is initialized before displaying the
+      // camera preview. Use a FutureBuilder to display a loading spinner
+      // until the controller has finished initializing.
+      body: Column(
+        children: <Widget>[
+          Container(
+            //margin: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(256, 256, 256, 0),
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft, end: Alignment.bottomRight, colors: <Color>[Color(CommonUtil().getMyPrimaryColor()), Color(CommonUtil().getMyGredientColor())], stops: [0.3, 1]),
+            ),
+            padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+            //margin: EdgeInsets.all(5),
+            child: Container(
+              margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(30)),
+              child: TextField(
+                textCapitalization: TextCapitalization.sentences,
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                ),
+                controller: _textFieldController,
+                autofocus: false,
+                onChanged: (editedValue) {
+                  createTicketController.strSearchText.value = editedValue??'';
+                  if (editedValue != '') {
+                    value = editedValue;
+
+                    // Check if the widget is from CreateTicket and searching for doctors
+                    if (widget.isFromCreateTicket &&
+                        widget.arguments!.searchWord ==
+                            CommonConstants.doctors) {
+
+                      // Create a new DoctorFilterRequestModel with updated values
+                      DoctorFilterRequestModel doctorFilterRequestModel =
+                          DoctorFilterRequestModel(
+                        page: 0,
+                        size: createTicketController.limit,
+                        searchText: CommonUtil().validString(createTicketController.strSearchText.value),
+                        filters: createTicketController
+                                .doctorFilterRequestModel?.filters ??
+                            [],
+                      );
+
+                      // Set the newly created DoctorFilterRequestModel to the controller
+                      createTicketController.doctorFilterRequestModel =
+                          doctorFilterRequestModel;
+
+                      // Refresh the doctor paging controller
+                      createTicketController.pagingController.refresh();
+                    }
+                    // Check if the widget is from CreateTicket and searching for labs or lab
+                    else if (widget.isFromCreateTicket &&
+                        (widget.arguments!.searchWord == CommonConstants.labs ||
+                            widget.arguments!.searchWord ==
+                                CommonConstants.lab)) {
+                      // Create a new LabListFilterRequestModel with updated values
+                      DoctorFilterRequestModel labListFilterRequestModel =
+                          DoctorFilterRequestModel(
+                        page: 0,
+                        size: createTicketController.limit,
+                        searchText: CommonUtil().validString(createTicketController.strSearchText.value),
+                        filters: createTicketController
+                                .labListFilterRequestModel?.filters ??
+                            [],
+                        healthOrganizationType:
+                            CommonConstants.keyLab.toUpperCase(),
+                      );
+
+                      // Set the newly created LabListFilterRequestModel to the controller
+                      createTicketController.labListFilterRequestModel =
+                          labListFilterRequestModel;
+
+                      // Refresh the lab paging controller
+                      createTicketController.labListResultPagingController
+                          .refresh();
+                    } else {
                       widget.arguments!.searchWord == CommonConstants.doctors
-                          ? _doctorsListBlock!.getDoctorsListNew(value, widget.isSkipUnknown)
-                          : widget.arguments!.searchWord == CommonConstants.hospitals
-                              ? _hospitalListBlock!.getHospitalListNew(value)
-                              : widget.arguments!.searchWord! == CommonConstants.labs || widget.arguments!.searchWord == CommonConstants.lab
-                                  ? _labsListBlock!.getLabsListNew(value!, widget.isFromCreateTicket)
-                                  : _labsListBlock!.getCityList(value!);
-                      setState(() {});
+                          ? _doctorsListBlock!.getDoctorsListNew(
+                          value, widget.isSkipUnknown)
+                          : widget.arguments!.searchWord ==
+                          CommonConstants.hospitals
+                          ? _hospitalListBlock!.getHospitalListNew(value)
+                          : widget.arguments!.searchWord! ==
+                          CommonConstants.labs ||
+                          widget.arguments!.searchWord == CommonConstants.lab
+                          ? _labsListBlock!.getLabsListNew(
+                          value!, widget.isFromCreateTicket)
+                          : _labsListBlock!.getCityList(value!);
+                    }
+                    setState(() {});
+                  } else {
+                    // Check if the widget is from CreateTicket and searching for doctors
+                    if (widget.isFromCreateTicket &&
+                        widget.arguments!.searchWord ==
+                            CommonConstants.doctors) {
+                      // Clear search criteria and refresh doctor paging controller
+                      onClear();
+                      createTicketController.pagingController.refresh();
+                    }
+                    // Check if the widget is from CreateTicket and searching for labs or lab
+                    else if (widget.isFromCreateTicket &&
+                        (widget.arguments!.searchWord == CommonConstants.labs ||
+                            widget.arguments!.searchWord ==
+                                CommonConstants.lab)) {
+                      // Clear search criteria and refresh lab paging controller
+                      onClear();
+                      createTicketController.labListResultPagingController
+                          .refresh();
                     } else {
                       widget.arguments!.searchWord == CommonConstants.doctors
                           ? _doctorsListBlock!.getExistingDoctorList('50')
-                          : widget.arguments!.searchWord == CommonConstants.hospitals
-                              ? _hospitalListBlock!.getExistingHospitalListNew(Constants.STR_HEALTHORG_HOSPID)
-                              : widget.arguments!.searchWord == CommonConstants.labs || widget.arguments!.searchWord == CommonConstants.lab
-                                  ? _labsListBlock!.getExistingLabsListNew(Constants.STR_HEALTHORG_LABID, widget.isFromCreateTicket)
-                                  : _labsListBlock!.getCityList('a');
-                      setState(() {});
+                          : widget.arguments!.searchWord ==
+                          CommonConstants.hospitals
+                          ? _hospitalListBlock!.getExistingHospitalListNew(
+                          Constants.STR_HEALTHORG_HOSPID)
+                          : widget.arguments!.searchWord ==
+                          CommonConstants.labs ||
+                          widget.arguments!.searchWord == CommonConstants.lab
+                          ? _labsListBlock!.getExistingLabsListNew(
+                          Constants.STR_HEALTHORG_LABID,
+                          widget.isFromCreateTicket)
+                          : _labsListBlock!.getCityList('a');
                     }
-                  },
-                  decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    prefixIcon: const Icon(
-                      Icons.search,
-                      color: Colors.black54,
-                    ),
-                    hintText: variable.strSearch,
-                    hintStyle: TextStyle(color: Colors.black54, fontSize: 16.0.sp),
-                    border: InputBorder.none,
+                    setState(() {});
+                  }
+                },
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: Colors.black54,
                   ),
+                  hintText: variable.strSearch,
+                  hintStyle: TextStyle(color: Colors.black54, fontSize: 16.0.sp),
+                  border: InputBorder.none,
                 ),
               ),
             ),
-            Expanded(
-                child: value == ''
-                    ?
-                    //getEmptyCard()
-                    /* Container(
-                      child: Center(
-                        child: Text(variable.strNodata),
-                      ),
-                    )*/
-                    widget.arguments!.searchWord == CommonConstants.doctors
-                        ? getResponseFromApiWidgetForDoctors()
-                        : widget.arguments!.searchWord == CommonConstants.hospitals
-                            ? getResponseFromApiWidgetForHospital()
-                            : widget.arguments!.searchWord == CommonConstants.labs || widget.arguments!.searchWord == CommonConstants.lab
-                                ? getResponseFromApiWidgetForLabs()
-                                : getResponseFromApiWidgetForCity()
-                    : widget.arguments!.searchWord == CommonConstants.doctors
-                        ? getResponseFromApiWidgetForDoctors()
-                        : widget.arguments!.searchWord == CommonConstants.hospitals
-                            ? getResponseFromApiWidgetForHospital()
-                            : widget.arguments!.searchWord == CommonConstants.labs || widget.arguments!.searchWord == CommonConstants.lab
-                                ? getResponseFromApiWidgetForLabs()
-                                : getResponseFromApiWidgetForCity()),
-          ],
+          ),
+          Expanded(
+              child: value == ''
+                  ?
+              widget.arguments!.searchWord == CommonConstants.doctors
+                  ? getResponseFromApiWidgetForDoctors()
+                  : widget.arguments!.searchWord == CommonConstants.hospitals
+                  ? getResponseFromApiWidgetForHospital()
+                  : widget.arguments!.searchWord == CommonConstants.labs || widget.arguments!.searchWord == CommonConstants.lab
+                  ? getResponseFromApiWidgetForLabs()
+                  : getResponseFromApiWidgetForCity()
+                  : widget.arguments!.searchWord == CommonConstants.doctors
+                  ? getResponseFromApiWidgetForDoctors()
+                  : widget.arguments!.searchWord == CommonConstants.hospitals
+                  ? getResponseFromApiWidgetForHospital()
+                  : widget.arguments!.searchWord == CommonConstants.labs || widget.arguments!.searchWord == CommonConstants.lab
+                  ? getResponseFromApiWidgetForLabs()
+                  : getResponseFromApiWidgetForCity()),
+        ],
+      ),
+      bottomNavigationBar: (widget.isFromCreateTicket &&
+          ((widget.arguments!.searchWord == CommonConstants.doctors) ||
+              (widget.arguments!.searchWord == CommonConstants.labs ||
+                  widget.arguments!.searchWord == CommonConstants.lab)))
+          ? Container(
+        height: 50,
+        padding: const EdgeInsets.all(3.0),
+        decoration: BoxDecoration(
+          border: Border.all(
+              color: Color(CommonUtil().getMyPrimaryColor())),
         ),
-        bottomNavigationBar: widget.isFromCreateTicket
-            ? Container(
-                height: 50,
-                padding: const EdgeInsets.all(3.0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Color(CommonUtil().getMyPrimaryColor())),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                //TODO
+              },
+              child: Text(
+                Constants.strSort,
+                style: TextStyle(
+                  color: Color(CommonUtil().getMyPrimaryColor()),
                 ),
+              ),
+            ),
+            // Spacer(),
+            Container(
+              color: Color(CommonUtil().getMyPrimaryColor()),
+              width: 1,
+            ),
+            Center(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  Get.to(DoctorsFilterScreen(
+                    selectedItems: selectedItems,
+                    filterMenuCount:
+                    count != 0 ? count : filterMenuCount.length,
+                    filterApplied: (
+                        Map<String, List<String>> item,
+                        List<DoctorsListResult> list,
+                        FilteredSelectedModel items,
+                        int filterCount,DoctorFilterRequestModel doctorFilterRequestModel,
+                        ) {
+                      doctorFilterList = list;
+                      selectedItems = items;
+                      filterMenuCount = item;
+                      count = filterCount;
+                      if(createTicketController.searchWord.value == CommonConstants.doctors) {
+                        createTicketController.doctorFilterRequestModel =
+                            doctorFilterRequestModel;
+                        createTicketController.pagingController.refresh();
+                      }else if(createTicketController.searchWord.value == CommonConstants.labs || createTicketController.searchWord.value == CommonConstants.lab) {
+                        createTicketController.labListFilterRequestModel =
+                            doctorFilterRequestModel;
+                        createTicketController.labListResultPagingController.refresh();
+                      }
+                    },
+                    filterSelectedItems: filterMenuCount, doctorFilterRequestModel: createTicketController.searchWord.value == CommonConstants.doctors?createTicketController.doctorFilterRequestModel:createTicketController.labListFilterRequestModel,
+                  ))?.then((value) {
+                    setState(() {});
+                  });
+                },
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => Navigator.pop(context),
-                      child: Text(
-                        'Sort',
-                        style: TextStyle(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
-                        ),
+                    Text(
+                      Constants.strFilter,
+                      style: TextStyle(
+                        color: Color(CommonUtil().getMyPrimaryColor()),
                       ),
                     ),
-                    // Spacer(),
-                    Container(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
-                      width: 1,
+                    const SizedBox(
+                      width: 5,
                     ),
-                    Center(
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          Get.to(DoctorsFilterScreen(
-                            selectedItems: selectedItems,
-                            filterMenuCount: count != 0 ? count : filterMenuCount.length,
-                            filterApplied: (
-                              Map<String, List<String>> item,
-                              List<DoctorsListResult> list,
-                              FilteredSelectedModel items,
-                              int filterCount,
-                            ) {
-                              doctorFilterList = list;
-                              selectedItems = items;
-                              filterMenuCount = item;
-                              count = filterCount;
-                            },
-                            filterSelectedItems: filterMenuCount,
-                          ))?.then((value) {
-                            setState(() {});
-                          });
-                        },
-                        child: Row(
-                          children: [
-                            Text(
-                              'Filter',
-                              style: TextStyle(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Visibility(
-                              visible: count != 0,
-                              child: Container(
-                                width: 28,
-                                height: 28,
-                                decoration: BoxDecoration(
-                                  color: Color(CommonUtil().getMyPrimaryColor()), // border color
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    count.toString(),
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                    Visibility(
+                      visible: count != 0,
+                      child: Container(
+                        width: 28,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color:
+                          Color(CommonUtil().getMyPrimaryColor()),
+                          // border color
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            count.toString(),
+                            style: const TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
-              )
-            : Container(),
-      );
+              ),
+            ),
+          ],
+        ),
+      )
+          : const SizedBox.shrink(),
+    );
+  }
 
-  Widget getResponseFromApiWidgetForDoctors() => StreamBuilder<ApiResponse<DoctorsSearchListResponse>>(
+  // Function to get the widget based on the API response for labs
+  Widget getResponseFromApiWidgetForLabs() {
+    if (widget.isFromCreateTicket &&
+        (widget.arguments!.searchWord == CommonConstants.labs ||
+            widget.arguments!.searchWord == CommonConstants.lab)) {
+      return getWidgetForLabServiceRequest();
+    } else {
+      return StreamBuilder<ApiResponse<LabsSearchListResponse>>(
+        stream: _labsListBlock!.labNewStream,
+        builder: (context, snapshot) {
+          String strText = value ?? "";
+          if (!snapshot.hasData) return Container();
+
+          switch (snapshot.data!.status) {
+            case Status.LOADING:
+              rebuildBlockObject();
+              return Center(
+                child: SizedBox(
+                  width: 30.0.h,
+                  height: 30.0.h,
+                  child: CommonCircularIndicator(),
+                ),
+              );
+              break;
+
+            case Status.ERROR:
+              rebuildBlockObject();
+              return Text(
+                variable.strNoDataAvailable + ' ' + CommonConstants.labs,
+                style: const TextStyle(color: Colors.red),
+              );
+              break;
+
+            case Status.COMPLETED:
+              rebuildBlockObject();
+              return (strText.trim().isNotEmpty &&
+                  strOthers.toLowerCase().contains(strText))
+                  ? Container(
+                margin: const EdgeInsets.all(5),
+                child:
+                getAllDatasInLabsList(snapshot.data?.data?.result ?? []),
+              )
+                  : snapshot.data!.data!.result == null
+                  ? Container(
+                child: const Center(
+                  child: Text(variable.strNodata),
+                ),
+              )
+                  : snapshot.data!.data!.result!.isEmpty
+                  ? Container(
+                child: const Center(
+                  child: Text(variable.strNodata),
+                ),
+              )
+                  : Container(
+                margin: const EdgeInsets.all(5),
+                child: getAllDatasInLabsList(
+                    snapshot.data!.data!.result),
+              );
+
+              break;
+
+            default:
+              break;
+          }
+          return Container();
+        },
+      );
+    }
+  }
+
+// Function to get the widget for lab service request
+  Widget getWidgetForLabServiceRequest() {
+    return Column(
+      children: [
+        Expanded(
+          child: PagedListView(
+            pagingController:
+            createTicketController.labListResultPagingController,
+            builderDelegate: PagedChildBuilderDelegate<LabListResult>(
+              itemBuilder: (context, item, index) =>
+                  labListView(labListResultData: item),
+              noItemsFoundIndicatorBuilder: (_) => emptyView(),
+              newPageErrorIndicatorBuilder: (_) => emptyView(),
+              firstPageErrorIndicatorBuilder: (_) => emptyView(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+// Function to display the first two letters of a name
+  Widget getFirstTwoLettersText(String strName) {
+    if (strName != null) {
+      var nameParts = strName.split(' ');
+      var initials = '';
+
+      if (nameParts.isNotEmpty) {
+        initials = nameParts[0][0].toUpperCase();
+
+        if (nameParts.length > 1) {
+          initials += nameParts[1][0].toUpperCase();
+        }
+      }
+
+      return Text(
+        initials,
+        style: TextStyle(
+          color: Color(CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else {
+      return Text(
+        '',
+        style: TextStyle(
+          color: Color(CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w200,
+        ),
+      );
+    }
+  }
+
+// Function to create the list view for labs
+  Widget labListView({LabListResult? labListResultData}) {
+    if (labListResultData != null) {
+      return GestureDetector(
+        onTap: () {
+          try {
+            if (widget.toPreviousScreen!) {
+              passLaboratoryValue(labListResultData, context);
+            } else {
+              passdataToNextScreen(
+                  labListResultData.healthOrganizationName, context,
+                  new DoctorsListResult(), new HospitalsListResult(),
+                  labListResultData);
+            }
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+          }
+        },
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          margin: EdgeInsets.only(
+            top: 5.0.sp,
+            bottom: 5.0.sp,
+            left: 10.0.sp,
+            right: 10.0.sp,
+          ),
+          elevation: 0.0,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.white,
+              ),
+              borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+            ),
+            child: Container(
+              padding: EdgeInsets.all(2.0.sp),
+              margin: EdgeInsets.only(
+                left: 8.0.w,
+                right: 15.0.w,
+                top: 8.0.h,
+                bottom: 8.0.h,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  ClipOval(
+                    child: CommonUtil().validString(
+                        labListResultData.healthOrganizationName)
+                        .trim()
+                        .isNotEmpty
+                        ? CachedNetworkImage(
+                      placeholder: (context, url) => Container(
+                        width: 50.0,
+                        height: 50.0,
+                        padding: const EdgeInsets.all(15.0),
+                        child: CommonCircularIndicator(),
+                      ),
+                      imageUrl: labListResultData?.logoURL ?? '',
+                      width: 50.0,
+                      height: 50.0,
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) => Container(
+                        height: 50.0.h,
+                        width: 50.0.h,
+                        color: Colors.grey[200],
+                        child: Center(
+                          child: getFirstTwoLettersText(
+                              labListResultData.healthOrganizationName ??
+                                  ''),
+                        ),
+                      ),
+                    )
+                        : Icon(
+                      Icons.account_circle,
+                      size: 50.0,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  SizedBoxWidget(
+                    width: 12.0.w,
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBoxWidget(
+                          height: 5.0.h,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            right: 4.0.w,
+                          ),
+                          child: Text(
+                            labListResultData.healthOrganizationName != null
+                                ? labListResultData.healthOrganizationName!
+                                .capitalizeFirstofEach
+                                : '',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16.0.sp,
+                              color: Colors.black,
+                            ),
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                        ),
+                        SizedBoxWidget(
+                          height: 2.0.h,
+                        ),
+                        CommonUtil()
+                            .validString(labListResultData.addressLine1 ?? '')
+                            .trim()
+                            .isNotEmpty
+                            ? Row(
+                          children: [
+                            SvgPicture.asset(
+                              doctorSearchHospital,
+                              color: Colors.grey,
+                              height: 15,
+                            ),
+                            const SizedBox(width: 5),
+                            Expanded(
+                              child: Text(
+                                labListResultData.addressLine1!,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12.0.sp,
+                                  color: Colors.grey,
+                                ),
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        )
+                            : SizedBox.shrink(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      return SizedBox.shrink();
+    }
+  }
+
+// Function to get the widget based on the API response for doctors
+  Widget getResponseFromApiWidgetForDoctors() {
+    if ((widget.isFromCreateTicket &&
+        widget.arguments!.searchWord == CommonConstants.doctors)) {
+      return getWidgetForDoctorServiceRequest();
+    } else {
+      return StreamBuilder<ApiResponse<DoctorsSearchListResponse>>(
         stream: _doctorsListBlock!.doctorsNewStream,
         builder: (context, snapshot) {
           if (!snapshot.hasData) return Container();
@@ -365,48 +818,348 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             case Status.LOADING:
               rebuildBlockObject();
               return Center(
-                  child: SizedBox(
-                child: CommonCircularIndicator(),
-                width: 30.0.h,
-                height: 30.0.h,
-              ));
-
+                child: SizedBox(
+                  child: CommonCircularIndicator(),
+                  width: 30.0.h,
+                  height: 30.0.h,
+                ),
+              );
               break;
 
             case Status.ERROR:
               rebuildBlockObject();
-              return Text(variable.strNoDataAvailable + ' ' + CommonConstants.doctors, style: const TextStyle(color: Colors.red));
+              return Text(
+                variable.strNoDataAvailable + ' ' + CommonConstants.doctors,
+                style: TextStyle(color: Colors.red),
+              );
               break;
 
             case Status.COMPLETED:
               rebuildBlockObject();
-              return (snapshot.data!.data!.isSuccess == false && widget.isSkipUnknown == true)
+              return (snapshot.data!.data!.isSuccess == false &&
+                  widget.isSkipUnknown == true)
                   ? Container(
-                      margin: const EdgeInsets.all(5),
-                      child: getAllDatasInDoctorsListScrap(snapshot.data!.data!),
-                    )
+                margin: EdgeInsets.all(5),
+                child:
+                getAllDatasInDoctorsListScrap(snapshot.data!.data!),
+              )
                   : (snapshot.data!.data!.result == null)
-                      ? /*Container(
-                        child: Center(
-                          child: Text(variable.strNodata),
-                        ),
-                      )*/
-                      getEmptyCard(snapshot.data!.data!.diagnostics)
-                      : snapshot.data!.data!.result!.isEmpty
-                          ? Container(
-                              child: const Center(
-                                child: Text(variable.strNodata),
-                              ),
-                            )
-                          //getEmptyCard()
-                          : Container(
-                              margin: const EdgeInsets.all(5),
-                              child: getAllDatasInDoctorsList(doctorFilterList.isEmpty ? snapshot.data!.data!.result : doctorFilterList),
-                            );
+                  ? getEmptyCard(snapshot.data!.data!.diagnostics)
+                  : snapshot.data!.data!.result!.isEmpty
+                  ? Container(
+                child: Center(
+                  child: Text(variable.strNodata),
+                ),
+              )
+                  : Container(
+                margin: EdgeInsets.all(5),
+                child: getAllDatasInDoctorsList(
+                    snapshot.data!.data!.result),
+              );
               break;
           }
         },
       );
+    }
+  }
+
+// Function to get the widget for doctor service request
+  Widget getWidgetForDoctorServiceRequest() {
+    return Column(
+      children: [
+        Expanded(
+          child: PagedListView(
+            pagingController: createTicketController.pagingController,
+            builderDelegate: PagedChildBuilderDelegate<DoctorsListResult>(
+              itemBuilder: (context, item, index) =>
+                  doctorsListView(doctorsListResultData: item),
+              noItemsFoundIndicatorBuilder: (_) => emptyView(),
+              newPageErrorIndicatorBuilder: (_) => emptyView(),
+              firstPageErrorIndicatorBuilder: (_) => emptyView(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+// Function to create the list view for doctors
+  Widget doctorsListView({DoctorsListResult? doctorsListResultData}) {
+    if (doctorsListResultData != null) {
+      var strExperience = CommonUtil()
+          .validString(doctorsListResultData?.experience.toString());
+      strExperience = strExperience?.trim().isNotEmpty ?? false
+          ? strExperience != '0' ? '$strExperience ${Constants.strYears}' : ''
+          : '';
+      var locationString =
+          doctorsListResultData.healthOrganizationName ?? '';
+      locationString += CommonUtil()
+          .validString(doctorsListResultData?.city ?? '')
+          .trim()
+          .isNotEmpty
+          ? ' - ${doctorsListResultData.city}'
+          : '';
+      locationString += CommonUtil()
+          .validString(doctorsListResultData?.state ?? '')
+          .trim()
+          .isNotEmpty
+          ? ' , ${doctorsListResultData.state}'
+          : '';
+      return GestureDetector(
+        onTap: () {
+          try {
+            if (widget.toPreviousScreen!) {
+              widget.arguments!.searchWord == CommonConstants.doctors
+                  ? passDoctorsValue(doctorsListResultData, context)
+                  : widget.arguments!.searchWord == CommonConstants.hospitals
+                  ? passHospitalValue(new HospitalsListResult(), context)
+                  : passLaboratoryValue(new LabListResult(), context);
+            } else {
+              passdataToNextScreen(doctorsListResultData.name, context,
+                  doctorsListResultData, new HospitalsListResult(),
+                  new LabListResult());
+            }
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+          }
+        },
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          margin: EdgeInsets.only(
+            top: 5.0.sp,
+            bottom: 5.0.sp,
+            left: 10.0.sp,
+            right: 10.0.sp,
+          ),
+          elevation: 0.0,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.white,
+              ),
+              borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+            ),
+            child: Container(
+              padding: EdgeInsets.all(2.0.sp),
+              margin: EdgeInsets.only(
+                left: 8.0.w,
+                right: 15.0.w,
+                top: 8.0.h,
+                bottom: 8.0.h,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      children: [
+                        ClipOval(
+                          child: CommonUtil()
+                              .validString(doctorsListResultData.firstName)
+                              .trim()
+                              .isNotEmpty
+                              ? CachedNetworkImage(
+                            placeholder: (context, url) => Container(
+                              width: 50.0,
+                              height: 50.0,
+                              padding: const EdgeInsets.all(15.0),
+                              child: CommonCircularIndicator(),
+                            ),
+                            imageUrl: doctorsListResultData
+                                ?.profilePicThumbnailUrl ??
+                                '',
+                            width: 50.0,
+                            height: 50.0,
+                            fit: BoxFit.cover,
+                            errorWidget: (context, url, error) => Container(
+                              height: 50.0.h,
+                              width: 50.0.h,
+                              color: Colors.grey[200],
+                              child: Center(
+                                child: getFirstLastNameText(
+                                    doctorsListResultData),
+                              ),
+                            ),
+                          )
+                              : Icon(
+                            Icons.account_circle,
+                            size: 50.0,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Text(
+                            strExperience,
+                            style: TextStyle(
+                              color: Colors.black.withOpacity(0.6),
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBoxWidget(
+                    width: 10.0.w,
+                  ),
+                  Expanded(
+                    flex: 8,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBoxWidget(
+                          height: 5.0.h,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            right: 4.0.w,
+                          ),
+                          child: Text(
+                            doctorsListResultData.name != null
+                                ? doctorsListResultData.name!
+                                .capitalizeFirstofEach
+                                : '',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16.0.sp,
+                              color: Colors.black,
+                            ),
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                        ),
+                        SizedBoxWidget(
+                          height: 2.0.h,
+                        ),
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              doctorSpecialization,
+                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              height: 15,
+                            ),
+                            const SizedBox(width: 5),
+                            Expanded(
+                              child: Text(
+                                CommonUtil().validString(
+                                    doctorsListResultData.specialization ?? ''),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12.0.sp,
+                                  color: Color(
+                                      CommonUtil().getMyPrimaryColor()),
+                                ),
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBoxWidget(
+                          height: 2.0.h,
+                        ),
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              doctorSearchHospital,
+                              color: Colors.grey,
+                              height: 15,
+                            ),
+                            const SizedBox(width: 5),
+                            Expanded(
+                              child: Text(
+                                locationString,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12.0.sp,
+                                  color: Colors.grey,
+                                ),
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBoxWidget(
+                          height: 2.0.h,
+                        ),
+                        Row(children: [
+                          SvgPicture.asset(
+                            doctorSearchLanguage,
+                            color: Colors.blue,
+                            height: 15,
+                          ),
+                          const SizedBox(width: 5),
+                          Expanded(
+                              child: Container(
+                                  height: 25.0.sp,
+                                  width: double.infinity,
+                                  child: getTagsWidget(
+                                      doctorsListResultData.doctorLanguage ?? [])))
+                        ]),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      return SizedBox.shrink();
+    }
+  }
+
+// Function to get the tags widget
+  Widget getTagsWidget(List<String> tags) {
+    return ((tags?.length ?? 0) > 0)
+        ? ListView.builder(
+      physics: BouncingScrollPhysics(),
+      scrollDirection: Axis.horizontal,
+      shrinkWrap: true,
+      itemCount: tags.length,
+      itemBuilder: (BuildContext context, int i) {
+        return Container(
+          margin: EdgeInsets.only(left: 5),
+          padding:
+          EdgeInsets.symmetric(vertical: 2.0, horizontal: 5.0),
+          color: Colors.blue,
+          child: Center(
+            child: Text(
+              tags[i],
+              style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+          ),
+        );
+      },
+    )
+        : SizedBox.shrink();
+  }
+
+// Function to create an empty view
+  Widget emptyView() {
+    return Container(
+      height: 1.sh,
+      alignment: Alignment.center,
+      child: Center(
+        child: Text(
+          variable.strNodata,
+        ),
+      ),
+    );
+  }
+
 
   Widget getResponseFromApiWidgetForHospital() => StreamBuilder<ApiResponse<HospitalsSearchListResponse>>(
         stream: _hospitalListBlock!.hospitalNewStream,
@@ -453,65 +1206,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         );
               break;
           }
-        },
-      );
-
-  Widget getResponseFromApiWidgetForLabs() => StreamBuilder<ApiResponse<LabsSearchListResponse>>(
-        stream: _labsListBlock!.labNewStream,
-        builder: (context, snapshot) {
-          String strText = value ?? "";
-          if (!snapshot.hasData) return Container();
-
-          switch (snapshot.data!.status) {
-            case Status.LOADING:
-              rebuildBlockObject();
-              return Center(
-                  child: SizedBox(
-                width: 30.0.h,
-                height: 30.0.h,
-                child: CommonCircularIndicator(),
-              ));
-
-              break;
-
-            case Status.ERROR:
-              rebuildBlockObject();
-              return Text(variable.strNoDataAvailable + ' ' + CommonConstants.labs, style: const TextStyle(color: Colors.red));
-              break;
-
-            case Status.COMPLETED:
-              rebuildBlockObject();
-              return (strText.trim().isNotEmpty && strOthers.toLowerCase().contains(strText))
-                  ? Container(
-                      margin: const EdgeInsets.all(5),
-                      child: getAllDatasInLabsList(snapshot.data?.data?.result ?? []),
-                    )
-                  : snapshot.data!.data!.result == null
-                      ? Container(
-                          child: const Center(
-                            child: Text(variable.strNodata),
-                          ),
-                        )
-                      //getEmptyCard()
-                      : snapshot.data!.data!.result!.isEmpty
-                          ? Container(
-                              child: const Center(
-                                child: Text(variable.strNodata),
-                              ),
-                            )
-                          //getEmptyCard()
-                          : Container(
-                              margin: const EdgeInsets.all(5),
-                              child: getAllDatasInLabsList(snapshot.data!.data!.result),
-                            );
-
-              break;
-
-            default:
-              break;
-          }
-          // }
-          return Container();
         },
       );
 
@@ -615,68 +1309,83 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     return Padding(padding: const EdgeInsets.only(left: 20, right: 20, top: 30), child: loginButtonWithGesture);
   }
 
-  Widget getAllDatasInDoctorsList(List<DoctorsListResult>? data) => RefreshIndicator(
-        key: _refreshIndicatorKey,
-        onRefresh: _refresh,
-        child: data != null
-            ? Container(
-                color: const Color(fhbColors.bgColorContainer),
-                child: ListView.builder(
-                  itemBuilder: (c, i) => Container(
-                    padding: const EdgeInsets.only(top: 2, bottom: 2),
-                    child: getCardToDisplaySearchList(
-                        (data[i].name != null && data[i].name != '') ? data[i].name!.capitalizeFirstofEach : data[i].firstName!.capitalizeFirstofEach + ' ' + data[i].lastName!.capitalizeFirstofEach,
-                        getDoctorsAddress(data[i]),
-                        data[i].doctorId,
-                        data[i].profilePicThumbnailUrl,
-                        data[i],
-                        HospitalsListResult(),
-                        LabListResult()),
-                  ),
-                  itemCount: data.length,
-                ))
-            : Container(
-                color: const Color(fhbColors.bgColorContainer),
-                child: const Center(
-                  child: Text(variable.strNodata),
-                ),
-              ),
-      );
+  Widget getAllDatasInDoctorsList(List<DoctorsListResult>? data) {
+    return RefreshIndicator(
+      key: _refreshIndicatorKey,
+      onRefresh: _refresh,
+      child: data != null
+          ? Container(
+          color: Color(fhbColors.bgColorContainer),
+          child: ListView.builder(
+            itemBuilder: (c, i) => Container(
+              padding: EdgeInsets.only(top: 2, bottom: 2),
+              child: getCardToDisplaySearchList(
+                  (data[i].name != null && data[i].name != '')
+                      ? data[i].name!.capitalizeFirstofEach
+                      : data[i].firstName!.capitalizeFirstofEach +
+                      ' ' +
+                      data[i].lastName!.capitalizeFirstofEach,
+                  getDoctorsAddress(data[i]),
+                  data[i].doctorId,
+                  data[i].profilePicThumbnailUrl,
+                  data[i],
+                  HospitalsListResult(),
+                  LabListResult()),
+            ),
+            itemCount: data.length,
+          ))
+          : Container(
+        color: Color(fhbColors.bgColorContainer),
+        child: Center(
+          child: Text(variable.strNodata),
+        ),
+      ),
+    );
+  }
 
-  Widget getAllDatasInDoctorsListScrap(DoctorsSearchListResponse data) => RefreshIndicator(
-        key: _refreshIndicatorKey,
-        onRefresh: _refresh,
-        child: (data.isSuccess == false && widget.isSkipUnknown == true && data.diagnostics?.errorData != null)
-            ? Container(
-                color: const Color(fhbColors.bgColorContainer),
-                child: getEmptyCard(data.diagnostics),
-              )
-            : data.result != null
-                ? Container(
-                    color: const Color(fhbColors.bgColorContainer),
-                    child: ListView.builder(
-                      itemBuilder: (c, i) => Container(
-                        padding: const EdgeInsets.only(top: 2, bottom: 2),
-                        child: getCardToDisplaySearchList(
-                            (data.result![i].name != null && data.result![i].name != '')
-                                ? data.result![i].name!.capitalizeFirstofEach
-                                : data.result![i].firstName!.capitalizeFirstofEach + ' ' + data.result![i].lastName!.capitalizeFirstofEach,
-                            getDoctorsAddress(data.result![i]),
-                            data.result![i].doctorId,
-                            data.result![i].profilePicThumbnailUrl,
-                            data.result![i],
-                            HospitalsListResult(),
-                            LabListResult()),
-                      ),
-                      itemCount: data.result!.length,
-                    ))
-                : Container(
-                    color: const Color(fhbColors.bgColorContainer),
-                    child: const Center(
-                      child: Text(variable.strNodata),
-                    ),
-                  ),
-      );
+  Widget getAllDatasInDoctorsListScrap(DoctorsSearchListResponse data) {
+    return RefreshIndicator(
+      key: _refreshIndicatorKey,
+      onRefresh: _refresh,
+      child: (data.isSuccess == false &&
+          widget.isSkipUnknown == true &&
+          data.diagnostics?.errorData != null)
+          ? Container(
+        color: Color(fhbColors.bgColorContainer),
+        child: getEmptyCard(data.diagnostics),
+      )
+          : data.result != null
+          ? Container(
+          color: Color(fhbColors.bgColorContainer),
+          child: ListView.builder(
+            itemBuilder: (c, i) => Container(
+              padding: EdgeInsets.only(top: 2, bottom: 2),
+              child: getCardToDisplaySearchList(
+                  (data.result![i].name != null &&
+                      data.result![i].name != '')
+                      ? data.result![i].name!.capitalizeFirstofEach
+                      : data.result![i].firstName!
+                      .capitalizeFirstofEach +
+                      ' ' +
+                      data.result![i].lastName!
+                          .capitalizeFirstofEach,
+                  getDoctorsAddress(data.result![i]),
+                  data.result![i].doctorId,
+                  data.result![i].profilePicThumbnailUrl,
+                  data.result![i],
+                  HospitalsListResult(),
+                  LabListResult()),
+            ),
+            itemCount: data.result!.length,
+          ))
+          : Container(
+        color: Color(fhbColors.bgColorContainer),
+        child: Center(
+          child: Text(variable.strNodata),
+        ),
+      ),
+    );
+  }
 
   getAllDatasInHospitalList(List<HospitalsListResult>? data) => RefreshIndicator(
         key: _refreshIndicatorKey,
@@ -783,54 +1492,74 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     );
   }
 
-  Widget getCardToDisplaySearchList(String? name, String? address, String? id, String? logo, DoctorsListResult data, HospitalsListResult hospitalData, LabListResult labData, {String? cityAndState}) =>
-      GestureDetector(
-          child: Padding(
-              padding: const EdgeInsets.only(bottom: 4, left: 10, right: 10),
-              child: Container(
-                  padding: const EdgeInsets.only(bottom: 2),
-                  margin: const EdgeInsets.all(0),
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
-                  child: Row(children: <Widget>[
-                    SizedBox(
-                      width: 10.0.w,
-                    ),
-                    ClipOval(
-                        child: Container(
-                      height: 50.0.h,
-                      width: 50.0.h,
-                      color: const Color(fhbColors.bgColorContainer),
-                      child: widget.arguments!.searchWord == CommonConstants.doctors ? getHospitalLogoImage(logo, data) : getHospitalLogoImage(logo, data),
-                    )),
-                    SizedBox(width: 10.0.w),
-                    Expanded(
-                        flex: 5,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: getDataToView(
-                            widget.arguments!.searchWord == CommonConstants.doctors
-                                ? name
-                                : widget.arguments!.searchWord == CommonConstants.hospitals
-                                    ? name
-                                    : labData.healthOrganizationName,
-                            address,
-                            id,
-                            data,
-                            specialization: widget.arguments!.searchWord == CommonConstants.hospitals ? hospitalData.specialization : null,
-                          ),
-                        ))
-                  ]))),
-          onTap: () {
-            if (widget.toPreviousScreen!) {
-              widget.arguments!.searchWord == CommonConstants.doctors
-                  ? passDoctorsValue(data, context)
-                  : widget.arguments!.searchWord == CommonConstants.hospitals
-                      ? passHospitalValue(hospitalData, context)
-                      : passLaboratoryValue(labData, context);
-            } else {
-              passdataToNextScreen(data.name, context, data, hospitalData, labData);
-            }
-          });
+  Widget getCardToDisplaySearchList(
+      String? name,
+      String? address,
+      String? id,
+      String? logo,
+      DoctorsListResult data,
+      HospitalsListResult hospitalData,
+      LabListResult labData,
+      {String? cityAndState}) {
+    return GestureDetector(
+        child: Padding(
+            padding: EdgeInsets.only(bottom: 4, left: 10, right: 10),
+            child: Container(
+                padding: EdgeInsets.only(bottom: 2),
+                margin: EdgeInsets.all(0),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Row(children: <Widget>[
+                  SizedBox(
+                    width: 10.0.w,
+                  ),
+                  ClipOval(
+                      child: Container(
+                        height: 50.0.h,
+                        width: 50.0.h,
+                        color: Color(fhbColors.bgColorContainer),
+                        child:
+                        widget.arguments!.searchWord == CommonConstants.doctors
+                            ? getHospitalLogoImage(logo, data)
+                            : getHospitalLogoImage(logo, data),
+                      )),
+                  SizedBox(width: 10.0.w),
+                  Expanded(
+                      flex: 5,
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: getDataToView(
+                          widget.arguments!.searchWord ==
+                              CommonConstants.doctors
+                              ? name
+                              : widget.arguments!.searchWord ==
+                              CommonConstants.hospitals
+                              ? name
+                              : labData.healthOrganizationName,
+                          address,
+                          id,
+                          data,
+                          specialization: widget.arguments!.searchWord ==
+                              CommonConstants.hospitals
+                              ? hospitalData.specialization
+                              : null,
+                        ),
+                      ))
+                ]))),
+        onTap: () {
+          if (widget.toPreviousScreen!) {
+            widget.arguments!.searchWord == CommonConstants.doctors
+                ? passDoctorsValue(data, context)
+                : widget.arguments!.searchWord == CommonConstants.hospitals
+                ? passHospitalValue(hospitalData, context)
+                : passLaboratoryValue(labData, context);
+          } else {
+            passdataToNextScreen(
+                data.name, context, data, hospitalData, labData);
+          }
+        });
+  }
 
   getCorrespondingImageWidget(String id) => const Icon(Icons.verified_user);
 
@@ -938,7 +1667,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget getFirstLastNameText(DoctorsListResult myProfile) {
-    if (myProfile != null && myProfile.firstName != null && myProfile.lastName != null) {
+    if (myProfile.firstName != null && myProfile.lastName != null) {
       return Text(
         myProfile.firstName![0].toUpperCase() + (myProfile.lastName!.length > 0 ? myProfile.lastName![0].toUpperCase() : ''),
         style: TextStyle(
@@ -947,7 +1676,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           fontWeight: FontWeight.w400,
         ),
       );
-    } else if (myProfile != null && myProfile.firstName != null) {
+    } else if (myProfile.firstName != null) {
       return Text(
         myProfile.firstName![0].toUpperCase(),
         style: TextStyle(
@@ -1110,75 +1839,75 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
     return showDialog<void>(
       context: context,
-      builder: (context) => StatefulBuilder(builder: (context, setState) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
-          content: Container(
-              width: 1.sw,
-              height: 1.sh / 1.5,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              IconButton(
-                                  icon: Icon(
-                                    Icons.close,
-                                    size: 24.0.sp,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  })
-                            ],
-                          ),
-
-                          Row(
-                            children: <Widget>[
-                              _showFirstNameTextField(),
-                            ],
-                          ),
-
-                          SizedBox(
-                            height: 10.0.h,
-                          ),
-                          Row(
-                            children: <Widget>[
-                              _showLastNameTextField(),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10.0.h,
-                          ),
-                          Row(
-                            children: <Widget>[
-                              CountryCodePickerPage(
-                                selectedCountry: _selectedDialogCountry,
-                                onValuePicked: (country) => setState(
-                                  () => _selectedDialogCountry = country,
+      builder: (context) => StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
+                content: Container(
+                    width: 1.sw,
+                    height: 1.sh / 1.5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    IconButton(
+                                        icon: Icon(
+                                          Icons.close,
+                                          size: 24.0.sp,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        })
+                                  ],
                                 ),
-                                isEnabled: BASE_URL != prodUSURL,
-                              ),
-                              _ShowMobileNoTextField()
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10.0.h,
-                          ),
 
-                          Row(
-                            children: <Widget>[
-                              _showSpecializationTextField(),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10.0.h,
-                          ),
-                          /*Row(
+                                Row(
+                                  children: <Widget>[
+                                    _showFirstNameTextField(),
+                                  ],
+                                ),
+
+                                SizedBox(
+                                  height: 10.0.h,
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    _showLastNameTextField(),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10.0.h,
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    CountryCodePickerPage(
+                                      selectedCountry: _selectedDialogCountry,
+                                      onValuePicked: (country) => setState(
+                                        () => _selectedDialogCountry = country,
+                                      ),
+                                      isEnabled: BASE_URL != prodUSURL,
+                                    ),
+                                    _ShowMobileNoTextField()
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10.0.h,
+                                ),
+
+                                Row(
+                                  children: <Widget>[
+                                    _showSpecializationTextField(),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10.0.h,
+                                ),
+                                /*Row(
                               children: <Widget>[
                                 _showHospitalNameTextField(false),
                               ],
@@ -1187,24 +1916,23 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                               height: 10.0.h,
                             ),*/
 
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              _showAddDoctorButton(),
-                            ],
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    _showAddDoctorButton(),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 20.0.h,
+                                ),
+                                // callAddFamilyStreamBuilder(),
+                              ],
+                            ),
                           ),
-                          SizedBox(
-                            height: 20.0.h,
-                          ),
-                          // callAddFamilyStreamBuilder(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                        ),
+                      ],
+                    )),
               )),
-        );
-      }),
     );
   }
 
@@ -1213,60 +1941,59 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
     return showDialog<void>(
       context: context,
-      builder: (context) => StatefulBuilder(builder: (context, setState) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
-          content: Container(
-              width: 1.sw,
-              height: 1.sh / 3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              IconButton(
-                                  icon: Icon(
-                                    Icons.close,
-                                    size: 24.0.sp,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  })
-                            ],
-                          ),
+      builder: (context) => StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
+                content: Container(
+                    width: 1.sw,
+                    height: 1.sh / 3,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    IconButton(
+                                        icon: Icon(
+                                          Icons.close,
+                                          size: 24.0.sp,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        })
+                                  ],
+                                ),
 
-                          Row(
-                            children: <Widget>[
-                              _showHospitalNameTextField(true),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10.0.h,
-                          ),
+                                Row(
+                                  children: <Widget>[
+                                    _showHospitalNameTextField(true),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10.0.h,
+                                ),
 
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              _showAddHospitalButton(),
-                            ],
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    _showAddHospitalButton(),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 20.0.h,
+                                ),
+                                // callAddFamilyStreamBuilder(),
+                              ],
+                            ),
                           ),
-                          SizedBox(
-                            height: 20.0.h,
-                          ),
-                          // callAddFamilyStreamBuilder(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                        ),
+                      ],
+                    )),
               )),
-        );
-      }),
     );
   }
 
@@ -1470,7 +2197,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       addDoctorData['firstName'] = toBeginningOfSentenceCase(firstNameController.text);
       addDoctorData['lastName'] = lastNameController.text.trim() == '' ? '' : toBeginningOfSentenceCase(lastNameController.text);
       addDoctorData['specialization'] = specializationController.text.trim() == '' ? null : specializationController.text;
-      if (mobileNoController.text.trim() == '' || mobileNoController.text == null) {
+      if (mobileNoController.text.trim() == '') {
         addDoctorData['phoneNumber'] = mobileNoController.text.trim() == '' ? null : mobileNoController.text;
       } else {
         final phoneNumber = '+' + _selectedDialogCountry.phoneCode.toString() + '' + mobileNoController.text;
@@ -1694,7 +2421,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             } else {
               Navigator.popUntil(context, (route) {
                 var shouldPop = false;
-                if (route.settings.name == routeClassName || route.settings == null) {
+                if (route.settings.name == routeClassName) {
                   shouldPop = true;
                 }
                 return shouldPop;
@@ -1781,7 +2508,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         keyboardType: TextInputType.emailAddress,
         //focusNode: _doctorFocus,
         textInputAction: TextInputAction.done,
-        //autofocus: true,
+        autofocus: false,
         enabled: false,
         //widget.arguments.fromClass == router.rt_myprovider ? false : true,
         onSubmitted: (term) {
@@ -2109,4 +2836,41 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 ),
               ),
       );
+
+
+
+  // Function to handle clearing the search criteria for doctors and labs
+  onClear() {
+    try {
+      // Extract the searchWord from widget arguments with default value ''
+      var searchWord = widget.arguments?.searchWord ?? '';
+
+      // Create a common filter request model
+      DoctorFilterRequestModel commonFilterRequestModel = DoctorFilterRequestModel(
+        page: 0,
+        size: createTicketController.limit,
+        searchText: CommonUtil().validString(createTicketController.strSearchText.value),
+        filters: [],
+      );
+
+      // Determine the current controller and set the common filter request model accordingly
+      if (searchWord == CommonConstants.doctors) {
+        // If searching for doctors, use existing doctor filters
+        commonFilterRequestModel.filters = createTicketController.doctorFilterRequestModel?.filters ?? [];
+        createTicketController.doctorFilterRequestModel = commonFilterRequestModel;
+      } else if (searchWord == CommonConstants.labs || searchWord == CommonConstants.lab) {
+        // If searching for labs, use existing lab filters and set healthOrganizationType
+        commonFilterRequestModel.filters = createTicketController.labListFilterRequestModel?.filters ?? [];
+        commonFilterRequestModel.healthOrganizationType = CommonConstants.keyLab.toUpperCase();
+        createTicketController.labListFilterRequestModel = commonFilterRequestModel;
+      }
+
+    } catch (e, stackTrace) {
+      // Handle any errors that occur during the clearing process
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+
+
 }

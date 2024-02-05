@@ -883,3 +883,7 @@ const String stringSnooze = 'Snooze';
 
 // Define a constant string for the "Dismiss" action.
 const String stringDismiss = 'Dismiss';
+
+// Define a constant string for the key 'experience'
+const String stringExperience = 'experience';
+

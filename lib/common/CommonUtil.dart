@@ -41,10 +41,10 @@ import 'package:myfhb/landing/controller/landing_screen_controller.dart';
 import 'package:myfhb/chat_socket/model/SheelaReminderResponse.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/main.dart';
-import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
+import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path/path.dart';
@@ -7662,6 +7662,24 @@ class CommonUtil {
       return false;  // If none of the conditions are met, return false
     }
   }
+
+  // Function to initialize and get the CreateTicketController instance
+  CreateTicketController onInitCreateTicketController() {
+    CreateTicketController createTicketController;
+
+    // Check if CreateTicketController is not registered with GetX
+    if (!Get.isRegistered<CreateTicketController>()) {
+      // If not registered, put the CreateTicketController into the GetX dependency injection system
+      Get.put(CreateTicketController());
+    }
+
+    // Find and get the CreateTicketController instance
+    createTicketController = Get.find();
+
+    // Return the obtained CreateTicketController instance
+    return createTicketController;
+  }
+
 
 }
 

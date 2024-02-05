@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/search_providers/screens/doctor_filter_request_model.dart';
 
 import '../../constants/fhb_constants.dart';
 import '../../src/ui/MyRecord.dart';
@@ -18,11 +20,12 @@ class DoctorsFilterScreen extends StatefulWidget {
     Map<String, List<String>> filterMenuCount,
     List<DoctorsListResult> doctorFilterList,
     FilteredSelectedModel selectdFilterItemIndex,
-    int count,
+    int count, DoctorFilterRequestModel doctorFilterRequestModel,
   ) filterApplied;
   final FilteredSelectedModel selectedItems;
   final int filterMenuCount;
   final Map<String, List<String>> filterSelectedItems;
+  final DoctorFilterRequestModel doctorFilterRequestModel;
 
   const DoctorsFilterScreen({
     super.key,
@@ -30,6 +33,7 @@ class DoctorsFilterScreen extends StatefulWidget {
     required this.selectedItems,
     required this.filterMenuCount,
     required this.filterSelectedItems,
+    required this.doctorFilterRequestModel,
   });
 
   @override
@@ -41,6 +45,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
   String selectedState = "";
   String selectedCity = "";
   int selectedIndex = 0;
+
   List<String> menu = const [
     'Gender',
     'Language Spoken',
@@ -50,6 +55,12 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
     'Hospital',
     'Years of experience',
   ];
+
+  List<String> labsMenu = const [
+    'State',
+    'City',
+  ];
+
   List<String> menuItems = [];
   FilteredSelectedModel selectdFilterItemIndex = FilteredSelectedModel(
     selectedGenderIndex: [],
@@ -64,6 +75,9 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
   int filterMenuCount = 0;
   Map<String, List<String>> selectedItems = {};
   List<String> searchFilterOption = [];
+  late DoctorFilterRequestModel doctorFilterRequestModel;
+
+  var createTicketController = CommonUtil().onInitCreateTicketController();
 
   @override
   void initState() {
@@ -79,7 +93,10 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
         create: (context) => DoctorsFilterBloc()
           ..add(GetDoctorSpecializationList(
             selectedIndex: selectedIndex,
-            selectedMenu: menu[0],
+            selectedMenu: createTicketController.searchWord.value ==
+                    CommonConstants.doctors
+                ? menu[0]
+                : labsMenu[0],
           )),
         child: BlocListener<DoctorsFilterBloc, DoctorsFilterState>(
           listener: (context, state) {
@@ -94,7 +111,8 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
             } else if (state is ShowDoctorFilterList) {
               doctorFilterList = state.doctorFilterList;
               filterMenuCount = state.filterMenuCount;
-              widget.filterApplied(selectedItems, doctorFilterList, selectdFilterItemIndex, filterMenuCount);
+              doctorFilterRequestModel = state.doctorFilterRequestModel;
+              widget.filterApplied(selectedItems, doctorFilterList, selectdFilterItemIndex, filterMenuCount,doctorFilterRequestModel);
               Navigator.pop(context);
             }
           },
@@ -112,7 +130,9 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                     Navigator.pop(context, [1]);
                   },
                 ),
-                title: Text(DoctorFilterConstants.filterDoctors),
+                title: Text(createTicketController.searchWord.value ==
+                    CommonConstants.doctors
+                    ?DoctorFilterConstants.filterDoctors:DoctorFilterConstants.filterLabs),
               ),
               body: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,7 +141,9 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                     child: Row(
                       children: [
                         LeftSideMenuWidget(
-                          menuItems: menu,
+                          menuItems: createTicketController.searchWord.value ==
+                              CommonConstants.doctors
+                              ?menu:labsMenu,
                           selectedOptionChanged: (int value, String selectedMenuItem) {
                             BlocProvider.of<DoctorsFilterBloc>(context).add(GetDoctorSpecializationList(
                               selectedIndex: value,
@@ -177,7 +199,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                                   selectedHospitalIndex: [],
                                   selectedYOEIndex: [],
                                 );
-                                widget.filterApplied({}, [], selectdFilterItemIndex, 0);
+                                widget.filterApplied({}, [], selectdFilterItemIndex, 0,new DoctorFilterRequestModel());
                                 Navigator.pop(context);
                                 setState(() {});
                               },

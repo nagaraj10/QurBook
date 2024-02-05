@@ -27,8 +27,12 @@ class ShowMenuItemList extends DoctorsFilterState {
 class ShowDoctorFilterList extends DoctorsFilterState {
   final List<DoctorsListResult> doctorFilterList;
   final int filterMenuCount;
+  // Declare a final variable of type DoctorFilterRequestModel
+  final DoctorFilterRequestModel doctorFilterRequestModel;
+
   ShowDoctorFilterList({
     required this.doctorFilterList,
     required this.filterMenuCount,
+    required this.doctorFilterRequestModel,
   });
 }
