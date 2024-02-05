@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/fhb_parameters.dart';
 import '../../../plan_dashboard/model/UpdatePaymentStatusSubscribe.dart';
@@ -16,14 +17,6 @@ import '../MyProvider/viewModel/UpdatePaymentViewModel.dart';
 import 'ResultPage.dart';
 
 class PaymentPage extends StatefulWidget {
-  final String? redirectUrl;
-  final String? paymentId;
-  final String? appointmentId;
-  Function(String)? closePage;
-  bool isFromSubscribe;
-  bool? isFromRazor;
-  bool isPaymentFromNotification;
-
   PaymentPage(
       {Key? key,
       required this.redirectUrl,
@@ -34,6 +27,13 @@ class PaymentPage extends StatefulWidget {
       this.isPaymentFromNotification = false,
       this.closePage})
       : super(key: key);
+  final String? redirectUrl;
+  final String? paymentId;
+  final String? appointmentId;
+  Function(String)? closePage;
+  bool isFromSubscribe;
+  bool? isFromRazor;
+  bool isPaymentFromNotification;
 
   @override
   _WebViewExampleState createState() => _WebViewExampleState();
@@ -57,6 +57,7 @@ class _WebViewExampleState extends State<PaymentPage> {
   @override
   void initState() {
     super.initState();
+    FABService.trackCurrentScreen(FBAPaymentScreen);
     updatePaymentViewModel = UpdatePaymentViewModel();
     PAYMENT_URL = widget.redirectUrl;
     paymentId = widget.paymentId;

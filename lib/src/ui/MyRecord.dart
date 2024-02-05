@@ -25,6 +25,7 @@ import '../../constants/variable_constant.dart' as variable;
 import '../../global_search/bloc/GlobalSearchBloc.dart';
 import '../../global_search/model/Data.dart';
 import '../../global_search/model/GlobalSearch.dart';
+import '../../landing/controller/landing_screen_controller.dart';
 import '../../landing/view_model/landing_view_model.dart';
 import '../../my_family/bloc/FamilyListBloc.dart';
 import '../../widgets/GradientAppBar.dart';
@@ -74,8 +75,8 @@ class MyRecords extends StatefulWidget {
       this.isHome = false,
       this.onBackPressed,
       this.isPatientSwitched = false,
-      this.patientName = "",
-      this.patientId = ""});
+      this.patientName = '',
+      this.patientId = ''});
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -88,7 +89,7 @@ class _MyRecordsState extends State<MyRecords> {
   MediaTypeBlock? _mediaTypeBlock;
   TextEditingController _searchQueryController = TextEditingController();
   bool _isSearching = false;
-  String searchQuery = "Search query";
+  String searchQuery = 'Search query';
   String? categoryName;
   String? categoryID;
   FamilyListBloc? _familyListBloc;
@@ -115,9 +116,10 @@ class _MyRecordsState extends State<MyRecords> {
   static bool audioPage = false;
   LandingViewModel? landingViewModel;
   late BuildContext context;
-  var qurhomeDashboardController =
+  QurhomeDashboardController qurhomeDashboardController =
       CommonUtil().onInitQurhomeDashboardController();
-  var landingScreenController = CommonUtil().onInitLandingScreenController();
+  LandingScreenController landingScreenController =
+      CommonUtil().onInitLandingScreenController();
 
   @override
   void initState() {
@@ -140,7 +142,7 @@ class _MyRecordsState extends State<MyRecords> {
     try {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Future.delayed(
-            Duration(milliseconds: 1000),
+            const Duration(milliseconds: 1000),
             () => isFirstTime
                 ? null
                 : ShowCaseWidget.of(_myContext)!
@@ -160,10 +162,7 @@ class _MyRecordsState extends State<MyRecords> {
       onWillPop: () {
         if (widget.isHome) {
           if (landingScreenController?.isSearchVisible.value ?? false) {
-            landingScreenController?.changeSearchBar(
-              isEnabled: false,
-              needNotify: true,
-            );
+            landingScreenController?.changeSearchBar();
           } else {
             widget.onBackPressed!();
           }
@@ -180,47 +179,42 @@ class _MyRecordsState extends State<MyRecords> {
     );
   }
 
-  Widget getCompleteWidgets() {
-    return Scaffold(
-      key: scaffold_state,
-      appBar: widget.isHome &&
-              !(landingScreenController?.isSearchVisible.value ?? false)
-          ? null
-          : AppBar(
-              toolbarHeight: CommonUtil().isTablet!
-                  ? 80
-                  : 60, //Set width and height to maintain UI similar in tablet and mobile ,to increase the space above the tabbar
+  Widget getCompleteWidgets() => Scaffold(
+        key: scaffold_state,
+        appBar: widget.isHome &&
+                !(landingScreenController?.isSearchVisible.value ?? false)
+            ? null
+            : AppBar(
+                toolbarHeight: CommonUtil().isTablet!
+                    ? 80
+                    : 60, //Set width and height to maintain UI similar in tablet and mobile ,to increase the space above the tabbar
 
-              elevation: 0,
-              automaticallyImplyLeading: false,
-              flexibleSpace: GradientAppBar(),
-              leading: IconWidget(
-                icon: widget.isHome ? Icons.cancel : Icons.arrow_back_ios,
-                colors: Colors.white,
-                size: 24.0.sp,
-                onTap: () {
-                  if (widget.isHome) {
-                    if (landingScreenController?.isSearchVisible.value ??
-                        false) {
-                      _searchQueryController.clear();
-                      landingScreenController?.changeSearchBar(
-                        isEnabled: false,
-                        needNotify: true,
-                      );
+                elevation: 0,
+                automaticallyImplyLeading: false,
+                flexibleSpace: GradientAppBar(),
+                leading: IconWidget(
+                  icon: widget.isHome ? Icons.cancel : Icons.arrow_back_ios,
+                  colors: Colors.white,
+                  size: 24.0.sp,
+                  onTap: () {
+                    if (widget.isHome) {
+                      if (landingScreenController?.isSearchVisible.value ??
+                          false) {
+                        _searchQueryController.clear();
+                        landingScreenController?.changeSearchBar();
+                      }
+                    } else {
+                      Navigator.pop(context);
                     }
-                  } else {
-                    Navigator.pop(context);
-                  }
-                },
+                  },
+                ),
+                titleSpacing: 0,
+                title: _buildSearchField(),
               ),
-              titleSpacing: 0,
-              title: _buildSearchField(),
-            ),
-      body: fromSearch
-          ? getResponseForSearchedMedia()
-          : getResponseFromApiWidget(),
-    );
-  }
+        body: fromSearch
+            ? getResponseForSearchedMedia()
+            : getResponseFromApiWidget(),
+      );
 
   Widget getResponseForSearchedMedia() {
     _globalSearchBloc = null;
@@ -241,12 +235,10 @@ class _MyRecordsState extends State<MyRecords> {
                 case Status.LOADING:
                   return Center(
                       child: SizedBox(
-                    child: CommonCircularIndicator(),
                     width: 30.0.h,
                     height: 30.0.h,
+                    child: CommonCircularIndicator(),
                   ));
-
-                  break;
 
                 case Status.ERROR:
                   return FHBBasicWidget.getRefreshContainerButton(
@@ -262,15 +254,12 @@ class _MyRecordsState extends State<MyRecords> {
                           child: getWidgetForSearchedMedia(
                               snapshot.data!.data!.response!.data!),
                         );
-                  break;
               }
             },
           );
   }
 
-  getEmptyCard() {
-    return Container();
-  }
+  Container getEmptyCard() => Container();
 
   Widget getWidgetForSearchedMedia(List<Data> data) {
     List<CategoryResult> categoryDataList = [];
@@ -289,10 +278,7 @@ class _MyRecordsState extends State<MyRecords> {
   Widget getResponseFromApiWidget() {
     List<CategoryResult>? categoryDataFromPrefernce =
         PreferenceUtil.getCategoryType();
-    /* if (categoryDataFromPrefernce != null &&
-        categoryDataFromPrefernce.length > 0)
-      return getMainWidgets(categoryDataFromPrefernce);
-    else*/
+
     return StreamBuilder<ApiResponse<CategoryDataList>>(
       stream: _categoryListBlocks!.categoryListStreams,
       builder:
@@ -302,18 +288,16 @@ class _MyRecordsState extends State<MyRecords> {
             case Status.LOADING:
               return Center(
                   child: SizedBox(
-                child: CommonCircularIndicator(),
                 width: 30.0.h,
                 height: 30.0.h,
+                child: CommonCircularIndicator(),
               ));
-              break;
 
             case Status.ERROR:
               return FHBBasicWidget.getRefreshContainerButton(
                   snapshot.data!.message, () {
                 setState(() {});
               });
-              break;
 
             case Status.COMPLETED:
               _categoryListBlocks = null;
@@ -330,11 +314,9 @@ class _MyRecordsState extends State<MyRecords> {
                 return Container(
                   width: 100.0.h,
                   height: 100.0.h,
-                  child: Text(''),
+                  child: const Text(''),
                 );
               }
-
-              break;
           }
         } else {
           return Container(
@@ -437,94 +419,68 @@ class _MyRecordsState extends State<MyRecords> {
     );
   }
 
-  Widget _buildSearchField() {
-    return Padding(
-      padding: EdgeInsets.only(top: 2, right: 6),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              constraints: BoxConstraints(maxHeight: 40.0.h),
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
-              child: TextField(
-                textCapitalization: TextCapitalization.sentences,
-                controller: _searchQueryController,
-                autofocus: false,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(2),
-                  hintText: variable.strSearchRecords,
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.black54,
-                  ),
-                  suffixIcon: Visibility(
-                    visible:
-                        _searchQueryController.text.length >= 3 ? true : false,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.clear,
-                        color: Colors.black54,
-                      ),
-                      onPressed: () {
-                        _searchQueryController.clear();
-                        PreferenceUtil.saveCompleteData(
-                                Constants.KEY_SEARCHED_LIST, null)
-                            .then((value) {
-                          setState(() {
-                            fromSearch = false;
-                          });
-                        });
-                      },
+  Widget _buildSearchField() => Padding(
+        padding: const EdgeInsets.only(top: 2, right: 6),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                constraints: BoxConstraints(maxHeight: 40.0.h),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30)),
+                child: TextField(
+                  textCapitalization: TextCapitalization.sentences,
+                  controller: _searchQueryController,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.all(2),
+                    hintText: variable.strSearchRecords,
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: Colors.black54,
                     ),
+                    suffixIcon: Visibility(
+                      visible: _searchQueryController.text.length >= 3,
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.clear,
+                          color: Colors.black54,
+                        ),
+                        onPressed: () {
+                          _searchQueryController.clear();
+                          PreferenceUtil.saveCompleteData(
+                                  Constants.KEY_SEARCHED_LIST, null)
+                              .then((value) {
+                            setState(() {
+                              fromSearch = false;
+                            });
+                          });
+                        },
+                      ),
+                    ),
+                    border: InputBorder.none,
+                    hintStyle:
+                        TextStyle(color: Colors.black45, fontSize: 16.0.sp),
                   ),
-                  border: InputBorder.none,
-                  hintStyle:
-                      TextStyle(color: Colors.black45, fontSize: 16.0.sp),
+                  style: TextStyle(color: Colors.black54, fontSize: 16.0.sp),
+                  onChanged: (editedValue) {
+                    _globalSearchBloc = null;
+                    _globalSearchBloc = GlobalSearchBloc();
+                  },
                 ),
-                style: TextStyle(color: Colors.black54, fontSize: 16.0.sp),
-                onChanged: (editedValue) {
-                  _globalSearchBloc = null;
-                  _globalSearchBloc = GlobalSearchBloc();
-                  /*if (editedValue != '' && editedValue.length > 3) {
-                    PreferenceUtil.saveCompleteData(
-                            Constants.KEY_SEARCHED_LIST, null)
-                        .then((value) {
-                      searchQuery = editedValue;
-                      _globalSearchBloc
-                          .searchBasedOnMediaType(searchQuery)
-                          .then((globalSearchResponse) {
-                        setState(() {
-                          fromSearch = true;
-                        });
-                      });
-                    });
-                  } else if (editedValue == '') {
-                    PreferenceUtil.saveCompleteData(
-                            Constants.KEY_SEARCHED_LIST, null)
-                        .then((value) {
-                      searchQuery = '';
-                      setState(() {
-                        fromSearch = false;
-                      });
-                    });
-                  }*/
-                },
               ),
             ),
-          ),
-          SizedBoxWidget(
-            width: 2.0.w,
-          ),
-          CommonUtil().getNotificationIcon(context),
-          SwitchProfile().buildActions(
-              context, _keyLoader, callBackToRefresh, false,
-              changeWhiteBg: true),
-        ],
-      ),
-    );
-  }
+            SizedBoxWidget(
+              width: 2.0.w,
+            ),
+            CommonUtil().getNotificationIcon(context),
+            SwitchProfile().buildActions(
+                context, _keyLoader, callBackToRefresh, false,
+                changeWhiteBg: true),
+          ],
+        ),
+      );
 
   void callBackToRefresh() {
     FirestoreServices().updateFirestoreListner();
@@ -556,10 +512,6 @@ class _MyRecordsState extends State<MyRecords> {
       _mediaTypeBlock = MediaTypeBlock();
       _mediaTypeBlock!.getMediTypesList();
     }
-    /* if (_familyListBloc == null) {
-      _familyListBloc = FamilyListBloc();
-      _familyListBloc.getFamilyMembersList();
-    }*/
 
     if (_myProfileBloc == null) {
       _myProfileBloc = MyProfileBloc();
@@ -593,11 +545,9 @@ class _MyRecordsState extends State<MyRecords> {
       i++;
     }
 
-    filteredCategoryData.sort((a, b) {
-      return a.categoryDescription!
-          .toLowerCase()
-          .compareTo(b.categoryDescription!.toLowerCase());
-    });
+    filteredCategoryData.sort((a, b) => a.categoryDescription!
+        .toLowerCase()
+        .compareTo(b.categoryDescription!.toLowerCase()));
 
     return filteredCategoryData;
   }
@@ -611,6 +561,39 @@ class _MyRecordsState extends State<MyRecords> {
 /// Implementation
 
 class CustomTabView extends StatefulWidget {
+  CustomTabView(
+      {required this.itemCount,
+      this.tabBuilder,
+      this.pageBuilder,
+      this.stub,
+      this.onPositionChange,
+      this.onScroll,
+      this.initPosition,
+      this.categoryData,
+      this.cameraKey,
+      this.voiceKey,
+      this.scaffold_state,
+      this.fromSearch,
+      this.completeData,
+      this.allowSelect,
+      this.selectedMedia,
+      this.allowSelectNotes,
+      this.allowSelectVoice,
+      this.isFromChat,
+      this.showDetails,
+      this.recordsState,
+      this.healthResult,
+      this.selectedRecordsId,
+      this.isAssociateOrChat,
+      this.isFromBills,
+      this.userID,
+      this.fromAppointments,
+      this.fromClass,
+      this.argument,
+      this.isFromVideoCall,
+      this.isPatientSwitched,
+      this.patientName,
+      this.patientId});
   final int itemCount;
   final IndexedWidgetBuilder? tabBuilder;
   final IndexedWidgetBuilder? pageBuilder;
@@ -645,40 +628,6 @@ class CustomTabView extends StatefulWidget {
   String? patientName;
   String? patientId;
 
-  CustomTabView(
-      {required this.itemCount,
-      this.tabBuilder,
-      this.pageBuilder,
-      this.stub,
-      this.onPositionChange,
-      this.onScroll,
-      this.initPosition,
-      this.categoryData,
-      this.cameraKey,
-      this.voiceKey,
-      this.scaffold_state,
-      this.fromSearch,
-      this.completeData,
-      this.allowSelect,
-      this.selectedMedia,
-      this.allowSelectNotes,
-      this.allowSelectVoice,
-      this.isFromChat,
-      this.showDetails,
-      this.recordsState,
-      this.healthResult,
-      this.selectedRecordsId,
-      this.isAssociateOrChat,
-      this.isFromBills,
-      this.userID,
-      this.fromAppointments,
-      this.fromClass,
-      this.argument,
-      this.isFromVideoCall,
-      this.isPatientSwitched,
-      this.patientName,
-      this.patientId});
-
   @override
   _CustomTabsState createState() => _CustomTabsState();
 }
@@ -695,7 +644,7 @@ class _CustomTabsState extends State<CustomTabView>
   MediaTypeBlock? _mediaTypeBlock;
   TextEditingController _searchQueryController = TextEditingController();
   bool _isSearching = false;
-  String searchQuery = "Search query";
+  String searchQuery = 'Search query';
   String? categoryName = '';
   String? categoryID = '';
 
@@ -716,7 +665,8 @@ class _CustomTabsState extends State<CustomTabView>
   late CommonUtil commonUtil;
 
   final qurhomeDashboardController = Get.put(QurhomeDashboardController());
-  var landingScreenController = CommonUtil().onInitLandingScreenController();
+  LandingScreenController landingScreenController =
+      CommonUtil().onInitLandingScreenController();
 
   @override
   void initState() {
@@ -789,7 +739,7 @@ class _CustomTabsState extends State<CustomTabView>
 
   @override
   Widget build(BuildContext context) {
-    if (widget.patientId != "") {
+    if (widget.patientId != '') {
       var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       if (userId == widget.patientId) {
         widget.isPatientSwitched = false;
@@ -798,32 +748,37 @@ class _CustomTabsState extends State<CustomTabView>
       }
     }
     if (widget.isPatientSwitched!) {
-      if (CommonUtil.dialogboxOpen != true)
+      if (CommonUtil.dialogboxOpen != true) {
         Future.delayed(
-            Duration.zero,
-            () => commonUtil.showCommonDialogBox(
-                "Switch to ${widget.patientName} profile to view the Prescription",
-                context));
+          Duration.zero,
+          () => commonUtil.showCommonDialogBox(
+            'Switch to ${widget.patientName} profile to view the Prescription',
+            context,
+          ),
+        );
+      }
     }
 
-    if (widget.itemCount < 1) return widget.stub ?? Container();
+    if (widget.itemCount < 1) {
+      return widget.stub ?? Container();
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: <Color>[
+            gradient: LinearGradient(
+              colors: <Color>[
                 Color(CommonUtil().getMyPrimaryColor()),
                 Color(CommonUtil().getMyGredientColor())
               ],
-                  stops: [
+              stops: const [
                 0.3,
-                1.0
-              ])),
+                1.0,
+              ],
+            ),
+          ),
           child: TabBar(
             indicatorWeight: 4,
             isScrollable: true,
@@ -850,201 +805,183 @@ class _CustomTabsState extends State<CustomTabView>
 
   Widget getAllTabsToDisplayInBodyClone(List<CategoryResult>? data) {
     rebuildAllBlocks();
-    if (widget.selectedMedia == null) {
-      widget.selectedMedia = [];
-    }
-
-    if (widget.selectedRecordsId == null) {
-      widget.selectedRecordsId = [];
-    }
-
-    return Stack(alignment: Alignment.bottomRight, children: <Widget>[
-      getAllTabsToDisplayInBody(data),
-      Container(
-          margin: EdgeInsets.only(right: 10, bottom: 10),
-          constraints: BoxConstraints(maxHeight: 120.0.h),
-          decoration: BoxDecoration(
-              color: Color(CommonUtil().getMyPrimaryColor()),
-              borderRadius: BorderRadius.circular(30)),
-          child: (widget.categoryData != null &&
-                  widget.categoryData![controller!.index].categoryName ==
-                      AppConstants.notes)
-              ? IconButton(
-                  icon: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    onCameraClicked();
-                  },
-                )
-              : ((CommonUtil.isUSRegion()) &&
-                      (controller!.index == 1) &&
-                      (qurhomeDashboardController.isVitalModuleDisable.value))
-                  ? SizedBox.shrink()
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        FHBBasicWidget.customShowCase(
-                            widget.cameraKey,
-                            Constants.CAMERA_DESC,
-                            Tooltip(
-                              message: 'Camera disabled',
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.camera_alt,
-                                  color: widget.isFromVideoCall!
-                                      ? Colors.black38
-                                      : Colors.white,
-                                  size: CommonUtil().isTablet!
-                                      ? 20.0.sp
-                                      : 30.0.sp,
+    widget.selectedMedia ??= [];
+    widget.selectedRecordsId ??= [];
+    return Stack(
+      alignment: Alignment.bottomRight,
+      children: <Widget>[
+        getAllTabsToDisplayInBody(data),
+        Container(
+            margin: const EdgeInsets.only(right: 10, bottom: 10),
+            constraints: BoxConstraints(maxHeight: 120.0.h),
+            decoration: BoxDecoration(
+                color: Color(CommonUtil().getMyPrimaryColor()),
+                borderRadius: BorderRadius.circular(30)),
+            child: (widget.categoryData != null &&
+                    widget.categoryData![controller!.index].categoryName ==
+                        AppConstants.notes)
+                ? IconButton(
+                    icon: const Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      onCameraClicked();
+                    },
+                  )
+                : ((CommonUtil.isUSRegion()) &&
+                        (controller!.index == 1) &&
+                        (qurhomeDashboardController.isVitalModuleDisable.value))
+                    ? const SizedBox.shrink()
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          FHBBasicWidget.customShowCase(
+                              widget.cameraKey,
+                              Constants.CAMERA_DESC,
+                              Tooltip(
+                                message: 'Camera disabled',
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.camera_alt,
+                                    color: widget.isFromVideoCall!
+                                        ? Colors.black38
+                                        : Colors.white,
+                                    size: CommonUtil().isTablet!
+                                        ? 20.0.sp
+                                        : 30.0.sp,
+                                  ),
+                                  onPressed: widget.isFromVideoCall!
+                                      ? null
+                                      : () {
+                                          onCameraClicked();
+                                        },
                                 ),
-                                onPressed: widget.isFromVideoCall!
-                                    ? null
-                                    : () {
-                                        onCameraClicked();
-                                      },
                               ),
-                            ),
-                            Constants.CAMERA_TITLE),
-                        Container(
-                          width: 20.0.w,
-                          height: 1.0.h,
-                          color: Colors.white,
-                        ),
-                        FHBBasicWidget.customShowCase(
-                            widget.voiceKey,
-                            Constants.VOICE_DESC,
-                            Tooltip(
-                              message: 'Microphone disabled',
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.mic,
-                                  color: widget.isFromVideoCall!
-                                      ? Colors.black38
-                                      : Colors.white,
-                                  size: CommonUtil().isTablet!
-                                      ? 20.0.sp
-                                      : 30.0.sp,
+                              Constants.CAMERA_TITLE),
+                          Container(
+                            width: 20.0.w,
+                            height: 1.0.h,
+                            color: Colors.white,
+                          ),
+                          FHBBasicWidget.customShowCase(
+                              widget.voiceKey,
+                              Constants.VOICE_DESC,
+                              Tooltip(
+                                message: 'Microphone disabled',
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.mic,
+                                    color: widget.isFromVideoCall!
+                                        ? Colors.black38
+                                        : Colors.white,
+                                    size: CommonUtil().isTablet!
+                                        ? 20.0.sp
+                                        : 30.0.sp,
+                                  ),
+                                  onPressed: widget.isFromVideoCall!
+                                      ? null
+                                      : () {
+                                          onVoiceRecordClicked();
+                                        },
                                 ),
-                                onPressed: widget.isFromVideoCall!
-                                    ? null
-                                    : () {
-                                        onVoiceRecordClicked();
-                                      },
                               ),
-                            ),
-                            Constants.VOICE_TITLE),
-                      ],
-                    )),
-      Align(
-          alignment: Alignment.bottomCenter,
-          child: widget.isAssociateOrChat!
-              /*(widget.selectedMedia != null &&
-                  widget.selectedMedia.length > 0 &&
-                  !widget.showDetails)*/
-              ? OutlinedButton(
-                  onPressed: () {
-                    if (widget.isFromChat!) {
-                      Navigator.of(context)
-                          .pop({'metaId': widget.selectedRecordsId});
-                    } else {
-                      if (widget.allowSelect!) {
-                        if (widget.fromAppointments!) {
-                          Navigator.of(context).pop(
-                              {'selectedResult': json.encode(selectedResult)});
-                        } else {
-                          Navigator.of(context)
-                              .pop({'metaId': widget.selectedMedia});
-                        }
+                              Constants.VOICE_TITLE),
+                        ],
+                      )),
+        Align(
+            alignment: Alignment.bottomCenter,
+            child: widget.isAssociateOrChat!
+                ? OutlinedButton(
+                    onPressed: () {
+                      if (widget.isFromChat!) {
+                        Navigator.of(context)
+                            .pop({'metaId': widget.selectedRecordsId});
                       } else {
-                        if (widget.fromAppointments!) {
-                          Navigator.of(context)
-                              .pop({'selectedResult': selectedResult});
+                        if (widget.allowSelect!) {
+                          if (widget.fromAppointments!) {
+                            Navigator.of(context).pop({
+                              'selectedResult': json.encode(selectedResult)
+                            });
+                          } else {
+                            Navigator.of(context)
+                                .pop({'metaId': widget.selectedMedia});
+                          }
                         } else {
-                          Navigator.of(context)
-                              .pop({'metaId': widget.selectedMedia});
+                          if (widget.fromAppointments!) {
+                            Navigator.of(context)
+                                .pop({'selectedResult': selectedResult});
+                          } else {
+                            Navigator.of(context)
+                                .pop({'metaId': widget.selectedMedia});
+                          }
                         }
                       }
-                    }
-                  },
-                  child:
-                      widget.isFromChat! ? Text('Attach') : Text('Associate'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                    backgroundColor: Colors.white,
-                    side: BorderSide(
-                        color: Color(CommonUtil().getMyPrimaryColor())),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                  ),
-                )
-              : SizedBox()
-          //: SizedBox(),
-          )
-    ]);
-  }
-
-  Widget getAllTabsToDisplayInBody(List<CategoryResult>? data) {
-    HealthRecordList? completeDataFromPreference =
-        PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
-    return widget.fromSearch!
-        ? getMediTypeForlabels(data, widget.completeData)
-        : /*completeDataFromPreference != null
-            ? getMediTypeForlabels(data, completeDataFromPreference)
-            : */
-        StreamBuilder<ApiResponse<HealthRecordList>>(
-            stream: _healthReportListForUserBlock!.healthReportStreams,
-            builder: (context,
-                AsyncSnapshot<ApiResponse<HealthRecordList>> snapshot) {
-              if (snapshot.hasData) {
-                switch (snapshot.data!.status) {
-                  case Status.LOADING:
-                    return Scaffold(
+                    },
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
                       backgroundColor: Colors.white,
-                      body: Center(
-                          child: SizedBox(
-                        child: CommonCircularIndicator(),
-                        width: 30.0.h,
-                        height: 30.0.h,
-                      )),
-                    );
-                    break;
-
-                  case Status.ERROR:
-                    return FHBBasicWidget.getRefreshContainerButton(
-                        snapshot.data!.message, () {
-                      setState(() {});
-                    });
-                    break;
-
-                  case Status.COMPLETED:
-                    _healthReportListForUserBlock = null;
-                    rebuildAllBlocks();
-                    if (!widget.fromSearch!) {
-                      PreferenceUtil.saveCompleteData(
-                          Constants.KEY_COMPLETE_DATA, snapshot.data!.data);
-                    }
-
-                    return getMediTypeForlabels(data, snapshot.data!.data);
-                    break;
-                }
-              } else {
-                return Container(height: 0.0.h, color: Colors.white);
-              }
-            },
-          );
+                      side: BorderSide(
+                          color: Color(CommonUtil().getMyPrimaryColor())),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                    ),
+                    child: widget.isFromChat!
+                        ? const Text('Attach')
+                        : const Text('Associate'),
+                  )
+                : const SizedBox())
+      ],
+    );
   }
+
+  Widget getAllTabsToDisplayInBody(List<CategoryResult>? data) =>
+      widget.fromSearch!
+          ? getMediTypeForlabels(data, widget.completeData)
+          : StreamBuilder<ApiResponse<HealthRecordList>>(
+              stream: _healthReportListForUserBlock!.healthReportStreams,
+              builder: (context,
+                  AsyncSnapshot<ApiResponse<HealthRecordList>> snapshot) {
+                if (snapshot.hasData) {
+                  switch (snapshot.data!.status) {
+                    case Status.LOADING:
+                      return Scaffold(
+                        backgroundColor: Colors.white,
+                        body: Center(
+                            child: SizedBox(
+                          width: 30.0.h,
+                          height: 30.0.h,
+                          child: CommonCircularIndicator(),
+                        )),
+                      );
+
+                    case Status.ERROR:
+                      return FHBBasicWidget.getRefreshContainerButton(
+                          snapshot.data!.message, () {
+                        setState(() {});
+                      });
+
+                    case Status.COMPLETED:
+                      _healthReportListForUserBlock = null;
+                      rebuildAllBlocks();
+                      if (!widget.fromSearch!) {
+                        PreferenceUtil.saveCompleteData(
+                            Constants.KEY_COMPLETE_DATA, snapshot.data!.data);
+                      }
+
+                      return getMediTypeForlabels(data, snapshot.data!.data);
+                  }
+                } else {
+                  return Container(height: 0.0.h, color: Colors.white);
+                }
+              },
+            );
 
   Widget getAllTabsToDisplayInBodyDemo(List<CategoryResult> data) {
     HealthRecordList? completeDataFromPreference =
         PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
     return widget.fromSearch!
         ? getMediTypeForlabels(data, widget.completeData)
-        /*: completeDataFromPreference != null
-            ? getMediTypeForlabels(data, completeDataFromPreference)
-            */
         : StreamBuilder<ApiResponse<HealthRecordList>>(
             stream: _healthReportListForUserBlock!.healthReportStreams,
             builder: (context,
@@ -1056,19 +993,17 @@ class _CustomTabsState extends State<CustomTabView>
                       backgroundColor: Colors.white,
                       body: Center(
                           child: SizedBox(
-                        child: CommonCircularIndicator(),
                         width: 30.0.h,
                         height: 30.0.h,
+                        child: CommonCircularIndicator(),
                       )),
                     );
-                    break;
 
                   case Status.ERROR:
                     return FHBBasicWidget.getRefreshContainerButton(
                         snapshot.data!.message, () {
                       setState(() {});
                     });
-                    break;
 
                   case Status.COMPLETED:
                     _healthReportListForUserBlock = null;
@@ -1079,7 +1014,6 @@ class _CustomTabsState extends State<CustomTabView>
                     }
 
                     return getMediTypeForlabels(data, snapshot.data!.data);
-                    break;
                 }
               } else {
                 return Container(height: 0.0.h, color: Colors.white);
@@ -1112,10 +1046,6 @@ class _CustomTabsState extends State<CustomTabView>
       _mediaTypeBlock = MediaTypeBlock();
       _mediaTypeBlock!.getMediTypesList();
     }
-    /*if (_familyListBloc == null) {
-      _familyListBloc = FamilyListBloc();
-      _familyListBloc.getFamilyMembersList();
-    }*/
 
     if (_myProfileBloc == null) {
       _myProfileBloc = MyProfileBloc();
@@ -1151,18 +1081,15 @@ class _CustomTabsState extends State<CustomTabView>
                       backgroundColor: Colors.white,
                       body: Center(
                           child: SizedBox(
-                        child: CommonCircularIndicator(),
                         width: 30.0.h,
                         height: 30.0.h,
+                        child: CommonCircularIndicator(),
                       )),
                     );
 
-                    break;
-
                   case Status.ERROR:
-                    return Text(variable.strNoLoadtabls,
+                    return const Text(variable.strNoLoadtabls,
                         style: TextStyle(color: Colors.red));
-                    break;
 
                   case Status.COMPLETED:
                     _mediaTypeBlock = null;
@@ -1171,7 +1098,6 @@ class _CustomTabsState extends State<CustomTabView>
                         Constants.KEY_METADATA, snapshot.data!.data!.result);
                     return getStackBody(
                         data, completeData, snapshot.data!.data!.result!);
-                    break;
                 }
               } else {
                 return getStackBody(data, completeData, null);
@@ -1189,8 +1115,8 @@ class _CustomTabsState extends State<CustomTabView>
       alignment: Alignment.bottomRight,
       children: <Widget>[
         TabBarView(
-          children: _getAllDataForTheTabs(data!, completeData, mediaData),
           controller: controller,
+          children: _getAllDataForTheTabs(data!, completeData, mediaData),
         ),
       ],
     );
@@ -1209,18 +1135,17 @@ class _CustomTabsState extends State<CustomTabView>
       List<HealthRecordCollection>? healthRecords, bool? condition) {
     if (widget.isFromChat!) {
       if (condition!) {
-        if (!(widget.selectedRecordsId!.contains(metaId))) {}
+        if (!widget.selectedRecordsId!.contains(metaId)) {}
       } else {
         widget.selectedRecordsId!.remove(metaId);
       }
       if (condition) {
-        if (!(widget.selectedMedia!.contains(metaId!))) {
+        if (!widget.selectedMedia!.contains(metaId!)) {
           widget.selectedMedia!.add(metaId);
           widget.selectedRecordsId!.addAll(healthRecords!);
         }
       } else {
         widget.selectedMedia!.remove(metaId!);
-        //widget.selectedRecordsId!.remove(healthRecords!);
         if ((healthRecords != null) && (healthRecords?.length ?? 0) > 0) {
           for (final healthRecord in healthRecords) {
             widget.selectedRecordsId?.removeWhere(
@@ -1241,7 +1166,7 @@ class _CustomTabsState extends State<CustomTabView>
     if (widget.allowSelect!) {
       if (widget.isFromChat!) {
         if (condition) {
-          if (!(widget.selectedMedia!.contains(metaId))) {
+          if (!widget.selectedMedia!.contains(metaId)) {
             widget.selectedMedia!.add(metaId);
             widget.selectedRecordsId!
                 .addAll(healthCategory!.healthRecordCollection!);
@@ -1253,7 +1178,7 @@ class _CustomTabsState extends State<CustomTabView>
         }
       } else {
         if (condition) {
-          if (!(widget.selectedMedia!.contains(metaId))) {
+          if (!widget.selectedMedia!.contains(metaId)) {
             widget.selectedMedia!.add(metaId);
           }
         } else {
@@ -1284,84 +1209,13 @@ class _CustomTabsState extends State<CustomTabView>
 
   List<Widget> _getAllDataForTheTabs(List<CategoryResult> data,
       HealthRecordList? completeData, List<MediaResult> mediaData) {
-    List<Widget> tabWidgetList = [];
-    //data.sort((a, b) => a.categoryName.compareTo(b.categoryName));
-    for (CategoryResult dataObj in data) {
-      /* if (dataObj
-                                .isDisplay && dataObj.categoryName != Constants.STR_FEEDBACK) {*/
+    var tabWidgetList = <Widget>[];
+
+    for (var dataObj in data) {
       if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionPrescription) {
-        tabWidgetList.add(HealthReportListScreen(
-            completeData,
-            callBackToRefresh,
-            dataObj.categoryName,
-            dataObj.id,
-            getDataForParticularLabel,
-            addMediaRemoveMaster,
-            widget.allowSelect,
-            widget.selectedMedia,
-            widget.allowSelectNotes,
-            widget.allowSelectVoice,
-            widget.showDetails,
-            widget.isFromChat,
-            addHealthRecords));
-      } else if (dataObj.categoryDescription ==
-          CommonConstants.categoryDescriptionDevice) {
-        if ((CommonUtil.isUSRegion()) &&
-            (qurhomeDashboardController.isVitalModuleDisable.value)) {
-          tabWidgetList
-              .add(FHBBasicWidget().getContainerFeatureDisableDataText());
-        } else {
-          tabWidgetList.add(DeviceListScreen(
-              completeData,
-              callBackToRefresh,
-              dataObj.categoryName,
-              dataObj.id,
-              getDataForParticularLabel,
-              addMediaRemoveMaster,
-              widget.allowSelect,
-              widget.selectedMedia,
-              widget.allowSelectNotes,
-              widget.allowSelectVoice,
-              widget.showDetails,
-              widget.isFromChat,
-              addHealthRecords));
-        }
-      } else if (dataObj.categoryDescription ==
-          CommonConstants.categoryDescriptionLabReport) {
-        tabWidgetList.add(LabReportListScreen(
-            completeData,
-            callBackToRefresh,
-            dataObj.categoryName,
-            dataObj.id,
-            getDataForParticularLabel,
-            addMediaRemoveMaster,
-            widget.allowSelect,
-            widget.selectedMedia,
-            widget.allowSelectNotes,
-            widget.allowSelectVoice,
-            widget.showDetails,
-            widget.isFromChat,
-            addHealthRecords));
-      } else if (dataObj.categoryDescription ==
-          CommonConstants.categoryDescriptionMedicalReport) {
-        tabWidgetList.add(MedicalReportListScreen(
-            completeData,
-            callBackToRefresh,
-            dataObj.categoryName,
-            dataObj.id,
-            getDataForParticularLabel,
-            addMediaRemoveMaster,
-            widget.allowSelect,
-            widget.selectedMedia,
-            widget.allowSelectNotes,
-            widget.allowSelectVoice,
-            widget.showDetails,
-            widget.isFromChat,
-            addHealthRecords));
-      } else if (dataObj.categoryDescription ==
-          CommonConstants.categoryDescriptionBills) {
-        tabWidgetList.add(BillsList(
+        tabWidgetList.add(
+          HealthReportListScreen(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
@@ -1375,10 +1229,38 @@ class _CustomTabsState extends State<CustomTabView>
             widget.showDetails,
             widget.isFromChat,
             addHealthRecords,
-            widget.isFromBills));
+          ),
+        );
       } else if (dataObj.categoryDescription ==
-          CommonConstants.categoryDescriptionIDDocs) {
-        tabWidgetList.add(IDDocsList(
+          CommonConstants.categoryDescriptionDevice) {
+        if ((CommonUtil.isUSRegion()) &&
+            (qurhomeDashboardController.isVitalModuleDisable.value)) {
+          tabWidgetList.add(
+            FHBBasicWidget().getContainerFeatureDisableDataText(),
+          );
+        } else {
+          tabWidgetList.add(
+            DeviceListScreen(
+              completeData,
+              callBackToRefresh,
+              dataObj.categoryName,
+              dataObj.id,
+              getDataForParticularLabel,
+              addMediaRemoveMaster,
+              widget.allowSelect,
+              widget.selectedMedia,
+              widget.allowSelectNotes,
+              widget.allowSelectVoice,
+              widget.showDetails,
+              widget.isFromChat,
+              addHealthRecords,
+            ),
+          );
+        }
+      } else if (dataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionLabReport) {
+        tabWidgetList.add(
+          LabReportListScreen(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
@@ -1391,10 +1273,71 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelectVoice,
             widget.showDetails,
             widget.isFromChat,
-            addHealthRecords));
+            addHealthRecords,
+          ),
+        );
+      } else if (dataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionMedicalReport) {
+        tabWidgetList.add(
+          MedicalReportListScreen(
+            completeData,
+            callBackToRefresh,
+            dataObj.categoryName,
+            dataObj.id,
+            getDataForParticularLabel,
+            addMediaRemoveMaster,
+            widget.allowSelect,
+            widget.selectedMedia,
+            widget.allowSelectNotes,
+            widget.allowSelectVoice,
+            widget.showDetails,
+            widget.isFromChat,
+            addHealthRecords,
+          ),
+        );
+      } else if (dataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionBills) {
+        tabWidgetList.add(
+          BillsList(
+            completeData,
+            callBackToRefresh,
+            dataObj.categoryName,
+            dataObj.id,
+            getDataForParticularLabel,
+            addMediaRemoveMaster,
+            widget.allowSelect,
+            widget.selectedMedia,
+            widget.allowSelectNotes,
+            widget.allowSelectVoice,
+            widget.showDetails,
+            widget.isFromChat,
+            addHealthRecords,
+            widget.isFromBills,
+          ),
+        );
+      } else if (dataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionIDDocs) {
+        tabWidgetList.add(
+          IDDocsList(
+            completeData,
+            callBackToRefresh,
+            dataObj.categoryName,
+            dataObj.id,
+            getDataForParticularLabel,
+            addMediaRemoveMaster,
+            widget.allowSelect,
+            widget.selectedMedia,
+            widget.allowSelectNotes,
+            widget.allowSelectVoice,
+            widget.showDetails,
+            widget.isFromChat,
+            addHealthRecords,
+          ),
+        );
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionOthers) {
-        tabWidgetList.add(OtherDocsList(
+        tabWidgetList.add(
+          OtherDocsList(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
@@ -1408,7 +1351,9 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelectVoice,
             widget.showDetails,
             widget.isFromChat,
-            addHealthRecords));
+            addHealthRecords,
+          ),
+        );
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionVoiceRecord) {
         if (CommonUtil.audioPage == false && widget.fromClass == '') {
@@ -1418,7 +1363,8 @@ class _CustomTabsState extends State<CustomTabView>
         if (CommonUtil.audioPage == false && widget.fromClass == 'audio') {
           widget.fromClass = '';
         }
-        tabWidgetList.add(VoiceRecordList(
+        tabWidgetList.add(
+          VoiceRecordList(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
@@ -1430,10 +1376,13 @@ class _CustomTabsState extends State<CustomTabView>
             widget.selectedMedia,
             widget.allowSelectNotes,
             widget.allowSelectVoice,
-            widget.showDetails));
+            widget.showDetails,
+          ),
+        );
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionClaimsRecord) {
-        tabWidgetList.add(OtherDocsList(
+        tabWidgetList.add(
+          OtherDocsList(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
@@ -1447,10 +1396,13 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelectVoice,
             widget.showDetails,
             widget.isFromChat,
-            addHealthRecords));
+            addHealthRecords,
+          ),
+        );
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionNotes) {
-        tabWidgetList.add(NotesScreenList(
+        tabWidgetList.add(
+          NotesScreenList(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
@@ -1462,10 +1414,13 @@ class _CustomTabsState extends State<CustomTabView>
             widget.selectedMedia,
             widget.allowSelectNotes,
             widget.allowSelectVoice,
-            widget.showDetails));
+            widget.showDetails,
+          ),
+        );
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionHospitalDocument) {
-        tabWidgetList.add(HospitalDocuments(
+        tabWidgetList.add(
+          HospitalDocuments(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
@@ -1478,16 +1433,19 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelectVoice,
             widget.showDetails,
             widget.isFromChat,
-            addHealthRecords));
+            addHealthRecords,
+          ),
+        );
       } else {
-        tabWidgetList.add(FHBBasicWidget().getContainerWithNoDataText());
+        tabWidgetList.add(
+          FHBBasicWidget().getContainerWithNoDataText(),
+        );
       }
-      /* }*/
     }
     return tabWidgetList;
   }
 
-  onPositionChange() {
+  void onPositionChange() {
     FocusManager.instance.primaryFocus!.unfocus();
     if (!controller!.indexIsChanging) {
       setState(() {});
@@ -1535,35 +1493,28 @@ class _CustomTabsState extends State<CustomTabView>
   List<Widget> getAllTabsToDisplayInHeader(List<CategoryResult> data) {
     List<Widget> tabWidgetList = [];
 
-    data.sort((a, b) {
-      return a.categoryDescription!
-          .toLowerCase()
-          .compareTo(b.categoryDescription!.toLowerCase());
-    });
+    data.sort((a, b) => a.categoryDescription!
+        .toLowerCase()
+        .compareTo(b.categoryDescription!.toLowerCase()));
 
     for (CategoryResult dataObj in data) {
-      /* if (dataObj
-                                .isDisplay ) {*/
       tabWidgetList.add(Column(children: [
-        Padding(padding: EdgeInsets.only(top: 10)),
+        const Padding(padding: EdgeInsets.only(top: 10)),
         dataObj.logo != null
-            ? Image.network(
-                /*Constants.BASE_URL + */
-                dataObj.logo!,
+            ? Image.network(dataObj.logo!,
                 width: 20.0.h,
                 height: 20.0.h,
                 color: Colors.white,
-                errorBuilder: (context, error, stackTrace) => SizedBox())
+                errorBuilder: (context, error, stackTrace) => const SizedBox())
             : Icon(Icons.calendar_today, size: 20.0.sp, color: Colors.white),
-        Padding(padding: EdgeInsets.only(top: 10)),
+        const Padding(padding: EdgeInsets.only(top: 10)),
         Container(
             child: Text(
           dataObj.categoryName!,
           style: TextStyle(fontSize: 14.0.sp),
         )),
-        Padding(padding: EdgeInsets.only(top: 10)),
+        const Padding(padding: EdgeInsets.only(top: 10)),
       ]));
-      /* }*/
     }
 
     return tabWidgetList;
@@ -1580,8 +1531,8 @@ class _CustomTabsState extends State<CustomTabView>
     });
 
     TextEditingController fileName = TextEditingController(
-        text: categoryName! +
-            '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
+        text:
+            '${categoryName!}_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     CommonDialogBox().getDialogBoxForNotes(
         context,
         containsAudio,
@@ -1610,14 +1561,6 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   void onCameraClicked() async {
-//    final PermissionHandler cameraPermission = PermissionHandler();
-//    var permissionStatus =
-//        await cameraPermission.checkPermissionStatus(PermissionGroup.camera);
-//
-//    if (permissionStatus == PermissionStatus.denied ||
-//        permissionStatus == PermissionStatus.unknown) {
-//      await _handleCameraAndMic();
-//    }
     var status = await Permission.camera.status;
 
     if (status.isDenied) {
@@ -1630,7 +1573,7 @@ class _CustomTabsState extends State<CustomTabView>
                   ? Constants.STR_PROVIDERDOCUMENTS
                   : Constants.STR_HOSPITALDOCUMENT)) {
         FHBBasicWidget().showInSnackBar(
-            Constants.MSG_NO_CAMERA_VOICERECORDS + ' ' + categoryName!,
+            '${Constants.MSG_NO_CAMERA_VOICERECORDS} ${categoryName!}',
             widget.scaffold_state!);
       } else if (categoryName == AppConstants.notes) {
         openNotesDialog();
@@ -1681,7 +1624,7 @@ class _CustomTabsState extends State<CustomTabView>
             ? Constants.STR_PROVIDERDOCUMENTS
             : Constants.STR_HOSPITALDOCUMENT)) {
       FHBBasicWidget().showInSnackBar(
-          Constants.MSG_NO_VOICERECORDS + ' ' + categoryName!,
+          '${Constants.MSG_NO_VOICERECORDS} ${categoryName!}',
           widget.scaffold_state!);
     } else {
       PreferenceUtil.saveString(

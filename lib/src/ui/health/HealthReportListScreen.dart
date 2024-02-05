@@ -10,6 +10,7 @@ import '../../../colors/fhb_colors.dart' as fhbColors;
 import '../../../common/CommonConstants.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../common/PreferenceUtil.dart';
+import '../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/fhb_query.dart' as query;
@@ -22,6 +23,20 @@ import '../../model/Health/asgard/health_record_list.dart';
 import '../../utils/FHBUtils.dart';
 
 class HealthReportListScreen extends StatefulWidget {
+  HealthReportListScreen(
+      this.completeData,
+      this.callBackToRefresh,
+      this.categoryName,
+      this.categoryId,
+      this.getDataForParticularLabel,
+      this.mediaSelected,
+      this.allowSelect,
+      this.mediaMeta,
+      this.isNotesSelect,
+      this.isAudioSelect,
+      this.showDetails,
+      this.allowAttach,
+      this.healthRecordSelected);
   final HealthRecordList? completeData;
 
   final Function callBackToRefresh;
@@ -40,20 +55,6 @@ class HealthReportListScreen extends StatefulWidget {
   final bool? allowAttach;
 
   List<String?>? mediaMeta;
-  HealthReportListScreen(
-      this.completeData,
-      this.callBackToRefresh,
-      this.categoryName,
-      this.categoryId,
-      this.getDataForParticularLabel,
-      this.mediaSelected,
-      this.allowSelect,
-      this.mediaMeta,
-      this.isNotesSelect,
-      this.isAudioSelect,
-      this.showDetails,
-      this.allowAttach,
-      this.healthRecordSelected);
 
   @override
   _HealthReportListScreenState createState() => _HealthReportListScreenState();
@@ -76,7 +77,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
     _healthReportListForUserBlock = HealthReportListForUserBlock();
     _healthReportListForUserBlock.getHelthReportLists();
     _bookmarkRecordBloc = BookmarkRecordBloc();
-
+    FABService.trackCurrentScreen(FBAMyRecordsPrescriptionScreen);
     PreferenceUtil.init();
     setAuthToken();
     super.initState();
@@ -103,9 +104,10 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                 itemCount: mediaMetaInfoObj.length,
               ))
           : Container(
+              color: const Color(fhbColors.bgColorContainer),
               child: Center(
                 child: Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
+                  padding: const EdgeInsets.only(left: 20, right: 20),
                   child: Text(
                     Constants.NO_DATA_PRESCRIPTION,
                     textAlign: TextAlign.center,
@@ -117,14 +119,13 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                   ),
                 ),
               ),
-              color: const Color(fhbColors.bgColorContainer),
             ),
     );
   }
 
   Future<void> _refresh() async {
     _refreshIndicatorKey.currentState?.show(atTop: false);
-    await Future.delayed(Duration(milliseconds: 2));
+    await Future.delayed(const Duration(milliseconds: 2));
 
     widget.callBackToRefresh();
   }
@@ -187,21 +188,21 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                 ),
               ).then((value) async {
                 if (value ?? false) {
-                  await Future.delayed(Duration(milliseconds: 100));
+                  await Future.delayed(const Duration(milliseconds: 100));
                   widget.callBackToRefresh();
                 }
               });
             }
           },
           child: Container(
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+            padding: const EdgeInsets.all(10.0),
+            margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
-                BoxShadow(
-                  color: const Color(fhbColors.cardShadowColor),
+                const BoxShadow(
+                  color: Color(fhbColors.cardShadowColor),
                   blurRadius: 16, // has the effect of softening the shadow
                   spreadRadius: 0, // has the effect of extending the shadow
                 )
@@ -233,7 +234,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                                 ? imageTabHeader
                                 : Constants.imageMobileHeader,
                             color: const Color(fhbColors.bgColorContainer))),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 Expanded(
                   flex: 6,
                   child: Column(
@@ -307,7 +308,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                       IconButton(
                           icon: mediaMetaInfoObj?.isBookmarked ?? false
                               ? ImageIcon(
-                                  AssetImage(variable.icon_record_fav_active),
+                                  const AssetImage(
+                                      variable.icon_record_fav_active),
                                   color:
                                       Color(CommonUtil().getMyPrimaryColor()),
                                   size: CommonUtil().isTablet!
@@ -315,7 +317,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                                       : mobileHeader2,
                                 )
                               : ImageIcon(
-                                  AssetImage(variable.icon_record_fav),
+                                  const AssetImage(variable.icon_record_fav),
                                   color: Colors.black,
                                   size: CommonUtil().isTablet!
                                       ? tabHeader2
@@ -328,7 +330,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                       (mediaMetaInfoObj?.metadata?.hasVoiceNotes != null &&
                               (mediaMetaInfoObj?.metadata?.hasVoiceNotes ??
                                   false))
-                          ? Icon(
+                          ? const Icon(
                               Icons.mic,
                               color: Colors.black54,
                             )
@@ -338,7 +340,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                               Icons.done,
                               color: Color(CommonUtil().getMyPrimaryColor()),
                             )
-                          : SizedBox(),
+                          : const SizedBox(),
                     ],
                   ),
                 ),
@@ -346,7 +348,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
             ),
           ));
     else
-      return SizedBox();
+      return const SizedBox();
   }
 
   getDoctorProfileImageWidget(MediaMetaInfo data) {
@@ -389,7 +391,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
           image: DecorationImage(
               image: imageProvider,
               fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
+              colorFilter:
+                  const ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
         ),
       ),
       placeholder: (context, url) => SizedBox(
@@ -400,7 +403,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
               highlightColor: Colors.grey[550]!,
               child:
                   Container(width: 50, height: 50, color: Colors.grey[200]))),
-      errorWidget: (context, url, error) => Icon(Icons.error),
+      errorWidget: (context, url, error) => const Icon(Icons.error),
     );
   }
 
@@ -458,7 +461,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
           image: DecorationImage(
               image: imageProvider,
               fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
+              colorFilter:
+                  const ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
         ),
       ),
       placeholder: (context, url) => SizedBox(
@@ -469,7 +473,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
               highlightColor: Colors.grey[550]!,
               child:
                   Container(width: 50, height: 50, color: Colors.grey[200]))),
-      errorWidget: (context, url, error) => Icon(Icons.error),
+      errorWidget: (context, url, error) => const Icon(Icons.error),
     );
   }
 

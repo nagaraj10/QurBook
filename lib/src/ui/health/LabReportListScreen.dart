@@ -6,6 +6,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../colors/fhb_colors.dart' as fhbColors;
 import '../../../common/CommonConstants.dart';
 import '../../../common/CommonUtil.dart';
+import '../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/variable_constant.dart' as variable;
@@ -67,6 +68,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
   @override
   void initState() {
     _healthReportListForUserBlock = HealthReportListForUserBlock();
+    FABService.trackCurrentScreen(FBAMyRecordsLabReportScreen);
     super.initState();
   }
 
@@ -91,9 +93,10 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                 itemCount: mediaMetaInfoObj.length,
               ))
           : Container(
+              color: const Color(fhbColors.bgColorContainer),
               child: Center(
                 child: Padding(
-                  padding: EdgeInsets.only(left: 40, right: 40),
+                  padding: const EdgeInsets.only(left: 40, right: 40),
                   child: Text(
                     Constants.NO_DATA_LAB_REPORT,
                     textAlign: TextAlign.center,
@@ -106,14 +109,13 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                   ),
                 ),
               ),
-              color: const Color(fhbColors.bgColorContainer),
             ),
     );
   }
 
   Future<void> _refresh() async {
-    _refreshIndicatorKey.currentState?.show(atTop: false);
-    await Future.delayed(Duration(seconds: 2));
+    await _refreshIndicatorKey.currentState?.show(atTop: false);
+    await Future.delayed(const Duration(seconds: 2));
     widget.callBackToRefresh();
   }
 
@@ -171,7 +173,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
             ),
           ).then((value) async {
             if (value ?? false) {
-              await Future.delayed(Duration(milliseconds: 100));
+              await Future.delayed(const Duration(milliseconds: 100));
               widget.callBackToRefresh();
             }
           });
@@ -179,14 +181,14 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
       },
       child: Container(
         //height: 90.0.h,
-        padding: EdgeInsets.all(10.0),
-        margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+        padding: const EdgeInsets.all(10.0),
+        margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
-            BoxShadow(
-              color: const Color(fhbColors.cardShadowColor),
+            const BoxShadow(
+              color: Color(fhbColors.cardShadowColor),
               blurRadius: 16, // has the effect of softening the shadow
               spreadRadius: 0, // has the effect of extending the shadow
             )
@@ -195,36 +197,19 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
         child: Row(
           children: <Widget>[
             ClipOval(
-                child:
-                    /* data.metadata.hospital != null
-                      ? data.metadata.hospital.l != null
-                          ? Image.network(
-                              Constants.BASE_URL +
-                                  data.metadata.hospital.logoThumbnail,
-                              height: 50.0.h,
-                              width: 50.0.h,
-                            )
-                          :*/
-                    CircleAvatar(
+                child: CircleAvatar(
               radius: CommonUtil().isTablet! ? 35 : 25,
               backgroundColor: const Color(fhbColors.bgColorContainer),
               child: Image.network(
-                /*Constants.BASE_URL +*/
                 mediaMetaInfo.metadata!.healthRecordCategory!.logo!,
                 height: 30.0.h,
                 width: 30.0.h,
-                errorBuilder: (context, error, stackTrace) => SizedBox(),
+                errorBuilder: (context, error, stackTrace) => const SizedBox(),
                 color: Color(
                   CommonUtil().getMyPrimaryColor(),
                 ),
               ),
-            )
-                /*: Container(
-                          height: 50.0.h,
-                          width: 50.0.h,
-                          color: Colors.grey[200],
-                        )*/
-                ),
+            )),
             SizedBox(width: 20.0.w),
             Expanded(
               flex: 6,
@@ -285,14 +270,14 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                   IconButton(
                       icon: mediaMetaInfo.isBookmarked!
                           ? ImageIcon(
-                              AssetImage(variable.icon_record_fav_active),
+                              const AssetImage(variable.icon_record_fav_active),
                               color: Color(CommonUtil().getMyPrimaryColor()),
                               size: CommonUtil().isTablet!
                                   ? tabHeader2
                                   : mobileHeader2,
                             )
                           : ImageIcon(
-                              AssetImage(variable.icon_record_fav),
+                              const AssetImage(variable.icon_record_fav),
                               color: Colors.black,
                               size: CommonUtil().isTablet!
                                   ? tabHeader2
@@ -303,7 +288,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                       }),
                   (mediaMetaInfo.metadata!.hasVoiceNotes != null &&
                           mediaMetaInfo.metadata!.hasVoiceNotes!)
-                      ? Icon(
+                      ? const Icon(
                           Icons.mic,
                           color: Colors.black54,
                         )
@@ -313,7 +298,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                           Icons.done,
                           color: Color(CommonUtil().getMyPrimaryColor()),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                 ],
               ),
             ),
@@ -346,8 +331,6 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                     width: 50.0.h, height: 50.0.h, color: Colors.grey[200])),
           );
         }
-
-        ///load until snapshot.hasData resolves to true
       },
     );
   }
@@ -370,8 +353,6 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                     width: 50.0.h, height: 50.0.h, color: Colors.grey[200])),
           );
         }
-
-        ///load until snapshot.hasData resolves to true
       },
     );
   }

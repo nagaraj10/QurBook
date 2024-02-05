@@ -21,6 +21,7 @@ import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_parameters.dart' as parameters;
@@ -121,6 +122,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     _healthReportListForUserBlock = HealthReportListForUserBlock();
     _familyListBloc = FamilyListBloc();
     _familyListBloc!.getFamilyMembersListNew();
+    FABService.trackCurrentScreen(FBAMyRecordsDetailsScreen);
 
     if (checkIfMp3IsPresent(widget.data) != '') {
       widget.data.metadata!.hasVoiceNotes = true;

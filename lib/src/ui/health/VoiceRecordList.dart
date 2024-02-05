@@ -4,6 +4,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../colors/fhb_colors.dart' as fhbColors;
 import '../../../common/CommonConstants.dart';
 import '../../../common/CommonUtil.dart';
+import '../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/variable_constant.dart' as variable;
@@ -57,6 +58,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
   @override
   void initState() {
     _healthReportListForUserBlock = HealthReportListForUserBlock();
+    FABService.trackCurrentScreen(FBAMyRecordsVoiceRecordsScreen);
     super.initState();
   }
 
