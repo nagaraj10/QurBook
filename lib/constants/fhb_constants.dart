@@ -345,6 +345,11 @@ const String icVoiceMic = 'assets/voice_clone/mic_icon.svg';
 const String icVoicePause = 'assets/voice_clone/pause_icon.svg';
 const String icVoiceStop = 'assets/voice_clone/stop_icon.svg';
 
+//
+const String doctorSearchHospital = 'assets/doctor_search/hospital.svg';
+const String doctorSearchLanguage = 'assets/doctor_search/languages.svg';
+const String doctorSpecialization = 'assets/doctor_search/specialization.svg';
+
 // Path to the placeholder image asset.
 const String ic_placeholder = 'assets/icons/placeholder.jpg';
 
@@ -1163,9 +1168,19 @@ const String strAndroidNormalchannelId =
     'androidNormalchannelId'; // Android normal channel ID
 const String strAndroidNormalCallchannelId =
     'androidNormalCallchannelId'; // Android normal call channel ID
+
 // Constant string for invoking a remainder activity related to Sheela
 const String strActivityRemainderInvokeSheela =
     'activityRemainderInvokeSheela&'; // Activity remainder for invoking Sheela
+
+// Define a constant string for 'Sort'
+const String strSort = 'Sort';
+
+// Define a constant string for 'Filter'
+const String strFilter = 'Filter';
+
+// Define a constant string for 'Years'
+const String strYears = 'Years';
 
 Future<void> fbaLog({String? eveName, eveParams}) async {
   try {
@@ -1201,4 +1216,5 @@ class DoctorFilterConstants {
   static String applyFilters = 'Apply Filters';
   static String reset = 'Reset';
   static String filterDoctors = 'Filter Doctors';
+  static String filterLabs = 'Filter Labs';
 }

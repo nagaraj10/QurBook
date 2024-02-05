@@ -175,6 +175,7 @@ flutter:
     - assets/languages/
     - assets/raw/dailer_tone.mp3
     - assets/raw/ns_final.mp3
+    - assets/doctor_search/
 
 
   #  - images/a_dot_ham.jpeg
