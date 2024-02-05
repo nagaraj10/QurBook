@@ -255,7 +255,24 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               Navigator.pop(context, [1]);
             },
           ),
-          title: Text('${widget.arguments!.searchWord} ' + variable.strSearch)),
+        title: Text(
+          // Check if the widget is from creating a ticket and searching for doctors
+          (widget.isFromCreateTicket &&
+                  widget.arguments!.searchWord == CommonConstants.doctors)
+              ? Constants
+                  .strChooseDoctor // Display "Choose Doctor" if searching for doctors
+              :
+              // Check if the widget is from creating a ticket and searching for labs or lab
+              (widget.isFromCreateTicket &&
+                      (widget.arguments!.searchWord == CommonConstants.labs ||
+                          widget.arguments!.searchWord == CommonConstants.lab))
+                  ? Constants
+                      .strChooseLab // Display "Choose Lab" if searching for labs or lab
+                  :
+                  // Display the search word and variable string if none of the above conditions match
+                  ('${widget.arguments!.searchWord} ' + variable.strSearch),
+        ),
+      ),
       // Wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner
       // until the controller has finished initializing.
@@ -271,7 +288,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
             //margin: EdgeInsets.all(5),
             child: Container(
-              margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+              margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5,top:5),
               decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(30)),
               child: TextField(
                 textCapitalization: TextCapitalization.sentences,
