@@ -9,6 +9,7 @@ import '../../../../colors/fhb_colors.dart' as fhbColors;
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/SwitchProfile.dart';
 import '../../../../common/common_circular_indicator.dart';
+import '../../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../../../common/firestore_services.dart';
 import '../../../../constants/variable_constant.dart' as variable;
 import '../../../../src/blocs/Category/CategoryListBlock.dart';
@@ -58,6 +59,7 @@ class _AppointmentsState extends State<Appointments> {
     try {
       Provider.of<AppointmentsListViewModel>(context, listen: false)
           .fetchAppointments();
+      FABService.trackCurrentScreen(FBAAppointmentsScreen);
       super.initState();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -76,27 +78,21 @@ class _AppointmentsState extends State<Appointments> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: RefreshIndicator(
-          onRefresh: () {
-            return refreshPage();
-          },
-          child: body()),
-      appBar: widget.isHome ? null : appBar() as PreferredSizeWidget?,
-      floatingActionButton: Visibility(
-        visible: CommonUtil.REGION_CODE == 'IN',
-        child: commonWidget.floatingButton(
-          context,
-          isHome: widget.isHome,
+  Widget build(BuildContext context) => Scaffold(
+        body: RefreshIndicator(onRefresh: () => refreshPage(), child: body()),
+        appBar: widget.isHome ? null : appBar() as PreferredSizeWidget?,
+        floatingActionButton: Visibility(
+          visible: CommonUtil.REGION_CODE == 'IN',
+          child: commonWidget.floatingButton(
+            context,
+            isHome: widget.isHome,
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   getCategoryList() {
-    CategoryListBlock _categoryListBlock = CategoryListBlock();
-    MediaTypeBlock _mediaTypeBlock = MediaTypeBlock();
+    var _categoryListBlock = CategoryListBlock();
+    var _mediaTypeBlock = MediaTypeBlock();
 
     _categoryListBlock.getCategoryLists().then((value) {});
 
@@ -125,7 +121,7 @@ class _AppointmentsState extends State<Appointments> {
                     maxHeight: 40.0.h,
                   ),
                   decoration: BoxDecoration(
-                    color: Color(fhbColors.cardShadowColor),
+                    color: const Color(fhbColors.cardShadowColor),
                     borderRadius: BorderRadius.circular(
                       5.0.sp,
                     ),
@@ -186,26 +182,24 @@ class _AppointmentsState extends State<Appointments> {
         ));
   }
 
-  Widget body() {
-    return SingleChildScrollView(
-      child: Container(
-          padding: EdgeInsets.only(
-            left: 20.0.w,
-            right: 20.0.w,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBoxWidget(
-                width: 0.0.w,
-                height: 20.0.h,
-              ),
-              search(),
-              getDoctorsAppoinmentsList()
-            ],
-          )),
-    );
-  }
+  Widget body() => SingleChildScrollView(
+        child: Container(
+            padding: EdgeInsets.only(
+              left: 20.0.w,
+              right: 20.0.w,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBoxWidget(
+                  width: 0.0.w,
+                  height: 20.0.h,
+                ),
+                search(),
+                getDoctorsAppoinmentsList()
+              ],
+            )),
+      );
 
   Widget getDoctorsAppoinmentsList() {
     var appointmentData = Provider.of<AppointmentsListViewModel>(context);
@@ -226,8 +220,7 @@ class _AppointmentsState extends State<Appointments> {
       case LoadingStatus.completed:
         return Consumer<AppointmentsListViewModel>(
           builder: (context, appointmentsViewModel, child) {
-            final AppointmentsModel? appointmentsData =
-                appointmentsViewModel.appointments;
+            final appointmentsData = appointmentsViewModel.appointments;
             if (appointmentsData != null) {
               return ((appointmentsData.result!.past != null &&
                           appointmentsData.result!.past!.length > 0) ||
@@ -259,7 +252,7 @@ class _AppointmentsState extends State<Appointments> {
                           height: 10.0.h,
                         ),
                         ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemBuilder: (BuildContext ctx, int i) {
                             appointmentsData.result!.upcoming!.sort((a, b) =>
@@ -301,7 +294,7 @@ class _AppointmentsState extends State<Appointments> {
                         (appointmentsData.result!.past != null &&
                                 appointmentsData.result!.past!.length > 0)
                             ? ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
+                                physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemBuilder: (BuildContext ctx, int i) {
                                   appointmentsData.result!.past!.sort((b, a) =>
@@ -342,99 +335,67 @@ class _AppointmentsState extends State<Appointments> {
         );
       case LoadingStatus.empty:
         return refreshIndicatorWithEmptyContainer(variable.strNoAppointments);
-        break;
+
       default:
         return refreshIndicatorWithEmptyContainer(variable.strNoAppointments);
     }
   }
 
-  Widget refreshIndicatorWithEmptyContainer(String msg) {
-    return RefreshIndicator(
-        onRefresh: () {
-          return refreshPage();
-        },
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            Container(
-              height: 1.sh / 2,
-              alignment: Alignment.center,
-              child: Center(
-                child: Text(
-                  variable.strNoAppointments,
-                  style: TextStyle(
-                    fontSize: 16.0.sp,
-                  ),
+  Widget refreshIndicatorWithEmptyContainer(String msg) => RefreshIndicator(
+      onRefresh: () => refreshPage(),
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          Container(
+            height: 1.sh / 2,
+            alignment: Alignment.center,
+            child: Center(
+              child: Text(
+                variable.strNoAppointments,
+                style: TextStyle(
+                  fontSize: 16.0.sp,
                 ),
               ),
-            )
-          ],
-        ));
-  }
+            ),
+          )
+        ],
+      ));
 
-  Widget appBar() {
-    return PreferredSize(
-      preferredSize: Size.fromHeight(70),
-      child: AppBar(
-        flexibleSpace: GradientAppBar(),
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-        // leading: Row(
-        //     // mainAxisAlignment: MainAxisAlignment.spaceAround,
-        //     // mainAxisSize: MainAxisSize.max,
-        //     children: [
-        //       SizedBoxWidget(
-        //         height: 0.0.h,
-        //         width: 30.0.w,
-        //       ),
-        //       IconWidget(
-        //         icon: Icons.arrow_back_ios,
-        //         colors: Colors.white,
-        //         size: 11.0.sp,
-        //         onTap: () {
-        //
-        //         },
-        //       ),
-        //     ],
-        //   ),
-        leading: IconWidget(
-          icon: Icons.arrow_back_ios,
-          colors: Colors.white,
-          size: 24.0.sp,
-          onTap: () {
-            Navigator.pop(context);
-            //PageNavigator.goToPermanent(context, router.rt_Dashboard);
-          },
-        ),
-        title: getTitle(),
-      ),
-    );
-  }
-
-  Widget getTitle() {
-    return Row(
-      children: [
-        Expanded(
-          child: TextWidget(
-            text: TranslationConstants.appointments.t(),
+  Widget appBar() => PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: AppBar(
+          flexibleSpace: GradientAppBar(),
+          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          leading: IconWidget(
+            icon: Icons.arrow_back_ios,
             colors: Colors.white,
-            overflow: TextOverflow.visible,
-            fontWeight: FontWeight.w600,
-            fontsize: 18.0.sp,
-            softwrap: true,
+            size: 24.0.sp,
+            onTap: () {
+              Navigator.pop(context);
+            },
           ),
+          title: getTitle(),
         ),
-        CommonUtil().getNotificationIcon(context),
-        if (!widget.isFromQurday)
-          SwitchProfile().buildActions(context, _key, callBackToRefresh, false),
-        // IconWidget(
-        //   icon: Icons.more_vert,
-        //   colors: Colors.white,
-        //   size: 24,
-        //   onTap: () {},
-        // ),
-      ],
-    );
-  }
+      );
+
+  Widget getTitle() => Row(
+        children: [
+          Expanded(
+            child: TextWidget(
+              text: TranslationConstants.appointments.t(),
+              colors: Colors.white,
+              overflow: TextOverflow.visible,
+              fontWeight: FontWeight.w600,
+              fontsize: 18.0.sp,
+              softwrap: true,
+            ),
+          ),
+          CommonUtil().getNotificationIcon(context),
+          if (!widget.isFromQurday)
+            SwitchProfile()
+                .buildActions(context, _key, callBackToRefresh, false),
+        ],
+      );
 
   void callBackToRefresh() {
     FirestoreServices().updateFirestoreListner();

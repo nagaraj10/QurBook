@@ -16,6 +16,7 @@ import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart';
 import '../../constants/variable_constant.dart';
@@ -86,7 +87,7 @@ class _ChatUserListState extends State<ChatUserList> {
   initState() {
     //FUcrash Future<void> initState()async{
     super.initState();
-
+    FABService.trackCurrentScreen(FBAChatScreen);
     qurhomeDashboardController.setActiveQurhomeDashboardToChat(
       status: false,
     );

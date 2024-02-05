@@ -4,6 +4,7 @@ import '../../../../common/CommonConstants.dart';
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/common_circular_indicator.dart';
 import '../../../../common/errors_widget.dart';
+import '../../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/router_variable.dart' as router;
 import '../../../../constants/variable_constant.dart' as variable;
@@ -25,12 +26,11 @@ import 'CommonWidgets.dart';
 import 'healthOrganization/HealthOrganization.dart';
 
 class MyProviders extends StatefulWidget {
+  MyProviders({super.key, this.closePage, this.isRefresh});
   Function(String)? closePage;
   bool? isRefresh;
   @override
   _MyProvidersState createState() => _MyProvidersState();
-
-  MyProviders({this.closePage, this.isRefresh});
 }
 
 class _MyProvidersState extends State<MyProviders> {
@@ -57,6 +57,7 @@ class _MyProvidersState extends State<MyProviders> {
   @override
   void initState() {
     super.initState();
+    FABService.trackCurrentScreen(FBAMyProviderScreen);
     getDataForProvider();
     _providersBloc = ProvidersBloc();
     _medicalPreferenceList = _providersBloc.getMedicalPreferencesForDoctors();
@@ -125,131 +126,6 @@ class _MyProvidersState extends State<MyProviders> {
         ));
   }
 
-  /*Widget collapseListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
-    return Container(
-      padding: EdgeInsets.all(10.0),
-      child: ExpandableButton(
-        child: getDoctorsWidget(i, docs),
-      ),
-    );
-  }
-
-  Widget expandedListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
-    return Container(
-      padding: EdgeInsets.all(10.0),
-      width: 1.sw,
-      child: ExpandableButton(
-        child: Column(
-          children: [
-            getDoctorsWidget(i, docs),
-            commonWidgets.getSizedBox(20.0),
-          ],
-        ),
-      ),
-    );
-  }*/
-
-  /*Widget getDoctorsWidget(int i, List<DoctorIds> docs) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Stack(
-          overflow: Overflow.visible,
-          children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              child: commonWidgets.getClipOvalImageNew(
-                  docs[i].profilePicThumbnailURL, fhbStyles.cardClipImage),
-            ),
-            Positioned(
-              bottom: 0.0,
-              right: 2.0,
-              child: commonWidgets.getDoctorStatusWidget(docs[i], i),
-            )
-          ],
-        ),
-        commonWidgets.getSizeBoxWidth(10.0),
-        Expanded(
-          flex: 4,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: [
-                  Expanded(
-                      child: Row(
-                    children: [
-                      commonWidgets.getTextForDoctors('${docs[i].name}'),
-                      commonWidgets.getSizeBoxWidth(10.0),
-                      commonWidgets.getIcon(
-                          width: fhbStyles.imageWidth,
-                          height: fhbStyles.imageHeight,
-                          icon: Icons.info,
-                          onTap: () {
-                            commonWidgets.showDoctorDetailView(
-                                docs[i], context);
-                          }),
-                    ],
-                  )),
-                  docs[i].isActive
-                      ? commonWidgets.getIcon(
-                          width: fhbStyles.imageWidth,
-                          height: fhbStyles.imageHeight,
-                          icon: Icons.check_circle,
-                          onTap: () {})
-                      : SizedBox(),
-                  commonWidgets.getSizeBoxWidth(15.0),
-                  commonWidgets.getBookMarkedIcon(docs[i], () {}),
-                  commonWidgets.getSizeBoxWidth(10.0),
-                ],
-              ),
-              commonWidgets.getSizedBox(5.0),
-              Row(children: [
-                Expanded(
-                    child: (docs[i].professionalDetails != null &&
-                            docs[i].professionalDetails.length > 0)
-                        ? docs[i].professionalDetails[0].specialty != null
-                            ? docs[i].professionalDetails[0].specialty.name !=
-                                    null
-                                ? commonWidgets.getDoctoSpecialist(
-                                    '${docs[i].professionalDetails[0].specialty.name}')
-                                : SizedBox()
-                            : SizedBox()
-                        : SizedBox()),
-                docs[i].fees != null
-                    ? docs[i].fees.consulting != null
-                        ? (docs[i].fees.consulting != null &&
-                                docs[i].fees.consulting != '')
-                            ? commonWidgets.getDoctoSpecialist(
-                                'INR ${docs[i].fees.consulting.fee}')
-                            : SizedBox()
-                        : SizedBox()
-                    : SizedBox(),
-                commonWidgets.getSizeBoxWidth(10.0),
-              ]),
-              commonWidgets.getSizedBox(5.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                      child:
-                          commonWidgets.getDoctorsAddress('${docs[i].city}')),
-                  docs[i].isMCIVerified
-                      ? commonWidgets.getMCVerified(
-                          docs[i].isMCIVerified, STR_MY_VERIFIED)
-                      : commonWidgets.getMCVerified(
-                          docs[i].isMCIVerified, STR_NOT_VERIFIED),
-                  commonWidgets.getSizeBoxWidth(10.0),
-                ],
-              )
-            ],
-          ),
-        ),
-      ],
-    );
-  }*/
-
   void getDataForProvider() async {
     if (firstTym == false) {
       firstTym = true;
@@ -277,40 +153,32 @@ class _MyProvidersState extends State<MyProviders> {
     setState(() {});
   }
 
-  Widget getFees(DoctorIds doctorId) {
-    return doctorId.fees != null
-        ? commonWidgets.getHospitalDetails(doctorId.fees!.consulting != null
-            ? (CommonUtil.REGION_CODE != "IN"
-                    ? variable.strDollar
-                    : variable.strRs) +
-                ' ' +
-                doctorId.fees!.consulting!.fee!
-            : '')
-        : Text('');
-  }
+  Widget getFees(DoctorIds doctorId) => doctorId.fees != null
+      ? commonWidgets.getHospitalDetails(doctorId.fees!.consulting != null
+          ? '${CommonUtil.REGION_CODE != "IN" ? variable.strDollar : variable.strRs} ${doctorId.fees!.consulting!.fee!}'
+          : '')
+      : const Text('');
 
-  Widget getDoctorProviderListNew() {
-    return FutureBuilder<MyProvidersResponse?>(
-      future: _medicalPreferenceList,
-      builder: (BuildContext context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CommonCircularIndicator();
-        } else if (snapshot.hasError) {
-          return ErrorsWidget();
-        } else {
-          final items = snapshot.data ??
-              <MyProvidersResponseData>[]; // handle the case that data is null
+  Widget getDoctorProviderListNew() => FutureBuilder<MyProvidersResponse?>(
+        future: _medicalPreferenceList,
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CommonCircularIndicator();
+          } else if (snapshot.hasError) {
+            return ErrorsWidget();
+          } else {
+            final items = snapshot.data ??
+                <MyProvidersResponseData>[]; // handle the case that data is null
 
-          return (snapshot.data != null && snapshot.data!.result != null)
-              ? myProviderList(snapshot.data)
-              : Container(
-                  child: Center(
-                  child: Text(variable.strNoDoctordata),
-                ));
-        }
-      },
-    );
-  }
+            return (snapshot.data != null && snapshot.data!.result != null)
+                ? myProviderList(snapshot.data)
+                : Container(
+                    child: const Center(
+                    child: Text(variable.strNoDoctordata),
+                  ));
+          }
+        },
+      );
 
   Widget myProviderList(MyProvidersResponse? myProvidersResponse) {
     copyOfdoctorsModel = null;
@@ -335,185 +203,175 @@ class _MyProvidersState extends State<MyProviders> {
       }
       final ids = copyOfdoctorsModel!.map((e) => e?.user?.id).toSet();
       copyOfdoctorsModel!.retainWhere((x) => ids.remove(x?.user?.id));
-      if (copyOfdoctorsModel != null && copyOfdoctorsModel!.length > 0) {
+      if (copyOfdoctorsModel != null && copyOfdoctorsModel!.isNotEmpty) {
         return ListView.separated(
           itemBuilder: (BuildContext context, index) =>
               providerDoctorItemWidget(
                   index, isSearch ? doctors : copyOfdoctorsModel!),
-          separatorBuilder: (BuildContext context, index) {
-            return Divider(
-              height: 0.0.h,
-              color: Colors.transparent,
-            );
-          },
+          separatorBuilder: (BuildContext context, index) => Divider(
+            height: 0.0.h,
+            color: Colors.transparent,
+          ),
           itemCount: isSearch ? doctors.length : copyOfdoctorsModel!.length,
         );
       } else {
-        return Container(
-          child: Center(
-            child: Text(variable.strNoDoctordata),
-          ),
+        return const Center(
+          child: Text(variable.strNoDoctordata),
         );
       }
     } else {
-      return Container(
-        child: Center(
-          child: Text(variable.strNoDoctordata),
-        ),
+      return const Center(
+        child: Text(variable.strNoDoctordata),
       );
     }
   }
 
-  Widget providerDoctorItemWidget(int i, List<Doctors?> docs) {
-    return InkWell(
-      onTap: () {
-        FocusManager.instance.primaryFocus!.unfocus();
-        navigateToHelathOrganizationList(context, docs, i);
-      },
-      child: Container(
-        padding: EdgeInsets.all(12.0),
-        margin: EdgeInsets.only(left: 15, right: 15, top: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFe3e2e2),
-              blurRadius: 16, // has the effect of softening the shadow
-              spreadRadius: 5.0, // has the effect of extending the shadow
-              offset: Offset(
-                0.0, // horizontal, move right 10
-                0.0, // vertical, move down 10
-              ),
-            )
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Stack(
-              clipBehavior: Clip.none,
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.center,
-                  child: commonWidgets.getClipOvalImageNew(docs[i]),
-                ),
-                Positioned(
-                  bottom: 0.0,
-                  right: 2.0,
-                  child: commonWidgets.getDoctorStatusWidgetNew(docs[i]!, i),
-                )
-              ],
-            ),
-            commonWidgets.getSizeBoxWidth(10.0.w),
-            Expanded(
-              flex: 4,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+  Widget providerDoctorItemWidget(int i, List<Doctors?> docs) => InkWell(
+        onTap: () {
+          FocusManager.instance.primaryFocus!.unfocus();
+          navigateToHelathOrganizationList(context, docs, i);
+        },
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          margin: const EdgeInsets.only(left: 15, right: 15, top: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0xFFe3e2e2),
+                blurRadius: 16, // has the effect of softening the shadow
+                spreadRadius: 5, // has the effect of extending the shadow
+              )
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Stack(
+                clipBehavior: Clip.none,
                 children: <Widget>[
-                  Row(
-                    children: [
-                      Expanded(
-                          child: Row(
-                        children: [
-                          commonWidgets.setDoctorname(docs[i]!.user),
-                          commonWidgets.getSizeBoxWidth(10.0.w),
-                          commonWidgets.getIcon(
-                              width: fhbStyles.imageWidth,
-                              height: fhbStyles.imageHeight,
-                              icon: Icons.info,
-                              onTap: () {
-                                commonWidgets.showDoctorDetailViewNew(
-                                    docs[i], context);
-                              }),
-                        ],
-                      )),
-                      commonWidgets.getSizeBoxWidth(10.0.w),
-                      commonWidgets.getBookMarkedIconNew(docs[i]!, () {
-                        providerViewModel
-                            .bookMarkDoctor(docs[i]!, false, 'ListItem',
-                                docs[i]!.sharedCategories)
-                            .then((status) {
-                          if (status!) {
-                            setState(() {
-                              _medicalPreferenceList = _providersBloc
-                                  .getMedicalPreferencesForDoctors();
-                            });
-                          }
-                        });
-                      }),
-                      commonWidgets.getSizeBoxWidth(15.0.w),
-                      docs[i]!.isTelehealthEnabled!
-                          ? commonWidgets.getIcon(
-                              width: fhbStyles.imageWidth,
-                              height: fhbStyles.imageHeight,
-                              icon: Icons.check_circle,
-                              onTap: () {
-                                //print('on check  pressed');
-                              })
-                          : SizedBox(),
-                      //commonWidgets.getFlagIcon(docs[i], () {})
-                    ],
+                  Container(
+                    alignment: Alignment.center,
+                    child: commonWidgets.getClipOvalImageNew(docs[i]),
                   ),
-                  commonWidgets.getSizedBox(5.0),
-                  Row(children: [
-                    Expanded(
-                        child: (docs[i]!.doctorProfessionalDetailCollection !=
-                                    null &&
-                                docs[i]!
-                                        .doctorProfessionalDetailCollection!
-                                        .length >
-                                    0)
-                            ? docs[i]!
-                                        .doctorProfessionalDetailCollection![0]
-                                        .specialty !=
-                                    null
-                                ? docs[i]!
-                                            .doctorProfessionalDetailCollection![
-                                                0]
-                                            .specialty!
-                                            .name !=
-                                        null
-                                    ? commonWidgets.getDoctoSpecialist(
-                                        '${docs[i]!.doctorProfessionalDetailCollection![0].specialty!.name}')
-                                    : SizedBox()
-                                : SizedBox()
-                            : SizedBox()),
-                    commonWidgets.getSizeBoxWidth(10.0.w),
-                  ]),
-                  commonWidgets.getSizedBox(5.0.w),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                          child: Text(
-                        '' + commonWidgets.getCityDoctorsModel(docs[i]!)!,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: false,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w200,
-                            color: Colors.grey[600],
-                            fontSize: fhbStyles.fnt_city),
-                      )),
-                      docs[i]!.isMciVerified!
-                          ? commonWidgets.getMCVerified(
-                              docs[i]!.isMciVerified!, STR_MY_VERIFIED)
-                          : commonWidgets.getMCVerified(
-                              docs[i]!.isMciVerified!, STR_NOT_VERIFIED),
-                      commonWidgets.getSizeBoxWidth(10.0.w),
-                    ],
+                  Positioned(
+                    bottom: 0,
+                    right: 2,
+                    child: commonWidgets.getDoctorStatusWidgetNew(docs[i]!, i),
                   )
                 ],
               ),
-            ),
-          ],
+              commonWidgets.getSizeBoxWidth(10.0.w),
+              Expanded(
+                flex: 4,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: [
+                        Expanded(
+                            child: Row(
+                          children: [
+                            commonWidgets.setDoctorname(docs[i]!.user),
+                            commonWidgets.getSizeBoxWidth(10.0.w),
+                            commonWidgets.getIcon(
+                                width: fhbStyles.imageWidth,
+                                height: fhbStyles.imageHeight,
+                                icon: Icons.info,
+                                onTap: () {
+                                  commonWidgets.showDoctorDetailViewNew(
+                                      docs[i], context);
+                                }),
+                          ],
+                        )),
+                        commonWidgets.getSizeBoxWidth(10.0.w),
+                        commonWidgets.getBookMarkedIconNew(docs[i]!, () {
+                          providerViewModel
+                              .bookMarkDoctor(docs[i]!, false, 'ListItem',
+                                  docs[i]!.sharedCategories)
+                              .then((status) {
+                            if (status!) {
+                              setState(() {
+                                _medicalPreferenceList = _providersBloc
+                                    .getMedicalPreferencesForDoctors();
+                              });
+                            }
+                          });
+                        }),
+                        commonWidgets.getSizeBoxWidth(15.0.w),
+                        if (docs[i]!.isTelehealthEnabled!)
+                          commonWidgets.getIcon(
+                              width: fhbStyles.imageWidth,
+                              height: fhbStyles.imageHeight,
+                              icon: Icons.check_circle,
+                              onTap: () {})
+                        else
+                          const SizedBox(),
+                      ],
+                    ),
+                    commonWidgets.getSizedBox(5),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: (docs[i]!.doctorProfessionalDetailCollection !=
+                                        null &&
+                                    docs[i]!
+                                            .doctorProfessionalDetailCollection!
+                                            .length >
+                                        0)
+                                ? docs[i]!
+                                            .doctorProfessionalDetailCollection![
+                                                0]
+                                            .specialty !=
+                                        null
+                                    ? docs[i]!
+                                                .doctorProfessionalDetailCollection![
+                                                    0]
+                                                .specialty!
+                                                .name !=
+                                            null
+                                        ? commonWidgets.getDoctoSpecialist(
+                                            '${docs[i]!.doctorProfessionalDetailCollection![0].specialty!.name}')
+                                        : const SizedBox()
+                                    : const SizedBox()
+                                : const SizedBox()),
+                        commonWidgets.getSizeBoxWidth(10.0.w),
+                      ],
+                    ),
+                    commonWidgets.getSizedBox(5.0.w),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                            child: Text(
+                          commonWidgets.getCityDoctorsModel(docs[i]!)!,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w200,
+                              color: Colors.grey[600],
+                              fontSize: fhbStyles.fnt_city),
+                        )),
+                        if (docs[i]!.isMciVerified!)
+                          commonWidgets.getMCVerified(
+                              docs[i]!.isMciVerified!, STR_MY_VERIFIED)
+                        else
+                          commonWidgets.getMCVerified(
+                              docs[i]!.isMciVerified!, STR_NOT_VERIFIED),
+                        commonWidgets.getSizeBoxWidth(10.0.w),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
-  navigateToHelathOrganizationList(
+  void navigateToHelathOrganizationList(
       BuildContext context, List<Doctors?> docs, int i) {
     Navigator.push(
         context,

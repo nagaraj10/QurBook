@@ -242,321 +242,329 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: widget.isFromCreateTicket ? Colors.grey[200] : null,
-      appBar: AppBar(
-          elevation: 0,
-          flexibleSpace: GradientAppBar(),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 24.0.sp,
+  Widget build(BuildContext context) => Scaffold(
+        backgroundColor: widget.isFromCreateTicket ? Colors.grey[200] : null,
+        appBar: AppBar(
+            elevation: 0,
+            flexibleSpace: GradientAppBar(),
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                size: 24.0.sp,
+              ),
+              onPressed: () {
+                Navigator.pop(context, [1]);
+              },
             ),
-            onPressed: () {
-              Navigator.pop(context, [1]);
-            },
-          ),
-          title: Text('${widget.arguments!.searchWord} ' + variable.strSearch)),
-      // Wait until the controller is initialized before displaying the
-      // camera preview. Use a FutureBuilder to display a loading spinner
-      // until the controller has finished initializing.
-      body: Column(
-        children: <Widget>[
-          Container(
-            //margin: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(256, 256, 256, 0),
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: <Color>[
-                    Color(CommonUtil().getMyPrimaryColor()),
-                    Color(CommonUtil().getMyGredientColor())
-                  ],
-                  stops: [
-                    0.3,
-                    1
-                  ]),
-            ),
-            padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-            //margin: EdgeInsets.all(5),
-            child: Container(
-              margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+            title:
+                Text('${widget.arguments!.searchWord} ${variable.strSearch}')),
+        // Wait until the controller is initialized before displaying the
+        // camera preview. Use a FutureBuilder to display a loading spinner
+        // until the controller has finished initializing.
+        body: Column(
+          children: <Widget>[
+            Container(
+              //margin: EdgeInsets.all(5),
               decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
-              child: TextField(
-                textCapitalization: TextCapitalization.sentences,
-                style: TextStyle(
-                  fontSize: 16.0.sp,
-                ),
-                controller: _textFieldController,
-                autofocus: false,
-                onChanged: (editedValue) {
-                  createTicketController.strSearchText.value =
-                      editedValue ?? '';
-                  if (editedValue != '') {
-                    value = editedValue;
-
-                    // Check if the widget is from CreateTicket and searching for doctors
-                    if (widget.isFromCreateTicket &&
-                        widget.arguments!.searchWord ==
-                            CommonConstants.doctors) {
-                      // Create a new DoctorFilterRequestModel with updated values
-                      DoctorFilterRequestModel doctorFilterRequestModel =
-                          DoctorFilterRequestModel(
-                        page: 0,
-                        size: createTicketController.limit,
-                        searchText: CommonUtil().validString(
-                            createTicketController.strSearchText.value),
-                        filters: createTicketController
-                                .doctorFilterRequestModel?.filters ??
-                            [],
-                      );
-
-                      // Set the newly created DoctorFilterRequestModel to the controller
-                      createTicketController.doctorFilterRequestModel =
-                          doctorFilterRequestModel;
-
-                      // Refresh the doctor paging controller
-                      createTicketController.pagingController.refresh();
-                    }
-                    // Check if the widget is from CreateTicket and searching for labs or lab
-                    else if (widget.isFromCreateTicket &&
-                        (widget.arguments!.searchWord == CommonConstants.labs ||
-                            widget.arguments!.searchWord ==
-                                CommonConstants.lab)) {
-                      // Create a new LabListFilterRequestModel with updated values
-                      DoctorFilterRequestModel labListFilterRequestModel =
-                          DoctorFilterRequestModel(
-                        page: 0,
-                        size: createTicketController.limit,
-                        searchText: CommonUtil().validString(
-                            createTicketController.strSearchText.value),
-                        filters: createTicketController
-                                .labListFilterRequestModel?.filters ??
-                            [],
-                        healthOrganizationType:
-                            CommonConstants.keyLab.toUpperCase(),
-                      );
-
-                      // Set the newly created LabListFilterRequestModel to the controller
-                      createTicketController.labListFilterRequestModel =
-                          labListFilterRequestModel;
-
-                      // Refresh the lab paging controller
-                      createTicketController.labListResultPagingController
-                          .refresh();
-                    } else {
-                      widget.arguments!.searchWord == CommonConstants.doctors
-                          ? _doctorsListBlock!
-                              .getDoctorsListNew(value, widget.isSkipUnknown)
-                          : widget.arguments!.searchWord ==
-                                  CommonConstants.hospitals
-                              ? _hospitalListBlock!.getHospitalListNew(value)
-                              : widget.arguments!.searchWord! ==
-                                          CommonConstants.labs ||
-                                      widget.arguments!.searchWord ==
-                                          CommonConstants.lab
-                                  ? _labsListBlock!.getLabsListNew(
-                                      value!, widget.isFromCreateTicket)
-                                  : _labsListBlock!.getCityList(value!);
-                    }
-                    setState(() {});
-                  } else {
-                    // Check if the widget is from CreateTicket and searching for doctors
-                    if (widget.isFromCreateTicket &&
-                        widget.arguments!.searchWord ==
-                            CommonConstants.doctors) {
-                      // Clear search criteria and refresh doctor paging controller
-                      onClear();
-                      createTicketController.pagingController.refresh();
-                    }
-                    // Check if the widget is from CreateTicket and searching for labs or lab
-                    else if (widget.isFromCreateTicket &&
-                        (widget.arguments!.searchWord == CommonConstants.labs ||
-                            widget.arguments!.searchWord ==
-                                CommonConstants.lab)) {
-                      // Clear search criteria and refresh lab paging controller
-                      onClear();
-                      createTicketController.labListResultPagingController
-                          .refresh();
-                    } else {
-                      widget.arguments!.searchWord == CommonConstants.doctors
-                          ? _doctorsListBlock!.getExistingDoctorList('50')
-                          : widget.arguments!.searchWord ==
-                                  CommonConstants.hospitals
-                              ? _hospitalListBlock!.getExistingHospitalListNew(
-                                  Constants.STR_HEALTHORG_HOSPID)
-                              : widget.arguments!.searchWord ==
-                                          CommonConstants.labs ||
-                                      widget.arguments!.searchWord ==
-                                          CommonConstants.lab
-                                  ? _labsListBlock!.getExistingLabsListNew(
-                                      Constants.STR_HEALTHORG_LABID,
-                                      widget.isFromCreateTicket)
-                                  : _labsListBlock!.getCityList('a');
-                    }
-                    setState(() {});
-                  }
-                },
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    color: Colors.black54,
+                color: const Color.fromRGBO(256, 256, 256, 0),
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: <Color>[
+                      Color(CommonUtil().getMyPrimaryColor()),
+                      Color(CommonUtil().getMyGredientColor())
+                    ],
+                    stops: [
+                      0.3,
+                      1
+                    ]),
+              ),
+              padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+              //margin: EdgeInsets.all(5),
+              child: Container(
+                margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30)),
+                child: TextField(
+                  textCapitalization: TextCapitalization.sentences,
+                  style: TextStyle(
+                    fontSize: 16.0.sp,
                   ),
-                  hintText: variable.strSearch,
-                  hintStyle:
-                      TextStyle(color: Colors.black54, fontSize: 16.0.sp),
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-              child: value == ''
-                  ? widget.arguments!.searchWord == CommonConstants.doctors
-                      ? getResponseFromApiWidgetForDoctors()
-                      : widget.arguments!.searchWord ==
-                              CommonConstants.hospitals
-                          ? getResponseFromApiWidgetForHospital()
-                          : widget.arguments!.searchWord ==
-                                      CommonConstants.labs ||
-                                  widget.arguments!.searchWord ==
-                                      CommonConstants.lab
-                              ? getResponseFromApiWidgetForLabs()
-                              : getResponseFromApiWidgetForCity()
-                  : widget.arguments!.searchWord == CommonConstants.doctors
-                      ? getResponseFromApiWidgetForDoctors()
-                      : widget.arguments!.searchWord ==
-                              CommonConstants.hospitals
-                          ? getResponseFromApiWidgetForHospital()
-                          : widget.arguments!.searchWord ==
-                                      CommonConstants.labs ||
-                                  widget.arguments!.searchWord ==
-                                      CommonConstants.lab
-                              ? getResponseFromApiWidgetForLabs()
-                              : getResponseFromApiWidgetForCity()),
-        ],
-      ),
-      bottomNavigationBar: (widget.isFromCreateTicket &&
-              ((widget.arguments!.searchWord == CommonConstants.doctors) ||
-                  (widget.arguments!.searchWord == CommonConstants.labs ||
-                      widget.arguments!.searchWord == CommonConstants.lab)))
-          ? Container(
-              height: 50,
-              padding: const EdgeInsets.all(3.0),
-              decoration: BoxDecoration(
-                border:
-                    Border.all(color: Color(CommonUtil().getMyPrimaryColor())),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () {
-                      //TODO
-                    },
-                    child: Text(
-                      Constants.strSort,
-                      style: TextStyle(
-                        color: Color(CommonUtil().getMyPrimaryColor()),
-                      ),
+                  controller: _textFieldController,
+                  autofocus: false,
+                  onChanged: (editedValue) {
+                    createTicketController.strSearchText.value =
+                        editedValue ?? '';
+                    if (editedValue != '') {
+                      value = editedValue;
+
+                      // Check if the widget is from CreateTicket and searching for doctors
+                      if (widget.isFromCreateTicket &&
+                          widget.arguments!.searchWord ==
+                              CommonConstants.doctors) {
+                        // Create a new DoctorFilterRequestModel with updated values
+                        DoctorFilterRequestModel doctorFilterRequestModel =
+                            DoctorFilterRequestModel(
+                          page: 0,
+                          size: createTicketController.limit,
+                          searchText: CommonUtil().validString(
+                              createTicketController.strSearchText.value),
+                          filters: createTicketController
+                                  .doctorFilterRequestModel?.filters ??
+                              [],
+                        );
+
+                        // Set the newly created DoctorFilterRequestModel to the controller
+                        createTicketController.doctorFilterRequestModel =
+                            doctorFilterRequestModel;
+
+                        // Refresh the doctor paging controller
+                        createTicketController.pagingController.refresh();
+                      }
+                      // Check if the widget is from CreateTicket and searching for labs or lab
+                      else if (widget.isFromCreateTicket &&
+                          (widget.arguments!.searchWord ==
+                                  CommonConstants.labs ||
+                              widget.arguments!.searchWord ==
+                                  CommonConstants.lab)) {
+                        // Create a new LabListFilterRequestModel with updated values
+                        DoctorFilterRequestModel labListFilterRequestModel =
+                            DoctorFilterRequestModel(
+                          page: 0,
+                          size: createTicketController.limit,
+                          searchText: CommonUtil().validString(
+                              createTicketController.strSearchText.value),
+                          filters: createTicketController
+                                  .labListFilterRequestModel?.filters ??
+                              [],
+                          healthOrganizationType:
+                              CommonConstants.keyLab.toUpperCase(),
+                        );
+
+                        // Set the newly created LabListFilterRequestModel to the controller
+                        createTicketController.labListFilterRequestModel =
+                            labListFilterRequestModel;
+
+                        // Refresh the lab paging controller
+                        createTicketController.labListResultPagingController
+                            .refresh();
+                      } else {
+                        widget.arguments!.searchWord == CommonConstants.doctors
+                            ? _doctorsListBlock!
+                                .getDoctorsListNew(value, widget.isSkipUnknown)
+                            : widget.arguments!.searchWord ==
+                                    CommonConstants.hospitals
+                                ? _hospitalListBlock!.getHospitalListNew(value)
+                                : widget.arguments!.searchWord! ==
+                                            CommonConstants.labs ||
+                                        widget.arguments!.searchWord ==
+                                            CommonConstants.lab
+                                    ? _labsListBlock!.getLabsListNew(
+                                        value!, widget.isFromCreateTicket)
+                                    : _labsListBlock!.getCityList(value!);
+                      }
+                      setState(() {});
+                    } else {
+                      // Check if the widget is from CreateTicket and searching for doctors
+                      if (widget.isFromCreateTicket &&
+                          widget.arguments!.searchWord ==
+                              CommonConstants.doctors) {
+                        // Clear search criteria and refresh doctor paging controller
+                        onClear();
+                        createTicketController.pagingController.refresh();
+                      }
+                      // Check if the widget is from CreateTicket and searching for labs or lab
+                      else if (widget.isFromCreateTicket &&
+                          (widget.arguments!.searchWord ==
+                                  CommonConstants.labs ||
+                              widget.arguments!.searchWord ==
+                                  CommonConstants.lab)) {
+                        // Clear search criteria and refresh lab paging controller
+                        onClear();
+                        createTicketController.labListResultPagingController
+                            .refresh();
+                      } else {
+                        widget.arguments!.searchWord == CommonConstants.doctors
+                            ? _doctorsListBlock!.getExistingDoctorList('50')
+                            : widget.arguments!.searchWord ==
+                                    CommonConstants.hospitals
+                                ? _hospitalListBlock!
+                                    .getExistingHospitalListNew(
+                                        Constants.STR_HEALTHORG_HOSPID)
+                                : widget.arguments!.searchWord ==
+                                            CommonConstants.labs ||
+                                        widget.arguments!.searchWord ==
+                                            CommonConstants.lab
+                                    ? _labsListBlock!.getExistingLabsListNew(
+                                        Constants.STR_HEALTHORG_LABID,
+                                        widget.isFromCreateTicket)
+                                    : _labsListBlock!.getCityList('a');
+                      }
+                      setState(() {});
+                    }
+                  },
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: Colors.black54,
                     ),
+                    hintText: variable.strSearch,
+                    hintStyle:
+                        TextStyle(color: Colors.black54, fontSize: 16.0.sp),
+                    border: InputBorder.none,
                   ),
-                  // Spacer(),
-                  Container(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
-                    width: 1,
-                  ),
-                  Center(
-                    child: GestureDetector(
+                ),
+              ),
+            ),
+            Expanded(
+                child: value == ''
+                    ? widget.arguments!.searchWord == CommonConstants.doctors
+                        ? getResponseFromApiWidgetForDoctors()
+                        : widget.arguments!.searchWord ==
+                                CommonConstants.hospitals
+                            ? getResponseFromApiWidgetForHospital()
+                            : widget.arguments!.searchWord ==
+                                        CommonConstants.labs ||
+                                    widget.arguments!.searchWord ==
+                                        CommonConstants.lab
+                                ? getResponseFromApiWidgetForLabs()
+                                : getResponseFromApiWidgetForCity()
+                    : widget.arguments!.searchWord == CommonConstants.doctors
+                        ? getResponseFromApiWidgetForDoctors()
+                        : widget.arguments!.searchWord ==
+                                CommonConstants.hospitals
+                            ? getResponseFromApiWidgetForHospital()
+                            : widget.arguments!.searchWord ==
+                                        CommonConstants.labs ||
+                                    widget.arguments!.searchWord ==
+                                        CommonConstants.lab
+                                ? getResponseFromApiWidgetForLabs()
+                                : getResponseFromApiWidgetForCity()),
+          ],
+        ),
+        bottomNavigationBar: (widget.isFromCreateTicket &&
+                ((widget.arguments!.searchWord == CommonConstants.doctors) ||
+                    (widget.arguments!.searchWord == CommonConstants.labs ||
+                        widget.arguments!.searchWord == CommonConstants.lab)))
+            ? Container(
+                height: 50,
+                padding: const EdgeInsets.all(3.0),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Color(CommonUtil().getMyPrimaryColor())),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () {
-                        Get.to(DoctorsFilterScreen(
-                          selectedItems: selectedItems,
-                          filterMenuCount:
-                              count != 0 ? count : filterMenuCount.length,
-                          filterApplied: (
-                            Map<String, List<String>> item,
-                            List<DoctorsListResult> list,
-                            FilteredSelectedModel items,
-                            int filterCount,
-                            DoctorFilterRequestModel doctorFilterRequestModel,
-                          ) {
-                            doctorFilterList = list;
-                            selectedItems = items;
-                            filterMenuCount = item;
-                            count = filterCount;
-                            if (createTicketController.searchWord.value ==
-                                CommonConstants.doctors) {
-                              createTicketController.doctorFilterRequestModel =
-                                  doctorFilterRequestModel;
-                              createTicketController.pagingController.refresh();
-                            } else if (createTicketController
-                                        .searchWord.value ==
-                                    CommonConstants.labs ||
-                                createTicketController.searchWord.value ==
-                                    CommonConstants.lab) {
-                              createTicketController.labListFilterRequestModel =
-                                  doctorFilterRequestModel;
-                              createTicketController
-                                  .labListResultPagingController
-                                  .refresh();
-                            }
-                          },
-                          filterSelectedItems: filterMenuCount,
-                          doctorFilterRequestModel: createTicketController
-                                      .searchWord.value ==
-                                  CommonConstants.doctors
-                              ? createTicketController.doctorFilterRequestModel
-                              : createTicketController
-                                  .labListFilterRequestModel,
-                        ))?.then((value) {
-                          setState(() {});
-                        });
+                        //TODO
                       },
-                      child: Row(
-                        children: [
-                          Text(
-                            Constants.strFilter,
-                            style: TextStyle(
-                              color: Color(CommonUtil().getMyPrimaryColor()),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Visibility(
-                            visible: count != 0,
-                            child: Container(
-                              width: 28,
-                              height: 28,
-                              decoration: BoxDecoration(
+                      child: Text(
+                        Constants.strSort,
+                        style: TextStyle(
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                        ),
+                      ),
+                    ),
+                    // Spacer(),
+                    Container(
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      width: 1,
+                    ),
+                    Center(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          Get.to(DoctorsFilterScreen(
+                            selectedItems: selectedItems,
+                            filterMenuCount:
+                                count != 0 ? count : filterMenuCount.length,
+                            filterApplied: (
+                              Map<String, List<String>> item,
+                              List<DoctorsListResult> list,
+                              FilteredSelectedModel items,
+                              int filterCount,
+                              DoctorFilterRequestModel doctorFilterRequestModel,
+                            ) {
+                              doctorFilterList = list;
+                              selectedItems = items;
+                              filterMenuCount = item;
+                              count = filterCount;
+                              if (createTicketController.searchWord.value ==
+                                  CommonConstants.doctors) {
+                                createTicketController
+                                        .doctorFilterRequestModel =
+                                    doctorFilterRequestModel;
+                                createTicketController.pagingController
+                                    .refresh();
+                              } else if (createTicketController
+                                          .searchWord.value ==
+                                      CommonConstants.labs ||
+                                  createTicketController.searchWord.value ==
+                                      CommonConstants.lab) {
+                                createTicketController
+                                        .labListFilterRequestModel =
+                                    doctorFilterRequestModel;
+                                createTicketController
+                                    .labListResultPagingController
+                                    .refresh();
+                              }
+                            },
+                            filterSelectedItems: filterMenuCount,
+                            doctorFilterRequestModel:
+                                createTicketController.searchWord.value ==
+                                        CommonConstants.doctors
+                                    ? createTicketController
+                                        .doctorFilterRequestModel
+                                    : createTicketController
+                                        .labListFilterRequestModel,
+                          ))?.then((value) {
+                            setState(() {});
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              Constants.strFilter,
+                              style: TextStyle(
                                 color: Color(CommonUtil().getMyPrimaryColor()),
-                                // border color
-                                shape: BoxShape.circle,
                               ),
-                              child: Center(
-                                child: Text(
-                                  count.toString(),
-                                  style: const TextStyle(color: Colors.white),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Visibility(
+                              visible: count != 0,
+                              child: Container(
+                                width: 28,
+                                height: 28,
+                                decoration: BoxDecoration(
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor()),
+                                  // border color
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    count.toString(),
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            )
-          : const SizedBox.shrink(),
-    );
-  }
+                  ],
+                ),
+              )
+            : const SizedBox.shrink(),
+      );
 
   // Function to get the widget based on the API response for labs
   Widget getResponseFromApiWidgetForLabs() {
@@ -581,15 +589,13 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   child: CommonCircularIndicator(),
                 ),
               );
-              break;
 
             case Status.ERROR:
               rebuildBlockObject();
               return Text(
-                variable.strNoDataAvailable + ' ' + CommonConstants.labs,
+                '${variable.strNoDataAvailable} ${CommonConstants.labs}',
                 style: const TextStyle(color: Colors.red),
               );
-              break;
 
             case Status.COMPLETED:
               rebuildBlockObject();
@@ -618,8 +624,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                   snapshot.data!.data!.result),
                             );
 
-              break;
-
             default:
               break;
           }
@@ -630,25 +634,23 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
 // Function to get the widget for lab service request
-  Widget getWidgetForLabServiceRequest() {
-    return Column(
-      children: [
-        Expanded(
-          child: PagedListView(
-            pagingController:
-                createTicketController.labListResultPagingController,
-            builderDelegate: PagedChildBuilderDelegate<LabListResult>(
-              itemBuilder: (context, item, index) =>
-                  labListView(labListResultData: item),
-              noItemsFoundIndicatorBuilder: (_) => emptyView(),
-              newPageErrorIndicatorBuilder: (_) => emptyView(),
-              firstPageErrorIndicatorBuilder: (_) => emptyView(),
+  Widget getWidgetForLabServiceRequest() => Column(
+        children: [
+          Expanded(
+            child: PagedListView(
+              pagingController:
+                  createTicketController.labListResultPagingController,
+              builderDelegate: PagedChildBuilderDelegate<LabListResult>(
+                itemBuilder: (context, item, index) =>
+                    labListView(labListResultData: item),
+                noItemsFoundIndicatorBuilder: (_) => emptyView(),
+                newPageErrorIndicatorBuilder: (_) => emptyView(),
+                firstPageErrorIndicatorBuilder: (_) => emptyView(),
+              ),
             ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
 
 // Function to display the first two letters of a name
   Widget getFirstTwoLettersText(String strName) {
@@ -762,7 +764,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                               ),
                             ),
                           )
-                        : Icon(
+                        : const Icon(
                             Icons.account_circle,
                             size: 50.0,
                             color: Colors.grey,
@@ -829,7 +831,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                   ),
                                 ],
                               )
-                            : SizedBox.shrink(),
+                            : const SizedBox.shrink(),
                       ],
                     ),
                   ),
@@ -840,7 +842,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         ),
       );
     } else {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
   }
 
@@ -865,22 +867,20 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   height: 30.0.h,
                 ),
               );
-              break;
 
             case Status.ERROR:
               rebuildBlockObject();
               return Text(
-                variable.strNoDataAvailable + ' ' + CommonConstants.doctors,
-                style: TextStyle(color: Colors.red),
+                '${variable.strNoDataAvailable} ${CommonConstants.doctors}',
+                style: const TextStyle(color: Colors.red),
               );
-              break;
 
             case Status.COMPLETED:
               rebuildBlockObject();
               return (snapshot.data!.data!.isSuccess == false &&
                       widget.isSkipUnknown == true)
                   ? Container(
-                      margin: EdgeInsets.all(5),
+                      margin: const EdgeInsets.all(5),
                       child:
                           getAllDatasInDoctorsListScrap(snapshot.data!.data!),
                     )
@@ -888,16 +888,15 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       ? getEmptyCard(snapshot.data!.data!.diagnostics)
                       : snapshot.data!.data!.result!.isEmpty
                           ? Container(
-                              child: Center(
+                              child: const Center(
                                 child: Text(variable.strNodata),
                               ),
                             )
                           : Container(
-                              margin: EdgeInsets.all(5),
+                              margin: const EdgeInsets.all(5),
                               child: getAllDatasInDoctorsList(
                                   snapshot.data!.data!.result),
                             );
-              break;
           }
         },
       );
@@ -905,24 +904,22 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
 // Function to get the widget for doctor service request
-  Widget getWidgetForDoctorServiceRequest() {
-    return Column(
-      children: [
-        Expanded(
-          child: PagedListView(
-            pagingController: createTicketController.pagingController,
-            builderDelegate: PagedChildBuilderDelegate<DoctorsListResult>(
-              itemBuilder: (context, item, index) =>
-                  doctorsListView(doctorsListResultData: item),
-              noItemsFoundIndicatorBuilder: (_) => emptyView(),
-              newPageErrorIndicatorBuilder: (_) => emptyView(),
-              firstPageErrorIndicatorBuilder: (_) => emptyView(),
+  Widget getWidgetForDoctorServiceRequest() => Column(
+        children: [
+          Expanded(
+            child: PagedListView(
+              pagingController: createTicketController.pagingController,
+              builderDelegate: PagedChildBuilderDelegate<DoctorsListResult>(
+                itemBuilder: (context, item, index) =>
+                    doctorsListView(doctorsListResultData: item),
+                noItemsFoundIndicatorBuilder: (_) => emptyView(),
+                newPageErrorIndicatorBuilder: (_) => emptyView(),
+                firstPageErrorIndicatorBuilder: (_) => emptyView(),
+              ),
             ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
 
 // Function to create the list view for doctors
   Widget doctorsListView({DoctorsListResult? doctorsListResultData}) {
@@ -1031,7 +1028,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                     ),
                                   ),
                                 )
-                              : Icon(
+                              : const Icon(
                                   Icons.account_circle,
                                   size: 50.0,
                                   color: Colors.grey,
@@ -1161,50 +1158,47 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         ),
       );
     } else {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
   }
 
 // Function to get the tags widget
-  Widget getTagsWidget(List<String> tags) {
-    return ((tags?.length ?? 0) > 0)
-        ? ListView.builder(
-            physics: BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            itemCount: tags.length,
-            itemBuilder: (BuildContext context, int i) {
-              return Container(
-                margin: EdgeInsets.only(left: 5),
-                padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 5.0),
-                color: Colors.blue,
-                child: Center(
-                  child: Text(
-                    tags[i],
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
+  Widget getTagsWidget(List<String> tags) => ((tags?.length ?? 0) > 0)
+      ? ListView.builder(
+          physics: const BouncingScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          shrinkWrap: true,
+          itemCount: tags.length,
+          itemBuilder: (BuildContext context, int i) {
+            return Container(
+              margin: const EdgeInsets.only(left: 5),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 2.0, horizontal: 5.0),
+              color: Colors.blue,
+              child: Center(
+                child: Text(
+                  tags[i],
+                  style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
-              );
-            },
-          )
-        : SizedBox.shrink();
-  }
+              ),
+            );
+          },
+        )
+      : const SizedBox.shrink();
 
 // Function to create an empty view
-  Widget emptyView() {
-    return Container(
-      height: 1.sh,
-      alignment: Alignment.center,
-      child: Center(
-        child: Text(
-          variable.strNodata,
+  Widget emptyView() => Container(
+        height: 1.sh,
+        alignment: Alignment.center,
+        child: const Center(
+          child: Text(
+            variable.strNodata,
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget getResponseFromApiWidgetForHospital() =>
       StreamBuilder<ApiResponse<HospitalsSearchListResponse>>(
@@ -1227,7 +1221,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             case Status.ERROR:
               rebuildBlockObject();
               return Text(
-                  variable.strNoDataAvailable + ' ' + CommonConstants.hospitals,
+                  '${variable.strNoDataAvailable} ${CommonConstants.hospitals}',
                   style: const TextStyle(color: Colors.red));
               break;
 
@@ -1365,83 +1359,75 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         child: loginButtonWithGesture);
   }
 
-  Widget getAllDatasInDoctorsList(List<DoctorsListResult>? data) {
-    return RefreshIndicator(
-      key: _refreshIndicatorKey,
-      onRefresh: _refresh,
-      child: data != null
-          ? Container(
-              color: Color(fhbColors.bgColorContainer),
-              child: ListView.builder(
-                itemBuilder: (c, i) => Container(
-                  padding: EdgeInsets.only(top: 2, bottom: 2),
-                  child: getCardToDisplaySearchList(
-                      (data[i].name != null && data[i].name != '')
-                          ? data[i].name!.capitalizeFirstofEach
-                          : data[i].firstName!.capitalizeFirstofEach +
-                              ' ' +
-                              data[i].lastName!.capitalizeFirstofEach,
-                      getDoctorsAddress(data[i]),
-                      data[i].doctorId,
-                      data[i].profilePicThumbnailUrl,
-                      data[i],
-                      HospitalsListResult(),
-                      LabListResult()),
-                ),
-                itemCount: data.length,
-              ))
-          : Container(
-              color: Color(fhbColors.bgColorContainer),
-              child: Center(
-                child: Text(variable.strNodata),
-              ),
-            ),
-    );
-  }
-
-  Widget getAllDatasInDoctorsListScrap(DoctorsSearchListResponse data) {
-    return RefreshIndicator(
-      key: _refreshIndicatorKey,
-      onRefresh: _refresh,
-      child: (data.isSuccess == false &&
-              widget.isSkipUnknown == true &&
-              data.diagnostics?.errorData != null)
-          ? Container(
-              color: Color(fhbColors.bgColorContainer),
-              child: getEmptyCard(data.diagnostics),
-            )
-          : data.result != null
-              ? Container(
-                  color: Color(fhbColors.bgColorContainer),
-                  child: ListView.builder(
-                    itemBuilder: (c, i) => Container(
-                      padding: EdgeInsets.only(top: 2, bottom: 2),
-                      child: getCardToDisplaySearchList(
-                          (data.result![i].name != null &&
-                                  data.result![i].name != '')
-                              ? data.result![i].name!.capitalizeFirstofEach
-                              : data.result![i].firstName!
-                                      .capitalizeFirstofEach +
-                                  ' ' +
-                                  data.result![i].lastName!
-                                      .capitalizeFirstofEach,
-                          getDoctorsAddress(data.result![i]),
-                          data.result![i].doctorId,
-                          data.result![i].profilePicThumbnailUrl,
-                          data.result![i],
-                          HospitalsListResult(),
-                          LabListResult()),
-                    ),
-                    itemCount: data.result!.length,
-                  ))
-              : Container(
-                  color: Color(fhbColors.bgColorContainer),
-                  child: Center(
-                    child: Text(variable.strNodata),
+  Widget getAllDatasInDoctorsList(List<DoctorsListResult>? data) =>
+      RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: _refresh,
+        child: data != null
+            ? Container(
+                color: const Color(fhbColors.bgColorContainer),
+                child: ListView.builder(
+                  itemBuilder: (c, i) => Container(
+                    padding: const EdgeInsets.only(top: 2, bottom: 2),
+                    child: getCardToDisplaySearchList(
+                        (data[i].name != null && data[i].name != '')
+                            ? data[i].name!.capitalizeFirstofEach
+                            : '${data[i].firstName!.capitalizeFirstofEach} ${data[i].lastName!.capitalizeFirstofEach}',
+                        getDoctorsAddress(data[i]),
+                        data[i].doctorId,
+                        data[i].profilePicThumbnailUrl,
+                        data[i],
+                        HospitalsListResult(),
+                        LabListResult()),
                   ),
+                  itemCount: data.length,
+                ))
+            : Container(
+                color: const Color(fhbColors.bgColorContainer),
+                child: const Center(
+                  child: Text(variable.strNodata),
                 ),
-    );
-  }
+              ),
+      );
+
+  Widget getAllDatasInDoctorsListScrap(DoctorsSearchListResponse data) =>
+      RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: _refresh,
+        child: (data.isSuccess == false &&
+                widget.isSkipUnknown == true &&
+                data.diagnostics?.errorData != null)
+            ? Container(
+                color: const Color(fhbColors.bgColorContainer),
+                child: getEmptyCard(data.diagnostics),
+              )
+            : data.result != null
+                ? Container(
+                    color: const Color(fhbColors.bgColorContainer),
+                    child: ListView.builder(
+                      itemBuilder: (c, i) => Container(
+                        padding: const EdgeInsets.only(top: 2, bottom: 2),
+                        child: getCardToDisplaySearchList(
+                            (data.result![i].name != null &&
+                                    data.result![i].name != '')
+                                ? data.result![i].name!.capitalizeFirstofEach
+                                : '${data.result![i].firstName!.capitalizeFirstofEach} ${data.result![i].lastName!.capitalizeFirstofEach}',
+                            getDoctorsAddress(data.result![i]),
+                            data.result![i].doctorId,
+                            data.result![i].profilePicThumbnailUrl,
+                            data.result![i],
+                            HospitalsListResult(),
+                            LabListResult()),
+                      ),
+                      itemCount: data.result!.length,
+                    ))
+                : Container(
+                    color: const Color(fhbColors.bgColorContainer),
+                    child: const Center(
+                      child: Text(variable.strNodata),
+                    ),
+                  ),
+      );
 
   getAllDatasInHospitalList(List<HospitalsListResult>? data) =>
       RefreshIndicator(
@@ -1589,73 +1575,72 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget getCardToDisplaySearchList(
-      String? name,
-      String? address,
-      String? id,
-      String? logo,
-      DoctorsListResult data,
-      HospitalsListResult hospitalData,
-      LabListResult labData,
-      {String? cityAndState}) {
-    return GestureDetector(
-        child: Padding(
-            padding: EdgeInsets.only(bottom: 4, left: 10, right: 10),
-            child: Container(
-                padding: EdgeInsets.only(bottom: 2),
-                margin: EdgeInsets.all(0),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: Row(children: <Widget>[
-                  SizedBox(
-                    width: 10.0.w,
-                  ),
-                  ClipOval(
-                      child: Container(
-                    height: 50.0.h,
-                    width: 50.0.h,
-                    color: Color(fhbColors.bgColorContainer),
-                    child:
-                        widget.arguments!.searchWord == CommonConstants.doctors
-                            ? getHospitalLogoImage(logo, data)
-                            : getHospitalLogoImage(logo, data),
-                  )),
-                  SizedBox(width: 10.0.w),
-                  Expanded(
-                      flex: 5,
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: getDataToView(
-                          widget.arguments!.searchWord ==
-                                  CommonConstants.doctors
-                              ? name
-                              : widget.arguments!.searchWord ==
-                                      CommonConstants.hospitals
-                                  ? name
-                                  : labData.healthOrganizationName,
-                          address,
-                          id,
-                          data,
-                          specialization: widget.arguments!.searchWord ==
-                                  CommonConstants.hospitals
-                              ? hospitalData.specialization
-                              : null,
-                        ),
-                      ))
-                ]))),
-        onTap: () {
-          if (widget.toPreviousScreen!) {
-            widget.arguments!.searchWord == CommonConstants.doctors
-                ? passDoctorsValue(data, context)
-                : widget.arguments!.searchWord == CommonConstants.hospitals
-                    ? passHospitalValue(hospitalData, context)
-                    : passLaboratoryValue(labData, context);
-          } else {
-            passdataToNextScreen(
-                data.name, context, data, hospitalData, labData);
-          }
-        });
-  }
+          String? name,
+          String? address,
+          String? id,
+          String? logo,
+          DoctorsListResult data,
+          HospitalsListResult hospitalData,
+          LabListResult labData,
+          {String? cityAndState}) =>
+      GestureDetector(
+          child: Padding(
+              padding: const EdgeInsets.only(bottom: 4, left: 10, right: 10),
+              child: Container(
+                  padding: const EdgeInsets.only(bottom: 2),
+                  margin: const EdgeInsets.all(0),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Row(children: <Widget>[
+                    SizedBox(
+                      width: 10.0.w,
+                    ),
+                    ClipOval(
+                        child: Container(
+                      height: 50.0.h,
+                      width: 50.0.h,
+                      color: const Color(fhbColors.bgColorContainer),
+                      child: widget.arguments!.searchWord ==
+                              CommonConstants.doctors
+                          ? getHospitalLogoImage(logo, data)
+                          : getHospitalLogoImage(logo, data),
+                    )),
+                    SizedBox(width: 10.0.w),
+                    Expanded(
+                        flex: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: getDataToView(
+                            widget.arguments!.searchWord ==
+                                    CommonConstants.doctors
+                                ? name
+                                : widget.arguments!.searchWord ==
+                                        CommonConstants.hospitals
+                                    ? name
+                                    : labData.healthOrganizationName,
+                            address,
+                            id,
+                            data,
+                            specialization: widget.arguments!.searchWord ==
+                                    CommonConstants.hospitals
+                                ? hospitalData.specialization
+                                : null,
+                          ),
+                        ))
+                  ]))),
+          onTap: () {
+            if (widget.toPreviousScreen!) {
+              widget.arguments!.searchWord == CommonConstants.doctors
+                  ? passDoctorsValue(data, context)
+                  : widget.arguments!.searchWord == CommonConstants.hospitals
+                      ? passHospitalValue(hospitalData, context)
+                      : passLaboratoryValue(labData, context);
+            } else {
+              passdataToNextScreen(
+                  data.name, context, data, hospitalData, labData);
+            }
+          });
 
   getCorrespondingImageWidget(String id) => const Icon(Icons.verified_user);
 
@@ -1937,13 +1922,13 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       address = toBeginningOfSentenceCase(data.addressLine1);
     }
     if (data.addressLine2 != '' && data.addressLine2 != null) {
-      address = address! + ',' + toBeginningOfSentenceCase(data.addressLine2)!;
+      address = '${address!},${toBeginningOfSentenceCase(data.addressLine2)!}';
     }
     if (data.city != '' && data.city != null) {
-      address = address! + '\n' + toBeginningOfSentenceCase(data.city)!;
+      address = '${address!}\n${toBeginningOfSentenceCase(data.city)!}';
     }
     if (data.state != '' && data.state != null) {
-      address = address! + ',' + toBeginningOfSentenceCase(data.state)!;
+      address = '${address!},${toBeginningOfSentenceCase(data.state)!}';
     }
     return address;
   }
@@ -1955,7 +1940,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       city = toBeginningOfSentenceCase(data.cityName);
     }
     if (data.stateName != '' && data.stateName != null) {
-      city = city! + ',' + toBeginningOfSentenceCase(data.stateName)!;
+      city = '${city!},${toBeginningOfSentenceCase(data.stateName)!}';
     }
     return city;
   }
@@ -2384,10 +2369,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             ? null
             : mobileNoController.text;
       } else {
-        final phoneNumber = '+' +
-            _selectedDialogCountry.phoneCode.toString() +
-            '' +
-            mobileNoController.text;
+        final phoneNumber =
+            '+${_selectedDialogCountry.phoneCode}${mobileNoController.text}';
         addDoctorData['phoneNumber'] = phoneNumber;
       }
       addDoctorData['hospitalName'] = hospitalNameController.text.trim() == ''
@@ -2490,7 +2473,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  ' Add ' + widget.arguments!.searchWord!,
+                  ' Add ${widget.arguments!.searchWord!}',
                   style: TextStyle(
                       fontSize: 18.0.sp,
                       fontWeight: FontWeight.w500,
@@ -2982,7 +2965,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             case Status.ERROR:
               rebuildBlockObject();
               return Text(
-                  variable.strNoDataAvailable + ' ' + CommonConstants.keyCity,
+                  '${variable.strNoDataAvailable} ${CommonConstants.keyCity}',
                   style: const TextStyle(color: Colors.red));
               break;
 

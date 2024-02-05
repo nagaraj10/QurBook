@@ -8,6 +8,7 @@ import '../../../../colors/fhb_colors.dart' as fhbColors;
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/FHBBasicWidget.dart';
 import '../../../../common/PreferenceUtil.dart';
+import '../../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../../../constants/fhb_constants.dart' as Constants;
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/router_variable.dart';
@@ -40,14 +41,14 @@ class _SuperMayaState extends State<SuperMaya> {
   void initState() {
     super.initState();
     PreferenceUtil.init();
-
+    FABService.trackCurrentScreen(FBAQurbookSheelaScreen);
     var isFirstTime = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_MAYA);
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(
-          Duration(milliseconds: 200),
+          const Duration(milliseconds: 200),
           () => isFirstTime
               ? null
-              : ShowCaseWidget.of(_myContext)!.startShowCase([_micKey]));
+              : ShowCaseWidget.of(_myContext).startShowCase([_micKey]));
     });
   }
 
@@ -75,7 +76,7 @@ class _SuperMayaState extends State<SuperMaya> {
                 appBar: widget.isHome
                     ? null
                     : PreferredSize(
-                        preferredSize: Size.fromHeight(60),
+                        preferredSize: const Size.fromHeight(60),
                         child: AppBar(
                           flexibleSpace: GradientAppBar(),
                           backgroundColor: Colors.transparent,
@@ -88,7 +89,7 @@ class _SuperMayaState extends State<SuperMaya> {
                             },
                           ),
                           elevation: 0,
-                          title: Text(strSheelaG),
+                          title: const Text(strSheelaG),
                           actions: [
                             Center(
                                 child:
@@ -117,11 +118,11 @@ class _SuperMayaState extends State<SuperMaya> {
                         //color: Colors.deepPurple,
                       ),
                       //Icon(Icons.people),
-                      Text(
+                      const Text(
                         variable.strIntromaya,
                         softWrap: true,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       SizedBox(
