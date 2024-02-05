@@ -130,7 +130,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
           variable.strBenefitMedicineOrdering,
           variable.strBenefitTransportation,
           variable.strBenefitCareDietPlans,
-          variable.strBenefitFamilyMembers,
+          variable.strBenefitHomecareServices,
         ].contains(element.fieldName),
       );
       return GetMembershipDataWidget(
