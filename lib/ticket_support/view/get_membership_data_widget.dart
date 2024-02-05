@@ -280,7 +280,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
   ///    then fetch from API or set default icon
   Widget getIcon(MemberShipAdditionalInfoBenefitType? type) {
     final iconsUrl = widget.iconsUrls?[getIconsTitle(type)];
-    if (type?.fieldName == strBenefitFamilyMembers) {
+    if (type?.fieldName == strBenefitHomecareServices) {
       return SvgPicture.asset(
         'assets/icons/Family-member-01.svg',
         height: 40,
@@ -321,7 +321,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
       case strBenefitTransportation:
         amount = widget.memberShipResult?.tranportation ?? 0;
         break;
-      case strBenefitFamilyMembers:
+      case strBenefitHomecareServices:
         amount = widget.memberShipResult?.homecareServices ?? 0;
         break;
       case strBenefitMedicineOrdering:
@@ -334,7 +334,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
     }
 
     return Text(
-      type?.code == 'BY_COST' ? '$_currentCurrency $amount /-' : '$amount',
+      type?.code == 'BY_COST' ? '$_currentCurrency$amount /-' : '$amount',
       overflow: TextOverflow.visible,
       style: _amountTextStyle,
     );
@@ -360,7 +360,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
       case strBenefitCareDietPlans:
         _title = strBenefitHealthPlan;
         break;
-      case strBenefitFamilyMembers:
+      case strBenefitHomecareServices:
         _title = strBenefitHomecareService;
         break;
       default:
@@ -388,7 +388,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
       case strBenefitCareDietPlans:
         _title = strBenefitHealthPlans;
         break;
-      case strBenefitFamilyMembers:
+      case strBenefitHomecareServices:
         _title = strBenefitHomecareServices;
         break;
       default:
