@@ -13,6 +13,7 @@ import '../../../common/OverLayCategoryDialog.dart';
 import '../../../common/OverlayDeviceDialog.dart';
 import '../../../common/PreferenceUtil.dart';
 import '../../../common/common_circular_indicator.dart';
+import '../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
 import '../../../constants/router_variable.dart' as router;
 import '../../../constants/variable_constant.dart' as variable;
@@ -70,6 +71,7 @@ class TakePictureScreenForDevicesState
     super.initState();
     // To display the current output from the Camera,
     // create a CameraController.
+    FABService.trackCurrentScreen(FBACameraScreen);
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
     deviceName =
         (PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) ?? '') == ''

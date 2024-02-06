@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
 
 import '../../common/CommonUtil.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../constants/fhb_constants.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../Controller/AddDeviceViewController.dart';
@@ -11,6 +11,7 @@ import '../Controller/AddDeviceViewController.dart';
 class AddDeviceView extends GetView<AddDeviceViewController> {
   @override
   Widget build(BuildContext context) {
+    FABService.trackCurrentScreen(FBAAddNewDeviceScreen);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(

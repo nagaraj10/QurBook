@@ -14,6 +14,7 @@ import '../../../common/FHBBasicWidget.dart';
 import '../../../common/OverLayCategoryDialog.dart';
 import '../../../common/PreferenceUtil.dart';
 import '../../../common/common_circular_indicator.dart';
+import '../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
 import '../../../constants/router_variable.dart' as router;
 import '../../../constants/variable_constant.dart' as variable;
@@ -64,7 +65,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   void initState() {
     super.initState();
     initFlashlight();
-
+    FABService.trackCurrentScreen(FBACameraScreen);
     // To display the current output from the Camera,
     // create a CameraController.
     _controller = CameraController(

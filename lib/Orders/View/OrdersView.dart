@@ -4,6 +4,7 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 
 import '../../common/CommonUtil.dart';
 import '../../common/common_circular_indicator.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
@@ -24,6 +25,7 @@ class _OrdersViewState extends State<OrdersView> {
   @override
   void initState() {
     controller.getOrders();
+    FABService.trackCurrentScreen(FBAMyOrdersScreen);
     super.initState();
   }
 

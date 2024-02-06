@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
 import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
@@ -59,6 +60,7 @@ class _ClaimListState extends State<ClaimList> {
   @override
   void initState() {
     super.initState();
+    FABService.trackCurrentScreen(FBAMyClaimScreen);
     claimListRepository = ClaimListRepository();
     _categoryResponseListRepository = CategoryResponseListRepository();
     claimListResponse = ClaimListResponse();

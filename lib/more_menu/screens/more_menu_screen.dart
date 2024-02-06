@@ -23,6 +23,7 @@ import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
@@ -180,7 +181,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     selectedList = [];
     _deviceModel = DevicesViewModel();
     authViewModel = AuthViewModel();
-
+    FABService.trackCurrentScreen(FBASettingScreen);
     if ((BASE_URL == prodINURL) ||
         (BASE_URL == prodUSURL) ||
         (BASE_URL == demoINURL) ||
