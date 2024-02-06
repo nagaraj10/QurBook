@@ -242,19 +242,239 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        backgroundColor: widget.isFromCreateTicket ? Colors.grey[200] : null,
-        appBar: AppBar(
-            elevation: 0,
-            flexibleSpace: GradientAppBar(),
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios,
-                size: 24.0.sp,
+  void dispose() {
+    createTicketController.strSearchText.value = '';
+    super.dispose();
+    fbaLog(
+        eveName: 'qurbook_screen_event',
+        eveParams: {'eventTime': '${DateTime.now()}', 'pageName': 'Search List Screen', 'screenSessionTime': '${DateTime.now().difference(mInitialTime).inSeconds} secs'});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: widget.isFromCreateTicket ? Colors.grey[200] : null,
+      appBar: AppBar(
+          elevation: 0,
+          flexibleSpace: GradientAppBar(),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              size: 24.0.sp,
+            ),
+            onPressed: () {
+              Navigator.pop(context, [1]);
+            },
+          ),
+        title: Text(
+          // Check if the widget is from creating a ticket and searching for doctors
+          (widget.isFromCreateTicket &&
+                  widget.arguments!.searchWord == CommonConstants.doctors)
+              ? Constants
+                  .strChooseDoctor // Display "Choose Doctor" if searching for doctors
+              :
+              // Check if the widget is from creating a ticket and searching for labs or lab
+              (widget.isFromCreateTicket &&
+                      (widget.arguments!.searchWord == CommonConstants.labs ||
+                          widget.arguments!.searchWord == CommonConstants.lab))
+                  ? Constants
+                      .strChooseLab // Display "Choose Lab" if searching for labs or lab
+                  :
+                  // Display the search word and variable string if none of the above conditions match
+                  ('${widget.arguments!.searchWord} ' + variable.strSearch),
+        ),
+      ),
+      // Wait until the controller is initialized before displaying the
+      // camera preview. Use a FutureBuilder to display a loading spinner
+      // until the controller has finished initializing.
+      body: Column(
+        children: <Widget>[
+          Container(
+            //margin: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(256, 256, 256, 0),
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft, end: Alignment.bottomRight, colors: <Color>[Color(CommonUtil().getMyPrimaryColor()), Color(CommonUtil().getMyGredientColor())], stops: [0.3, 1]),
+            ),
+            padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+            //margin: EdgeInsets.all(5),
+            child: Container(
+              margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5,top:5),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(30)),
+              child: TextField(
+                textCapitalization: TextCapitalization.sentences,
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                ),
+                controller: _textFieldController,
+                autofocus: false,
+                onChanged: (editedValue) {
+                  createTicketController.strSearchText.value = editedValue??'';
+                  if (editedValue != '') {
+                    value = editedValue;
+
+                    // Check if the widget is from CreateTicket and searching for doctors
+                    if (widget.isFromCreateTicket &&
+                        widget.arguments!.searchWord ==
+                            CommonConstants.doctors) {
+
+                      // Create a new DoctorFilterRequestModel with updated values
+                      DoctorFilterRequestModel doctorFilterRequestModel =
+                          DoctorFilterRequestModel(
+                        page: 0,
+                        size: createTicketController.limit,
+                        searchText: CommonUtil().validString(createTicketController.strSearchText.value),
+                        filters: createTicketController
+                                .doctorFilterRequestModel?.filters ??
+                            [],
+                      );
+
+                      // Set the newly created DoctorFilterRequestModel to the controller
+                      createTicketController.doctorFilterRequestModel =
+                          doctorFilterRequestModel;
+
+                      // Refresh the doctor paging controller
+                      createTicketController.pagingController.refresh();
+                    }
+                    // Check if the widget is from CreateTicket and searching for labs or lab
+                    else if (widget.isFromCreateTicket &&
+                        (widget.arguments!.searchWord == CommonConstants.labs ||
+                            widget.arguments!.searchWord ==
+                                CommonConstants.lab)) {
+                      // Create a new LabListFilterRequestModel with updated values
+                      DoctorFilterRequestModel labListFilterRequestModel =
+                          DoctorFilterRequestModel(
+                        page: 0,
+                        size: createTicketController.limit,
+                        searchText: CommonUtil().validString(createTicketController.strSearchText.value),
+                        filters: createTicketController
+                                .labListFilterRequestModel?.filters ??
+                            [],
+                        healthOrganizationType:
+                            CommonConstants.keyLab.toUpperCase(),
+                      );
+
+                      // Set the newly created LabListFilterRequestModel to the controller
+                      createTicketController.labListFilterRequestModel =
+                          labListFilterRequestModel;
+
+                      // Refresh the lab paging controller
+                      createTicketController.labListResultPagingController
+                          .refresh();
+                    } else {
+                      widget.arguments!.searchWord == CommonConstants.doctors
+                          ? _doctorsListBlock!.getDoctorsListNew(
+                          value, widget.isSkipUnknown)
+                          : widget.arguments!.searchWord ==
+                          CommonConstants.hospitals
+                          ? _hospitalListBlock!.getHospitalListNew(value)
+                          : widget.arguments!.searchWord! ==
+                          CommonConstants.labs ||
+                          widget.arguments!.searchWord == CommonConstants.lab
+                          ? _labsListBlock!.getLabsListNew(
+                          value!, widget.isFromCreateTicket)
+                          : _labsListBlock!.getCityList(value!);
+                    }
+                    setState(() {});
+                  } else {
+                    // Check if the widget is from CreateTicket and searching for doctors
+                    if (widget.isFromCreateTicket &&
+                        widget.arguments!.searchWord ==
+                            CommonConstants.doctors) {
+                      // Clear search criteria and refresh doctor paging controller
+                      onClear();
+                      createTicketController.pagingController.refresh();
+                    }
+                    // Check if the widget is from CreateTicket and searching for labs or lab
+                    else if (widget.isFromCreateTicket &&
+                        (widget.arguments!.searchWord == CommonConstants.labs ||
+                            widget.arguments!.searchWord ==
+                                CommonConstants.lab)) {
+                      // Clear search criteria and refresh lab paging controller
+                      onClear();
+                      createTicketController.labListResultPagingController
+                          .refresh();
+                    } else {
+                      widget.arguments!.searchWord == CommonConstants.doctors
+                          ? _doctorsListBlock!.getExistingDoctorList('50')
+                          : widget.arguments!.searchWord ==
+                          CommonConstants.hospitals
+                          ? _hospitalListBlock!.getExistingHospitalListNew(
+                          Constants.STR_HEALTHORG_HOSPID)
+                          : widget.arguments!.searchWord ==
+                          CommonConstants.labs ||
+                          widget.arguments!.searchWord == CommonConstants.lab
+                          ? _labsListBlock!.getExistingLabsListNew(
+                          Constants.STR_HEALTHORG_LABID,
+                          widget.isFromCreateTicket)
+                          : _labsListBlock!.getCityList('a');
+                    }
+                    setState(() {});
+                  }
+                },
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: Colors.black54,
+                  ),
+                  hintText: variable.strSearch,
+                  hintStyle: TextStyle(color: Colors.black54, fontSize: 16.0.sp),
+                  border: InputBorder.none,
+                ),
               ),
-              onPressed: () {
-                Navigator.pop(context, [1]);
-              },
+            ),
+          ),
+          Expanded(
+              child: value == ''
+                  ?
+              widget.arguments!.searchWord == CommonConstants.doctors
+                  ? getResponseFromApiWidgetForDoctors()
+                  : widget.arguments!.searchWord == CommonConstants.hospitals
+                  ? getResponseFromApiWidgetForHospital()
+                  : widget.arguments!.searchWord == CommonConstants.labs || widget.arguments!.searchWord == CommonConstants.lab
+                  ? getResponseFromApiWidgetForLabs()
+                  : getResponseFromApiWidgetForCity()
+                  : widget.arguments!.searchWord == CommonConstants.doctors
+                  ? getResponseFromApiWidgetForDoctors()
+                  : widget.arguments!.searchWord == CommonConstants.hospitals
+                  ? getResponseFromApiWidgetForHospital()
+                  : widget.arguments!.searchWord == CommonConstants.labs || widget.arguments!.searchWord == CommonConstants.lab
+                  ? getResponseFromApiWidgetForLabs()
+                  : getResponseFromApiWidgetForCity()),
+        ],
+      ),
+      bottomNavigationBar: (widget.isFromCreateTicket &&
+          ((widget.arguments!.searchWord == CommonConstants.doctors) ||
+              (widget.arguments!.searchWord == CommonConstants.labs ||
+                  widget.arguments!.searchWord == CommonConstants.lab)))
+          ? 
+      Container(
+        height: 50,
+        padding: const EdgeInsets.all(3.0),
+        decoration: BoxDecoration(
+          border: Border.all(
+              color: Color(CommonUtil().getMyPrimaryColor())),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Flexible(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  //TODO
+                },
+                child: Center(
+                  child: Text(
+                    Constants.strSort,
+                    style: TextStyle(
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+              ),
             ),
             title:
                 Text('${widget.arguments!.searchWord} ${variable.strSearch}')),
@@ -264,303 +484,75 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         body: Column(
           children: <Widget>[
             Container(
-              //margin: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: const Color.fromRGBO(256, 256, 256, 0),
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: <Color>[
-                      Color(CommonUtil().getMyPrimaryColor()),
-                      Color(CommonUtil().getMyGredientColor())
-                    ],
-                    stops: [
-                      0.3,
-                      1
-                    ]),
-              ),
-              padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-              //margin: EdgeInsets.all(5),
-              child: Container(
-                margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30)),
-                child: TextField(
-                  textCapitalization: TextCapitalization.sentences,
-                  style: TextStyle(
-                    fontSize: 16.0.sp,
-                  ),
-                  controller: _textFieldController,
-                  autofocus: false,
-                  onChanged: (editedValue) {
-                    createTicketController.strSearchText.value =
-                        editedValue ?? '';
-                    if (editedValue != '') {
-                      value = editedValue;
-
-                      // Check if the widget is from CreateTicket and searching for doctors
-                      if (widget.isFromCreateTicket &&
-                          widget.arguments!.searchWord ==
-                              CommonConstants.doctors) {
-                        // Create a new DoctorFilterRequestModel with updated values
-                        DoctorFilterRequestModel doctorFilterRequestModel =
-                            DoctorFilterRequestModel(
-                          page: 0,
-                          size: createTicketController.limit,
-                          searchText: CommonUtil().validString(
-                              createTicketController.strSearchText.value),
-                          filters: createTicketController
-                                  .doctorFilterRequestModel?.filters ??
-                              [],
-                        );
-
-                        // Set the newly created DoctorFilterRequestModel to the controller
+              color: Color(CommonUtil().getMyPrimaryColor()),
+              width: 1,
+            ),
+            Flexible(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  Get.to(DoctorsFilterScreen(
+                    selectedItems: selectedItems,
+                    filterMenuCount:
+                    count != 0 ? count : filterMenuCount.length,
+                    filterApplied: (
+                        Map<String, List<String>> item,
+                        List<DoctorsListResult> list,
+                        FilteredSelectedModel items,
+                        int filterCount,DoctorFilterRequestModel doctorFilterRequestModel,
+                        ) {
+                      doctorFilterList = list;
+                      selectedItems = items;
+                      filterMenuCount = item;
+                      count = filterCount;
+                      if(createTicketController.searchWord.value == CommonConstants.doctors) {
                         createTicketController.doctorFilterRequestModel =
                             doctorFilterRequestModel;
 
                         // Refresh the doctor paging controller
                         createTicketController.pagingController.refresh();
                       }
-                      // Check if the widget is from CreateTicket and searching for labs or lab
-                      else if (widget.isFromCreateTicket &&
-                          (widget.arguments!.searchWord ==
-                                  CommonConstants.labs ||
-                              widget.arguments!.searchWord ==
-                                  CommonConstants.lab)) {
-                        // Create a new LabListFilterRequestModel with updated values
-                        DoctorFilterRequestModel labListFilterRequestModel =
-                            DoctorFilterRequestModel(
-                          page: 0,
-                          size: createTicketController.limit,
-                          searchText: CommonUtil().validString(
-                              createTicketController.strSearchText.value),
-                          filters: createTicketController
-                                  .labListFilterRequestModel?.filters ??
-                              [],
-                          healthOrganizationType:
-                              CommonConstants.keyLab.toUpperCase(),
-                        );
-
-                        // Set the newly created LabListFilterRequestModel to the controller
-                        createTicketController.labListFilterRequestModel =
-                            labListFilterRequestModel;
-
-                        // Refresh the lab paging controller
-                        createTicketController.labListResultPagingController
-                            .refresh();
-                      } else {
-                        widget.arguments!.searchWord == CommonConstants.doctors
-                            ? _doctorsListBlock!
-                                .getDoctorsListNew(value, widget.isSkipUnknown)
-                            : widget.arguments!.searchWord ==
-                                    CommonConstants.hospitals
-                                ? _hospitalListBlock!.getHospitalListNew(value)
-                                : widget.arguments!.searchWord! ==
-                                            CommonConstants.labs ||
-                                        widget.arguments!.searchWord ==
-                                            CommonConstants.lab
-                                    ? _labsListBlock!.getLabsListNew(
-                                        value!, widget.isFromCreateTicket)
-                                    : _labsListBlock!.getCityList(value!);
-                      }
-                      setState(() {});
-                    } else {
-                      // Check if the widget is from CreateTicket and searching for doctors
-                      if (widget.isFromCreateTicket &&
-                          widget.arguments!.searchWord ==
-                              CommonConstants.doctors) {
-                        // Clear search criteria and refresh doctor paging controller
-                        onClear();
-                        createTicketController.pagingController.refresh();
-                      }
-                      // Check if the widget is from CreateTicket and searching for labs or lab
-                      else if (widget.isFromCreateTicket &&
-                          (widget.arguments!.searchWord ==
-                                  CommonConstants.labs ||
-                              widget.arguments!.searchWord ==
-                                  CommonConstants.lab)) {
-                        // Clear search criteria and refresh lab paging controller
-                        onClear();
-                        createTicketController.labListResultPagingController
-                            .refresh();
-                      } else {
-                        widget.arguments!.searchWord == CommonConstants.doctors
-                            ? _doctorsListBlock!.getExistingDoctorList('50')
-                            : widget.arguments!.searchWord ==
-                                    CommonConstants.hospitals
-                                ? _hospitalListBlock!
-                                    .getExistingHospitalListNew(
-                                        Constants.STR_HEALTHORG_HOSPID)
-                                : widget.arguments!.searchWord ==
-                                            CommonConstants.labs ||
-                                        widget.arguments!.searchWord ==
-                                            CommonConstants.lab
-                                    ? _labsListBlock!.getExistingLabsListNew(
-                                        Constants.STR_HEALTHORG_LABID,
-                                        widget.isFromCreateTicket)
-                                    : _labsListBlock!.getCityList('a');
-                      }
-                      setState(() {});
-                    }
-                  },
-                  decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    prefixIcon: const Icon(
-                      Icons.search,
-                      color: Colors.black54,
-                    ),
-                    hintText: variable.strSearch,
-                    hintStyle:
-                        TextStyle(color: Colors.black54, fontSize: 16.0.sp),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-                child: value == ''
-                    ? widget.arguments!.searchWord == CommonConstants.doctors
-                        ? getResponseFromApiWidgetForDoctors()
-                        : widget.arguments!.searchWord ==
-                                CommonConstants.hospitals
-                            ? getResponseFromApiWidgetForHospital()
-                            : widget.arguments!.searchWord ==
-                                        CommonConstants.labs ||
-                                    widget.arguments!.searchWord ==
-                                        CommonConstants.lab
-                                ? getResponseFromApiWidgetForLabs()
-                                : getResponseFromApiWidgetForCity()
-                    : widget.arguments!.searchWord == CommonConstants.doctors
-                        ? getResponseFromApiWidgetForDoctors()
-                        : widget.arguments!.searchWord ==
-                                CommonConstants.hospitals
-                            ? getResponseFromApiWidgetForHospital()
-                            : widget.arguments!.searchWord ==
-                                        CommonConstants.labs ||
-                                    widget.arguments!.searchWord ==
-                                        CommonConstants.lab
-                                ? getResponseFromApiWidgetForLabs()
-                                : getResponseFromApiWidgetForCity()),
-          ],
-        ),
-        bottomNavigationBar: (widget.isFromCreateTicket &&
-                ((widget.arguments!.searchWord == CommonConstants.doctors) ||
-                    (widget.arguments!.searchWord == CommonConstants.labs ||
-                        widget.arguments!.searchWord == CommonConstants.lab)))
-            ? Container(
-                height: 50,
-                padding: const EdgeInsets.all(3.0),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Color(CommonUtil().getMyPrimaryColor())),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () {
-                        //TODO
-                      },
-                      child: Text(
-                        Constants.strSort,
+                    },
+                    filterSelectedItems: filterMenuCount, doctorFilterRequestModel: createTicketController.searchWord.value == CommonConstants.doctors?createTicketController.doctorFilterRequestModel:createTicketController.labListFilterRequestModel,
+                  ))?.then((value) {
+                    setState(() {});
+                  });
+                },
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Spacer(),
+                      Text(
+                        Constants.strFilter,
                         style: TextStyle(
                           color: Color(CommonUtil().getMyPrimaryColor()),
+                          fontSize: 18,
                         ),
                       ),
-                    ),
-                    // Spacer(),
-                    Container(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
-                      width: 1,
-                    ),
-                    Center(
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          Get.to(DoctorsFilterScreen(
-                            selectedItems: selectedItems,
-                            filterMenuCount:
-                                count != 0 ? count : filterMenuCount.length,
-                            filterApplied: (
-                              Map<String, List<String>> item,
-                              List<DoctorsListResult> list,
-                              FilteredSelectedModel items,
-                              int filterCount,
-                              DoctorFilterRequestModel doctorFilterRequestModel,
-                            ) {
-                              doctorFilterList = list;
-                              selectedItems = items;
-                              filterMenuCount = item;
-                              count = filterCount;
-                              if (createTicketController.searchWord.value ==
-                                  CommonConstants.doctors) {
-                                createTicketController
-                                        .doctorFilterRequestModel =
-                                    doctorFilterRequestModel;
-                                createTicketController.pagingController
-                                    .refresh();
-                              } else if (createTicketController
-                                          .searchWord.value ==
-                                      CommonConstants.labs ||
-                                  createTicketController.searchWord.value ==
-                                      CommonConstants.lab) {
-                                createTicketController
-                                        .labListFilterRequestModel =
-                                    doctorFilterRequestModel;
-                                createTicketController
-                                    .labListResultPagingController
-                                    .refresh();
-                              }
-                            },
-                            filterSelectedItems: filterMenuCount,
-                            doctorFilterRequestModel:
-                                createTicketController.searchWord.value ==
-                                        CommonConstants.doctors
-                                    ? createTicketController
-                                        .doctorFilterRequestModel
-                                    : createTicketController
-                                        .labListFilterRequestModel,
-                          ))?.then((value) {
-                            setState(() {});
-                          });
-                        },
-                        child: Row(
-                          children: [
-                            Text(
-                              Constants.strFilter,
-                              style: TextStyle(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                              ),
+                      SizedBox(width: 5,),
+                      Visibility(
+                        visible: count != 0,
+                        child: Container(
+                          width: 28,
+                          height: 28,
+                          decoration: BoxDecoration(
+                            color:
+                            Color(CommonUtil().getMyPrimaryColor()),
+                            // border color
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Text(
+                              count.toString(),
+                              style: const TextStyle(color: Colors.white),
                             ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Visibility(
-                              visible: count != 0,
-                              child: Container(
-                                width: 28,
-                                height: 28,
-                                decoration: BoxDecoration(
-                                  color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
-                                  // border color
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    count.toString(),
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                      Spacer(),
+                    ],
+                  ),
                 ),
               )
             : const SizedBox.shrink(),
