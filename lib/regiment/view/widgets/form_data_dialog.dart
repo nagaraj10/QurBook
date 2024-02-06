@@ -1273,31 +1273,18 @@ class FormDataDialogState extends State<FormDataDialog> {
           isAdd,
           title,
         }) {
-          // Flag to determine if English language check was successful, defaulting to true
-          bool isCheckEnglishLang = true;
-
-          try {
-            // Attempt to check if the current language is English using the checkIsLanguageEnglish method
-            isCheckEnglishLang = (CommonUtil()
-                    .checkIsLanguageEnglish(CommonUtil.getCurrentLanCode()) ??
-                true);
-          } catch (e, stackTrace) {
-            // Catch any exceptions that may occur during the language check and log them
-            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-          }
-
           if (isAdd == null || isAdd) {
             isAdd = isAdd ?? false;
             final oldValue = saveMap.putIfAbsent(
               isAdd
                   ? 'pf_$title'
-                  : 'pf_${isCheckEnglishLang ? updatedFieldData.title : updatedFieldData.originalTitle}',
+                  : 'pf_${updatedFieldData.title}',
               () => updatedFieldData.value,
             );
             if (oldValue != null) {
               saveMap[isAdd
                       ? 'pf_$title'
-                      : 'pf_${isCheckEnglishLang ? updatedFieldData.title : updatedFieldData.originalTitle}'] =
+                      : 'pf_${updatedFieldData.title}'] =
                   updatedFieldData.value;
             }
           } else {
