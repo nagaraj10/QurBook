@@ -1,20 +1,17 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/PaymentFailureRetryModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/MyProvider/viewModel/UpdatePaymentViewModel.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import '../../../../landing/view/landing_arguments.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 
+import '../../../../landing/view/landing_arguments.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/fhb_parameters.dart';
+import '../../../constants/router_variable.dart' as router;
+import '../../../src/model/home_screen_arguments.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../MyProvider/model/updatePayment/PaymentFailureRetryModel.dart';
+import '../MyProvider/view/TelehealthProviders.dart';
+import '../MyProvider/viewModel/UpdatePaymentViewModel.dart';
 import 'PaymentPage.dart';
 
 class ResultPage extends StatefulWidget {
@@ -55,7 +52,6 @@ class _ResultPage extends State<ResultPage> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     updatePaymentViewModel = UpdatePaymentViewModel();
     status = widget.status;
     isFromSubscribe = widget.isFromSubscribe;
@@ -92,17 +88,6 @@ class _ResultPage extends State<ResultPage> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Payment Done Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
@@ -116,7 +101,9 @@ class _ResultPage extends State<ResultPage> {
                         status ? PAYMENT_SUCCESS_PNG : PAYMENT_FAILURE_PNG,
                         width: 120.0.h,
                         height: 120.0.h,
-                        color: status ? Color(CommonUtil().getMyPrimaryColor()) : Colors.red),
+                        color: status
+                            ? Color(CommonUtil().getMyPrimaryColor())
+                            : Colors.red),
                     SizedBox(height: 15.0.h),
                     Text(status ? PAYMENT_SUCCESS_MSG : PAYMENT_FAILURE_MSG,
                         style: TextStyle(
@@ -153,13 +140,16 @@ class _ResultPage extends State<ResultPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                              side: BorderSide(color: Colors.white)),
-                          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.all(12.0),),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                side: BorderSide(color: Colors.white)),
+                            backgroundColor:
+                                Color(CommonUtil().getMyPrimaryColor()),
+                            foregroundColor: Colors.white,
+                            padding: EdgeInsets.all(12.0),
+                          ),
                           onPressed: () {
                             status
                                 ? widget.closePage!(STR_SUCCESS)

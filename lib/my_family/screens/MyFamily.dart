@@ -3,27 +3,25 @@ import 'dart:convert' as convert;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:myfhb/authentication/model/Country.dart';
-import 'package:myfhb/authentication/widgets/country_code_picker.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
+
+import '../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../../authentication/constants/constants.dart';
+import '../../authentication/model/Country.dart';
 import '../../authentication/view/verifypatient_screen.dart';
+import '../../authentication/widgets/country_code_picker.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
+import '../../common/common_circular_indicator.dart';
+import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
-import '../bloc/FamilyListBloc.dart';
-import '../models/relationship_response_list.dart';
-import '../models/relationships.dart';
 import '../../my_family_detail/models/my_family_detail_arguments.dart';
 import '../../src/model/user/MyProfileModel.dart';
 import '../../src/resources/network/ApiResponse.dart';
@@ -31,7 +29,11 @@ import '../../src/utils/FHBUtils.dart';
 import '../../src/utils/alert.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
+import '../bloc/FamilyListBloc.dart';
+import '../models/FamilyMembersRes.dart';
+import '../models/relationship_response_list.dart';
+import '../models/relationships.dart';
+import '../services/FamilyMemberListRepository.dart';
 
 class MyFamily extends StatefulWidget {
   @override
@@ -75,7 +77,8 @@ class _MyFamilyState extends State<MyFamily> {
   RelationsShipModel? selectedRelationShip;
 
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
-  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state =
+      GlobalKey<ScaffoldMessengerState>();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
 
@@ -92,8 +95,8 @@ class _MyFamilyState extends State<MyFamily> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
+    FABService.trackCurrentScreen(FBAMyFamilyScreen);
     _familyListBloc = FamilyListBloc();
     //_familyListBloc!.getFamilyMembersListNew();
     _familyListBloc!.getCustomRoles();
@@ -104,17 +107,6 @@ class _MyFamilyState extends State<MyFamily> {
     PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, '');
 
     fetchUserProfileInfo();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'MyFamily Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override

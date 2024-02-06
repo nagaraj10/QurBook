@@ -6579,11 +6579,6 @@ class CommonUtil {
       } catch (e, stackTrace) {
         CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
-      fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'call',
-        'navigationPage': 'TeleHelath Call screen',
-      });
 
       if (callType.toLowerCase() == 'audio') {
         Provider.of<AudioCallProvider>(Get.context!, listen: false)

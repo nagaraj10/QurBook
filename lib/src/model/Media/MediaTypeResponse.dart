@@ -1,28 +1,26 @@
-
 import 'package:myfhb/common/CommonUtil.dart';
 
 import '../../../constants/fhb_parameters.dart' as parameters;
 import 'MediaData.dart';
 
 class MediaTypesResponse {
+  MediaTypesResponse({this.status, this.success, this.message, this.response});
   int? status;
   bool? success;
   String? message;
   Response? response;
 
-  MediaTypesResponse({this.status, this.success, this.message, this.response});
-
   MediaTypesResponse.fromJson(Map<String, dynamic> json) {
-     try {
-       status = json[parameters.strStatus];
-       success = json[parameters.strSuccess];
-       message = json[parameters.strMessage];
-       response = json[parameters.strResponse] != null
-               ? Response.fromJson(json[parameters.strResponse])
-               : null;
-     } catch (e,stackTrace) {
-       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-     }
+    try {
+      status = json[parameters.strStatus];
+      success = json[parameters.strSuccess];
+      message = json[parameters.strMessage];
+      response = json[parameters.strResponse] != null
+          ? Response.fromJson(json[parameters.strResponse])
+          : null;
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -47,13 +45,13 @@ class Response {
     try {
       count = json[parameters.strCount];
       if (json[parameters.strData] != null) {
-            data = <MediaData>[];
-            json[parameters.strData].forEach((v) {
-              data!.add(MediaData.fromJson(v));
-            });
-          }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        data = <MediaData>[];
+        json[parameters.strData].forEach((v) {
+          data!.add(MediaData.fromJson(v));
+        });
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -66,4 +64,3 @@ class Response {
     return data;
   }
 }
-

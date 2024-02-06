@@ -1,17 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
 import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
+import '../../common/common_circular_indicator.dart';
+import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart' as Constants;
-import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
-import '../bloc/my_family_detail_view_boc.dart';
-import '../models/my_family_detail_view_arguments.dart';
-import 'my_family_detail_view_hospital.dart';
-import 'my_family_detail_view_insurance.dart';
 import '../../src/model/Category/catergory_data_list.dart';
 import '../../src/model/Category/catergory_result.dart';
 import '../../src/model/Health/asgard/health_record_list.dart';
@@ -19,13 +17,10 @@ import '../../src/resources/network/ApiResponse.dart';
 import '../../src/utils/FHBUtils.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
-
-import '../../common/CommonUtil.dart';
-import '../../common/FHBBasicWidget.dart';
-import '../../src/utils/FHBUtils.dart';
-import '../../constants/router_variable.dart' as router;
-import '../../common/errors_widget.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
+import '../bloc/my_family_detail_view_boc.dart';
+import '../models/my_family_detail_view_arguments.dart';
+import 'my_family_detail_view_hospital.dart';
+import 'my_family_detail_view_insurance.dart';
 
 class MyFamilyDetailView extends StatefulWidget {
   MyFamilyDetailViewArguments? arguments;
@@ -44,11 +39,11 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
   int? activeTabIndex = 0;
   MyFamilyDetailViewBloc? myFamilyDetailViewBloc;
   List<CategoryResult>? categoryData;
-  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state =
+      GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
 
     tabController = TabController(length: 2, vsync: this);
@@ -64,17 +59,6 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
 
     PreferenceUtil.saveString(
         Constants.KEY_FAMILYMEMBERID, myFamilyDetailViewBloc!.userId!);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Family List Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   void _setActiveTabIndex() {

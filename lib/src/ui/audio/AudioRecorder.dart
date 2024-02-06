@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 
@@ -27,6 +26,7 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart';
 
 import '../../../Qurhome/Common/GradientAppBarQurhome.dart';
+import '../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 
 class AudioRecorder extends StatefulWidget {
   AudioScreenArguments? arguments;
@@ -57,6 +57,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   @override
   void initState() {
     CommonUtil().handleCameraAndMic(onlyMic: true);
+    FABService.trackCurrentScreen(FBAVoiceRecordScreen);
     set_up_audios();
     super.initState();
   }
@@ -108,7 +109,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
           setState(
             () {
               if (widget.arguments?.isFromSheelaFileUpload ?? false) {
-                if (event.duration.inMinutes >= 120) { // // maximum audio size is 100mb
+                if (event.duration.inMinutes >= 120) {
+                  // // maximum audio size is 100mb
                   stopRecorder();
                   toast.getToastForLongTime(
                     strAudioSizeValidation,
@@ -136,9 +138,9 @@ class _AudioRecorderState extends State<AudioRecorder> {
           );
         },
       );
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       _isRecording = false;
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       setState(
         () {},
@@ -193,10 +195,9 @@ class _AudioRecorderState extends State<AudioRecorder> {
         if (value != null && value != '')
           Navigator.of(context).pop({Constants.keyAudioFile: value});
       }
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       print("Failed to stop recorder");
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     _isRecording = false;
     if (_recorderSubscription != null) {

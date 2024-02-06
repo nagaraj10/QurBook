@@ -1,21 +1,22 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../Controller/HubListViewController.dart';
-import '../../constants/fhb_constants.dart';
 
 import '../../common/CommonUtil.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../constants/fhb_constants.dart';
 import '../../constants/variable_constant.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/Notifications/constants/notification_constants.dart';
+import '../Controller/HubListViewController.dart';
 
 class HubListView extends GetView<HubListViewController> {
   @override
   Widget build(BuildContext context) {
     controller.getHubList();
+    FABService.trackCurrentScreen(FBAConnectedDevicesScreen);
     return Obx(
       () {
         return Scaffold(
@@ -62,21 +63,17 @@ class HubListView extends GetView<HubListViewController> {
         ),
       );
     }
-    if (((controller.hubListResponse?.result ?? [])
-            .isEmpty)) {
+    if (((controller.hubListResponse?.result ?? []).isEmpty)) {
       return pairNewVirtualHubBtn();
     }
-    if (((controller.hubListResponse?.result?.length??0) >
-            0)) {
+    if (((controller.hubListResponse?.result?.length ?? 0) > 0)) {
       return listContent();
     }
     return Container();
   }
 
   Widget addNewDevice() {
-    if ((controller.hubListResponse?.result ?? [])
-            .length ==
-        0) {
+    if ((controller.hubListResponse?.result ?? []).length == 0) {
       return Container();
     }
     return Padding(
@@ -259,8 +256,7 @@ class HubListView extends GetView<HubListViewController> {
 
   Widget listContent() {
     return ListView.builder(
-      itemCount:
-          (controller.hubListResponse?.result?.length??0),
+      itemCount: (controller.hubListResponse?.result?.length ?? 0),
       shrinkWrap: true,
       itemBuilder: (context, index) {
         return Padding(
@@ -274,7 +270,9 @@ class HubListView extends GetView<HubListViewController> {
                     width: 10,
                   ),
                   getDeviceImage(
-                    controller.hubListResponse?.result![index].device?.deviceType?.code??"",
+                    controller.hubListResponse?.result![index].device
+                            ?.deviceType?.code ??
+                        "",
                   ),
                   const SizedBox(
                     width: 10,
@@ -285,7 +283,9 @@ class HubListView extends GetView<HubListViewController> {
                       children: [
                         Text(
                           CommonUtil().validString(
-                            controller.hubListResponse?.result![index].user?.firstName??"",
+                            controller.hubListResponse?.result![index].user
+                                    ?.firstName ??
+                                "",
                           ),
                           style: TextStyle(
                               color: Colors.black,
@@ -333,7 +333,8 @@ class HubListView extends GetView<HubListViewController> {
                     onTap: () {
                       unPairDialog(
                         type: 'device',
-                        deviceId: controller.hubListResponse?.result![index].id??"",
+                        deviceId:
+                            controller.hubListResponse?.result![index].id ?? "",
                         idName: "Device",
                       );
                     },
@@ -475,13 +476,11 @@ class HubListView extends GetView<HubListViewController> {
     );
   }
 
-
   Future<void> askPermssionLocationBleScan() async {
     try {
       var location = await Permission.location.status;
       var bluetoothScan = await Permission.bluetoothScan.status;
-      if (location.isDenied ||
-          bluetoothScan.isDenied) {
+      if (location.isDenied || bluetoothScan.isDenied) {
         await CommonUtil().handleLocationBleScanConnect();
       } else {
         controller.checkForConnectedDevices();

@@ -1,44 +1,37 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:myfhb/claim/screen/ClaimRecordCreate.dart';
-import 'package:myfhb/common/ShowPDFFromFile.dart';
-import '../../../common/firestore_services.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonDialogBox.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/OverLayCategoryDialog.dart';
-import 'package:myfhb/common/OverlayDeviceDialog.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/src/utils/language/language_utils.dart';
-import 'package:myfhb/common/SwitchProfile.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/search_providers/models/search_arguments.dart';
-import 'package:myfhb/search_providers/screens/search_specific_list.dart';
-import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Category/CategoryData.dart';
-import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/src/model/Health/DigitRecogResponse.dart';
-import 'package:myfhb/src/model/Media/MediaData.dart';
-import 'package:myfhb/src/model/Media/media_data_list.dart';
-import 'package:myfhb/src/model/Media/media_result.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/widgets/RaisedGradientButton.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:get/get.dart';
+
+import '../../../claim/screen/ClaimRecordCreate.dart';
+import '../../../common/CommonConstants.dart';
+import '../../../common/CommonDialogBox.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../common/FHBBasicWidget.dart';
+import '../../../common/OverLayCategoryDialog.dart';
+import '../../../common/OverlayDeviceDialog.dart';
+import '../../../common/PreferenceUtil.dart';
+import '../../../common/SwitchProfile.dart';
+import '../../../common/common_circular_indicator.dart';
+import '../../../common/firestore_services.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/fhb_parameters.dart' as parameters;
+import '../../../constants/router_variable.dart' as router;
+import '../../../constants/variable_constant.dart' as variable;
+import '../../../search_providers/models/search_arguments.dart';
+import '../../../search_providers/screens/search_specific_list.dart';
+import '../../../widgets/GradientAppBar.dart';
+import '../../../widgets/RaisedGradientButton.dart';
+import '../../blocs/Media/MediaTypeBlock.dart';
+import '../../blocs/health/HealthReportListForUserBlock.dart';
+import '../../model/Category/catergory_result.dart';
+import '../../model/Health/DigitRecogResponse.dart';
+import '../../model/Media/media_data_list.dart';
+import '../../model/Media/media_result.dart';
+import '../../utils/FHBUtils.dart';
+import '../../utils/language/language_utils.dart';
+import '../../utils/screenutils/size_extensions.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
   final List<String?> imagePath;
@@ -128,24 +121,10 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     _healthReportListForUserBlock = HealthReportListForUserBlock();
-
     PreferenceUtil.init();
-
     getAllObjectToPost();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Display Picture Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -373,23 +352,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           break;
       }
     } else {
-      var digitRecog = true;
-
-      digitRecog = false;
-      // PreferenceUtil.getStringValue(Constants.allowDigitRecognition) ==
-      //         variable.strFalse
-      //     ? false
-      //     : true;
-
-      if (digitRecog) {
-        skipTapped = false;
-
-        readingDeviceDetails(deviceName);
-
-        onPostDeviceImageData(deviceName);
-      } else {
-        displayDevicesList(deviceName, null);
-      }
+      displayDevicesList(deviceName, null);
     }
   }
 
@@ -897,12 +860,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   onPostDeviceImageData(String? deviceName) async {
-    Map<String, dynamic> postMainData = Map();
     Map<String, dynamic> postMediaData = Map();
-    // String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-
-    //postMainData[parameters.struserId] = userID;
-
     List<CategoryResult> catgoryDataList = PreferenceUtil.getCategoryType()!;
 
     categoryDataObj = CommonUtil()

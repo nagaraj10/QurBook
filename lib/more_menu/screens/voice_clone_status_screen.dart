@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/more_menu/screens/terms_and_conditon.dart';
-import 'package:myfhb/more_menu/voice_clone_status_controller.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart';
-import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
-import 'package:myfhb/voice_cloning/model/voice_cloning_choose_member_arguments.dart';
-import 'package:myfhb/voice_cloning/view/widgets/voice_clone_family_members_list.dart';
 
+import '../../common/CommonUtil.dart';
 import '../../common/common_circular_indicator.dart';
+import '../../common/errors_widget.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart';
+import '../../constants/variable_constant.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../telehealth/features/Notifications/constants/notification_constants.dart';
+import '../../voice_cloning/model/voice_clone_status_arguments.dart';
+import '../../voice_cloning/model/voice_cloning_choose_member_arguments.dart';
+import '../../voice_cloning/view/widgets/voice_clone_family_members_list.dart';
+import '../voice_clone_status_controller.dart';
+import 'terms_and_conditon.dart';
 
 class VoiceCloningStatus extends StatefulWidget {
   final VoiceCloneStatusArguments? arguments;
@@ -37,7 +37,6 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
   bool isForceStopPlayer = false;
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     controller.onInit();
     controller.initialiseControllers(); //initialize player
     //Api to get health organzation id and also the status of voice cloning
@@ -52,12 +51,6 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
   void dispose() {
     controller.dispose();
     super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': ' Voice Cloning status',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   disposeVoiceControler() async {

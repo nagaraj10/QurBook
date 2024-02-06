@@ -1,16 +1,14 @@
-
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/model/calldata.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/my_providers/models/User.dart';
-import 'package:myfhb/video_call/utils/wave_animation.dart';
-import '../../../constants/fhb_constants.dart';
+import '../../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import '../../Qurhome/QurhomeDashboard/model/calldata.dart';
+import '../../common/CommonUtil.dart';
+import '../../my_providers/models/User.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
+import '../utils/wave_animation.dart';
 
 class CallingPage extends StatefulWidget {
   final name;
@@ -53,14 +51,11 @@ class _CallingPageState extends State<CallingPage> {
       configAudioPlayer();
       super.initState();
       name = widget.name;
-      mInitialTime = DateTime.now();
       if (regController.isFromSOS.value) {
         regController.onGoingSOSCall.value = true;
       }
-    } catch (e,stackTrace) {
-      print(e);
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -70,16 +65,8 @@ class _CallingPageState extends State<CallingPage> {
       super.dispose();
       clearAudioPlayer();
       VideoCallCommonUtils.callActions.value = CallActions.CALLING;
-      fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'pageName': 'Calling Screen',
-        'screenSessionTime':
-            '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-      });
-    } catch (e,stackTrace) {
-      print(e);
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -88,10 +75,9 @@ class _CallingPageState extends State<CallingPage> {
       _audioCache.clearAll();
       await audioPlayer!.stop();
       await audioPlayer!.release();
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       //print(e);
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -100,8 +86,8 @@ class _CallingPageState extends State<CallingPage> {
 //SharedPrefUtils sharedPref = new SharedPrefUtils();
       try {
         isDoctor = false; //await sharedPref.getBool('isDoctor');
-      } catch (e,stackTrace) {
-                                CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
       audioPlayer = await _audioCache.play('raw/dailer_tone.mp3');
       audioPlayer!.setVolume(0.1);
@@ -118,9 +104,9 @@ class _CallingPageState extends State<CallingPage> {
           patienInfo: widget.patienInfo,
           isFromAppointment: widget.isFromAppointment,
           isDoctor: isDoctor);
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       print(e);
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -168,7 +154,9 @@ class _CallingPageState extends State<CallingPage> {
                         fontSize: 30.0.sp,
                         fontWeight: FontWeight.w600,
                         /*color: Color(CommonUtil().getMyPrimaryColor()),*/
-                        color: regController.isFromSOS.value?Colors.red:Color(CommonUtil().getMyPrimaryColor()),
+                        color: regController.isFromSOS.value
+                            ? Colors.red
+                            : Color(CommonUtil().getMyPrimaryColor()),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -214,9 +202,10 @@ class _CallingPageState extends State<CallingPage> {
                                   bookingId: widget.callMetaData!.bookId);
                             }
                             VideoCallCommonUtils().callEnd(context, widget.id);
-                          } catch (e,stackTrace) {
+                          } catch (e, stackTrace) {
                             print(e);
-                                                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                            CommonUtil()
+                                .appLogs(message: e, stackTrace: stackTrace);
                           }
                         },
                       ),

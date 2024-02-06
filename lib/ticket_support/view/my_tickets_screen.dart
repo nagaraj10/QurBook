@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/ticket_support/view/ticket_types_screen.dart';
-import 'package:myfhb/ticket_support/view/tickets_list_view.dart';
-import '../../common/CommonUtil.dart';
-import '../../constants/fhb_constants.dart';
-import '../../widgets/GradientAppBar.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+
+import '../../common/CommonUtil.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart' as router;
+import '../../landing/view/landing_arguments.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/GradientAppBar.dart';
+import 'ticket_types_screen.dart';
+import 'tickets_list_view.dart';
 
 class MyTicketsListScreen extends StatefulWidget {
   @override
@@ -18,34 +20,31 @@ class MyTicketsListScreen extends StatefulWidget {
 class _MyTicketsListScreenState extends State<MyTicketsListScreen> {
   @override
   Widget build(BuildContext context) {
+    FABService.trackCurrentScreen(FBAServiceRequestScreen);
+
     return Scaffold(
       floatingActionButton: Container(
         decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
-                  Color(CommonUtil().getMyPrimaryColor()),
-                  Color(CommonUtil().getMyGredientColor())
-                ]),
+          shape: BoxShape.circle,
+          gradient: LinearGradient(colors: [
+            Color(CommonUtil().getMyPrimaryColor()),
+            Color(CommonUtil().getMyGredientColor())
+          ]),
           boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: Offset(0, 3),
-          ),
-        ],),
-
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
         child: FloatingActionButton(
-          autofocus: false,
           onPressed: () async {
-            Navigator.push(
+            await Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => TicketTypesScreen()),
             ).then((value) {
-              print('intent working');
               setState(() {});
             });
           },
@@ -78,15 +77,7 @@ class _MyTicketsListScreenState extends State<MyTicketsListScreen> {
   Future<bool>? onBackPressed(BuildContext context) {
     Get.offAllNamed(
       router.rt_Landing,
-      arguments: LandingArguments(
-        needFreshLoad: true,
-      ),
+      arguments: const LandingArguments(),
     );
-
-    /*if (Navigator.canPop(context)) {
-      Get.back();
-    } else {
-
-    }*/
   }
 }

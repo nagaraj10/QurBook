@@ -28,9 +28,7 @@ class _TabBarDemoState extends State<MyProvidersMain>
   bool isRefresh = true;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // Create TabController for getting the index of current tab
     _controller = TabController(
       length: 2,
       vsync: this,

@@ -13,15 +13,14 @@ import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:myfhb/ticket_support/view/create_ticket_screen.dart';
 
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../widgets/dropdown_with_categories.dart';
 import '../../src/blocs/Media/MediaTypeBlock.dart';
 import '../../src/model/Media/media_data_list.dart';
 import '../../src/model/Media/media_result.dart';
-import '../../constants/fhb_constants.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:geocoder/geocoder.dart'; FU2.5
 import 'package:geolocator/geolocator.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
@@ -152,8 +151,8 @@ class AddProvidersState extends State<AddProviders> {
   @override
   void initState() {
     try {
-      mInitialTime = DateTime.now();
       super.initState();
+      FABService.trackCurrentScreen(FBAAddDoctorScreen);
 
       addProvidersBloc = AddProvidersBloc();
       updateProvidersBloc = UpdateProvidersBloc();
@@ -203,12 +202,6 @@ class AddProvidersState extends State<AddProviders> {
   @override
   void dispose() {
     super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Add Provider Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override

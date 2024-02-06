@@ -1,11 +1,13 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import '../../common/firestore_services.dart';
 import 'package:provider/provider.dart';
 
 import '../../common/CommonUtil.dart';
 import '../../common/SwitchProfile.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../common/firestore_services.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart';
 import '../../landing/view/landing_arguments.dart';
@@ -16,22 +18,27 @@ import '../view_model/regiment_view_model.dart';
 import 'regiment_tab.dart';
 
 class RegimentScreen extends StatelessWidget {
+  RegimentScreen({
+    Key? key,
+    this.aruguments,
+  }) : super(key: key);
   final RegimentArguments? aruguments;
-
-  RegimentScreen({this.aruguments});
   final GlobalKey<State> _key = GlobalKey<State>();
 
   @override
   Widget build(BuildContext context) {
+    FABService.trackCurrentScreen(FBARegimenScreen);
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         elevation: 0,
-        title: Text(strRegimen,
-            style: TextStyle(
-                fontSize:
-                    CommonUtil().isTablet! ? tabFontTitle : mobileFontTitle)),
+        title: Text(
+          strRegimen,
+          style: TextStyle(
+            fontSize: CommonUtil().isTablet! ? tabFontTitle : mobileFontTitle,
+          ),
+        ),
         leading: IconWidget(
           icon: Icons.arrow_back_ios,
           colors: Colors.white,
@@ -39,14 +46,22 @@ class RegimentScreen extends StatelessWidget {
           onTap: () => onBackPressed(context),
         ),
         actions: [
-          SwitchProfile().buildActions(context, _key, () {
-            Provider.of<RegimentViewModel>(context, listen: false)
-                .fetchRegimentData(
-              isInitial: true,
-            );
-            FirestoreServices().updateFirestoreListner();
-            (context as Element).markNeedsBuild();
-          }, true, changeWhiteBg: true),
+          SwitchProfile().buildActions(
+            context,
+            _key,
+            () {
+              Provider.of<RegimentViewModel>(
+                context,
+                listen: false,
+              ).fetchRegimentData(
+                isInitial: true,
+              );
+              FirestoreServices().updateFirestoreListner();
+              (context as Element).markNeedsBuild();
+            },
+            true,
+            changeWhiteBg: true,
+          ),
         ],
       ),
       body: WillPopScope(
@@ -61,7 +76,7 @@ class RegimentScreen extends StatelessWidget {
     );
   }
 
-  onBackPressed(BuildContext context) {
+  void onBackPressed(BuildContext context) {
     if (Navigator.canPop(context)) {
       Provider.of<RegimentViewModel>(context, listen: false)
           .switchFromSymptomToSchedule();
@@ -69,7 +84,7 @@ class RegimentScreen extends StatelessWidget {
     } else {
       Get.offAllNamed(
         rt_Landing,
-        arguments: LandingArguments(
+        arguments: const LandingArguments(
           needFreshLoad: false,
         ),
       );

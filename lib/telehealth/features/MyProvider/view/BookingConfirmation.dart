@@ -1,64 +1,61 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/BadgesBlue.dart';
 import 'package:gmiwidgetspackage/widgets/FlutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/IconButtonWidget.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
-import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/constants/fhb_query.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/utils/language/language_utils.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
-import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/my_providers/models/Doctors.dart';
-import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
-import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/MyProfileResult.dart';
-import 'package:myfhb/src/model/user/UserAddressCollection.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/src/ui/MyRecordsArguments.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/styles/styles.dart' as fhbStyles;
-import 'package:myfhb/telehealth/features/MyProvider/model/DoctorsFromHospitalModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/appointments/AppointmentNotificationPayment.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/appointments/CreateAppointmentModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/associaterecords/associate_success_response.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
-import 'package:myfhb/telehealth/features/MyProvider/viewModel/CreateAppointmentViewModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
-import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';  //FU2.5
-import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart'; //FU2.5
 
-import 'TelehealthProviders.dart';
+import '../../../../add_family_user_info/models/add_family_user_info_arguments.dart';
+import '../../../../add_family_user_info/services/add_family_user_info_repository.dart';
+import '../../../../common/CommonConstants.dart';
+import '../../../../common/FHBBasicWidget.dart';
+import '../../../../common/PreferenceUtil.dart';
+import '../../../../common/common_circular_indicator.dart';
 import '../../../../common/errors_widget.dart';
+import '../../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../../../constants/fhb_constants.dart' as Constants;
+import '../../../../constants/fhb_constants.dart';
+import '../../../../constants/fhb_parameters.dart';
+import '../../../../constants/fhb_parameters.dart' as parameters;
+import '../../../../constants/fhb_query.dart';
+import '../../../../constants/router_variable.dart' as router;
+import '../../../../constants/variable_constant.dart';
 import '../../../../landing/view/landing_arguments.dart';
+import '../../../../my_family/bloc/FamilyListBloc.dart';
+import '../../../../my_family/models/FamilyMembersRes.dart';
+import '../../../../my_providers/models/Doctors.dart';
+import '../../../../my_providers/models/GetDoctorsByIdModel.dart';
+import '../../../../src/blocs/Category/CategoryListBlock.dart';
+import '../../../../src/model/Category/catergory_result.dart';
+import '../../../../src/model/home_screen_arguments.dart';
+import '../../../../src/model/user/MyProfileModel.dart';
+import '../../../../src/model/user/UserAddressCollection.dart';
+import '../../../../src/resources/network/ApiResponse.dart';
+import '../../../../src/ui/MyRecord.dart';
+import '../../../../src/ui/MyRecordsArguments.dart';
+import '../../../../src/utils/FHBUtils.dart';
+import '../../../../src/utils/language/language_utils.dart';
+import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../../styles/styles.dart' as fhbStyles;
+import '../../../../widgets/GradientAppBar.dart';
+import '../../Payment/PaymentPage.dart';
+import '../../appointments/model/fetchAppointments/past.dart';
+import '../model/DoctorsFromHospitalModel.dart';
+import '../model/appointments/AppointmentNotificationPayment.dart';
+import '../model/appointments/CreateAppointmentModel.dart';
+import '../model/associaterecords/associate_success_response.dart';
+import '../model/getAvailableSlots/SlotSessionsModel.dart';
+import '../model/healthOrganization/HealthOrganizationResult.dart';
+import '../viewModel/CreateAppointmentViewModel.dart';
+import '../viewModel/MyProviderViewModel.dart';
+import 'CommonWidgets.dart';
+import 'TelehealthProviders.dart';
+
+import 'dart:developer' as dev;
 
 class BookingConfirmation extends StatefulWidget {
   final followUpFee;
@@ -109,7 +106,7 @@ class BookingConfirmation extends StatefulWidget {
       this.isFromFollowUpApp,
       this.isFromFollowUpTake,
       this.isFromPaymentNotification = false,
-      this.appointmentId = ""});
+      this.appointmentId = ''});
 
   @override
   BookingConfirmationState createState() => BookingConfirmationState();
@@ -127,11 +124,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   FamilyMembers? familyData = FamilyMembers();
 
   List<SharedByUsers> _familyNames = [];
-
-  /* List<String> recordIds = List();
-  List<String> notesId = List();
-  List<String> voiceIds = List();*/
-
   List<String> healthRecords = [];
 
   int recordIdCount = 0;
@@ -164,7 +156,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
 
-  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+      GlobalKey<ScaffoldMessengerState>();
 
   bool? checkedValue = false;
 
@@ -177,20 +170,19 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       doctorName = '',
       speciality = '',
       patientName = '',
-      shortURL = "",
-      paymentID = "";
+      shortURL = '',
+      paymentID = '';
   bool? status;
   Doctor? doctorFromNotification;
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     providerViewModel = MyProviderViewModel();
     createAppointMentViewModel = CreateAppointMentViewModel();
     createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     selectedId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     _familyListBloc = FamilyListBloc();
     _familyListBloc.getFamilyMembersListNew();
-
+    FABService.trackCurrentScreen(FBAConfirmationDetailsScreen);
     _categoryListBlock = null;
     _categoryListBlock = CategoryListBlock();
 
@@ -205,27 +197,15 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           ? getFollowUpFee()
           : widget.isFromHospital!
               ? getFeesFromHospital(
-                  widget.resultFromHospitalList![widget.doctorListIndex!], false)
+                  widget.resultFromHospitalList![widget.doctorListIndex!],
+                  false)
               : getFees(widget.healthOrganizationResult![widget.i!], false));
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Booking Confirmation Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
-  }
-
   addHealthRecords() {
-    //healthRecords.addAll(CommonUtil.recordIds);
     healthRecords.addAll(CommonUtil.notesId!);
     healthRecords.addAll(CommonUtil.voiceIds!);
   }
@@ -243,7 +223,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
       familyMembersModel = familyMembersList;
 
-      for (int i = 0; i < familyMembersModel.result!.sharedByUsers!.length; i++) {
+      for (int i = 0;
+          i < familyMembersModel.result!.sharedByUsers!.length;
+          i++) {
         sharedbyme.add(familyMembersModel.result!.sharedByUsers![i]);
       }
     });
@@ -257,23 +239,25 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           .sessionData![widget.rowPosition!]
           .slots![widget.itemPosition!]
           .startTime!);
-      apiStartTime = widget
-          .sessionData![widget.rowPosition!].slots![widget.itemPosition!].startTime;
-      apiEndTime = widget
-          .sessionData![widget.rowPosition!].slots![widget.itemPosition!].endTime;
-      slotNumber = widget
-          .sessionData![widget.rowPosition!].slots![widget.itemPosition!].slotNumber
+      apiStartTime = widget.sessionData![widget.rowPosition!]
+          .slots![widget.itemPosition!].startTime;
+      apiEndTime = widget.sessionData![widget.rowPosition!]
+          .slots![widget.itemPosition!].endTime;
+      slotNumber = widget.sessionData![widget.rowPosition!]
+          .slots![widget.itemPosition!].slotNumber
           .toString();
-      doctorSessionId = widget.sessionData![widget.rowPosition!].doctorSessionId;
+      doctorSessionId =
+          widget.sessionData![widget.rowPosition!].doctorSessionId;
       scheduleDate = CommonUtil.dateConversionToApiFormat(widget.selectedDate!);
       isResident = widget.isFromHospital!
-          ? widget
-              .resultFromHospitalList![widget.doctorListIndex!].doctor!.isResident
+          ? widget.resultFromHospitalList![widget.doctorListIndex!].doctor!
+              .isResident
           : widget.isFromFollowReschedule!
               ? widget.docsReschedule![widget.doctorListPos!]!.isResident
               : widget.docs![widget.doctorListPos!]!.isResident;
       doctorId = widget.isFromHospital!
-          ? widget.resultFromHospitalList![widget.doctorListIndex!].doctor!.user!.id
+          ? widget
+              .resultFromHospitalList![widget.doctorListIndex!].doctor!.user!.id
           : widget.isFromFollowReschedule!
               ? widget.docsReschedule![widget.doctorListPos!]!.user!.id
               : widget.docs![widget.doctorListPos!]!.user!.id;
@@ -318,30 +302,30 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       }
       selectedId =
           appointmentNotificationPayment.result?.appointment?.bookedFor != null
-              ? appointmentNotificationPayment.result?.appointment?.bookedFor!.id
-              : "";
+              ? appointmentNotificationPayment
+                  .result?.appointment?.bookedFor!.id
+              : '';
       try {
         var firstName = appointmentNotificationPayment
                     .result?.appointment?.bookedFor?.firstName !=
                 null
             ? appointmentNotificationPayment
                 .result?.appointment?.bookedFor?.firstName
-            : "";
+            : '';
         var lastName = appointmentNotificationPayment
                     .result?.appointment?.bookedFor?.lastName !=
                 null
             ? appointmentNotificationPayment
                 .result?.appointment?.bookedFor?.lastName
-            : "";
+            : '';
         patientName =
             appointmentNotificationPayment.result?.appointment?.bookedFor !=
                     null
-                ? firstName! + " " + lastName!
-                : "";
-      } catch (e,stackTrace) {
-        patientName = "";
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+                ? firstName! + ' ' + lastName!
+                : '';
+      } catch (e, stackTrace) {
+        patientName = '';
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
 
       doctorName = appointmentNotificationPayment.result?.doctor?.user != null
@@ -358,10 +342,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       appointmentNotificationPayment
                               .result?.doctor?.user!.lastName !=
                           null
-                  ? (appointmentNotificationPayment.result!.doctor!.user
-                          !.firstName!.capitalizeFirstofEach +
-                      appointmentNotificationPayment
-                          .result!.doctor!.user!.lastName!.capitalizeFirstofEach)
+                  ? (appointmentNotificationPayment.result!.doctor!.user!
+                          .firstName!.capitalizeFirstofEach +
+                      appointmentNotificationPayment.result!.doctor!.user!
+                          .lastName!.capitalizeFirstofEach)
                   : '')
           : '';
 
@@ -385,17 +369,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   height: 30,
                 ),
               );
-              break;
 
             case Status.ERROR:
               return FHBBasicWidget.getRefreshContainerButton(
                   snapshot.data!.message, () {
                 setState(() {});
               });
-              break;
 
             case Status.COMPLETED:
-              //_healthReportListForUserBlock = null;
               print(snapshot.data.toString());
               if (snapshot.data!.data!.result != null) {
                 familyData = snapshot.data!.data;
@@ -404,7 +385,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               return dropDownButton(snapshot.data!.data!.result != null
                   ? snapshot.data!.data!.result!.sharedByUsers
                   : null);
-              break;
           }
         } else {
           return Container(height: 0, color: Colors.white);
@@ -423,9 +403,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               ' ' +
               myProfile.result!.lastName!.capitalizeFirstofEach
           : '';
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     if (sharedByMeList == null) {
@@ -459,13 +438,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       width: double.infinity,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.0),
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(
               color: Colors.grey, style: BorderStyle.solid, width: 0.80),
         ),
         child: DropdownButton<SharedByUsers>(
           value: selectedUser,
-          underline: SizedBox(),
+          underline: const SizedBox(),
           isExpanded: true,
           hint: Row(
             children: <Widget>[
@@ -485,9 +464,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                             user.child == null
                                 ? 'Self'
                                 : ((user.child?.firstName ?? '') +
-                                            ' ' +
-                                            (user.child?.lastName ?? ''))
-                                        .capitalizeFirstofEach,
+                                        ' ' +
+                                        (user.child?.lastName ?? ''))
+                                    .capitalizeFirstofEach,
                             style: TextStyle(
                               fontSize: 14.0.sp,
                             )),
@@ -519,12 +498,12 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   Widget nameDateCard() {
     return Container(
-      padding: EdgeInsets.all(8.0),
-      margin: EdgeInsets.fromLTRB(18.0, 0.0, 18.0, 0.0),
+      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.fromLTRB(18, 0, 18, 0),
       child: Column(
         children: <Widget>[
           SizedBoxWidget(
-            height: 10.0,
+            height: 10,
           ),
           Container(
             child: Row(
@@ -535,7 +514,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             ),
           ),
           SizedBoxWidget(
-            height: 8.0,
+            height: 8,
           ),
           widget.isFromPaymentNotification
               ? Row(
@@ -549,7 +528,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 )
               : getDropdown(),
           SizedBoxWidget(
-            height: 10.0,
+            height: 10,
           ),
           Container(
             child: Row(
@@ -563,7 +542,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             ),
           ),
           Container(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -580,18 +559,19 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                           }
                         }),
                     SizedBoxWidget(
-                      width: 10.0,
+                      width: 10,
                     ),
                     TextWidget(
                       text: widget.selectedDate != null
                           ? commonUtil
-                              .dateConversionToDayMonthYear(widget.selectedDate!)
+                              .dateConversionToDayMonthYear(
+                                  widget.selectedDate!)
                               .toString()
                           : '',
                       fontsize: 14.0.sp,
                     ),
                     SizedBoxWidget(
-                      width: 5.0,
+                      width: 5,
                     ),
                     TextWidget(
                       text: slotTime != null ? slotTime : '0.00',
@@ -603,12 +583,12 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   width: 30,
                   height: 30,
                   decoration: BoxDecoration(
-                    color: Color(
-                        CommonUtil().getMyPrimaryColor()), // border color
+                    color:
+                        Color(CommonUtil().getMyPrimaryColor()), // border color
                     shape: BoxShape.circle,
                   ),
                   child: Padding(
-                    padding: EdgeInsets.all(2), // border width
+                    padding: const EdgeInsets.all(2), // border width
                     child: Container(
                       // or ClipRRect if you need to clip the content
                       decoration: BoxDecoration(
@@ -636,10 +616,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   @override
   Widget build(BuildContext context) {
-    pr = ProgressDialog(context, type: ProgressDialogType.normal);//  FU2.5
+    pr = ProgressDialog(context, type: ProgressDialogType.normal); //  FU2.5
     pr.style(
         message: checkSlots,
-        borderRadius: 6.0,
+        borderRadius: 6,
         backgroundColor: Colors.white,
         progressWidget: SizedBox(
           height: 1.sh,
@@ -650,10 +630,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 child: CommonCircularIndicator()),
           ),
         ),
-        elevation: 6.0,
+        elevation: 6,
         insetAnimCurve: Curves.easeInOut,
-        progress: 0.0,
-        maxProgress: 100.0,
+        progress: 0,
+        maxProgress: 100,
         progressTextStyle: TextStyle(
             color: Colors.black,
             fontSize: 12.0.sp,
@@ -683,7 +663,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               if (widget.isFromPaymentNotification) {
                 Get.offAllNamed(router.rt_notification_main);
               } else {
-                if (widget.isFromPaymentNotification == false) widget.refresh!();
+                if (widget.isFromPaymentNotification == false)
+                  widget.refresh!();
                 Navigator.pop(context);
               }
             },
@@ -712,47 +693,44 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           discount = CommonUtil()
               .doubleWithoutDecimalToInt(double.parse(discount))
               .toString();
-        } catch (e,stackTrace) {
-          widget = SizedBox.shrink();
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+        } catch (e, stackTrace) {
+          widget = const SizedBox.shrink();
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         }
-        widget = Container(
-          child: Center(
-            child: CheckboxListTile(
-              title: Text("Qurhealth Discount (" + discount! + '%)'),
-              value: checkedValue,
-              activeColor: Colors.green,
-              onChanged: (newValue) {
-                setState(() {
-                  checkedValue = newValue;
-                  if (checkedValue!) {
-                    if (originalFees.contains(',')) {
-                      originalFees = originalFees.replaceAll(',', '');
-                    }
-                    INR_Price = getDiscountedFee(
-                        double.parse(discount!), double.parse(originalFees));
-                    if (INR_Price == '0' || INR_Price == '0.00') {
-                      btnLabelChange = bookNow;
-                    } else {
-                      btnLabelChange = payNow;
-                    }
+        widget = Center(
+          child: CheckboxListTile(
+            title: Text('Qurhealth Discount (${discount!}%)'),
+            value: checkedValue,
+            activeColor: Colors.green,
+            onChanged: (newValue) {
+              setState(() {
+                checkedValue = newValue;
+                if (checkedValue!) {
+                  if (originalFees.contains(',')) {
+                    originalFees = originalFees.replaceAll(',', '');
+                  }
+                  INR_Price = getDiscountedFee(
+                      double.parse(discount!), double.parse(originalFees));
+                  if (INR_Price == '0' || INR_Price == '0.00') {
+                    btnLabelChange = bookNow;
                   } else {
-                    INR_Price = originalFees;
                     btnLabelChange = payNow;
                   }
-                });
-              },
-              controlAffinity:
-                  ListTileControlAffinity.leading, //  <-- leading Checkbox
-            ),
+                } else {
+                  INR_Price = originalFees;
+                  btnLabelChange = payNow;
+                }
+              });
+            },
+            controlAffinity:
+                ListTileControlAffinity.leading, //  <-- leading Checkbox
           ),
         );
       } else {
-        widget = SizedBox.shrink();
+        widget = const SizedBox.shrink();
       }
     } else {
-      widget = SizedBox.shrink();
+      widget = const SizedBox.shrink();
     }
     return widget;
   }
@@ -782,22 +760,22 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            insetPadding: EdgeInsets.symmetric(horizontal: 8),
+            insetPadding: const EdgeInsets.symmetric(horizontal: 8),
             backgroundColor: Colors.transparent,
             content: Container(
               width: double.maxFinite,
-              height: 250.0,
+              height: 250,
               child: Column(
                 children: <Widget>[
                   Column(
                     children: <Widget>[
                       Card(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.0),
+                          borderRadius: BorderRadius.circular(4),
                         ),
                         child: Container(
                           height: 160,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
@@ -818,21 +796,23 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                   SizedBoxWithChild(
                                     width: 90,
                                     height: 40,
-                                    child: ElevatedButton(style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(12.0),
+                                                BorderRadius.circular(12),
                                             side: BorderSide(
                                                 color: Color(CommonUtil()
                                                     .getMyPrimaryColor()))),
                                         backgroundColor: Colors.transparent,
                                         foregroundColor: Color(
                                             CommonUtil().getMyPrimaryColor()),
-                                        padding: EdgeInsets.all(8.0),
+                                        padding: const EdgeInsets.all(8),
                                       ),
                                       onPressed: () {
                                         if (widget.isFromPaymentNotification) {
-                                          Get.offNamed(router.rt_notification_main);
+                                          Get.offNamed(
+                                              router.rt_notification_main);
                                         } else {
                                           Navigator.pop(context);
                                         }
@@ -850,14 +830,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                       style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(12.0),
+                                                BorderRadius.circular(12),
                                             side: BorderSide(
                                                 color: Color(CommonUtil()
                                                     .getMyPrimaryColor()))),
                                         backgroundColor: Colors.transparent,
-                                        foregroundColor: Color(CommonUtil()
-                                            .getMyPrimaryColor()),
-                                        padding: EdgeInsets.all(8.0),
+                                        foregroundColor: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                        padding: const EdgeInsets.all(8),
                                       ),
                                       onPressed: () {
                                         if (widget.isFromPaymentNotification) {
@@ -1039,11 +1019,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           isResidentDoctorMembership: isResidentDoctorMembership,
         );
       }
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       pr.hide();
       toast.getToast(someWentWrong, Colors.red);
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -1168,7 +1147,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       } else {
                         Get.offAllNamed(
                           router.rt_Landing,
-                          arguments: LandingArguments(
+                          arguments: const LandingArguments(
                             needFreshLoad: false,
                           ),
                         );
@@ -1225,8 +1204,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                               .user!
                               .profilePicThumbnailUrl
                           : widget.isFromFollowReschedule!
-                              ? widget.docsReschedule![widget.doctorListPos!]!.user!
-                                  .profilePicThumbnailUrl
+                              ? widget.docsReschedule![widget.doctorListPos!]!
+                                  .user!.profilePicThumbnailUrl
                               : widget.docs![widget.doctorListPos!]!.user!
                                   .profilePicThumbnailUrl),
             ),
@@ -1236,14 +1215,15 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   .doctor):commonWidgets.getClipOvalImageNew(widget.docs[widget.doctorListPos]),
             ),*/
             Positioned(
-              bottom: 0.0,
-              right: 2.0,
+              bottom: 0,
+              right: 2,
               child: widget.isFromPaymentNotification
                   ? commonWidgets.getDoctorStatusWidgetNewForHos(null, 0,
                       status: '${status}')
                   : widget.isFromHospital!
                       ? commonWidgets.getDoctorStatusWidgetNewForHos(
-                          widget.resultFromHospitalList![widget.doctorListIndex!]
+                          widget
+                              .resultFromHospitalList![widget.doctorListIndex!]
                               .doctor,
                           widget.i)
                       : widget.isFromFollowReschedule!
@@ -1255,7 +1235,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             )
           ],
         ),
-        commonWidgets.getSizeBoxWidth(10.0),
+        commonWidgets.getSizeBoxWidth(10),
         Expanded(
           flex: 4,
           child: Column(
@@ -1278,13 +1258,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                           widget.doctorListIndex!]
                                       .doctor!
                                       .user)
-                                  : commonWidgets.setDoctorname(widget
-                                          .isFromFollowReschedule!
-                                      ? widget
-                                          .docsReschedule![widget.doctorListPos!]!
-                                          .user
-                                      : widget
-                                          .docs![widget.doctorListPos!]!.user)),
+                                  : commonWidgets.setDoctorname(
+                                      widget.isFromFollowReschedule!
+                                          ? widget
+                                              .docsReschedule![
+                                                  widget.doctorListPos!]!
+                                              .user
+                                          : widget.docs![widget.doctorListPos!]!
+                                              .user)),
 
                       //commonWidgets.getSizeBoxWidth(10.0),
                       commonWidgets.getIcon(
@@ -1345,27 +1326,29 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                               height: fhbStyles.imageHeight,
                                               icon: Icons.check_circle,
                                               onTap: () {})
-                                          : SizedBox()
-                                  : SizedBox()
-                          : SizedBox(),
+                                          : const SizedBox()
+                                  : const SizedBox()
+                          : const SizedBox(),
                 ],
               ),
-              commonWidgets.getSizedBox(5.0),
+              commonWidgets.getSizedBox(5),
               Row(children: [
                 Expanded(
                     child: widget.isFromPaymentNotification
                         ? commonWidgets.getDoctorSpecialityText(speciality!)
                         : widget.isFromHospital!
                             ? commonWidgets.getDoctoSpecialistOnlyForHos(widget
-                                .resultFromHospitalList![widget.doctorListIndex!]
+                                .resultFromHospitalList![
+                                    widget.doctorListIndex!]
                                 .doctor!)
                             : widget.isFromFollowReschedule!
                                 ? commonWidgets.getDoctoSpecialistForReschedule(
-                                    widget.docsReschedule![widget.doctorListPos!]!)
+                                    widget.docsReschedule![
+                                        widget.doctorListPos!]!)
                                 : commonWidgets.getDoctoSpecialistOnly(
                                     widget.docs![widget.doctorListPos!]!)),
               ]),
-              commonWidgets.getSizedBox(5.0),
+              commonWidgets.getSizedBox(5),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -1457,7 +1440,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                                   widget.doctorListPos!]!
                                               .isMciVerified!,
                                       'Not Verified')
-                              : widget.docs![widget.doctorListPos!]!.isMciVerified!
+                              : widget.docs![widget.doctorListPos!]!
+                                      .isMciVerified!
                                   ? commonWidgets.getMCVerified(
                                       widget.isFromHospital!
                                           ? widget
@@ -1478,7 +1462,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                           : widget.docs![widget.doctorListPos!]!
                                               .isMciVerified!,
                                       'Not Verified'),
-                  commonWidgets.getSizeBoxWidth(10.0),
+                  commonWidgets.getSizeBoxWidth(10),
                 ],
               )
             ],
@@ -1493,8 +1477,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       _categoryListBlock!.getCategoryLists().then((value) {
         categoryDataList = value!.result;
 
-        filteredCategoryData =
-            CommonUtil().fliterCategories(categoryDataList!);
+        filteredCategoryData = CommonUtil().fliterCategories(categoryDataList!);
 
         //filteredCategoryData.add(categoryDataObjClone);
         return filteredCategoryData;
@@ -1607,8 +1590,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             child: Center(
               child: CheckboxListTile(
                 title: Text(
-                  "Membership Discount (" + MembershipDiscountPercent! + '%)',
-                  style: TextStyle(color: Colors.grey),
+                  'Membership Discount (' + MembershipDiscountPercent! + '%)',
+                  style: const TextStyle(color: Colors.grey),
                 ),
                 value: true,
                 activeColor: Colors.grey,
@@ -1674,8 +1657,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 double.parse(discountPercent!),
               )
               .toString();
-        } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
           return;
         }
@@ -1707,14 +1690,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 ElevatedButton(
                   onPressed: () => Get.back(
                     result: true,
                   ),
-                  child: Text(
+                  child: const Text(
                     Constants.okButton,
                   ),
                 )
@@ -1807,22 +1790,24 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 myProfile!.result!.dateOfBirth!.isNotEmpty) {
               if (myProfile!.result!.additionalInfo != null) {
                 if ((myProfile!.result!.additionalInfo!.height != null &&
-                        myProfile!.result!.additionalInfo!.height!.isNotEmpty) ||
+                        myProfile!
+                            .result!.additionalInfo!.height!.isNotEmpty) ||
                     myProfile!.result!.additionalInfo!.heightObj != null) {
                   if (myProfile!.result!.additionalInfo!.weight != null &&
                       myProfile!.result!.additionalInfo!.weight!.isNotEmpty) {
                     if (myProfile!.result!.userAddressCollection3 != null) {
-                      if (myProfile!.result!.userAddressCollection3!.length > 0) {
+                      if (myProfile!.result!.userAddressCollection3!.length >
+                          0) {
                         if (myProfile!.result!.userAddressCollection3![0]
                                     .addressLine1 !=
                                 null &&
                             myProfile!.result!.userAddressCollection3![0]
                                 .addressLine1!.isNotEmpty &&
-                            myProfile!
-                                    .result!.userAddressCollection3![0].pincode !=
+                            myProfile!.result!.userAddressCollection3![0]
+                                    .pincode !=
                                 null &&
-                            myProfile!.result!.userAddressCollection3![0].pincode!
-                                .isNotEmpty) {
+                            myProfile!.result!.userAddressCollection3![0]
+                                .pincode!.isNotEmpty) {
                           if (myProfile!.result!.userAddressCollection3![0]
                                       .addressLine1 !=
                                   null &&
@@ -1938,7 +1923,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       SnackBar(
         content: Text(message),
         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-        elevation: 5.0,
+        elevation: 5,
         action: SnackBarAction(
             label: actionName,
             onPressed: () async {
@@ -1977,8 +1962,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 .doubleWithoutDecimalToInt(double.parse(price.toString()))
                 .toStringAsFixed(2)
                 .toString();
-      } catch (e,stackTrace) {
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         return price.toString();
       }
@@ -1993,13 +1978,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           Container(
             color: Colors.grey[100],
             child: Card(
-              margin: EdgeInsets.all(12.0),
+              margin: const EdgeInsets.all(12),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
+                borderRadius: BorderRadius.circular(12),
               ),
-              elevation: 10.0,
+              elevation: 10,
               child: Container(
-                margin: EdgeInsets.all(8.0),
+                margin: const EdgeInsets.all(8),
                 child: getDoctorsWidget(),
               ),
             ),
@@ -2013,8 +1998,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   color: Colors.grey[400],
                 ),
                 Container(
-                  padding: EdgeInsets.all(8.0),
-                  margin: EdgeInsets.fromLTRB(18.0, 0.0, 18.0, 0.0),
+                  padding: const EdgeInsets.all(8),
+                  margin: const EdgeInsets.fromLTRB(18, 0, 18, 0),
                   child: Column(
                     children: <Widget>[
                       Row(
@@ -2039,14 +2024,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                 clipBehavior: Clip.none,
                                 children: <Widget>[
                                   SizedBoxWithChild(
-                                    height: 22.0,
-                                    width: 22.0,
+                                    height: 22,
+                                    width: 22,
                                     child: IconButtonWidget(
                                       iconPath: Constants.NOTES_ICON_LINK,
-                                      size: 18.0,
+                                      size: 18,
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
-                                      padding: EdgeInsets.all(1.0),
+                                      padding: const EdgeInsets.all(1),
                                       onPressed: () {
                                         if (widget.isFromPaymentNotification ==
                                             false)
@@ -2061,19 +2046,19 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                     ),
                                   ),
                                   notesIdCount > 0
-                                      ? Positioned(
-                                          top: -5.0,
-                                          right: -5.0,
+                                      ? const Positioned(
+                                          top: -5,
+                                          right: -5,
                                           child: Icon(
                                             Icons.check_circle,
                                             color: Colors.green,
                                             size: 15,
                                           ),
                                         )
-                                      : SizedBox(),
+                                      : const SizedBox(),
                                 ],
                               ),
-                              SizedBoxWidget(height: 2.0),
+                              SizedBoxWidget(height: 2),
                               TextWidget(
                                   text: parameters.addNotes,
                                   fontsize: 10.0.sp,
@@ -2089,14 +2074,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                 clipBehavior: Clip.none,
                                 children: <Widget>[
                                   SizedBoxWithChild(
-                                    height: 22.0,
-                                    width: 22.0,
+                                    height: 22,
+                                    width: 22,
                                     child: IconButtonWidget(
                                       iconPath: Constants.VOICE_ICON_LINK,
-                                      size: 18.0,
+                                      size: 18,
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
-                                      padding: EdgeInsets.all(1.0),
+                                      padding: const EdgeInsets.all(1),
                                       onPressed: () {
                                         if (widget.isFromPaymentNotification ==
                                             false)
@@ -2111,19 +2096,19 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                     ),
                                   ),
                                   voiceIdCount > 0
-                                      ? Positioned(
-                                          top: -5.0,
-                                          right: -5.0,
+                                      ? const Positioned(
+                                          top: -5,
+                                          right: -5,
                                           child: Icon(
                                             Icons.check_circle,
                                             color: Colors.green,
                                             size: 15,
                                           ),
                                         )
-                                      : SizedBox(),
+                                      : const SizedBox(),
                                 ],
                               ),
-                              SizedBoxWidget(height: 2.0),
+                              SizedBoxWidget(height: 2),
                               TextWidget(
                                   text: parameters.addVoice,
                                   fontsize: 10.0.sp,
@@ -2139,14 +2124,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                 clipBehavior: Clip.none,
                                 children: <Widget>[
                                   SizedBoxWithChild(
-                                    height: 22.0,
-                                    width: 22.0,
+                                    height: 22,
+                                    width: 22,
                                     child: IconButtonWidget(
                                       iconPath: Constants.RECORDS_ICON_LINK,
-                                      size: 18.0,
+                                      size: 18,
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
-                                      padding: EdgeInsets.all(1.0),
+                                      padding: const EdgeInsets.all(1),
                                       onPressed: () {
                                         if (widget.isFromPaymentNotification ==
                                             false)
@@ -2165,10 +2150,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                           badgeValue: recordIdCount.toString(),
                                           backColor: Color(
                                               commonUtil.getMyPrimaryColor()))
-                                      : SizedBox(),
+                                      : const SizedBox(),
                                 ],
                               ),
-                              SizedBoxWidget(height: 2.0),
+                              SizedBoxWidget(height: 2),
                               TextWidget(
                                   text: parameters.records,
                                   fontsize: 10.0.sp,
@@ -2183,7 +2168,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                     ],
                   ),
                 ),
-                SizedBoxWidget(height: 10.0),
+                SizedBoxWidget(height: 10),
                 Divider(
                   color: Colors.grey[400],
                 ),
@@ -2191,11 +2176,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             ),
           ),
           widget.isFromPaymentNotification
-              ? SizedBox.shrink()
+              ? const SizedBox.shrink()
               : isFollowUp()
-                  ? SizedBox.shrink()
+                  ? const SizedBox.shrink()
                   : isMembershipDiscount
-                      ? SizedBox.shrink()
+                      ? const SizedBox.shrink()
                       : getCSRCheckBox(
                           widget.isFromHospital!
                               ? getFeesFromHospital(
@@ -2220,16 +2205,16 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                   ),
                           ),
                         ),
-          SizedBoxWidget(height: 15.0),
+          SizedBoxWidget(height: 15),
           isMembershipDiscount
               ? Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     getMembershipDiscountCheckBox(),
-                    SizedBoxWidget(height: 15.0),
+                    SizedBoxWidget(height: 15),
                   ],
                 )
-              : SizedBox.shrink(),
+              : const SizedBox.shrink(),
           Container(
             child: Center(
               child: Text(
@@ -2243,10 +2228,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             ),
           ),
           SizedBoxWidget(
-            height: 20.0,
+            height: 20,
           ),
           Container(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -2258,11 +2243,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                           side: BorderSide(
-                              color:
-                                  Color(CommonUtil().getMyPrimaryColor()))),
+                              color: Color(CommonUtil().getMyPrimaryColor()))),
                       backgroundColor: Colors.transparent,
                       foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                      padding: EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8),
                     ),
                     onPressed: () {
                       if (widget.isFromPaymentNotification == false)
@@ -2283,11 +2267,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                           side: BorderSide(
-                              color:
-                                  Color(CommonUtil().getMyPrimaryColor()))),
+                              color: Color(CommonUtil().getMyPrimaryColor()))),
                       backgroundColor: Colors.transparent,
                       foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                      padding: EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8),
                     ),
                     onPressed: () {
                       FHBUtils().check().then((intenet) {

@@ -1,23 +1,25 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/main.dart';
-import 'package:myfhb/services/pushnotification_service.dart';
-import 'package:myfhb/src/resources/network/api_services.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/CommonUtil.dart';
+import '../common/PreferenceUtil.dart';
 import '../constants/HeaderRequest.dart';
-import 'ReminderModel.dart';
-import '../src/utils/FHBUtils.dart';
+import '../constants/fhb_constants.dart';
 import '../constants/fhb_constants.dart' as Constants;
+import '../constants/fhb_parameters.dart';
+import '../main.dart';
+import '../services/pushnotification_service.dart';
+import '../src/resources/network/api_services.dart';
+import '../src/utils/FHBUtils.dart';
+import 'ReminderModel.dart';
 
 class QurPlanReminders {
   static const reminderLocalFile = 'notificationList.json';
 
-  static getTheRemindersFromAPI({bool isSnooze = false, Reminder? snoozeReminderData}) async {
+  static getTheRemindersFromAPI(
+      {bool isSnooze = false, Reminder? snoozeReminderData}) async {
     final headerRequest = HeaderRequest();
     var headers = await headerRequest.getRequestHeadersAuthContents();
     var now = DateTime.now();
@@ -48,7 +50,7 @@ class QurPlanReminders {
       data.forEach((element) {
         var newData = Reminder.fromMap(element);
         final notificationId =
-        toSigned32BitInt(int.tryParse('${newData.eid}') ?? 0);
+            toSigned32BitInt(int.tryParse('${newData.eid}') ?? 0);
         newData.notificationListId = notificationId.toString();
         newData?.redirectTo = stringRegimentScreen;
         if (!newData.evDisabled) {
@@ -58,12 +60,12 @@ class QurPlanReminders {
       });
       if (isSnooze) {
         final notificationId =
-        toSigned32BitInt(int.tryParse('${snoozeReminderData?.eid}') ?? 0);
+            toSigned32BitInt(int.tryParse('${snoozeReminderData?.eid}') ?? 0);
         snoozeReminderData?.notificationListId = notificationId.toString();
         snoozeReminderData?.redirectTo = stringRegimentScreen;
         reminders.add(snoozeReminderData ?? Reminder());
       }
-      await updateReminderswithLocal(reminders,isSnooze: isSnooze);
+      await updateReminderswithLocal(reminders, isSnooze: isSnooze);
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       print(e.toString());
@@ -104,7 +106,6 @@ class QurPlanReminders {
     }
   }
 
-
   static Future<bool?> updateRemindersLocally(Reminder data) async {
     final reminders = await getLocalReminder();
     Reminder? foundTheMatched;
@@ -125,38 +126,37 @@ class QurPlanReminders {
       {bool isSnooze = false}) async {
     var localReminders = await getLocalReminder();
 
-
-      try {
-        for (var i = 0; i < data.length; i++) {
-          var apiReminder = data[i];
-          var found = false;
-          for (var j = 0; j < localReminders.length; j++) {
-            var localReminder = localReminders[j];
-            if (apiReminder.eid == localReminder.eid) {
-              found = true;
-              if (apiReminder == localReminder) {
-                break;
-              } else {
-                await cancelLocalReminders(localReminder);
-                await onInitScheduleNotification(apiReminder);
-              }
+    try {
+      for (var i = 0; i < data.length; i++) {
+        var apiReminder = data[i];
+        var found = false;
+        for (var j = 0; j < localReminders.length; j++) {
+          var localReminder = localReminders[j];
+          if (apiReminder.eid == localReminder.eid) {
+            found = true;
+            if (apiReminder == localReminder) {
+              break;
+            } else {
+              await cancelLocalReminders(localReminder);
+              await onInitScheduleNotification(apiReminder);
             }
           }
-          if (!found) {
-            await onInitScheduleNotification(apiReminder);
-          }
         }
-
-        for (var i = 0; i < localReminders.length; i++) {
-          var localReminder = localReminders[i];
-          if (!data.contains(localReminder)) {
-            await cancelLocalReminders(localReminder);
-          }
+        if (!found) {
+          await onInitScheduleNotification(apiReminder);
         }
-        return await saveRemindersLocally(data);
-      } catch (e) {
-        print(e);
       }
+
+      for (var i = 0; i < localReminders.length; i++) {
+        var localReminder = localReminders[i];
+        if (!data.contains(localReminder)) {
+          await cancelLocalReminders(localReminder);
+        }
+      }
+      return await saveRemindersLocally(data);
+    } catch (e) {
+      print(e);
+    }
 
     return await saveRemindersLocally(data);
   }
@@ -240,7 +240,6 @@ class QurPlanReminders {
         // Handle any exceptions that may occur during the process
         CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
-
     }
     return notifications;
   }
@@ -253,7 +252,6 @@ class QurPlanReminders {
     return await saveRemindersLocally([]);
   }
 
-
   // Cancel local reminder notifications
   static Future<void> cancelLocalReminders(Reminder foundTheMatched) async {
     try {
@@ -264,8 +262,8 @@ class QurPlanReminders {
       // Cancel the main notification
       var mainNotificationId = int.tryParse('$id') ?? 0;
       await localNotificationsPlugin.cancel(mainNotificationId);
-      await sheelaAIController.clearScheduledTime(mainNotificationId.toString());
-
+      await sheelaAIController
+          .clearScheduledTime(mainNotificationId.toString());
 
       // Cancel reminder notifications if beforeInt is greater than 0
       var beforeInt = int.tryParse(foundTheMatched.remindbefore!);
@@ -273,7 +271,8 @@ class QurPlanReminders {
         var baseId = '${id}00';
         var beforeNotificationId = int.tryParse(baseId) ?? 0;
         await localNotificationsPlugin.cancel(beforeNotificationId);
-        await sheelaAIController.clearScheduledTime(beforeNotificationId.toString());
+        await sheelaAIController
+            .clearScheduledTime(beforeNotificationId.toString());
       }
 
       // Cancel reminder notifications if afterInt is greater than 0
@@ -282,9 +281,9 @@ class QurPlanReminders {
         var baseId = '${id}11';
         var afterNotificationId = int.tryParse(baseId) ?? 0;
         await localNotificationsPlugin.cancel(afterNotificationId);
-        await sheelaAIController.clearScheduledTime(afterNotificationId.toString());
+        await sheelaAIController
+            .clearScheduledTime(afterNotificationId.toString());
       }
-
     } catch (e, stackTrace) {
       // Log any errors and their stack traces
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -312,5 +311,4 @@ class QurPlanReminders {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
-
 }

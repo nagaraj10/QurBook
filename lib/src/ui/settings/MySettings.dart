@@ -2,28 +2,27 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
-import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
-import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
-import 'package:myfhb/landing/view_model/landing_view_model.dart';
-import 'package:myfhb/src/model/CreateDeviceSelectionModel.dart';
-import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
-import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
-import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 
-import 'AppleHealthSettings.dart';
-import 'package:myfhb/src/model/user/Tags.dart';
+import '../../../colors/fhb_colors.dart' as fhbColors;
+import '../../../common/CommonUtil.dart';
+import '../../../common/PreferenceUtil.dart';
+import '../../../common/common_circular_indicator.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/variable_constant.dart' as variable;
+import '../../../device_integration/view/screens/Device_Card.dart';
+import '../../../device_integration/view/screens/Device_Data.dart';
+import '../../../device_integration/viewModel/Device_model.dart';
+import '../../../device_integration/viewModel/deviceDataHelper.dart';
+import '../../../landing/view_model/landing_view_model.dart';
+import '../../../widgets/GradientAppBar.dart';
+import '../../model/CreateDeviceSelectionModel.dart';
+import '../../model/GetDeviceSelectionModel.dart';
+import '../../model/UpdatedDeviceModel.dart';
+import '../../model/user/Tags.dart';
+import '../../resources/repository/health/HealthReportListForUserRepository.dart';
+import '../../utils/screenutils/size_extensions.dart';
 
 class MySettings extends StatefulWidget {
   @override
@@ -84,7 +83,6 @@ class _MySettingsState extends State<MySettings> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     selectedList = [];
     _deviceModel = DevicesViewModel();
     super.initState();
@@ -118,19 +116,7 @@ class _MySettingsState extends State<MySettings> {
     }
     if (_isHealthFirstTime) {
       _isHKActive = false;
-      //PreferenceUtil.saveString(Constants.activateHK, _isHKActive.toString());
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Settings Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   Future<GetDeviceSelectionModel?> getDeviceSelectionValues() async {

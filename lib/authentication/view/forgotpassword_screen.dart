@@ -1,23 +1,21 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/authentication/model/Country.dart';
-import 'package:myfhb/widgets/app_primary_button.dart';
+
+import '../../common/CommonUtil.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/variable_constant.dart';
+import '../../src/ui/loader_class.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/app_primary_button.dart';
 import '../constants/constants.dart';
+import '../model/Country.dart';
 import '../model/forgot_password_model.dart';
+import '../view_model/patientauth_view_model.dart';
+import '../widgets/country_code_picker.dart';
 import 'authentication_validator.dart';
 import 'confirm_password_screen.dart';
 import 'login_screen.dart';
-import '../view_model/patientauth_view_model.dart';
-import '../model/forgot_password_model.dart' as forgotPasswordModel;
-import '../../constants/fhb_constants.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
-import '../widgets/country_code_picker.dart';
-import '../../common/CommonUtil.dart';
-import '../../constants/variable_constant.dart';
-import '../../src/ui/loader_class.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override
@@ -34,20 +32,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
     authViewModel = AuthViewModel();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Forgot Password Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -102,7 +88,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         _backbutton(),
                         SizedBox(height: height * .015),
                         Text(
-                          CommonUtil.isUSRegion()?strUSsupportEmail:strINsupportEmail,
+                          CommonUtil.isUSRegion()
+                              ? strUSsupportEmail
+                              : strINsupportEmail,
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 15.0.sp),
                         ),
@@ -150,7 +138,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           style: TextStyle(
             fontSize: 16.0.sp,
           ),
-          autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
+          autovalidateMode: _autoValidateBool
+              ? AutovalidateMode.always
+              : AutovalidateMode.disabled,
           obscureText: isPassword,
           controller: controller,
           decoration: InputDecoration(
@@ -183,8 +173,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
               )),
           validator: (value) {
-            return AuthenticationValidator()
-                .phoneValidation(value!, patternPhoneNew as String, strPhoneCantEmpty);
+            return AuthenticationValidator().phoneValidation(
+                value!, patternPhoneNew as String, strPhoneCantEmpty);
           },
           keyboardType: TextInputType.number,
         ));
@@ -259,37 +249,40 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Widget _backbutton() {
-   return AppPrimaryButton(onTap: () {
-      FocusScope.of(context).unfocus();
-      Navigator.of(context).pop();
-    }, text:strBackText,
+    return AppPrimaryButton(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        Navigator.of(context).pop();
+      },
+      text: strBackText,
       isSecondaryButton: true,
-
     );
   }
 
   Widget _resetbutton() {
-   return AppPrimaryButton(text:strResetButton, onTap: () async {
-      FocusScope.of(context).unfocus();
-      if (_ForgetPassKey.currentState!.validate()) {
-        _ForgetPassKey.currentState!.save();
-        LoaderClass.showLoadingDialog(context);
-        var logInModel = PatientForgotPasswordModel(
-          //userName: mobileController.text,
-          userName:
-          '${_selectedDialogCountry.phoneCode}${mobileController.text}',
-          source: strSource,
-        );
-        final map = logInModel.toJson();
-        final response = await authViewModel.resetPassword(map);
-        _checkResponse(response);
-      } else {
-        setState(() {
-          _autoValidateBool = true;
-        });
-      }
-    },
-   );
+    return AppPrimaryButton(
+      text: strResetButton,
+      onTap: () async {
+        FocusScope.of(context).unfocus();
+        if (_ForgetPassKey.currentState!.validate()) {
+          _ForgetPassKey.currentState!.save();
+          LoaderClass.showLoadingDialog(context);
+          var logInModel = PatientForgotPasswordModel(
+            //userName: mobileController.text,
+            userName:
+                '${_selectedDialogCountry.phoneCode}${mobileController.text}',
+            source: strSource,
+          );
+          final map = logInModel.toJson();
+          final response = await authViewModel.resetPassword(map);
+          _checkResponse(response);
+        } else {
+          setState(() {
+            _autoValidateBool = true;
+          });
+        }
+      },
+    );
   }
 
   _checkResponse(PatientForgotPasswordModel response) {
