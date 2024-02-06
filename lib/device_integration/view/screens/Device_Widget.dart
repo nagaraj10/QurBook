@@ -1,42 +1,40 @@
 // ignore: file_names
 import 'dart:io';
-import 'package:myfhb/common/common_circular_indicator.dart';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
 import '../../../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../common/PreferenceUtil.dart';
-import '../../../constants/fhb_constants.dart';
-import '../../../constants/fhb_parameters.dart';
+import '../../../common/common_circular_indicator.dart';
 import '../../../common/errors_widget.dart';
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/fhb_parameters.dart';
+import '../../../constants/fhb_parameters.dart' as parameters;
+import '../../../constants/router_variable.dart' as router;
 import '../../../constants/variable_constant.dart';
-import '../../viewModel/deviceDataHelper.dart';
+import '../../../constants/variable_constant.dart' as variable;
 import '../../../devices/device_dashboard_arguments.dart';
 import '../../../my_family/bloc/FamilyListBloc.dart';
+import '../../../regiment/view_model/regiment_view_model.dart';
 import '../../../src/model/GetDeviceSelectionModel.dart';
 import '../../../src/model/common_response.dart';
 import '../../../src/model/user/MyProfileModel.dart';
 import '../../../src/model/user/user_accounts_arguments.dart';
 import '../../../src/resources/repository/health/HealthReportListForUserRepository.dart';
 import '../../../src/ui/user/UserAccounts.dart';
-import 'package:provider/provider.dart';
-import '../../../regiment/view_model/regiment_view_model.dart';
-
-import '../../../constants/variable_constant.dart' as variable;
-import '../../../constants/fhb_parameters.dart' as parameters;
-
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../model/LastMeasureSync.dart';
+import '../../viewModel/Device_model.dart';
+import '../../viewModel/deviceDataHelper.dart';
 import 'Device_Data.dart';
 import 'Device_Value.dart';
-
-import '../../viewModel/Device_model.dart';
-
-import '../../model/LastMeasureSync.dart';
-import '../../../constants/fhb_constants.dart' as Constants;
-import '../../../constants/router_variable.dart' as router;
-import '../../../src/utils/screenutils/size_extensions.dart';
 
 class ShowDevicesNew extends StatefulWidget {
   const ShowDevicesNew({
@@ -142,14 +140,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   @override
   void initState() {
     FocusManager.instance.primaryFocus!.unfocus();
-    mInitialTime = DateTime.now();
     _familyListBloc = FamilyListBloc();
     getFamilyLength();
-    // Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
-    //   isInitial: true,
-    //   setIndex: true,
-    //   fromPlans: widget.fromPlans,
-    // );
     super.initState();
   }
 
@@ -157,12 +149,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   void dispose() {
     FocusManager.instance.primaryFocus!.unfocus();
     super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Device Value Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   getFamilyLength() async {
@@ -607,8 +593,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           averageForSys = '';
           averageForDia = '';
         }
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         averageForSys = '';
         averageForDia = '';
@@ -670,8 +656,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             ? deviceValues!.bloodGlucose!.entities![0].averageAsOfNow!.ppAverage
                 .toString()
             : '';
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         averageForFasting = '';
         averageForPP = '';
@@ -757,8 +743,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                           .averageAsOfNow!.oxygenLevelAverage
                           .toString()
                       : '';
-            } catch (e,stackTrace) {
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+            } catch (e, stackTrace) {
+              CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
               averageForPul = '';
               averageForPRBpm = '';
@@ -773,8 +759,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           averageForPRBpm = '';
           prbPMOxi = '';
         }
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         averageForPulForBp = '';
         averageForPul = '';
@@ -790,8 +776,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 .oxygenLevelAverage
                 .toString()
             : '';
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         averageForSPO2 = '';
       }
@@ -829,8 +815,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 .temperatureAverage
                 .toString()
             : '';
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         averageForTemp = '';
       }
@@ -840,8 +826,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 ? deviceValues!
                     .bodyTemperature!.entities![0].temperatureUnit!.code
                 : '';
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         unitForTemp = '';
       }
@@ -879,8 +865,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 .bodyWeight!.entities![0].averageAsOfNow!.weightAverage
                 .toString()
             : '';
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         averageForWeigh = '';
       }
@@ -890,8 +876,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             deviceValues!.bodyWeight!.entities![0].weightUnit != null
                 ? deviceValues!.bodyWeight!.entities![0].weightUnit!.code
                 : '';
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         unitForWeight = '';
       }
@@ -1057,10 +1043,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                   child: InkWell(
                     onTap: () {
                       toast.getToastForLongTime(strSync, Colors.green);
-                      if (Platform.isAndroid)
-                       { _deviceDataHelper.syncGoogleFit().then((value) {
+                      if (Platform.isAndroid) {
+                        _deviceDataHelper.syncGoogleFit().then((value) {
                           setState(() {});
-                        });}
+                        });
+                      }
                     },
                     child: Image.asset(
                       icon_refresh_dash,

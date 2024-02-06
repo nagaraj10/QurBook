@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
-import 'package:myfhb/common/firebase_analytics_service.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-
 import 'package:provider/provider.dart';
 
+import '../../../Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import '../../../Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import '../../../chat_socket/view/ChatUserList.dart';
 import '../../../common/CommonConstants.dart';
 import '../../../common/CommonUtil.dart';
@@ -46,8 +43,8 @@ class _HomeWidgetState extends State<HomeWidget> {
       getConfiguration();
       super.initState();
       //initilizeViewModel();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -57,8 +54,8 @@ class _HomeWidgetState extends State<HomeWidget> {
     try {
       addPlanButton = await PreferenceUtil.getAddPlanBtn();
       //setState(() {});
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -178,11 +175,6 @@ class _HomeWidgetState extends State<HomeWidget> {
                       icon: variable.icon_my_plan,
                       color: Color(CommonConstants.bplightColor),
                       onPressed: () async {
-                        var firebase = FirebaseAnalyticsService();
-                        firebase.trackEvent("on_plan_button_click", {
-                          "user_id":
-                              PreferenceUtil.getStringValue(KEY_USERID_MAIN)
-                        });
                         await Get.toNamed(rt_MyPlans);
                         await landingViewModel.getQurPlanDashBoard();
                       },
@@ -197,8 +189,6 @@ class _HomeWidgetState extends State<HomeWidget> {
                     ),
                     LandingCard(
                       title: constants.strYourRegimen,
-                      // eventName:
-                      //     dashboardData?.regimenDue?.lastEventTitle ?? '',
                       onEventPressed: () async {
                         final userId =
                             PreferenceUtil.getStringValue(constants.KEY_USERID);
@@ -206,10 +196,6 @@ class _HomeWidgetState extends State<HomeWidget> {
                           Get.context!,
                           listen: false,
                         ).regimentMode = RegimentMode.Schedule;
-                        // Provider.of<RegimentViewModel>(
-                        //   Get.context,
-                        //   listen: false,
-                        // ).regimentFilter = RegimentFilter.Event;
                         Provider.of<RegimentViewModel>(
                           context,
                           listen: false,
@@ -225,15 +211,6 @@ class _HomeWidgetState extends State<HomeWidget> {
                         widget.refresh(userId != newUserId);
                         await landingViewModel.getQurPlanDashBoard();
                       },
-                      // lastStatus:
-                      //     dashboardData?.regimenDue?.lastEnteredDateTime !=
-                      //             null
-                      //         ? CommonUtil().regimentDateFormat(
-                      //             dashboardData
-                      //                 ?.regimenDue?.lastEnteredDateTime,
-                      //             isLanding: true,
-                      //           )
-                      //         : '',
                       alerts: activePlanCount > 0
                           ? (activeDues > 0
                               ? '$activeDues${constants.strActivitiesDue}'
@@ -244,10 +221,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                           : null,
                       icon: variable.icon_my_health_regimen,
                       color: Color(CommonConstants.pulselightColor),
-                      onPressed:
-                          /* activePlanCount > 0
-                    ?*/
-                          () async {
+                      onPressed: () async {
                         final userId =
                             PreferenceUtil.getStringValue(constants.KEY_USERID);
                         Provider.of<RegimentViewModel>(
@@ -264,23 +238,6 @@ class _HomeWidgetState extends State<HomeWidget> {
                         widget.refresh(userId != newUserId);
                         await landingViewModel.getQurPlanDashBoard();
                       },
-                      /*  : null,*/
-                      // onAddPressed: () async {
-                      //   var userId = PreferenceUtil.getStringValue(
-                      //       constants.KEY_USERID);
-                      //   Provider.of<RegimentViewModel>(
-                      //     Get.context,
-                      //     listen: false,
-                      //   ).regimentMode = RegimentMode.Schedule;
-                      //   Provider.of<RegimentViewModel>(Get.context,
-                      //           listen: false)
-                      //       .regimentFilter = RegimentFilter.All;
-                      //   await Get.toNamed(rt_Regimen);
-                      //   var newUserId = PreferenceUtil.getStringValue(
-                      //       constants.KEY_USERID);
-                      //   refresh(userId != newUserId);
-                      //   await landingViewModel.getQurPlanDashBoard();
-                      // },
                       onLinkPressed: activePlanCount > 0
                           ? () async {
                               final userId = PreferenceUtil.getStringValue(
@@ -313,10 +270,6 @@ class _HomeWidgetState extends State<HomeWidget> {
                         await Get.toNamed(rt_Devices);
                         await landingViewModel.getQurPlanDashBoard();
                       },
-                      // onAddPressed: () async {
-                      //   await Get.toNamed(rt_Devices);
-                      //   await landingViewModel.getQurPlanDashBoard();
-                      // },
                     ),
                     LandingCard(
                       title: constants.strSymptomsCheckIn,
@@ -372,22 +325,6 @@ class _HomeWidgetState extends State<HomeWidget> {
                               await landingViewModel.getQurPlanDashBoard();
                             }
                           : null,
-                      // onAddPressed: () async {
-                      //   var userId = PreferenceUtil.getStringValue(
-                      //       constants.KEY_USERID);
-                      //   Provider.of<RegimentViewModel>(
-                      //     Get.context,
-                      //     listen: false,
-                      //   ).regimentMode = RegimentMode.Symptoms;
-                      //   Provider.of<RegimentViewModel>(Get.context,
-                      //           listen: false)
-                      //       .regimentFilter = RegimentFilter.All;
-                      //   await Get.toNamed(rt_Regimen);
-                      //   var newUserId = PreferenceUtil.getStringValue(
-                      //       constants.KEY_USERID);
-                      //   refresh(userId != newUserId);
-                      //   await landingViewModel.getQurPlanDashBoard();
-                      // },
                     ),
                     LandingCard(
                       title: constants.strYourFamily,
@@ -407,16 +344,6 @@ class _HomeWidgetState extends State<HomeWidget> {
                         );
                         await landingViewModel.getQurPlanDashBoard();
                       },
-                      // onAddPressed: () async {
-                      //   await Navigator.pushNamed(
-                      //     Get.context,
-                      //     rt_UserAccounts,
-                      //     arguments: UserAccountsArguments(
-                      //       selectedIndex: 1,
-                      //     ),
-                      //   );
-                      //   await landingViewModel.getQurPlanDashBoard();
-                      // },
                     ),
                     LandingCard(
                       title: constants.strYourProviders,
@@ -436,21 +363,11 @@ class _HomeWidgetState extends State<HomeWidget> {
                         );
                         await landingViewModel.getQurPlanDashBoard();
                       },
-                      // onAddPressed: () async {
-                      //   await Navigator.pushNamed(
-                      //     Get.context,
-                      //     rt_UserAccounts,
-                      //     arguments: UserAccountsArguments(
-                      //       selectedIndex: 2,
-                      //     ),
-                      //   );
-                      //   await landingViewModel.getQurPlanDashBoard();
-                      // },
                     ),
                     LandingCard(
                       title: constants.strServices,
                       lastStatus: '',
-                      alerts: '' /*constants.strTrueDeskTickets*/,
+                      alerts: '',
                       icon: variable.icon_service,
                       color: Color(CommonConstants.pulselightColor),
                       onPressed: () {
@@ -460,59 +377,17 @@ class _HomeWidgetState extends State<HomeWidget> {
                             builder: (context) => MyTicketsListScreen(),
                           ),
                         );
-                        // if (availableVideos > 0) {
-                        //   Get.to(
-                        //     VideoScreen(
-                        //       videoList: dashboardData?.helperVideos,
-                        //     ),
-                        //   );
-                        // }
                       },
                     ),
                     LandingCard(
                       title: TranslationConstants.chatWithUs.t(),
                       lastStatus: '',
-                      /*isEnabled: activePlanCount > 0,*/
-                      // alerts: availableCareProvider > 0 &&
-                      //         (careProviderName?.trim()?.isNotEmpty ??
-                      //             false)
-                      //     ? '$careProviderName ${constants.strChatAvailable}'
-                      //     : constants.strChatNotAvailable,
                       alerts: careProvidersCount > 0
                           ? '$careProvidersCount ${constants.strCareProvidersAvailable}'
                           : constants.strChatNotAvailable,
                       icon: variable.icon_chat_dash,
                       color: Color(CommonConstants.bplightColor),
-                      // onTicketPressed: () async {
-                      //   print('Ticket Pressed');
-                      //   Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) => MyTicketsListScreen(),
-                      //     ),
-                      //   );
-                      // },
                       onPressed: () async {
-                        // if (availableCareProvider > 0) {
-                        //   Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => Chat(
-                        //         peerId:
-                        //             dashboardData?.careGiverInfo?.doctorId,
-                        //         peerAvatar: dashboardData
-                        //                 ?.careGiverInfo?.profilePic ??
-                        //             '',
-                        //         peerName: careProviderName,
-                        //         lastDate: null,
-                        //         patientId: '',
-                        //         patientName: '',
-                        //         patientPicture: '',
-                        //         isFromVideoCall: false,
-                        //       ),
-                        //     ),
-                        //   );
-                        // }
                         if (careProvidersCount > 0) {
                           Navigator.push(
                             context,
@@ -548,8 +423,8 @@ class _HomeWidgetState extends State<HomeWidget> {
       } else {
         return constants.strNoPlansAdded;
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       return constants.strNoPlansAdded;
     }

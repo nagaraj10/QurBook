@@ -1,12 +1,9 @@
-
 import 'dart:async';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -16,40 +13,36 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/resources/network/api_services.dart';
-import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/src/ui/MyRecordsArguments.dart';
-import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
-import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/telehealth/features/chat/constants/const.dart';
-import 'package:myfhb/telehealth/features/chat/model/AppointmentDetailModel.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
-import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
-import 'package:myfhb/telehealth/features/chat/viewModel/notificationController.dart';
-import 'package:myfhb/widgets/ShowImage.dart';
 import 'package:open_filex/open_filex.dart';
-//import 'package:open_file/open_file.dart'; FU2.5
-//import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';  FU2.5
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import '../../../../common/CommonUtil.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 
+import '../../../../common/PreferenceUtil.dart';
+import '../../../../common/common_circular_indicator.dart';
+import '../../../../constants/fhb_constants.dart' as Constants;
+import '../../../../constants/fhb_constants.dart';
+import '../../../../constants/variable_constant.dart' as variable;
+import '../../../../src/model/Health/asgard/health_record_collection.dart';
+import '../../../../src/model/user/MyProfileModel.dart';
+import '../../../../src/resources/network/api_services.dart';
+import '../../../../src/ui/MyRecord.dart';
+import '../../../../src/ui/MyRecordsArguments.dart';
+import '../../../../src/ui/SheelaAI/Views/youtube_player.dart';
+import '../../../../src/ui/audio/AudioRecorder.dart';
+import '../../../../src/ui/audio/AudioScreenArguments.dart';
+import '../../../../src/utils/FHBUtils.dart';
+import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../../widgets/ShowImage.dart';
+import '../constants/const.dart';
+import '../model/AppointmentDetailModel.dart';
+import '../viewModel/ChatViewModel.dart';
+import '../viewModel/notificationController.dart';
 import 'ChooseDateSlot.dart';
+import 'PDFModel.dart';
+import 'PDFView.dart';
+import 'PDFViewerController.dart';
+import 'full_photo.dart';
 
 class Chat extends StatefulWidget {
   final String? peerId;
@@ -65,14 +58,14 @@ class Chat extends StatefulWidget {
 
   Chat(
       {Key? key,
-       this.peerId,
-       this.peerAvatar,
-       this.peerName,
-     this.lastDate,
-       this.patientId,
-       this.patientName,
-       this.patientPicture,
-       this.isFromVideoCall,
+      this.peerId,
+      this.peerAvatar,
+      this.peerName,
+      this.lastDate,
+      this.patientId,
+      this.patientName,
+      this.patientPicture,
+      this.isFromVideoCall,
       this.message,
       this.isCareGiver})
       : super(key: key);
@@ -121,14 +114,14 @@ class ChatScreen extends StatefulWidget {
 
   ChatScreen(
       {Key? key,
-       this.peerId,
-       this.peerAvatar,
-       this.peerName,
-       this.lastDate,
-       this.patientId,
-       this.patientName,
-       this.patientPicture,
-       this.isFromVideoCall,
+      this.peerId,
+      this.peerAvatar,
+      this.peerName,
+      this.lastDate,
+      this.patientId,
+      this.patientName,
+      this.patientPicture,
+      this.isFromVideoCall,
       this.message,
       this.isCareGiver})
       : super(key: key);
@@ -148,14 +141,14 @@ class ChatScreen extends StatefulWidget {
 class ChatScreenState extends State<ChatScreen> {
   ChatScreenState(
       {Key? key,
-       this.peerId,
-       this.peerAvatar,
-       this.peerName,
-       this.lastDate,
-       this.patientId,
-       this.patientName,
-       this.patientPicUrl,
-       this.isFromVideoCall});
+      this.peerId,
+      this.peerAvatar,
+      this.peerName,
+      this.lastDate,
+      this.patientId,
+      this.patientName,
+      this.patientPicUrl,
+      this.isFromVideoCall});
 
   String? peerId;
   String? peerAvatar;
@@ -185,7 +178,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   final TextFieldColorizer textEditingController = TextFieldColorizer(
     {
-      '#(.*?)#': TextStyle(color: Colors.orange),
+      '#(.*?)#': const TextStyle(color: Colors.orange),
     },
   );
 
@@ -227,11 +220,8 @@ class ChatScreenState extends State<ChatScreen> {
 
   bool isCareGiverApi = true;
 
-  /*bool isDateIconShown = false;*/
-
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
 
     focusNode.addListener(onFocusChange);
@@ -265,7 +255,7 @@ class ChatScreenState extends State<ChatScreen> {
     setState(() {
       isLoading = true;
     });
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     setState(() {
       isLoading = false;
     });
@@ -277,19 +267,13 @@ class ChatScreenState extends State<ChatScreen> {
     _mPlayer!.closeAudioSession();
     _mPlayer = null;
     super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'TeleHealth Chat Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   set_up_audios() async {
     _mPlayer!.openAudioSession().then(
       (value) {
         _mPlayer!.setSubscriptionDuration(
-          Duration(
+          const Duration(
             seconds: 1,
           ),
         );
@@ -328,8 +312,8 @@ class ChatScreenState extends State<ChatScreen> {
           });
         }
       });
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       setState(() {
         isChatDisable = false;
@@ -429,10 +413,10 @@ class ChatScreenState extends State<ChatScreen> {
                     null) {
               patientDeviceToken = appointmentResult
                   ?.deviceToken?.patient?.payload![0]?.deviceTokenId;
-            } else if (appointmentResult
-                    !.deviceToken!.parentMember!.isSuccess! &&
-                appointmentResult
-                    !.deviceToken!.parentMember!.payload!.isNotEmpty &&
+            } else if (appointmentResult!
+                    .deviceToken!.parentMember!.isSuccess! &&
+                appointmentResult!
+                    .deviceToken!.parentMember!.payload!.isNotEmpty &&
                 appointmentResult?.deviceToken?.parentMember?.payload![0]
                         ?.deviceTokenId !=
                     null) {
@@ -489,8 +473,8 @@ class ChatScreenState extends State<ChatScreen> {
       //     onSendMessage(imageUrl, 3);
       //   });
       // });
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       setState(() {
         isLoading = false;
@@ -650,9 +634,8 @@ class ChatScreenState extends State<ChatScreen> {
           groupChatId,
           doctorDeviceToken);
       textValue = '';
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -730,11 +713,11 @@ class ChatScreenState extends State<ChatScreen> {
               onPressed: () async {
                 await OpenFilex.open(
                   file?.path,
-                );//FU2.5
+                ); //FU2.5
                 final controller = Get.find<PDFViewController>();
                 final data = OpenPDF(type: PDFLocation.Path, path: file?.path);
                 controller.data = data;
-                Get.to(() => PDFView());
+                Get.to(() => const PDFView());
               },
             ),
           ),
@@ -756,7 +739,7 @@ class ChatScreenState extends State<ChatScreen> {
             onPressed: () async {
               await OpenFilex.open(
                 pdfFile,
-              );//FU2.5
+              ); //FU2.5
             },
           ),
         ));
@@ -796,9 +779,8 @@ class ChatScreenState extends State<ChatScreen> {
             ),
           ));
         }
-      } catch (e,stackTrace) {
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
     }
   }
@@ -853,7 +835,7 @@ class ChatScreenState extends State<ChatScreen> {
               // Text
               ? Card(
                   color: Colors.transparent,
-                  shape: RoundedRectangleBorder(
+                  shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(25),
                           bottomLeft: Radius.circular(25),
@@ -863,7 +845,7 @@ class ChatScreenState extends State<ChatScreen> {
                       maxWidth: 1.sw * .6,
                     ),
                     padding: const EdgeInsets.all(15.0),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(25),
@@ -896,10 +878,10 @@ class ChatScreenState extends State<ChatScreen> {
                               child: CommonCircularIndicator(),
                               width: 200.0.h,
                               height: 200.0.h,
-                              padding: EdgeInsets.all(70.0),
+                              padding: const EdgeInsets.all(70.0),
                               decoration: BoxDecoration(
                                 color: greyColor2,
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                   Radius.circular(8.0),
                                 ),
                               ),
@@ -911,7 +893,7 @@ class ChatScreenState extends State<ChatScreen> {
                                 height: 200.0.h,
                                 fit: BoxFit.cover,
                               ),
-                              borderRadius: BorderRadius.all(
+                              borderRadius: const BorderRadius.all(
                                 Radius.circular(8.0),
                               ),
                               clipBehavior: Clip.hardEdge,
@@ -921,7 +903,8 @@ class ChatScreenState extends State<ChatScreen> {
                             height: 200.0.h,
                             fit: BoxFit.cover,
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8.0)),
                           clipBehavior: Clip.hardEdge,
                         ),
                         onPressed: () {
@@ -934,8 +917,10 @@ class ChatScreenState extends State<ChatScreen> {
                         onLongPress: () {
                           openDownloadAlert(
                               document[STR_CONTENT], context, false, '.jpg');
-                        },style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.all(0),),
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.all(0),
+                        ),
                       ),
                       margin: EdgeInsets.only(
                           bottom: isLastMessageRight(index) ? 20.0 : 10.0,
@@ -945,7 +930,7 @@ class ChatScreenState extends State<ChatScreen> {
                   : document[STR_TYPE] == 2
                       ? Card(
                           color: Colors.transparent,
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(25),
                                   bottomLeft: Radius.circular(25),
@@ -963,7 +948,7 @@ class ChatScreenState extends State<ChatScreen> {
                                 maxWidth: 1.sw * .6,
                               ),
                               padding: const EdgeInsets.all(15.0),
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(25),
@@ -974,7 +959,7 @@ class ChatScreenState extends State<ChatScreen> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.picture_as_pdf,
                                     size: 14,
                                     color: Colors.black54,
@@ -996,7 +981,7 @@ class ChatScreenState extends State<ChatScreen> {
                                 borderRadius: BorderRadius.circular(10.0),
                                 elevation: 2.0,
                                 child: Container(
-                                  padding: EdgeInsets.all(10.0),
+                                  padding: const EdgeInsets.all(10.0),
                                   width: 1.sw / 3,
                                   child: Row(
                                     mainAxisAlignment:
@@ -1058,7 +1043,7 @@ class ChatScreenState extends State<ChatScreen> {
                                   child: CommonCircularIndicator(),
                                   width: 35.0.h,
                                   height: 35.0.h,
-                                  padding: EdgeInsets.all(10.0),
+                                  padding: const EdgeInsets.all(10.0),
                                 ),
                             imageUrl: peerAvatar!,
                             width: 35.0.h,
@@ -1081,7 +1066,7 @@ class ChatScreenState extends State<ChatScreen> {
                                     ),
                                   )),
                                 )),
-                        borderRadius: BorderRadius.all(
+                        borderRadius: const BorderRadius.all(
                           Radius.circular(18.0),
                         ),
                         clipBehavior: Clip.hardEdge,
@@ -1090,7 +1075,7 @@ class ChatScreenState extends State<ChatScreen> {
                 document[STR_TYPE] == 0
                     ? Card(
                         color: Colors.transparent,
-                        shape: RoundedRectangleBorder(
+                        shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                                 topRight: Radius.circular(25),
                                 bottomLeft: Radius.circular(25),
@@ -1102,7 +1087,7 @@ class ChatScreenState extends State<ChatScreen> {
                           padding: const EdgeInsets.all(15.0),
                           decoration: BoxDecoration(
                             color: Color(CommonUtil().getMyPrimaryColor()),
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                               topRight: Radius.circular(25),
                               bottomLeft: Radius.circular(25),
                               bottomRight: Radius.circular(25),
@@ -1127,10 +1112,10 @@ class ChatScreenState extends State<ChatScreen> {
                                     child: CommonCircularIndicator(),
                                     width: 200.0.h,
                                     height: 200.0.h,
-                                    padding: EdgeInsets.all(70.0),
+                                    padding: const EdgeInsets.all(70.0),
                                     decoration: BoxDecoration(
                                       color: greyColor2,
-                                      borderRadius: BorderRadius.all(
+                                      borderRadius: const BorderRadius.all(
                                         Radius.circular(8.0),
                                       ),
                                     ),
@@ -1143,7 +1128,7 @@ class ChatScreenState extends State<ChatScreen> {
                                       height: 200.0.h,
                                       fit: BoxFit.cover,
                                     ),
-                                    borderRadius: BorderRadius.all(
+                                    borderRadius: const BorderRadius.all(
                                       Radius.circular(8.0),
                                     ),
                                     clipBehavior: Clip.hardEdge,
@@ -1153,8 +1138,8 @@ class ChatScreenState extends State<ChatScreen> {
                                   height: 200.0.h,
                                   fit: BoxFit.cover,
                                 ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8.0)),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(8.0)),
                                 clipBehavior: Clip.hardEdge,
                               ),
                               onPressed: () {
@@ -1167,15 +1152,17 @@ class ChatScreenState extends State<ChatScreen> {
                               onLongPress: () {
                                 openDownloadAlert(document[STR_CONTENT],
                                     context, false, '.jpg');
-                              },style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.all(0),),
+                              },
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.all(0),
+                              ),
                             ),
-                            margin: EdgeInsets.only(left: 10.0),
+                            margin: const EdgeInsets.only(left: 10.0),
                           )
                         : document[STR_TYPE] == 2
                             ? Card(
                                 color: Colors.transparent,
-                                shape: RoundedRectangleBorder(
+                                shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.only(
                                         topRight: Radius.circular(25),
                                         bottomLeft: Radius.circular(25),
@@ -1197,7 +1184,7 @@ class ChatScreenState extends State<ChatScreen> {
                                     decoration: BoxDecoration(
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
-                                      borderRadius: BorderRadius.only(
+                                      borderRadius: const BorderRadius.only(
                                         topRight: Radius.circular(25),
                                         bottomLeft: Radius.circular(25),
                                         bottomRight: Radius.circular(25),
@@ -1207,7 +1194,7 @@ class ChatScreenState extends State<ChatScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Icon(
+                                        const Icon(
                                           Icons.picture_as_pdf,
                                           size: 14,
                                           color: Colors.black54,
@@ -1215,7 +1202,7 @@ class ChatScreenState extends State<ChatScreen> {
                                         SizedBoxWidget(
                                           width: 5.0.w,
                                         ),
-                                        Text(
+                                        const Text(
                                           'Click to view PDF',
                                           style: TextStyle(color: Colors.white),
                                         ),
@@ -1233,7 +1220,7 @@ class ChatScreenState extends State<ChatScreen> {
                                           CommonUtil().getMyPrimaryColor()),
                                       elevation: 2.0,
                                       child: Container(
-                                        padding: EdgeInsets.all(10.0),
+                                        padding: const EdgeInsets.all(10.0),
                                         width: 1.sw / 3,
                                         child: Row(
                                           mainAxisAlignment:
@@ -1293,13 +1280,14 @@ class ChatScreenState extends State<ChatScreen> {
                           fontSize: 14.0.sp,
                           fontStyle: FontStyle.italic),
                     ),
-                    margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
+                    margin: const EdgeInsets.only(
+                        left: 50.0, top: 5.0, bottom: 5.0),
                   )
                 : Container()
           ],
           crossAxisAlignment: CrossAxisAlignment.start,
         ),
-        margin: EdgeInsets.only(bottom: 10.0),
+        margin: const EdgeInsets.only(bottom: 10.0),
       );
     }
   }
@@ -1330,7 +1318,7 @@ class ChatScreenState extends State<ChatScreen> {
     final controller = Get.find<PDFViewController>();
     final data = OpenPDF(type: PDFLocation.URL, path: url);
     controller.data = data;
-    Get.to(() => PDFView());
+    Get.to(() => const PDFView());
   }
 
   String getFormattedDateTime(String datetime) {
@@ -1416,7 +1404,7 @@ class ChatScreenState extends State<ChatScreen> {
                 child: Row(
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 10),
+                      padding: const EdgeInsets.only(left: 10),
                       child: GestureDetector(
                         child: Icon(
                           Icons.arrow_back_ios,
@@ -1429,11 +1417,11 @@ class ChatScreenState extends State<ChatScreen> {
                         },
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     AnimatedSwitcher(
-                      duration: Duration(milliseconds: 10),
+                      duration: const Duration(milliseconds: 10),
                       child: Container(
                         width: 1.sw * 0.66,
                         child: _patientDetailOrSearch(),
@@ -1549,12 +1537,12 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   Widget moreOptionsPopup() => PopupMenuButton(
-      icon: Icon(
+      icon: const Icon(
         Icons.more_vert,
         color: Colors.white,
       ),
       color: Colors.white,
-      padding: EdgeInsets.only(left: 1, right: 2),
+      padding: const EdgeInsets.only(left: 1, right: 2),
       onSelected: (dynamic newValue) {
         if (newValue == 0) {
           isSearchVisible = true;
@@ -1606,7 +1594,7 @@ class ChatScreenState extends State<ChatScreen> {
     setState(() {
       if (isSearchVisible) {
         resultWidget = AnimatedSwitcher(
-          duration: Duration(milliseconds: 10),
+          duration: const Duration(milliseconds: 10),
           child: Container(
             height: 45.0.h,
             child: TextField(
@@ -1625,11 +1613,11 @@ class ChatScreenState extends State<ChatScreen> {
                       commonIndex = 0;
                       showSearch();
                     },
-                    icon: Icon(Icons.clear, size: 20),
+                    icon: const Icon(Icons.clear, size: 20),
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(10.0),
+                  border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10.0),
                     ),
                   ),
                   filled: true,
@@ -1644,7 +1632,7 @@ class ChatScreenState extends State<ChatScreen> {
         );
       } else {
         resultWidget = AnimatedSwitcher(
-          duration: Duration(milliseconds: 10),
+          duration: const Duration(milliseconds: 10),
           child: Row(
             children: <Widget>[
               ClipOval(
@@ -1729,7 +1717,7 @@ class ChatScreenState extends State<ChatScreen> {
                               ],
                             ),
                           )
-                        : SizedBox.shrink(),
+                        : const SizedBox.shrink(),
                     Text(
                       widget.lastDate != null
                           ? LAST_RECEIVED + widget.lastDate!
@@ -1769,7 +1757,8 @@ class ChatScreenState extends State<ChatScreen> {
                   // SpeedDial
                   Theme(
                     data: ThemeData(
-                      colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.transparent),
+                      colorScheme: ColorScheme.fromSwatch()
+                          .copyWith(secondary: Colors.transparent),
                     ),
                     child: Container(
                       height: 1.sw * 0.1,
@@ -1787,7 +1776,7 @@ class ChatScreenState extends State<ChatScreen> {
                             toast.getToast('No more data', Colors.red);
                           }
                         },
-                        child: Icon(Icons.arrow_upward),
+                        child: const Icon(Icons.arrow_upward),
                       ),
                     ),
                   ),
@@ -1796,7 +1785,8 @@ class ChatScreenState extends State<ChatScreen> {
                   ),
                   Theme(
                     data: ThemeData(
-                      colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.transparent),
+                      colorScheme: ColorScheme.fromSwatch()
+                          .copyWith(secondary: Colors.transparent),
                     ),
                     child: Container(
                       height: 1.sw * 0.1,
@@ -1809,12 +1799,12 @@ class ChatScreenState extends State<ChatScreen> {
                             commonIndex = commonIndex - 1;
                             // listScrollController.scrollTo(
                             //     index: indexList[commonIndex],
-                                // duration: Duration(milliseconds: 100));  FU2.5
+                            // duration: Duration(milliseconds: 100));  FU2.5
                           } else {
                             toast.getToast('No more data', Colors.red);
                           }
                         },
-                        child: Icon(Icons.arrow_downward),
+                        child: const Icon(Icons.arrow_downward),
                       ),
                     ),
                   ),
@@ -1840,7 +1830,7 @@ class ChatScreenState extends State<ChatScreen> {
                       (isShowSticker ? buildSticker() : Container()),
 
                       // Input content
-                      !isChatDisable ? buildInput() : SizedBox.shrink(),
+                      !isChatDisable ? buildInput() : const SizedBox.shrink(),
                       SizedBox(
                         height: 20.0.h,
                       ),
@@ -1962,7 +1952,7 @@ class ChatScreenState extends State<ChatScreen> {
       decoration: BoxDecoration(
           border: Border(top: BorderSide(color: greyColor2, width: 0.5)),
           color: Colors.white),
-      padding: EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(5.0),
       height: 180.0.h,
     );
   }
@@ -2014,12 +2004,12 @@ class ChatScreenState extends State<ChatScreen> {
                         ),
                         filled: true,
                         fillColor: Colors.white70,
-                        enabledBorder: OutlineInputBorder(
+                        enabledBorder: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(12.0)),
                           borderSide:
                               BorderSide(color: Colors.transparent, width: 2),
                         ),
-                        focusedBorder: OutlineInputBorder(
+                        focusedBorder: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           borderSide: BorderSide(color: Colors.transparent),
                         ),
@@ -2079,8 +2069,8 @@ class ChatScreenState extends State<ChatScreen> {
                   child: Icon(Icons.send,
                       size: 24.0,
                       color: Color(CommonUtil().getMyPrimaryColor())),
-                  padding: EdgeInsets.all(12.0),
-                  shape: CircleBorder(),
+                  padding: const EdgeInsets.all(12.0),
+                  shape: const CircleBorder(),
                 ),
               ),
             ),
@@ -2115,8 +2105,8 @@ class ChatScreenState extends State<ChatScreen> {
                         child: Icon(Icons.mic,
                             size: 24.0,
                             color: Color(CommonUtil().getMyPrimaryColor())),
-                        padding: EdgeInsets.all(12.0),
-                        shape: CircleBorder(),
+                        padding: const EdgeInsets.all(12.0),
+                        shape: const CircleBorder(),
                       ),
                     ),
                   )
@@ -2303,7 +2293,7 @@ class ChatScreenState extends State<ChatScreen> {
         child: !isPatient
             ? InkWell(
                 child: Container(
-                  margin: EdgeInsets.only(top: 8),
+                  margin: const EdgeInsets.only(top: 8),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(999),
@@ -2341,8 +2331,9 @@ class ChatScreenState extends State<ChatScreen> {
                             onSendMessage(removedBrackets.toString(), 0);
                           }
                         }
-                      } catch (e,stackTrace) {
-                                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                      } catch (e, stackTrace) {
+                        CommonUtil()
+                            .appLogs(message: e, stackTrace: stackTrace);
 
                         print(e);
                       }
@@ -2350,7 +2341,7 @@ class ChatScreenState extends State<ChatScreen> {
                   });
                 },
               )
-            : SizedBox.shrink(),
+            : const SizedBox.shrink(),
       );
 
   List<InlineSpan> linkify(String text, int index, bool isPatient) {
@@ -2513,7 +2504,7 @@ class TextFieldColorizer extends TextEditingController {
   }
 
   @override
-   TextSpan  buildTextSpan(
+  TextSpan buildTextSpan(
       {BuildContext? context, TextStyle? style, bool? withComposing}) {
     final List<InlineSpan> children = [];
     String? patternMatched;
@@ -2528,10 +2519,10 @@ class TextFieldColorizer extends TextEditingController {
                 bool ret = false;
                 RegExp(e).allMatches(text)
                   ..forEach((element) {
-                    if (element.group(0) == match[0]  ) {
+                    if (element.group(0) == match[0]) {
                       patternMatched = e;
                       ret = true;
-                      return ;  // return true;
+                      return; // return true;
                     }
                   });
                 return ret;

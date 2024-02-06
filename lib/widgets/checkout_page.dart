@@ -3,37 +3,34 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/authentication/view/authentication_validator.dart';
-import 'package:myfhb/colors/fhb_colors.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/firebase_analytics_service.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'package:myfhb/src/utils/alert.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
-import 'package:myfhb/widgets/checkout_page_provider.dart';
-import 'package:myfhb/widgets/checkoutpage_genric_widget.dart';
-import 'package:myfhb/widgets/dotted_line.dart';
-import 'package:myfhb/widgets/fetching_cart_items_model.dart';
-import 'package:myfhb/widgets/result_page_new.dart';
 import 'package:provider/provider.dart';
 
+import '../authentication/constants/constants.dart';
+import '../authentication/view/authentication_validator.dart';
+import '../colors/fhb_colors.dart';
+import '../common/CommonUtil.dart';
+import '../common/common_circular_indicator.dart';
+import '../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../constants/fhb_constants.dart';
+import '../constants/fhb_parameters.dart';
+import '../constants/router_variable.dart' as router;
+import '../constants/variable_constant.dart' as variable;
+import '../landing/view/landing_arguments.dart';
+import '../plan_wizard/view_model/plan_wizard_view_model.dart';
+import '../src/resources/network/ApiBaseHelper.dart';
+import '../src/utils/alert.dart';
+import '../src/utils/screenutils/size_extensions.dart';
 import 'CartIconWithBadge.dart';
+import 'checkout_page_provider.dart';
+import 'checkoutpage_genric_widget.dart';
+import 'dotted_line.dart';
+import 'fetching_cart_items_model.dart';
+import 'result_page_new.dart';
 
 class CheckoutPage extends StatefulWidget {
   //final CartType cartType;
@@ -64,9 +61,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   void initState() {
     super.initState();
-    mInitialTime = DateTime.now();
-    // Provider.of<CheckoutPageProvider>(context, listen: false).cartType =
-    //     widget.cartType;
+    FABService.trackCurrentScreen(FBAMyCartScreen);
     Provider.of<CheckoutPageProvider>(context, listen: false).fetchCartItems(
         isNeedRelod: true,
         cartUserId: widget.cartUserId,
@@ -78,21 +73,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
     Provider.of<CheckoutPageProvider>(context, listen: false)
         .loader(false, isNeedRelod: false);
     //});
-
-    var firebase = FirebaseAnalyticsService();
-    firebase.trackCurrentScreen("checkoutPage", "");
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'CheckoutPage Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   Future<bool> onBackPressed(BuildContext context) async {
@@ -701,11 +687,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         Provider.of<PlanWizardViewModel>(context, listen: false)
             .checkCartForBundle();
     var mCartTotal = value.totalProductCount;
-    var firebase = FirebaseAnalyticsService();
-    firebase.trackEvent("on_pay_clicked", {
-      "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-      "total": mCartTotal
-    });
+
     var body = {
       "cartId": "${value.fetchingCartItemsModel!.result!.cart!.id}",
       "isQurbook": true
@@ -979,8 +961,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                               color:
                                                                   Colors.black,
                                                             ),
-                                                            children: <
-                                                                TextSpan>[
+                                                            children: <TextSpan>[
                                                               TextSpan(
                                                                 text:
                                                                     '${item.productDetail?.planName!.toLowerCase()}',
@@ -1033,29 +1014,34 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                     .isTablet!
                                                                 ? 50
                                                                 : 40,
-                                                            child: ElevatedButton(style: ElevatedButton.styleFrom(
-                                                              shape: RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              12.0),
-                                                                  side: BorderSide(
-                                                                      color: Color(
-                                                                          CommonUtil()
-                                                                              .getMyPrimaryColor()))),
-                                                              backgroundColor: Colors
-                                                                  .transparent,
-                                                              foregroundColor: Color(
-                                                                  CommonUtil()
-                                                                      .getMyPrimaryColor()),
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(8.0),),
+                                                            child:
+                                                                ElevatedButton(
+                                                              style:
+                                                                  ElevatedButton
+                                                                      .styleFrom(
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            12.0),
+                                                                    side: BorderSide(
+                                                                        color: Color(
+                                                                            CommonUtil().getMyPrimaryColor()))),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                                foregroundColor:
+                                                                    Color(CommonUtil()
+                                                                        .getMyPrimaryColor()),
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            8.0),
+                                                              ),
                                                               onPressed: () {
                                                                 try {
                                                                   Navigator.pop(
                                                                       context);
-                                                                } catch (e,stackTrace) {
+                                                                } catch (e, stackTrace) {
                                                                   //print(e);
                                                                   CommonUtil().appLogs(
                                                                       message: e
@@ -1104,10 +1090,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                 foregroundColor:
                                                                     Color(CommonUtil()
                                                                         .getMyPrimaryColor()),
-                                                                padding: const
-                                                                    EdgeInsets
+                                                                padding:
+                                                                    const EdgeInsets
                                                                         .all(
-                                                                            8.0),
+                                                                        8.0),
                                                               ),
                                                               onPressed:
                                                                   () async {
@@ -1138,7 +1124,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
                                                                   Navigator.pop(
                                                                       context);
-                                                                } catch (e,stackTrace) {
+                                                                } catch (e, stackTrace) {
                                                                   //print(e);
                                                                   CommonUtil().appLogs(
                                                                       message: e
@@ -1232,12 +1218,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     Provider.of<CheckoutPageProvider>(context, listen: false).isMembershipCart =
         Provider.of<PlanWizardViewModel>(context, listen: false)
             .checkCartForBundle();
-    var mCartTotal = value.totalProductCount;
-    var firebase = FirebaseAnalyticsService();
-    firebase.trackEvent("on_pay_clicked", {
-      "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-      "total": mCartTotal
-    });
+
     var body = {
       "cartId": "${value.fetchingCartItemsModel!.result!.cart!.id}",
       "isQurbook": true

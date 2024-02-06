@@ -6,47 +6,48 @@ import 'package:flutter/services.dart';
 import 'package:flutter_sound/public/flutter_sound_player.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/chat_socket/constants/const_socket.dart';
-import 'package:myfhb/chat_socket/model/CaregiverPatientChatModel.dart';
-import 'package:myfhb/chat_socket/model/ChatHistoryModel.dart';
-import 'package:myfhb/chat_socket/model/EmitAckResponse.dart';
-import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
-import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/src/ui/MyRecordsArguments.dart';
-import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
-import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
-import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/chat/constants/const.dart';
-import 'package:myfhb/telehealth/features/chat/model/AppointmentDetailModel.dart';
-import 'package:myfhb/telehealth/features/chat/view/ChooseDateSlot.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
-import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
-import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
+import '../../add_family_user_info/services/add_family_user_info_repository.dart';
+import '../../authentication/constants/constants.dart';
+import '../../common/FHBBasicWidget.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../common/common_circular_indicator.dart';
+import '../../common/errors_widget.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/variable_constant.dart';
+import '../../src/model/Health/asgard/health_record_collection.dart';
+import '../../src/model/user/MyProfileModel.dart';
+import '../../src/ui/MyRecord.dart';
+import '../../src/ui/MyRecordsArguments.dart';
+import '../../src/ui/SheelaAI/Views/youtube_player.dart';
+import '../../src/ui/audio/AudioRecorder.dart';
+import '../../src/ui/audio/AudioScreenArguments.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../telehealth/features/chat/constants/const.dart';
+import '../../telehealth/features/chat/model/AppointmentDetailModel.dart';
+import '../../telehealth/features/chat/view/ChooseDateSlot.dart';
+import '../../telehealth/features/chat/view/PDFModel.dart';
+import '../../telehealth/features/chat/view/PDFView.dart';
+import '../../telehealth/features/chat/view/full_photo.dart';
+import '../../telehealth/features/chat/viewModel/ChatViewModel.dart';
+import '../constants/const_socket.dart';
+import '../model/CaregiverPatientChatModel.dart';
+import '../model/ChatHistoryModel.dart';
+import '../model/EmitAckResponse.dart';
+import '../viewModel/chat_socket_view_model.dart';
+import '../viewModel/getx_chat_view_model.dart';
 
 class ChatDetail extends StatefulWidget {
   final String? patientId;
@@ -225,7 +226,7 @@ class ChatState extends State<ChatDetail> {
   @override
   void initState() {
     super.initState();
-
+    FABService.trackCurrentScreen(FBAChatDetailsScreen);
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       Provider.of<ChatSocketViewModel>(
         Get.context!,

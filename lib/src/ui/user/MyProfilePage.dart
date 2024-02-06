@@ -1,50 +1,52 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'dart:io';
 import 'package:intl/intl.dart';
-import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
-import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
-import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
-import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/language/model/Language.dart';
-import 'package:myfhb/language/repository/LanguageRepository.dart';
-import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
-import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
-import 'package:myfhb/src/model/TagsResult.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/MyProfileResult.dart';
-import 'package:myfhb/src/model/user/Tags.dart';
-import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/user_plans/view/user_profile_image.dart';
-import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
-import 'package:myfhb/widgets/DropdownWithTags.dart';
-import 'package:myfhb/widgets/TagsList.dart';
 import 'package:provider/provider.dart';
 
+import '../../../add_family_user_info/bloc/add_family_user_info_bloc.dart';
+import '../../../add_family_user_info/models/add_family_user_info_arguments.dart';
+import '../../../add_family_user_info/services/add_family_user_info_repository.dart';
+import '../../../common/CommonConstants.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../common/FHBBasicWidget.dart';
+import '../../../common/PreferenceUtil.dart';
+import '../../../common/common_circular_indicator.dart';
+import '../../../common/errors_widget.dart';
+import '../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/router_variable.dart' as router;
+import '../../../constants/variable_constant.dart' as variable;
+import '../../../language/model/Language.dart';
+import '../../../language/repository/LanguageRepository.dart';
+import '../../../user_plans/view/user_profile_image.dart';
+import '../../../user_plans/view_model/user_plans_view_model.dart';
+import '../../../widgets/TagsList.dart';
+import '../../blocs/Media/MediaTypeBlock.dart';
+import '../../model/GetDeviceSelectionModel.dart';
+import '../../model/TagsResult.dart';
+import '../../model/user/MyProfileModel.dart';
+import '../../model/user/MyProfileResult.dart';
+import '../../model/user/Tags.dart';
+import '../../resources/repository/health/HealthReportListForUserRepository.dart';
+import '../../utils/FHBUtils.dart';
+import '../../utils/screenutils/size_extensions.dart';
+import '../authentication/OtpVerifyScreen.dart';
+
 class MyProfilePage extends StatefulWidget {
+  const MyProfilePage({super.key});
+
   @override
   _MyProfilePageState createState() => _MyProfilePageState();
 }
 
 class _MyProfilePageState extends State<MyProfilePage> {
-  //MyProfileBloc _myProfileBloc;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
-  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state =
+      GlobalKey<ScaffoldMessengerState>();
   FlutterToast toast = FlutterToast();
   var mobile = TextEditingController();
   var name = TextEditingController();
@@ -90,12 +92,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
   @override
   void initState() {
     PreferenceUtil.init();
-    // getPreferredLanguage();
+    FABService.trackCurrentScreen(FBAMyInfoScreen);
     super.initState();
     languageBlock = LanguageRepository();
     addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
-    _healthReportListForUserRepository =
-        HealthReportListForUserRepository();
+    _healthReportListForUserRepository = HealthReportListForUserRepository();
     addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
 
     if (_mediaTypeBlock == null) {
@@ -307,8 +308,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
       }
       if (data.dateOfBirth != null) {
         if (CommonUtil.isUSRegion()) {
-          dob.text =
-              FHBUtils().getFormattedDateOnly(data.dateOfBirth ?? "");
+          dob.text = FHBUtils().getFormattedDateOnly(data.dateOfBirth ?? "");
         } else {
           dob.text = FHBUtils().getFormattedDateOnlyNew(data.dateOfBirth)!;
         }
@@ -375,12 +375,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
                           shape: CircleBorder(
                               side: BorderSide(
                                   width: 1.5.w,
-                                  color:
-                                      (Provider.of<UserPlansViewModel>(context)
-                                              .isGoldMember)
-                                          ? Colors.transparent
-                                          : Color(CommonUtil()
-                                              .getMyPrimaryColor()))),
+                                  color: (Provider.of<UserPlansViewModel>(
+                                              context)
+                                          .isGoldMember)
+                                      ? Colors.transparent
+                                      : Color(
+                                          CommonUtil().getMyPrimaryColor()))),
                         ),
                         child: data.profilePicThumbnailUrl != null
                             ? UserProfileImage(myProfile,

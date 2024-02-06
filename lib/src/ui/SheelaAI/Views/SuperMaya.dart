@@ -1,15 +1,14 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
-import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 import '../../../../colors/fhb_colors.dart' as fhbColors;
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/FHBBasicWidget.dart';
 import '../../../../common/PreferenceUtil.dart';
+import '../../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../../../constants/fhb_constants.dart' as Constants;
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/router_variable.dart';
@@ -17,6 +16,7 @@ import '../../../../constants/variable_constant.dart' as variable;
 import '../../../../widgets/GradientAppBar.dart';
 import '../../../../widgets/RaisedGradientButton.dart';
 import '../../../utils/screenutils/size_extensions.dart';
+import '../Controller/SheelaAIController.dart';
 import '../Models/sheela_arguments.dart';
 
 class SuperMaya extends StatefulWidget {
@@ -37,49 +37,20 @@ class _SuperMayaState extends State<SuperMaya> {
   late BuildContext _myContext;
   final sheelBadgeController = Get.put(SheelaAIController());
 
-  // PermissionStatus permissionStatus = PermissionStatus.undetermined;
-  // final Permission _micpermission = Permission.microphone;
-
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
     PreferenceUtil.init();
-
+    FABService.trackCurrentScreen(FBAQurbookSheelaScreen);
     var isFirstTime = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_MAYA);
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(
-          Duration(milliseconds: 200),
+          const Duration(milliseconds: 200),
           () => isFirstTime
               ? null
-              : ShowCaseWidget.of(_myContext)!.startShowCase([_micKey]));
+              : ShowCaseWidget.of(_myContext).startShowCase([_micKey]));
     });
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Sheela Start Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
-  }
-
-  void _listenForPermissionStatus() async {
-    // final status = await _micpermission.status;
-    //setState(() => permissionStatus = status);
-  }
-
-/* Future<PermissionStatus> requestPermission(Permission micPermission) async {
-   final status = await micPermission.request();
-    setState(() {
-
-      permissionStatus = status;
-    });
-    return status;
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -92,19 +63,20 @@ class _SuperMayaState extends State<SuperMaya> {
         builder: (context) {
           _myContext = context;
           return WillPopScope(
-            onWillPop: () async{ // FUcrash added async
+            onWillPop: () async {
+              // FUcrash added async
               if (widget.isHome) {
                 widget.onBackPressed!();
               }
               Future.value(widget.isHome ? false : true);
-              return true;  // FUcrash added return and removed cast
-            } ,
+              return true; // FUcrash added return and removed cast
+            },
             child: Scaffold(
                 backgroundColor: const Color(fhbColors.bgColorContainer),
                 appBar: widget.isHome
                     ? null
                     : PreferredSize(
-                        preferredSize: Size.fromHeight(60),
+                        preferredSize: const Size.fromHeight(60),
                         child: AppBar(
                           flexibleSpace: GradientAppBar(),
                           backgroundColor: Colors.transparent,
@@ -117,7 +89,7 @@ class _SuperMayaState extends State<SuperMaya> {
                             },
                           ),
                           elevation: 0,
-                          title: Text(strSheelaG),
+                          title: const Text(strSheelaG),
                           actions: [
                             Center(
                                 child:
@@ -146,11 +118,11 @@ class _SuperMayaState extends State<SuperMaya> {
                         //color: Colors.deepPurple,
                       ),
                       //Icon(Icons.people),
-                      Text(
+                      const Text(
                         variable.strIntromaya,
                         softWrap: true,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       SizedBox(

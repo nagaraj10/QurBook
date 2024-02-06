@@ -1,13 +1,11 @@
-
 import 'package:flutter/material.dart';
-import 'package:myfhb/colors/fhb_colors.dart';
-import 'package:myfhb/plan_wizard/view/pages/care_plan/care_plan_page.dart';
-import 'package:myfhb/plan_wizard/view/pages/care_plan/provider_care.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../colors/fhb_colors.dart';
+import '../../../view_model/plan_wizard_view_model.dart';
 import '../CareDietAppBar.dart';
 import 'free_care.dart';
+import 'provider_care.dart';
 
 class TabCareMain extends StatefulWidget {
   @override
@@ -29,8 +27,8 @@ class _TabCareMainState extends State<TabCareMain>
     _tabController!.addListener(_setActiveTabIndex);
 
     if ((Provider.of<PlanWizardViewModel>(context, listen: false)
-            .isDynamicLink)) {
-      Future.delayed(Duration(), () {
+        .isDynamicLink)) {
+      Future.delayed(const Duration(), () {
         var tabIndex = Provider.of<PlanWizardViewModel>(context, listen: false)
             .dynamicLinkTabIndex;
         Provider.of<PlanWizardViewModel>(context, listen: false)
@@ -61,8 +59,10 @@ class _TabCareMainState extends State<TabCareMain>
       body: TabBarView(
         controller: _tabController,
         children: [
-          Container(color: Color(bgColorContainer), child: ProviderCarePlans()),
-          Container(color: Color(bgColorContainer), child: FreeCarePlans())
+          Container(
+              color: const Color(bgColorContainer), child: ProviderCarePlans()),
+          Container(
+              color: const Color(bgColorContainer), child: FreeCarePlans())
         ],
       ),
     );

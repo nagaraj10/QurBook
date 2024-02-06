@@ -1,15 +1,14 @@
-
 import 'package:flutter/material.dart';
+
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
-import '../../constants/fhb_constants.dart';
+import '../../constants/variable_constant.dart' as variable;
 import '../../record_detail/screens/record_detail_screen.dart';
 import '../../src/model/Health/asgard/health_record_list.dart';
 import '../../src/utils/FHBUtils.dart';
-import '../../constants/variable_constant.dart' as variable;
 import '../../src/utils/screenutils/size_extensions.dart';
 
 class MyFamilyDetailViewHospital extends StatefulWidget {
@@ -25,23 +24,6 @@ class MyFamilyDetailViewHospital extends StatefulWidget {
 
 class MyFamilyDetailViewHospitalState
     extends State<MyFamilyDetailViewHospital> {
-  @override
-  void initState() {
-    mInitialTime = DateTime.now();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Family Hospital Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     getCategoryPreference();
@@ -137,9 +119,10 @@ class MyFamilyDetailViewHospitalState
                         overflow: TextOverflow.ellipsis,
                       ),
                       Visibility(
-                          visible: mediaMetaInfoObj.metadata!.dateOfVisit != null
-                              ? true
-                              : false,
+                          visible:
+                              mediaMetaInfoObj.metadata!.dateOfVisit != null
+                                  ? true
+                                  : false,
                           child: Text(
                             mediaMetaInfoObj.metadata!.dateOfVisit != null
                                 ? variable.strValidThru +

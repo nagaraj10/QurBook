@@ -1,26 +1,26 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
-import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/firebase_analytics_service.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
-import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
-import 'package:myfhb/src/model/Authentication/OTPResponse.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/src/blocs/Authentication/OTPVerifyBloc.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+
+import '../../../add_family_user_info/bloc/add_family_user_info_bloc.dart';
+import '../../../common/CommonConstants.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../common/FHBBasicWidget.dart';
+import '../../../common/PreferenceUtil.dart';
+import '../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/router_variable.dart' as router;
+import '../../../constants/variable_constant.dart' as variable;
+import '../../../myfhb_weview/myfhb_webview.dart';
+import '../../../widgets/GradientAppBar.dart';
+import '../../blocs/Authentication/OTPVerifyBloc.dart';
+import '../../blocs/User/MyProfileBloc.dart';
+import '../../model/Authentication/OTPResponse.dart';
+import '../../utils/FHBUtils.dart';
+import '../../utils/PageNavigator.dart';
+import '../../utils/screenutils/size_extensions.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
   final String? enteredMobNumber;
@@ -52,7 +52,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   late OTPVerifyBloc _otpVerifyBloc;
   late AddFamilyUserInfoBloc addFamilyUserInfoBloc;
 
-  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state =
+      GlobalKey<ScaffoldMessengerState>();
 
   @override
   void dispose() {
@@ -428,8 +429,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                 },
                                 child: Icon(
                                   Icons.backspace,
-                                  color: Color(
-                                      CommonUtil().getMyPrimaryColor()),
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor()),
                                 )),
                             MaterialButton(
                               onPressed: () {
@@ -493,8 +494,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                 //matchOtp();
                               },
                               child: Icon(Icons.done,
-                                  color: Color(
-                                      CommonUtil().getMyPrimaryColor())),
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor())),
                             ),
                           ],
                         ),
@@ -639,7 +640,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
       PreferenceUtil.saveString(
               Constants.KEY_USERID_MAIN, otpResponse.response!.id!)
           .then((onValue) {
-        PreferenceUtil.saveString(Constants.KEY_USERID, otpResponse.response!.id!)
+        PreferenceUtil.saveString(
+                Constants.KEY_USERID, otpResponse.response!.id!)
             .then((onValue) {
           PreferenceUtil.saveString(
                   Constants.KEY_AUTHTOKEN, otpResponse.response!.authToken!)
@@ -663,8 +665,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     }
   }
 
-  void generateOtp(
-      OTPVerifyBloc bloc, String? selectedCountryCode, String? enteredMobNumber) {
+  void generateOtp(OTPVerifyBloc bloc, String? selectedCountryCode,
+      String? enteredMobNumber) {
     bloc
         .generateOTP(widget.enteredMobNumber, widget.selectedCountryCode!,
             widget.fromSignIn!)
@@ -701,8 +703,12 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   style: linkStyle,
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
-                      openWebView(Constants.terms_of_service,
-                          CommonUtil.isUSRegion()?variable.file_terms_us:variable.file_terms, true);
+                      openWebView(
+                          Constants.terms_of_service,
+                          CommonUtil.isUSRegion()
+                              ? variable.file_terms_us
+                              : variable.file_terms,
+                          true);
                     }),
               TextSpan(text: variable.strAnd),
               TextSpan(
@@ -710,8 +716,12 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   style: linkStyle,
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
-                      openWebView(Constants.privacy_policy,
-                          CommonUtil.isUSRegion()?variable.file_privacy_us:variable.file_privacy, true);
+                      openWebView(
+                          Constants.privacy_policy,
+                          CommonUtil.isUSRegion()
+                              ? variable.file_privacy_us
+                              : variable.file_privacy,
+                          true);
                     }),
             ],
           ),

@@ -1,13 +1,14 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../common/CommonUtil.dart';
-import '../constants/fhb_constants.dart';
-import '../widgets/GradientAppBar.dart';
-import '../src/utils/screenutils/size_extensions.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+import '../common/CommonUtil.dart';
+import '../common/common_circular_indicator.dart';
 import '../constants/variable_constant.dart' as variable;
-import 'package:myfhb/common/common_circular_indicator.dart';
+import '../src/utils/screenutils/size_extensions.dart';
+import '../widgets/GradientAppBar.dart';
 
 class MyFhbWebView extends StatefulWidget {
   final String? title;
@@ -26,23 +27,6 @@ class MyFhbWebView extends StatefulWidget {
 class _MyFhbWebViewState extends State<MyFhbWebView> {
   late WebViewController _controller;
   bool isLoading = true;
-
-  @override
-  void initState() {
-    mInitialTime = DateTime.now();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Helps Docs Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +73,8 @@ class _MyFhbWebViewState extends State<MyFhbWebView> {
               mimeType: variable.strtexthtml,
               encoding: Encoding.getByName(variable.strUtf))
           .toString());
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
       if (selectedUrl.isNotEmpty) {

@@ -1,38 +1,36 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_screen.dart';
-import 'package:myfhb/telehealth/features/Notifications/viewModel/fetchNotificationViewModel.dart';
-import 'package:myfhb/telehealth/features/appointments/viewModel/cancelAppointmentViewModel.dart';
 import 'package:provider/provider.dart';
 
+import '../../appointments/viewModel/cancelAppointmentViewModel.dart';
+import '../viewModel/fetchNotificationViewModel.dart';
+import 'notification_screen.dart';
 
 class NotificationMain extends StatefulWidget {
-
   bool isFromQurday;
 
-  NotificationMain({Key? key, this.isFromQurday = false}) : super(key: key);
+  NotificationMain({
+    Key? key,
+    this.isFromQurday = false,
+  }) : super(key: key);
 
   @override
   _NotificationMainState createState() => _NotificationMainState();
 }
 
 class _NotificationMainState extends State<NotificationMain> {
-
-
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: MultiProvider(
-          providers: [
-            ChangeNotifierProvider(
-              create: (context) => FetchNotificationViewModel(),
-            ),
-            ChangeNotifierProvider<CancelAppointmentViewModel>(
-              create: (_) => CancelAppointmentViewModel(),
-            ),
-          ],
-          child: NotificationScreen(isFromQurday: widget.isFromQurday),
-        )
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+          body: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => FetchNotificationViewModel(),
+          ),
+          ChangeNotifierProvider<CancelAppointmentViewModel>(
+            create: (_) => CancelAppointmentViewModel(),
+          ),
+        ],
+        child: NotificationScreen(
+          isFromQurday: widget.isFromQurday,
+        ),
+      ));
 }

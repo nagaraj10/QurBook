@@ -9,53 +9,54 @@ import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/unit/choose_unit.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
-import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
-import 'package:myfhb/QurHub/View/HubListView.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/authentication/view/otp_remove_account_screen.dart';
-import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/DeleteAccountWebScreen.dart';
-import 'package:myfhb/common/DexComWebScreen.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
-import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
-import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
-import 'package:myfhb/more_menu/screens/terms_and_conditon.dart';
-import 'package:myfhb/more_menu/screens/trouble_shooting.dart';
-import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
-import 'package:myfhb/src/model/user/Tags.dart';
-import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
-import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
-import 'package:myfhb/src/ui/settings/NonAdheranceSettingsScreen.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/unit/choose_unit.dart';
-import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../QurHub/Controller/HubListViewController.dart';
+import '../../QurHub/View/HubListView.dart';
+import '../../authentication/constants/constants.dart';
+import '../../authentication/view/otp_remove_account_screen.dart';
+import '../../authentication/view_model/patientauth_view_model.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonUtil.dart';
+import '../../common/DeleteAccountWebScreen.dart';
+import '../../common/DexComWebScreen.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
+import '../../common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
-import '../../constants/fhb_constants.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
+import '../../constants/variable_constant.dart';
+import '../../device_integration/view/screens/Device_Card.dart';
+import '../../device_integration/view/screens/Device_Data.dart';
 import '../../device_integration/viewModel/Device_model.dart';
+import '../../device_integration/viewModel/deviceDataHelper.dart';
 import '../../landing/view/landing_screen.dart';
 import '../../myfhb_weview/myfhb_webview.dart';
+import '../../src/blocs/User/MyProfileBloc.dart';
 import '../../src/model/CreateDeviceSelectionModel.dart';
 import '../../src/model/GetDeviceSelectionModel.dart';
 import '../../src/model/UpdatedDeviceModel.dart';
 import '../../src/model/user/MyProfileModel.dart';
+import '../../src/model/user/Tags.dart';
 import '../../src/model/user/user_accounts_arguments.dart';
 import '../../src/resources/repository/health/HealthReportListForUserRepository.dart';
 import '../../src/ui/HomeScreen.dart';
+import '../../src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import '../../src/ui/settings/CaregiverSettng.dart';
 import '../../src/ui/settings/MySettings.dart';
+import '../../src/ui/settings/NonAdheranceSettingsScreen.dart';
+import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
+import '../../unit/choose_unit.dart';
+import '../../voice_cloning/model/voice_clone_status_arguments.dart';
 import '../../widgets/GradientAppBar.dart';
+import 'terms_and_conditon.dart';
+import 'trouble_shooting.dart';
 
 class MoreMenuScreen extends StatefulWidget {
   final Function(bool userChanged)? refresh;
@@ -108,10 +109,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   String selectedMaya = PreferenceUtil.getStringValue(Constants.keyMayaAsset) ??
       variable.icon_mayaMain;
 
-  /*int selectedPrimaryColor =
-      PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
-          ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
-          : 0xff5e1fe0;*/
   int? selectedPrimaryColor = 0xff5f0cf9;
 
   int selectedGradientColor =
@@ -175,20 +172,18 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   @override
   void initState() {
+    super.initState();
     qurhomeDashboardController.getModuleAccess();
-    mInitialTime = DateTime.now();
-    //getProfileImage();
-    //getAppColorValues();
     if (CommonUtil.REGION_CODE == 'US') {
       getAvailableDevices();
     }
     PackageInfo.fromPlatform().then((packageInfo) {
-      version = packageInfo.version + " + " + packageInfo.buildNumber;
+      version = '${packageInfo.version} + ${packageInfo.buildNumber}';
     });
     selectedList = [];
     _deviceModel = DevicesViewModel();
     authViewModel = AuthViewModel();
-
+    FABService.trackCurrentScreen(FBASettingScreen);
     if ((BASE_URL == prodINURL) ||
         (BASE_URL == prodUSURL) ||
         (BASE_URL == demoINURL) ||
@@ -197,17 +192,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     } else {
       isProd = false;
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Moremenu Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   getProfileImage() async {

@@ -1,22 +1,22 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Health/CompleteData.dart';
-import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+
+import '../../../colors/fhb_colors.dart' as fhbColors;
+import '../../../common/CommonConstants.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/variable_constant.dart' as variable;
+import '../../../record_detail/screens/record_detail_screen.dart';
+import '../../blocs/health/HealthReportListForUserBlock.dart';
+import '../../model/Health/MediaMetaInfo.dart';
+import '../../model/Health/asgard/health_record_collection.dart';
+import '../../model/Health/asgard/health_record_list.dart';
+import '../../utils/FHBUtils.dart';
+import '../../utils/screenutils/size_extensions.dart';
 
 class HospitalDocuments extends StatefulWidget {
   final HealthRecordList? completeData;
@@ -65,27 +65,14 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     _healthReportListForUserBlock = HealthReportListForUserBlock();
-
+    FABService.trackCurrentScreen(FBAMyRecordsHospitalDocumentsScreen);
     super.initState();
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Hospital Documents List Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _getWidgetToDisplayMedicalrecords(widget.completeData!);
-  }
+  Widget build(BuildContext context) =>
+      _getWidgetToDisplayMedicalrecords(widget.completeData!);
 
   Widget _getWidgetToDisplayMedicalrecords(HealthRecordList completeData) {
     List<HealthResult> mediaMetaInfoObj = [];
@@ -295,8 +282,7 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                             ? ImageIcon(
                                 AssetImage(variable.icon_record_fav_active),
                                 //TODO chnage theme
-                                color:
-                                    Color(CommonUtil().getMyPrimaryColor()),
+                                color: Color(CommonUtil().getMyPrimaryColor()),
                                 size: CommonUtil().isTablet!
                                     ? tabHeader2
                                     : mobileHeader2,

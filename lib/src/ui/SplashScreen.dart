@@ -3,63 +3,62 @@ import 'dart:io';
 import 'package:app_settings/app_settings.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:get/get.dart';
-import 'package:myfhb/authentication/view/login_screen.dart';
-import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
-import 'package:myfhb/chat_socket/view/ChatDetail.dart';
-import 'package:myfhb/chat_socket/view/ChatUserList.dart';
-import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
-import 'package:myfhb/claim/screen/ClaimRecordDisplay.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/landing/view_model/landing_view_model.dart';
-import 'package:myfhb/myPlan/view/myPlanDetail.dart';
-import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
-import 'package:myfhb/regiment/models/regiment_arguments.dart';
-import 'package:myfhb/regiment/view/manage_activities/manage_activities_screen.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
-import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
-import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
-import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
-import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart'
-    as doc;
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
-import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
-import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
-import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
-import 'package:myfhb/widgets/checkout_page.dart';
+import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:provider/provider.dart';
 
+import '../../authentication/view/login_screen.dart';
+import '../../caregiverAssosication/caregiverAPIProvider.dart';
+import '../../chat_socket/view/ChatDetail.dart';
+import '../../chat_socket/view/ChatUserList.dart';
+import '../../chat_socket/viewModel/chat_socket_view_model.dart';
+import '../../claim/screen/ClaimRecordDisplay.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_parameters.dart' as parameters;
+import '../../constants/fhb_parameters.dart';
+import '../../constants/router_variable.dart';
+import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart' as variable;
+import '../../constants/variable_constant.dart';
+import '../../landing/view/landing_arguments.dart';
+import '../../landing/view_model/landing_view_model.dart';
+import '../../myPlan/view/myPlanDetail.dart';
+import '../../my_family_detail/models/my_family_detail_arguments.dart';
+import '../../regiment/models/regiment_arguments.dart';
+import '../../regiment/view/manage_activities/manage_activities_screen.dart';
+import '../../regiment/view_model/regiment_view_model.dart';
 import '../../services/pushnotification_service.dart';
+import '../../telehealth/features/MyProvider/view/BookingConfirmation.dart';
+import '../../telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import '../../telehealth/features/Notifications/services/notification_services.dart';
+import '../../telehealth/features/appointments/controller/AppointmentDetailsController.dart';
+import '../../telehealth/features/appointments/model/fetchAppointments/city.dart';
+import '../../telehealth/features/appointments/model/fetchAppointments/doctor.dart'
+    as doc;
+import '../../telehealth/features/appointments/model/fetchAppointments/past.dart';
+import '../../telehealth/features/appointments/view/AppointmentDetailScreen.dart';
+import '../../telehealth/features/appointments/view/resheduleMain.dart';
+import '../../ticket_support/view/detail_ticket_view_screen.dart';
 import '../../voice_cloning/model/voice_clone_status_arguments.dart';
+import '../../widgets/checkout_page.dart';
+import '../model/GetDeviceSelectionModel.dart';
+import '../model/home_screen_arguments.dart';
+import '../model/user/user_accounts_arguments.dart';
+import '../resources/repository/health/HealthReportListForUserRepository.dart';
 import '../utils/PageNavigator.dart';
+import '../utils/screenutils/size_extensions.dart';
 import '../utils/timezone/timezone_services.dart';
 import 'NetworkScreen.dart';
 import 'SheelaAI/Models/sheela_arguments.dart';
 import 'SheelaAI/Views/SuperMaya.dart';
+import 'settings/CaregiverSettng.dart';
 
 class SplashScreen extends StatefulWidget {
   final String? nsRoute;
@@ -87,7 +86,8 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver {
+class _SplashScreenState extends State<SplashScreen>
+    with WidgetsBindingObserver {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   HealthReportListForUserRepository healthReportListForUserRepository =
@@ -100,20 +100,21 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
   @override
   void initState() {
     super.initState();
+    FABService.trackCurrentScreen(FBAAppLaunch);
     PreferenceUtil.init();
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     CommonUtil().ListenForTokenUpdate();
     Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
     CommonUtil().OnInitAction();
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (Platform.isIOS) {
         // Get the iOS push kit Token
         variable.reponseToTriggerPushKitTokenMethodChannel
             .setMethodCallHandler((call) async {
           if (call.method == variable.pushKitTokenMethod) {
             final data = Map<String, dynamic>.from(call.arguments);
-            PreferenceUtil.saveString(
+            await PreferenceUtil.saveString(
                 Constants.KEY_PUSH_KIT_TOKEN, data[isTokenStr]);
           }
         });
@@ -129,11 +130,6 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
             }
           });
         }
-        // if (kDebugMode) {
-        //   setState(() {
-        //     _loaded = true;
-        //   });
-        // }
       } else {
         callAppLockFeatureMethod(
             widget.nsRoute != null && widget.nsRoute == call ? true : false);
@@ -148,9 +144,12 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
         String authToken = PreferenceUtil.getStringValue(
             Constants.KEY_AUTHTOKEN)!; // To check whether it's logged in or not
         if (PreferenceUtil.getEnableAppLock() && authToken != null) {
-          _loaded = await CommonUtil().checkAppLock(useErrorDialogs: false,authErrorCallback:(e) {
-            _biometricNotEntrolled = e==auth_error.notEnrolled || e==auth_error.passcodeNotSet;
-          });
+          _loaded = await CommonUtil().checkAppLock(
+              useErrorDialogs: false,
+              authErrorCallback: (e) {
+                _biometricNotEntrolled = e == auth_error.notEnrolled ||
+                    e == auth_error.passcodeNotSet;
+              });
           if (_loaded) {
             setState(() {});
             if (Platform.isIOS) {
@@ -160,7 +159,9 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
               );
             }
           } else {
-          _biometricNotEntrolled ? _showAuthenticationError() : _showMyDialog();
+            _biometricNotEntrolled
+                ? _showAuthenticationError()
+                : _showMyDialog();
           }
         } else {
           if (Platform.isIOS) {
@@ -271,87 +272,87 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
               return false;
             },
             child: AlertDialog(
-              insetPadding: EdgeInsets.symmetric(horizontal: 20),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
-              content:Column(
-                mainAxisSize: MainAxisSize.min,
-                children:[
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Image.asset(
-                    variable.warning_icon,
-                    height: 30,
-                    width: 30,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    variable.strAuthenticationError,
-                    style:
-                    TextStyle(fontSize: 22,
-                        //      color: Colors.red,
-                        fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Divider(
-                      height: 2,
-                      thickness: 1.3,
+                insetPadding: EdgeInsets.symmetric(horizontal: 20),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  RichText(
-                    textAlign: TextAlign.start,
-                    text: TextSpan(
-                      style: TextStyle(fontSize: 14,
-                          height: 1.6,
-                          color:Colors.black,fontWeight: FontWeight.w400),
-                      children: [
-                        TextSpan(
-                          text: '${variable.strPleaseGoTo} ',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        TextSpan(
-                            text:variable.strSettings,
-                            style: TextStyle(fontSize: 16.0,
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap=(){
-                                AppSettings.openLockAndPasswordSettings();
-                                _isSettingsOpen = true;
-                                Navigator.of(context).pop();
-                              }
-                        ),
-                        TextSpan(
-                          text:
-                          ' ${variable.strErrorAuthDescription}',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                      ],
+                    Image.asset(
+                      variable.warning_icon,
+                      height: 30,
+                      width: 30,
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextButton(
-                    child: Text(
-                      variable.strLogin,
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      variable.strAuthenticationError,
                       style: TextStyle(
-                        color:Color(CommonUtil().getMyPrimaryColor()),
+                          fontSize: 22,
+                          //      color: Colors.red,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Divider(
+                        height: 2,
+                        thickness: 1.3,
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      moveToLoginPage();
-                    },
-                  ),
-                ],
-              )
-            ));
+                    RichText(
+                      textAlign: TextAlign.start,
+                      text: TextSpan(
+                        style: TextStyle(
+                            fontSize: 14,
+                            height: 1.6,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400),
+                        children: [
+                          TextSpan(
+                            text: '${variable.strPleaseGoTo} ',
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                          TextSpan(
+                              text: variable.strSettings,
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  AppSettings.openLockAndPasswordSettings();
+                                  _isSettingsOpen = true;
+                                  Navigator.of(context).pop();
+                                }),
+                          TextSpan(
+                            text: ' ${variable.strErrorAuthDescription}',
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextButton(
+                      child: Text(
+                        variable.strLogin,
+                        style: TextStyle(
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        moveToLoginPage();
+                      },
+                    ),
+                  ],
+                )));
       },
     );
   }
@@ -407,20 +408,9 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                               PreferenceUtil.getStringValue(Constants.MOB_NUM),
                               token,
                               true)
-                          .then((value) {
-                        fbaLog(eveParams: {
-                          'eventTime': '${DateTime.now()}',
-                          'ns_type': 'dashboard',
-                          'navigationPage': 'Dashboard',
-                        });
-                      });
+                          .then((value) {});
                     });
                     if (widget.nsRoute == 'DoctorRescheduling') {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'DoctorRescheduling',
-                        'navigationPage': 'Reschedule screen',
-                      });
                       var body = {};
                       body['templateName'] = widget.templateName;
                       body['contextId'] = widget.bookingID;
@@ -440,20 +430,17 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                           body: body,
                         ),
                       );
-                    }else if(widget.nsRoute =='vcApproveByProvider' || widget.nsRoute =='vcDeclineByProvider'){
+                    } else if (widget.nsRoute == 'vcApproveByProvider' ||
+                        widget.nsRoute == 'vcDeclineByProvider') {
                       Get.toNamed(
                         rt_VoiceCloningStatus,
-                        arguments: const VoiceCloneStatusArguments(fromMenu: true),
+                        arguments:
+                            const VoiceCloneStatusArguments(fromMenu: true),
                       )?.then((value) => PageNavigator.goToPermanent(
                           context, router.rt_Landing));
-                    }
-                    else if (widget.nsRoute == 'DoctorCancellation') {
+                    } else if (widget.nsRoute == 'DoctorCancellation') {
                       //cancel appointments route
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'DoctorCancellation',
-                        'navigationPage': 'Appointment List',
-                      });
+
                       Get.to(TelehealthProviders(
                         arguments: HomeScreenArguments(
                             selectedIndex: 0,
@@ -469,11 +456,6 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                         parameters.doctorCancellation) {
                       Get.toNamed(rt_notification_main);
                     } else if (widget.nsRoute == 'chat') {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'chat',
-                        'navigationPage': 'Tele Health Chat list',
-                      });
                       if (widget.bundle != null && widget.bundle != '') {
                         var chatParsedData = widget.bundle?.split('&');
                         Get.to(() => ChatDetail(
@@ -497,11 +479,6 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                       }
                     } else if (widget.nsRoute == 'appointmentList' ||
                         widget.nsRoute == 'appointmentHistory') {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'appointmentList',
-                        'navigationPage': 'Tele Health Appointment list',
-                      });
                       //cancel appointments route
                       Get.to(TelehealthProviders(
                         arguments: HomeScreenArguments(
@@ -513,11 +490,6 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'sheela') {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'sheela',
-                        'navigationPage': 'Sheela Start Page',
-                      });
                       if (widget.bundle != null && widget.bundle.isNotEmpty) {
                         var rawTitle;
                         var rawBody;
@@ -667,32 +639,17 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                       Get.to(DetailedTicketView(null, true, passedValArr[0]));
                     } else if (widget.nsRoute == 'profile_page' ||
                         widget.nsRoute == 'profile') {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'profile_page',
-                        'navigationPage': 'User Profile page',
-                      });
                       Get.toNamed(router.rt_UserAccounts,
                               arguments:
                                   UserAccountsArguments(selectedIndex: 0))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'googlefit') {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'googlefit',
-                        'navigationPage': 'Google Fit page',
-                      });
                       Get.toNamed(router.rt_AppSettings)!.then((value) =>
                           PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'th_provider' ||
                         widget.nsRoute == 'provider') {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'th_provider',
-                        'navigationPage': 'Tele Health Provider',
-                      });
                       Get.toNamed(router.rt_TelehealthProvider,
                               arguments: HomeScreenArguments(selectedIndex: 1))!
                           .then((value) => PageNavigator.goToPermanent(
@@ -700,11 +657,6 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                     } else if (widget.nsRoute == 'my_record' ||
                         widget.nsRoute == 'prescription_list' ||
                         widget.nsRoute == 'add_doc') {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'my_record',
-                        'navigationPage': 'My Records',
-                      });
                       getProfileData();
                       Get.toNamed(router.rt_HomeScreen,
                               arguments: HomeScreenArguments(selectedIndex: 1))!
@@ -713,11 +665,6 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                     } else if (widget.nsRoute == 'myRecords' &&
                         (widget.templateName != null &&
                             widget.templateName != '')) {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'myRecords',
-                        'navigationPage': '${widget.templateName}',
-                      });
                       final temp = widget.templateName!.split('|');
                       final dataOne = temp[1];
                       final dataTwo = temp[2];
@@ -772,13 +719,6 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                                   lastDate: passedValArr[4]))).then((value) {});
                     } else if (widget.nsRoute == 'regiment_screen') {
                       var passedValArr = widget.bundle?.split('&');
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': CommonUtil.isUSRegion()
-                            ? 'QurHomeRegimenScreen'
-                            : 'regiment_screen',
-                        'navigationPage': 'Regimen Screen',
-                      });
                       if ((CommonUtil.isUSRegion()) &&
                           (passedValArr[3] != null) &&
                           (passedValArr[3] != 'null') &&
@@ -812,11 +752,6 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                                 RegimentArguments(eventId: passedValArr[2]));
                       }
                     } else if (widget.nsRoute == 'th_provider_hospital') {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'th_provider_hospital',
-                        'navigationPage': 'TH provider Hospital Screen',
-                      });
                       Get.toNamed(router.rt_TelehealthProvider,
                               arguments: HomeScreenArguments(
                                   selectedIndex: 1, thTabIndex: 1))!
@@ -824,22 +759,12 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'myfamily_list' ||
                         widget.nsRoute == 'profile_my_family') {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'myfamily_list',
-                        'navigationPage': 'MyFamily List Screen',
-                      });
                       Get.toNamed(router.rt_UserAccounts,
                               arguments:
                                   UserAccountsArguments(selectedIndex: 1))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'myprovider_list') {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'myprovider_list',
-                        'navigationPage': 'MyProvider List Screen',
-                      });
                       Get.toNamed(router.rt_UserAccounts,
                               arguments:
                                   UserAccountsArguments(selectedIndex: 2))!
@@ -847,33 +772,18 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                               context, router.rt_Landing));
                     } else if (CommonUtil.isUSRegion() &&
                         widget.nsRoute == strPatientReferralAcceptToPatient) {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'myprovider_list',
-                        'navigationPage': 'MyProvider List Screen',
-                      });
                       Get.toNamed(router.rt_UserAccounts,
                               arguments:
                                   UserAccountsArguments(selectedIndex: 2))
                           ?.then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'myplans') {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'myplans',
-                        'navigationPage': 'MyPlans Screen',
-                      });
                       Get.toNamed(router.rt_UserAccounts,
                               arguments:
                                   UserAccountsArguments(selectedIndex: 3))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'devices_tab') {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'devices_tab',
-                        'navigationPage': 'Device Tab Screen',
-                      });
                       Get.toNamed(
                         router.rt_HomeScreen,
                         arguments: HomeScreenArguments(
@@ -882,11 +792,6 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'bills') {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'bills',
-                        'navigationPage': 'Bills Screen',
-                      });
                       Get.toNamed(
                         router.rt_HomeScreen,
                         arguments: HomeScreenArguments(
@@ -895,23 +800,12 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'openurl') {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'landing',
-                        'navigationPage': 'Landing',
-                      });
                       Provider.of<LandingViewModel>(context, listen: false)
                           .isURLCome = true;
-                      //ignore: lines_longer_than_80_chars
                       PageNavigator.goToPermanent(context, router.rt_Landing,
                           arguments:
                               LandingArguments(url: widget.bundle ?? null));
                     } else if (widget.nsRoute == 'mycart') {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'my cart',
-                        'navigationPage': 'My Cart',
-                      });
                       var passedValArr = widget.bundle?.split('&');
 
                       var body = {};
@@ -960,17 +854,11 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                       final template = widget.bundle['template'];
                       final userId = widget.bundle['userId'];
                       final patName = widget.bundle['patName'];
-                      //TODO if its Renew take the user into plandetail view
                       if (widget.nsRoute == 'Renew' ||
                           widget.nsRoute == 'myplandetails') {
                         final currentUserId =
                             PreferenceUtil.getStringValue(KEY_USERID);
                         if (currentUserId == userId) {
-                          fbaLog(eveParams: {
-                            'eventTime': '${DateTime.now()}',
-                            'ns_type': 'myplan_deatails',
-                            'navigationPage': 'My Plan Details',
-                          });
                           Get.to(
                             MyPlanDetail(
                               packageId: planid,
@@ -1016,7 +904,6 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                         ),
                       ).then((value) {});
                     } else if (widget.nsRoute == 'claimList') {
-                      final userId = widget.bundle['userId'];
                       final claimId = widget.bundle['claimId'];
                       Get.to(
                         ClaimRecordDisplay(
@@ -1026,21 +913,11 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'manageActivities') {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'manageActivities',
-                        'navigationPage': 'Manage Activities',
-                      });
                       Get.to(ManageActivitiesScreen())!.then((value) =>
                           PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == strAppointmentDetail) {
                       var passedValArr = widget.bundle?.split('&');
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'appointmentDetail',
-                        'navigationPage': 'Appointment Detail Page',
-                      });
 
                       if (passedValArr[2] != null) {
                         try {
@@ -1097,11 +974,6 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                       // Navigate to the permanent landing page after processing the Voice Clone Patient Assignment
                       PageNavigator.goToPermanent(context, router.rt_Landing);
                     } else {
-                      fbaLog(eveParams: {
-                        'eventTime': '${DateTime.now()}',
-                        'ns_type': 'landing',
-                        'navigationPage': 'Landing',
-                      });
                       PageNavigator.goToPermanent(context, router.rt_Landing);
                     }
                   } else {
@@ -1119,27 +991,11 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
                               token,
                               true)
                           .then((value) {
-                        fbaLog(eveParams: {
-                          'eventTime': '${DateTime.now()}',
-                          'ns_type': 'dashboard',
-                          'navigationPage': 'Dashboard',
-                        });
                         PageNavigator.goToPermanent(context, router.rt_Landing);
                       });
                     });
-                    
                   }
                 } else {
-                  //PageNavigator.goToPermanent(context, router.rt_WebCognito);
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => PatientSignInScreen()));
-                  fbaLog(eveParams: {
-                    'eventTime': '${DateTime.now()}',
-                    'ns_type': 'sign_in',
-                    'navigationPage': 'Login Page',
-                  });
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
@@ -1175,20 +1031,24 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      String? authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+      String? authToken =
+          PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
       /// Added Lifecycle because not possible to receive the callback  from os so handled manually.
-      if(PreferenceUtil.getEnableAppLock() && authToken != null && _isSettingsOpen){
-        _isSettingsOpen =false;
+      if (PreferenceUtil.getEnableAppLock() &&
+          authToken != null &&
+          _isSettingsOpen) {
+        _isSettingsOpen = false;
         callAppLockFeatureMethod(false);
-    }
+      }
     }
   }
+
   @override
   void dispose() {
     WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
   }
-
 
   void getProfileData() async {
     try {
@@ -1197,7 +1057,8 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
-  void moveToLoginPage()async {
+
+  void moveToLoginPage() async {
     /// Removing the preferences and navigating to Login
     await PreferenceUtil.clearAllData();
     Navigator.pushAndRemoveUntil(
@@ -1205,7 +1066,7 @@ class _SplashScreenState extends State<SplashScreen>with WidgetsBindingObserver 
       MaterialPageRoute(
         builder: (context) => PatientSignInScreen(),
       ),
-          (route) => false,
+      (route) => false,
     );
   }
 }

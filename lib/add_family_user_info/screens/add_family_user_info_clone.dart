@@ -180,7 +180,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       CommonUtil().isTablet! ? 22 : 16; //incrase the size of text in tablet
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
     sheelaAIcontroller!.getLanguagesFromApi().then((value) {
       getSupportedLanguages();
@@ -216,12 +215,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   void dispose() {
     checkCSIRPackageVaildation();
     super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Add Family User info Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   fetchUserProfileInfo() async {

@@ -80,18 +80,6 @@ import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 setRouter(List<CameraDescription> listOfCameras) async {
   final firstCamera = listOfCameras[0];
 
-//TODO : to confirm
-  /*
-  var fhb_router = <String, WidgetBuilder>{
-    router.rt_Sheela: (BuildContext context) => ChatScreen(
-          arguments: ModalRoute.of(context).settings.arguments,
-        ),
-    router.rt_Splash: (BuildContext context) => SplashScreen(),
-    router.rt_SignIn: (BuildContext context) => SignInScreen(),
-    router.rt_Dashboard: (BuildContext context) => DevicesScreen(),
-    router.rt_Regimen: (BuildContext context) =>
-  */
-
   final fhbRouter = <String, WidgetBuilder>{
     router.rt_Sheela: (context) => SheelaAIMainScreen(
           arguments:
@@ -213,8 +201,9 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_notification_main: (BuildContext context) => NotificationMain(),
     router.rt_membership_benefits_screen: (BuildContext context) =>
         MembershipBenefitListScreen(
-            membershipBenefitListModel: ModalRoute.of(context)!.settings.arguments
-                as MembershipBenefitListModel?),
+            membershipBenefitListModel: ModalRoute.of(context)!
+                .settings
+                .arguments as MembershipBenefitListModel?),
   };
 
   return fhbRouter;

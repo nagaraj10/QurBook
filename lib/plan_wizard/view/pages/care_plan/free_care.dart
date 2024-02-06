@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
-import 'package:myfhb/plan_wizard/view/widgets/care_plan_card.dart';
-import 'package:myfhb/plan_wizard/view/widgets/next_button.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
-import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../authentication/constants/constants.dart';
+import '../../../../common/CommonUtil.dart';
+import '../../../../common/common_circular_indicator.dart';
+import '../../../../common/errors_widget.dart';
+import '../../../../constants/fhb_constants.dart';
+import '../../../../constants/variable_constant.dart' as variable;
+import '../../../../plan_dashboard/model/PlanListModel.dart';
+import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../../telehealth/features/SearchWidget/view/SearchWidget.dart';
+import '../../../../telehealth/features/chat/constants/const.dart';
+import '../../../view_model/plan_wizard_view_model.dart';
+import '../../widgets/care_plan_card.dart';
+import '../../widgets/next_button.dart';
 
 class FreeCarePlans extends StatefulWidget {
   @override
@@ -37,15 +38,19 @@ class _FreeCarePlans extends State<FreeCarePlans> {
   PlanWizardViewModel? planListProvider;
 
   List sortType = ['Default', 'Price', 'Duration'];
-  ValueNotifier<String?> _selectedItem = ValueNotifier<String?>('Default');
+  final ValueNotifier<String?> _selectedItem =
+      ValueNotifier<String?>('Default');
 
   @override
   void initState() {
+    super.initState();
     Provider.of<PlanWizardViewModel>(context, listen: false)
         .currentPackageFreeCareId = '';
 
-    planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getCarePlanList(strFreeCare) as Future<PlanListModel?>;
+    planListModel = Provider.of<PlanWizardViewModel>(
+      context,
+      listen: false,
+    ).getCarePlanList(strFreeCare);
   }
 
   @override

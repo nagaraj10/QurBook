@@ -1,4 +1,3 @@
-
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
@@ -48,13 +47,17 @@ class AppointmentsCommonWidget {
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.start,
               maxLines: 2,
-              style:
-              TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: fhbStyles.fnt_doc_name),
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                  fontSize: fhbStyles.fnt_doc_name),
             ),
           ),
-          SizedBox(width: 1.0.w,),
+          SizedBox(
+            width: 1.0.w,
+          ),
           Padding(
-            padding:  EdgeInsets.only(top:4.0),
+            padding: EdgeInsets.only(top: 4),
             child: IconWidget(
                 colors: Color(CommonUtil().getMyPrimaryColor()),
                 icon: Icons.info,
@@ -202,9 +205,8 @@ class AppointmentsCommonWidget {
                   toast.getToast(parameters.errNoRecordsSelected, Colors.red);
                 }
               }
-            } catch (e,stackTrace) {
-                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+            } catch (e, stackTrace) {
+              CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             }
           });
         }, notesCount),
@@ -257,9 +259,8 @@ class AppointmentsCommonWidget {
                   toast.getToast(parameters.errNoRecordsSelected, Colors.red);
                 }
               }
-            } catch (e,stackTrace) {
-                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+            } catch (e, stackTrace) {
+              CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             }
           });
         }, voiceNotesCount),
@@ -313,9 +314,8 @@ class AppointmentsCommonWidget {
                     toast.getToast(parameters.errNoRecordsSelected, Colors.red);
                   }
                 }
-              } catch (e,stackTrace) {
-                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+              } catch (e, stackTrace) {
+                CommonUtil().appLogs(message: e, stackTrace: stackTrace);
               }
             });
           }
@@ -401,11 +401,13 @@ class AppointmentsCommonWidget {
       child: Container(
         height: 20.0.h,
         width: 70.0.h,
-        child: OutlinedButton(style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-          side:
-              BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),),
+        child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+          ),
           onPressed: () {},
           child: TextWidget(
             text: TranslationConstants.joinCall.t(),
@@ -425,7 +427,7 @@ class AppointmentsCommonWidget {
               color: Color(CommonUtil().getMyPrimaryColor()),
               width: 3.0.w,
             ),
-            borderRadius: BorderRadius.circular(50.0),
+            borderRadius: BorderRadius.circular(50),
             gradient: LinearGradient(
               colors: <Color>[
                 Color(CommonUtil().getMyPrimaryColor()),
@@ -448,35 +450,34 @@ class AppointmentsCommonWidget {
   Widget floatingButton(
     BuildContext context, {
     bool isHome = false,
-  }) {
-    return FloatingActionButton(
-      mini: true,
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50),
-        side: BorderSide(
-            width: 2.0.w, color: Color(CommonUtil().getMyPrimaryColor())),
-      ),
-      elevation: 0.0,
-      onPressed: () {},
-      child: IconWidget(
-        icon: Icons.add,
-        colors: Color(CommonUtil().getMyPrimaryColor()),
-        size: 24.0.sp,
-        onTap: () {
-          FocusManager.instance.primaryFocus!.unfocus();
-          if (!isHome) {
-            Navigator.of(context).pop();
-          }
-          Navigator.pushNamed(
-            context,
-            '/telehealth-providers',
-            arguments: HomeScreenArguments(selectedIndex: 1),
-          ).then((value) {});
-        },
-      ),
-    );
-  }
+  }) =>
+      FloatingActionButton(
+        mini: true,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+          side: BorderSide(
+              width: 2.0.w, color: Color(CommonUtil().getMyPrimaryColor())),
+        ),
+        elevation: 0,
+        onPressed: () {},
+        child: IconWidget(
+          icon: Icons.add,
+          colors: Color(CommonUtil().getMyPrimaryColor()),
+          size: 24.0.sp,
+          onTap: () {
+            FocusManager.instance.primaryFocus!.unfocus();
+            if (!isHome) {
+              Navigator.of(context).pop();
+            }
+            Navigator.pushNamed(
+              context,
+              '/telehealth-providers',
+              arguments: HomeScreenArguments(selectedIndex: 1),
+            ).then((value) {});
+          },
+        ),
+      );
 
   Widget title(String text) {
     return Padding(
@@ -539,9 +540,8 @@ class AppointmentsCommonWidget {
     try {
       filteredCategoryData = PreferenceUtil.getCategoryTypeDisplay(
           ConstantKey.KEY_CATEGORYLIST_VISIBLE)!;
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
@@ -566,11 +566,11 @@ class AppointmentsCommonWidget {
                 color: const Color(0xFFe3e2e2),
                 blurRadius: 16,
                 // has the effect of softening the shadow
-                spreadRadius: 5.0,
+                spreadRadius: 5,
                 // has the effect of extending the shadow
                 offset: Offset(
-                  0.0, // horizontal, move right 10
-                  0.0, // vertical, move down 10
+                  0, // horizontal, move right 10
+                  0, // vertical, move down 10
                 ),
               )
             ]),
@@ -594,8 +594,7 @@ class AppointmentsCommonWidget {
       return commonTextWidget(doc.additionalinfo?.healthOrganizationId ?? '');
     } else if (doc.doctorSessionId == null && doc.healthOrganization == null) {
       return Text(
-          (doc.additionalinfo?.title != null &&
-                  doc.additionalinfo?.title != '')
+          (doc.additionalinfo?.title != null && doc.additionalinfo?.title != '')
               ? CommonUtil()
                   .getFirstAndLastName(doc.additionalinfo?.title! ?? '')
               : (doc.serviceCategory?.code == 'LAB')
@@ -726,8 +725,7 @@ class AppointmentsCommonWidget {
         doc.doctor?.user != null &&
         doc.doctor?.user?.userAddressCollection3 != null &&
         doc.doctor!.user!.userAddressCollection3!.length > 0) {
-      location =
-          doc.doctor?.user?.userAddressCollection3![0].city?.name ?? "";
+      location = doc.doctor?.user?.userAddressCollection3![0].city?.name ?? "";
     }
 
     return location;

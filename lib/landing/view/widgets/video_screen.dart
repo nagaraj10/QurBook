@@ -1,26 +1,26 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/constants/fhb_query.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
 import 'package:provider/provider.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
 import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonUtil.dart';
+import '../../../common/common_circular_indicator.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/fhb_parameters.dart';
-import '../../model/qur_plan_dashboard_model.dart';
-import '../../../widgets/GradientAppBar.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import '../../../constants/fhb_query.dart';
+import '../../../constants/router_variable.dart';
+import '../../../src/ui/SheelaAI/Views/youtube_player.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/landing/view_model/landing_view_model.dart';
+import '../../../widgets/GradientAppBar.dart';
+import '../../model/qur_plan_dashboard_model.dart';
+import '../../view_model/landing_view_model.dart';
+import '../landing_arguments.dart';
 
 class VideoScreen extends StatefulWidget {
   VideoScreen({
-  this.videoList,
+    this.videoList,
   });
 
   List<HelperVideo>? videoList;
@@ -34,7 +34,6 @@ class _VideoScreenState extends State<VideoScreen> {
   @override
   void initState() {
     super.initState();
-    mInitialTime = DateTime.now();
     if (widget.videoList == null) {
       Provider.of<LandingViewModel>(context, listen: false)
           .getQurPlanWidgetsData(
@@ -42,17 +41,6 @@ class _VideoScreenState extends State<VideoScreen> {
         includeText: qr_helperVideos,
       );
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Help Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override

@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
@@ -7,18 +6,18 @@ import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/video_call/utils/audiocall_provider.dart';
-import 'package:myfhb/video_call/utils/rtc_engine.dart';
-import 'package:myfhb/video_call/widgets/audiocall_screen.dart';
 import 'package:provider/provider.dart';
-//import 'package:screen/screen.dart';  FU2.5
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
+
 import '../../../../constants/fhb_constants.dart' as constants;
+import '../../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../utils/audiocall_provider.dart';
+import '../utils/rtc_engine.dart';
+import '../widgets/audiocall_screen.dart';
 
 class MakeCallPage extends StatefulWidget {
   /// non-modifiable channel name of the page
@@ -72,17 +71,9 @@ class _MakeCallPageState extends State<MakeCallPage> {
       super.dispose();
       Provider.of<RTCEngineProvider>(Get.context!, listen: false)
           .stopRtcEngine();
-      //Screen.keepOn(false);  FU2.5
       _connectivitySubscription.cancel();
-      fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'pageName': 'Call Screen',
-        'screenSessionTime':
-            '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-      });
-    } catch (e,stackTrace) {
-      print(e);
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -90,13 +81,10 @@ class _MakeCallPageState extends State<MakeCallPage> {
   void initState() {
     try {
       super.initState();
-      mInitialTime = DateTime.now();
-      //Screen.keepOn(true);  FU2.5
       _connectivitySubscription =
           _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-    } catch (e,stackTrace) {
-      print(e);
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -109,8 +97,8 @@ class _MakeCallPageState extends State<MakeCallPage> {
         specialityName = /*await prefs.getString("speciality")*/ "";
         userIdForNotify =
             await PreferenceUtil.getStringValue(constants.KEY_USERID);
-      } catch (e,stackTrace) {
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
       switch (result) {
         case ConnectivityResult.wifi:
@@ -164,9 +152,9 @@ class _MakeCallPageState extends State<MakeCallPage> {
           });
           break;
       }
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       print(e);
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -213,7 +201,8 @@ class _MakeCallPageState extends State<MakeCallPage> {
     ).users.forEach(
           (int uid) => list.add(
             RtcRemoteView.SurfaceView(
-              uid: uid, channelId: '',
+              uid: uid,
+              channelId: '',
             ),
           ),
         );
@@ -346,33 +335,34 @@ class _MakeCallPageState extends State<MakeCallPage> {
                     children: [
                       regController.isFromSOS.value
                           ? Container(
-                        color: Colors.red,
-                        height: 30.00,
-                        child: Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.info_outline_rounded,
-                                size: 20.0.sp,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 3.0.w,
-                              ),
-                              Text(
-                                yourCallIsBeingRecorded,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14.0.sp,
+                              color: Colors.red,
+                              height: 30.00,
+                              child: Padding(
+                                padding: EdgeInsets.all(5.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.info_outline_rounded,
+                                      size: 20.0.sp,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(
+                                      width: 3.0.w,
+                                    ),
+                                    Text(
+                                      yourCallIsBeingRecorded,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14.0.sp,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ):SizedBox.shrink(),
+                            )
+                          : SizedBox.shrink(),
                       Expanded(
                         child: InkWell(
                           child: AudioCallScreen(
@@ -389,33 +379,34 @@ class _MakeCallPageState extends State<MakeCallPage> {
                     children: [
                       regController.isFromSOS.value
                           ? Container(
-                        color: Colors.red,
-                        height: 30.00,
-                        child: Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.info_outline_rounded,
-                                size: 20.0.sp,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 3.0.w,
-                              ),
-                              Text(
-                                yourCallIsBeingRecorded,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14.0.sp,
+                              color: Colors.red,
+                              height: 30.00,
+                              child: Padding(
+                                padding: EdgeInsets.all(5.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.info_outline_rounded,
+                                      size: 20.0.sp,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(
+                                      width: 3.0.w,
+                                    ),
+                                    Text(
+                                      yourCallIsBeingRecorded,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14.0.sp,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ):SizedBox.shrink(),
+                            )
+                          : SizedBox.shrink(),
                       Expanded(child: _viewRows()),
                     ],
                   );
