@@ -89,9 +89,7 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
             /*(widget.fieldData?.title ?? '').isNotEmpty
                 ? '${Constants.select} ${widget.fieldData?.title}'
                 : '',*/
-            (widget.fieldData.title ?? '').isNotEmpty
-                ? '${Constants.select}'
-                : '',
+            getHintText(),
             style: TextStyle(
               fontSize: 14.0.sp,
             ),
@@ -129,4 +127,27 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
             : comboValue
         : null;
   }
+
+  String getHintText() {
+    // Initialize text with an empty string
+    String text = '';
+
+    // Check if the current language is English
+    if (CommonUtil().isLanguageEnglish() ?? false) {
+      // Check if the title is not null and not empty
+      text = (widget.fieldData.title ?? '').isNotEmpty
+          ? '${Constants.select}' // Set text to '${Constants.select}' if title is not empty
+          : ''; // Otherwise, set text to empty string
+    } else {
+      // For other languages
+      // Check if translated title is not null and not empty
+      text = (widget.fieldData.translatedTitle ?? '').isNotEmpty
+          ? '${Constants.select}' // Set text to '${Constants.select}' if translated title is not empty
+          : ''; // Otherwise, set text to empty string
+    }
+
+    // Return the resulting text
+    return text;
+  }
+
 }
