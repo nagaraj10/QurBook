@@ -1,20 +1,23 @@
 import 'dart:async';
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/FlutterToast.dart';
 
 class CameraPreviewScreen extends StatefulWidget {
-  const CameraPreviewScreen({super.key, required this.cameras});
+  const CameraPreviewScreen({Key? key, required this.cameras}) : super(key: key);
   final List<CameraDescription> cameras;
 
   @override
-  State<CameraPreviewScreen> createState() => _CameraPreviewScreenState();
+  _CameraPreviewScreenState createState() => _CameraPreviewScreenState();
 }
 
 class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
   late CameraController controller;
   late Timer _timer;
   int _secondsRemaining = 30;
+  XFile? imageFile;
 
   @override
   void initState() {
@@ -22,13 +25,9 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
     cameraInitialization();
   }
 
-  cameraInitialization() async {
+  void cameraInitialization() async {
     controller = CameraController(widget.cameras[0], ResolutionPreset.medium);
-    await controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-    });
+    await controller.initialize();
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
@@ -51,8 +50,11 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
 
   Future<void> _takePicture() async {
     try {
-      final image = await controller.takePicture();
-      Navigator.pop(context, image); // Sending the image path back
+      final XFile image = await controller.takePicture();
+      setState(() {
+        imageFile = image;
+      });
+      _timer.cancel();
     } catch (e) {
       FlutterToast().getToast(e.toString(), Colors.red);
     }
@@ -63,42 +65,98 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
     if (!controller.value.isInitialized) {
       return Container();
     }
-    return Scaffold(
+      return _buildCameraPreview();
+  }
+
+  Widget _buildCameraPreview() => Scaffold(
       backgroundColor: Colors.transparent,
-      body: Column(
-        children: [
-          const SizedBox(height: 100),
-          Text(
-            '$_secondsRemaining seconds left',
-            style: const TextStyle(fontSize: 20, color: Colors.red),
-          ),
-          const SizedBox(height: 30),
-          CameraPreview(controller),
-          const SizedBox(height: 30),
-          Row(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Cancel"),
+      bottomNavigationBar:  Padding(
+        padding: const EdgeInsets.all(20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Icon(
+                Icons.cancel_outlined,
+                size: 32,
               ),
-              const Spacer(),
-              ElevatedButton(
-                onPressed: () => _takePicture(),
+            ),
+            Visibility(
+              visible: imageFile==null,
+              child: ElevatedButton(
+                onPressed: _takePicture,
                 child: const Icon(
                   Icons.camera_alt_rounded,
                   size: 32,
                 ),
               ),
-              SizedBox(
-                width: 30,
+            ),
+            Visibility(
+              visible: imageFile!=null,
+              child: IconButton(
+                onPressed: (){
+                  Navigator.of(context).pop(imageFile);
+                },
+                icon: const Icon(
+                  Icons.check,
+                  color: Colors.white,
+                  size: 32,
+                ),
               ),
-              const Spacer(),
-            ],
+            ),
+          ],
+        ),
+      ),
+      body:  Stack(
+        children: [
+          Positioned.fill(
+            child: imageFile != null
+                ? Image.file(
+              File(imageFile!.path),
+              fit: BoxFit.cover,
+            )
+                : CameraPreview(controller),
           ),
+          if(imageFile == null)
+          Positioned(
+            top: 100,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Text(
+                '$_secondsRemaining',
+                style: const TextStyle(fontSize: 25, color: Colors.red),
+              ),
+            ),
+          ),
+
         ],
       ),
     );
-  }
+
+
+
+  // void _retakePicture() {
+  //   setState(() {
+  //     imageFile = null;
+  //     _secondsRemaining = 30;
+  //   });
+  //   _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+  //     setState(() {
+  //       if (_secondsRemaining > 0) {
+  //         _secondsRemaining--;
+  //       } else {
+  //         _timer.cancel();
+  //         _takePicture();
+  //       }
+  //     });
+  //   });
+  // }
+
+  // void _acceptPicture() {
+  //   Navigator.of(context).pop(imageFile);
+  // }
 }
