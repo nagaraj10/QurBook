@@ -75,8 +75,14 @@ class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
             _field: field,
             _type: field == _hospital || field == _languageSpoken ? _array : _string,
           };
-          if (values.length == 1) {
-            filter[_value] = field == _hospital || field == _languageSpoken?values:values.first;
+          if(field == _hospital || field == _languageSpoken){
+            if(values.isNotEmpty) {
+              filter[_value] =  values;
+              filters.add(filter);
+            }
+          }
+          else if (values.length == 1) {
+            filter[_value] = values.first;
             filters.add(filter);
           }
         }
