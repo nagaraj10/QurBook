@@ -1146,8 +1146,12 @@ const String strAppNsQurhomeIcon =
     'app_ns_qurhome_icon'; // App icon for Qurhome
 const String strAppNsQurbookIcon =
     'app_ns_qurbook_icon'; // App icon for Qurbook
+const String strAppNsQurdayIcon =
+    'app_ns_qurday_icon'; // App icon for Qurday
 const String strIcLauncherQurhome =
     'ic_launcher_qurhome'; // Launcher icon for Qurhome
+const String strIcLauncherQurDay =
+    'ic_launcher_qurday'; // Launcher icon for QurDay
 const String strIcLauncherQurbook =
     'ic_launcher_qurbook'; // Launcher icon for Qurbook
 const String strMeetingId = 'meeting_id'; // Meeting ID

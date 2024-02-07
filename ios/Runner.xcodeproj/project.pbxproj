@@ -33,7 +33,6 @@
 		54C1996A2848885200BC3B10 /* BSOSessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C199682848885200BC3B10 /* BSOSessionData.m */; };
 		54CE079F2923A7A800C29FFB /* LoaderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54CE079E2923A7A800C29FFB /* LoaderVC.swift */; };
 		54DE869A2861E78A0005B940 /* beep_beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 54DE86992861E78A0005B940 /* beep_beep.mp3 */; };
-		54E34BAE2A4C5E2F000EB933 /* blecommentedcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E34BAD2A4C5E2F000EB933 /* blecommentedcode.swift */; };
 		54E34BB02A4C8DCD000EB933 /* AppDelegateNE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E34BAF2A4C8DCD000EB933 /* AppDelegateNE.swift */; };
 		54E34BB22A4C8ECE000EB933 /* AppDelegateTTS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E34BB12A4C8ECE000EB933 /* AppDelegateTTS.swift */; };
 		54E34BB42A4C90FE000EB933 /* AppDelegateCKE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E34BB32A4C90FE000EB933 /* AppDelegateCKE.swift */; };
@@ -166,7 +165,6 @@
 		54C199692848885200BC3B10 /* BSOSessionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSOSessionData.h; sourceTree = "<group>"; };
 		54CE079E2923A7A800C29FFB /* LoaderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderVC.swift; sourceTree = "<group>"; };
 		54DE86992861E78A0005B940 /* beep_beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = beep_beep.mp3; sourceTree = "<group>"; };
-		54E34BAD2A4C5E2F000EB933 /* blecommentedcode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = blecommentedcode.swift; sourceTree = "<group>"; };
 		54E34BAF2A4C8DCD000EB933 /* AppDelegateNE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateNE.swift; sourceTree = "<group>"; };
 		54E34BB12A4C8ECE000EB933 /* AppDelegateTTS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateTTS.swift; sourceTree = "<group>"; };
 		54E34BB32A4C90FE000EB933 /* AppDelegateCKE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateCKE.swift; sourceTree = "<group>"; };
@@ -430,7 +428,7 @@
 				54E34BAF2A4C8DCD000EB933 /* AppDelegateNE.swift */,
 				54E34BB12A4C8ECE000EB933 /* AppDelegateTTS.swift */,
 				54E34BB32A4C90FE000EB933 /* AppDelegateCKE.swift */,
-				54E34BAD2A4C5E2F000EB933 /* blecommentedcode.swift */,
+				
 			);
 			path = AppDelegate;
 			sourceTree = "<group>";
@@ -939,7 +937,7 @@
 				9C07AB7224F3948900DCE725 /* NVActivityIndicatorAnimationAudioEqualizer.swift in Sources */,
 				9C07AB7D24F3948900DCE725 /* NVActivityIndicatorAnimationLineScalePulseOutRapid.swift in Sources */,
 				9C07AB7424F3948900DCE725 /* NVActivityIndicatorAnimationBallGridBeat.swift in Sources */,
-				54E34BAE2A4C5E2F000EB933 /* blecommentedcode.swift in Sources */,
+				
 				54C199552848805100BC3B10 /* OHQStateMachine.m in Sources */,
 				9C07AB5D24F3948900DCE725 /* NVActivityIndicatorView.swift in Sources */,
 				54E34BB42A4C90FE000EB933 /* AppDelegateCKE.swift in Sources */,
