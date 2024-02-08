@@ -686,13 +686,16 @@ class QurHomeApiProvider {
   }
 
   // Saves the user's last access time on the server.
-  saveUserLastAccessTime({String version = '', String appNameTemp = ''}) async {
+  saveUserLastAccessTime({
+    String version = '',
+    String appNameTemp = '',
+  }) async {
     try {
       // Get the request headers with time slot
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
 
       // Get the local device name
-      String deviceName = "${Platform?.localHostname}";
+      String deviceName = Platform.localHostname;
 
       // Get the current date and time
       DateTime utcDateTime = DateTime.now().toUtc();
@@ -717,7 +720,7 @@ class QurHomeApiProvider {
       ))!;
 
       // Check the response status code
-      if (res?.statusCode == 200) {
+      if (res.statusCode == 200) {
         // Success
       } else {
         // Failure
