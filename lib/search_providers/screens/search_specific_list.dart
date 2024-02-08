@@ -25,6 +25,7 @@ import '../../common/common_circular_indicator.dart';
 import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_parameters.dart'as Parameters;
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
 import '../../my_family/bloc/FamilyListBloc.dart';
@@ -163,6 +164,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       _familyListBloc!.getFamilyMembersListNew();
 
       if (widget.isFromCreateTicket) {
+
+        createTicketController.isLabNameAscendingOrder.value = 0;
+        createTicketController.isDoctorNameAscendingOrder.value = 0;
+        createTicketController.isDoctorExpAscendingOrder.value = 0;
+
         var searchWord = widget.arguments!.searchWord ?? '';
 
         // Create a common filter request model
@@ -173,6 +179,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           searchText: CommonUtil()
               .validString(createTicketController.strSearchText.value),
           filters: [],
+          sorts: [],
         );
 
         // Determine the controller and pagingController based on the searchWord
@@ -329,8 +336,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         size: createTicketController.limit,
                         searchText: CommonUtil().validString(
                             createTicketController.strSearchText.value),
-                        filters: createTicketController
+                            filters: createTicketController
                                 .doctorFilterRequestModel?.filters ??
+                            [],
+                        sorts: createTicketController
+                                .doctorFilterRequestModel?.sorts ??
                             [],
                       );
 
@@ -355,6 +365,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                             createTicketController.strSearchText.value),
                         filters: createTicketController
                                 .labListFilterRequestModel?.filters ??
+                            [],
+                        sorts: createTicketController
+                                .labListFilterRequestModel?.sorts ??
                             [],
                         healthOrganizationType:
                             CommonConstants.keyLab.toUpperCase(),
@@ -520,6 +533,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                             count = filterCount;
                             if (createTicketController.searchWord.value ==
                                 CommonConstants.doctors) {
+                              doctorFilterRequestModel.sorts = createTicketController.doctorFilterRequestModel?.sorts ?? [];
                               createTicketController.doctorFilterRequestModel =
                                   doctorFilterRequestModel;
                               createTicketController.pagingController.refresh();
@@ -528,6 +542,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                     CommonConstants.labs ||
                                 createTicketController.searchWord.value ==
                                     CommonConstants.lab) {
+                              doctorFilterRequestModel.sorts = createTicketController.labListFilterRequestModel?.sorts ?? [];
                               createTicketController.labListFilterRequestModel =
                                   doctorFilterRequestModel;
                               createTicketController
@@ -3157,6 +3172,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         searchText: CommonUtil()
             .validString(createTicketController.strSearchText.value),
         filters: [],
+        sorts: [],
       );
 
       // Determine the current controller and set the common filter request model accordingly
@@ -3164,6 +3180,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         // If searching for doctors, use existing doctor filters
         commonFilterRequestModel.filters =
             createTicketController.doctorFilterRequestModel?.filters ?? [];
+        commonFilterRequestModel.sorts =
+            createTicketController.doctorFilterRequestModel?.sorts ?? [];
         createTicketController.doctorFilterRequestModel =
             commonFilterRequestModel;
       } else if (searchWord == CommonConstants.labs ||
@@ -3171,6 +3189,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         // If searching for labs, use existing lab filters and set healthOrganizationType
         commonFilterRequestModel.filters =
             createTicketController.labListFilterRequestModel?.filters ?? [];
+        commonFilterRequestModel.sorts =
+            createTicketController.labListFilterRequestModel?.sorts ?? [];
         commonFilterRequestModel.healthOrganizationType =
             CommonConstants.keyLab.toUpperCase();
         createTicketController.labListFilterRequestModel =
@@ -3202,118 +3222,193 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               child: StatefulBuilder(
                 builder: (BuildContext context, StateSetter setState) {
                   return Obx(() => Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              Constants.strSortby,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  Constants.strSortby,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.close, color: Colors.black),
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                )
+                              ],
                             ),
-                            IconButton(
-                              icon: Icon(Icons.close, color: Colors.black),
-                              onPressed: () {
-                                Get.back();
-                              },
-                            )
-                          ],
-                        ),
-                      ),
-                      ListTile(
-                        title: Text(Constants.strAlphabetAZ),
-                        trailing: buildRadio(
-                          value: 1,
-                          groupValue: isDoctor
-                              ? createTicketController
-                              .isDoctorNameAscendingOrder.value
-                              : createTicketController
-                              .isLabNameAscendingOrder.value,
-                          onChanged: (value) {
-                            if (isDoctor) {
-                              createTicketController.isDoctorNameAscendingOrder
-                                  .value = value ?? 0;
-                            } else {
-                              createTicketController.isLabNameAscendingOrder.value =
-                                  value ?? 0;
-                            }
-                          },
-                        ),
-                      ),
-                      ListTile(
-                        title: Text(Constants.strAlphabetZA),
-                        trailing: buildRadio(
-                          value: 2,
-                          groupValue: isDoctor
-                              ? createTicketController
-                              .isDoctorNameAscendingOrder.value
-                              : createTicketController
-                              .isLabNameAscendingOrder.value,
-                          onChanged: (value) {
-                            if (isDoctor) {
-                              createTicketController.isDoctorNameAscendingOrder
-                                  .value = value ?? 0;
-                            } else {
-                              createTicketController.isLabNameAscendingOrder.value =
-                                  value ?? 0;
-                            }
-                          },
-                        ),
-                      ),
-                      if (isDoctor)
-                        ...[
-                          SizedBox(height: 10),
+                          ),
                           ListTile(
-                            title: Text(Constants.strExperienceASC),
+                            title: Text(Constants.strAlphabetAZ),
                             trailing: buildRadio(
                               value: 1,
-                              groupValue: createTicketController
-                                  .isDoctorExpAscendingOrder.value,
+                              groupValue: isDoctor
+                                  ? createTicketController
+                                      .isDoctorNameAscendingOrder.value
+                                  : createTicketController
+                                      .isLabNameAscendingOrder.value,
                               onChanged: (value) {
-                                createTicketController.isDoctorExpAscendingOrder
-                                    .value = value ?? 0;
+                                if (isDoctor) {
+                                  createTicketController
+                                      .isDoctorNameAscendingOrder
+                                      .value = value ?? 0;
+                                } else {
+                                  createTicketController.isLabNameAscendingOrder
+                                      .value = value ?? 0;
+                                }
                               },
                             ),
                           ),
                           ListTile(
-                            title: Text(Constants.strExperienceDESC),
+                            title: Text(Constants.strAlphabetZA),
                             trailing: buildRadio(
                               value: 2,
-                              groupValue: createTicketController
-                                  .isDoctorExpAscendingOrder.value,
+                              groupValue: isDoctor
+                                  ? createTicketController
+                                      .isDoctorNameAscendingOrder.value
+                                  : createTicketController
+                                      .isLabNameAscendingOrder.value,
                               onChanged: (value) {
-                                createTicketController.isDoctorExpAscendingOrder
-                                    .value = value ?? 0;
+                                if (isDoctor) {
+                                  createTicketController
+                                      .isDoctorNameAscendingOrder
+                                      .value = value ?? 0;
+                                } else {
+                                  createTicketController.isLabNameAscendingOrder
+                                      .value = value ?? 0;
+                                }
                               },
                             ),
                           ),
-                        ],
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            buildButton(
-                              text: DoctorFilterConstants.reset,
-                              textColor: Color(CommonUtil().getMyPrimaryColor()),
-                              onTap: () async {},
+                          if (isDoctor) ...[
+                            SizedBox(height: 10),
+                            ListTile(
+                              title: Text(Constants.strExperienceASC),
+                              trailing: buildRadio(
+                                value: 1,
+                                groupValue: createTicketController
+                                    .isDoctorExpAscendingOrder.value,
+                                onChanged: (value) {
+                                  createTicketController
+                                      .isDoctorExpAscendingOrder
+                                      .value = value ?? 0;
+                                },
+                              ),
                             ),
-                            SizedBox(width: 15),
-                            buildButton(
-                              text: Constants.strApply,
-                              textColor: Colors.white,
-                              onTap: () {},
-                              backgroundColor:
-                              Color(CommonUtil().getMyPrimaryColor()),
+                            ListTile(
+                              title: Text(Constants.strExperienceDESC),
+                              trailing: buildRadio(
+                                value: 2,
+                                groupValue: createTicketController
+                                    .isDoctorExpAscendingOrder.value,
+                                onChanged: (value) {
+                                  createTicketController
+                                      .isDoctorExpAscendingOrder
+                                      .value = value ?? 0;
+                                },
+                              ),
                             ),
                           ],
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                    ],
-                  ));
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                buildButton(
+                                  text: DoctorFilterConstants.reset,
+                                  textColor:
+                                      Color(CommonUtil().getMyPrimaryColor()),
+                                  onTap: () async {
+                                    createTicketController
+                                        .isLabNameAscendingOrder.value = 0;
+                                    createTicketController
+                                        .isDoctorNameAscendingOrder.value = 0;
+                                    createTicketController
+                                        .isDoctorExpAscendingOrder.value = 0;
+                                  },
+                                ),
+                                SizedBox(width: 15),
+                                buildButton(
+                                  text: Constants.strApply,
+                                  textColor: Colors.white,
+                                  onTap: () {
+                                    if (isDoctor) {
+                                      var doctorName = createTicketController
+                                          .isDoctorNameAscendingOrder.value;
+                                      var doctorExp = createTicketController
+                                          .isDoctorExpAscendingOrder.value;
+
+                                      createTicketController
+                                          .doctorFilterRequestModel.sorts = [];
+
+                                      if (doctorName != 0) {
+                                        Sorts docNameSorts = Sorts();
+                                        docNameSorts?.field =
+                                            Parameters.strDoctorName;
+                                        docNameSorts?.orderBy = doctorName == 1
+                                            ? Constants.strASC
+                                            : Constants.strDESC;
+
+                                        createTicketController
+                                            .doctorFilterRequestModel.sorts
+                                            ?.add(docNameSorts);
+                                      }
+                                      if (doctorExp != 0) {
+                                        Sorts docExpSorts = Sorts();
+                                        docExpSorts?.field =
+                                            Parameters.stringDoctorExperience;
+                                        docExpSorts?.orderBy = doctorName == 1
+                                            ? Constants.strASC
+                                            : Constants.strDESC;
+
+                                        createTicketController
+                                            .doctorFilterRequestModel.sorts
+                                            ?.add(docExpSorts);
+                                      }
+
+                                      // Refresh the lab paging controller
+                                      createTicketController.pagingController
+                                          .refresh();
+                                    } else {
+                                      var labName = createTicketController
+                                          .isLabNameAscendingOrder.value;
+
+                                      createTicketController
+                                          .labListFilterRequestModel.sorts = [];
+
+                                      if (labName != 0) {
+                                        Sorts labSorts = Sorts();
+                                        labSorts?.field =
+                                            variable.strHealthOrganizationName;
+                                        labSorts?.orderBy = labName == 1
+                                            ? Constants.strASC
+                                            : Constants.strDESC;
+
+                                        createTicketController
+                                            .labListFilterRequestModel.sorts
+                                            ?.add(labSorts);
+                                      }
+
+                                      // Refresh the lab paging controller
+                                      createTicketController
+                                          .labListResultPagingController
+                                          .refresh();
+                                    }
+                                    Get.back();
+                                  },
+                                  backgroundColor:
+                                      Color(CommonUtil().getMyPrimaryColor()),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                        ],
+                      ));
                 },
               ),
             ),
@@ -3363,5 +3458,4 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       ),
     );
   }
-
 }

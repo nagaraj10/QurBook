@@ -1193,6 +1193,8 @@ const String strAlphabetAZ = 'Alphabet(A-Z)';
 const String strAlphabetZA = 'Alphabet(Z-A)';
 const String strExperienceASC = 'Experience(ASC)';
 const String strExperienceDESC = 'Experience(DESC)';
+const String strASC = 'ASC';
+const String strDESC = 'DESC';
 
 class DoctorFilterConstants {
   static List<String> yearOfExperienceList = [
