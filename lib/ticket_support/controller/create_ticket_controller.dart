@@ -86,6 +86,10 @@ class CreateTicketController extends GetxController {
 // Declare a variable named 'strSearchText' and use the '.obs' extension, indicating it's an observable
   var strSearchText = "".obs;
 
+  var isLabNameAscendingOrder = 0.obs;
+  var isDoctorNameAscendingOrder = 0.obs;
+  var isDoctorExpAscendingOrder = 0.obs;
+
 
 
 

@@ -1187,6 +1187,13 @@ const String strChooseDoctor = 'Choose Doctor';
 // Define another constant string for choosing a lab
 const String strChooseLab = 'Choose Lab';
 
+const String strApply = 'Apply';
+const String strSortby = 'Sort by';
+const String strAlphabetAZ = 'Alphabet(A-Z)';
+const String strAlphabetZA = 'Alphabet(Z-A)';
+const String strExperienceASC = 'Experience(ASC)';
+const String strExperienceDESC = 'Experience(DESC)';
+
 class DoctorFilterConstants {
   static List<String> yearOfExperienceList = [
     "0 to 5 years",

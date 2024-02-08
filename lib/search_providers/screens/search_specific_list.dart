@@ -478,7 +478,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     child: GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () {
-                        //TODO
+                        showSortOrderDialog(widget.arguments!.searchWord ==
+                                CommonConstants.doctors
+                            ? true
+                            : false);
                       },
                       child: Center(
                         child: Text(
@@ -3178,4 +3181,187 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
+
+  showSortOrderDialog(bool isDoctor) {
+    showModalBottomSheet(
+      context: context,
+      isDismissible: false,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async {
+            return false;
+          },
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25),
+              topRight: Radius.circular(25),
+            ),
+            child: Container(
+              color: Colors.white,
+              child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return Obx(() => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              Constants.strSortby,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.close, color: Colors.black),
+                              onPressed: () {
+                                Get.back();
+                              },
+                            )
+                          ],
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(Constants.strAlphabetAZ),
+                        trailing: buildRadio(
+                          value: 1,
+                          groupValue: isDoctor
+                              ? createTicketController
+                              .isDoctorNameAscendingOrder.value
+                              : createTicketController
+                              .isLabNameAscendingOrder.value,
+                          onChanged: (value) {
+                            if (isDoctor) {
+                              createTicketController.isDoctorNameAscendingOrder
+                                  .value = value ?? 0;
+                            } else {
+                              createTicketController.isLabNameAscendingOrder.value =
+                                  value ?? 0;
+                            }
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(Constants.strAlphabetZA),
+                        trailing: buildRadio(
+                          value: 2,
+                          groupValue: isDoctor
+                              ? createTicketController
+                              .isDoctorNameAscendingOrder.value
+                              : createTicketController
+                              .isLabNameAscendingOrder.value,
+                          onChanged: (value) {
+                            if (isDoctor) {
+                              createTicketController.isDoctorNameAscendingOrder
+                                  .value = value ?? 0;
+                            } else {
+                              createTicketController.isLabNameAscendingOrder.value =
+                                  value ?? 0;
+                            }
+                          },
+                        ),
+                      ),
+                      if (isDoctor)
+                        ...[
+                          SizedBox(height: 10),
+                          ListTile(
+                            title: Text(Constants.strExperienceASC),
+                            trailing: buildRadio(
+                              value: 1,
+                              groupValue: createTicketController
+                                  .isDoctorExpAscendingOrder.value,
+                              onChanged: (value) {
+                                createTicketController.isDoctorExpAscendingOrder
+                                    .value = value ?? 0;
+                              },
+                            ),
+                          ),
+                          ListTile(
+                            title: Text(Constants.strExperienceDESC),
+                            trailing: buildRadio(
+                              value: 2,
+                              groupValue: createTicketController
+                                  .isDoctorExpAscendingOrder.value,
+                              onChanged: (value) {
+                                createTicketController.isDoctorExpAscendingOrder
+                                    .value = value ?? 0;
+                              },
+                            ),
+                          ),
+                        ],
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            buildButton(
+                              text: DoctorFilterConstants.reset,
+                              textColor: Color(CommonUtil().getMyPrimaryColor()),
+                              onTap: () async {},
+                            ),
+                            SizedBox(width: 15),
+                            buildButton(
+                              text: Constants.strApply,
+                              textColor: Colors.white,
+                              onTap: () {},
+                              backgroundColor:
+                              Color(CommonUtil().getMyPrimaryColor()),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                    ],
+                  ));
+                },
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildRadio({
+    required int value,
+    required int groupValue,
+    required ValueChanged<int?> onChanged,
+  }) {
+    return Radio(
+      value: value,
+      groupValue: groupValue,
+      onChanged: onChanged,
+      activeColor: Color(CommonUtil().getMyPrimaryColor()),
+    );
+  }
+
+  Widget buildButton({
+    required String text,
+    required Color textColor,
+    required VoidCallback onTap,
+    Color? backgroundColor,
+  }) {
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          height: 48,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            border: Border.all(color: Color(CommonUtil().getMyPrimaryColor())),
+            borderRadius: const BorderRadius.all(Radius.circular(50)),
+          ),
+          child: Center(
+            child: Text(
+              text,
+              style: TextStyle(color: textColor),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
 }
