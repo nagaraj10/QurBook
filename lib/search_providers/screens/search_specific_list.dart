@@ -166,8 +166,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       if (widget.isFromCreateTicket) {
 
         createTicketController.isLabNameAscendingOrder.value = 0;
-        createTicketController.isDoctorNameAscendingOrder.value = 0;
-        createTicketController.isDoctorExpAscendingOrder.value = 0;
+        createTicketController.isDoctorSort.value = 0;
 
         var searchWord = widget.arguments!.searchWord ?? '';
 
@@ -3247,15 +3246,13 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                             trailing: buildRadio(
                               value: 1,
                               groupValue: isDoctor
-                                  ? createTicketController
-                                      .isDoctorNameAscendingOrder.value
+                                  ? createTicketController.isDoctorSort.value
                                   : createTicketController
                                       .isLabNameAscendingOrder.value,
                               onChanged: (value) {
                                 if (isDoctor) {
-                                  createTicketController
-                                      .isDoctorNameAscendingOrder
-                                      .value = value ?? 0;
+                                  createTicketController.isDoctorSort.value =
+                                      value ?? 0;
                                 } else {
                                   createTicketController.isLabNameAscendingOrder
                                       .value = value ?? 0;
@@ -3268,15 +3265,13 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                             trailing: buildRadio(
                               value: 2,
                               groupValue: isDoctor
-                                  ? createTicketController
-                                      .isDoctorNameAscendingOrder.value
+                                  ? createTicketController.isDoctorSort.value
                                   : createTicketController
                                       .isLabNameAscendingOrder.value,
                               onChanged: (value) {
                                 if (isDoctor) {
-                                  createTicketController
-                                      .isDoctorNameAscendingOrder
-                                      .value = value ?? 0;
+                                  createTicketController.isDoctorSort.value =
+                                      value ?? 0;
                                 } else {
                                   createTicketController.isLabNameAscendingOrder
                                       .value = value ?? 0;
@@ -3289,26 +3284,24 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                             ListTile(
                               title: Text(Constants.strExperienceASC),
                               trailing: buildRadio(
-                                value: 1,
-                                groupValue: createTicketController
-                                    .isDoctorExpAscendingOrder.value,
+                                value: 3,
+                                groupValue:
+                                    createTicketController.isDoctorSort.value,
                                 onChanged: (value) {
-                                  createTicketController
-                                      .isDoctorExpAscendingOrder
-                                      .value = value ?? 0;
+                                  createTicketController.isDoctorSort.value =
+                                      value ?? 0;
                                 },
                               ),
                             ),
                             ListTile(
                               title: Text(Constants.strExperienceDESC),
                               trailing: buildRadio(
-                                value: 2,
-                                groupValue: createTicketController
-                                    .isDoctorExpAscendingOrder.value,
+                                value: 4,
+                                groupValue:
+                                    createTicketController.isDoctorSort.value,
                                 onChanged: (value) {
-                                  createTicketController
-                                      .isDoctorExpAscendingOrder
-                                      .value = value ?? 0;
+                                  createTicketController.isDoctorSort.value =
+                                      value ?? 0;
                                 },
                               ),
                             ),
@@ -3323,12 +3316,29 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                   textColor:
                                       Color(CommonUtil().getMyPrimaryColor()),
                                   onTap: () async {
-                                    createTicketController
-                                        .isLabNameAscendingOrder.value = 0;
-                                    createTicketController
-                                        .isDoctorNameAscendingOrder.value = 0;
-                                    createTicketController
-                                        .isDoctorExpAscendingOrder.value = 0;
+                                    if (isDoctor) {
+                                      createTicketController
+                                          .isDoctorSort.value = 0;
+
+                                      createTicketController.doctorFilterRequestModel = new DoctorFilterRequestModel();
+
+                                      // Refresh the lab paging controller
+                                      createTicketController.pagingController
+                                          .refresh();
+
+                                    } else {
+                                      createTicketController
+                                          .isLabNameAscendingOrder.value = 0;
+
+                                      createTicketController.labListFilterRequestModel = new DoctorFilterRequestModel();
+
+                                      // Refresh the lab paging controller
+                                      createTicketController
+                                          .labListResultPagingController
+                                          .refresh();
+                                    }
+
+                                    Get.back();
                                   },
                                 ),
                                 SizedBox(width: 15),
@@ -3337,37 +3347,29 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                   textColor: Colors.white,
                                   onTap: () {
                                     if (isDoctor) {
-                                      var doctorName = createTicketController
-                                          .isDoctorNameAscendingOrder.value;
-                                      var doctorExp = createTicketController
-                                          .isDoctorExpAscendingOrder.value;
+                                      var doctorSort = createTicketController
+                                          .isDoctorSort.value;
+
+
+                                      createTicketController.doctorFilterRequestModel.page = 0;
 
                                       createTicketController
                                           .doctorFilterRequestModel.sorts = [];
 
-                                      if (doctorName != 0) {
-                                        Sorts docNameSorts = Sorts();
-                                        docNameSorts?.field =
-                                            Parameters.strDoctorName;
-                                        docNameSorts?.orderBy = doctorName == 1
-                                            ? Constants.strASC
-                                            : Constants.strDESC;
+                                      if (doctorSort != 0) {
+                                        Sorts docSorts = Sorts();
+                                        docSorts?.field = (doctorSort == 1 ||
+                                                doctorSort == 2)
+                                            ? Parameters.strDoctorName
+                                            : Parameters.stringDoctorExperience;
+                                        docSorts?.orderBy =
+                                            (doctorSort == 1 || doctorSort == 3)
+                                                ? Constants.strASC
+                                                : Constants.strDESC;
 
                                         createTicketController
                                             .doctorFilterRequestModel.sorts
-                                            ?.add(docNameSorts);
-                                      }
-                                      if (doctorExp != 0) {
-                                        Sorts docExpSorts = Sorts();
-                                        docExpSorts?.field =
-                                            Parameters.stringDoctorExperience;
-                                        docExpSorts?.orderBy = doctorName == 1
-                                            ? Constants.strASC
-                                            : Constants.strDESC;
-
-                                        createTicketController
-                                            .doctorFilterRequestModel.sorts
-                                            ?.add(docExpSorts);
+                                            ?.add(docSorts);
                                       }
 
                                       // Refresh the lab paging controller
@@ -3376,6 +3378,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                     } else {
                                       var labName = createTicketController
                                           .isLabNameAscendingOrder.value;
+
+                                      createTicketController.labListFilterRequestModel.page = 0;
 
                                       createTicketController
                                           .labListFilterRequestModel.sorts = [];
@@ -3458,4 +3462,5 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       ),
     );
   }
+
 }

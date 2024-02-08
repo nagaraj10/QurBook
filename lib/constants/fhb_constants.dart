@@ -1189,10 +1189,10 @@ const String strChooseLab = 'Choose Lab';
 
 const String strApply = 'Apply';
 const String strSortby = 'Sort by';
-const String strAlphabetAZ = 'Alphabet(A-Z)';
-const String strAlphabetZA = 'Alphabet(Z-A)';
-const String strExperienceASC = 'Experience(ASC)';
-const String strExperienceDESC = 'Experience(DESC)';
+const String strAlphabetAZ = 'Alphabetical (A-Z)';
+const String strAlphabetZA = 'Alphabetical (Z-A)';
+const String strExperienceASC = 'Experience (Asc.)';
+const String strExperienceDESC = 'Experience (Desc.)';
 const String strASC = 'ASC';
 const String strDESC = 'DESC';
 

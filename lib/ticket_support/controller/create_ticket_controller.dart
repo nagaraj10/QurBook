@@ -87,8 +87,7 @@ class CreateTicketController extends GetxController {
   var strSearchText = "".obs;
 
   var isLabNameAscendingOrder = 0.obs;
-  var isDoctorNameAscendingOrder = 0.obs;
-  var isDoctorExpAscendingOrder = 0.obs;
+  var isDoctorSort = 0.obs;
 
 
 
