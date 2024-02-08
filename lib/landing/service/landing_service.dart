@@ -43,10 +43,10 @@ class LandingService {
     var _helper = ApiBaseHelper();
     final userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
     final url = variable.qr_membership + userId! + variable.qr_organizationid;
-
     var response = await _helper.getMemberShipDetails(
       url,
     );
-    return MemberShipDetailResponse.fromJson(response ?? '');
+    var fromJson = MemberShipDetailResponse.fromJson(response ?? '');
+    return fromJson;
   }
 }

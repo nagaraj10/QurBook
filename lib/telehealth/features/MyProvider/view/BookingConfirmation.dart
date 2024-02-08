@@ -164,6 +164,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   String? INR_Price = '';
   String btnLabelChange = payNow;
   bool isMembershipDiscount = false;
+  bool isActiveMemberShip= false;
+  bool isApplyMemberShipBenefits= false;
   String? MembershipDiscountPercent;
   bool? isResident = false;
   String? profilePicThumbnailUrl,
@@ -185,7 +187,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     FABService.trackCurrentScreen(FBAConfirmationDetailsScreen);
     _categoryListBlock = null;
     _categoryListBlock = CategoryListBlock();
-
     getCategoryList();
     getDataFromWidget();
     setLengthValue();
@@ -1604,6 +1605,26 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         : Container();
   }
 
+  applyMemberShipBenefitsWidget(){
+    return CheckboxListTile(
+      title: Text(
+        '${parameters.applyMemberShipBenefit}(XXX)',
+        style: TextStyle(
+            color: Colors.black
+        ),
+      ),
+      value: isApplyMemberShipBenefits,
+      activeColor:Color(CommonUtil().getMyPrimaryColor()),
+      onChanged:(value){
+        setState(() {
+          isApplyMemberShipBenefits = !isApplyMemberShipBenefits;
+        });
+      },
+      controlAffinity:
+      ListTileControlAffinity.leading, //  <-- leading Checkbox
+    );
+  }
+
   showDialogForMembershipDiscount() async {
     if (!isResident!) return;
     String? originalFees;
@@ -2205,7 +2226,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                   ),
                           ),
                         ),
-          SizedBoxWidget(height: 15),
+          applyMemberShipBenefitsWidget(),
+          SizedBoxWidget(height: 5),
           isMembershipDiscount
               ? Column(
                   mainAxisSize: MainAxisSize.min,
