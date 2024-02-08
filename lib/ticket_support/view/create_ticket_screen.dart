@@ -556,6 +556,21 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                       readonly: true),
                 ),
               ));
+            } else if (field.name.toString().toLowerCase() ==
+                tckConstants.strPinCode) {
+              /// Add Condition for specifically pincode
+              widgetForColumn
+                ..add(field.isVisible != null &&
+                        field.name == tckConstants.strAddressLine
+                    ? Visibility(
+                        visible: isVisible,
+                        child: getTextWidget(tckConstants.address))
+                    : const SizedBox.shrink())
+                ..add(field.isVisible != null
+                    ? Visibility(
+                        visible: isVisible,
+                        child: getTextFieldWidget(field, isPincode: true))
+                    : getTextFieldWidget(field, isPincode: true));
             } else {
               // Handle address fields
               widgetForColumn.add(field.isVisible != null &&
@@ -596,10 +611,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     ],
                   ))
                 : SizedBox.shrink();
-
+            /// add field.name != tckConstants.strPinCode for to avoid this
             (field.type == tckConstants.tckTypeTitle &&
                     (field.name != tckConstants.tckMainTitle &&
-                        field.name != tckConstants.tckPackageTitle) &&
+                        field.name != tckConstants.tckPackageTitle &&
+                        field.name != tckConstants.strPinCode) &&
                     field.isVisible == null)
                 ? widgetForColumn.add(Column(
                     children: [
@@ -614,9 +630,30 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   ))
                 : SizedBox.shrink();
 
+            /// Add Condition for specifically pincode
+            (field.type == tckConstants.tckTypeTitle &&
+                    (field.name == tckConstants.strPinCode))
+                ? widgetForColumn.add(
+                    Column(
+                      children: [
+                        SizedBox(height: 15.h),
+                        getWidgetForTitleText(
+                            title: displayName,
+                            isRequired: /*field.isRequired*/ isVisible),
+                        SizedBox(height: 10.h),
+                        getWidgetForTextValue(
+                            i, CommonUtil().getFieldName(field.name), field,
+                            isPincode: true),
+                      ],
+                    ),
+                  )
+                : const SizedBox.shrink();
+
+            /// add field.name != tckConstants.strPinCode for to avoid this
             (field.type == tckConstants.tckTypeTitle &&
                     (field.name != tckConstants.tckMainTitle &&
-                        field.name != tckConstants.tckPackageTitle) &&
+                        field.name != tckConstants.tckPackageTitle &&
+                        field.name != tckConstants.strPinCode) &&
                     field.isVisible != null)
                 ? widgetForColumn.add(Visibility(
                     visible: isVisible,
@@ -1458,11 +1495,15 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     );
   }
 
-  Widget getWidgetForTextValue(int index, String? strName, Field field) {
+  /// isPincode An optional parameter to indicate whether the widget is
+  /// specifically intended for PIN code input. Defaults to `false`.
+  Widget getWidgetForTextValue(int index, String? strName, Field field,
+      {bool isPincode = false}) {
     return TextField(
       textCapitalization: TextCapitalization.sentences,
       autofocus: false,
       controller: textEditingControllers[strName],
+      keyboardType: isPincode ? TextInputType.number : null,
       decoration: InputDecoration(
         fillColor: Colors.white,
         filled: true,
@@ -3007,11 +3048,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     return planListModelList;
   }
 
+  /// isPincode An optional parameter to indicate whether the widget is
+  /// specifically intended for PIN code input. Defaults to `false`.
   Widget getIconTextField(
           {String? icon,
           String? fieldName,
           String? displayName,
           bool? isRequired,
+          bool? isPincode,
           bool? readonly,
           TextEditingController? controller,
           bool? isTextArea,
@@ -3050,8 +3094,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   TextFormField(
                     textCapitalization: TextCapitalization.sentences,
                     controller: controller ?? textEditingControllers[fieldName],
-                    keyboardType:
-                        isTextArea == true ? TextInputType.multiline : null,
+                    keyboardType: isTextArea == true
+                        ? TextInputType.multiline
+                        : isPincode ?? false
+                            ? TextInputType.number
+                            : null,
                     maxLines: isTextArea == true ? 8 : null,
                     decoration: isTextArea == true
                         ? InputDecoration(
@@ -3385,7 +3432,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             ));
   }
 
-  getTextFieldWidget(Field field) {
+  /// isPincode An optional parameter to indicate whether the widget is
+  /// specifically intended for PIN code input. Defaults to `false`.
+  getTextFieldWidget(Field field, {bool isPincode = false}) {
     return Container(
       margin: EdgeInsets.only(top: 30.h),
       child: getIconTextField(
@@ -3393,6 +3442,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           fieldName: CommonUtil().getFieldName(field.name),
           displayName: field.displayName,
           isRequired: field.isRequired,
+          isPincode: isPincode,
           isTextArea: field.type == tckConstants.tckTypeDescription),
     );
   }
