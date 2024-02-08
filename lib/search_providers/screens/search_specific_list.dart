@@ -165,8 +165,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
       if (widget.isFromCreateTicket) {
 
+        // Set the value of isLabNameAscendingOrder to 0
         createTicketController.isLabNameAscendingOrder.value = 0;
+        // Set the value of isDoctorSort to 0
         createTicketController.isDoctorSort.value = 0;
+
 
         var searchWord = widget.arguments!.searchWord ?? '';
 
@@ -3220,199 +3223,160 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               color: Colors.white,
               child: StatefulBuilder(
                 builder: (BuildContext context, StateSetter setState) {
+                  // Using StatefulBuilder to rebuild parts of the dialog when state changes
                   return Obx(() => Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  Constants.strSortby,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.close, color: Colors.black),
-                                  onPressed: () {
-                                    Get.back();
-                                  },
-                                )
-                              ],
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              Constants.strSortby,
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
+                            IconButton(
+                              icon: Icon(Icons.close, color: Colors.black),
+                              onPressed: () {
+                                Get.back();
+                              },
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      // ListTile for sorting options
+                      ListTile(
+                        title: Text(Constants.strAlphabetAZ),
+                        trailing: buildRadio(
+                          value: 1,
+                          groupValue: isDoctor
+                              ? createTicketController.isDoctorSort.value
+                              : createTicketController.isLabNameAscendingOrder.value,
+                          onChanged: (value) {
+                            // Update sort value based on user selection
+                            if (isDoctor) {
+                              createTicketController.isDoctorSort.value = value ?? 0;
+                            } else {
+                              createTicketController.isLabNameAscendingOrder.value = value ?? 0;
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      // Another sorting option
+                      ListTile(
+                        title: Text(Constants.strAlphabetZA),
+                        trailing: buildRadio(
+                          value: 2,
+                          groupValue: isDoctor
+                              ? createTicketController.isDoctorSort.value
+                              : createTicketController.isLabNameAscendingOrder.value,
+                          onChanged: (value) {
+                            // Update sort value based on user selection
+                            if (isDoctor) {
+                              createTicketController.isDoctorSort.value = value ?? 0;
+                            } else {
+                              createTicketController.isLabNameAscendingOrder.value = value ?? 0;
+                            }
+                          },
+                        ),
+                      ),
+                      // Additional sorting options for doctors
+                      if (isDoctor) ...[
+                        SizedBox(height: 2),
+                        ListTile(
+                          title: Text(Constants.strExperienceASC),
+                          trailing: buildRadio(
+                            value: 3,
+                            groupValue: createTicketController.isDoctorSort.value,
+                            onChanged: (value) {
+                              // Update sort value based on user selection
+                              createTicketController.isDoctorSort.value = value ?? 0;
+                            },
                           ),
-                          ListTile(
-                            title: Text(Constants.strAlphabetAZ),
-                            trailing: buildRadio(
-                              value: 1,
-                              groupValue: isDoctor
-                                  ? createTicketController.isDoctorSort.value
-                                  : createTicketController
-                                      .isLabNameAscendingOrder.value,
-                              onChanged: (value) {
+                        ),
+                        SizedBox(height: 2),
+                        ListTile(
+                          title: Text(Constants.strExperienceDESC),
+                          trailing: buildRadio(
+                            value: 4,
+                            groupValue: createTicketController.isDoctorSort.value,
+                            onChanged: (value) {
+                              // Update sort value based on user selection
+                              createTicketController.isDoctorSort.value = value ?? 0;
+                            },
+                          ),
+                        ),
+                      ],
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            // Button to reset sorting options
+                            buildButton(
+                              text: DoctorFilterConstants.reset,
+                              textColor: Color(CommonUtil().getMyPrimaryColor()),
+                              onTap: () async {
+                                // Reset sorting options and refresh data
                                 if (isDoctor) {
-                                  createTicketController.isDoctorSort.value =
-                                      value ?? 0;
+                                  createTicketController.isDoctorSort.value = 0;
+                                  createTicketController.doctorFilterRequestModel = new DoctorFilterRequestModel();
+                                  createTicketController.pagingController.refresh();
                                 } else {
-                                  createTicketController.isLabNameAscendingOrder
-                                      .value = value ?? 0;
+                                  createTicketController.isLabNameAscendingOrder.value = 0;
+                                  createTicketController.labListFilterRequestModel = new DoctorFilterRequestModel();
+                                  createTicketController.labListResultPagingController.refresh();
                                 }
+                                Get.back();
                               },
                             ),
-                          ),
-                          ListTile(
-                            title: Text(Constants.strAlphabetZA),
-                            trailing: buildRadio(
-                              value: 2,
-                              groupValue: isDoctor
-                                  ? createTicketController.isDoctorSort.value
-                                  : createTicketController
-                                      .isLabNameAscendingOrder.value,
-                              onChanged: (value) {
+                            SizedBox(width: 15),
+                            // Button to apply sorting options
+                            buildButton(
+                              text: Constants.strApply,
+                              textColor: Colors.white,
+                              onTap: () {
+                                // Apply sorting options and refresh data
                                 if (isDoctor) {
-                                  createTicketController.isDoctorSort.value =
-                                      value ?? 0;
+                                  var doctorSort = createTicketController.isDoctorSort.value;
+                                  createTicketController.doctorFilterRequestModel.page = 0;
+                                  createTicketController.doctorFilterRequestModel.sorts = [];
+                                  if (doctorSort != 0) {
+                                    Sorts docSorts = Sorts();
+                                    docSorts?.field = (doctorSort == 1 || doctorSort == 2)
+                                        ? Parameters.strDoctorName
+                                        : Parameters.stringDoctorExperience;
+                                    docSorts?.orderBy = (doctorSort == 1 || doctorSort == 3)
+                                        ? Constants.strASC
+                                        : Constants.strDESC;
+                                    createTicketController.doctorFilterRequestModel.sorts?.add(docSorts);
+                                  }
+                                  createTicketController.pagingController.refresh();
                                 } else {
-                                  createTicketController.isLabNameAscendingOrder
-                                      .value = value ?? 0;
+                                  var labName = createTicketController.isLabNameAscendingOrder.value;
+                                  createTicketController.labListFilterRequestModel.page = 0;
+                                  createTicketController.labListFilterRequestModel.sorts = [];
+                                  if (labName != 0) {
+                                    Sorts labSorts = Sorts();
+                                    labSorts?.field = variable.strHealthOrganizationName;
+                                    labSorts?.orderBy = labName == 1 ? Constants.strASC : Constants.strDESC;
+                                    createTicketController.labListFilterRequestModel.sorts?.add(labSorts);
+                                  }
+                                  createTicketController.labListResultPagingController.refresh();
                                 }
+                                Get.back();
                               },
-                            ),
-                          ),
-                          if (isDoctor) ...[
-                            SizedBox(height: 10),
-                            ListTile(
-                              title: Text(Constants.strExperienceASC),
-                              trailing: buildRadio(
-                                value: 3,
-                                groupValue:
-                                    createTicketController.isDoctorSort.value,
-                                onChanged: (value) {
-                                  createTicketController.isDoctorSort.value =
-                                      value ?? 0;
-                                },
-                              ),
-                            ),
-                            ListTile(
-                              title: Text(Constants.strExperienceDESC),
-                              trailing: buildRadio(
-                                value: 4,
-                                groupValue:
-                                    createTicketController.isDoctorSort.value,
-                                onChanged: (value) {
-                                  createTicketController.isDoctorSort.value =
-                                      value ?? 0;
-                                },
-                              ),
+                              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
                             ),
                           ],
-                          Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                buildButton(
-                                  text: DoctorFilterConstants.reset,
-                                  textColor:
-                                      Color(CommonUtil().getMyPrimaryColor()),
-                                  onTap: () async {
-                                    if (isDoctor) {
-                                      createTicketController
-                                          .isDoctorSort.value = 0;
-
-                                      createTicketController.doctorFilterRequestModel = new DoctorFilterRequestModel();
-
-                                      // Refresh the lab paging controller
-                                      createTicketController.pagingController
-                                          .refresh();
-
-                                    } else {
-                                      createTicketController
-                                          .isLabNameAscendingOrder.value = 0;
-
-                                      createTicketController.labListFilterRequestModel = new DoctorFilterRequestModel();
-
-                                      // Refresh the lab paging controller
-                                      createTicketController
-                                          .labListResultPagingController
-                                          .refresh();
-                                    }
-
-                                    Get.back();
-                                  },
-                                ),
-                                SizedBox(width: 15),
-                                buildButton(
-                                  text: Constants.strApply,
-                                  textColor: Colors.white,
-                                  onTap: () {
-                                    if (isDoctor) {
-                                      var doctorSort = createTicketController
-                                          .isDoctorSort.value;
-
-
-                                      createTicketController.doctorFilterRequestModel.page = 0;
-
-                                      createTicketController
-                                          .doctorFilterRequestModel.sorts = [];
-
-                                      if (doctorSort != 0) {
-                                        Sorts docSorts = Sorts();
-                                        docSorts?.field = (doctorSort == 1 ||
-                                                doctorSort == 2)
-                                            ? Parameters.strDoctorName
-                                            : Parameters.stringDoctorExperience;
-                                        docSorts?.orderBy =
-                                            (doctorSort == 1 || doctorSort == 3)
-                                                ? Constants.strASC
-                                                : Constants.strDESC;
-
-                                        createTicketController
-                                            .doctorFilterRequestModel.sorts
-                                            ?.add(docSorts);
-                                      }
-
-                                      // Refresh the lab paging controller
-                                      createTicketController.pagingController
-                                          .refresh();
-                                    } else {
-                                      var labName = createTicketController
-                                          .isLabNameAscendingOrder.value;
-
-                                      createTicketController.labListFilterRequestModel.page = 0;
-
-                                      createTicketController
-                                          .labListFilterRequestModel.sorts = [];
-
-                                      if (labName != 0) {
-                                        Sorts labSorts = Sorts();
-                                        labSorts?.field =
-                                            variable.strHealthOrganizationName;
-                                        labSorts?.orderBy = labName == 1
-                                            ? Constants.strASC
-                                            : Constants.strDESC;
-
-                                        createTicketController
-                                            .labListFilterRequestModel.sorts
-                                            ?.add(labSorts);
-                                      }
-
-                                      // Refresh the lab paging controller
-                                      createTicketController
-                                          .labListResultPagingController
-                                          .refresh();
-                                    }
-                                    Get.back();
-                                  },
-                                  backgroundColor:
-                                      Color(CommonUtil().getMyPrimaryColor()),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                        ],
-                      ));
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                    ],
+                  ));
                 },
               ),
             ),
@@ -3422,6 +3386,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     );
   }
 
+// Widget to build radio buttons for sorting options
   Widget buildRadio({
     required int value,
     required int groupValue,
@@ -3435,6 +3400,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     );
   }
 
+// Widget to build buttons for resetting and applying sorting options
   Widget buildButton({
     required String text,
     required Color textColor,
@@ -3462,5 +3428,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       ),
     );
   }
+
+
 
 }

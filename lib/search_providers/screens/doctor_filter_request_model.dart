@@ -9,7 +9,7 @@ class DoctorFilterRequestModel {
   int? size;
   String? searchText;
   List<Filter>? filters;
-  List<Sorts>? sorts;
+  List<Sorts>? sorts; // Declares a nullable list of Sorts objects
   String? healthOrganizationType;
 
   DoctorFilterRequestModel({

@@ -1187,14 +1187,15 @@ const String strChooseDoctor = 'Choose Doctor';
 // Define another constant string for choosing a lab
 const String strChooseLab = 'Choose Lab';
 
-const String strApply = 'Apply';
-const String strSortby = 'Sort by';
-const String strAlphabetAZ = 'Alphabetical (A-Z)';
-const String strAlphabetZA = 'Alphabetical (Z-A)';
-const String strExperienceASC = 'Experience (Asc.)';
-const String strExperienceDESC = 'Experience (Desc.)';
-const String strASC = 'ASC';
-const String strDESC = 'DESC';
+const String strApply = 'Apply'; // Label for the Apply button
+const String strSortby = 'Sort by'; // Label for the Sort by dropdown
+const String strAlphabetAZ = 'Alphabetical (A-Z)'; // Option for sorting alphabetically from A to Z
+const String strAlphabetZA = 'Alphabetical (Z-A)'; // Option for sorting alphabetically from Z to A
+const String strExperienceASC = 'Experience (Asc.)'; // Option for sorting by experience in ascending order
+const String strExperienceDESC = 'Experience (Desc.)'; // Option for sorting by experience in descending order
+const String strASC = 'ASC'; // Label for ascending order
+const String strDESC = 'DESC'; // Label for descending order
+
 
 class DoctorFilterConstants {
   static List<String> yearOfExperienceList = [
