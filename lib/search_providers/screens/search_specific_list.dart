@@ -983,7 +983,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           .validString(doctorsListResultData?.experience.toString());
       strExperience = strExperience?.trim().isNotEmpty ?? false
           ? strExperience != '0'
-              ? '$strExperience ${Constants.strYears}'
+              ? '$strExperience ${strExperience=='1'?Constants.strYear:Constants.strYears}'
               : ''
           : '';
       var locationString = doctorsListResultData.healthOrganizationName ?? '';
