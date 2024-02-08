@@ -86,6 +86,15 @@ class CreateTicketController extends GetxController {
 // Declare a variable named 'strSearchText' and use the '.obs' extension, indicating it's an observable
   var strSearchText = "".obs;
 
+  // Observable variable for sorting order of lab names.
+  // Initially set to 0 (no sorting).
+  var isLabNameAscendingOrder = 0.obs;
+
+  // Observable variable for sorting order of doctors.
+  // Initially set to 0 (no sorting).
+  var isDoctorSort = 0.obs;
+
+
 
 
 
@@ -232,6 +241,11 @@ class CreateTicketController extends GetxController {
         ..searchText = strSearchText.value
         ..size = limit;
 
+      if (doctorFilterRequestModel.sorts == null ||
+          (doctorFilterRequestModel.sorts!.isEmpty??true)) {
+        doctorFilterRequestModel.sorts = null;
+      }
+
       // Fetch new data using the FilterDoctorApi based on the updated doctor filter request model
       final newData = await FilterDoctorApi().getFilterDoctorList(doctorFilterRequestModel);
 
@@ -266,6 +280,11 @@ class CreateTicketController extends GetxController {
         ..size = limit
         ..searchText = strSearchText.value
         ..healthOrganizationType = CommonConstants.keyLab.toUpperCase();
+
+      if (labListFilterRequestModel.sorts == null ||
+          (labListFilterRequestModel.sorts!.isEmpty??true)) {
+        labListFilterRequestModel.sorts = null;
+      }
 
       // Fetch new data using the FilterDoctorApi based on the updated lab filter request model
       final newData = await FilterDoctorApi().getFilterLabListResult(labListFilterRequestModel);
