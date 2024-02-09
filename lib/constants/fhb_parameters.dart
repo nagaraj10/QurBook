@@ -887,3 +887,6 @@ const String stringDismiss = 'Dismiss';
 // Define a constant string for the key 'experience'
 const String stringExperience = 'experience';
 
+const String stringDoctorExperience = 'doctorExperience'; // Represents a key or identifier for doctor experience data
+
+
