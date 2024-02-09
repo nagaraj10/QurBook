@@ -11,7 +11,6 @@ class CreateAppointMentViewModel {
   CreateAppointmentModel bookAppointment = CreateAppointmentModel();
   AppointmentNotificationPayment appointmentNotification = AppointmentNotificationPayment();
 
-
   Future<CreateAppointmentModel?> putBookAppointment(
     String? createdBy,
     String? bookedFor,
@@ -24,22 +23,23 @@ class CreateAppointMentViewModel {
     bool? isCSRDiscount, {
     Past? doc,
     bool isResidentDoctorMembership = false,
+    String? walletDeductionAmount,
   }) async {
     try {
       CreateAppointmentModel bookAppointmentModel =
           await createAppointmentService.bookAppointment(
-        createdBy,
-        bookedFor,
-        doctorSessionId,
-        scheduleDate,
-        slotNumber,
-        isMedicalShared,
-        isFollowUp,
-        healthRecords,
-        isCSRDiscount,
-        doc: doc,
-        isResidentDoctorMembership: isResidentDoctorMembership,
-      );
+              createdBy,
+              bookedFor,
+              doctorSessionId,
+              scheduleDate,
+              slotNumber,
+              isMedicalShared,
+              isFollowUp,
+              healthRecords,
+              isCSRDiscount,
+              doc: doc,
+              isResidentDoctorMembership: isResidentDoctorMembership,
+              walletDeductionAmount: walletDeductionAmount);
       bookAppointment = bookAppointmentModel;
       return bookAppointment;
     } catch (e,stackTrace) {
