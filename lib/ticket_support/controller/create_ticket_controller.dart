@@ -271,15 +271,34 @@ class CreateTicketController extends GetxController {
     }
   }
 
-// Function to fetch and paginate lab list data
+  // Function to fetch and paginate lab list data
   fetchLabListData(int pageKey) async {
     try {
+
+      // Ensure labListFilterRequestModel.filters is initialized as an empty list if null
+      labListFilterRequestModel.filters ??= [];
+
+      // Check if the health organization type filter is already added
+      var isHealthOrganizationTypeAlreadyAdded = hasHealthOrgTypeFilter(labListFilterRequestModel.filters);
+
       // Increment the page number in the lab filter request model
       labListFilterRequestModel
-        ..page = (labListFilterRequestModel?.page ?? 0) + 1
-        ..size = limit
-        ..searchText = strSearchText.value
-        ..healthOrganizationType = CommonConstants.keyLab.toUpperCase();
+        ..page = (labListFilterRequestModel?.page ?? 0) + 1 // Increment the page number by 1, or set to 1 if it's null
+        ..size = limit // Set the number of items per page
+        ..searchText = strSearchText.value; // Set the search text
+
+      // Add health organization type filter if it's not already added
+      if (!isHealthOrganizationTypeAlreadyAdded) {
+        // Create a new filter instance for health organization type
+        var labFilter = Filter()
+          ..field = strHealthOrganizationType // Set the field to health organization type
+          ..value = CommonConstants.keyLab.toUpperCase() // Set the value (assuming keyLab needs to be in uppercase)
+          ..type = strString; // Set the type to string
+
+        // Add the health organization type filter to the list of filters
+        labListFilterRequestModel.filters?.add(labFilter);
+      }
+
 
       if (labListFilterRequestModel.sorts == null ||
           (labListFilterRequestModel.sorts!.isEmpty??true)) {
@@ -310,5 +329,14 @@ class CreateTicketController extends GetxController {
   }
 
 
+  // Function to check if a health organization type filter is already added
+  bool hasHealthOrgTypeFilter(List<Filter>? filters) {
+    // Check if filters list contains any filter with health org type
+    return filters?.any((filter) =>
+    // Check if filter's field matches health org type
+    filter.field == strHealthOrganizationType)
+        // Default to false if filters is null
+        ?? false;
+  }
 
 }

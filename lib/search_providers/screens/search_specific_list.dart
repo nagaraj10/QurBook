@@ -200,8 +200,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           });
         } else if (searchWord == CommonConstants.labs ||
             searchWord == CommonConstants.lab) {
-          commonFilterRequestModel.healthOrganizationType =
-              CommonConstants.keyLab.toUpperCase();
+
           createTicketController.labListFilterRequestModel =
               commonFilterRequestModel;
 
@@ -371,8 +370,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         sorts: createTicketController
                                 .labListFilterRequestModel?.sorts ??
                             [],
-                        healthOrganizationType:
-                            CommonConstants.keyLab.toUpperCase(),
                       );
 
                       // Set the newly created LabListFilterRequestModel to the controller
@@ -3193,8 +3190,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             createTicketController.labListFilterRequestModel?.filters ?? [];
         commonFilterRequestModel.sorts =
             createTicketController.labListFilterRequestModel?.sorts ?? [];
-        commonFilterRequestModel.healthOrganizationType =
-            CommonConstants.keyLab.toUpperCase();
         createTicketController.labListFilterRequestModel =
             commonFilterRequestModel;
       }
