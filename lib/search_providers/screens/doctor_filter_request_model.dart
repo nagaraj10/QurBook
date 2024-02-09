@@ -10,7 +10,6 @@ class DoctorFilterRequestModel {
   String? searchText;
   List<Filter>? filters;
   List<Sorts>? sorts; // Declares a nullable list of Sorts objects
-  String? healthOrganizationType;
 
   DoctorFilterRequestModel({
     this.page,
@@ -18,7 +17,6 @@ class DoctorFilterRequestModel {
     this.searchText,
     this.filters,
     this.sorts,
-    this.healthOrganizationType,
   });
 
   factory DoctorFilterRequestModel.fromJson(Map<String, dynamic> json) => DoctorFilterRequestModel(
@@ -27,7 +25,7 @@ class DoctorFilterRequestModel {
         searchText: json["searchText"],
         filters: json["filters"] == null ? [] : List<Filter>.from(json["filters"]!.map((x) => Filter.fromJson(x))),
         sorts: json["sorts"] == null ? [] : List<Sorts>.from(json["sorts"]!.map((x) => Sorts.fromJson(x))),
-        healthOrganizationType: json["healthOrganizationType"],
+
       );
 
   Map<String, dynamic> toJson() {
@@ -38,10 +36,6 @@ class DoctorFilterRequestModel {
       "filters": filters == null ? [] : List<dynamic>.from(filters!.map((x) => x.toJson())),
       "sorts": sorts == null ? [] : List<dynamic>.from(sorts!.map((x) => x.toJson())),
     };
-    // Only include healthOrganizationType if it's not null
-    if (healthOrganizationType != null) {
-      json["healthOrganizationType"] = healthOrganizationType;
-    }
 
     return json;
   }
