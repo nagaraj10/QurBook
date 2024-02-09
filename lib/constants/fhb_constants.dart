@@ -1198,6 +1198,13 @@ const String strExperienceDESC = 'Experience (Desc.)'; // Option for sorting by 
 const String strASC = 'ASC'; // Label for ascending order
 const String strDESC = 'DESC'; // Label for descending order
 
+// Define a constant variable for the health organization type
+const String strHealthOrganizationType = 'healthOrganizationType';
+
+// Define a constant variable for string data type
+const String strString = 'string';
+
+
 
 class DoctorFilterConstants {
   static List<String> yearOfExperienceList = [
