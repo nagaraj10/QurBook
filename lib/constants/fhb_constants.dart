@@ -1180,12 +1180,31 @@ const String strFilter = 'Filter';
 
 // Define a constant string for 'Years'
 const String strYears = 'Years';
+// Define a constant string for 'Year'
+const String strYear = 'Year';
 
 // Define a constant string for choosing a doctor
 const String strChooseDoctor = 'Choose Doctor';
 
 // Define another constant string for choosing a lab
 const String strChooseLab = 'Choose Lab';
+
+const String strApply = 'Apply'; // Label for the Apply button
+const String strSortby = 'Sort by'; // Label for the Sort by dropdown
+const String strAlphabetAZ = 'Alphabetical (A-Z)'; // Option for sorting alphabetically from A to Z
+const String strAlphabetZA = 'Alphabetical (Z-A)'; // Option for sorting alphabetically from Z to A
+const String strExperienceASC = 'Experience (Asc.)'; // Option for sorting by experience in ascending order
+const String strExperienceDESC = 'Experience (Desc.)'; // Option for sorting by experience in descending order
+const String strASC = 'ASC'; // Label for ascending order
+const String strDESC = 'DESC'; // Label for descending order
+
+// Define a constant variable for the health organization type
+const String strHealthOrganizationType = 'healthOrganizationType';
+
+// Define a constant variable for string data type
+const String strString = 'string';
+
+
 
 class DoctorFilterConstants {
   static List<String> yearOfExperienceList = [

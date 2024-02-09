@@ -19,6 +19,7 @@ class ApiServices {
     // final String _baseUrl = BASE_URL;
     final String _baseUrl = '';
     _checkRefreshTokenRequired();
+    unawaited(_logLastUserAccess());
     try {
       final response = await http
           .get(
@@ -51,6 +52,7 @@ class ApiServices {
     // print(headers);
     // print('jsonBody: ' + body);
     _checkRefreshTokenRequired();
+    unawaited(_logLastUserAccess());
     try {
       final response = await http
           .post(
@@ -87,6 +89,7 @@ class ApiServices {
     // final String _baseUrl = BASE_URL;
     final String _baseUrl = '';
     _checkRefreshTokenRequired();
+    unawaited(_logLastUserAccess());
     try {
       final response = await http
           .put(
@@ -118,6 +121,7 @@ class ApiServices {
     // final String _baseUrl = BASE_URL;
     final String _baseUrl = '';
     _checkRefreshTokenRequired();
+    unawaited(_logLastUserAccess());
     try {
       final response = await http
           .delete(
@@ -140,35 +144,38 @@ class ApiServices {
     }
   }
 
-  static callRefreshTokenApi()async{
+  static callRefreshTokenApi() async {
     var headerRequest = await HeaderRequest().getRequestHeader();
     String? refToken = PreferenceUtil.getStringValue(strRefreshToken);
     try {
       var data = {
-        'refreshToken':'$refToken',
-        'source':'myFHBMobile',
-        'isJWTToken':true
+        'refreshToken': '$refToken',
+        'source': 'myFHBMobile',
+        'isJWTToken': true
       };
       final response = await http
           .post(
-        Uri.parse(BASE_URL+refreshTokenEndPoint),
-        body: json.encode(data),
-        headers: headerRequest,
-      )
+            Uri.parse(BASE_URL + refreshTokenEndPoint),
+            body: json.encode(data),
+            headers: headerRequest,
+          )
           .timeout(
-        Duration(
-          seconds: 20,
-        ),
-      );
-      if(response.statusCode ==200){
+            Duration(
+              seconds: 20,
+            ),
+          );
+      if (response.statusCode == 200) {
         final responseResult = jsonDecode(response.body);
+
         ///Adding a new Jwt token and updating the refresh and Expiry time.
         final String jwtToken = responseResult[strResult][strJwtToken];
         await PreferenceUtil.saveString(KEY_AUTHTOKEN, jwtToken);
-        await PreferenceUtil.saveInt(strAuthExpiration,parseJwtPayLoad(jwtToken??'')[strAuthExpiration]);
-        var refToken= responseResult[strResult][strRefreshToken];
-        await PreferenceUtil.saveString(strRefreshToken,refToken.toString());
-///
+        await PreferenceUtil.saveInt(strAuthExpiration,
+            parseJwtPayLoad(jwtToken ?? '')[strAuthExpiration]);
+        var refToken = responseResult[strResult][strRefreshToken];
+        await PreferenceUtil.saveString(strRefreshToken, refToken.toString());
+
+        ///
       }
       return response;
     } on TimeoutException {
@@ -182,28 +189,49 @@ class ApiServices {
       }
     }
   }
-   static _checkRefreshTokenRequired() {
-     String? refToken = PreferenceUtil.getStringValue(strRefreshToken);
-     String? authToken = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
-     if(authToken!=null && refToken!=null){
-       try {
-         final tokenExpireUnixTime = PreferenceUtil.getIntValue(strAuthExpiration);
-         final backendTimestamp = DateTime.fromMillisecondsSinceEpoch(tokenExpireUnixTime! * 1000);
-         // Get the current time
-         final currentDate = DateTime.now().toLocal();
-         // Calculate the difference in minutes between the backend timestamp and current time
-         final differenceInMinutes = backendTimestamp.difference(currentDate).inMinutes;
-         // Check if the difference is less than or equal to 10 hours (600 minutes) and not negative
-         if (differenceInMinutes <= 600 && differenceInMinutes > 0) {
-           callRefreshTokenApi();
-         }
-         // The timestamp is either more than 10 hours ahead or negative (expired)
-       } catch(e) {
-         // Handle exceptions if any
-       }
-     }
 
+  static _checkRefreshTokenRequired() {
+    String? refToken = PreferenceUtil.getStringValue(strRefreshToken);
+    String? authToken = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
+    if (authToken != null && refToken != null) {
+      try {
+        final tokenExpireUnixTime =
+            PreferenceUtil.getIntValue(strAuthExpiration);
+        final backendTimestamp =
+            DateTime.fromMillisecondsSinceEpoch(tokenExpireUnixTime! * 1000);
+        // Get the current time
+        final currentDate = DateTime.now().toLocal();
+        // Calculate the difference in minutes between the backend timestamp and current time
+        final differenceInMinutes =
+            backendTimestamp.difference(currentDate).inMinutes;
+        // Check if the difference is less than or equal to 10 hours (600 minutes) and not negative
+        if (differenceInMinutes <= 600 && differenceInMinutes > 0) {
+          callRefreshTokenApi();
+        }
+        // The timestamp is either more than 10 hours ahead or negative (expired)
+      } catch (e) {
+        // Handle exceptions if any
+      }
+    }
   }
 
+  static Future<void> _logLastUserAccess() async {
+    const String LAST_ACCESS_KEY =
+        'last_access'; // key to store last access time
+    const int MAX_ALLOWED_TIME_MS =
+        60 * 1000; // maximum allowed time difference
 
+    int lastAccess = PreferenceUtil.getIntValue(LAST_ACCESS_KEY) ??
+        (61 * 1000); // get last access time
+    int currentTime = DateTime.now().millisecondsSinceEpoch; // get current time
+
+    if (currentTime - lastAccess > MAX_ALLOWED_TIME_MS) {
+      // check if time difference exceeds max
+      // Make API call to record latest user access
+
+      CommonUtil().saveUserLastAccessTime();
+      // Update shared preference with new last access time
+      await PreferenceUtil.saveInt(LAST_ACCESS_KEY, currentTime);
+    }
+  }
 }
