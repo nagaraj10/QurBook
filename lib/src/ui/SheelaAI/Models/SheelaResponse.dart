@@ -82,6 +82,7 @@ class SheelaResponse {
     this.text,
     this.audioURL,
     this.endOfConv,
+    this.endOfConvDiscardDialog,
     this.buttons,
     this.imageURL,
     this.searchURL,
