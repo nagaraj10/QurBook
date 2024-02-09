@@ -41,6 +41,7 @@ dependencies:
   flutter_sound: ^8.3.9
   flutter_geocoder: ^0.2.2-nullsafety
   geolocator: ^7.2.0+1
+  native_shutter_sound: ^0.0.1
   uuid: ^3.0.4
   dotted_border: ^2.0.0
   webview_flutter: ^2.0.9
@@ -50,7 +51,7 @@ dependencies:
   flutter_absolute_path:
     path: ./flutter_absolute_path
   provider: ^6.0.0
-    #audio_waveforms package was added locally because of Compatibility  issue.
+  #audio_waveforms package was added locally because of Compatibility  issue.
   audio_waveforms:
     path: ./audio_waveforms
   get: ^4.1.4
@@ -88,7 +89,7 @@ dependencies:
   scroll_to_index: ^2.0.0
   flutter_inappwebview: ^5.3.2
   flutter_downloader: ^1.5.2
-#  contacts_service: ^0.6.1
+  #  contacts_service: ^0.6.1
   group_list_view: ^1.0.5
   advance_pdf_viewer2: ^2.0.5
   open_filex: ^4.3.4

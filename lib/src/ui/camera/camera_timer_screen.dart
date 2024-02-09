@@ -4,44 +4,45 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:native_shutter_sound/native_shutter_sound.dart';
-import 'package:native_shutter_sound/native_shutter_sound_platform_interface.dart';
 
 import '../../utils/screenutils/size_extensions.dart';
 
+// Define a StatefulWidget for the camera preview screen
 class CameraPreviewScreen extends StatefulWidget {
-  const CameraPreviewScreen({super.key, required this.cameras});
-
   final List<CameraDescription> cameras;
+  const CameraPreviewScreen({Key? key, required this.cameras}) : super(key: key);
 
   @override
-  _CameraPreviewScreenState createState() => _CameraPreviewScreenState();
+  State<CameraPreviewScreen> createState() => _CameraPreviewScreenState();
 }
 
+// Define the state for the camera preview screen
 class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
   late CameraController controller;
   late Timer _timer;
-  int _secondsRemaining = 30;
-  XFile? imageFile;
+  int _secondsRemaining = 30; // Initialize remaining seconds
+  XFile? imageFile; // Variable to store the captured image file
 
   @override
   void initState() {
     super.initState();
-    cameraInitialization();
+    cameraInitialization(); // Initialize camera
   }
 
+  // Initialize the camera
   Future<void> cameraInitialization() async {
     controller = CameraController(
-      widget.cameras[0],
+      widget.cameras[0], // Use the first camera from the list
       ResolutionPreset.high,
     );
-    await controller.initialize();
+    await controller.initialize(); // Initialize the camera controller
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_secondsRemaining > 0) {
-          _secondsRemaining--;
+          _secondsRemaining--; // Decrement remaining seconds
         } else {
-          _timer.cancel();
-          _takePicture();
+          _timer.cancel(); // Cancel the timer when time is up
+          _takePicture(); // Take the picture when time is up
         }
       });
     });
@@ -49,20 +50,20 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
 
   @override
   void dispose() {
-    controller.dispose();
-    _timer.cancel();
+    controller.dispose(); // Dispose the camera controller
+    _timer.cancel(); // Cancel the timer
     super.dispose();
   }
 
+  // Function to capture a picture
   Future<void> _takePicture() async {
     try {
-      final image = await controller.takePicture();
-
+      final image = await controller.takePicture(); // Capture the picture
       setState(() {
-        imageFile = image;
+        imageFile = image; // Set the captured image file
       });
-      _timer.cancel();
-      await NativeShutterSoundPlatform.instance.play();
+      await NativeShutterSound.play(); // Play shutter sound
+      _timer.cancel(); // Cancel the timer
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -71,11 +72,12 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
   @override
   Widget build(BuildContext context) {
     if (!controller.value.isInitialized) {
-      return Container();
+      return Container(); // Return an empty container if camera is not initialized
     }
-    return _buildCameraPreview();
+    return _buildCameraPreview(); // Build the camera preview
   }
 
+  // Widget to build the camera preview screen
   Widget _buildCameraPreview() => Scaffold(
         backgroundColor: Colors.transparent,
         bottomNavigationBar: Padding(
@@ -85,7 +87,7 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(); // Navigate back when cancel button is pressed
                 },
                 child: Icon(
                   Icons.cancel_outlined,
@@ -93,11 +95,12 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
                 ),
               ),
               Visibility(
-                visible: imageFile == null,
+                visible: imageFile == null, // Show the capture button only if no image is captured
                 child: Padding(
                   padding: const EdgeInsets.only(right: 50),
                   child: ElevatedButton(
                     onPressed: _takePicture,
+                    // Call _takePicture function when capture button is pressed
                     child: Icon(
                       Icons.camera_alt_rounded,
                       size: 32.0.sp,
@@ -106,10 +109,10 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
                 ),
               ),
               Visibility(
-                visible: imageFile != null,
+                visible: imageFile != null, // Show the check button only if an image is captured
                 child: IconButton(
                   onPressed: () {
-                    Navigator.of(context).pop(imageFile);
+                    Navigator.of(context).pop(imageFile); // Navigate back with the captured image file
                   },
                   icon: Icon(
                     Icons.check,
@@ -124,14 +127,14 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
         body: Stack(
           children: [
             Positioned.fill(
-              child: imageFile != null
-                  ? Image.file(
-                      File(imageFile!.path),
-                      fit: BoxFit.cover,
-                    )
-                  : CameraPreview(controller),
-            ),
-            if (imageFile == null)
+                child: imageFile != null
+                    ? Image.file(
+                        File(imageFile!.path),
+                        fit: BoxFit.cover,
+                      )
+                    : CameraPreview(controller) // Show camera preview if no image is captured
+                ),
+            if (imageFile == null) // Show countdown only if no image is captured
               Positioned(
                 top: 50,
                 left: 0,
@@ -139,40 +142,36 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
                 child: TweenAnimationBuilder<double>(
                   tween: Tween<double>(begin: 1, end: 0),
                   duration: Duration(seconds: _secondsRemaining),
-                  builder: (context, value, child) {
-                    // Calculate the color based on the remaining time
-                    Color color = _secondsRemaining <= 10 ? Colors.red : Colors.grey;
-                    return Container(
-                      width: 100,
-                      height: 100,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 60,
-                            // decoration: BoxDecoration(
-                            //   shape: BoxShape.circle,
-                            //   border: Border.all(color: color, width: 3),
-                            // ),
-                            child: CircularProgressIndicator(
-                              value: value,
+                  builder: (context, value, child) => Container(
+                    width: 100,
+                    height: 100,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          width: 60,
+                          height: 60,
+                          child: CircularProgressIndicator(
+                            value: value,
+                            color: Colors.white,
+                            strokeWidth: 8,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            '$_secondsRemaining',
+                            style: TextStyle(
+                              fontSize: 25.0.sp,
                               color: Colors.white,
-                              strokeWidth: 5,
+                              fontWeight: FontWeight.bold,
+                              // Adjust the color as needed
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5.0), // Adjust the padding as needed
-                            child: Text(
-                              '$_secondsRemaining',
-                              style: const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold // Adjust the color as needed
-                                  ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
           ],
