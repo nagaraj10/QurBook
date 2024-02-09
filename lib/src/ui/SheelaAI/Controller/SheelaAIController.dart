@@ -1490,50 +1490,72 @@ makeApiRequest is used to update the data with latest data
     }
   }
 
-  void freeTextConversation({dynamic freeText}) {
+
+  Future<void> freeTextConversation({dynamic freeText}) async {
     try {
       if (freeText != null) {
-        // right user card
-        final cardResponse = SheelaResponse(text: freeText);
-        conversations.add(cardResponse);
+        // Translate user input and Sheela's response
+        List<String?> translationsText = await Future.wait([
+          getTextTranslate(freeText),
+          getTextTranslate(freeTextReply + (freeText ?? '') + freeTextReplyConfirm),
+        ]);
+
+        // Reset loading flag and remove the loading response from conversations
+        isLoading.value = false;
+        conversations.removeLast();
+
+        // Add user's response to the conversation (right user card)
+        conversations.add(SheelaResponse(text: translationsText[0]));
         scrollToEnd();
-        // left sheela card
-        Future.delayed(Duration(seconds: 2), () {
-          isLoading.value = true;
-          SheelaResponse currentCon = SheelaResponse();
-          currentCon.text =
-              freeTextReply + (freeText ?? '') + freeTextReplyConfirm;
-          currentCon.recipientId = sheelaRecepId;
-          currentCon.endOfConv = false;
-          currentCon.endOfConvDiscardDialog = false;
-          currentCon.singleuse = true;
-          currentCon.isActionDone = false;
-          currentCon.isButtonNumber = false;
-          currentCon.recipientId = sheelaRecepId;
-          currentCon.buttons = freeTextButtons(freeTextPayload: freeText);
-          conversations.add(currentCon);
-          currentPlayingConversation = currentCon;
-          isLoading.value = false;
-          playTTS();
-          scrollToEnd();
-        });
+
+        // Add Sheela's response to the conversation (left sheela card)
+        await Future.delayed(Duration(seconds: 1));
+        isLoading.value = true;
+        conversations.add(SheelaResponse(
+            loading: true)); // Add loading response to conversations
+        scrollToEnd(); // Scroll to the end of conversations
+        SheelaResponse currentCon = SheelaResponse(
+          text: translationsText[1],
+          recipientId: sheelaRecepId,
+          endOfConv: false,
+          endOfConvDiscardDialog: false,
+          singleuse: true,
+          isActionDone: false,
+          isButtonNumber: false,
+          buttons: await freeTextButtons(freeTextPayload: freeText),
+        );
+        // Reset loading flag and remove the loading response from conversations
+        isLoading.value = false;
+        conversations.removeLast();
+        conversations.add(currentCon);
+        currentPlayingConversation = currentCon;
+        isLoading.value = false;
+        playTTS();
+        scrollToEnd();
       }
     } catch (e, stackTrace) {
+      // Handle exceptions and log
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
-  List<Buttons> freeTextButtons({String? freeTextPayload}) {
-    List<Buttons> buttons = [
-      Buttons(
-        title: strContinue,
-        payload: freeTextPayload,
-      ),
-      Buttons(title: strRedo, btnRedirectTo: strRedirectRedo),
-      Buttons(title: strExit, payload: strExit, mute: sheela_hdn_btn_yes),
+  Future<List<Buttons>> freeTextButtons({String? freeTextPayload}) async {
+    // Translate button titles
+    List<String?> translatedTexts = await Future.wait([
+      getTextTranslate(strContinue),
+      getTextTranslate(strRedo),
+      getTextTranslate(strExit),
+    ]);
+
+    // Create Buttons with translated titles and payloads
+    return [
+      Buttons(title: translatedTexts[0], payload: freeTextPayload),
+      Buttons(title: translatedTexts[1], btnRedirectTo: strRedirectRedo),
+      Buttons(title: translatedTexts[2], payload: strExit, mute: sheela_hdn_btn_yes),
     ];
-    return buttons;
   }
+
+
 
   // Function to generate a list of button configurations for image preview
   List<Buttons> sheelaImagePreviewButtons(
@@ -2391,6 +2413,10 @@ makeApiRequest is used to update the data with latest data
                     .last?.additionalInfoSheelaResponse?.reconfirmationFlag ??
                 false)) {
           redoCurrentPlayingConversation = conversations.last;
+          isLoading.value = true; // Set loading flag
+          conversations.add(SheelaResponse(
+              loading: true)); // Add loading response to conversations
+          scrollToEnd(); // Scroll to the end of conversations
           freeTextConversation(freeText: response);
         } else {
           final newConversation = SheelaResponse(text: response);
