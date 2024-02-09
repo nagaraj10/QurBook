@@ -79,6 +79,9 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
 
   var createTicketController = CommonUtil().onInitCreateTicketController();
 
+  // Initialize a boolean variable to true, assuming all lists are initially empty
+  bool allListsEmpty = true;
+
   @override
   void initState() {
     super.initState();
@@ -86,6 +89,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
     selectedItems = widget.filterSelectedItems;
     selectedState = selectdFilterItemIndex.selectedStateIndex.isEmpty ? "" : selectdFilterItemIndex.selectedStateIndex.first;
     selectedCity = selectdFilterItemIndex.selectedCityIndex.isEmpty ? "" : selectdFilterItemIndex.selectedCityIndex.first;
+    checkAllListsEmpty();
   }
 
   @override
@@ -168,6 +172,9 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                             selectedState = state;
                             selectedCity = city;
                             selectdFilterItemIndex = selectedIndex;
+
+                            checkAllListsEmpty();
+                            
                             setState(() {});
                           },
                         )
@@ -226,19 +233,22 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: InkWell(
-                              onTap: () {
+                              onTap: (!allListsEmpty)
+                                  ?() {
                                 BlocProvider.of<DoctorsFilterBloc>(context).add(
                                   ApplyFilters(
                                     selectedItems: selectedItems,
                                     count: 0,
                                   ),
                                 );
-                              },
+                              }:null,
                               child: Container(
                                 height: 48,
                                 padding: const EdgeInsets.all(10),
                                 decoration: ShapeDecoration(
-                                  color: Color(CommonUtil().getMyPrimaryColor()),
+                                  color: (!allListsEmpty)
+                                      ? Color(CommonUtil().getMyPrimaryColor())
+                                      : Colors.grey.withOpacity(0.5),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(50),
                                   ),
@@ -262,4 +272,50 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
           ),
         ),
       );
+
+  // Function to check if all filter indexes are empty
+  void checkAllListsEmpty() {
+    try {
+      // Check if selectedGenderIndex is null or empty
+      bool selectedGenderIndexIsNull = selectdFilterItemIndex?.selectedGenderIndex == null ||
+          selectdFilterItemIndex.selectedGenderIndex.isEmpty;
+
+      // Check if selectedLanguageIndex is null or empty
+      bool selectedLanguageIndexIsNull = selectdFilterItemIndex?.selectedLanguageIndex == null ||
+          selectdFilterItemIndex.selectedLanguageIndex.isEmpty;
+
+      // Check if selectedSpecializationIndex is null or empty
+      bool selectedSpecializationIndexIsNull = selectdFilterItemIndex?.selectedSpecializationeIndex == null ||
+          selectdFilterItemIndex.selectedSpecializationeIndex.isEmpty;
+
+      // Check if selectedStateIndex is null or empty
+      bool selectedStateIndexIsNull = selectdFilterItemIndex?.selectedStateIndex == null ||
+          selectdFilterItemIndex.selectedStateIndex.isEmpty;
+
+      // Check if selectedCityIndex is null or empty
+      bool selectedCityIndexIsNull = selectdFilterItemIndex?.selectedCityIndex == null ||
+          selectdFilterItemIndex.selectedCityIndex.isEmpty;
+
+      // Check if selectedHospitalIndex is null or empty
+      bool selectedHospitalIndexIsNull = selectdFilterItemIndex?.selectedHospitalIndex == null ||
+          selectdFilterItemIndex.selectedHospitalIndex.isEmpty;
+
+      // Check if selectedYOEIndex is null or empty
+      bool selectedYOEIndexIsNull = selectdFilterItemIndex?.selectedYOEIndex == null ||
+          selectdFilterItemIndex.selectedYOEIndex.isEmpty;
+
+      // Set allListsEmpty based on whether all indexes are null or empty
+      allListsEmpty = selectedGenderIndexIsNull &&
+          selectedLanguageIndexIsNull &&
+          selectedSpecializationIndexIsNull &&
+          selectedStateIndexIsNull &&
+          selectedCityIndexIsNull &&
+          selectedHospitalIndexIsNull &&
+          selectedYOEIndexIsNull;
+    } catch (e, stackTrace) {
+      // Log any exceptions that occur
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
 }
