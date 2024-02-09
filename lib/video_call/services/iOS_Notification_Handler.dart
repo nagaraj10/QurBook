@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../QurHub/Controller/HubListViewController.dart';
 import '../../QurHub/View/HubListView.dart';
+import '../../Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import '../../authentication/constants/constants.dart';
 import '../../caregiverAssosication/caregiverAPIProvider.dart';
 import '../../chat_socket/view/ChatDetail.dart';
@@ -948,24 +949,35 @@ class IosNotificationHandler {
       var estart = tempData['estart'];
       var dosemeal = tempData['dosemeal'];
 
-      // Check if the region is US and estart is not null.
-      if (CommonUtil.isUSRegion() && estart != null) {
-        // Initialize the QurhomeDashboardController and set its values.
-        var qurhomeDashboardController =
-            CommonUtil().onInitQurhomeDashboardController();
-        qurhomeDashboardController.eventId.value = eventId;
-        qurhomeDashboardController.estart.value = estart;
+      // Initialize the QurhomeDashboardController and set its values.
+      var qurhomeDashboardController =
+      CommonUtil().onInitQurhomeDashboardController();
 
-        // Check dosemeal values for special cases and update the controller accordingly.
-        if (dosemeal == doseValueless || dosemeal == doseValueHigh) {
-          qurhomeDashboardController.isOnceInAPlanActivity.value = true;
-        } else {
-          qurhomeDashboardController.isOnceInAPlanActivity.value = false;
+      // Check if the region is US.
+      if (CommonUtil.isUSRegion()) {
+        // Update the tab index.
+        qurhomeDashboardController.updateTabIndex(0);
+
+        // Check if estart is not null.
+        if (estart != null) {
+          // Set eventId and estart values to the controller.
+          qurhomeDashboardController.eventId.value = eventId;
+          qurhomeDashboardController.estart.value = estart;
+
+          // Check dosemeal values for special cases and update the controller accordingly.
+          if (dosemeal == doseValueless || dosemeal == doseValueHigh) {
+            qurhomeDashboardController.isOnceInAPlanActivity.value = true;
+          } else {
+            qurhomeDashboardController.isOnceInAPlanActivity.value = false;
+          }
         }
 
-        // Update the tab index and navigate to the permanent landing page.
-        qurhomeDashboardController.updateTabIndex(0);
-        PageNavigator.goToPermanent(Get.context!, router.rt_Landing);
+        // Navigate to the permanent landing page based on call status.
+        if (!CommonUtil.isCallStarted) {
+          Get.offNamedUntil(router.rt_Landing, (route) => false);
+        } else {
+          Get.to(() => QurhomeDashboard());
+        }
       } else {
         // For non-US regions or when estart is null, navigate to the Regiment screen.
         Provider.of<RegimentViewModel>(
