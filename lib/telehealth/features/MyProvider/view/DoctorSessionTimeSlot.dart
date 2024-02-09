@@ -7,6 +7,7 @@ import '../../../../common/PreferenceUtil.dart';
 import '../../../../common/common_circular_indicator.dart';
 import '../../../../common/errors_widget.dart';
 import '../../../../constants/fhb_parameters.dart';
+import '../../../../constants/variable_constant.dart';
 import '../../../../landing/service/landing_service.dart';
 import '../../../../my_providers/models/Doctors.dart';
 import '../../../../my_providers/models/GetDoctorsByIdModel.dart';
@@ -43,6 +44,8 @@ class DoctorSessionTimeSlot extends StatefulWidget {
   bool? isFromFollowOrReschedule;
   bool? isFromFollowUpApp;
   bool? isFromFollowUpTake;
+  num? doctorAppoinmentTransLimit;
+  num? noOfDoctorAppointments;
 
   DoctorSessionTimeSlot({
     this.doctorId,
@@ -118,6 +121,21 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
     PreferenceUtil.saveActiveMembershipStatus(
       value.isSuccess! ? (value.result ?? []).length > 0 : false,
     );
+    // Iterate through the result list
+    value.result?.forEach((result) {
+      // Iterate through the benefitType list in additionalInfo
+      result.additionalInfo?.benefitType?.forEach((benefitType) {
+        // Check if fieldName is "Doctor Appointment"
+        if (benefitType.fieldName == strBenefitDoctorAppointment) {
+          // Get the transactionLimit
+          widget.doctorAppoinmentTransLimit = benefitType.transactionLimit;
+        }
+      });
+    });
+    print('0000 appin:${value.result?.first.noOfDoctorAppointments}');
+    if(value.result?.first.noOfDoctorAppointments!=null){
+      widget.noOfDoctorAppointments= double.parse('${value.result?.first.noOfDoctorAppointments.toString()}');
+    }
   }
 
   @override
@@ -264,6 +282,8 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                               isRefresh: () {
                                 widget.refresh!();
                               },
+                              noOfDoctorAppointments:widget.noOfDoctorAppointments,
+                              doctorAppoinmentTransLimit:widget.doctorAppoinmentTransLimit,
                               isFromNotification: widget.isFromNotification,
                               isFromHospital: widget.isFromHospital,
                               body: widget.body,

@@ -4,12 +4,14 @@ class MemberShipAdditionalInfoBenefitType {
   String? code;
   String? name;
   String? fieldName;
+  num? transactionLimit;
 
   MemberShipAdditionalInfoBenefitType({
     this.id,
     this.code,
     this.name,
     this.fieldName,
+    this.transactionLimit,
   });
 
   factory MemberShipAdditionalInfoBenefitType.fromJson(
@@ -19,6 +21,7 @@ class MemberShipAdditionalInfoBenefitType {
         code: json['code'],
         name: json['name'],
         fieldName: json['fieldName'],
+        transactionLimit: json['transactionLimit']
       );
 
   Map<String, dynamic> toJson() => {

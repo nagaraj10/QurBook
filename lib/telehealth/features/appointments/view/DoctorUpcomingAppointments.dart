@@ -33,7 +33,6 @@ import 'DoctorTimeSlotWidget.dart';
 import 'appointmentsCommonWidget.dart';
 import 'resheduleMain.dart';
 
-import 'dart:developer' as dev;
 
 class DoctorUpcomingAppointments extends StatefulWidget {
   Past? doc;
@@ -66,7 +65,6 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
 
   @override
   void initState() {
-    dev.debugger();
     cancelAppointmentViewModel =
         Provider.of<CancelAppointmentViewModel>(context, listen: false);
     getCategoryList();

@@ -81,6 +81,8 @@ class BookingConfirmation extends StatefulWidget {
   bool? isFromFollowUpApp;
   bool? isFromFollowUpTake;
   bool isFromPaymentNotification = false;
+  num? doctorAppoinmentTransLimit;
+  num? noOfDoctorAppointments;
   String? appointmentId;
 
   BookingConfirmation(
@@ -106,7 +108,9 @@ class BookingConfirmation extends StatefulWidget {
       this.isFromFollowUpApp,
       this.isFromFollowUpTake,
       this.isFromPaymentNotification = false,
-      this.appointmentId = ''});
+      this.appointmentId = '',
+      this.doctorAppoinmentTransLimit,
+      this.noOfDoctorAppointments});
 
   @override
   BookingConfirmationState createState() => BookingConfirmationState();
@@ -129,6 +133,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   int recordIdCount = 0;
   int notesIdCount = 0;
   int voiceIdCount = 0;
+  bool? isActiveMember;
 
   String? slotNumber = '',
       slotTime = '',
@@ -162,8 +167,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   bool? checkedValue = false;
 
   String? INR_Price = '';
+  //Added for storing a temp original price to retrieve when membershipApplied.
+  String? originalPrice = '';
+  String? applyMembershipDiscountedAmount = '';
+
   String btnLabelChange = payNow;
   bool isMembershipDiscount = false;
+  bool isApplyMemberShipBenefits= false;
   String? MembershipDiscountPercent;
   bool? isResident = false;
   String? profilePicThumbnailUrl,
@@ -185,7 +195,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     FABService.trackCurrentScreen(FBAConfirmationDetailsScreen);
     _categoryListBlock = null;
     _categoryListBlock = CategoryListBlock();
-
     getCategoryList();
     getDataFromWidget();
     setLengthValue();
@@ -200,6 +209,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   widget.resultFromHospitalList![widget.doctorListIndex!],
                   false)
               : getFees(widget.healthOrganizationResult![widget.i!], false));
+      originalPrice = INR_Price;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -296,6 +306,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       if (appointmentNotificationPayment.result?.payment != null) {
         INR_Price =
             appointmentNotificationPayment.result?.payment?.amount ?? '';
+        originalPrice = INR_Price;
         shortURL =
             appointmentNotificationPayment.result?.payment?.longUrl ?? '';
         paymentID = appointmentNotificationPayment.result?.payment?.id ?? '';
@@ -711,6 +722,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   }
                   INR_Price = getDiscountedFee(
                       double.parse(discount!), double.parse(originalFees));
+                  originalPrice = INR_Price;
                   if (INR_Price == '0' || INR_Price == '0.00') {
                     btnLabelChange = bookNow;
                   } else {
@@ -878,6 +890,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                                 : null,
                                             isResidentDoctorMembership:
                                                 isMembershipDiscount,
+                                            walletDeductionAmount: applyMembershipDiscountedAmount
                                           );
                                         }
                                       },
@@ -946,21 +959,22 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     bool? isCSRDiscount, {
     Past? doc,
     bool isResidentDoctorMembership = false,
+    String? walletDeductionAmount,
   }) async {
     CreateAppointmentModel? bookAppointmentModel =
         await createAppointMentViewModel.putBookAppointment(
-      createdBy,
-      bookedFor,
-      doctorSessionId,
-      scheduleDate,
-      slotNumber,
-      isMedicalShared,
-      isFollowUp,
-      healthRecords,
-      isCSRDiscount,
-      doc: doc,
-      isResidentDoctorMembership: isResidentDoctorMembership,
-    );
+            createdBy,
+            bookedFor,
+            doctorSessionId,
+            scheduleDate,
+            slotNumber,
+            isMedicalShared,
+            isFollowUp,
+            healthRecords,
+            isCSRDiscount,
+            doc: doc,
+            isResidentDoctorMembership: isResidentDoctorMembership,
+            walletDeductionAmount: walletDeductionAmount);
 
     return bookAppointmentModel!;
   }
@@ -976,6 +990,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     List<String> healthRecords, {
     Past? doc,
     bool isResidentDoctorMembership = false,
+        String? walletDeductionAmount,
   }) {
     setState(() {
       pr.show();
@@ -998,6 +1013,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               checkedValue,
               doc: doc,
               isResidentDoctorMembership: isResidentDoctorMembership,
+              walletDeductionAmount: applyMembershipDiscountedAmount
             );
           } else {
             pr.hide();
@@ -1017,6 +1033,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           checkedValue,
           doc: doc,
           isResidentDoctorMembership: isResidentDoctorMembership,
+          walletDeductionAmount: applyMembershipDiscountedAmount
         );
       }
     } catch (e, stackTrace) {
@@ -1038,6 +1055,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     bool? isCSRDiscount, {
     Past? doc,
     bool isResidentDoctorMembership = false,
+        String? walletDeductionAmount,
   }) {
     bookAppointmentCall(
       createdBy,
@@ -1051,6 +1069,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       isCSRDiscount,
       doc: doc,
       isResidentDoctorMembership: isResidentDoctorMembership,
+      walletDeductionAmount: walletDeductionAmount
     ).then((value) {
       if (value != null) {
         if (value.isSuccess != null &&
@@ -1591,7 +1610,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               child: CheckboxListTile(
                 title: Text(
                   'Membership Discount (' + MembershipDiscountPercent! + '%)',
-                  style: const TextStyle(color: Colors.grey),
+                  style: const TextStyle(color: Colors.grey,
+                  fontSize: 12),
                 ),
                 value: true,
                 activeColor: Colors.grey,
@@ -1604,12 +1624,65 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         : Container();
   }
 
+  applyMemberShipBenefitsWidget()=> CheckboxListTile(
+      title: Text(
+        '${parameters.applyMemberShipBenefit}${(widget.doctorAppoinmentTransLimit!=null && widget.doctorAppoinmentTransLimit! >0)?' (${parameters.max} ${widget.doctorAppoinmentTransLimit})':''}',
+        style: TextStyle(
+            color: Colors.black,
+          fontSize: 12
+        ),
+      ),
+      value: isApplyMemberShipBenefits,
+      activeColor:Color(CommonUtil().getMyPrimaryColor()),
+      onChanged:(value){
+        setState(() {
+          isApplyMemberShipBenefits = value!;
+          if(value==true){
+            applyMembershipDiscountedAmount =  updateThaMembershipBenefit();
+          }else{
+           INR_Price= originalPrice;
+           applyMembershipDiscountedAmount ='';
+          }
+          if (INR_Price == '0' || INR_Price == '0.00') {
+            btnLabelChange = bookNow;
+          } else {
+            btnLabelChange = payNow;
+          }
+        });
+      },
+      controlAffinity:
+      ListTileControlAffinity.leading, //  <-- leading Checkbox
+    );
+
+
+   updateThaMembershipBenefit() {
+     INR_Price = CommonUtil().replaceSeparator(value:INR_Price!, separator: ',');
+    double currentAmount = double.parse(INR_Price!);
+    num deductedAmount = 0.0;
+    if (widget.doctorAppoinmentTransLimit != null && widget.doctorAppoinmentTransLimit! > 0) {
+      double remainingAmount = currentAmount - widget.doctorAppoinmentTransLimit!;
+      // Deducted amount is either the remaining amount (if positive) or the current amount (if negative)
+      deductedAmount = remainingAmount <= 0 ? currentAmount : widget.doctorAppoinmentTransLimit!;
+      // Update INR_Price based on the remaining amount
+      INR_Price = commonWidgets.getMoneyWithForamt((remainingAmount <= 0 ? 0 : remainingAmount).toStringAsFixed(2));
+    } else if (widget.noOfDoctorAppointments != null && widget.noOfDoctorAppointments! > 0) {
+      double remainingAmount = currentAmount - widget.noOfDoctorAppointments!;
+      // Deducted amount is either the remaining amount (if positive) or the current amount (if negative)
+      deductedAmount = remainingAmount <= 0 ? currentAmount : widget.noOfDoctorAppointments!;
+      // Update INR_Price based on the remaining amount
+      INR_Price = commonWidgets.getMoneyWithForamt((remainingAmount <= 0 ? 0 : remainingAmount).toStringAsFixed(2));
+    }
+    return deductedAmount.toStringAsFixed(2);
+  }
+
+
   showDialogForMembershipDiscount() async {
+    isActiveMember = await PreferenceUtil.getActiveMembershipStatus();
+    setState(() {});
     if (!isResident!) return;
     String? originalFees;
     String? discountPercent;
     String? discount;
-    bool? isActiveMember = await PreferenceUtil.getActiveMembershipStatus();
     if (!(isActiveMember ?? false)) return;
     if (widget.isFromHospital!) {
       ResultFromHospital result =
@@ -1710,6 +1783,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           () {
             isMembershipDiscount = isActiveMember ?? false;
             INR_Price = discount;
+            originalPrice = INR_Price;
             if (INR_Price == '0' || INR_Price == '0.00') {
               btnLabelChange = bookNow;
             } else {
@@ -1909,6 +1983,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               : [],
           doc: widget.isFollowUp! ? widget.doctorsData : null,
           isResidentDoctorMembership: isMembershipDiscount,
+            walletDeductionAmount: applyMembershipDiscountedAmount
         );
       } else {
         _displayDialog(context);
@@ -2205,16 +2280,22 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                   ),
                           ),
                         ),
-          SizedBoxWidget(height: 15),
+          SizedBoxWidget(height: 10),
           isMembershipDiscount
               ? Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     getMembershipDiscountCheckBox(),
-                    SizedBoxWidget(height: 15),
+                    SizedBoxWidget(height: 10),
                   ],
                 )
               : const SizedBox.shrink(),
+          Visibility(
+              visible: isActiveMember==true,
+              child: Container(
+                margin: EdgeInsets.only(bottom: 10),
+                child:applyMemberShipBenefitsWidget(),
+              )),
           Container(
             child: Center(
               child: Text(
@@ -2304,6 +2385,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                     : null,
                                 isResidentDoctorMembership:
                                     isMembershipDiscount,
+                                  walletDeductionAmount: applyMembershipDiscountedAmount
                               );
                             } else {
                               _displayDialog(context);
