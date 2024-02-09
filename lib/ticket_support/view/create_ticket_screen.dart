@@ -570,7 +570,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     ? Visibility(
                         visible: isVisible,
                         child: getTextFieldWidget(field, isPincode: true))
-                    : getTextFieldWidget(field, isPincode: true));
+                    : getTextFieldWidget(field, isPincode: CommonUtil.REGION_CODE == 'IN',));
             } else {
               // Handle address fields
               widgetForColumn.add(field.isVisible != null &&
@@ -643,7 +643,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         SizedBox(height: 10.h),
                         getWidgetForTextValue(
                             i, CommonUtil().getFieldName(field.name), field,
-                            isPincode: true),
+                            isPincode: CommonUtil.REGION_CODE == 'IN'),
                       ],
                     ),
                   )
