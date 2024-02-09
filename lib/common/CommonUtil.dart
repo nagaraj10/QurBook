@@ -355,6 +355,19 @@ class CommonUtil {
     });
   }
 
+  // Function to replace a separator in a string with an empty string
+  String? replaceSeparator({required String? value, required String separator}) {
+    // Check if the value is not null and contains the separator
+    if (value != null && value.contains(separator)) {
+      // If it does, replace all occurrences of the separator with an empty string
+      return value.replaceAll(separator, '');
+    }
+    // If the value is null or doesn't contain the separator, return the original value
+    return value;
+  }
+
+
+
   void commonMethodToSetPreference() async {
     var apiBaseHelper = ApiBaseHelper();
 

@@ -46,7 +46,6 @@ class LandingService {
     var response = await _helper.getMemberShipDetails(
       url,
     );
-    var fromJson = MemberShipDetailResponse.fromJson(response ?? '');
-    return fromJson;
+    return MemberShipDetailResponse.fromJson(response ?? '');
   }
 }

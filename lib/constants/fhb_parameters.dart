@@ -371,6 +371,7 @@ const String addVoice = 'Add Voice';
 const String records = 'Records';
 const String deviceReading = 'Device Readings';
 const String applyMemberShipBenefit = 'Apply Membership Benefit';
+const String max = 'Max';
 const String payNow = 'Pay Now';
 const String slotsAreNotAvailable = 'Slot not available in this date';
 const String bookNow = 'Book Now';
