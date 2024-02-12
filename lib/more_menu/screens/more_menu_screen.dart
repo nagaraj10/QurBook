@@ -45,6 +45,7 @@ import '../../src/model/user/user_accounts_arguments.dart';
 import '../../src/resources/repository/health/HealthReportListForUserRepository.dart';
 import '../../src/ui/HomeScreen.dart';
 import '../../src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import '../../src/ui/SheelaAI/Services/SheelaAIAPIServices.dart';
 import '../../src/ui/settings/CaregiverSettng.dart';
 import '../../src/ui/settings/MySettings.dart';
 import '../../src/ui/settings/NonAdheranceSettingsScreen.dart';
@@ -169,12 +170,16 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   double arrowIcon = CommonUtil().isTablet! ? 20.0.sp : 16.0.sp;
   double switchTrail = CommonUtil().isTablet! ? 1.0 : 0.8;
   bool? isVoiceCloningChanged; // bool value to allow navigation when tapped
+  ///Added for family members to identify  whether voice is assigned or not
+  bool isVoiceAssigned =false;
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
     qurhomeDashboardController.getModuleAccess();
     if (CommonUtil.REGION_CODE == 'US') {
+      ///It will return voiceid if voice id is not empty which means voice is assigned.
+      SheelAIAPIService().getVoiceId().then((value) =>isVoiceAssigned =value?.isNotEmpty ??false);
       getAvailableDevices();
     }
     PackageInfo.fromPlatform().then((packageInfo) {
@@ -2124,9 +2129,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }
 
   void handleUseClonedVoiceSwitch(bool isEnabled){
-    useClonedVoice =isEnabled;
-    setState(() {
-    });
+    if(isVoiceAssigned){
+      useClonedVoice =isEnabled;
+      setState(() {
+      });
+    }else{
+      toast.getToast(variable.strVoiceCloneNotSetByYourCaregiver, Colors.red);
+    }
   }
 
   Future<void> handleVoiceCloneSwitchAction(bool isEnabled) async {
@@ -2210,7 +2219,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   ///Only for family members
   Widget _useClonedVoiceWidget(){
    return  Visibility(
-     visible:CommonUtil.isUSRegion()&& !isCareGiver,
+     visible:CommonUtil.isUSRegion(),
        child: ListTile(
           leading: ImageIcon(
             AssetImage(variable.icon_voice_cloning),

@@ -745,6 +745,8 @@ const String strSheelaDesc =
 const String strUseClonedVoice =
     'Use cloned voice'; //String declared for use cloned voice
 
+const String strVoiceCloneNotSetByYourCaregiver = 'Voice clone sample not set by your caregiver'; //String declared for VoiceCloneNotSetByYourCaregiver
+
 const String strUseClonedVoiceDesc =
     'Option to allow using the cloned voice for sheela conversation';//description for Usecloned Voice
 
