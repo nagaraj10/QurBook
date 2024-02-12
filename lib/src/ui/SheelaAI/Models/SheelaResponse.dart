@@ -16,9 +16,7 @@ class SpeechModelAPIResponse {
   SpeechModelAPIResponse.fromJson(Map<String, dynamic> json) {
     try {
       isSuccess = json['isSuccess'] ?? false;
-      result = json['result'] != null
-          ? SheelaResponse.fromJson(json['result'])
-          : null;
+      result = json['result'] != null ? SheelaResponse.fromJson(json['result']) : null;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -58,8 +56,7 @@ class SheelaResponse {
   var eid;
   bool? directCall;
   String? recipient;
-  String timeStamp =
-  FHBUtils().getFormattedDateString(DateTime.now().toString());
+  String timeStamp = FHBUtils().getFormattedDateString(DateTime.now().toString());
   GoogleTTSResponseModel? ttsResponse;
   Rx<bool> isPlaying = false.obs;
   int? currentButtonPlayingIndex;
@@ -78,7 +75,8 @@ class SheelaResponse {
   String? videoThumbnailUrl;
   Uint8List? videoThumbnailUrlData; // this for the videoThumbnail avoid loading issue
 
-  SheelaResponse({this.recipientId,
+  SheelaResponse({
+    this.recipientId,
     this.text,
     this.audioURL,
     this.endOfConv,
@@ -124,8 +122,7 @@ class SheelaResponse {
       text = json['text'];
       audioURL = json['audioURL'];
       endOfConv = json['endOfConv'];
-      endOfConvDiscardDialog =
-      json['endOfConv'] != null ? json['endOfConv'] : false;
+      endOfConvDiscardDialog = json['endOfConv'] != null ? json['endOfConv'] : false;
       if (json['buttons'] != null) {
         buttons = <Buttons>[];
         json['buttons'].forEach((v) {
@@ -159,21 +156,54 @@ class SheelaResponse {
       recipient = json['recipient'];
       conversationFlag = json['conversationFlag'];
       additionalInfo = json['additionalInfo'];
-      additionalInfoSheelaResponse = json['additionalInfo'] != null
-          ? AdditionalInfoSheela.fromJson(json['additionalInfo'])
-          : null;
+      additionalInfoSheelaResponse = json['additionalInfo'] != null ? AdditionalInfoSheela.fromJson(json['additionalInfo']) : null;
       sessionId = json['sessionId'];
       relationshipId = json['relationshipId'];
       isButtonNumber = (json['IsButtonNumber'] ?? false);
 
       if (buttons != null && buttons!.length > 0) {
-        List<Buttons>? buttonsList = [];
-        buttons!.forEach((element) {
-          if (element.hidden != sheela_hdn_btn_yes) {
-            buttonsList.add(element);
-          }
-        });
-        buttons = buttonsList;
+        // List<Buttons>? buttonsList = [];
+        // buttons!.forEach((element) {
+        //   if (element.hidden != sheela_hdn_btn_yes) {
+        //     buttonsList.add(element);
+        //   }
+        // });
+        buttons = [
+          Buttons.fromJson({
+            "payload": "Show Image Help",
+            "title": "Show Image Help",
+            "redirectTo": "media_help_screen",
+            "mute": "yes",
+            "imageUrl": "https://cdn.pixabay.com/photo/2014/09/20/23/44/website-454460_640.jpg",
+            "videoUrl": null,
+            "audioUrl": null,
+            "seq": 3,
+            "synonymsList": "['open image', 'show image', 'image help']"
+          }),
+          Buttons.fromJson({
+            "payload": "Show Audio Help",
+            "title": "Show Audio Help",
+            "redirectTo": "media_help_screen",
+            "mute": "yes",
+            "imageUrl": null,
+            "videoUrl": null,
+            "audioUrl": "http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3",
+            "seq": 4,
+            "synonymsList": "['open audio', 'show audio', 'audio help']"
+          }),
+          Buttons.fromJson({
+            "payload": "Show Video Help",
+            "title": "Show Video Help",
+            "redirectTo": "media_help_screen",
+            "mute": "yes",
+            "imageUrl": null,
+            "videoUrl": "https://www.youtube.com/watch?v=YYYWRtFBf_A",
+            "audioUrl": null,
+            "seq": 5,
+            "synonymsList": "['open Video', 'show Video', 'Video help']"
+          })
+        ];
+        // buttonsList;
       }
       pronunciationText = (json['pronunciationText'] ?? '');
     } catch (e, stackTrace) {
@@ -246,6 +276,7 @@ class Buttons {
   bool? needPhoto;
   bool? needAudio;
   bool? needVideo;
+  List<String>? synonymsList;
 
   Buttons({
     this.payload,
@@ -257,6 +288,7 @@ class Buttons {
     this.relationshipIdNotRequired = false,
     this.ttsResponse,
     this.btnRedirectTo,
+    this.synonymsList,
     this.imageUrl,
     this.videoUrl,
     this.audioUrl,
@@ -286,6 +318,14 @@ class Buttons {
       needPhoto = (json['needPhoto'] ?? false);
       needAudio = (json['needAudio'] ?? false);
       needVideo = (json['needVideo'] ?? false);
+      synonymsList =
+          // (json['title'] == "Show Image Help")
+          //     ? ['open image', 'show image', 'image help']
+          //     : json['title'] == "Show Audio Help"
+          //         ? ['open audio', 'show audio', 'audio help']
+          //         : ['open Video', 'show Video', 'Video help'];
+
+          json["synonymsList"] != null ? List<String>.from(json["synonymsList"]) : [];
       if (json['chatAttachments'] != null) {
         chatAttachments = <ChatAttachments>[];
         json['chatAttachments'].forEach((v) {
@@ -318,9 +358,9 @@ class Buttons {
     data['needPhoto'] = this.needPhoto;
     data['needAudio'] = this.needAudio;
     data['needVideo'] = this.needVideo;
+    data['synonymsList'] = this.synonymsList;
     if (this.chatAttachments != null) {
-      data['chatAttachments'] =
-          this.chatAttachments!.map((v) => v.toJson()).toList();
+      data['chatAttachments'] = this.chatAttachments!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -333,9 +373,7 @@ class Buttons {
       mediaType = CommonUtil().validString(json['mediaType'])?.trim() ?? '';
 
       // Check if both media and mediaType are not empty, and mediaType is 'image'.
-      isImageWithContent = (media!.isNotEmpty &&
-          mediaType!.isNotEmpty &&
-          mediaType!.toLowerCase() == strImageText);
+      isImageWithContent = (media!.isNotEmpty && mediaType!.isNotEmpty && mediaType!.toLowerCase() == strImageText);
     } catch (e, stackTrace) {
       // Log any errors during the process.
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -378,13 +416,7 @@ class ChatAttachments {
   Messages? messages;
   String? documentId;
 
-  ChatAttachments({this.id,
-    this.chatListId,
-    this.deliveredDateTime,
-    this.isRead,
-    this.messageType,
-    this.messages,
-    this.documentId});
+  ChatAttachments({this.id, this.chatListId, this.deliveredDateTime, this.isRead, this.messageType, this.messages, this.documentId});
 
   ChatAttachments.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -392,9 +424,7 @@ class ChatAttachments {
     deliveredDateTime = json['deliveredDateTime'];
     isRead = json['isRead'];
     messageType = json['messageType'];
-    messages = json['messages'] != null
-        ? Messages.fromJson(json['messages'])
-        : null;
+    messages = json['messages'] != null ? Messages.fromJson(json['messages']) : null;
     documentId = json['documentId'];
   }
 
@@ -418,16 +448,13 @@ class AdditionalInfoSheela {
   bool? reconfirmationFlag;
   SnoozeData? snoozeData;
 
-  AdditionalInfoSheela(
-      {this.sessionTimeoutMin, this.reconfirmationFlag, this.snoozeData});
+  AdditionalInfoSheela({this.sessionTimeoutMin, this.reconfirmationFlag, this.snoozeData});
 
   AdditionalInfoSheela.fromJson(Map<String, dynamic> json) {
     try {
       sessionTimeoutMin = json['sessionTimeoutMin'];
       reconfirmationFlag = json['reconfirmationFlag'] ?? false;
-      snoozeData = json['snoozeData'] != null
-          ? SnoozeData.fromJson(json['snoozeData'])
-          : null;
+      snoozeData = json['snoozeData'] != null ? SnoozeData.fromJson(json['snoozeData']) : null;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -451,13 +478,7 @@ class SnoozeData {
   String? estart;
   String? dosemeal;
 
-  SnoozeData({this.uformName,
-    this.activityName,
-    this.title,
-    this.description,
-    this.eid,
-    this.estart,
-    this.dosemeal});
+  SnoozeData({this.uformName, this.activityName, this.title, this.description, this.eid, this.estart, this.dosemeal});
 
   SnoozeData.fromJson(Map<String, dynamic> json) {
     try {
@@ -497,15 +518,7 @@ class Messages {
   bool? isPatient;
   String? chatMessageId;
 
-  Messages({this.id,
-    this.idTo,
-    this.type,
-    this.idFrom,
-    this.isread,
-    this.content,
-    this.isUpload,
-    this.isPatient,
-    this.chatMessageId});
+  Messages({this.id, this.idTo, this.type, this.idFrom, this.isread, this.content, this.isUpload, this.isPatient, this.chatMessageId});
 
   Messages.fromJson(Map<String, dynamic> json) {
     id = json['id'];
