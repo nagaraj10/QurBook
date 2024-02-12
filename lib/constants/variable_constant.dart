@@ -742,6 +742,12 @@ const String strAllowVoiceCloning =
     'Allow voice cloning'; //String declared for Allow voice cloning
 const String strSheelaDesc =
     'Sheela clones your voice for family member communication'; // descrption for voice cloning
+const String strUseClonedVoice =
+    'Use cloned voice'; //String declared for use cloned voice
+
+const String strUseClonedVoiceDesc =
+    'Option to allow using the cloned voice for sheela conversation';//description for Usecloned Voice
+
 const String strStatus = 'Status : ';
 //Create common String for voice cloning text
 const String strVoiceTerms = 'Accept And Continue';

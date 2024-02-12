@@ -98,6 +98,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   String? qa_subscription;
 
   bool voiceCloning = false;
+  ///Added for Family members
+  bool useClonedVoice = false;
   bool providerAllowedVoiceCloningModule = false;
   bool superAdminAllowedVoiceCloningModule = false;
   String voiceCloningStatus = strInActive; //set defaut value
@@ -1191,6 +1193,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                         ),
                         onTap: () => navigateToTermsOrStatusScreen()),
                   ),
+                _useClonedVoiceWidget(),
                 if (Platform.isAndroid)
                   Theme(
                       data: theme,
@@ -2120,6 +2123,12 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     }
   }
 
+  void handleUseClonedVoiceSwitch(bool isEnabled){
+    useClonedVoice =isEnabled;
+    setState(() {
+    });
+  }
+
   Future<void> handleVoiceCloneSwitchAction(bool isEnabled) async {
     if (superAdminAllowedVoiceCloningModule &&
         providerAllowedVoiceCloningModule) {
@@ -2198,6 +2207,34 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         ),
       );
 
+  ///Only for family members
+  Widget _useClonedVoiceWidget(){
+   return  Visibility(
+     visible:CommonUtil.isUSRegion()&& !isCareGiver,
+       child: ListTile(
+          leading: ImageIcon(
+            AssetImage(variable.icon_voice_cloning),
+            size: iconSize
+          ),
+          title: Text(variable.strUseClonedVoice,
+              style: TextStyle(
+                  fontSize: subtitle,)),
+          subtitle: Text(
+            variable.strUseClonedVoiceDesc,
+            maxLines: 2,
+            style: TextStyle(
+                fontSize: title4, color: Colors.grey),
+          ),
+          trailing: Transform.scale(
+            scale: switchTrail,
+            child: Switch(
+              value: useClonedVoice,
+              activeColor:Color(CommonUtil().getMyPrimaryColor()),
+              onChanged: handleUseClonedVoiceSwitch,
+            ),
+          ),),
+     );
+  }
   void closeDialog() => Navigator.of(
         context,
       ).pop();
