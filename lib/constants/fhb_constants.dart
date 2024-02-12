@@ -923,6 +923,7 @@ const String strProviderName = 'provider_name';
 const String strServiceType = 'serviceType';
 const String str_preferred_lab = 'preferred_lab';
 const String strHealthOrganizationId = 'healthOrganizationId';
+const String strPinCode = 'pin_code';
 
 const String strNoteChat = 'Note: ';
 const String strRRTAppointmentLabelChat =
