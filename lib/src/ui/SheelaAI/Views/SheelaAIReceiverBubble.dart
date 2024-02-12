@@ -348,7 +348,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                 chatAttachments:
                                     buttonData?.chatAttachments ?? []),
                           )?.then((value) {
-                            controller.isSheelaScreenActive = true;
+                            controller..isSheelaScreenActive = true
+                            ..playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
                           });
                         }
                       } else if (buttonData?.btnRedirectTo ==
@@ -367,7 +368,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             url: buttonData?.imageUrl ?? '',
                             titleSheelaPreview: strImageTitle,
                           ))?.then((value) {
-                            controller.isSheelaScreenActive = true;
+                            controller..isSheelaScreenActive = true
+                            ..playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
                           });
                         }
                       } else if (buttonData?.btnRedirectTo == strRedirectRedo) {
@@ -776,7 +778,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                     Get.to(() => ImageSlider(
                                           imageURl: (buttonData?.media ?? ''), // Pass the image link to the ImageSlider widget.
                                         ))?.then((value) {
-                                      controller.isSheelaScreenActive = true;
+                                      controller..isSheelaScreenActive = true
+                                      ..playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
                                     });
                                   },
                                   child: FadeInImage.assetNetwork(
@@ -893,7 +896,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
           ),
         )!
             .then((value) {
-          controller.updateTimer(enable: true);
+          controller..updateTimer(enable: true)
+          ..playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
         });
       } else {
         controller.isPlayPauseView.value = false;
@@ -905,7 +909,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
           ),
         )!
             .then((value) {
-          controller.updateTimer(enable: true);
+          controller..updateTimer(enable: true)
+          ..playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
         });
       }
     } catch (e, stackTrace) {
@@ -923,7 +928,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         audioUrl: (audioURLLink ?? ""),
       ))!
           .then((value) {
-        controller.updateTimer(enable: true);
+        controller..updateTimer(enable: true)
+        ..playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
       });
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
