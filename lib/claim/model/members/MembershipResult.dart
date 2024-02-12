@@ -14,7 +14,7 @@ class MemberShipResult {
   int? planId;
   String? creditAmount;
   int? noOfCarePlans;
-  int? noOfDoctorAppointments;
+  dynamic noOfDoctorAppointments;//Added dynamic because value may be possiblities to come as double and string or int
   int? labAppointment;
   int? medicineOrdering;
   int? tranportation;
@@ -52,12 +52,22 @@ class MemberShipResult {
       planSubscriptionInfoId = json['planSubscriptionInfoId'];
       planId = json['planId'];
       creditAmount = json['creditAmount'];
-      noOfCarePlans = json['noOfCarePlans'];
+      noOfCarePlans = json['noOfCarePlans'] != null
+          ? int.parse(json['noOfCarePlans'])
+          : null; // Parsing to int or null if it's null
       noOfDoctorAppointments = json['noOfDoctorAppointments'];
-      labAppointment = json['labAppointment'];
-      medicineOrdering = json['medicineOrdering'];
-      tranportation = json['tranportation'];
-      homecareServices = json['homecareServices'];
+      labAppointment = json['labAppointment'] != null
+          ? int.parse(json['labAppointment'])
+          : null; // Parsing to int or null if it's null
+      medicineOrdering = json['medicineOrdering'] != null
+          ? int.parse(json['medicineOrdering'])
+          : null;
+      tranportation = json['tranportation'] != null
+          ? int.parse(json['tranportation'])
+          : null; // Parsing to int or null if it's null
+      homecareServices = json['homecareServices'] != null
+          ? int.parse(json['homecareServices'])
+          : null; // Parsing to int or null if it's null
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }

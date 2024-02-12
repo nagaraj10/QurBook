@@ -7,10 +7,12 @@ import 'package:myfhb/landing/model/membership_detail_response.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 
+import '../../claim/model/members/MembershipResult.dart';
+
 class CorpUsersWelcomeDialog extends StatelessWidget {
   const CorpUsersWelcomeDialog(this.cpUser, this.result, {Key? key})
       : super(key: key);
-  final Result result;
+  final MemberShipResult result;
   final MyProfileResult? cpUser;
   @override
   Widget build(BuildContext context) {

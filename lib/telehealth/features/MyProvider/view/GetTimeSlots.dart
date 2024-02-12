@@ -43,6 +43,8 @@ class GetTimeSlots extends StatelessWidget {
   final DateTime? selectedDate;
   bool? isReshedule;
   FlutterToast toast = FlutterToast();
+  num? doctorAppoinmentTransLimit;
+  num? noOfDoctorAppointments;
   List<String?> bookingIds = [];
   final List<HealthOrganizationResult>? healthOrganizationResult;
   final List<ResultFromHospital>? resultFromHospitalList;
@@ -80,7 +82,9 @@ class GetTimeSlots extends StatelessWidget {
       this.body,
       this.isFromFollowReschedule,
       this.isFromFollowUpApp,
-      this.isFromFollowUpTake});
+      this.isFromFollowUpTake,
+        this.doctorAppoinmentTransLimit,
+        this.noOfDoctorAppointments});
 
   @override
   Widget build(BuildContext context) {
@@ -190,6 +194,8 @@ class GetTimeSlots extends StatelessWidget {
             refresh: () {
               isRefresh!();
             },
+            doctorAppoinmentTransLimit: doctorAppoinmentTransLimit,
+            noOfDoctorAppointments:noOfDoctorAppointments,
             isFromHospital: isFromHospital,
             isFromFollowReschedule: isFromFollowReschedule,
             isFromFollowUpApp: isFromFollowUpApp,
