@@ -35,11 +35,13 @@ class FamilyListView {
         _familyListBloc.getSharedByUsersCombinedList(data) ?? [];
 
     return showDialog(
+        useSafeArea: true,
         context: context,
         builder: (context) {
-          return Material(
-              type: MaterialType.transparency,
-              child: Container(
+          return Align(
+              alignment: Alignment.centerLeft,
+              child: Material(
+                type: MaterialType.transparency,
                 child: Column(
                   children: <Widget>[
                     if (data != null)
@@ -160,8 +162,12 @@ class FamilyListView {
                 ),
               ),
               Container(
+                alignment: Alignment.center,
                 constraints: BoxConstraints(
-                  maxHeight: 440.0.h,
+                  maxHeight: (MediaQuery.of(context).orientation ==
+                          Orientation.landscape)
+                      ? MediaQuery.sizeOf(context).height / 1.5
+                      : MediaQuery.sizeOf(context).height / 2,
                 ),
                 child: ListView.builder(
                   shrinkWrap: true,
