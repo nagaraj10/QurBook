@@ -2218,15 +2218,10 @@ makeApiRequest is used to update the data with latest data
                   responseRecived = careGiverSheela;
                 }
                 for (var btn in conversations.last?.buttons) {
-                  if ((btn.title ?? '').toLowerCase() == responseRecived.toLowerCase()) {
+                  if ((btn.title ?? '').toLowerCase() == responseRecived.toLowerCase() ||
+                      (btn.synonymsList != null && btn.synonymsList.any((synonym) => synonym.toLowerCase() == responseRecived.toLowerCase()))) {
                     button = btn;
-                  } else if (btn.synonymsList != null) {
-                    for (var synonym in btn.synonymsList) {
-                      if (synonym.toLowerCase() == responseRecived.toLowerCase()) {
-                        button = btn;
-                        break; // Exit the synonym loop if a match is found
-                      }
-                    }
+                    break; // Exit the loop if a match is found
                   }
                 }
               } else if ((conversations.last?.isButtonNumber ?? false)) {
