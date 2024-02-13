@@ -391,7 +391,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                   style: TextStyle(
                                                       fontSize:
                                                           CommonUtil().isTablet!
-                                                              ? tabHeader1
+                                                              ? tabTitle
                                                               : mobileHeader1)),
                                               style: TextButton.styleFrom(
                                                 foregroundColor:
