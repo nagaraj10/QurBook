@@ -200,7 +200,10 @@ class RegimentService {
         followEventParams =
             '&followevent=1&context=${followEventContext ?? ''}';
       }
-      //Get the Application name and convert to Upper case
+
+      /* Gets the application name from CommonUtil and converts it to uppercase.
+      This is used to identify the application name in a standardized way.
+      */
       var source =
           (await CommonUtil().getSourceName()).toString().toUpperCase();
       var response = await ApiServices.post(

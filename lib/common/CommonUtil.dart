@@ -7734,8 +7734,12 @@ class CommonUtil {
   }
 
   /**
-   * Common method to get the app name
+    Gets the source name for the app based on the package name.
+    Checks the package name from PackageInfo against known bundle IDs 
+    to determine the source name for the current app.
+    Returns a string containing the determined source name.
    */
+
   getSourceName() async {
     var source = '';
     final packageInfo = await PackageInfo.fromPlatform();
