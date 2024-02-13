@@ -13,10 +13,7 @@ class MemberShipDetailResponse {
     try {
       isSuccess = json['isSuccess'];
       if (json['result'] != null) {
-            result = <MemberShipResult>[];
-            json['result'].forEach((v) {
-              result!.add(MemberShipResult.fromJson(v));
-            });
+            result = List<MemberShipResult>.from(json["result"].map((x) => MemberShipResult.fromJson(x)));
           }
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
