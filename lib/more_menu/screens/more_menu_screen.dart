@@ -78,7 +78,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   GetDeviceSelectionModel? selectionResult;
   CreateDeviceSelectionModel? createDeviceSelectionModel;
   UpdateDeviceModel? updateDeviceModel;
-  final  _helper = ApiBaseHelper();
 
   int? preColor = 0xff5e1fe0;
   int? greColor = 0xff753aec;
@@ -180,8 +179,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     super.initState();
     qurhomeDashboardController.getModuleAccess();
     if (CommonUtil.REGION_CODE == 'US') {
-      ///It will return voiceid if voice id is not empty which means voice is assigned.
-      SheelAIAPIService().getVoiceId().then((value) =>isVoiceAssigned =value?.isNotEmpty ??false);
       getAvailableDevices();
     }
     PackageInfo.fromPlatform().then((packageInfo) {
@@ -2087,7 +2084,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             false;
     useClonedVoice = getDeviceSelectionModel.result![0].profileSetting!.useClonedVoice ??
         false;
-
+    isVoiceAssigned = getDeviceSelectionModel.result![0].profileSetting!.voiceCloneAssigned ?? false;
     //set the bool value when provider has allowed the permssion
     providerAllowedVoiceCloningModule = getDeviceSelectionModel
             .result![0]
@@ -2134,7 +2131,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }
 
   Future<void> handleUseClonedVoiceSwitch(bool isEnabled) async {
-    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if(isVoiceAssigned){
      await  createAppColorSelection(preColor, greColor);
       setState(() {
@@ -2226,28 +2222,33 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   Widget _useClonedVoiceWidget(){
    return  Visibility(
      visible:CommonUtil.isUSRegion(),
-       child: ListTile(
-          leading: ImageIcon(
-            AssetImage(variable.icon_voice_cloning),
-            size: iconSize
-          ),
-          title: Text(variable.strUseClonedVoice,
-              style: TextStyle(
-                  fontSize: subtitle,)),
-          subtitle: Text(
-            variable.strUseClonedVoiceDesc,
-            maxLines: 2,
-            style: TextStyle(
-                fontSize: title4, color: Colors.grey),
-          ),
-          trailing: Transform.scale(
-            scale: switchTrail,
-            child: Switch(
-              value: useClonedVoice,
-              activeColor:Color(CommonUtil().getMyPrimaryColor()),
-              onChanged: handleUseClonedVoiceSwitch,
-            ),
-          ),),
+       child: Column(
+         children: [
+           Divider(),
+           ListTile(
+              leading: ImageIcon(
+                AssetImage(variable.icon_voice_cloning),
+                size: iconSize
+              ),
+              title: Text(variable.strUseClonedVoice,
+                  style: TextStyle(
+                      fontSize: subtitle,)),
+              subtitle: Text(
+                variable.strUseClonedVoiceDesc,
+                maxLines: 2,
+                style: TextStyle(
+                    fontSize: title4, color: Colors.grey),
+              ),
+              trailing: Transform.scale(
+                scale: switchTrail,
+                child: Switch(
+                  value: useClonedVoice,
+                  activeColor:Color(CommonUtil().getMyPrimaryColor()),
+                  onChanged: handleUseClonedVoiceSwitch,
+                ),
+              ),),
+         ],
+       ),
      );
   }
   void closeDialog() => Navigator.of(

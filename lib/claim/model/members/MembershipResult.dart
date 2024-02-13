@@ -3,22 +3,23 @@ import '../../../common/CommonUtil.dart';
 
 class MemberShipResult {
   String? id;
-  String? healthOrganizationName;
-  String? healthOrganizationId;
-  String? planName;
-  MemberShipAdditionalInfo? additionalInfo;
-  String? planStartDate;
-  String? planEndDate;
-  String? planSubscriptionInfoId;
+    String? healthOrganizationName;
+    String? healthOrganizationId;
+    String? planName;
+    MemberShipAdditionalInfo? additionalInfo;
+    String? planStartDate;
+    String? planEndDate;
+    String? planSubscriptionInfoId;
   /// New Parameters added for Membership Benefits
-  int? planId;
-  String? creditAmount;
-  int? noOfCarePlans;
-  dynamic noOfDoctorAppointments;//Added dynamic because value may be possiblities to come as double and string or int
-  int? labAppointment;
-  int? medicineOrdering;
-  int? tranportation;
-  int? homecareServices;
+    int? planId;
+    String? creditAmount;
+    int? noOfCarePlans;
+    int? noOfDoctorAppointments;
+    int? labAppointment;
+    int? medicineOrdering;
+    int? tranportation;
+    int? homecareServices;
+    int? familyMembersAllowed;
 
   MemberShipResult(
       {this.id,
@@ -52,22 +53,13 @@ class MemberShipResult {
       planSubscriptionInfoId = json['planSubscriptionInfoId'];
       planId = json['planId'];
       creditAmount = json['creditAmount'];
-      noOfCarePlans = json['noOfCarePlans'] != null
-          ? int.parse(json['noOfCarePlans'])
-          : null; // Parsing to int or null if it's null
+      noOfCarePlans = json['noOfCarePlans'];
       noOfDoctorAppointments = json['noOfDoctorAppointments'];
-      labAppointment = json['labAppointment'] != null
-          ? int.parse(json['labAppointment'])
-          : null; // Parsing to int or null if it's null
-      medicineOrdering = json['medicineOrdering'] != null
-          ? int.parse(json['medicineOrdering'])
-          : null;
-      tranportation = json['tranportation'] != null
-          ? int.parse(json['tranportation'])
-          : null; // Parsing to int or null if it's null
-      homecareServices = json['homecareServices'] != null
-          ? int.parse(json['homecareServices'])
-          : null; // Parsing to int or null if it's null
+      labAppointment = json['labAppointment'];
+      medicineOrdering = json['medicineOrdering'];
+      tranportation = json['tranportation'];
+      homecareServices = json['homecareServices'];
+      familyMembersAllowed = json['familyMembersAllowed'];
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -93,6 +85,7 @@ class MemberShipResult {
     data['medicineOrdering'] = medicineOrdering;
     data['tranportation'] = tranportation;
     data['homecareServices'] = homecareServices;
+    data['familyMembersAllowed'] = familyMembersAllowed;
     return data;
   }
 }
