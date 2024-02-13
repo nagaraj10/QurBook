@@ -194,6 +194,8 @@ const String lock_icon = 'assets/lock_icon.png';
 const String remove_user = 'assets/settings/remove_user.png';
 const String icon_voice_cloning =
     'assets/settings/icon_voicecloning.png'; //path where voice clon icon is placed
+const String icon_mic_icon =
+    'assets/settings/mic_icon.png'; //path where voice clon icon is placed
 
 const String icon_records = 'assets/navicons/records.png';
 const String icon_chat = 'assets/navicons/chat.png';

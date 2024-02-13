@@ -1147,7 +1147,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     visible: superAdminAllowedVoiceCloningModule,
                     child: ListTile(
                         leading: ImageIcon(
-                          AssetImage(variable.icon_voice_cloning),
+                          AssetImage(CommonUtil.isUSRegion()?variable.icon_mic_icon:variable.icon_voice_cloning),
                           size: iconSize,
                           color: providerAllowedVoiceCloningModule
                               ? Colors.black
