@@ -38,7 +38,8 @@ class Devicedashboard extends StatefulWidget {
 }
 
 class _DevicedashboardScreenState extends State<Devicedashboard> {
-  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state =
+      GlobalKey<ScaffoldMessengerState>();
   TextEditingController deviceController = TextEditingController(text: '');
   TextEditingController pulse = TextEditingController(text: '');
   TextEditingController memoController = TextEditingController(text: '');
@@ -72,7 +73,6 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
     deviceName = widget.arguments!.deviceName;
     catgoryDataList = PreferenceUtil.getCategoryType()!;
@@ -89,12 +89,6 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
   @override
   void dispose() {
     super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Device Dashboard Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -160,13 +154,15 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                       });
                     }*/
                         ,
-                        style:  OutlinedButton.styleFrom(
-                        foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                        backgroundColor: Colors.transparent,
-                        side: BorderSide(
-                            color: Color(CommonUtil().getMyPrimaryColor())),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor:
+                              Color(CommonUtil().getMyPrimaryColor()),
+                          backgroundColor: Colors.transparent,
+                          side: BorderSide(
+                              color: Color(CommonUtil().getMyPrimaryColor())),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
                         child: Text('OK'),
                       ),
                       //submitButton(_otpVerifyBloc)
@@ -431,8 +427,8 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
             .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
         postMediaData[parameters.strhealthRecordCategory] =
             categoryDataObj.toJson();
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         if (catgoryDataList == null) {
           await _categoryListBlock.getCategoryLists().then((value) {

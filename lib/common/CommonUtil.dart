@@ -355,6 +355,19 @@ class CommonUtil {
     });
   }
 
+  // Function to replace a separator in a string with an empty string
+  String? replaceSeparator({required String? value, required String separator}) {
+    // Check if the value is not null and contains the separator
+    if (value != null && value.contains(separator)) {
+      // If it does, replace all occurrences of the separator with an empty string
+      return value.replaceAll(separator, '');
+    }
+    // If the value is null or doesn't contain the separator, return the original value
+    return value;
+  }
+
+
+
   void commonMethodToSetPreference() async {
     var apiBaseHelper = ApiBaseHelper();
 
@@ -5487,21 +5500,60 @@ class CommonUtil {
   }
 
   String showDescriptionTextForm(FieldModel fieldModel) {
+    // Initialize desc with an empty string
     String? desc = '';
 
-    if ((fieldModel?.isSurvey ?? false) &&
-        (fieldModel.strTitleDesc ?? "").trim().isNotEmpty) {
-      desc = fieldModel.strTitleDesc;
-    } else if (fieldModel.description != null && fieldModel.description != '') {
-      desc = fieldModel.description;
-    } else if (fieldModel.title != null && fieldModel.title != '') {
-      desc = fieldModel.title;
+    // Check if the current language is English
+    if (CommonUtil().isLanguageEnglish() ?? false) {
+      // Check if it's a survey and title description is not empty
+      if ((fieldModel?.isSurvey ?? false) &&
+          (fieldModel.strTitleDesc ?? "").trim().isNotEmpty) {
+        // Set desc to title description
+        desc = fieldModel.strTitleDesc;
+      }
+      // Check if description is not null and not empty
+      else if (fieldModel.description != null &&
+          fieldModel.description != '') {
+        // Set desc to description
+        desc = fieldModel.description;
+      }
+      // Check if title is not null and not empty
+      else if (fieldModel.title != null && fieldModel.title != '') {
+        // Set desc to title
+        desc = fieldModel.title;
+      } else {
+        // Set desc to empty string
+        desc = '';
+      }
     } else {
-      desc = '';
+      // For other languages
+      // Check if it's a survey and title description is not empty
+      if ((fieldModel?.isSurvey ?? false) &&
+          (fieldModel.strTitleDesc ?? "").trim().isNotEmpty) {
+        // Set desc to title description
+        desc = fieldModel.strTitleDesc;
+      }
+      // Check if translated description is not null and not empty
+      else if (fieldModel.translatedDescription != null &&
+          fieldModel.translatedDescription != '') {
+        // Set desc to translated description
+        desc = fieldModel.translatedDescription;
+      }
+      // Check if translated title is not null and not empty
+      else if (fieldModel.translatedTitle != null &&
+          fieldModel.translatedTitle != '') {
+        // Set desc to translated title
+        desc = fieldModel.translatedTitle;
+      } else {
+        // Set desc to empty string
+        desc = '';
+      }
     }
 
+    // Return the parsed HTML string
     return parseHtmlString(desc);
   }
+
 
   String showDescTextRegimenList(VitalsData vitalsData) {
     String? desc = '';
@@ -6540,11 +6592,6 @@ class CommonUtil {
       } catch (e, stackTrace) {
         CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
-      fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'call',
-        'navigationPage': 'TeleHelath Call screen',
-      });
 
       if (callType.toLowerCase() == 'audio') {
         Provider.of<AudioCallProvider>(Get.context!, listen: false)
@@ -7653,14 +7700,25 @@ class CommonUtil {
   /// @return True if the language is English, false otherwise.
   bool? checkIsLanguageEnglish(String? preferredLanguage) {
     // Check if the preferredLanguage is not null and matches one of the English language codes
-    if (preferredLanguage != null &&
-        (preferredLanguage == 'en-IN' ||  // English - India
-            preferredLanguage == 'en' ||   // English
-            preferredLanguage == 'undef')) {  // Undefined language (assuming 'undef' represents a special case)
-      return true;  // If any of the conditions are met, return true
-    } else {
-      return false;  // If none of the conditions are met, return false
+    try {
+      if (preferredLanguage != null &&
+              (preferredLanguage == 'en-IN' ||  // English - India
+                  preferredLanguage == 'en' ||   // English
+                  preferredLanguage == 'undef')) {  // Undefined language (assuming 'undef' represents a special case)
+            return true;  // If any of the conditions are met, return true
+          } else {
+            return false;  // If none of the conditions are met, return false
+          }
+    } catch (e,stackTrace) {
+      appLogs(message: e, stackTrace: stackTrace);
     }
+  }
+
+  bool? isLanguageEnglish() {
+    bool isCheckEnglishLang = true;
+    // Attempt to check if the current language is English using the checkIsLanguageEnglish method
+    isCheckEnglishLang = (checkIsLanguageEnglish(getCurrentLanCode()) ?? true);
+    return isCheckEnglishLang;
   }
 
   // Function to initialize and get the CreateTicketController instance

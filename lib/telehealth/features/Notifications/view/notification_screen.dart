@@ -7,50 +7,51 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
-import 'package:myfhb/QurHub/View/HubListView.dart';
-import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
-import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
-import 'package:myfhb/chat_socket/view/ChatDetail.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
-import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
-import 'package:myfhb/src/ui/SheelaAI/Views/SuperMaya.dart';
-import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/appointments/AppointmentNotificationPayment.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
-import 'package:myfhb/telehealth/features/MyProvider/viewModel/CreateAppointmentViewModel.dart';
-import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
-import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
-import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../QurHub/Controller/HubListViewController.dart';
+import '../../../../QurHub/View/HubListView.dart';
+import '../../../../Qurhome/Common/GradientAppBarQurhome.dart';
+import '../../../../Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import '../../../../caregiverAssosication/caregiverAPIProvider.dart';
+import '../../../../chat_socket/view/ChatDetail.dart';
 import '../../../../claim/screen/ClaimRecordDisplay.dart';
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
+import '../../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/fhb_parameters.dart' as parameters;
+import '../../../../constants/router_variable.dart';
 import '../../../../constants/router_variable.dart' as routervariable;
 import '../../../../constants/router_variable.dart' as router;
 import '../../../../landing/view/landing_arguments.dart';
 import '../../../../myPlan/view/myPlanDetail.dart';
+import '../../../../my_family_detail/models/my_family_detail_arguments.dart';
 import '../../../../regiment/models/regiment_arguments.dart';
 import '../../../../regiment/view_model/regiment_view_model.dart';
 import '../../../../src/model/home_screen_arguments.dart';
 import '../../../../src/model/user/user_accounts_arguments.dart';
 import '../../../../src/ui/MyRecord.dart';
+import '../../../../src/ui/SheelaAI/Models/sheela_arguments.dart';
+import '../../../../src/ui/SheelaAI/Views/SuperMaya.dart';
+import '../../../../src/ui/settings/CaregiverSettng.dart';
 import '../../../../src/utils/PageNavigator.dart';
 import '../../../../src/utils/language/language_utils.dart';
 import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../../ticket_support/view/detail_ticket_view_screen.dart';
 import '../../../../voice_cloning/model/voice_clone_status_arguments.dart';
 import '../../../../widgets/GradientAppBar.dart';
 import '../../../../widgets/checkout_page.dart';
+import '../../MyProvider/model/appointments/AppointmentNotificationPayment.dart';
+import '../../MyProvider/view/BookingConfirmation.dart';
 import '../../MyProvider/view/TelehealthProviders.dart';
+import '../../MyProvider/viewModel/CreateAppointmentViewModel.dart';
+import '../../appointments/controller/AppointmentDetailsController.dart';
 import '../../appointments/model/cancelAppointments/cancelModel.dart';
 import '../../appointments/model/fetchAppointments/city.dart';
 import '../../appointments/model/fetchAppointments/doctor.dart' as doctorObj;
 import '../../appointments/model/fetchAppointments/past.dart';
+import '../../appointments/view/AppointmentDetailScreen.dart';
 import '../../appointments/view/resheduleMain.dart';
 import '../../appointments/viewModel/cancelAppointmentViewModel.dart';
 import '../constants/notification_constants.dart' as constants;
@@ -82,10 +83,7 @@ class _NotificationScreen extends State<NotificationScreen> {
     qurhomeController.setActiveQurhomeDashboardToChat(
       status: false,
     );
-
-    mInitialTime = DateTime.now();
-    // Provider.of<FetchNotificationViewModel>(context, listen: false)
-    //     .fetchNotifications();
+    FABService.trackCurrentScreen(FBANotificationsListScreen);
     Provider.of<FetchNotificationViewModel>(context, listen: false)
         .pagingController
         .addPageRequestListener((pageKey) {
@@ -100,12 +98,6 @@ class _NotificationScreen extends State<NotificationScreen> {
   @override
   void dispose() {
     super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Notification Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
     notificationData?.pagingController.dispose();
   }
 
@@ -168,7 +160,6 @@ class _NotificationScreen extends State<NotificationScreen> {
     return AppBar(
       flexibleSpace:
           widget.isFromQurday ? GradientAppBarQurhome() : GradientAppBar(),
-      //centerTitle: true,
       leading: IconWidget(
         icon: Icons.arrow_back_ios,
         colors: Colors.white,
@@ -196,38 +187,6 @@ class _NotificationScreen extends State<NotificationScreen> {
           },
         ),
       ],
-
-      // (notificationData?.deleteMode ?? false)
-      //     ? [
-      //         InkWell(
-      //           onTap: () {
-      //             notificationData.selectOrDeselectAllTapped();
-      //           },
-      //           child: Center(
-      //             child: Text(
-      //               'Select All',
-      //               style: TextStyle(
-      //                 color: Colors.white,
-      //               ),
-      //             ),
-      //           ),
-      //         ),
-      //         SizedBox(
-      //           width: 16,
-      //         ),
-      //         IconWidget(
-      //           icon: Icons.delete,
-      //           colors: Colors.white,
-      //           size: 24.0.sp,
-      //           onTap: () {
-      //             showDeleteAlert(context);
-      //           },
-      //         ),
-      //         SizedBox(
-      //           width: 16,
-      //         )
-      //       ]
-      //     : [],
     );
   }
 
@@ -245,8 +204,6 @@ class _NotificationScreen extends State<NotificationScreen> {
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-
-      //print(e);
     }
     return true;
   }
@@ -254,7 +211,7 @@ class _NotificationScreen extends State<NotificationScreen> {
   Future<void> _showNotificationClearDialog() async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
@@ -301,15 +258,12 @@ class _NotificationScreen extends State<NotificationScreen> {
     body["medium"] = "Push";
     body["clearIds"] = [];
     body["isClearAll"] = true;
-    print(body);
     FetchNotificationService().clearNotifications(body).then((data) {
       if (data != null && data) {
         Provider.of<FetchNotificationViewModel>(context, listen: false)
-          //..clearNotifications()
           ..fetchNotifications();
       } else {
         Provider.of<FetchNotificationViewModel>(context, listen: false)
-          //..clearNotifications()
           ..fetchNotifications();
       }
     });
@@ -322,15 +276,12 @@ class _NotificationScreen extends State<NotificationScreen> {
         req.logIds = [];
         req.isMarkAllRead = true;
         final body = req.toJson();
-        print(body);
         FetchNotificationService().updateNsOnTapAction(body).then((data) {
           if (data != null && data['isSuccess']) {
             Provider.of<FetchNotificationViewModel>(context, listen: false)
-              //..clearNotifications()
               ..fetchNotifications();
           } else {
             Provider.of<FetchNotificationViewModel>(context, listen: false)
-              //..clearNotifications()
               ..fetchNotifications();
           }
         });
@@ -347,48 +298,9 @@ class _NotificationScreen extends State<NotificationScreen> {
       notificationData = Provider.of<FetchNotificationViewModel>(context);
     }
     return listView(notificationData!.pagingController.itemList);
-    // switch (notificationData.loadingStatus) {
-    //   case LoadingStatus.searching:
-    //     return CommonCircularIndicator();
-    //   case LoadingStatus.completed:
-    //     return (notificationData != null)
-    //         ? (notificationData.pagingController.itemList != null)
-    //             ? (notificationData.pagingController.itemList != null) &&
-    //                     (notificationData.pagingController.itemList.length > 0)
-    //                 ? listView(notificationData.pagingController.itemList)
-    //                 : emptyNotification()
-
-    //             : emptyNotification()
-    //         : emptyNotification();
-    //   case LoadingStatus.empty:
-    //   default:
-    //     return emptyNotification();
-    // }
   }
 
   Widget listView(List<NotificationResult>? notification) {
-    // List<NotificationResult> pendingNotification = List();
-    // List<NotificationResult> readNotification = List();
-    // List<NotificationResult> mainNotificationList = List();
-
-    // notification.result.sort((a, b) => b.createdOn.compareTo(a.createdOn));
-
-    // for (int i = 0; i < notification.result.length; i++) {
-    //   if (!notification?.result[i]?.isActionDone &&
-    //       notification?.result[i]?.isUnread) {
-    //     //this is for action button notification
-    //     pendingNotification.add(notification.result[i]);
-    //   } else if (notification?.result[i]?.isUnread) {
-    //     //this is for normal notification
-    //     pendingNotification.add(notification.result[i]);
-    //   } else {
-    //     readNotification.add(notification.result[i]);
-    //   }
-
-    //   mainNotificationList = []
-    //     ..addAll(pendingNotification)
-    //     ..addAll(readNotification);
-    // }
     return PagedListView(
       pagingController: notificationData!.pagingController,
       builderDelegate: PagedChildBuilderDelegate<NotificationResult>(
@@ -399,12 +311,6 @@ class _NotificationScreen extends State<NotificationScreen> {
         firstPageErrorIndicatorBuilder: (_) => emptyNotification(),
       ),
     );
-    // return ListView.builder(
-    //     itemCount: notification.length,
-    //     shrinkWrap: true,
-    //     itemBuilder: (context, index) {
-    //       return notificationView(notification: notification[index]);
-    //     });
   }
 
   Widget emptyNotification() {
@@ -426,13 +332,7 @@ class _NotificationScreen extends State<NotificationScreen> {
       return (message.messageBody == "" || message.messageTitle == "")
           ? Container()
           : InkWell(
-              onLongPress: () {
-                // if ((notificationData?.deleteLogId?.length ?? 0) == 0) {
-                //   notificationData.deleteMode = true;
-                //   notification.deleteSelected = true;
-                //   notificationData.addTheidToDelete(notification.id);
-                // }
-              },
+              onLongPress: () {},
               splashColor: Color(CommonUtil.secondaryGrey),
               onTap: notificationData!.deleteMode
                   ? () {
@@ -719,187 +619,6 @@ class _NotificationScreen extends State<NotificationScreen> {
                 ),
               ),
             );
-      /* : Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 5, bottom: 5),
-              child: Column(
-                children: [
-                  ListTile(
-                    onTap: () {},
-                    title: TextWidget(
-                      text: message.messageTitle,
-                      colors: Colors.black,
-                      overflow: TextOverflow.visible,
-                      fontWeight: FontWeight.w600,
-                      fontsize: 15.0.sp,
-                      softwrap: true,
-                    ),
-                    subtitle: TextWidget(
-                      text: message.messageBody,
-                      colors: Colors.grey,
-                      overflow: TextOverflow.visible,
-                      fontWeight: FontWeight.w500,
-                      fontsize: 14.0.sp,
-                      softwrap: true,
-                    ),
-                    trailing: Column(
-                      children: <Widget>[
-                        TextWidget(
-                          text: constants.notificationDate(
-                              notification.result[index].createdOn),
-                          colors: Colors.black,
-                          overflow: TextOverflow.visible,
-                          fontWeight: FontWeight.w500,
-                          fontsize: 12.0.sp,
-                          softwrap: true,
-                        ),
-                        TextWidget(
-                          text: constants.notificationTime(
-                              notification.result[index].createdOn),
-                          colors: Color(CommonUtil().getMyPrimaryColor()),
-                          overflow: TextOverflow.visible,
-                          fontWeight: FontWeight.w600,
-                          fontsize: 12.0.sp,
-                          softwrap: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                  (payload?.templateName == constants.strCancelByDoctor ||
-                          payload?.templateName ==
-                              constants.strRescheduleByDoctor)
-                      ? Padding(
-                          padding: EdgeInsets.only(left: 20, right: 20),
-                          child: Row(
-                            children: [
-                              OutlinedButton(
-                                onPressed: !notification
-                                        ?.result[index]?.isActionDone
-                                    ? () {
-                                        var body = {};
-                                        body['templateName'] =
-                                            payload?.templateName;
-                                        body['contextId'] =
-                                            payload?.bookingId;
-                                        _displayDialog(
-                                            context,
-                                            [
-                                              Past(
-                                                  bookingId: notification
-                                                      .result[index]
-                                                      .messageDetails
-                                                      .payload
-                                                      .bookingId,
-                                                  plannedStartDateTime:
-                                                      notification
-                                                          .result[index]
-                                                          .messageDetails
-                                                          .payload
-                                                          .plannedStartDateTime)
-                                            ],
-                                            body);
-                                      }
-                                    : null,
-                                child: TextWidget(
-                                  text: AppConstants.cancel,
-                                  colors: !notification
-                                          ?.result[index]?.isActionDone
-                                      ? Color(
-                                          CommonUtil().getMyPrimaryColor())
-                                      : Colors.grey,
-                                  overflow: TextOverflow.visible,
-                                  fontWeight: FontWeight.w600,
-                                  fontsize: 15.0.sp,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 15.0.w,
-                              ),
-                              OutlinedButton(
-                                onPressed: !notification
-                                        ?.result[index]?.isActionDone
-                                    ? () {
-                                        //Reschedule
-                                        var body = {};
-                                        body['templateName'] =
-                                            payload?.templateName;
-                                        body['contextId'] =
-                                            payload?.bookingId;
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ResheduleMain(
-                                                    isFromNotification:
-                                                        false,
-                                                    closePage: (value) {},
-                                                    isReshedule: true,
-                                                    doc: Past(
-                                                        doctor: Doctor(
-                                                            id: notification
-                                                                 .result[
-                                                                    index]
-                                                                .messageDetails
-                                                                .payload
-                                                                .doctorId),
-                                                        doctorSessionId:
-                                                            notification
-
-                     .result[
-                                                                    index]
-                                                                .messageDetails
-                                                                .payload
-                                                                .doctorSessionId,
-                                                        healthOrganization: City(
-                                                            id: notification
-                                                                .result[
-                                                                    index]
-                                                                .messageDetails
-                                                                .payload
-                                                                .healthOrganizationId),
-                                                        bookingId: notification
-                                                            .result[index]
-                                                            .messageDetails
-                                                            .payload
-                                                            .bookingId),
-                                                    body: body,
-                                                  )),
-                                        ).then((value) {
-                                          Provider.of<
-                                                  FetchNotificationViewModel>(
-                                              context,
-                                              listen: false)
-                                            ..clearNotifications()
-                                            ..fetchNotifications();
-                                        });
-                                      }
-                                    : null,
-                                child: TextWidget(
-                                  text: AppConstants.reschedule,
-                                  colors: !notification
-                                          ?.result[index]?.isActionDone
-                                      ? Color(
-                                          CommonUtil().getMyPrimaryColor())
-                                      : Colors.grey,
-                                  overflow: TextOverflow.visible,
-                                  fontWeight: FontWeight.w600,
-                                  fontsize: 15.0.sp,
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      : Container()
-                ],
-              ),
-            ),
-            Container(
-              height: 0.2,
-              color: Colors.black,
-            )
-          ],
-        ); */
     } else {
       return Container();
     }
@@ -1219,12 +938,6 @@ class _NotificationScreen extends State<NotificationScreen> {
             var rawBody, rawTitle;
             rawBody = result.messageDetails?.rawMessage?.messageBody;
             rawTitle = result.messageDetails?.rawMessage?.messageTitle;
-
-            fbaLog(eveParams: {
-              'eventTime': '${DateTime.now()}',
-              'ns_type': 'sheela',
-              'navigationPage': 'Sheela Start Page',
-            });
 
             if (rawBody != null && rawBody != '') {
               if (result.messageDetails?.payload?.isSheela ?? false) {

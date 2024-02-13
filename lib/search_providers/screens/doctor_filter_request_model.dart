@@ -9,14 +9,14 @@ class DoctorFilterRequestModel {
   int? size;
   String? searchText;
   List<Filter>? filters;
-  String? healthOrganizationType;
+  List<Sorts>? sorts; // Declares a nullable list of Sorts objects
 
   DoctorFilterRequestModel({
     this.page,
     this.size,
     this.searchText,
     this.filters,
-    this.healthOrganizationType,
+    this.sorts,
   });
 
   factory DoctorFilterRequestModel.fromJson(Map<String, dynamic> json) => DoctorFilterRequestModel(
@@ -24,16 +24,21 @@ class DoctorFilterRequestModel {
         size: json["size"],
         searchText: json["searchText"],
         filters: json["filters"] == null ? [] : List<Filter>.from(json["filters"]!.map((x) => Filter.fromJson(x))),
-        healthOrganizationType: json["healthOrganizationType"],
+        sorts: json["sorts"] == null ? [] : List<Sorts>.from(json["sorts"]!.map((x) => Sorts.fromJson(x))),
+
       );
 
-  Map<String, dynamic> toJson() => {
-        "page": page,
-        "size": size,
-        "searchText": searchText,
-        "filters": filters == null ? [] : List<dynamic>.from(filters!.map((x) => x.toJson())),
-        "healthOrganizationType": healthOrganizationType,
-      };
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> json = {
+      "page": page,
+      "size": size,
+      "searchText": searchText,
+      "filters": filters == null ? [] : List<dynamic>.from(filters!.map((x) => x.toJson())),
+      "sorts": sorts == null ? [] : List<dynamic>.from(sorts!.map((x) => x.toJson())),
+    };
+
+    return json;
+  }
 }
 
 class Filter {
@@ -78,4 +83,24 @@ class ValueClass {
         "min": min,
         "max": max,
       };
+}
+
+
+class Sorts {
+  String? field;
+  String? orderBy;
+
+  Sorts({this.field, this.orderBy});
+
+  Sorts.fromJson(Map<String, dynamic> json) {
+    field = json['field'];
+    orderBy = json['orderBy'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['field'] = this.field;
+    data['orderBy'] = this.orderBy;
+    return data;
+  }
 }

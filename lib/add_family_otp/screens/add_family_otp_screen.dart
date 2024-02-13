@@ -1,4 +1,3 @@
-
 import 'dart:convert' as convert;
 
 import 'package:flutter/material.dart';
@@ -12,7 +11,6 @@ import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
-import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_parameters.dart' as parameters;
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
@@ -44,7 +42,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
 
   late AddFamilyOTPBloc _addFamilyOTPBloc;
 
-  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state =
+      GlobalKey<ScaffoldMessengerState>();
 
   @override
   void dispose() {
@@ -55,17 +54,10 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
     controller4.dispose();
     controller5.dispose();
     controller6.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Add Family OTP Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     PreferenceUtil.init();
 
     super.initState();
@@ -408,7 +400,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                   _addFamilyOTPBloc
                                       .verifyAddFamilyOtp(
                                           widget.arguments!.enteredMobNumber,
-                                          widget.arguments!.selectedCountryCode!,
+                                          widget
+                                              .arguments!.selectedCountryCode!,
                                           otp)
                                       .then(checkOTPResponse);
                                 } else {

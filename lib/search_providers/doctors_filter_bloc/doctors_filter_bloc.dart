@@ -75,7 +75,13 @@ class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
             _field: field,
             _type: field == _hospital || field == _languageSpoken ? _array : _string,
           };
-          if (values.length == 1) {
+          if(field == _hospital || field == _languageSpoken){
+            if(values.isNotEmpty) {
+              filter[_value] =  values;
+              filters.add(filter);
+            }
+          }
+          else if (values.length == 1) {
             filter[_value] = values.first;
             filters.add(filter);
           }
@@ -94,17 +100,21 @@ class DoctorsFilterBloc extends Bloc<DoctorsFilterEvent, DoctorsFilterState> {
     filterMenuCount = event.count + filters.length;
     List<DoctorsListResult> doctorFilterList = [];
     doctorFilterList.clear();
+    final List<bool> nonEmptyFirstValues = event.selectedItems.entries
+        .map((entry) => entry.value.isNotEmpty && entry.value.first.isNotEmpty)
+        .toList();
+
     try {
       //doctorFilterList = await FilterDoctorApi().getFilterDoctorList(doctorFilterRequestModel);
       emit(ShowDoctorFilterList(
         doctorFilterList: doctorFilterList,
-        filterMenuCount: filters.length,
+        filterMenuCount: nonEmptyFirstValues.where((value) => value).length,
         doctorFilterRequestModel: doctorFilterRequestModel,
       ));
     } catch (e) {
       emit(ShowDoctorFilterList(
         doctorFilterList: [],
-        filterMenuCount: filters.length,
+        filterMenuCount: nonEmptyFirstValues.where((value) => value).length,
         doctorFilterRequestModel: doctorFilterRequestModel,
       ));
     }

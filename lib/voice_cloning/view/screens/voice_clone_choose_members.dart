@@ -41,7 +41,6 @@ class _VoiceCloningChooseMemberState extends State<VoiceCloningChooseMember> {
 
   @override
   void initState() {
-    fhb_constants.mInitialTime = DateTime.now();
     super.initState();
     fetchFamilyMembersList();
   }
@@ -93,18 +92,6 @@ class _VoiceCloningChooseMemberState extends State<VoiceCloningChooseMember> {
     _hasData = _listOfFamilyMembers.isNotEmpty;
     _isLoading = false;
     setState(() {});
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    final differenceInSeconds =
-        DateTime.now().difference(fhb_constants.mInitialTime).inSeconds;
-    fhb_constants.fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Choose Members And Submit Voice Cloning',
-      'screenSessionTime': '$differenceInSeconds secs'
-    });
   }
 
   @override
@@ -180,12 +167,13 @@ class _VoiceCloningChooseMemberState extends State<VoiceCloningChooseMember> {
                             .submitVoiceCloneWithFamilyMembers(request);
                         _flutterToast.getToast(
                             response.message ?? '', Colors.green);
-                            
+
                         Navigator.popUntil(context, (route) {
                           var shouldPop = false;
-                           if ([rt_notification_main,rt_more_menu].contains(route.settings.name)) {
-                              shouldPop = true;
-                            }
+                          if ([rt_notification_main, rt_more_menu]
+                              .contains(route.settings.name)) {
+                            shouldPop = true;
+                          }
                           return shouldPop;
                         });
                       }

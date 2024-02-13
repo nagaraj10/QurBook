@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
-import 'package:myfhb/plan_wizard/view/widgets/diet_plan_card.dart';
-import 'package:myfhb/plan_wizard/view/widgets/next_button.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
-import 'package:myfhb/telehealth/features/chat/constants/const.dart';
-import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../authentication/constants/constants.dart';
+import '../../../../common/CommonUtil.dart';
+import '../../../../common/common_circular_indicator.dart';
+import '../../../../common/errors_widget.dart';
+import '../../../../constants/fhb_constants.dart';
+import '../../../../constants/variable_constant.dart' as variable;
+import '../../../../plan_dashboard/model/PlanListModel.dart';
+import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../../telehealth/features/SearchWidget/view/SearchWidget.dart';
+import '../../../../telehealth/features/chat/constants/const.dart';
+import '../../../../widgets/checkout_page.dart';
+import '../../../view_model/plan_wizard_view_model.dart';
+import '../../widgets/diet_plan_card.dart';
+import '../../widgets/next_button.dart';
 
 class FreeDietPlans extends StatefulWidget {
   @override
@@ -38,17 +39,19 @@ class _FreeDietPlans extends State<FreeDietPlans> {
   PlanWizardViewModel? planListProvider;
 
   List sortType = ['Default', 'Price', 'Duration'];
-  ValueNotifier<String?> _selectedItem = ValueNotifier<String?>('Default');
+  final ValueNotifier<String?> _selectedItem =
+      ValueNotifier<String?>('Default');
 
   bool isSwitched = false;
 
   @override
   void initState() {
+    super.initState();
     Provider.of<PlanWizardViewModel>(context, listen: false)
         .currentPackageFreeDietId = '';
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getDietPlanListNew(isFrom: strFreeDiet) as Future<PlanListModel?>;
+        .getDietPlanListNew(isFrom: strFreeDiet);
   }
 
   @override
@@ -335,14 +338,14 @@ class _FreeDietPlans extends State<FreeDietPlans> {
     if (isSwitched == false) {
       setState(() {
         isSwitched = true;
-        planListModel = planListProvider!.getDietPlanListNew(
-            isFrom: strFreeDiet, isVeg: true) as Future<PlanListModel?>;
+        planListModel = planListProvider!
+            .getDietPlanListNew(isFrom: strFreeDiet, isVeg: true);
       });
     } else {
       setState(() {
         isSwitched = false;
-        planListModel = planListProvider!
-            .getDietPlanListNew(isFrom: strFreeDiet) as Future<PlanListModel?>;
+        planListModel =
+            planListProvider!.getDietPlanListNew(isFrom: strFreeDiet);
       });
     }
   }

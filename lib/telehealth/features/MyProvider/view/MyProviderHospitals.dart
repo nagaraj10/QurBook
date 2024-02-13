@@ -1,41 +1,24 @@
-
 // import 'package:auto_size_text/auto_size_text.dart';
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:intl/intl.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/SwitchProfile.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/my_providers/bloc/providers_block.dart';
-import 'package:myfhb/my_providers/models/Doctors.dart';
-import 'package:myfhb/my_providers/models/Hospitals.dart';
-import 'package:myfhb/my_providers/models/MyProviderResponseData.dart';
-import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
-import 'package:myfhb/search_providers/models/search_arguments.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/styles/styles.dart' as fhbStyles;
-import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/AvailableTimeSlotsModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/healthOrganization/DoctorsListFromHospital.dart';
-import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:path/path.dart';
 
+import '../../../../colors/fhb_colors.dart' as fhbColors;
+import '../../../../common/CommonConstants.dart';
+import '../../../../common/CommonUtil.dart';
+import '../../../../common/common_circular_indicator.dart';
+import '../../../../common/errors_widget.dart';
+import '../../../../constants/router_variable.dart' as router;
+import '../../../../constants/variable_constant.dart' as variable;
+import '../../../../my_providers/bloc/providers_block.dart';
+import '../../../../my_providers/models/Hospitals.dart';
+import '../../../../my_providers/models/MyProviderResponseData.dart';
+import '../../../../my_providers/models/MyProviderResponseNew.dart';
+import '../../../../search_providers/models/search_arguments.dart';
+import '../../../../src/utils/colors_utils.dart';
+import '../../../../src/utils/screenutils/size_extensions.dart';
 import '../../SearchWidget/view/SearchWidget.dart';
-import 'healthOrganization/HealthOrganization.dart';
-import 'package:myfhb/common/errors_widget.dart';
+import '../viewModel/MyProviderViewModel.dart';
+import 'CommonWidgets.dart';
+import 'healthOrganization/DoctorsListFromHospital.dart';
 
 class MyProvidersHospitals extends StatefulWidget {
   Function(String)? closePage;
@@ -59,22 +42,9 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
     _providersBloc = ProvidersBloc();
     _medicalPreferenceList = _providersBloc.getMedicalPreferencesForHospital();
-    print('init hospital');
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'MyProvider Hospitals List Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   getHospitalsList() {
@@ -97,7 +67,6 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
 
   @override
   Widget build(BuildContext context) {
-    print('inside build of doctors');
     if (!widget.isRefresh!) {
       providerViewModel.doctorIdsList = null;
       setState(() {
@@ -125,9 +94,10 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                       isSearch = false;
                     });
                   }
-                },onClosePress: (){
-                FocusManager.instance.primaryFocus!.unfocus();
-              },
+                },
+                onClosePress: () {
+                  FocusManager.instance.primaryFocus!.unfocus();
+                },
               ),
               Expanded(
                 child: myProvidersResponseList != null
@@ -170,15 +140,13 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          final items = snapshot.data ??
-              <MyProvidersResponseData>[];
-          if(initialHospitalList!=null && initialHospitalList!.length>0){
+          final items = snapshot.data ?? <MyProvidersResponseData>[];
+          if (initialHospitalList != null && initialHospitalList!.length > 0) {
             // handle the case that data is null
             return hospitalList(isSearch
                 ? myProviderHospitalList
                 : snapshot.data?.result?.hospitals);
-          }
-          else if (snapshot.hasData &&
+          } else if (snapshot.hasData &&
               snapshot.data!.result != null &&
               snapshot.data!.result!.hospitals != null &&
               snapshot.data!.result!.hospitals!.length > 0) {
@@ -256,7 +224,8 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                               color: Color(fhbColors.bgColorContainer),
                               child: Center(
                                 child: Text(
-                                  getHospitalName(hospitals[i])![0].toUpperCase(),
+                                  getHospitalName(hospitals[i])![0]
+                                      .toUpperCase(),
                                   style: TextStyle(
                                     color:
                                         Color(CommonUtil().getMyPrimaryColor()),
@@ -285,8 +254,9 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   SizedBox(height: 5.0.h),
-                //  AutoSizeText( FU2.5
-                  Text( // FU2.5
+                  //  AutoSizeText( FU2.5
+                  Text(
+                    // FU2.5
                     getHospitalName(hospitals[i])!,
                     maxLines: 1,
                     style: TextStyle(
@@ -325,7 +295,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                       1)
                     Column(
                       children: [
-                       // AutoSizeText(  FU2.5
+                        // AutoSizeText(  FU2.5
                         Text(
                           commonWidgets.getCityHospitalAddress(hospitals[i])!,
                           maxLines: 2,
@@ -343,7 +313,8 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                     Column(
                       children: [
                         // AutoSizeText( FU2.5
-                        Text( //  FU2.5
+                        Text(
+                          //  FU2.5
                           commonWidgets.getCityHospital(hospitals[i])!,
                           maxLines: 1,
                           style: TextStyle(
@@ -399,8 +370,9 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
           ),
         ));
   }
+
   String? getHospitalName(Hospitals eachHospitalModel) {
-    String? name="";
+    String? name = "";
 
     if (eachHospitalModel.name != null) {
       if (eachHospitalModel.name != "Self" &&
@@ -421,5 +393,4 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
     }
     return name;
   }
-
 }

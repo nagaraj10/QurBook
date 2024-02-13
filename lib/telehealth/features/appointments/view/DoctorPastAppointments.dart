@@ -1,7 +1,3 @@
-
-import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,37 +5,35 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/chat_socket/view/ChatDetail.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
-import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/src/utils/language/language_utils.dart';
-import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/src/ui/MyRecordsArguments.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
-import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
-import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
-import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
-import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
-    as Constants;
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
-import 'package:myfhb/styles/styles.dart' as fhbStyles;
-import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsListViewModel.dart';
-import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as ConstantKey;
+
+import '../../../../chat_socket/view/ChatDetail.dart';
+import '../../../../common/PreferenceUtil.dart';
+import '../../../../constants/fhb_constants.dart' as ConstantKey;
+import '../../../../src/blocs/Category/CategoryListBlock.dart';
+import '../../../../src/model/Category/catergory_result.dart';
+import '../../../../src/ui/MyRecord.dart';
+import '../../../../src/ui/MyRecordsArguments.dart';
+import '../../../../src/utils/language/language_utils.dart';
+import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../../styles/styles.dart' as fhbStyles;
+import '../../MyProvider/view/CommonWidgets.dart';
+import '../../chat/viewModel/ChatViewModel.dart';
+import '../constants/appointments_constants.dart' as Constants;
+import '../controller/AppointmentDetailsController.dart';
+import '../model/fetchAppointments/healthRecord.dart';
+import '../model/fetchAppointments/past.dart';
+import '../viewModel/appointmentsListViewModel.dart';
+import 'AppointmentDetailScreen.dart';
+import 'appointmentsCommonWidget.dart';
+import 'resheduleMain.dart';
 
 class DoctorPastAppointments extends StatefulWidget {
+  DoctorPastAppointments({super.key, this.doc, this.onChanged, this.closePage});
   Past? doc;
   ValueChanged<String>? onChanged;
   Function(String)? closePage;
-
-  DoctorPastAppointments({this.doc, this.onChanged, this.closePage});
 
   @override
   DoctorPastAppointmentState createState() => DoctorPastAppointmentState();
@@ -56,11 +50,11 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
   List<CategoryResult> filteredCategoryData = [];
   CategoryListBlock _categoryListBlock = CategoryListBlock();
 
-  AppointmentDetailsController appointmentDetailsController= CommonUtil().onInitAppointmentDetailsController();
+  AppointmentDetailsController appointmentDetailsController =
+      CommonUtil().onInitAppointmentDetailsController();
 
   @override
   void initState() {
-    // TODO: implement initState
     appointmentsViewModel =
         Provider.of<AppointmentsListViewModel>(context, listen: false);
     getCategoryList();
@@ -74,9 +68,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return doctorsHistoryListCard(widget.doc!);
-  }
+  Widget build(BuildContext context) => doctorsHistoryListCard(widget.doc!);
 
   Widget doctorsHistoryListCard(Past doc) {
     List<String> recordIds = [];
@@ -95,8 +87,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
           appointmentDetailsController
               .getAppointmentDetail(widget.doc?.id ?? "");
           Get.to(() => AppointmentDetailScreen());
-        } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
           if (kDebugMode) {
             printError(info: e.toString());
@@ -127,15 +119,20 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                 child: Container(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       commonWidget.docName(
                                           context,
-                                          commonWidget.getDoctorAndHealthOrganizationName(
-                                              widget.doc!)),
-                                      SizedBoxWidget(height: 3.0.h, width: 0.0.h),
+                                          commonWidget
+                                              .getDoctorAndHealthOrganizationName(
+                                                  widget.doc!)),
+                                      SizedBoxWidget(
+                                          height: 3.0.h, width: 0.0.h),
                                       widget.doc!.doctorSessionId == null ||
-                                              widget.doc?.doctor?.specialization == null
+                                              widget.doc?.doctor
+                                                      ?.specialization ==
+                                                  null
                                           ? SizedBox.shrink()
                                           : Container(
                                               width: 1.sw / 2,
@@ -177,33 +174,45 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                                         : ''
                                                     : '')!,
                                                 style: TextStyle(
-                                                    fontSize:
-                                                        fhbStyles.fnt_doc_specialist),
+                                                    fontSize: fhbStyles
+                                                        .fnt_doc_specialist),
                                                 maxLines: 2,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
                                       widget.doc!.doctorSessionId == null ||
-                                              widget.doc?.doctor?.specialization == null
+                                              widget.doc?.doctor
+                                                      ?.specialization ==
+                                                  null
                                           ? SizedBox.shrink()
                                           : SizedBox(height: 3.0.h),
                                       commonWidget.docLoc(
-                                          context, commonWidget.getLocation(widget.doc!)),
+                                          context,
+                                          commonWidget
+                                              .getLocation(widget.doc!)),
                                       widget.doc!.doctorSessionId == null ||
-                                              widget.doc?.doctor?.specialization == null
+                                              widget.doc?.doctor
+                                                      ?.specialization ==
+                                                  null
                                           ? SizedBox.shrink()
                                           : SizedBox(height: 3.0),
                                       widget.doc!.doctorSessionId == null
-                                          ? commonWidget.docLoc(context,
-                                              commonWidget.getServiceCategory(widget.doc!))
+                                          ? commonWidget.docLoc(
+                                              context,
+                                              commonWidget.getServiceCategory(
+                                                  widget.doc!))
                                           : SizedBox.shrink(),
                                       widget.doc!.doctorSessionId == null ||
-                                              widget.doc?.doctor?.specialization == null
+                                              widget.doc?.doctor
+                                                      ?.specialization ==
+                                                  null
                                           ? SizedBox.shrink()
                                           : SizedBox(height: 3.0),
                                       widget.doc!.doctorSessionId == null
-                                          ? commonWidget.docLoc(context,
-                                              commonWidget.getModeOfService(widget.doc!))
+                                          ? commonWidget.docLoc(
+                                              context,
+                                              commonWidget.getModeOfService(
+                                                  widget.doc!))
                                           : SizedBox.shrink(),
                                       SizedBoxWidget(height: 5.0.h),
                                       SizedBoxWidget(height: 15.0.h),
@@ -226,11 +235,11 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                             children: [
                               //joinCallIcon(doc),
                               SizedBoxWidget(
-                                height:
-                                    widget.doc?.doctor?.specialization == null ||
-                                            widget.doc!.doctorSessionId == null
-                                        ? 30.0.h
-                                        : 40.0.h,
+                                height: widget.doc?.doctor?.specialization ==
+                                            null ||
+                                        widget.doc!.doctorSessionId == null
+                                    ? 30.0.h
+                                    : 40.0.h,
                               ),
                               widget.doc!.doctorSessionId == null
                                   ? SizedBox.shrink()
@@ -241,17 +250,18 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                       text: doc.plannedStartDateTime == null
                                           ? ''
                                           : DateFormat(Constants
-                                                      .Appointments_time_format)
-                                                  .format(DateTime.parse(
-                                                      doc.plannedStartDateTime!))
-                                                  .toString(),
+                                                  .Appointments_time_format)
+                                              .format(DateTime.parse(
+                                                  doc.plannedStartDateTime!))
+                                              .toString(),
                                       fontWeight: FontWeight.w600,
                                       colors: Color(
                                           CommonUtil().getMyPrimaryColor()),
                                     )
                                   : TextWidget(
                                       fontsize: 11.0.sp,
-                                      text: TranslationConstants.nextFollowUpOn.t(),
+                                      text: TranslationConstants.nextFollowUpOn
+                                          .t(),
                                       overflow: TextOverflow.visible,
                                       fontWeight: FontWeight.w400,
                                       colors: Colors.black38,
@@ -262,13 +272,13 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                     ? doc.plannedStartDateTime == null
                                         ? ""
                                         : DateFormat.yMMMEd()
-                                                .format(DateTime.parse(
-                                                    doc.plannedStartDateTime!))
-                                                .toString()
-                                    : DateFormat.yMMMEd()
                                             .format(DateTime.parse(
-                                                doc.plannedFollowupDate!))
-                                            .toString(),
+                                                doc.plannedStartDateTime!))
+                                            .toString()
+                                    : DateFormat.yMMMEd()
+                                        .format(DateTime.parse(
+                                            doc.plannedFollowupDate!))
+                                        .toString(),
                                 fontWeight: FontWeight.w500,
                                 overflow: TextOverflow.visible,
                                 colors: Colors.black,
@@ -278,8 +288,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                 text: doc.plannedFollowupDate == null
                                     ? ''
                                     : '${CommonUtil.CURRENCY}' +
-                                            providerCommonWidget.getMoneyWithForamt(
-                                                doc.doctorFollowUpFee),
+                                        providerCommonWidget.getMoneyWithForamt(
+                                            doc.doctorFollowUpFee),
                                 fontWeight: FontWeight.w600,
                                 overflow: TextOverflow.visible,
                                 colors: Color(CommonUtil().getMyPrimaryColor()),
@@ -323,7 +333,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                               int position = await getCategoryPosition(
                                   AppConstants.prescription);
 
-                              await Navigator.of(context).push(MaterialPageRoute(
+                              await Navigator.of(context)
+                                  .push(MaterialPageRoute(
                                 builder: (context) => MyRecords(
                                     argument: MyRecordsArgument(
                                         categoryPosition: position,
@@ -523,8 +534,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
     try {
       filteredCategoryData =
           PreferenceUtil.getCategoryTypeDisplay(ConstantKey.KEY_CATEGORYLIST)!;
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         printError(info: e.toString());

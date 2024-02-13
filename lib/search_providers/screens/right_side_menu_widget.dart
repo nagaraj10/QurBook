@@ -142,7 +142,6 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
                                 (item) => item.toLowerCase().contains(val.toLowerCase()),
                               )
                               .toList();
-                          FocusManager.instance.primaryFocus?.unfocus();
                           isSearch = true;
                           setState(() {});
                         } else {
@@ -154,7 +153,11 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
                     },
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      suffixIcon: const Icon(Icons.search),
+                      suffixIcon: InkWell(
+                          onTap: () {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          },
+                          child: const Icon(Icons.search)),
                       hintText: 'Search',
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),

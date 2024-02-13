@@ -1,35 +1,36 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:agora_rtc_engine/rtc_channel.dart';
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/ui/SplashScreen.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/video_call/model/CallArguments.dart';
-import 'package:myfhb/video_call/model/videocallStatus.dart';
-import 'package:myfhb/video_call/utils/audiocall_provider.dart';
-import 'package:myfhb/video_call/utils/hideprovider.dart';
-import 'package:myfhb/video_call/utils/rtc_engine.dart';
-import 'package:myfhb/video_call/utils/videoicon_provider.dart';
-import 'package:myfhb/video_call/widgets/audiocall_screen.dart';
 import 'package:provider/provider.dart';
-// import 'package:screen/screen.dart';  FU2.5
-import 'package:myfhb/constants/router_variable.dart' as router;
+
+import '../../common/CommonUtil.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../common/common_circular_indicator.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_parameters.dart' as parameters;
+import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart';
+import '../../src/ui/SplashScreen.dart';
+import '../../src/utils/PageNavigator.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../model/CallArguments.dart';
+import '../model/videocallStatus.dart';
+import '../utils/audiocall_provider.dart';
+import '../utils/hideprovider.dart';
+import '../utils/rtc_engine.dart';
 import '../utils/settings.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
+import '../utils/videoicon_provider.dart';
+import '../widgets/audiocall_screen.dart';
 
 class CallPage extends StatefulWidget {
   /// non-modifiable channel name of the page
@@ -74,38 +75,24 @@ class _CallPageState extends State<CallPage> {
   int videoPauseResumeState = 0;
   RtcEngineEventHandler rtcEngineEventHandler = RtcEngineEventHandler();
   RtcChannelEventHandler rtcChannelEventHandler = RtcChannelEventHandler();
-  //bool _isAudioCall = false;
   bool _isOnSpeaker = false;
-  //final myDB = Firestore.instance;
   final hideStatus = Provider.of<HideProvider>(Get.context!, listen: false);
   final audioStatus =
       Provider.of<AudioCallProvider>(Get.context!, listen: false);
-  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+      GlobalKey<ScaffoldMessengerState>();
 
   @override
   void dispose() {
-    // clear users
     _users.clear();
-    // destroy sdk
-    // widget.rtcEngine.leaveChannel();
-    // widget.rtcEngine.destroy();
     cancelOnGoingNS();
     super.dispose();
-    //Screen.keepOn(false);  FU2.5
     videoPauseResumeState = 0;
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'TeleHealth Call Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
-    //_isAudioCall = audioStatus?.isAudioCall;
     if (widget.arguments != null) {
       widget.channelName = widget.arguments!.channelName;
       widget.role = widget.arguments!.role;
@@ -328,7 +315,6 @@ class _CallPageState extends State<CallPage> {
             LocalVideoStreamError localVideoStreamError) {
       if (localVideoStreamState == LocalVideoStreamState.Stopped) {
         //FlutterToast().getToast('your video has been stopped', Colors.red);
-
       } else if (localVideoStreamState == LocalVideoStreamState.Failed) {
         //FlutterToast().getToast('The local video fails to start.', Colors.red);
       } else if (localVideoStreamState == LocalVideoStreamState.Capturing) {
@@ -337,7 +323,6 @@ class _CallPageState extends State<CallPage> {
       } else if (localVideoStreamState == LocalVideoStreamState.Encoding) {
         // FlutterToast().getToast(
         //     'The first local video frame encodes successfully.', Colors.green);
-
       }
 
       if (localVideoStreamError == LocalVideoStreamError.OK) {
@@ -347,16 +332,13 @@ class _CallPageState extends State<CallPage> {
         // FlutterToast().getToast(
         //     'The local video capture fails. Check whether the capturer is working properly.',
         //     Colors.red);
-
       } else if (localVideoStreamError ==
           LocalVideoStreamError.DeviceNoPermission) {
         // FlutterToast().getToast(
         //     'No permission to use the local video device.', Colors.red);
-
       } else if (localVideoStreamError == LocalVideoStreamError.DeviceBusy) {
         // FlutterToast()
         //     .getToast('The local video capturer is in use.', Colors.red);
-
       } else if (localVideoStreamError == LocalVideoStreamError.EncodeFailure) {
         //FlutterToast().getToast('The local video encoding fails.', Colors.red);
       } else if (localVideoStreamError == LocalVideoStreamError.Failure) {
@@ -708,7 +690,8 @@ class _CallPageState extends State<CallPage> {
     _users.forEach(
       (int uid) => list.add(
         RtcRemoteView.SurfaceView(
-          uid: uid, channelId: '',
+          uid: uid,
+          channelId: '',
         ),
       ),
     );
@@ -1028,8 +1011,8 @@ class _CallPageState extends State<CallPage> {
             printError(info: e.toString());
           },
         );
-    } catch (e,stackTrace) {
-                              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       printError(info: e.toString());
     }

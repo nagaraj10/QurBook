@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
-import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
-import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
+
 import '../../claim/model/members/MembershipBenefitListModel.dart';
 import '../../claim/model/members/MembershipDetails.dart';
 import '../../common/CommonUtil.dart';
+import '../../common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart' as constants;
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
+import '../controller/create_ticket_controller.dart';
+import '../model/ticket_types_model.dart';
+import '../view_model/tickets_view_model.dart';
 import 'create_ticket_screen.dart';
 import 'get_membership_data_widget.dart';
 
@@ -28,7 +29,7 @@ class TicketTypesScreen extends StatefulWidget {
 class _TicketTypesScreenState extends State<TicketTypesScreen> {
   TicketViewModel ticketViewModel = TicketViewModel();
   TicketTypesModel ticketTypesModel = TicketTypesModel();
-  Map<String,String?> _iconsurls = Map<String,String?>();
+  Map<String, String?> _iconsurls = Map<String, String?>();
 
   final _membershipFontSize = CommonUtil().isTablet! ? 25.0.sp : 20.0.sp;
   final _iconHeight = CommonUtil().isTablet! ? 80.0 : 60.0;
@@ -130,7 +131,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
           variable.strBenefitMedicineOrdering,
           variable.strBenefitTransportation,
           variable.strBenefitCareDietPlans,
-          variable.strBenefitFamilyMembers,
+          variable.strBenefitHomecareServices,
         ].contains(element.fieldName),
       );
       return GetMembershipDataWidget(
@@ -258,7 +259,9 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                     Color(CommonUtil().getMyGredientColor())
                   ],
                 ),
-                borderRadius: const BorderRadius.all(Radius.circular(12),),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(12),
+                ),
                 border: Border.all(
                   color: Color(CommonUtil().getMyPrimaryColor()),
                 ),
@@ -297,7 +300,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
             ),
           )),
     );
-}
+  }
 
   Widget getTicketTypeImages(
       BuildContext context, TicketTypesResult ticketListData) {

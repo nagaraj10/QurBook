@@ -1,15 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+
+import '../../common/CommonUtil.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 import '../constants/constants.dart';
 import '../model/change_password_model.dart';
-import 'authentication_validator.dart';
-import '../model/change_password_model.dart' as changePasswordModel;
 import '../view_model/patientauth_view_model.dart';
-import '../../common/CommonUtil.dart';
-import '../../constants/fhb_constants.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
+import 'authentication_validator.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   @override
@@ -27,20 +25,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   late AuthViewModel authViewModel;
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
     authViewModel = AuthViewModel();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Change Password Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -99,10 +85,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 ),
                               ),
                               controller: OldPasswordController,
-                              autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
+                              autovalidateMode: _autoValidateBool
+                                  ? AutovalidateMode.always
+                                  : AutovalidateMode.disabled,
                               validator: (value) {
                                 return AuthenticationValidator()
-                                    .passwordValidation(value!, patternPassword as String,
+                                    .passwordValidation(
+                                        value!,
+                                        patternPassword as String,
                                         strPassCantEmpty);
                               },
                               onSaved: (value) {},
@@ -115,7 +105,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               style: TextStyle(
                                 fontSize: 16.0.sp,
                               ),
-                              autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
+                              autovalidateMode: _autoValidateBool
+                                  ? AutovalidateMode.always
+                                  : AutovalidateMode.disabled,
                               obscureText: true,
                               decoration: InputDecoration(
                                 hintText: strNewPasswordHintTxt,
@@ -130,7 +122,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               ),
                               validator: (value) {
                                 return AuthenticationValidator()
-                                    .passwordValidation(value!, patternPassword as String,
+                                    .passwordValidation(
+                                        value!,
+                                        patternPassword as String,
                                         strPassCantEmpty);
                               },
                               controller: NewPasswordController,
@@ -144,7 +138,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               style: TextStyle(
                                 fontSize: 16.0.sp,
                               ),
-                              autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
+                              autovalidateMode: _autoValidateBool
+                                  ? AutovalidateMode.always
+                                  : AutovalidateMode.disabled,
                               obscureText: true,
                               decoration: InputDecoration(
                                 hintText: strNewPasswordAgainHintText,

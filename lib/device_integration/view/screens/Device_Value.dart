@@ -1,58 +1,55 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/regiment/models/field_response_model.dart';
-import 'package:myfhb/regiment/models/regiment_data_model.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/src/model/Category/catergory_data_list.dart';
-import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
-import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
-import 'package:myfhb/unit/choose_unit.dart';
+import 'package:provider/provider.dart';
+
 import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonConstants.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../common/FHBBasicWidget.dart';
+import '../../../common/PreferenceUtil.dart';
+import '../../../common/common_circular_indicator.dart';
 import '../../../common/customized_checkbox.dart';
+import '../../../common/errors_widget.dart';
 import '../../../constants/fhb_constants.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/fhb_parameters.dart';
+import '../../../constants/fhb_parameters.dart' as parameters;
 import '../../../constants/router_variable.dart';
 import '../../../constants/variable_constant.dart';
-import '../../model/DeleteDeviceHealthRecord.dart';
+import '../../../constants/variable_constant.dart' as variable;
+import '../../../regiment/models/field_response_model.dart';
+import '../../../regiment/models/regiment_data_model.dart';
+import '../../../regiment/view_model/regiment_view_model.dart';
 import '../../../src/blocs/Category/CategoryListBlock.dart';
 import '../../../src/blocs/Media/MediaTypeBlock.dart';
 import '../../../src/blocs/health/HealthReportListForUserBlock.dart';
+import '../../../src/model/Category/catergory_data_list.dart';
 import '../../../src/model/Category/catergory_result.dart';
+import '../../../src/model/GetDeviceSelectionModel.dart';
 import '../../../src/model/Media/media_data_list.dart';
 import '../../../src/model/Media/media_result.dart';
+import '../../../src/resources/network/ApiBaseHelper.dart';
 import '../../../src/resources/repository/health/HealthReportListForUserRepository.dart';
+import '../../../src/ui/SheelaAI/Models/sheela_arguments.dart';
 import '../../../src/utils/FHBUtils.dart';
-import 'package:provider/provider.dart';
-
-import '../../../constants/fhb_parameters.dart';
-import '../../../constants/variable_constant.dart' as variable;
-
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../../unit/choose_unit.dart';
 import '../../../widgets/GradientAppBar.dart';
-
 import '../../model/BPValues.dart';
+import '../../model/DeleteDeviceHealthRecord.dart';
 import '../../model/GulcoseValues.dart';
 import '../../model/OxySaturationValues.dart';
 import '../../model/TemperatureValues.dart';
 import '../../model/WeightValues.dart';
 import '../../viewModel/Device_model.dart';
-import '../../../common/PreferenceUtil.dart';
-import '../../../constants/fhb_parameters.dart' as parameters;
-import 'dart:convert';
-import '../../../src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import '../../../src/resources/network/ApiBaseHelper.dart';
 
 class EachDeviceValues extends StatefulWidget {
   const EachDeviceValues(
@@ -71,7 +68,8 @@ class EachDeviceValues extends StatefulWidget {
 }
 
 class _EachDeviceValuesState extends State<EachDeviceValues> {
-  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state =
+      GlobalKey<ScaffoldMessengerState>();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   String errorMsg = '', errorMsgDia = '', errorMsgSys = '';
   bool onOkClicked = false;
@@ -139,7 +137,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     try {
       super.initState();
       onInit();
-      mInitialTime = DateTime.now();
       catgoryDataList = PreferenceUtil.getCategoryType()!;
       if (catgoryDataList == null) {
         _categoryListBlock.getCategoryLists().then((value) {
@@ -152,21 +149,21 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
       try {
         weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         weightUnit = "kg";
       }
 
       try {
         tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         tempUnit = "F";
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       //print(e);
     }
@@ -189,10 +186,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
       activitiesFilteredList =
           await CommonUtil().getMasterData(Get.context!, '');
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
-      //print(e);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -216,19 +211,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Device Value Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    //final _devicesmodel = Provider.of<DevicesViewModel>(context);
     return Scaffold(
       key: scaffold_state,
       appBar: AppBar(
@@ -339,12 +322,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     }*/
                   ,
                   style: OutlinedButton.styleFrom(
-                  foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                  backgroundColor: Colors.transparent,
-                  side: BorderSide(
-                      color: Color(CommonUtil().getMyPrimaryColor())),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),),
+                    foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                    backgroundColor: Colors.transparent,
+                    side: BorderSide(
+                        color: Color(CommonUtil().getMyPrimaryColor())),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
                   child: Text('OK'),
                 ),
                 //submitButton(_otpVerifyBloc)
@@ -398,8 +382,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         categoryDataObj = CommonUtil()
             .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
         postMediaData[strhealthRecordCategory] = categoryDataObj.toJson();
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
         if (catgoryDataList == null) {
           await _categoryListBlock.getCategoryLists().then((value) {
@@ -911,8 +895,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   Widget getCardForThermometer(String? deviceName) {
     try {
       tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       tempUnit = "F";
     }
@@ -1188,8 +1172,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   Widget getCardForWeighingScale(String? deviceName) {
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       weightUnit = "kg";
     }

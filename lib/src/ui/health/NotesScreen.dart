@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../../../colors/fhb_colors.dart' as fhbColors;
+import '../../../common/CommonUtil.dart';
+import '../../../common/FHBBasicWidget.dart';
+import '../../../common/common_circular_indicator.dart';
+import '../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/variable_constant.dart' as variable;
+import '../../../record_detail/screens/record_detail_screen.dart';
+import '../../blocs/health/HealthReportListForUserBlock.dart';
+import '../../model/Health/MediaMetaInfo.dart';
+import '../../model/Health/asgard/health_record_list.dart';
+import '../../resources/network/ApiResponse.dart';
+import '../../utils/FHBUtils.dart';
+import '../../utils/screenutils/size_extensions.dart';
 
 class NotesScreenList extends StatefulWidget {
   final HealthRecordList? completeData;
@@ -56,27 +58,14 @@ class _NotesScreenListState extends State<NotesScreenList> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     _healthReportListForUserBlock = HealthReportListForUserBlock();
-
+    FABService.trackCurrentScreen(FBAMyRecordsNotesScreen);
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Notes List Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return getWidgetToDisplayOtherDocsList(widget.completeData!);
-    //return getNotes();
   }
 
   Widget getWidgetToDisplayOtherDocsList(HealthRecordList completeData) {
@@ -182,23 +171,23 @@ class _NotesScreenListState extends State<NotesScreenList> {
                 CircleAvatar(
                   radius: CommonUtil().isTablet! ? 35 : 25,
                   backgroundColor: const Color(fhbColors.bgColorContainer),
-                  child: mediaMetaInfoObj
-                              .metadata!.healthRecordCategory!.logo !=
-                          null
-                      ? Image.network(
-                          /* mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
+                  child:
+                      mediaMetaInfoObj.metadata!.healthRecordCategory!.logo !=
+                              null
+                          ? Image.network(
+                              /* mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
                         ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
                         :
                           Constants.BASE_URL +*/
-                          mediaMetaInfoObj
-                              .metadata!.healthRecordCategory!.logo!,
-                          height: 25.0.h,
-                          width: 25.0.h,
-                          color: Color(CommonUtil().getMyPrimaryColor()),
-                          errorBuilder: (context, error, stackTrace) =>
-                              SizedBox(),
-                        )
-                      : SizedBox(),
+                              mediaMetaInfoObj
+                                  .metadata!.healthRecordCategory!.logo!,
+                              height: 25.0.h,
+                              width: 25.0.h,
+                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              errorBuilder: (context, error, stackTrace) =>
+                                  SizedBox(),
+                            )
+                          : SizedBox(),
                 ),
                 SizedBox(
                   width: 20,
@@ -244,8 +233,8 @@ class _NotesScreenListState extends State<NotesScreenList> {
                           icon: mediaMetaInfoObj.isBookmarked!
                               ? ImageIcon(
                                   AssetImage(variable.icon_record_fav_active),
-                                  color: Color(
-                                      CommonUtil().getMyPrimaryColor()),
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor()),
                                   size: CommonUtil().isTablet!
                                       ? tabHeader2
                                       : mobileHeader2,
@@ -271,8 +260,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
                       widget.mediaMeta!.contains(mediaMetaInfoObj.id)
                           ? Icon(
                               Icons.done,
-                              color:
-                                  Color(CommonUtil().getMyPrimaryColor()),
+                              color: Color(CommonUtil().getMyPrimaryColor()),
                             )
                           : SizedBox(),
                     ],

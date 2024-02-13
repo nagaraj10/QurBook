@@ -86,6 +86,15 @@ class CreateTicketController extends GetxController {
 // Declare a variable named 'strSearchText' and use the '.obs' extension, indicating it's an observable
   var strSearchText = "".obs;
 
+  // Observable variable for sorting order of lab names.
+  // Initially set to 0 (no sorting).
+  var isLabNameAscendingOrder = 0.obs;
+
+  // Observable variable for sorting order of doctors.
+  // Initially set to 0 (no sorting).
+  var isDoctorSort = 0.obs;
+
+
 
 
 
@@ -232,6 +241,11 @@ class CreateTicketController extends GetxController {
         ..searchText = strSearchText.value
         ..size = limit;
 
+      if (doctorFilterRequestModel.sorts == null ||
+          (doctorFilterRequestModel.sorts!.isEmpty??true)) {
+        doctorFilterRequestModel.sorts = null;
+      }
+
       // Fetch new data using the FilterDoctorApi based on the updated doctor filter request model
       final newData = await FilterDoctorApi().getFilterDoctorList(doctorFilterRequestModel);
 
@@ -257,15 +271,39 @@ class CreateTicketController extends GetxController {
     }
   }
 
-// Function to fetch and paginate lab list data
+  // Function to fetch and paginate lab list data
   fetchLabListData(int pageKey) async {
     try {
+
+      // Ensure labListFilterRequestModel.filters is initialized as an empty list if null
+      labListFilterRequestModel.filters ??= [];
+
+      // Check if the health organization type filter is already added
+      var isHealthOrganizationTypeAlreadyAdded = hasHealthOrgTypeFilter(labListFilterRequestModel.filters);
+
       // Increment the page number in the lab filter request model
       labListFilterRequestModel
-        ..page = (labListFilterRequestModel?.page ?? 0) + 1
-        ..size = limit
-        ..searchText = strSearchText.value
-        ..healthOrganizationType = CommonConstants.keyLab.toUpperCase();
+        ..page = (labListFilterRequestModel?.page ?? 0) + 1 // Increment the page number by 1, or set to 1 if it's null
+        ..size = limit // Set the number of items per page
+        ..searchText = strSearchText.value; // Set the search text
+
+      // Add health organization type filter if it's not already added
+      if (!isHealthOrganizationTypeAlreadyAdded) {
+        // Create a new filter instance for health organization type
+        var labFilter = Filter()
+          ..field = strHealthOrganizationType // Set the field to health organization type
+          ..value = CommonConstants.keyLab.toUpperCase() // Set the value (assuming keyLab needs to be in uppercase)
+          ..type = strString; // Set the type to string
+
+        // Add the health organization type filter to the list of filters
+        labListFilterRequestModel.filters?.add(labFilter);
+      }
+
+
+      if (labListFilterRequestModel.sorts == null ||
+          (labListFilterRequestModel.sorts!.isEmpty??true)) {
+        labListFilterRequestModel.sorts = null;
+      }
 
       // Fetch new data using the FilterDoctorApi based on the updated lab filter request model
       final newData = await FilterDoctorApi().getFilterLabListResult(labListFilterRequestModel);
@@ -291,5 +329,14 @@ class CreateTicketController extends GetxController {
   }
 
 
+  // Function to check if a health organization type filter is already added
+  bool hasHealthOrgTypeFilter(List<Filter>? filters) {
+    // Check if filters list contains any filter with health org type
+    return filters?.any((filter) =>
+    // Check if filter's field matches health org type
+    filter.field == strHealthOrganizationType)
+        // Default to false if filters is null
+        ?? false;
+  }
 
 }

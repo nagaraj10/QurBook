@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/firebase_analytics_service.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/widgets/checkout_page.dart';
-import 'package:myfhb/widgets/checkout_page_provider.dart';
-import 'package:myfhb/widgets/payment_gatway.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
+
+import '../common/CommonUtil.dart';
+import '../constants/fhb_constants.dart';
+import '../constants/fhb_parameters.dart';
+import '../constants/router_variable.dart' as router;
+import '../landing/view/landing_arguments.dart';
+import '../regiment/view_model/regiment_view_model.dart';
+import '../src/utils/screenutils/size_extensions.dart';
+import 'checkout_page.dart';
+import 'checkout_page_provider.dart';
+import 'payment_gatway.dart';
 
 class PaymentResultPage extends StatefulWidget {
   final bool? status;
@@ -51,25 +49,10 @@ class PaymentResultPage extends StatefulWidget {
 class _ResultPage extends State<PaymentResultPage> {
   bool? status;
 
-  //bool isFromSubscribe;
-
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     status = widget.status ?? false;
-    //isFromSubscribe = widget.isFromSubscribe;
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Payment Done Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   Widget paidPlanContent() {
@@ -80,7 +63,7 @@ class _ResultPage extends State<PaymentResultPage> {
         Text(status! ? PAYMENT_SUCCESS_MSG : PAYMENT_FAILURE_MSG,
             style: TextStyle(
                 fontSize: 22.0.sp,
-                color:Color(CommonUtil().getMyPrimaryColor()),
+                color: Color(CommonUtil().getMyPrimaryColor()),
                 fontWeight: FontWeight.bold)),
         SizedBox(height: 10.0.h),
         status!
@@ -120,7 +103,9 @@ class _ResultPage extends State<PaymentResultPage> {
                           status! ? PAYMENT_SUCCESS_PNG : PAYMENT_FAILURE_PNG,
                           width: 120.0.h,
                           height: 120.0.h,
-                          color: status! ? Color(CommonUtil().getMyPrimaryColor()) : Colors.red),
+                          color: status!
+                              ? Color(CommonUtil().getMyPrimaryColor())
+                              : Colors.red),
                       SizedBox(height: 15.0.h),
                       (widget.isFreePlan)
                           ? Text(
@@ -130,7 +115,8 @@ class _ResultPage extends State<PaymentResultPage> {
                               // TODO this need to confirm with bussinees
                               style: TextStyle(
                                   fontSize: 18.0.sp,
-                                  color:Color(CommonUtil().getMyPrimaryColor()),
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor()),
                                   fontWeight: FontWeight.bold))
                           : paidPlanContent(),
                       //status
@@ -138,7 +124,8 @@ class _ResultPage extends State<PaymentResultPage> {
                           ? Text('Order ID : ' + widget.refNo!,
                               style: TextStyle(
                                   fontSize: 16.0.sp,
-                                  color: Color(CommonUtil().getMyPrimaryColor()),
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor()),
                                   fontWeight: FontWeight.bold))
                           : SizedBox(),
                       SizedBox(height: 30.0.h),
@@ -159,12 +146,7 @@ class _ResultPage extends State<PaymentResultPage> {
                               Provider.of<CheckoutPageProvider>(context,
                                       listen: false)
                                   .loader(false, isNeedRelod: true);
-                              var firebase = FirebaseAnalyticsService();
-                              firebase.trackEvent("on_payment_done", {
-                                "user_id": PreferenceUtil.getStringValue(
-                                    KEY_USERID_MAIN),
-                                "status": status
-                              });
+
                               if (status!) {
                                 //widget.closePage(STR_SUCCESS);
                                 SchedulerBinding.instance!
@@ -221,14 +203,15 @@ class _ResultPage extends State<PaymentResultPage> {
                                       listen: false)
                                   .isMembershipCart),
                               child: ElevatedButton(
-  style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    side: BorderSide(color: Colors.white)),
-                                backgroundColor:
-                                    Color(CommonUtil().getMyPrimaryColor()),
-                                foregroundColor: Colors.white,
-                                padding: EdgeInsets.all(12.0),),
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      side: BorderSide(color: Colors.white)),
+                                  backgroundColor:
+                                      Color(CommonUtil().getMyPrimaryColor()),
+                                  foregroundColor: Colors.white,
+                                  padding: EdgeInsets.all(12.0),
+                                ),
                                 onPressed: () async {
                                   if (widget.isPaymentFromNotification) {
                                     Get.offAllNamed(
@@ -314,13 +297,15 @@ class _ResultPage extends State<PaymentResultPage> {
 
   Widget getRetryButton() {
     if (!status! && !widget.isFreePlan) {
-      return ElevatedButton( style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            side: BorderSide(color: Colors.white)),
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-        foregroundColor: Colors.white,
-        padding: EdgeInsets.all(12.0),),
+      return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+              side: BorderSide(color: Colors.white)),
+          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          foregroundColor: Colors.white,
+          padding: EdgeInsets.all(12.0),
+        ),
         onPressed: () {
           Provider.of<CheckoutPageProvider>(context, listen: false)
               .loader(false, isNeedRelod: true);

@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
@@ -27,7 +26,8 @@ import 'package:myfhb/common/CommonConstants.dart';
 
 class TelehealthProviders extends StatefulWidget {
   static _TelehealthProvidersState? of(BuildContext context) =>
-      context.findAncestorStateOfType<State<TelehealthProviders>>() as _TelehealthProvidersState?;
+      context.findAncestorStateOfType<State<TelehealthProviders>>()
+          as _TelehealthProvidersState?;
 
   final int? bottomindex;
   HomeScreenArguments? arguments;
@@ -77,8 +77,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
         mTabIndex: widget.arguments!.thTabIndex,
       ),
       SuperMaya(),
-      //ChatHomeScreen(),
-      ChatUserList(),
+      const ChatUserList(),
       MyRecords(
         argument: MyRecordsArgument(),
       ),
@@ -91,7 +90,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
       if (CommonConstants.showNotificationdialog) {
         CommonConstants.showNotificationdialog = false;
 
-        Future.delayed(Duration(seconds: 5), () {
+        Future.delayed(const Duration(seconds: 5), () {
           //* show cancel app. dialog
 
           showCanelAppointmentPromptToUser(context);
@@ -293,8 +292,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                               TranslationConstants.yourBookingSuccess.t(),
                               Colors.green);
                           var body = {};
-                          body['templateName'] =
-                              widget.arguments?.templateName;
+                          body['templateName'] = widget.arguments?.templateName;
                           body['contextId'] = _bookingId;
                           FetchNotificationService()
                               .updateNsActionStatus(body)

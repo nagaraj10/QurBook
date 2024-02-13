@@ -72,8 +72,9 @@ class FieldModel {
     this.deleted,
     this.value,
     this.strTitleDesc,
-    this.originalTitle,
     this.isSurvey = false,
+    this.translatedTitle,
+    this.translatedDescription,
   });
 
   dynamic fieldid;
@@ -94,9 +95,10 @@ class FieldModel {
   DateTime? ts;
   dynamic deleted;
   String? value;
-  String? originalTitle; // to get the original title in other languages
   bool isSurvey = false;
   String? strTitleDesc = "";
+  dynamic translatedTitle; // for getting the translated title to preview in regimen form
+  dynamic translatedDescription; // for getting the translated description to preview in regimen form
 
   factory FieldModel.fromJson(Map<String, dynamic> json) => FieldModel(
         fieldid: json['fieldid'],
@@ -116,8 +118,11 @@ class FieldModel {
         depth: json['depth'],
         ts: DateTime.tryParse(json['ts'] ?? ''),
         deleted: json['deleted'],
-        originalTitle: (json['originalTitle']??'')
-      );
+      translatedTitle:
+          json['translatedTitle'] != null ? json['translatedTitle'] : '',
+      translatedDescription: json['translatedDescription'] != null
+          ? json['translatedDescription']
+          : '');
 
   Map<String, dynamic> toJson() => {
         'fieldid': fieldid,
@@ -137,7 +142,8 @@ class FieldModel {
         'depth': depth,
         'ts': ts!.toIso8601String(),
         'deleted': deleted,
-        'originalTitle': originalTitle,
+        'translatedTitle': translatedTitle,
+        'translatedDescription': translatedDescription,
       };
 }
 

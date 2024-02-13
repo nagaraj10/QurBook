@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/plan_wizard/models/health_condition_response_model.dart';
-import 'package:myfhb/plan_wizard/view/widgets/plans_grid_view.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
+
+import '../../../common/common_circular_indicator.dart';
+import '../../../common/errors_widget.dart';
+import '../../../constants/fhb_constants.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../models/health_condition_response_model.dart';
+import '../../view_model/plan_wizard_view_model.dart';
+import '../widgets/plans_grid_view.dart';
 
 class HealthConditionPage extends StatefulWidget {
   @override

@@ -7,6 +7,7 @@ import 'package:myfhb/constants/variable_constant.dart';
 class AppNameConstants{
   static const String QURHOME ='qurhome';
   static const String QURBOOK ='qurbook';
+  static const String QURDAY ='qurday';
 }
 
 ///Ios Notification Categories

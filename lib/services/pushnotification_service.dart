@@ -531,13 +531,18 @@ void listenEvent(String meetingId) {
 getIconBasedOnRegion({required bool isSmallIcon}) {
 
   if (isSmallIcon) {
-    if (CommonUtil.AppName.toLowerCase()==AppNameConstants.QURHOME) {
+    if (CommonUtil.AppName.toLowerCase().trim().toString()==AppNameConstants.QURHOME) {
       return strAppNsQurhomeIcon;
+    }else if(CommonUtil.AppName.toLowerCase().trim().toString()==AppNameConstants.QURDAY){
+      return strAppNsQurdayIcon;
     }
     return strAppNsQurbookIcon;
   } else {
-    if (CommonUtil.AppName.toLowerCase()==AppNameConstants.QURHOME) {
+    if (CommonUtil.AppName.toLowerCase().trim().toString()==AppNameConstants.QURHOME) {
       return strIcLauncherQurhome;
+    }
+    else if(CommonUtil.AppName.toLowerCase().trim().toString()==AppNameConstants.QURDAY){
+      return strIcLauncherQurDay;
     }
     return strIcLauncherQurbook;
   }
