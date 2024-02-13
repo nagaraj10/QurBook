@@ -119,7 +119,7 @@ class SheelaAIController extends GetxController {
   LanguageRepository languageBlock = LanguageRepository();
   Map<String, dynamic> langaugeDropdownList = {};
 
-  List<String> sheelaTTSWordList = ["sheila", "sila", "shila", "shiela"];
+  List<String> sheelaTTSWordList = ['sheila', 'sila', 'shila', 'shiela'];
 
   bool isAllowSheelaLiveReminders = true;
   SheelaBadgeModel? _sheelaBadgeModel;
@@ -239,7 +239,7 @@ class SheelaAIController extends GetxController {
           } else {
             gettingReposnseFromNative();
           }
-        } else if ((conversations.last.redirectTo ?? "") ==
+        } else if ((conversations.last.redirectTo ?? '') ==
             strRegimen.toLowerCase()) {
           if (PreferenceUtil.getIfQurhomeisAcive()) {
             Get.to(
@@ -250,11 +250,11 @@ class SheelaAIController extends GetxController {
           } else {
             Get.toNamed(rt_Regimen);
           }
-        } else if ((conversations.last.redirectTo ?? "") ==
+        } else if ((conversations.last.redirectTo ?? '') ==
             strMyFamilyList.toLowerCase()) {
           Get.to(
               UserAccounts(arguments: UserAccountsArguments(selectedIndex: 1)));
-        } else if ((conversations.last.redirectTo ?? "") ==
+        } else if ((conversations.last.redirectTo ?? '') ==
             strHomeScreen.toLowerCase()) {
           startTimer();
         }
@@ -432,7 +432,7 @@ class SheelaAIController extends GetxController {
         localDateTime: CommonUtil.dateFormatterWithdatetimesecondsApiFormatAI(
             DateTime.now()),
         endPoint: BASE_URL,
-        directCall: isUnAvailableCC ? "UNAVAILABLE" : null,
+        directCall: isUnAvailableCC ? 'UNAVAILABLE' : null,
       );
       if (getCurrentLanCode() == 'undef') {
         sheelaRequest.message = '/provider_message';
@@ -473,7 +473,7 @@ class SheelaAIController extends GetxController {
         arguments!.showUnreadMessage = false;
       } else if (arguments?.eventType != null &&
           arguments?.eventType == strWrapperCall) {
-        sheelaRequest.additionalInfo = arguments?.others ?? "";
+        sheelaRequest.additionalInfo = arguments?.others ?? '';
         arguments?.eventType = null;
       } else if (arguments?.sheelReminder ?? false) {
         reqJson = {
@@ -501,7 +501,7 @@ class SheelaAIController extends GetxController {
         if (apiResponse.isSuccess! && apiResponse.result != null) {
           var currentResponse = apiResponse.result!;
           if ((currentResponse.recipientId ?? '').isEmpty) {
-            currentResponse.recipientId = "Sheela Response";
+            currentResponse.recipientId = 'Sheela Response';
           }
           currentResponse =
               (await getGoogleTTSForConversation(currentResponse))!;
@@ -635,7 +635,7 @@ class SheelaAIController extends GetxController {
             try {
               if (!conversations.last.endOfConv) {
                 gettingReposnseFromNative();
-              } else if ((conversations.last.redirectTo ?? "") ==
+              } else if ((conversations.last.redirectTo ?? '') ==
                   strRegimen.toLowerCase()) {
                 if (PreferenceUtil.getIfQurhomeisAcive()) {
                   Get.to(
@@ -740,7 +740,7 @@ class SheelaAIController extends GetxController {
               final dir = await getTemporaryDirectory();
               final file = File('${dir.path}/tempAudioFile.mp3');
               await file.writeAsBytes(bytes);
-              final path = "${dir.path}/tempAudioFile.mp3";
+              final path = '${dir.path}/tempAudioFile.mp3';
               currentPlayingConversation!.isPlaying.value = true;
               await player!.play(path, isLocal: true);
             }
@@ -764,7 +764,7 @@ class SheelaAIController extends GetxController {
   stopTTS() {
     player?.stop();
     if (useLocalTTSEngine) {
-      playUsingLocalTTSEngineFor("", close: true);
+      playUsingLocalTTSEngineFor('', close: true);
     }
     if (isMicListening.isTrue) {
       isMicListening(false);
@@ -911,12 +911,12 @@ class SheelaAIController extends GetxController {
   String? getCurrentLanCode({bool splittedCode = false}) {
     try {
       String? currentLang = PreferenceUtil.getStringValue(SHEELA_LANG);
-      if (!((currentLang ?? '').contains("-"))) {
+      if (!((currentLang ?? '').contains('-'))) {
         currentLang = CommonUtil.langaugeCodes[currentLang ?? 'undef'];
       }
       if ((currentLang ?? '').isNotEmpty) {
-        if (splittedCode && (currentLang != "undef")) {
-          final langCode = currentLang!.split("-").first;
+        if (splittedCode && (currentLang != 'undef')) {
+          final langCode = currentLang!.split('-').first;
           currentLang = langCode;
         }
       } else {
@@ -1078,6 +1078,7 @@ class SheelaAIController extends GetxController {
           isNeedSheelaDialog: isNeedSheelaDialog);
     }
   }
+
 /*
 getSheelaBadgeCount is used to get the latest Sheela Queue badge count.
 makeApiRequest is used to update the data with latest data
@@ -1150,7 +1151,7 @@ makeApiRequest is used to update the data with latest data
       late AudioCache _audioCache;
       _audioCache = AudioCache();
 
-      String audioasset = "assets/raw/ns_final.mp3";
+      String audioasset = 'assets/raw/ns_final.mp3';
       ByteData bytes =
           await rootBundle.load(audioasset); //load sound from assets
       Uint8List soundbytes =
@@ -1166,14 +1167,14 @@ makeApiRequest is used to update the data with latest data
   void updateTimer({bool enable = false}) {
     try {
       if (_popTimer != null && _popTimer!.isActive) {
-        printInfo(info: "Cancelled the timer");
+        printInfo(info: 'Cancelled the timer');
         _popTimer!.cancel();
         _popTimer = null;
       } else if (enable) {
-        printInfo(info: "started the timer");
+        printInfo(info: 'started the timer');
         _popTimer = Timer(const Duration(seconds: 30), () {
           if (isSheelaScreenActive && bleController == null) {
-            printInfo(info: "timeout the timer");
+            printInfo(info: 'timeout the timer');
             stopTTS();
             canSpeak = false;
             isSheelaScreenActive = false;
@@ -1205,7 +1206,7 @@ makeApiRequest is used to update the data with latest data
   callToCC(SheelaResponse currentResponse) async {
     if ((currentResponse.directCall != null && currentResponse.directCall!) &&
         (currentResponse.recipient != null &&
-            currentResponse.recipient!.trim().toLowerCase() == "cc")) {
+            currentResponse.recipient!.trim().toLowerCase() == 'cc')) {
       var regController = CommonUtil().onInitQurhomeRegimenController();
       if (CommonUtil()
           .validString(regController.careCoordinatorId.value)
@@ -1236,6 +1237,7 @@ makeApiRequest is used to update the data with latest data
         )!
             .then((value) {
           updateTimer(enable: true);
+          playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
         });
       } else {
         isPlayPauseView.value = false;
@@ -1243,11 +1245,12 @@ makeApiRequest is used to update the data with latest data
             (CommonUtil().isTablet ?? false) ? true : false;
         Get.to(
           VideoPlayerScreen(
-            videoURL: (currentVideoLinkUrl ?? ""),
+            videoURL: (currentVideoLinkUrl ?? ''),
           ),
         )!
             .then((value) {
           updateTimer(enable: true);
+          playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
         });
       }
     } catch (e, stackTrace) {
@@ -1262,10 +1265,11 @@ makeApiRequest is used to update the data with latest data
       }
       updateTimer(enable: false);
       Get.to(AudioPlayerScreen(
-        audioUrl: (audioURLLink ?? ""),
+        audioUrl: (audioURLLink ?? ''),
       ))!
           .then((value) {
         updateTimer(enable: true);
+        playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
       });
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -1388,14 +1392,14 @@ makeApiRequest is used to update the data with latest data
     });
   }
 
-/**
- * This method checks the first and last activity time of the day
- * Get the list of times on which the remainder should popup based on
- * the interval time
- * If the device time matched the time with any of the value in the remainder
- * list then check if the remainder count in not empty
- * If not show popup dialog else doesnt
- */
+  /**
+   * This method checks the first and last activity time of the day
+   * Get the list of times on which the remainder should popup based on
+   * the interval time
+   * If the device time matched the time with any of the value in the remainder
+   * list then check if the remainder count in not empty
+   * If not show popup dialog else doesnt
+   */
   void showRemainderBasedOnCondition(
       {bool isNeedSheelaDialog = false,
       bool isFromQurHomeRegimen = false}) async {
@@ -1410,9 +1414,9 @@ makeApiRequest is used to update the data with latest data
         controllerQurhomeRegimen.remainderTimestamps ?? [];
 
     if (startDate != null &&
-        startDate != "" &&
+        startDate != '' &&
         endDate != null &&
-        endDate != "") {
+        endDate != '') {
       if ((DateTime.parse(startDate ?? '').isAtSameMomentAs(DateTime.now()) ||
               DateTime.now().isAfter(DateTime.parse(startDate ?? ''))) &&
           (DateTime.now().isBefore(DateTime.parse(endDate ?? ''))) &&
@@ -1476,7 +1480,7 @@ makeApiRequest is used to update the data with latest data
   String? prefixListFiltering(String strResponse) {
     try {
       for (String strSheelaText in sheelaTTSWordList) {
-        if ((strResponse ?? "")
+        if ((strResponse ?? '')
             .toLowerCase()
             .contains(strSheelaText.toLowerCase())) {
           var regEx = RegExp(strSheelaText, caseSensitive: false);
@@ -1490,14 +1494,14 @@ makeApiRequest is used to update the data with latest data
     }
   }
 
-
   Future<void> freeTextConversation({dynamic freeText}) async {
     try {
       if (freeText != null) {
         // Translate user input and Sheela's response
         List<String?> translationsText = await Future.wait([
           getTextTranslate(freeText),
-          getTextTranslate(freeTextReply + (freeText ?? '') + freeTextReplyConfirm),
+          getTextTranslate(
+              freeTextReply + (freeText ?? '') + freeTextReplyConfirm),
         ]);
 
         // Reset loading flag and remove the loading response from conversations
@@ -1551,11 +1555,12 @@ makeApiRequest is used to update the data with latest data
     return [
       Buttons(title: translatedTexts[0], payload: freeTextPayload),
       Buttons(title: translatedTexts[1], btnRedirectTo: strRedirectRedo),
-      Buttons(title: translatedTexts[2], payload: strExit, mute: sheela_hdn_btn_yes),
+      Buttons(
+          title: translatedTexts[2],
+          payload: strExit,
+          mute: sheela_hdn_btn_yes),
     ];
   }
-
-
 
   // Function to generate a list of button configurations for image preview
   List<Buttons> sheelaImagePreviewButtons(
@@ -2405,7 +2410,7 @@ makeApiRequest is used to update the data with latest data
       }*/
 
       if ((response ?? '').toString().isNotEmpty) {
-        if ((currentLanguageCode.value ?? "").contains("en")) {
+        if ((currentLanguageCode.value ?? '').contains('en')) {
           response = prefixListFiltering(response ?? '');
         }
         if ((conversations.isNotEmpty) &&
@@ -2431,20 +2436,30 @@ makeApiRequest is used to update the data with latest data
                 if (responseRecived == carGiverSheela) {
                   responseRecived = careGiverSheela;
                 }
-                button = conversations.last?.buttons.firstWhere((element) =>
-                    (element.title ?? "").toLowerCase() == responseRecived);
+                for (var btn in conversations.last?.buttons) {
+                  // Check if the title of the button matches the response or any of its synonyms
+                  if ((btn.title ?? '').toLowerCase() ==
+                          responseRecived.toLowerCase() ||
+                      (btn.synonymsList != null &&
+                          btn.synonymsList.any((synonym) =>
+                              synonym.toLowerCase() ==
+                              responseRecived.toLowerCase()))) {
+                    button = btn;
+                    break; // Exit the loop if a match is found
+                  }
+                }
               } else if ((conversations.last?.isButtonNumber ?? false)) {
                 bool isDigit = CommonUtil().isNumeric(responseRecived);
                 for (int i = 0; i < conversations.last?.buttons.length; i++) {
-                  var temp = conversations.last?.buttons[i].title.split(".");
+                  var temp = conversations.last?.buttons[i].title.split('.');
                   var realNumber = CommonUtil()
                       .realNumber(int.tryParse(temp[0].toString().trim()));
                   var optionWithRealNumber =
-                      "Option ${realNumber.toString().trim()}";
-                  var optionWithDigit = "Option ${temp[0].toString().trim()}";
+                      'Option ${realNumber.toString().trim()}';
+                  var optionWithDigit = 'Option ${temp[0].toString().trim()}';
                   var numberWithRealNumber =
-                      "Number ${realNumber.toString().trim()}";
-                  var numberWithDigit = "Number ${temp[0].toString().trim()}";
+                      'Number ${realNumber.toString().trim()}';
+                  var numberWithDigit = 'Number ${temp[0].toString().trim()}';
                   if (((temp[isDigit ? 0 : 1].toString().trim())
                               .toLowerCase() ==
                           responseRecived) ||
@@ -2480,6 +2495,7 @@ makeApiRequest is used to update the data with latest data
                           chatAttachments: button?.chatAttachments ?? []),
                     )?.then((value) {
                       isSheelaScreenActive = true;
+                      playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
                     });
                   }
                 } else if (button?.btnRedirectTo == strRedirectToHelpPreview) {
@@ -2496,6 +2512,7 @@ makeApiRequest is used to update the data with latest data
                       titleSheelaPreview: strImageTitle,
                     ))?.then((value) {
                       isSheelaScreenActive = true;
+                      playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
                     });
                   }
                 } else if (button?.btnRedirectTo == strRedirectRedo) {
@@ -2509,7 +2526,7 @@ makeApiRequest is used to update the data with latest data
                     playTTS();
                     scrollToEnd();
                   });
-                } else if ((button?.btnRedirectTo ?? "") ==
+                } else if ((button?.btnRedirectTo ?? '') ==
                     strHomeScreenForce.toLowerCase()) {
                   Get.back();
                 } else if ((button?.isSnoozeAction ?? false)) {
@@ -2972,6 +2989,22 @@ makeApiRequest is used to update the data with latest data
     } catch (e, stackTrace) {
       // Handle any exceptions and log them using appLogs method
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  // Function to get the TTS play again flag
+  bool getTTSPlayAgainFlag() {
+    // Using the nullish coalescing operator (??) to handle null cases
+    // If currentPlayingConversation is not null, check isPlayAgainMediaTTS; otherwise, default to false
+    return conversations.last?.additionalInfoSheelaResponse?.isAutoReadTTS ??
+        false;
+  }
+
+  playPauseTTSFromApi() {
+    // Check if TTS play again flag is true
+    if (getTTSPlayAgainFlag()) {
+      // Play or pause TTS with the last conversation, or a default SheelaResponse if conversations.last is null
+      playPauseTTS(conversations.last ?? SheelaResponse());
     }
   }
 }
