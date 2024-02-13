@@ -42,6 +42,7 @@ import '../../src/model/UpdatedDeviceModel.dart';
 import '../../src/model/user/MyProfileModel.dart';
 import '../../src/model/user/Tags.dart';
 import '../../src/model/user/user_accounts_arguments.dart';
+import '../../src/resources/network/ApiBaseHelper.dart';
 import '../../src/resources/repository/health/HealthReportListForUserRepository.dart';
 import '../../src/ui/HomeScreen.dart';
 import '../../src/ui/SheelaAI/Controller/SheelaAIController.dart';
@@ -77,6 +78,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   GetDeviceSelectionModel? selectionResult;
   CreateDeviceSelectionModel? createDeviceSelectionModel;
   UpdateDeviceModel? updateDeviceModel;
+  final  _helper = ApiBaseHelper();
 
   int? preColor = 0xff5e1fe0;
   int? greColor = 0xff753aec;
@@ -848,7 +850,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             allowAppointmentNotification,
             allowVitalNotification,
             allowSymptomsNotification,
-            voiceCloning)
+            voiceCloning,
+            useClonedVoice)
         .then((value) async {
       createDeviceSelectionModel = value;
       if (createDeviceSelectionModel!.isSuccess!) {
@@ -2082,6 +2085,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     voiceCloning =
         getDeviceSelectionModel.result![0].profileSetting!.voiceCloning ??
             false;
+    useClonedVoice = getDeviceSelectionModel.result![0].profileSetting!.useClonedVoice ??
+        false;
 
     //set the bool value when provider has allowed the permssion
     providerAllowedVoiceCloningModule = getDeviceSelectionModel
@@ -2128,9 +2133,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     }
   }
 
-  void handleUseClonedVoiceSwitch(bool isEnabled){
+  Future<void> handleUseClonedVoiceSwitch(bool isEnabled) async {
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if(isVoiceAssigned){
-      useClonedVoice =isEnabled;
+     await  createAppColorSelection(preColor, greColor);
       setState(() {
       });
     }else{
