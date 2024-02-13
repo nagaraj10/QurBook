@@ -162,48 +162,13 @@ class SheelaResponse {
       isButtonNumber = (json['IsButtonNumber'] ?? false);
 
       if (buttons != null && buttons!.length > 0) {
-        // List<Buttons>? buttonsList = [];
-        // buttons!.forEach((element) {
-        //   if (element.hidden != sheela_hdn_btn_yes) {
-        //     buttonsList.add(element);
-        //   }
-        // });
-        buttons = [
-          Buttons.fromJson({
-            "payload": "Show Image Help",
-            "title": "Show Image Help",
-            "redirectTo": "media_help_screen",
-            "mute": "yes",
-            "imageUrl": "https://cdn.pixabay.com/photo/2014/09/20/23/44/website-454460_640.jpg",
-            "videoUrl": null,
-            "audioUrl": null,
-            "seq": 3,
-            "synonymsList": "['open image', 'show image', 'image help']"
-          }),
-          Buttons.fromJson({
-            "payload": "Show Audio Help",
-            "title": "Show Audio Help",
-            "redirectTo": "media_help_screen",
-            "mute": "yes",
-            "imageUrl": null,
-            "videoUrl": null,
-            "audioUrl": "http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3",
-            "seq": 4,
-            "synonymsList": "['open audio', 'show audio', 'audio help']"
-          }),
-          Buttons.fromJson({
-            "payload": "Show Video Help",
-            "title": "Show Video Help",
-            "redirectTo": "media_help_screen",
-            "mute": "yes",
-            "imageUrl": null,
-            "videoUrl": "https://www.youtube.com/watch?v=YYYWRtFBf_A",
-            "audioUrl": null,
-            "seq": 5,
-            "synonymsList": "['open Video', 'show Video', 'Video help']"
-          })
-        ];
-        // buttonsList;
+        List<Buttons>? buttonsList = [];
+        buttons!.forEach((element) {
+          if (element.hidden != sheela_hdn_btn_yes) {
+            buttonsList.add(element);
+          }
+        });
+        buttons = buttonsList;
       }
       pronunciationText = (json['pronunciationText'] ?? '');
     } catch (e, stackTrace) {
@@ -318,14 +283,7 @@ class Buttons {
       needPhoto = (json['needPhoto'] ?? false);
       needAudio = (json['needAudio'] ?? false);
       needVideo = (json['needVideo'] ?? false);
-      synonymsList =
-          // (json['title'] == "Show Image Help")
-          //     ? ['open image', 'show image', 'image help']
-          //     : json['title'] == "Show Audio Help"
-          //         ? ['open audio', 'show audio', 'audio help']
-          //         : ['open Video', 'show Video', 'Video help'];
-
-          json["synonymsList"] != null ? List<String>.from(json["synonymsList"]) : [];
+      synonymsList = json["synonymsList"] != null ? List<String>.from(json["synonymsList"]) : [];
       if (json['chatAttachments'] != null) {
         chatAttachments = <ChatAttachments>[];
         json['chatAttachments'].forEach((v) {
