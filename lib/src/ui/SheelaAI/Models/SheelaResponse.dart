@@ -241,7 +241,7 @@ class Buttons {
   bool? needPhoto;
   bool? needAudio;
   bool? needVideo;
-  List<String>? synonymsList;
+  List<String>? synonymsList; // list of synonyms to match the voice input
 
   Buttons({
     this.payload,
@@ -283,7 +283,9 @@ class Buttons {
       needPhoto = (json['needPhoto'] ?? false);
       needAudio = (json['needAudio'] ?? false);
       needVideo = (json['needVideo'] ?? false);
-      synonymsList = json["synonymsList"] != null ? List<String>.from(json["synonymsList"]) : [];
+      synonymsList = json["synonymsList"] != null
+          ? List<String>.from(json["synonymsList"])
+          : []; // Assign synonymsList with an empty list if it's null, otherwise, convert the JSON list to a Dart list of strings
       if (json['chatAttachments'] != null) {
         chatAttachments = <ChatAttachments>[];
         json['chatAttachments'].forEach((v) {

@@ -2218,6 +2218,7 @@ makeApiRequest is used to update the data with latest data
                   responseRecived = careGiverSheela;
                 }
                 for (var btn in conversations.last?.buttons) {
+                  // Check if the title of the button matches the response or any of its synonyms
                   if ((btn.title ?? '').toLowerCase() == responseRecived.toLowerCase() ||
                       (btn.synonymsList != null && btn.synonymsList.any((synonym) => synonym.toLowerCase() == responseRecived.toLowerCase()))) {
                     button = btn;
