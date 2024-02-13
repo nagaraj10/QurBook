@@ -387,7 +387,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                       });
                                                 }
                                               },
-                                              child: Text('Clear cart'),
+                                              child: Text('Clear cart',
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          CommonUtil().isTablet!
+                                                              ? tabHeader1
+                                                              : mobileHeader1)),
                                               style: TextButton.styleFrom(
                                                 foregroundColor:
                                                     widget.isFromNotification
@@ -684,15 +689,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 });
                                               },
                                         child: ConstrainedBox(
-                                          constraints:
-                                              BoxConstraints(minWidth: 200),
+                                          constraints: BoxConstraints(
+                                              minWidth: CommonUtil().isTablet!
+                                                  ? 230
+                                                  : 200),
                                           child: Container(
-                                            height: 50,
+                                            height: CommonUtil().isTablet!
+                                                ? 60
+                                                : 50,
                                             padding: EdgeInsets.symmetric(
-                                                vertical: 5.0.sp,
-                                                horizontal: 5.0.sp),
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
+                                              vertical: 5.0.sp,
+                                              horizontal: 20.0.sp,
+                                            ),
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(5)),
                                               boxShadow: <BoxShadow>[
@@ -719,8 +729,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     height: 20,
                                                     child:
                                                         CommonCircularIndicator())
-                                                : Text(
-                                                    value.cartType ==
+                                                : Text( value.cartType ==
                                                             CartType.RETRY_CART
                                                         ? strRetryPay
                                                         : (value.totalProductCount) >
