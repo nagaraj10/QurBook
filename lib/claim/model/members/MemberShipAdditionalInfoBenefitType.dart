@@ -21,7 +21,8 @@ class MemberShipAdditionalInfoBenefitType {
         code: json['code'],
         name: json['name'],
         fieldName: json['fieldName'],
-        transactionLimit: json['transactionLimit']
+        /// now transactionLimit can handle int and string both
+        transactionLimit: int.tryParse(json['transactionLimit'].toString()),
       );
 
   Map<String, dynamic> toJson() => {
