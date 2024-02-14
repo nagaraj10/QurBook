@@ -1426,23 +1426,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
             .transactionLimit ??
         0;
   }
-  /// Returns the membership discount title string with currency formatting,
-  /// capping the discount at the maximum membership amount limit if applicable.
+
+  /// Returns the membership discount title string with currency formatting
+  /// applied, based on the subTotalProductCount and totalProductCount values
+  /// from the provided CheckoutPageProvider.
   ///
-  /// Gets the maximum membership amount limit using getMembershipAmountLimit().
-  /// Then calculates the actual discount amount by taking the min of the
-  /// limit and total product count. Formats the amount with currency and minus sign.
-  /// So this shows the membership discount up to the max limit.
-  ///
-  /// Parameters:
-  /// - value: The CheckoutPageProvider value.
-  ///
-  /// Returns: The membership discount title string with currency formatting.
+  /// This is used to display the membership discount amount on the checkout
+  /// page.
   String getMembershipDiscountWithCurrency(CheckoutPageProvider value) {
-    final maxMembershipAmountLimit = getMembershipAmountLimit(value);
-
-    final finalAmount = min(maxMembershipAmountLimit, value.totalProductCount);
-
+    final finalAmount = value.subTotalProductCount - value.totalProductCount;
     return '-${CommonUtil.CURRENCY}$finalAmount';
   }
 }
