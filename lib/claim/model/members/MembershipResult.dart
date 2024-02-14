@@ -11,15 +11,15 @@ class MemberShipResult {
     String? planEndDate;
     String? planSubscriptionInfoId;
   /// New Parameters added for Membership Benefits
-    int? planId;
+    num? planId;
     String? creditAmount;
-    int? noOfCarePlans;
-    int? noOfDoctorAppointments;
-    int? labAppointment;
-    int? medicineOrdering;
-    int? tranportation;
-    int? homecareServices;
-    int? familyMembersAllowed;
+    num? noOfCarePlans;
+    num? noOfDoctorAppointments;
+    num? labAppointment;
+    num? medicineOrdering;
+    num? tranportation;
+    num? homecareServices;
+    num? familyMembersAllowed;
 
   MemberShipResult(
       {this.id,

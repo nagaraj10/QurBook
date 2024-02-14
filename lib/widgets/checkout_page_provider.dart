@@ -43,14 +43,14 @@ class CheckoutPageProvider extends ChangeNotifier {
   bool isLoading = false;
   bool isFirstTym = true;
 
-  int totalProductCount = 0;
-  int subTotalProductCount = 0;
+  num totalProductCount = 0;
+  num subTotalProductCount = 0;
   List<ProductList>? productList;
   List<ProductList> cartList = [];
 
   int get currentCartCount => _cartCount;
 
-  int get _productCount => totalProductCount;
+  num get _productCount => totalProductCount;
 
   Future<void> loader(bool currentIsLoading, {bool isNeedRelod = false}) async{
     isLoading = currentIsLoading;

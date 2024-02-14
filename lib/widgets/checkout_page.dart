@@ -546,7 +546,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             Spacer(),
                                             Text(
                                               //to showcase subtotal of product
-                                              '${CommonUtil.CURRENCY}${value.subTotalProductCount}',
+                                              '${CommonUtil.CURRENCY}${CommonUtil.formatAmount(value.subTotalProductCount)}',
                                               style: TextStyle(
                                                   fontSize:
                                                       CommonUtil().isTablet!
@@ -606,7 +606,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               width: 20.0.w,
                                             ),
                                             Text(
-                                              '${CommonUtil.CURRENCY}${value.totalProductCount}',
+                                              '${CommonUtil.CURRENCY}${CommonUtil.formatAmount(value.totalProductCount)}',
                                               style: TextStyle(
                                                   fontSize:
                                                       CommonUtil().isTablet!
@@ -652,7 +652,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '${CommonUtil.CURRENCY}${value.totalProductCount}',
+                                        '${CommonUtil.CURRENCY}${CommonUtil.formatAmount(value.totalProductCount)}',
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
@@ -866,7 +866,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   Widget _cartItem(BuildContext context, ProductList item,
       {bool isFirsTym = true}) {
-    int productValue = 0;
+    num productValue = 0;
 
     if (!isFirsTym) {
       if (item.productDetail?.planSubscriptionFee != null &&
@@ -875,7 +875,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           productValue = 0;
         } else {
           productValue =
-              double.parse(item.productDetail!.planSubscriptionFee!).toInt();
+              num.parse(item.productDetail?.planSubscriptionFee ?? '0');
         }
       }
     } else {
@@ -884,26 +884,26 @@ class _CheckoutPageState extends State<CheckoutPage> {
         if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = double.parse(item.additionalInfo?.newFee).toInt();
+          productValue = num.parse(item.additionalInfo?.newFee ?? '0');
         }
       } else if (item.additionalInfo?.actualFee != null &&
           item.additionalInfo?.actualFee != "") {
         if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = double.parse(item.additionalInfo?.actualFee).toInt();
+          productValue = num.parse(item.additionalInfo?.actualFee);
         }
       } else if (item.paidAmount!.contains(".")) {
         if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = double.parse(item.paidAmount!).toInt();
+          productValue = num.parse(item.paidAmount ?? '0');
         }
       } else {
         if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = int.parse(item.paidAmount!);
+          productValue = num.parse(item.paidAmount ?? '0');
         }
       }
     }
@@ -1256,7 +1256,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                     Spacer(),
                     Text(
-                      '${CommonUtil.CURRENCY}${productValue}',
+                      '${CommonUtil.CURRENCY}${CommonUtil.formatAmount(productValue)}',
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
@@ -1408,7 +1408,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
     final maxMembershipAmountLimit = getMembershipAmountLimit(value);
     var basedtitle = variable.strMembershipDiscount;
     if (maxMembershipAmountLimit > 0) {
-      basedtitle += ' (Max. $maxMembershipAmountLimit)';
+      basedtitle +=
+          ' (Max. ${CommonUtil.formatAmount(maxMembershipAmountLimit)})';
     }
     return basedtitle;
   }
@@ -1419,7 +1420,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   /// Checks the membership additional info for the 'benefitType' field
   /// with name 'benefitCareDietPlans', and returns its 'transactionLimit'
   /// value if available. Otherwise returns 0.
-  int getMembershipAmountLimit(CheckoutPageProvider value) {
+  num getMembershipAmountLimit(CheckoutPageProvider value) {
     return value.memberShipDetailsResult?.additionalInfo?.benefitType
             ?.lastWhere((element) =>
                 element.fieldName == variable.strBenefitCareDietPlans)
@@ -1434,7 +1435,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
   /// This is used to display the membership discount amount on the checkout
   /// page.
   String getMembershipDiscountWithCurrency(CheckoutPageProvider value) {
-    final finalAmount = value.subTotalProductCount - value.totalProductCount;
+    final finalAmount = CommonUtil.formatAmount(
+        value.subTotalProductCount - value.totalProductCount);
     return '-${CommonUtil.CURRENCY}$finalAmount';
   }
 }
