@@ -1,3 +1,4 @@
+import '../../../src/utils/screenutils/size_extensions.dart';
 import 'MembershipAdditionInfo.dart';
 import '../../../common/CommonUtil.dart';
 
@@ -14,7 +15,7 @@ class MemberShipResult {
   int? planId;
   String? creditAmount;
   int? noOfCarePlans;
-  dynamic noOfDoctorAppointments;//Added dynamic because value may be possiblities to come as double and string or int
+  num? noOfDoctorAppointments;//Added num because value may be possiblities to come as double and int
   int? labAppointment;
   int? medicineOrdering;
   int? tranportation;
@@ -53,9 +54,9 @@ class MemberShipResult {
       planId = json['planId'];
       creditAmount = json['creditAmount'];
       noOfCarePlans = json['noOfCarePlans'] != null
-          ? int.parse(json['noOfCarePlans'])
+          ? int.tryParse(json['noOfCarePlans'].toString())
           : null; // Parsing to int or null if it's null
-      noOfDoctorAppointments = json['noOfDoctorAppointments'];
+      noOfDoctorAppointments = json['noOfDoctorAppointments'].toString().parseNum();
       labAppointment = json['labAppointment'] != null
           ? int.parse(json['labAppointment'])
           : null; // Parsing to int or null if it's null

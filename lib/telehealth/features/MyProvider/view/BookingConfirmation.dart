@@ -1770,6 +1770,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   onPressed: () => Get.back(
                     result: true,
                   ),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color(CommonUtil().getMyPrimaryColor())),// Set background color here
+                    // You can also customize other properties such as padding, shape, etc.
+                  ),
                   child: const Text(
                     Constants.okButton,
                   ),

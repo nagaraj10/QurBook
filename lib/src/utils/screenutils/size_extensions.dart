@@ -25,3 +25,27 @@ extension SizeExtension on num {
   ///Multiple of screen height
   double get sh => ScreenUtil().screenHeight! * this;
 }
+
+///Num Parse Extension to parse dynamic fields
+extension ParseNumExtension on dynamic {
+  num? parseNum() {
+    if (this == null) {
+      return null;
+    } else if (this is num) {
+      return this as num;
+    } else if (this is String) {
+      String trimmedString = (this as String).trim();
+      if (trimmedString.isEmpty) {
+        return null; // Return null if the string is empty after trimming
+      }
+      return num.tryParse(trimmedString);
+    } else {
+      // Handle other cases if needed
+      return null;
+    }
+  }
+}
+
+
+
+
