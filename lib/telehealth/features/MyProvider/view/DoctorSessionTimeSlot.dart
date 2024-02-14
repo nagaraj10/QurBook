@@ -132,9 +132,8 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
         }
       });
     });
-    print('0000 appin:${value.result?.first.noOfDoctorAppointments}');
     if(value.result?.first.noOfDoctorAppointments!=null){
-      widget.noOfDoctorAppointments= double.parse('${value.result?.first.noOfDoctorAppointments.toString()}');
+      widget.noOfDoctorAppointments= value.result?.first.noOfDoctorAppointments;
     }
   }
 

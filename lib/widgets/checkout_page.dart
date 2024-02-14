@@ -1419,7 +1419,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   /// Checks the membership additional info for the 'benefitType' field
   /// with name 'benefitCareDietPlans', and returns its 'transactionLimit'
   /// value if available. Otherwise returns 0.
-  int getMembershipAmountLimit(CheckoutPageProvider value) {
+  num getMembershipAmountLimit(CheckoutPageProvider value) {
     return value.memberShipDetailsResult?.additionalInfo?.benefitType
             ?.lastWhere((element) =>
                 element.fieldName == variable.strBenefitCareDietPlans)
