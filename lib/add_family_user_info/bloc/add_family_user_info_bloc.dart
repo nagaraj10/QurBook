@@ -150,6 +150,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       CommonUtil().onInitSheelaAIController();
 
   bool voiceCloning = false;
+
+  bool useClonedVoice = false;
   bool providerAllowedVoiceCloningModule = true;
   bool superAdminAllowedVoiceCloningModule = true;
   String voiceCloningStatus = 'Inactive';
@@ -410,7 +412,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                 allowAppointmentNotification,
                 allowVitalNotification,
                 allowSymptomsNotification,
-                voiceCloning)
+                voiceCloning,
+                useClonedVoice)
             .then((value) {
           createDeviceSelectionModel = value;
           if (createDeviceSelectionModel?.isSuccess ?? false) {
@@ -438,7 +441,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                     allowAppointmentNotification,
                     allowVitalNotification,
                     allowSymptomsNotification,
-                    voiceCloning)
+                    voiceCloning,
+                    useClonedVoice)
                 .then((value) {
               createDeviceSelectionModel = value;
               if (createDeviceSelectionModel!.isSuccess!) {
@@ -584,6 +588,9 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     voiceCloning =
         getDeviceSelectionModel.result![0].profileSetting!.voiceCloning ??
             false;
+    useClonedVoice =
+        getDeviceSelectionModel.result![0].profileSetting!.useClonedVoice ??
+            false;
 
     providerAllowedVoiceCloningModule = getDeviceSelectionModel
             .result![0]
@@ -664,7 +671,9 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                   allowAppointmentNotification,
                   allowVitalNotification,
                   allowSymptomsNotification,
-                  voiceCloning)
+                  voiceCloning,
+            useClonedVoice
+          )
               .then((value) {
             createDeviceSelectionModel = value;
             if (createDeviceSelectionModel!.isSuccess!) {

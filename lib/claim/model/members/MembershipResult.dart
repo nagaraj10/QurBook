@@ -4,13 +4,13 @@ import '../../../common/CommonUtil.dart';
 
 class MemberShipResult {
   String? id;
-  String? healthOrganizationName;
-  String? healthOrganizationId;
-  String? planName;
-  MemberShipAdditionalInfo? additionalInfo;
-  String? planStartDate;
-  String? planEndDate;
-  String? planSubscriptionInfoId;
+    String? healthOrganizationName;
+    String? healthOrganizationId;
+    String? planName;
+    MemberShipAdditionalInfo? additionalInfo;
+    String? planStartDate;
+    String? planEndDate;
+    String? planSubscriptionInfoId;
   /// New Parameters added for Membership Benefits
   int? planId;
   String? creditAmount;
@@ -20,6 +20,7 @@ class MemberShipResult {
   int? medicineOrdering;
   int? tranportation;
   int? homecareServices;
+  int? familyMembersAllowed;
 
   MemberShipResult(
       {this.id,
@@ -69,6 +70,7 @@ class MemberShipResult {
       homecareServices = json['homecareServices'] != null
           ? int.tryParse(json['homecareServices'].toString())
           : null; // Parsing to int or null if it's null
+      familyMembersAllowed = json['familyMembersAllowed'];
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -94,6 +96,7 @@ class MemberShipResult {
     data['medicineOrdering'] = medicineOrdering;
     data['tranportation'] = tranportation;
     data['homecareServices'] = homecareServices;
+    data['familyMembersAllowed'] = familyMembersAllowed;
     return data;
   }
 }
