@@ -1,3 +1,5 @@
+import '../../../src/utils/screenutils/size_extensions.dart';
+
 /// A class representing the additional information related to a membership benefit type.
 class MemberShipAdditionalInfoBenefitType {
   String? id;
@@ -21,8 +23,7 @@ class MemberShipAdditionalInfoBenefitType {
         code: json['code'],
         name: json['name'],
         fieldName: json['fieldName'],
-        /// now transactionLimit can handle double, int, and string
-        transactionLimit: num.parse(json['transactionLimit'].toString() ?? '0'),
+        transactionLimit: json['transactionLimit'].toString().parseNum() ?? 0,
       );
 
   Map<String, dynamic> toJson() => {

@@ -451,7 +451,7 @@ class CheckoutPageProvider extends ChangeNotifier {
                   element.fieldName == constant.strBenefitCareDietPlans)
               .transactionLimit ??
           0;
-      totalProductCount = max(totalProductCount - transactionLimit, 0);
+      totalProductCount = max(totalProductCount - transactionLimit.toInt(), 0);
     }
     notifyListeners();
   }

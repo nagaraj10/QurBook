@@ -313,7 +313,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
 
     switch (type?.fieldName) {
       case strBenefitDoctorAppointment:
-        amount = widget.memberShipResult?.noOfDoctorAppointments ?? 0;
+        amount = widget.memberShipResult?.noOfDoctorAppointments?.toInt() ?? 0;
         break;
       case strBenefitCareDietPlans:
         amount = widget.memberShipResult?.noOfCarePlans ?? 0;
