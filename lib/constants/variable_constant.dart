@@ -67,6 +67,7 @@ const String Self = 'Self';
 const String Delink = 'Delink';
 const String Please_Wait = 'Please Wait';
 const String parentToChild = 'parentToChild';
+const String stringUpdateCart = 'Update Cart';
 const String DeLink = 'De-Link';
 const String Error = 'Error';
 const String Success = 'Success';
@@ -1018,6 +1019,7 @@ const String strAvailableServices = 'Available Services';
 const String strAvailableBalance = 'Available balance';
 const String strShowAvailableBenefits = 'Show available benefits';
 
+const String strMembershipDiscount = 'Membership discount';
 const String strBenefitHomecareService = 'Homecare Service';
 const String strBenefitHomecareServices = 'Homecare Services';
 const String strBenefitHealthPlan = 'Health Plan';

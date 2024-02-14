@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../authentication/constants/constants.dart';
+import '../../../claim/model/members/MemberShipAdditionalInfoBenefitType.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../common/FHBBasicWidget.dart';
 import '../../../constants/fhb_constants.dart';
@@ -500,8 +501,29 @@ class CarePlanCard extends StatelessWidget {
     int careCount =
         await Provider.of<PlanWizardViewModel>(context, listen: false)
             .carePlanCount;
+
+    /// Checks if the 'Care Diet Plans' benefit type for the user's membership
+    /// is 'By Cost' or not. Retrieves the membership details and benefit types,
+    /// then finds the 'Care Diet Plans' benefit type and checks if its code
+    /// is 'BY_COST'.
+    List<MemberShipAdditionalInfoBenefitType>? benefitType =
+        await Provider.of<PlanWizardViewModel>(context, listen: false)
+            .memberShipDetailsResult
+            ?.result
+            ?.first
+            .additionalInfo
+            ?.benefitType;
+
+    final isBenefitTypeByCost = benefitType
+            ?.firstWhereOrNull(
+                (element) => element.fieldName == strBenefitCareDietPlans)
+            ?.code ==
+        'BY_COST';
+
     int priceValue = int.parse(price);
-    if (isMemberShip && priceValue > 0 && careCount > 0) {
+    if (isBenefitTypeByCost) {
+      addToCartCommonMethod(planList!, context, planList.price, "", false);
+    } else if (isMemberShip && priceValue > 0 && careCount > 0) {
       _alertForMemberShip(context, planList!, isMemberShip);
     } else {
       addToCartCommonMethod(planList!, context, planList.price, "", false);

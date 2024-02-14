@@ -87,7 +87,9 @@ class Alert {
             FlatButtonWidget(
               isSelected: true,
               bgColor: Color(CommonUtil().getMyPrimaryColor()),
+              titleColor: Colors.white,
               title: confirm,
+              width: confirm == variable.stringUpdateCart ? 150 : 100,
               onPress: onPressedConfirm as void Function()? ??
                   () {
                     Navigator.of(context).pop();

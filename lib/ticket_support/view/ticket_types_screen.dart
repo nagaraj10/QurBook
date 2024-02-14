@@ -121,7 +121,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
   }
 
   Widget getMembershipDataUI(MemberShipDetails? memberShipDetails) {
-    final _memberShipResult = memberShipDetails?.result?.first;
+    final _memberShipResult = memberShipDetails?.result?.last;
     if (_memberShipResult != null) {
       /// We need to showcase only selected benefitType only.
       _memberShipResult.additionalInfo?.benefitType?.removeWhere(

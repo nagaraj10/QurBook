@@ -4,7 +4,7 @@ class MemberShipAdditionalInfoBenefitType {
   String? code;
   String? name;
   String? fieldName;
-  num? transactionLimit;
+  int? transactionLimit;
 
   MemberShipAdditionalInfoBenefitType({
     this.id,
