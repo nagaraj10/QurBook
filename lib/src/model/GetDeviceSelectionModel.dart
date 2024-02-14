@@ -128,6 +128,8 @@ class ProfileSetting {
   String? qa_subscription;
   String? voiceCloningStatus;
   bool? voiceCloning;
+  bool? useClonedVoice;
+  bool? voiceCloneAssigned;
 
   PreferredMeasurement? preferredMeasurement;
 
@@ -152,6 +154,8 @@ class ProfileSetting {
     this.preferredMeasurement,
     this.voiceCloningStatus,
     this.voiceCloning,
+    this.useClonedVoice,
+    this.voiceCloneAssigned,
   });
 
   ProfileSetting.fromJson(Map<String, dynamic> json) {
@@ -183,7 +187,9 @@ class ProfileSetting {
         voiceCloningStatus = json['voiceCloningStatus'] ??
             strInActive; //get the status of voice cloning
         voiceCloning = json[
-            'voiceCloning']; // get the value if voice cloning is enabled or not
+            'voiceCloning'];
+        useClonedVoice = json['useClonedVoice']; // get the value if the cloned voice feature is enabled
+        voiceCloneAssigned = json['voiceCloneAssigned'];
       }
 
       if (json.containsKey('preferred_measurement')) {

@@ -44,9 +44,11 @@ import '../../src/model/UpdatedDeviceModel.dart';
 import '../../src/model/user/MyProfileModel.dart';
 import '../../src/model/user/Tags.dart';
 import '../../src/model/user/user_accounts_arguments.dart';
+import '../../src/resources/network/ApiBaseHelper.dart';
 import '../../src/resources/repository/health/HealthReportListForUserRepository.dart';
 import '../../src/ui/HomeScreen.dart';
 import '../../src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import '../../src/ui/SheelaAI/Services/SheelaAIAPIServices.dart';
 import '../../src/ui/settings/CaregiverSettng.dart';
 import '../../src/ui/settings/MySettings.dart';
 import '../../src/ui/settings/NonAdheranceSettingsScreen.dart';
@@ -100,6 +102,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   String? qa_subscription;
 
   bool voiceCloning = false;
+  ///Added for Family members
+  bool useClonedVoice = false;
   bool providerAllowedVoiceCloningModule = false;
   bool superAdminAllowedVoiceCloningModule = false;
   String voiceCloningStatus = strInActive; //set defaut value
@@ -169,9 +173,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   double arrowIcon = CommonUtil().isTablet! ? 20.0.sp : 16.0.sp;
   double switchTrail = CommonUtil().isTablet! ? 1.0 : 0.8;
   bool? isVoiceCloningChanged; // bool value to allow navigation when tapped
+  ///Added for family members to identify  whether voice is assigned or not
+  bool isVoiceAssigned =false;
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
     qurhomeDashboardController.getModuleAccess();
     if (CommonUtil.REGION_CODE == 'US') {
@@ -843,7 +849,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             allowAppointmentNotification,
             allowVitalNotification,
             allowSymptomsNotification,
-            voiceCloning)
+            voiceCloning,
+            useClonedVoice)
         .then((value) async {
       createDeviceSelectionModel = value;
       if (createDeviceSelectionModel!.isSuccess!) {
@@ -1142,7 +1149,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     visible: superAdminAllowedVoiceCloningModule,
                     child: ListTile(
                         leading: ImageIcon(
-                          AssetImage(variable.icon_voice_cloning),
+                          AssetImage(CommonUtil.isUSRegion()?variable.icon_mic_icon:variable.icon_voice_cloning),
                           size: iconSize,
                           color: providerAllowedVoiceCloningModule
                               ? Colors.black
@@ -1193,6 +1200,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                         ),
                         onTap: () => navigateToTermsOrStatusScreen()),
                   ),
+                _useClonedVoiceWidget(),
                 if (Platform.isAndroid)
                   Theme(
                       data: theme,
@@ -2076,7 +2084,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     voiceCloning =
         getDeviceSelectionModel.result![0].profileSetting!.voiceCloning ??
             false;
-
+    useClonedVoice = getDeviceSelectionModel.result![0].profileSetting!.useClonedVoice ??
+        false;
+    isVoiceAssigned = getDeviceSelectionModel.result![0].profileSetting!.voiceCloneAssigned ?? false;
     //set the bool value when provider has allowed the permssion
     providerAllowedVoiceCloningModule = getDeviceSelectionModel
             .result![0]
@@ -2119,6 +2129,16 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       _confirmVoiceCloneDisable(isEnabled);
     } else {
       handleVoiceCloneSwitchAction(isEnabled);
+    }
+  }
+
+  Future<void> handleUseClonedVoiceSwitch(bool isEnabled) async {
+    if(isVoiceAssigned){
+     await  createAppColorSelection(preColor, greColor);
+      setState(() {
+      });
+    }else{
+      toast.getToast(variable.strVoiceCloneNotSetByYourCaregiver, Colors.red);
     }
   }
 
@@ -2200,6 +2220,39 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         ),
       );
 
+  ///Only for family members
+  Widget _useClonedVoiceWidget(){
+   return  Visibility(
+     visible:CommonUtil.isUSRegion(),
+       child: Column(
+         children: [
+           Divider(),
+           ListTile(
+              leading: ImageIcon(
+                AssetImage(variable.icon_voice_cloning),
+                size: iconSize
+              ),
+              title: Text(variable.strUseClonedVoice,
+                  style: TextStyle(
+                      fontSize: subtitle,)),
+              subtitle: Text(
+                variable.strUseClonedVoiceDesc,
+                maxLines: 2,
+                style: TextStyle(
+                    fontSize: title4, color: Colors.grey),
+              ),
+              trailing: Transform.scale(
+                scale: switchTrail,
+                child: Switch(
+                  value: useClonedVoice,
+                  activeColor:Color(CommonUtil().getMyPrimaryColor()),
+                  onChanged: handleUseClonedVoiceSwitch,
+                ),
+              ),),
+         ],
+       ),
+     );
+  }
   void closeDialog() => Navigator.of(
         context,
       ).pop();

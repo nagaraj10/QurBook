@@ -14,7 +14,6 @@ import '../../telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart'
 import '../bloc/providers_block.dart';
 import '../models/Hospitals.dart';
 import 'my_provider.dart';
-import 'dart:developer' as dev;
 
 class MyProvidersHospitalsList extends StatefulWidget {
   final List<Hospitals>? hospitalsModel;
@@ -42,7 +41,6 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
       GlobalKey<RefreshIndicatorState>();
   @override
   void initState() {
-    dev.debugger();
     super.initState();
   }
 

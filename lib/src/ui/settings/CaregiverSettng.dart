@@ -52,6 +52,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
  * Declare variable neccessary to voice cloning 
  */
   bool voiceCloning = false;
+  bool useClonedVoice = false;
   bool providerAllowedVoiceCloningModule = true;
   bool superAdminAllowedVoiceCloningModule = true;
   String voiceCloningStatus = 'Inactive';
@@ -190,7 +191,8 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
             allowAppointmentNotification,
             allowVitalNotification,
             allowSymptomsNotification,
-            voiceCloning)
+            voiceCloning,
+           useClonedVoice)
         .then((value) {
       Provider.of<LandingViewModel>(context, listen: false)
           .getQurPlanDashBoard();
@@ -407,6 +409,9 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
 
       voiceCloning =
           getDeviceSelectionModel.result![0].profileSetting!.voiceCloning ??
+              false;
+      useClonedVoice =
+          getDeviceSelectionModel.result![0].profileSetting!.useClonedVoice ??
               false;
 
       providerAllowedVoiceCloningModule = getDeviceSelectionModel

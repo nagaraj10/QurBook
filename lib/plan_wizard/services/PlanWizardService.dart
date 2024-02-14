@@ -13,6 +13,8 @@ import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/plan_wizard/models/health_condition_response_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../claim/model/members/MembershipDetails.dart';
+
 class PlanWizardService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
@@ -61,6 +63,21 @@ class PlanWizardService {
     var jsonString = convert.jsonEncode(body);
     final response = await _helper.getPlanList(qr_plan_list, jsonString);
     return PlanListModel.fromJson(response);
+  }
+
+  /// Gets the membership details for the user with the given ID.
+  ///
+  /// Sends a request to the API to get the membership details for the user
+  /// with the provided user ID. Returns a Future containing the MemberShipDetails
+  /// model containing the membership details.
+  ///
+  /// @param userId The ID of the user to get membership details for.
+  /// @returns A Future containing the MemberShipDetails for the given user.
+  Future<MemberShipDetails> getMemberShip(String userId) async {
+    final responseQuery = '$qr_membership$userId';
+    final response = await _helper.getMemberShipDetails(responseQuery);
+
+    return MemberShipDetails.fromJson(response);
   }
 
   Future<DietPlanModel> getDietPlanList(

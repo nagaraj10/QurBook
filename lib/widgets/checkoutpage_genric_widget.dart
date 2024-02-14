@@ -303,7 +303,7 @@ class CheckoutPageWidgets {
 
                                                 Alert.displayConfirmProceed(
                                                     Get.context!,
-                                                    confirm: "Update Cart",
+                                                    confirm: variable.stringUpdateCart,
                                                     title: "Update",
                                                     content:
                                                         value.message ?? '',
