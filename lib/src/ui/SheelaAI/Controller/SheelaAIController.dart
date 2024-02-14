@@ -920,7 +920,9 @@ class SheelaAIController extends GetxController {
           currentDeviceStatus.allowAppointmentNotification,
           currentDeviceStatus.allowVitalNotification,
           currentDeviceStatus.allowSymptomsNotification,
-          currentDeviceStatus.voiceCloning);
+          currentDeviceStatus.voiceCloning,
+        currentDeviceStatus.useClonedVoice
+      );
       return data;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -972,7 +974,8 @@ class SheelaAIController extends GetxController {
         currentDeviceStatus.allowSymptomsNotification,
         currentDeviceStatus.preferredMeasurement,
         currentDeviceStatus.voiceCloning,
-        null);
+       currentDeviceStatus.useClonedVoice
+    );
     if (value.isSuccess ?? false) {
       //updated
     } else {
