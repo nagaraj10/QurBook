@@ -7737,8 +7737,13 @@ class CommonUtil {
     // Return the obtained CreateTicketController instance
     return createTicketController;
   }
-
-
+/// Formats the given [amount] number to a string with 2 decimal places,
+/// unless the amount is an integer, in which case no decimal places are used.
+///
+/// @param amount The number to format as a string.
+/// @return The formatted string representing the amount.
+  static String formatAmount(num amount) =>
+      '${amount % 1 == 0 ? amount : amount.toStringAsFixed(2)}';
 }
 
 extension CapExtension on String {
