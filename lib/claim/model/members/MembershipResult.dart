@@ -58,16 +58,16 @@ class MemberShipResult {
           : null; // Parsing to int or null if it's null
       noOfDoctorAppointments = json['noOfDoctorAppointments'].toString().parseNum();
       labAppointment = json['labAppointment'] != null
-          ? int.parse(json['labAppointment'])
+          ? int.tryParse(json['labAppointment'].toString())
           : null; // Parsing to int or null if it's null
       medicineOrdering = json['medicineOrdering'] != null
-          ? int.parse(json['medicineOrdering'])
+          ? int.tryParse(json['medicineOrdering'].toString())
           : null;
       tranportation = json['tranportation'] != null
-          ? int.parse(json['tranportation'])
+          ? int.tryParse(json['tranportation'].toString())
           : null; // Parsing to int or null if it's null
       homecareServices = json['homecareServices'] != null
-          ? int.parse(json['homecareServices'])
+          ? int.tryParse(json['homecareServices'].toString())
           : null; // Parsing to int or null if it's null
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
