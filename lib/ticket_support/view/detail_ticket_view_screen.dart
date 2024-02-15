@@ -196,6 +196,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
           strName.contains(variable.strDoctorAppointment) ||
           strName.contains(variable.strLabAppointment) ||
           strName.contains(strOthers) ||
+          strName.contains(variable.strAmbulanceService) ||
+          strName.contains(variable.strHealthPlan) ||
+          strName.contains(variable.strOrderMedicine) ||
           strName.contains(variable.strGeneralHealth)) {
         if (ticket.type!.additionalInfo != null && dataFields != null) {
           for (int i = 0; i < ticket.type!.additionalInfo!.field!.length; i++) {
@@ -361,6 +364,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                               strName.contains(variable.strDoctorAppointment) ||
                               strName.contains(variable.strLabAppointment) ||
                               strName.contains(strOthers) ||
+                              strName.contains(variable.strAmbulanceService) ||
+                              strName.contains(variable.strHealthPlan) ||
+                              strName.contains(variable.strOrderMedicine) ||
                           strName.contains(variable.strGeneralHealth))
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
