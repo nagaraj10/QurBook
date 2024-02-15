@@ -1,39 +1,37 @@
+import 'dart:math';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/authentication/view/authentication_validator.dart';
-import 'package:myfhb/colors/fhb_colors.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/firebase_analytics_service.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'package:myfhb/src/utils/alert.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
-import 'package:myfhb/widgets/checkout_page_provider.dart';
-import 'package:myfhb/widgets/checkoutpage_genric_widget.dart';
-import 'package:myfhb/widgets/dotted_line.dart';
-import 'package:myfhb/widgets/fetching_cart_items_model.dart';
-import 'package:myfhb/widgets/result_page_new.dart';
 import 'package:provider/provider.dart';
 
+import '../authentication/constants/constants.dart';
+import '../authentication/view/authentication_validator.dart';
+import '../colors/fhb_colors.dart';
+import '../common/CommonUtil.dart';
+import '../common/common_circular_indicator.dart';
+import '../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../constants/fhb_constants.dart';
+import '../constants/fhb_parameters.dart' as fhb_parameters;
+import '../constants/router_variable.dart' as router;
+import '../constants/variable_constant.dart' as variable;
+import '../landing/view/landing_arguments.dart';
+import '../plan_wizard/view_model/plan_wizard_view_model.dart';
+import '../src/resources/network/ApiBaseHelper.dart';
+import '../src/utils/alert.dart';
+import '../src/utils/screenutils/size_extensions.dart';
 import 'CartIconWithBadge.dart';
+import 'checkout_page_provider.dart';
+import 'checkoutpage_genric_widget.dart';
+import 'dotted_line.dart';
+import 'fetching_cart_items_model.dart';
+import 'result_page_new.dart';
 
 class CheckoutPage extends StatefulWidget {
   //final CartType cartType;
@@ -64,9 +62,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   void initState() {
     super.initState();
-    mInitialTime = DateTime.now();
-    // Provider.of<CheckoutPageProvider>(context, listen: false).cartType =
-    //     widget.cartType;
+    FABService.trackCurrentScreen(FBAMyCartScreen);
     Provider.of<CheckoutPageProvider>(context, listen: false).fetchCartItems(
         isNeedRelod: true,
         cartUserId: widget.cartUserId,
@@ -74,25 +70,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
         isPaymentLinkViaPush: widget.isFromNotification,
         cartId: widget.cartId,
         firstTym: true);
+    Provider.of<CheckoutPageProvider>(context, listen: false).getMemberShip();
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     Provider.of<CheckoutPageProvider>(context, listen: false)
         .loader(false, isNeedRelod: false);
     //});
-
-    var firebase = FirebaseAnalyticsService();
-    firebase.trackCurrentScreen("checkoutPage", "");
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'CheckoutPage Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   Future<bool> onBackPressed(BuildContext context) async {
@@ -317,7 +305,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                           children: <Widget>[
                                                                             Center(
                                                                               child: Text(
-                                                                                CLEAR_CART_MSG,
+                                                                                fhb_parameters.CLEAR_CART_MSG,
                                                                                 style: TextStyle(fontSize: CommonUtil().isTablet! ? tabHeader3 : mobileHeader3, fontWeight: FontWeight.w500),
                                                                                 textAlign: TextAlign.center,
                                                                               ),
@@ -374,7 +362,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                       }
                                                                                     },
                                                                                     child: TextWidget(
-                                                                                      text: ok,
+                                                                                      text: fhb_parameters.ok,
                                                                                       fontsize: 14.0.sp,
                                                                                     ),
                                                                                   ),
@@ -399,7 +387,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                       });
                                                 }
                                               },
-                                              child: Text('Clear cart'),
+                                              child: Text('Clear cart',
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          CommonUtil().isTablet!
+                                                              ? tabHeader1
+                                                              : mobileHeader1)),
                                               style: TextButton.styleFrom(
                                                 foregroundColor:
                                                     widget.isFromNotification
@@ -466,6 +459,49 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     .productList![index]);
                                           },
                                         ),
+                                        // Add Checkbox for Membership discount apply
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 35.0.w,
+                                              height: 25.0.w,
+                                              child: Container(
+                                                margin: const EdgeInsets.only(
+                                                  right: 10,
+                                                ),
+                                                child: Checkbox(
+                                                  activeColor: Color(
+                                                    CommonUtil()
+                                                        .getMyPrimaryColor(),
+                                                  ),
+                                                  checkColor: Colors.white,
+                                                  value:  value.
+                                                      checkedMembershipBenefits,
+                                                  onChanged: (newValue) {
+                                                    setState(() {
+                                                      value.checkedMembershipBenefits =
+                                                          newValue ?? false;
+                                                    });
+                                                    value.updateProductCountBasedOnCondiiton(isNeedRelod: true, firstTym: false);
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                            Flexible(
+                                              child: Wrap(
+                                                children: [
+                                                  Text(
+                                                    getMembershipDiscount(
+                                                        value),
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        )
                                       ],
                                     ),
                                   ),
@@ -509,7 +545,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             : mobileHeader3)),
                                             Spacer(),
                                             Text(
-                                              '${CommonUtil.CURRENCY}${value.totalProductCount}',
+                                              //to showcase subtotal of product
+                                              '${CommonUtil.CURRENCY}${CommonUtil.formatAmount(value.subTotalProductCount)}',
                                               style: TextStyle(
                                                   fontSize:
                                                       CommonUtil().isTablet!
@@ -517,6 +554,39 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                           : mobileHeader3),
                                             ),
                                           ],
+                                        ),
+                                        /// if Apply Membership Benefits then transactionlimit amount Deduct from subtotal
+                                        Visibility(
+                                          visible:
+                                              value.checkedMembershipBenefits,
+                                          child: const Divider(),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              value.checkedMembershipBenefits,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                getMembershipDiscount(value),
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      CommonUtil().isTablet!
+                                                          ? tabHeader2
+                                                          : mobileHeader2,
+                                                ),
+                                              ),
+                                              const Spacer(),
+                                              Text(
+                                                getMembershipDiscountWithCurrency(value),
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      CommonUtil().isTablet!
+                                                          ? tabHeader3
+                                                          : mobileHeader3,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                         DottedLine(
                                             height: 1,
@@ -536,7 +606,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               width: 20.0.w,
                                             ),
                                             Text(
-                                              '${CommonUtil.CURRENCY}${value.totalProductCount}',
+                                              '${CommonUtil.CURRENCY}${CommonUtil.formatAmount(value.totalProductCount)}',
                                               style: TextStyle(
                                                   fontSize:
                                                       CommonUtil().isTablet!
@@ -582,7 +652,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '${CommonUtil.CURRENCY}${value.totalProductCount}',
+                                        '${CommonUtil.CURRENCY}${CommonUtil.formatAmount(value.totalProductCount)}',
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
@@ -619,15 +689,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 });
                                               },
                                         child: ConstrainedBox(
-                                          constraints:
-                                              BoxConstraints(minWidth: 200),
+                                          constraints: BoxConstraints(
+                                              minWidth: CommonUtil().isTablet!
+                                                  ? 230
+                                                  : 200),
                                           child: Container(
-                                            height: 50,
+                                            height: CommonUtil().isTablet!
+                                                ? 60
+                                                : 50,
                                             padding: EdgeInsets.symmetric(
-                                                vertical: 5.0.sp,
-                                                horizontal: 5.0.sp),
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
+                                              vertical: 5.0.sp,
+                                              horizontal: 20.0.sp,
+                                            ),
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(5)),
                                               boxShadow: <BoxShadow>[
@@ -654,8 +729,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     height: 20,
                                                     child:
                                                         CommonCircularIndicator())
-                                                : Text(
-                                                    value.cartType ==
+                                                : Text( value.cartType ==
                                                             CartType.RETRY_CART
                                                         ? strRetryPay
                                                         : (value.totalProductCount) >
@@ -701,15 +775,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
         Provider.of<PlanWizardViewModel>(context, listen: false)
             .checkCartForBundle();
     var mCartTotal = value.totalProductCount;
-    var firebase = FirebaseAnalyticsService();
-    firebase.trackEvent("on_pay_clicked", {
-      "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-      "total": mCartTotal
-    });
+
     var body = {
       "cartId": "${value.fetchingCartItemsModel!.result!.cart!.id}",
       "isQurbook": true
     };
+    /// Add `walletDeductionAmount` parameter only if patient apply Membership benefits checked
+    if (value.checkedMembershipBenefits) {
+      final maxMembershipAmountLimit = getMembershipAmountLimit(value);
+
+    final finalAmount = min(maxMembershipAmountLimit,
+        value.totalProductCount);
+      body['walletDeductionAmount'] = finalAmount;
+    }
     FetchingCartItemsModel? fetchingCartItemsModel =
         await Provider.of<CheckoutPageProvider>(Get.context!, listen: false)
             .updateCartItems(
@@ -788,7 +866,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   Widget _cartItem(BuildContext context, ProductList item,
       {bool isFirsTym = true}) {
-    int productValue = 0;
+    num productValue = 0;
 
     if (!isFirsTym) {
       if (item.productDetail?.planSubscriptionFee != null &&
@@ -797,7 +875,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           productValue = 0;
         } else {
           productValue =
-              double.parse(item.productDetail!.planSubscriptionFee!).toInt();
+              num.parse(item.productDetail?.planSubscriptionFee ?? '0');
         }
       }
     } else {
@@ -806,26 +884,26 @@ class _CheckoutPageState extends State<CheckoutPage> {
         if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = double.parse(item.additionalInfo?.newFee).toInt();
+          productValue = num.parse(item.additionalInfo?.newFee ?? '0');
         }
       } else if (item.additionalInfo?.actualFee != null &&
           item.additionalInfo?.actualFee != "") {
         if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = double.parse(item.additionalInfo?.actualFee).toInt();
+          productValue = num.parse(item.additionalInfo?.actualFee);
         }
       } else if (item.paidAmount!.contains(".")) {
         if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = double.parse(item.paidAmount!).toInt();
+          productValue = num.parse(item.paidAmount ?? '0');
         }
       } else {
         if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = int.parse(item.paidAmount!);
+          productValue = num.parse(item.paidAmount ?? '0');
         }
       }
     }
@@ -979,8 +1057,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                               color:
                                                                   Colors.black,
                                                             ),
-                                                            children: <
-                                                                TextSpan>[
+                                                            children: <TextSpan>[
                                                               TextSpan(
                                                                 text:
                                                                     '${item.productDetail?.planName!.toLowerCase()}',
@@ -1033,29 +1110,34 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                     .isTablet!
                                                                 ? 50
                                                                 : 40,
-                                                            child: ElevatedButton(style: ElevatedButton.styleFrom(
-                                                              shape: RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              12.0),
-                                                                  side: BorderSide(
-                                                                      color: Color(
-                                                                          CommonUtil()
-                                                                              .getMyPrimaryColor()))),
-                                                              backgroundColor: Colors
-                                                                  .transparent,
-                                                              foregroundColor: Color(
-                                                                  CommonUtil()
-                                                                      .getMyPrimaryColor()),
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(8.0),),
+                                                            child:
+                                                                ElevatedButton(
+                                                              style:
+                                                                  ElevatedButton
+                                                                      .styleFrom(
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            12.0),
+                                                                    side: BorderSide(
+                                                                        color: Color(
+                                                                            CommonUtil().getMyPrimaryColor()))),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                                foregroundColor:
+                                                                    Color(CommonUtil()
+                                                                        .getMyPrimaryColor()),
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            8.0),
+                                                              ),
                                                               onPressed: () {
                                                                 try {
                                                                   Navigator.pop(
                                                                       context);
-                                                                } catch (e,stackTrace) {
+                                                                } catch (e, stackTrace) {
                                                                   //print(e);
                                                                   CommonUtil().appLogs(
                                                                       message: e
@@ -1104,10 +1186,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                 foregroundColor:
                                                                     Color(CommonUtil()
                                                                         .getMyPrimaryColor()),
-                                                                padding: const
-                                                                    EdgeInsets
+                                                                padding:
+                                                                    const EdgeInsets
                                                                         .all(
-                                                                            8.0),
+                                                                        8.0),
                                                               ),
                                                               onPressed:
                                                                   () async {
@@ -1138,7 +1220,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
                                                                   Navigator.pop(
                                                                       context);
-                                                                } catch (e,stackTrace) {
+                                                                } catch (e, stackTrace) {
                                                                   //print(e);
                                                                   CommonUtil().appLogs(
                                                                       message: e
@@ -1146,7 +1228,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                 }
                                                               },
                                                               child: TextWidget(
-                                                                text: ok,
+                                                                text: fhb_parameters.ok,
                                                                 fontsize:
                                                                     14.0.sp,
                                                               ),
@@ -1174,7 +1256,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                     Spacer(),
                     Text(
-                      '${CommonUtil.CURRENCY}${productValue}',
+                      '${CommonUtil.CURRENCY}${CommonUtil.formatAmount(productValue)}',
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
@@ -1232,17 +1314,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
     Provider.of<CheckoutPageProvider>(context, listen: false).isMembershipCart =
         Provider.of<PlanWizardViewModel>(context, listen: false)
             .checkCartForBundle();
-    var mCartTotal = value.totalProductCount;
-    var firebase = FirebaseAnalyticsService();
-    firebase.trackEvent("on_pay_clicked", {
-      "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-      "total": mCartTotal
-    });
+
     var body = {
       "cartId": "${value.fetchingCartItemsModel!.result!.cart!.id}",
       "isQurbook": true
     };
-
+    /// Add `walletDeductionAmount` parameter only if patient apply Membership benefits checked
+    if (value.checkedMembershipBenefits) {
+      final maxMembershipAmountLimit = getMembershipAmountLimit(value);
+      final finalAmount =
+          min(maxMembershipAmountLimit, value.totalProductCount);
+      body['walletDeductionAmount'] = finalAmount;
+    }
     FetchingCartItemsModel? fetchingCartItemsModel =
         await Provider.of<CheckoutPageProvider>(Get.context!, listen: false)
             .updateCartItems(
@@ -1268,7 +1351,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             }
           } else {
             Alert.displayConfirmProceed(Get.context!,
-                confirm: "Update Cart",
+                confirm: variable.stringUpdateCart,
                 title: "Update",
                 content: result.message ?? '', onPressedConfirm: () {
               ApiBaseHelper()
@@ -1312,5 +1395,48 @@ class _CheckoutPageState extends State<CheckoutPage> {
         }
       }
     });
+  }
+
+  /// Returns the membership discount title string, appending the
+  /// maximum membership discount amount if applicable.
+  ///
+  /// Parameters:
+  /// - value: The CheckoutPageProvider value.
+  ///
+  /// Returns: The membership discount title string.
+  String getMembershipDiscount(CheckoutPageProvider value) {
+    final maxMembershipAmountLimit = getMembershipAmountLimit(value);
+    var basedtitle = variable.strMembershipDiscount;
+    if (maxMembershipAmountLimit > 0) {
+      basedtitle +=
+          ' (Max. ${CommonUtil.formatAmount(maxMembershipAmountLimit)})';
+    }
+    return basedtitle;
+  }
+
+  /// Returns the maximum membership discount amount limit based on the
+  /// membership details in the provided CheckoutPageProvider value.
+  ///
+  /// Checks the membership additional info for the 'benefitType' field
+  /// with name 'benefitCareDietPlans', and returns its 'transactionLimit'
+  /// value if available. Otherwise returns 0.
+  num getMembershipAmountLimit(CheckoutPageProvider value) {
+    return value.memberShipDetailsResult?.additionalInfo?.benefitType
+            ?.lastWhere((element) =>
+                element.fieldName == variable.strBenefitCareDietPlans)
+            .transactionLimit ??
+        0;
+  }
+
+  /// Returns the membership discount title string with currency formatting
+  /// applied, based on the subTotalProductCount and totalProductCount values
+  /// from the provided CheckoutPageProvider.
+  ///
+  /// This is used to display the membership discount amount on the checkout
+  /// page.
+  String getMembershipDiscountWithCurrency(CheckoutPageProvider value) {
+    final finalAmount = CommonUtil.formatAmount(
+        value.subTotalProductCount - value.totalProductCount);
+    return '-${CommonUtil.CURRENCY}$finalAmount';
   }
 }

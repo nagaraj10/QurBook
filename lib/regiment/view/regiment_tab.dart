@@ -1,18 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/main.dart';
-import 'package:myfhb/regiment/models/regiment_response_model.dart';
-import 'package:myfhb/regiment/service/regiment_service.dart';
-import 'package:myfhb/regiment/view/widgets/filter_widget.dart';
-import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -20,14 +11,21 @@ import 'package:showcaseview/showcaseview.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
+import '../../common/common_circular_indicator.dart';
+import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
 import '../models/profile_response_model.dart';
 import '../models/regiment_data_model.dart';
+import '../models/regiment_response_model.dart';
+import '../service/regiment_service.dart';
 import '../view_model/regiment_view_model.dart';
 import 'widgets/event_list_widget.dart';
+import 'widgets/filter_widget.dart';
 import 'widgets/regiment_data_card.dart';
 
 class RegimentTab extends StatefulWidget {
@@ -65,7 +63,6 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   @override
   void initState() {
     qurhomeDashboardController.getModuleAccess();
-    mInitialTime = DateTime.now();
     FocusManager.instance.primaryFocus!.unfocus();
     super.initState();
     getProfile();
@@ -200,15 +197,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    // searchController?.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Regimen Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
     scrollController.dispose();
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -310,6 +300,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         } else if (uformName == Uformname.PULSE) {
           isDefault = false;
           cardIcon = 'assets/devices/os_dashboard.png';
+        } else {
+          cardIcon = 'assets/Qurhome/Qurhome.png';
         }
         break;
       case Activityname.MEDICATION:

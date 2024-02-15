@@ -1,20 +1,23 @@
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:launch_review/launch_review.dart';
-import 'package:myfhb/colors/fhb_colors.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:io';
+
+import '../../../colors/fhb_colors.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/router_variable.dart' as router;
+import '../../../constants/variable_constant.dart';
+import '../../../myfhb_weview/myfhb_webview.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../../widgets/GradientAppBar.dart';
 
 class HelpSupport extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    FABService.trackCurrentScreen(FBAHelpAndSupportFAQScreen);
     return Scaffold(
       backgroundColor: const Color(bgColorContainer),
       appBar: AppBar(
@@ -66,7 +69,12 @@ class HelpSupport extends StatelessWidget {
                       InkWell(
                         onTap: () {
                           openWebView(
-                              terms_of_service, CommonUtil.isUSRegion()?file_terms_us:file_terms, true, context);
+                              terms_of_service,
+                              CommonUtil.isUSRegion()
+                                  ? file_terms_us
+                                  : file_terms,
+                              true,
+                              context);
                         },
                         child: ListTile(
                             leading: ImageIcon(
@@ -82,7 +90,12 @@ class HelpSupport extends StatelessWidget {
                       InkWell(
                         onTap: () {
                           openWebView(
-                              privacy_policy, CommonUtil.isUSRegion()?file_privacy_us:file_privacy, true, context);
+                              privacy_policy,
+                              CommonUtil.isUSRegion()
+                                  ? file_privacy_us
+                                  : file_privacy,
+                              true,
+                              context);
                         },
                         child: ListTile(
                             leading: ImageIcon(

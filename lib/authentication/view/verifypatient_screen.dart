@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -5,44 +8,41 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:package_info/package_info.dart';
-import 'package:myfhb/widgets/app_primary_button.dart';
+import 'package:provider/provider.dart';
 import 'package:sms_autofill/sms_autofill.dart';
+
 import '../../add_family_user_info/models/add_family_user_info_arguments.dart';
-import '../constants/constants.dart';
-import '../../constants/fhb_constants.dart' as Constants;
-import '../model/patientverify_model.dart';
-import '../model/resend_otp_model.dart';
-import '../model/verifyotp_model.dart';
-import 'authentication_validator.dart';
-import 'login_screen.dart';
-import '../view_model/patientauth_view_model.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
 import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
-import '../../my_family/models/relationships.dart';
-import '../../src/model/Authentication/UserModel.dart';
 import '../../constants/fhb_constants.dart' as Constants;
-import '../../constants/variable_constant.dart';
-import '../../src/model/Authentication/DeviceInfoSucess.dart';
-import '../../src/resources/network/ApiBaseHelper.dart';
-import 'dart:convert';
-import 'dart:io';
 import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart';
+import '../../my_family/models/relationships.dart';
+import '../../src/model/Authentication/DeviceInfoSucess.dart';
+import '../../src/model/Authentication/UserModel.dart';
+import '../../src/resources/network/ApiBaseHelper.dart';
 import '../../src/ui/loader_class.dart';
 import '../../src/utils/PageNavigator.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 import '../../src/utils/timezone/timezone_services.dart';
+import '../../widgets/app_primary_button.dart';
+import '../constants/constants.dart';
 import '../model/patientlogin_model.dart' as loginModel;
-import '../../constants/fhb_constants.dart' as con;
+import '../model/patientverify_model.dart';
+import '../model/resend_otp_model.dart';
+import '../model/verifyotp_model.dart';
 import '../view_model/otp_view_model.dart';
-import 'package:provider/provider.dart';
-import '../../widgets/RaisedGradientButton.dart';
+import '../view_model/patientauth_view_model.dart';
+import 'authentication_validator.dart';
+import 'login_screen.dart';
 import 'or_divider.dart';
 
 class VerifyPatient extends StatefulWidget {
   VerifyPatient(
       {this.PhoneNumber,
+        this.pwd,
       this.from,
       this.fName,
       this.lName,
@@ -58,6 +58,7 @@ class VerifyPatient extends StatefulWidget {
       this.isVirtualNumber = false});
 
   final String? PhoneNumber;
+  final String? pwd;
   final String? from;
   final String? fName;
   final String? mName;
@@ -110,7 +111,6 @@ class _VerifyPatientState extends State<VerifyPatient>
 
   @override
   void initState() {
-    con.mInitialTime = DateTime.now();
     super.initState();
     listenForCode();
     SmsAutoFill().listenForCode;
@@ -132,12 +132,6 @@ class _VerifyPatientState extends State<VerifyPatient>
     otpNotifier.value = false;
     WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
-    con.fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Verify Patient Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(con.mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -201,8 +195,9 @@ class _VerifyPatientState extends State<VerifyPatient>
                                   if (Navigator.canPop(context)) {
                                     Get.back();
                                   }
-                                } catch (e,stackTrace) {
-                                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+                                } catch (e, stackTrace) {
+                                  CommonUtil().appLogs(
+                                      message: e, stackTrace: stackTrace);
                                   print(e);
                                 }
                               },
@@ -255,7 +250,7 @@ class _VerifyPatientState extends State<VerifyPatient>
                       //     : Container(),
                       SizedBox(height: 20.0.h),
                       _verifyButton(),
-                      SizedBox(height:20.0.h),
+                      SizedBox(height: 20.0.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -291,21 +286,22 @@ class _VerifyPatientState extends State<VerifyPatient>
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             SizedBox(height: 10.0.h),
-                            AppPrimaryButton(text:strresendOtp, onTap:otpViewModel!.timerSeconds == 0
-                                ? () {
-                              otpViewModel?.stopOTPTimer();
-                              otpViewModel?.startTimer();
-                              if (from == strFromSignUp) {
-                                _resendOtpDetails();
-                              } else if (widget.dataForResendOtp !=
-                                  null ||
-                                  from ==
-                                      strFromVerifyFamilyMember) {
-                                _startTimer();
-                              }
-                            }
-                                :()=>{},
-                                textSize: 15.0.sp,
+                            AppPrimaryButton(
+                              text: strresendOtp,
+                              onTap: otpViewModel!.timerSeconds == 0
+                                  ? () {
+                                      otpViewModel?.stopOTPTimer();
+                                      otpViewModel?.startTimer();
+                                      if (from == strFromSignUp) {
+                                        _resendOtpDetails();
+                                      } else if (widget.dataForResendOtp !=
+                                              null ||
+                                          from == strFromVerifyFamilyMember) {
+                                        _startTimer();
+                                      }
+                                    }
+                                  : () => {},
+                              textSize: 15.0.sp,
                               isSecondaryButton: true,
                             ),
                             Visibility(
@@ -316,23 +312,23 @@ class _VerifyPatientState extends State<VerifyPatient>
                               visible: from != strFromVerifyFamilyMember,
                               child: Align(
                                 child: AppPrimaryButton(
-                                onTap: otpViewModel!.timerSeconds == 0
-                                    ? () {
-                                  otpViewModel?.stopOTPTimer();
-                                  otpViewModel!.confirmViaCall(
-                                    phoneNumber:
-                                    widget.PhoneNumber ?? '',
-                                    onOtpReceived: (otpCode) {
-                                      _verifyDetails(
-                                        otpCode: otpCode,
-                                      );
-                                    },
-                                  );
-                                }
-                                    : (){},
-                                    text:strVerifyCall,
+                                  onTap: otpViewModel!.timerSeconds == 0
+                                      ? () {
+                                          otpViewModel?.stopOTPTimer();
+                                          otpViewModel!.confirmViaCall(
+                                            phoneNumber:
+                                                widget.PhoneNumber ?? '',
+                                            onOtpReceived: (otpCode) {
+                                              _verifyDetails(
+                                                otpCode: otpCode,
+                                              );
+                                            },
+                                          );
+                                        }
+                                      : () {},
+                                  text: strVerifyCall,
                                   isSecondaryButton: true,
-                                    textSize: 15.0.sp,
+                                  textSize: 15.0.sp,
                                 ),
                               ),
                             ),
@@ -457,7 +453,9 @@ class _VerifyPatientState extends State<VerifyPatient>
         child: TextFormField(
           textCapitalization: TextCapitalization.sentences,
           keyboardType: TextInputType.number,
-          autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
+          autovalidateMode: _autoValidateBool
+              ? AutovalidateMode.always
+              : AutovalidateMode.disabled,
           obscureText: isPassword,
           style: TextStyle(
             fontSize: 16.0.sp,
@@ -484,16 +482,17 @@ class _VerifyPatientState extends State<VerifyPatient>
   }
 
   Widget _verifyButton() {
-    return AppPrimaryButton(text:strVerify, onTap: (){
-      AuthenticationValidator().checkNetwork().then((intenet) {
-        if (intenet != null && intenet) {
-          _verifyDetails();
-        } else {
-          toast.getToast(strNetworkIssue, Colors.red);
-        }
-      });
-    });
-
+    return AppPrimaryButton(
+        text: strVerify,
+        onTap: () {
+          AuthenticationValidator().checkNetwork().then((intenet) {
+            if (intenet != null && intenet) {
+              _verifyDetails();
+            } else {
+              toast.getToast(strNetworkIssue, Colors.red);
+            }
+          });
+        });
   }
 
   _verifyDetails({String? otpCode}) async {
@@ -514,6 +513,7 @@ class _VerifyPatientState extends State<VerifyPatient>
               : PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         );
         var map = logInModel.toJson();
+        map['password']=widget.pwd;
         var response = await authViewModel.verifyPatient(map);
         print(response.toString());
         _checkResponse(response);
@@ -579,7 +579,7 @@ class _VerifyPatientState extends State<VerifyPatient>
     }
   }
 
-  _checkResponse(PatientSignupOtp response)async{
+  _checkResponse(PatientSignupOtp response) async {
     if (response.isSuccess!) {
       _getPatientDetails();
     } else {
@@ -627,8 +627,8 @@ class _VerifyPatientState extends State<VerifyPatient>
     try {
       var apiBaseHelper = ApiBaseHelper();
       final res = apiBaseHelper.updateLastVisited();
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     if (widget.from == strFromSignUp) {
       if (widget.userConfirm!) {
@@ -677,6 +677,9 @@ class _VerifyPatientState extends State<VerifyPatient>
       id_token_string = parseJwtPayLoad(decodesstring!)[strToken]
           [strProviderPayLoad][strIdToken];
       final idTokens = parseJwtPayLoad(id_token_string!);
+      ///Added for token refresh
+      await PreferenceUtil.saveInt(strAuthExpiration,parseJwtPayLoad(decodesstring!)[strAuthExpiration]);
+    ///
       print(idTokens);
       user_mobile_no = idTokens[strphonenumber];
       print(idTokens[strphonenumber]);
@@ -706,8 +709,8 @@ class _VerifyPatientState extends State<VerifyPatient>
       var token = '';
       try {
         token = (await _firebaseMessaging.getToken())!;
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
       CommonUtil().OnInitAction();
       TimezoneServices().checkUpdateTimezone();

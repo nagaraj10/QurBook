@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:camera/camera.dart';
+import 'package:myfhb/services/pushnotification_service.dart';
 import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,6 +19,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/app_theme.dart';
 import 'package:myfhb/voice_cloning/controller/voice_cloning_controller.dart';
+import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
@@ -35,7 +37,7 @@ import 'common/CommonConstants.dart';
 import 'common/CommonUtil.dart';
 import 'common/DatabseUtil.dart';
 import 'common/PreferenceUtil.dart';
-import 'common/firebase_analytics_service.dart';
+import 'common/firestore_services.dart';
 import 'constants/fhb_constants.dart' as Constants;
 import 'constants/fhb_constants.dart';
 import 'constants/fhb_parameters.dart';
@@ -55,6 +57,7 @@ import 'regiment/models/regiment_arguments.dart';
 import 'regiment/view/manage_activities/manage_activities_screen.dart';
 import 'regiment/view_model/regiment_view_model.dart';
 import 'schedules/add_reminders.dart';
+import 'services/notification_helper.dart';
 import 'src/blocs/Category/CategoryListBlock.dart';
 import 'src/model/home_screen_arguments.dart';
 import 'src/model/user/user_accounts_arguments.dart';
@@ -65,16 +68,16 @@ import 'src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import 'src/ui/SheelaAI/Views/SuperMaya.dart';
 import 'src/ui/SplashScreen.dart';
-import 'src/ui/connectivity_bloc.dart';
 import 'src/ui/settings/CaregiverSettng.dart';
 import 'src/utils/FHBUtils.dart';
 import 'src/utils/PageNavigator.dart';
+import 'src/utils/cron_jobs.dart';
 import 'src/utils/dynamic_links.dart';
-import 'src/utils/language/app_localizations.dart';
 import 'src/utils/language/language_utils.dart';
 import 'src/utils/language/languages.dart';
-import 'src/utils/language/view_model/language_view_model.dart';
+import 'src/utils/lifecycle_state_provider.dart';
 import 'src/utils/screenutils/screenutil.dart';
+import 'src/utils/timezone/timezone_services.dart';
 import 'telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'telehealth/features/Notifications/services/notification_services.dart';
@@ -105,22 +108,24 @@ late List<CameraDescription> listOfCameras;
 
 //variable for all outer
 late var routes;
+final FlutterLocalNotificationsPlugin localNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
-  var reminderMethodChannelAndroid =
-      const MethodChannel('android/notification');
-
   await runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
     var cameras = await availableCameras();
     listOfCameras = cameras;
-    reminderMethodChannelAndroid.invokeMethod('testingNotification');
     // Get a specific camera from the list of available cameras.
     firstCamera = cameras[0];
     routes = await router.setRouter(listOfCameras);
     //get secret from resource
     final resList = <dynamic>[];
+
+    ///Added to identify the app name for foreground and Background.
+    var packageInfo = await PackageInfo.fromPlatform();
+    CommonUtil.AppName = packageInfo.appName;
     await CommonUtil.getResourceLoader().then((value) {
       final Map mSecretMap = value;
       mSecretMap.values.forEach((element) {
@@ -130,6 +135,7 @@ Future<void> main() async {
     });
 
     PreferenceUtil.init();
+    await PushNotificationService().setupNotification();
 
     await DatabaseUtil.getDBLength().then((length) {
       if (length == 0) {
@@ -190,10 +196,6 @@ Future<void> main() async {
         print(e.toString());
       }
     }
-
-    var firebase = FirebaseAnalyticsService();
-    firebase.setUserId(PreferenceUtil.getStringValue(KEY_USERID_MAIN));
-    firebase.trackCurrentScreen("startScreen", "classOverride");
     runApp(
       MultiProvider(
         providers: [
@@ -296,7 +298,7 @@ class _MyFHBState extends State<MyFHB> {
   var sheelaMethodChannelAndroid = const MethodChannel('sheela.channel');
   static const platform = variable.version_platform;
   String? _responseFromNative = variable.strWaitLoading;
-  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  //final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   static const secure_platform = variable.security;
   static const nav_platform = MethodChannel('navigation.channel');
   String navRoute = '';
@@ -328,12 +330,6 @@ class _MyFHBState extends State<MyFHB> {
     CheckForShowingTheIntroScreens();
     chatViewModel.setCurrentChatRoomID('none');
     super.initState();
-    /*CommonUtil.askPermissionForCameraAndMic().then((value) {
-      CommonUtil.askPermissionForLocation().then((value) {
-        CommonUtil().askPermissionForNotification();
-      });
-    });*/
-    getMyRoute();
     _enableTimer();
     final res = apiBaseHelper.updateLastVisited();
     isAlreadyLoaded = true;
@@ -345,19 +341,58 @@ class _MyFHBState extends State<MyFHB> {
     }
     FirebaseMessaging.instance.onTokenRefresh
         .listen(CommonUtil().saveTokenToDatabase);
-    Get.put(
-      HubListViewController(),
-    );
-    Get.lazyPut(
-      () => SheelaAIController(),
-    );
-    Get.lazyPut(
-      () => SheelaBLEController(),
-    );
+    Get
+      ..put(
+        HubListViewController(),
+      )
+      ..lazyPut(
+        () => SheelaAIController(),
+      )
+      ..lazyPut(
+        () => SheelaBLEController(),
+      );
 
     //initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    // Function to set up cron job and event listeners which is called after
+    //some delay to make sure all the environment related data are setup.
+    Future.delayed(const Duration(seconds: 4)).then(
+      (value) => setUpCronJobAndListeners(),
+    );
+  }
+
+// Function to set up cron job and event listeners
+  void setUpCronJobAndListeners() {
+    try {
+      // Schedule the cron job to run at midnight for
+      //getting the latest regiment
+      CronJobServices().scheduleUpdateForData();
+
+      // Add an observer to handle lifecycle events,
+      // specifically when the app is resumed
+      WidgetsBinding.instance.addObserver(
+        LifecycleEventHandler(
+          // Callback executed upon app resumption
+          resumeCallBack: () async {
+            // Update Firestore data for 'all' with loading indicator
+            FirestoreServices().updateDataFor(
+              'all',
+              withLoading: true,
+            );
+
+            // Check and update the timezone information
+            await TimezoneServices().checkUpdateTimezone();
+
+            // Record the user's last access time
+            CommonUtil().saveUserLastAccessTime();
+          },
+        ),
+      );
+    } catch (e, stackTrace) {
+      // Handle and log any exceptions that occur during setup
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 
   CheckForShowingTheIntroScreens() async {
@@ -403,60 +438,23 @@ class _MyFHBState extends State<MyFHB> {
     var callType = '';
     var notificationListId = '';
     _msgListener.value = _msg;
-    print('datanotificaton: ' + msg.toString());
     final cMsg = msg as String;
     if (cMsg.isNotEmpty || cMsg != null) {
       if (cMsg == 'chat') {
-        fbaLog(eveParams: {
-          'eventTime': '${DateTime.now()}',
-          'ns_type': 'chat',
-          'navigationPage': 'Tele Health Chat list',
-        });
         Get.to(ChatUserList());
       } else if (cMsg == 'FETCH_LOG') {}
-      if(cMsg =='vcApproveByProvider' || cMsg =='vcDeclineByProvider'){
+      if (cMsg == 'vcApproveByProvider' || cMsg == 'vcDeclineByProvider') {
         Get.toNamed(
           rt_VoiceCloningStatus,
           arguments: const VoiceCloneStatusArguments(fromMenu: true),
         );
       }
       final passedValArr = cMsg.split('&');
-      if (passedValArr[0] == 'facebookdeeplink') {
-        var firebase = FirebaseAnalyticsService();
-        print(passedValArr[1]);
-        firebase.trackEvent("on_facebook_clicked", {
-          "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-          "total": passedValArr[1]
-        });
-      }
+      if (passedValArr[0] == 'facebookdeeplink') {}
       if (passedValArr[0] == 'activityRemainderInvokeSheela') {
         //// allow the user for auto redirect to sheela screen on time
-        if (CommonUtil().isAllowSheelaLiveReminders()) {
-          // live reminder On deafult existing flow
-          if (sheelaAIController.isSheelaScreenActive) {
-            var reqJson = {
-              KIOSK_task: KIOSK_remind,
-              KIOSK_eid: passedValArr[1].toString()
-            };
-            CommonUtil().callQueueNotificationPostApi(reqJson);
-          } else {
-            if (sheelaAIController.isQueueDialogShowing.value) {
-              Get.back();
-              sheelaAIController.isQueueDialogShowing.value = false;
-            }
-            Future.delayed(Duration(milliseconds: 500), () async {
-              getToSheelaNavigate(passedValArr,
-                  isFromActivityRemainderInvokeSheela: true);
-            });
-          }
-        } else {
-          // live reminder off only queue flow working
-          var reqJson = {
-            KIOSK_task: KIOSK_remind,
-            KIOSK_eid: passedValArr[1].toString()
-          };
-          CommonUtil().callQueueNotificationPostApi(reqJson);
-        }
+        CommonUtil()
+            .getActivityRemainderInvokeSheela(passedValArr, sheelaAIController);
       }
       if (passedValArr[0] == 'isSheelaFollowup') {
         /*if (sheelaAIController.isSheelaScreenActive) {
@@ -483,22 +481,28 @@ class _MyFHBState extends State<MyFHB> {
             if (sheelaAIController.isQueueDialogShowing.value) {
               Get.back();
               Future.delayed(Duration(milliseconds: 500), () async {
-                getToSheelaNavigate(passedValArr, isFromAudio: true);
+                CommonUtil().getToSheelaNavigate(
+                    passedValArr, sheelaAIController,
+                    isFromAudio: true);
               });
             } else {
               Future.delayed(Duration(milliseconds: 500), () async {
-                getToSheelaNavigate(passedValArr, isFromAudio: true);
+                CommonUtil().getToSheelaNavigate(
+                    passedValArr, sheelaAIController,
+                    isFromAudio: true);
               });
             }
           } else {
             if (sheelaAIController.isQueueDialogShowing.value) {
               Get.back();
               Future.delayed(Duration(milliseconds: 500), () async {
-                getToSheelaNavigate(passedValArr);
+                CommonUtil()
+                    .getToSheelaNavigate(passedValArr, sheelaAIController);
               });
             } else {
               Future.delayed(Duration(milliseconds: 500), () async {
-                getToSheelaNavigate(passedValArr);
+                CommonUtil()
+                    .getToSheelaNavigate(passedValArr, sheelaAIController);
               });
             }
             //}
@@ -510,11 +514,7 @@ class _MyFHBState extends State<MyFHB> {
         if (temp[0] == 'myRecords') {
           final dataOne = temp[1];
           final dataTwo = temp[2];
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'myRecords',
-            'navigationPage': temp[1],
-          });
+
           if (dataTwo.runtimeType == String && (dataTwo).isNotEmpty) {
             final userId = PreferenceUtil.getStringValue(KEY_USERID);
             if ((passedValArr[2]) == userId) {
@@ -567,18 +567,8 @@ class _MyFHBState extends State<MyFHB> {
             );
           }
         } else if (passedValArr[1] == 'qurbookServiceRequestStatusUpdate') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'qurbookServiceRequestStatusUpdate',
-            'navigationPage': 'TicketDetails',
-          });
           Get.to(DetailedTicketView(null, true, passedValArr[2]));
         } else if (passedValArr[1] == 'notifyPatientServiceTicketByCC') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'notifyPatientServiceTicketByCC',
-            'navigationPage': 'TicketDetails',
-          });
           Get.to(DetailedTicketView(null, true, passedValArr[2]));
         } else if (passedValArr[1] == 'appointmentPayment') {
           var nsBody = {};
@@ -616,11 +606,6 @@ class _MyFHBState extends State<MyFHB> {
           //   ),
           // );
         } else if (passedValArr[1] == 'sheela') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'sheela',
-            'navigationPage': 'Sheela Start Page',
-          });
           try {
             if (CommonUtil().isAllowSheelaLiveReminders()) {
               if (passedValArr[2] != null && passedValArr[2].isNotEmpty) {
@@ -663,52 +648,26 @@ class _MyFHBState extends State<MyFHB> {
           }
         } else if (passedValArr[1] == 'profile_page' ||
             passedValArr[1] == 'profile') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'profile_page',
-            'navigationPage': 'User Profile page',
-          });
           Get.toNamed(router.rt_UserAccounts,
                   arguments: UserAccountsArguments(selectedIndex: 0))!
               .then((value) => setState(() {}));
         } else if (passedValArr[1] == 'googlefit') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'googlefit',
-            'navigationPage': 'Google Fit page',
-          });
           Get.toNamed(router.rt_AppSettings);
         } else if (passedValArr[1] == 'th_provider' ||
             passedValArr[1] == 'provider') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'th_provider',
-            'navigationPage': 'Tele Health Provider',
-          });
           Get.toNamed(router.rt_TelehealthProvider,
                   arguments: HomeScreenArguments(selectedIndex: 1))!
               .then((value) => setState(() {}));
         } else if (passedValArr[1] == 'my_record' ||
             passedValArr[1] == 'prescription_list' ||
             passedValArr[1] == 'add_doc') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'my_record',
-            'navigationPage': 'My Records',
-          });
           getProfileData();
           Get.toNamed(router.rt_HomeScreen,
                   arguments: HomeScreenArguments(selectedIndex: 1))!
               .then((value) => setState(() {}));
         } else if (passedValArr[1] == 'regiment_screen') {
           //this need to be navigte to Regiment screen
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': CommonUtil.isUSRegion()
-                ? 'QurHomeRegimenScreen'
-                : 'regiment_screen',
-            'navigationPage': 'Regimen Screen',
-          });
+
           if ((CommonUtil.isUSRegion()) &&
               (passedValArr[3] != null) &&
               (passedValArr[3] != 'null') &&
@@ -742,11 +701,6 @@ class _MyFHBState extends State<MyFHB> {
                 arguments: RegimentArguments(eventId: passedValArr[2]));
           }
         } else if (passedValArr[1] == 'dashboard') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'dashboard',
-            'navigationPage': 'Device List Screen',
-          });
           PageNavigator.goToPermanent(context, router.rt_Landing);
         } else if (passedValArr[1] == 'familyMemberCaregiverRequest') {
           if (passedValArr[2] == 'accept') {
@@ -760,70 +714,31 @@ class _MyFHBState extends State<MyFHB> {
               requestor: passedValArr[6],
             );
           }
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'dashboard',
-            'navigationPage': 'Device List Screen',
-          });
+
           PageNavigator.goToPermanent(context, router.rt_Landing);
         } else if (passedValArr[1] == 'th_provider_hospital') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'th_provider_hospital',
-            'navigationPage': 'TH provider Hospital Screen',
-          });
           Get.toNamed(router.rt_TelehealthProvider,
               arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1));
         } else if (passedValArr[1] == 'myfamily_list' ||
             passedValArr[1] == 'profile_my_family') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'myfamily_list',
-            'navigationPage': 'MyFamily List Screen',
-          });
           Get.toNamed(router.rt_UserAccounts,
               arguments: UserAccountsArguments(selectedIndex: 1));
         } else if (CommonUtil.isUSRegion() &&
             passedValArr[1] == strPatientReferralAcceptToPatient) {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'myprovider_list',
-            'navigationPage': 'MyProvider List Screen',
-          });
           Get.toNamed(router.rt_UserAccounts,
               arguments: UserAccountsArguments(selectedIndex: 2));
         } else if (passedValArr[1] == 'myprovider_list') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'myprovider_list',
-            'navigationPage': 'MyProvider List Screen',
-          });
           Get.toNamed(router.rt_UserAccounts,
               arguments: UserAccountsArguments(selectedIndex: 2));
         } else if (passedValArr[1] == 'myplans') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'myplans',
-            'navigationPage': 'MyPlans Screen',
-          });
           Get.toNamed(router.rt_UserAccounts,
               arguments: UserAccountsArguments(selectedIndex: 3));
         } else if (passedValArr[1] == 'appointmentList' ||
             passedValArr[1] == 'appointmentHistory') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'appointmentList',
-            'navigationPage': 'appointmentList',
-          });
           Get.to(SplashScreen(
             nsRoute: passedValArr[1],
           ));
         } else if (passedValArr[1] == 'devices_tab') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'device_list',
-            'navigationPage': 'devices_tab',
-          });
           getProfileData();
           Get.toNamed(
             router.rt_HomeScreen,
@@ -832,11 +747,6 @@ class _MyFHBState extends State<MyFHB> {
               .then((value) =>
                   PageNavigator.goToPermanent(context, router.rt_Landing));
         } else if (passedValArr[1] == 'bills') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'bills',
-            'navigationPage': 'Bills Screen',
-          });
           Get.toNamed(
             router.rt_HomeScreen,
             arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 4),
@@ -844,11 +754,6 @@ class _MyFHBState extends State<MyFHB> {
               .then((value) =>
                   PageNavigator.goToPermanent(context, router.rt_Landing));
         } else if (passedValArr[1] == 'chat') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'initiate screen',
-            'navigationPage': 'Chat Screen',
-          });
           Get.to(() => ChatDetail(
                     peerId: passedValArr[2],
                     peerName: passedValArr[3],
@@ -864,11 +769,6 @@ class _MyFHBState extends State<MyFHB> {
                   PageNavigator.goToPermanent(context, router.rt_Landing));
           ;
         } else if (passedValArr[1] == 'mycart') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'my cart',
-            'navigationPage': 'My Cart',
-          });
           var nsBody = {};
           nsBody['templateName'] = strCaregiverNotifyPlanSubscription;
           nsBody['contextId'] = passedValArr[4];
@@ -889,19 +789,9 @@ class _MyFHBState extends State<MyFHB> {
           CommonUtil()
               .getDetailsOfAddedFamilyMember(Get.context!, passedValArr[2]);
         } else if (passedValArr[1] == 'manageActivities') {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'manageActivities',
-            'navigationPage': 'Manage Activities',
-          });
           Get.to(ManageActivitiesScreen())!.then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
         } else if (passedValArr[1] == strAppointmentDetail) {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'appointmentDetail',
-            'navigationPage': 'Appointment Detail Page',
-          });
           if (passedValArr[2] != null) {
             try {
               if (passedValArr[3] != null) {
@@ -929,11 +819,6 @@ class _MyFHBState extends State<MyFHB> {
         } else if (passedValArr[1] == strConnectedDevicesScreen) {
           CommonUtil().navigateToHubList(Get.context!, fromNotification: false);
         } else {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'appointment_list',
-            'navigationPage': 'Tele Health Appointment list',
-          });
           PageNavigator.goToPermanent(Get.context!, router.rt_Landing);
         }
       }
@@ -969,29 +854,10 @@ class _MyFHBState extends State<MyFHB> {
         }
       } else if (passedValArr[1] == 'appointmentList' ||
           passedValArr[1] == 'appointmentHistory') {
-        fbaLog(eveParams: {
-          'eventTime': '${DateTime.now()}',
-          'ns_type': 'appointmentList',
-          'navigationPage': 'Tele Health Appointment list',
-        });
         Get.to(SplashScreen(
           nsRoute: passedValArr[1],
         ));
       } else if (passedValArr[0] == 'DoctorRescheduling') {
-        /* Get.to(TelehealthProviders(
-          arguments: HomeScreenArguments(
-            selectedIndex: 1,
-          doctorID: passedValArr[1] ?? '',
-          bookingId: passedValArr[2] ?? '',
-          doctorSessionId: passedValArr[3] ?? '',
-          healthOrganizationId: passedValArr[4] ?? ''
-          ),
-        )); */
-        fbaLog(eveParams: {
-          'eventTime': '${DateTime.now()}',
-          'ns_type': 'DoctorRescheduling',
-          'navigationPage': 'Reschedule screen',
-        });
         final body = {};
         body['templateName'] = passedValArr[5];
         body['contextId'] = passedValArr[2];
@@ -1009,11 +875,6 @@ class _MyFHBState extends State<MyFHB> {
           body: body,
         ));
       } else if (passedValArr[0] == 'DoctorCancellation') {
-        fbaLog(eveParams: {
-          'eventTime': '${DateTime.now()}',
-          'ns_type': 'DoctorCancellation',
-          'navigationPage': 'Appointment List',
-        });
         Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(
               selectedIndex: 0,
@@ -1029,11 +890,7 @@ class _MyFHBState extends State<MyFHB> {
         jsonInput['action'] = passedValArr[2];
       } else if (passedValArr[0] == 'openurl') {
         final urlInfo = passedValArr[1];
-        fbaLog(eveParams: {
-          'eventTime': '${DateTime.now()}',
-          'ns_type': 'openurl',
-          'navigationPage': 'Browser page',
-        });
+
         CommonUtil().launchURL(urlInfo);
       } else if (passedValArr[0] == 'myplandetails') {
         final planid = passedValArr[1];
@@ -1042,11 +899,6 @@ class _MyFHBState extends State<MyFHB> {
         final patName = passedValArr[4];
         final currentUserId = PreferenceUtil.getStringValue(KEY_USERID);
         if (currentUserId == userId) {
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'myplan_deatails',
-            'navigationPage': 'My Plan Details',
-          });
           Get.to(
             MyPlanDetail(
               packageId: planid,
@@ -1062,11 +914,7 @@ class _MyFHBState extends State<MyFHB> {
         final claimId = passedValArr[1];
         final userId = passedValArr[2];
         final currentUserId = PreferenceUtil.getStringValue(KEY_USERID);
-        fbaLog(eveParams: {
-          'eventTime': '${DateTime.now()}',
-          'ns_type': 'claim_Details',
-          'navigationPage': 'Claim Record Display',
-        });
+
         Get.to(
           ClaimRecordDisplay(
             claimID: claimId,
@@ -1081,11 +929,6 @@ class _MyFHBState extends State<MyFHB> {
         if (passedValArr[0] == 'Renew') {
           final currentUserId = PreferenceUtil.getStringValue(KEY_USERID);
           if (currentUserId == userId) {
-            fbaLog(eveParams: {
-              'eventTime': '${DateTime.now()}',
-              'ns_type': 'myplan_deatails',
-              'navigationPage': 'My Plan Details',
-            });
             Get.to(
               MyPlanDetail(
                 packageId: planid,
@@ -1108,19 +951,6 @@ class _MyFHBState extends State<MyFHB> {
           FetchNotificationService().updateNsActionStatus(nsBody).then((data) {
             FetchNotificationService().updateNsOnTapAction(nsBody);
           });
-          //   //TODO if its Callback just show the message alone
-          //   Get.rawSnackbar(
-          //       messageText: Center(
-          //         child: Text(
-          //           '$patName, Thank you for reaching out.  Your caregiver will call you as soon as possible.',
-          //           style: TextStyle(
-          //               color: Colors.white, fontWeight: FontWeight.w500),
-          //         ),
-          //       ),
-          //       snackPosition: SnackPosition.BOTTOM,
-          //       snackStyle: SnackStyle.GROUNDED,
-          //       duration: Duration(seconds: 3),
-          //       backgroundColor: Colors.green.shade500);
         }
       } else if (passedValArr[0] == Constants.strVoiceClonePatientAssignment) {
         // Check if the first element of passedValArr is related to voice clone patient assignment
@@ -1158,11 +988,6 @@ class _MyFHBState extends State<MyFHB> {
               patientPic = '';
             }
 
-            fbaLog(eveParams: {
-              'eventTime': '${DateTime.now()}',
-              'ns_type': 'call',
-              'navigationPage': 'TeleHelath Call screen',
-            });
             if (callType.toLowerCase() == 'audio') {
               Provider.of<AudioCallProvider>(Get.context!, listen: false)
                   .enableAudioCall();
@@ -1191,81 +1016,6 @@ class _MyFHBState extends State<MyFHB> {
     }
   }
 
-  getToSheelaNavigate(var passedValArr,
-      {bool isFromAudio = false,
-      bool isFromActivityRemainderInvokeSheela = false}) {
-    if (isFromActivityRemainderInvokeSheela) {
-      Get.toNamed(
-        rt_Sheela,
-        arguments: SheelaArgument(eId: passedValArr[1].toString()),
-      )!
-          .then((value) {
-        try {
-          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
-        } catch (e, stackTrace) {
-          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-        }
-      });
-      return;
-    }
-    if (isFromAudio) {
-      Get.toNamed(
-        router.rt_Sheela,
-        arguments: SheelaArgument(
-          allowBackBtnPress: true,
-          audioMessage: passedValArr[3].toString(),
-          eventIdViaSheela: passedValArr[4].toString(),
-        ),
-      )!
-          .then((value) {
-        try {
-          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
-        } catch (e, stackTrace) {
-          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-          if (kDebugMode) {
-            print(e);
-          }
-        }
-      });
-    } else {
-      Future.delayed(Duration(milliseconds: 500), () async {
-        Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(
-              allowBackBtnPress: true,
-              isSheelaFollowup: true,
-              textSpeechSheela: (passedValArr[2] != null &&
-                      passedValArr[2] != 'null' &&
-                      passedValArr[2] != '')
-                  ? passedValArr[2]
-                  : passedValArr[1],
-              audioMessage: '',
-              isNeedPreferredLangauge: true,
-              eventIdViaSheela: passedValArr[4]),
-        )!
-            .then((value) {
-          try {
-            sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
-          } catch (e, stackTrace) {
-            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-            if (kDebugMode) {
-              print(e);
-            }
-          }
-        });
-      });
-    }
-  }
-
-  getMyRoute() async {
-    final route = await nav_platform.invokeMethod('getMyRoute');
-    if (route != null && route != 'null') {
-      setState(() {
-        navRoute = route;
-      });
-    }
-  }
-
   void getProfileData() async {
     try {
       await CommonUtil().getUserProfileData();
@@ -1278,22 +1028,22 @@ class _MyFHBState extends State<MyFHB> {
   Widget build(BuildContext context) {
     final nsSettingsForAndroid =
         AndroidInitializationSettings(variable.strLauncher);
-    final nsSettingsForIOS = IOSInitializationSettings();
+
+    // Create an instance of DarwinInitializationSettings with notificationCategories
+    final nsSettingsForIOS = DarwinInitializationSettings(
+        notificationCategories: darwinIOSCategories);
     final platform = InitializationSettings(
         android: nsSettingsForAndroid, iOS: nsSettingsForIOS);
 
-    Future notificationAction(String? payload) async {
+    Future notificationAction(NotificationResponse details) async {
       await Navigator.push(
           context, MaterialPageRoute(builder: (context) => AddReminder()));
     }
 
-    flutterLocalNotificationsPlugin.initialize(platform,
-        onSelectNotification: notificationAction);
+/*    flutterLocalNotificationsPlugin.initialize(platform,
+        onDidReceiveNotificationResponse: notificationAction);*/
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<ConnectivityBloc>(
-          create: (_) => ConnectivityBloc(),
-        ),
         ChangeNotifierProvider<CallStatus>(
           create: (_) => CallStatus(),
         ),
@@ -1333,7 +1083,8 @@ class _MyFHBState extends State<MyFHB> {
         ChangeNotifierProvider<ChatSocketViewModel>(
           create: (_) => ChatSocketViewModel(),
         ),
-        ChangeNotifierProvider<VoiceCloningController>(create:(_)=>VoiceCloningController())
+        ChangeNotifierProvider<VoiceCloningController>(
+            create: (_) => VoiceCloningController())
       ],
       child: LayoutBuilder(builder: (context, constraints) {
         return OrientationBuilder(builder: (context, orientation) {
@@ -1348,7 +1099,7 @@ class _MyFHBState extends State<MyFHB> {
             themeMode: ThemeMode.light,
             theme: AppTheme().themeData,
             //home: navRoute.isEmpty ? SplashScreen() : StartTheCall(),
-            home: findHomeWidget(navRoute),
+            home: SplashScreen(),
             navigatorObservers: [MyFHB.routeObserver],
             routes: routes,
             debugShowCheckedModeBanner: false,
@@ -1380,15 +1131,15 @@ class _MyFHBState extends State<MyFHB> {
       }
     } else {
       try {
-
         if (navRoute == 'FETCH_LOG') {
           return SplashScreen(
             nsRoute: '',
           );
         }
-        if(navRoute =='vcApproveByProvider' || navRoute =='vcDeclineByProvider'){
+        if (navRoute == 'vcApproveByProvider' ||
+            navRoute == 'vcDeclineByProvider') {
           return SplashScreen(
-            nsRoute:navRoute,
+            nsRoute: navRoute,
           );
         }
         final parsedData = navRoute.split('&');

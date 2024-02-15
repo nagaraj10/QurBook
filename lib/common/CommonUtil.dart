@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_geocoder/model.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -39,9 +40,11 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
 import 'package:myfhb/landing/controller/landing_screen_controller.dart';
 import 'package:myfhb/chat_socket/model/SheelaReminderResponse.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/main.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
+import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path/path.dart';
@@ -153,6 +156,7 @@ import '../video_call/model/payload.dart' as vsPayLoad;
 import '../video_call/pages/calling_page.dart';
 import '../video_call/pages/callmain.dart';
 import '../video_call/pages/callmain_makecall.dart';
+import '../video_call/services/iOS_Notification_Handler.dart';
 import '../video_call/utils/audiocall_provider.dart';
 import '../video_call/utils/hideprovider.dart';
 import '../video_call/utils/rtc_engine.dart';
@@ -169,6 +173,7 @@ import 'keysofmodel.dart' as keysConstant;
 import 'package:myfhb/more_menu/trouble_shoot_controller.dart';
 
 import 'widgets/CommonWidgets.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -188,6 +193,8 @@ class CommonUtil {
   static String TRUE_DESK_URL = '';
   static String WEB_URL = '';
   static String PORTAL_URL = '';
+
+  static String AppName ='';
 
   static String UNIT_CONFIGURATION_URL =
       'system-configuration/unit-configuration';
@@ -347,6 +354,19 @@ class CommonUtil {
       }
     });
   }
+
+  // Function to replace a separator in a string with an empty string
+  String? replaceSeparator({required String? value, required String separator}) {
+    // Check if the value is not null and contains the separator
+    if (value != null && value.contains(separator)) {
+      // If it does, replace all occurrences of the separator with an empty string
+      return value.replaceAll(separator, '');
+    }
+    // If the value is null or doesn't contain the separator, return the original value
+    return value;
+  }
+
+
 
   void commonMethodToSetPreference() async {
     var apiBaseHelper = ApiBaseHelper();
@@ -5480,21 +5500,60 @@ class CommonUtil {
   }
 
   String showDescriptionTextForm(FieldModel fieldModel) {
+    // Initialize desc with an empty string
     String? desc = '';
 
-    if ((fieldModel?.isSurvey ?? false) &&
-        (fieldModel.strTitleDesc ?? "").trim().isNotEmpty) {
-      desc = fieldModel.strTitleDesc;
-    } else if (fieldModel.description != null && fieldModel.description != '') {
-      desc = fieldModel.description;
-    } else if (fieldModel.title != null && fieldModel.title != '') {
-      desc = fieldModel.title;
+    // Check if the current language is English
+    if (CommonUtil().isLanguageEnglish() ?? false) {
+      // Check if it's a survey and title description is not empty
+      if ((fieldModel?.isSurvey ?? false) &&
+          (fieldModel.strTitleDesc ?? "").trim().isNotEmpty) {
+        // Set desc to title description
+        desc = fieldModel.strTitleDesc;
+      }
+      // Check if description is not null and not empty
+      else if (fieldModel.description != null &&
+          fieldModel.description != '') {
+        // Set desc to description
+        desc = fieldModel.description;
+      }
+      // Check if title is not null and not empty
+      else if (fieldModel.title != null && fieldModel.title != '') {
+        // Set desc to title
+        desc = fieldModel.title;
+      } else {
+        // Set desc to empty string
+        desc = '';
+      }
     } else {
-      desc = '';
+      // For other languages
+      // Check if it's a survey and title description is not empty
+      if ((fieldModel?.isSurvey ?? false) &&
+          (fieldModel.strTitleDesc ?? "").trim().isNotEmpty) {
+        // Set desc to title description
+        desc = fieldModel.strTitleDesc;
+      }
+      // Check if translated description is not null and not empty
+      else if (fieldModel.translatedDescription != null &&
+          fieldModel.translatedDescription != '') {
+        // Set desc to translated description
+        desc = fieldModel.translatedDescription;
+      }
+      // Check if translated title is not null and not empty
+      else if (fieldModel.translatedTitle != null &&
+          fieldModel.translatedTitle != '') {
+        // Set desc to translated title
+        desc = fieldModel.translatedTitle;
+      } else {
+        // Set desc to empty string
+        desc = '';
+      }
     }
 
+    // Return the parsed HTML string
     return parseHtmlString(desc);
   }
+
 
   String showDescTextRegimenList(VitalsData vitalsData) {
     String? desc = '';
@@ -6533,11 +6592,6 @@ class CommonUtil {
       } catch (e, stackTrace) {
         CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
-      fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'call',
-        'navigationPage': 'TeleHelath Call screen',
-      });
 
       if (callType.toLowerCase() == 'audio') {
         Provider.of<AudioCallProvider>(Get.context!, listen: false)
@@ -7499,6 +7553,197 @@ class CommonUtil {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
+
+  // Asynchronous function to retrieve and handle the route based on notification
+  getMyRoute() async {
+    try {
+      // Get details if the app was launched from a notification
+      NotificationAppLaunchDetails? didLaunchFromNotification =
+      await localNotificationsPlugin.getNotificationAppLaunchDetails();
+
+      // Get the notification response if available
+      NotificationResponse? notificationResponse =
+          didLaunchFromNotification?.notificationResponse;
+
+      // Check if there is a notification response
+      if (notificationResponse != null) {
+        // Check if the app was launched by tapping on the notification
+        if (didLaunchFromNotification?.didNotificationLaunchApp == true) {
+          // Decode the payload and handle the notification response
+          var mapResponse = jsonDecode(notificationResponse.payload ?? '');
+
+          // If there is an action id, add it to the map
+          if (notificationResponse.actionId != null) {
+            mapResponse['action'] = notificationResponse.actionId;
+          }
+
+          // Handle the notification response for iOS
+          IosNotificationHandler().handleNotificationResponse(mapResponse);
+        }
+      }
+    } catch (e, stackTrace) {
+      // Log any errors using appLogs
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  // This function is responsible for handling the Sheela activity remainder invocation.
+  getActivityRemainderInvokeSheela(var passedValArr, SheelaAIController sheelaAIController) {
+    // Check if auto redirect to Sheela screen is allowed
+    if (CommonUtil().isAllowSheelaLiveReminders()) {
+      // Live reminder on default existing flow
+      if (sheelaAIController.isSheelaScreenActive) {
+        // If Sheela screen is active, send a reminder notification
+        var reqJson = {
+          KIOSK_task: KIOSK_remind,
+          KIOSK_eid: passedValArr[1].toString(),
+        };
+        CommonUtil().callQueueNotificationPostApi(reqJson);
+      } else {
+        // If Sheela screen is not active and queue dialog is showing, dismiss it
+        if (sheelaAIController.isQueueDialogShowing.value) {
+          Get.back();
+          sheelaAIController.isQueueDialogShowing.value = false;
+        }
+        // Delayed navigation to Sheela screen
+        Future.delayed(Duration(milliseconds: 500), () async {
+          CommonUtil().getToSheelaNavigate(passedValArr, sheelaAIController,
+              isFromActivityRemainderInvokeSheela: true);
+        });
+      }
+    } else {
+      // Live reminder off, only queue flow is working
+      var reqJson = {
+        KIOSK_task: KIOSK_remind,
+        KIOSK_eid: passedValArr[1].toString(),
+      };
+      CommonUtil().callQueueNotificationPostApi(reqJson);
+    }
+  }
+
+// This function is responsible for navigating to the Sheela screen based on various conditions.
+  getToSheelaNavigate(var passedValArr, SheelaAIController sheelaAIController,
+      {bool isFromAudio = false, bool isFromActivityRemainderInvokeSheela = false}) {
+    if (isFromActivityRemainderInvokeSheela) {
+      // If invoked from activity remainder, navigate to Sheela screen with arguments
+      Get.toNamed(
+        rt_Sheela,
+        arguments: SheelaArgument(eId: passedValArr[1].toString()),
+      )!
+          .then((value) {
+        try {
+          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+        }
+      });
+      return;
+    }
+
+    if (isFromAudio) {
+      // If invoked from audio, navigate to Sheela screen with audio-related arguments
+      Get.toNamed(
+        router.rt_Sheela,
+        arguments: SheelaArgument(
+          allowBackBtnPress: true,
+          audioMessage: passedValArr[3].toString(),
+          eventIdViaSheela: passedValArr[4].toString(),
+        ),
+      )!
+          .then((value) {
+        try {
+          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+          if (kDebugMode) {
+            print(e);
+          }
+        }
+      });
+    } else {
+      // Delayed navigation to Sheela screen with default arguments
+      Future.delayed(Duration(milliseconds: 500), () async {
+        Get.toNamed(
+          rt_Sheela,
+          arguments: SheelaArgument(
+              allowBackBtnPress: true,
+              isSheelaFollowup: true,
+              textSpeechSheela: (passedValArr[2] != null &&
+                  passedValArr[2] != 'null' &&
+                  passedValArr[2] != '')
+                  ? passedValArr[2]
+                  : passedValArr[1],
+              audioMessage: '',
+              isNeedPreferredLangauge: true,
+              eventIdViaSheela: passedValArr[4]),
+        )!
+            .then((value) {
+          try {
+            sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+            if (kDebugMode) {
+              print(e);
+            }
+          }
+        });
+      });
+    }
+  }
+
+
+
+
+  /// Checks if the preferred language is English based on certain conditions.
+  ///
+  /// @param preferredLanguage The preferred language to be checked (nullable).
+  /// @return True if the language is English, false otherwise.
+  bool? checkIsLanguageEnglish(String? preferredLanguage) {
+    // Check if the preferredLanguage is not null and matches one of the English language codes
+    try {
+      if (preferredLanguage != null &&
+              (preferredLanguage == 'en-IN' ||  // English - India
+                  preferredLanguage == 'en' ||   // English
+                  preferredLanguage == 'undef')) {  // Undefined language (assuming 'undef' represents a special case)
+            return true;  // If any of the conditions are met, return true
+          } else {
+            return false;  // If none of the conditions are met, return false
+          }
+    } catch (e,stackTrace) {
+      appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  bool? isLanguageEnglish() {
+    bool isCheckEnglishLang = true;
+    // Attempt to check if the current language is English using the checkIsLanguageEnglish method
+    isCheckEnglishLang = (checkIsLanguageEnglish(getCurrentLanCode()) ?? true);
+    return isCheckEnglishLang;
+  }
+
+  // Function to initialize and get the CreateTicketController instance
+  CreateTicketController onInitCreateTicketController() {
+    CreateTicketController createTicketController;
+
+    // Check if CreateTicketController is not registered with GetX
+    if (!Get.isRegistered<CreateTicketController>()) {
+      // If not registered, put the CreateTicketController into the GetX dependency injection system
+      Get.put(CreateTicketController());
+    }
+
+    // Find and get the CreateTicketController instance
+    createTicketController = Get.find();
+
+    // Return the obtained CreateTicketController instance
+    return createTicketController;
+  }
+/// Formats the given [amount] number to a string with 2 decimal places,
+/// unless the amount is an integer, in which case no decimal places are used.
+///
+/// @param amount The number to format as a string.
+/// @return The formatted string representing the amount.
+  static String formatAmount(num amount) =>
+      '${amount % 1 == 0 ? amount : amount.toStringAsFixed(2)}';
 }
 
 extension CapExtension on String {

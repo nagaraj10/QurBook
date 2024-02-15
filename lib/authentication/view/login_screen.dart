@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/authentication/model/Country.dart';
-import 'package:myfhb/authentication/view/signup_screen.dart';
-import '../model/patientlogin_model.dart';
+
+import '../../common/CommonUtil.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../constants/fhb_constants.dart';
+import '../../src/ui/loader_class.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 import '../constants/constants.dart';
+import '../model/Country.dart';
+import '../model/patientlogin_model.dart';
+import '../view_model/patientauth_view_model.dart';
+import '../widgets/country_code_picker.dart';
 import 'authentication_validator.dart';
 import 'login_validation_screen.dart';
-import '../view_model/patientauth_view_model.dart';
-import '../../constants/fhb_constants.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
-import '../widgets/country_code_picker.dart';
-import '../../common/CommonUtil.dart';
-import '../../src/ui/loader_class.dart';
+import 'signup_screen.dart';
 
 class PatientSignInScreen extends StatefulWidget {
   @override
@@ -34,20 +35,9 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
+    FABService.trackCurrentScreen(FBALoginScreen);
     authViewModel = AuthViewModel();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Login Screen',
-      'screenSessionTime':
-      '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -79,77 +69,76 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                           height: 120.0.h,
                           width: 120.0.h,
                         ),
-                          SizedBox(height: 20.0.h),
-                          Text(
-                            ENTER_MOB_NUM,
-                            textAlign: TextAlign.center,
+                        SizedBox(height: 20.0.h),
+                        Text(
+                          ENTER_MOB_NUM,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16.0.sp,
+                          ),
+                        ),
+                        SizedBox(height: 20.0.h),
+                        _loginTextFields(
+                          TextFormField(
+                            textCapitalization: TextCapitalization.sentences,
+                            readOnly: isSignInScreen ? false : true,
+                            enableInteractiveSelection: false,
                             style: TextStyle(
                               fontSize: 16.0.sp,
                             ),
-                          ),
-                          SizedBox(height: 20.0.h),
-                          _loginTextFields(
-                            TextFormField(
-                              textCapitalization:
-                              TextCapitalization.sentences,
-                              readOnly:isSignInScreen?false:true,
-                              enableInteractiveSelection: false,
-                              style: TextStyle(
-                                fontSize: 16.0.sp,
-                              ),
-                              autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
-                              maxLength: 10,
-                              decoration: InputDecoration(
-                                counterText: "",
-                                prefixIcon: Container(
-                                  constraints: BoxConstraints(
-                                    maxWidth: 75.0.w,
-                                    minWidth: 75.0.w,
+                            autovalidateMode: _autoValidateBool
+                                ? AutovalidateMode.always
+                                : AutovalidateMode.disabled,
+                            maxLength: 10,
+                            decoration: InputDecoration(
+                              counterText: "",
+                              prefixIcon: Container(
+                                constraints: BoxConstraints(
+                                  maxWidth: 75.0.w,
+                                  minWidth: 75.0.w,
+                                ),
+                                child: CountryCodePickerPage(
+                                  selectedCountry: _selectedDialogCountry,
+                                  isFromAuthenticationScreen: true,
+                                  onValuePicked: (country) => setState(
+                                    () => _selectedDialogCountry = country,
                                   ),
-                                  child: CountryCodePickerPage(
-                                      selectedCountry: _selectedDialogCountry,
-                                      isFromAuthenticationScreen: true,
-                                      onValuePicked: (country) =>
-                                          setState(
-                                                () =>
-                                            _selectedDialogCountry = country,
-                                          ),
-                                      isEnabled: isSignInScreen
+                                  isEnabled: isSignInScreen
                                       ? (BASE_URL != prodUSURL)
                                       : false,
-                                  ),
                                 ),
-                                hintText: strNewPhoneHint,
-                                labelText: strNumberHint,
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                    )),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                    )),
                               ),
-                              validator: (value) {
-                                return AuthenticationValidator()
-                                    .phoneValidation(
-                                    value!, patternPhoneNew as String,
-                                    strPhoneCantEmpty);
-                              },
-                              controller: numberController,
-                              onSaved: (value) {},
-                              keyboardType: TextInputType.number,
+                              hintText: strNewPhoneHint,
+                              labelText: strNumberHint,
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                  )),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                  )),
                             ),
+                            validator: (value) {
+                              return AuthenticationValidator().phoneValidation(
+                                  value!,
+                                  patternPhoneNew as String,
+                                  strPhoneCantEmpty);
+                            },
+                            controller: numberController,
+                            onSaved: (value) {},
+                            keyboardType: TextInputType.number,
                           ),
+                        ),
                         if (isSignInScreen) ...{
                           SizedBox(height: 20.0.h),
                           _loginsavebutton(),
                           SizedBox(height: 20.0.h),
-                        }else...{
+                        } else ...{
                           SizedBox(height: 10.0.h),
                           retryButton(),
                           SizedBox(height: 20.0.h),
@@ -159,10 +148,6 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                     ),
                   ),
                 ),
-                /* Positioned(
-                top: 40,
-                left: 0,
-              ),*/
               ],
             ),
           ),
@@ -193,7 +178,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
           child: Container(
             width: 260.0.w,
             padding:
-            EdgeInsets.symmetric(vertical: 15.0.sp, horizontal: 15.0.sp),
+                EdgeInsets.symmetric(vertical: 15.0.sp, horizontal: 15.0.sp),
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(5)),

@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/add_new_plan/view/AddNewPlan.dart';
-import 'package:myfhb/add_provider_plan/view/AddProviderPlan.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/plan_wizard/view/pages/diet_plan/tab_diet_main.dart';
-import 'package:myfhb/plan_wizard/view/pages/health_condition_page.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
+
+import '../../add_new_plan/view/AddNewPlan.dart';
+import '../../add_provider_plan/view/AddProviderPlan.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart';
+import '../../landing/view/landing_arguments.dart';
+import '../../src/ui/MyRecord.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../widgets/GradientAppBar.dart';
+import '../view_model/plan_wizard_view_model.dart';
 import 'pages/care_plan/tab_care_main.dart';
+import 'pages/diet_plan/tab_diet_main.dart';
+import 'pages/health_condition_page.dart';
 import 'widgets/plan_navigation_widget.dart';
 
 class PlanWizardScreen extends StatefulWidget {
@@ -30,12 +32,12 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
   @override
   void initState() {
     super.initState();
-    mInitialTime = DateTime.now();
-    if (!(Provider.of<PlanWizardViewModel>(context, listen: false)
-        .isDynamicLink)) {
+    FABService.trackCurrentScreen(FBAAddPlansCategoryScreen);
+    if (!Provider.of<PlanWizardViewModel>(context, listen: false)
+        .isDynamicLink) {
       Provider.of<PlanWizardViewModel>(context, listen: false).currentPage = 0;
     } else {
-      Future.delayed(Duration(), () {
+      Future.delayed(const Duration(), () {
         Provider.of<PlanWizardViewModel>(context, listen: false)
             .changeCurrentPage(
           Provider.of<PlanWizardViewModel>(context, listen: false)
@@ -43,23 +45,13 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
         );
       });
     }
+    Provider.of<PlanWizardViewModel>(context,listen: false).getMemberShip();
     Provider.of<PlanWizardViewModel>(context, listen: false).getCreditBalance();
     Provider.of<PlanWizardViewModel>(context, listen: false).fetchCartItem();
     Provider.of<PlanWizardViewModel>(context, listen: false).updateCareCount();
     Provider.of<PlanWizardViewModel>(context, listen: false).updateDietCount();
     Provider.of<PlanWizardViewModel>(context, listen: false)
         .isPlanWizardActive = true;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'PlanWizard Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -159,7 +151,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                             ),
                             OutlinedButton(
                               style: OutlinedButton.styleFrom(
-                                side: BorderSide(color: Colors.white),
+                                side: const BorderSide(color: Colors.white),
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(
@@ -173,11 +165,8 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                                   Get.to(AddProviderPlan(
                                       planWizardViewModel.selectedTag));
                                 } else {
-                                  AddNewPlan().addNewPlan(
-                                      context,
-                                      feedbackCode,
-                                      titleName,
-                                      hintText, (bool) {
+                                  AddNewPlan().addNewPlan(context, feedbackCode,
+                                      titleName, hintText, (bool) {
                                     FlutterToast toast = FlutterToast();
                                     if (bool) {
                                       toast.getToast(
@@ -200,7 +189,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                           ],
                         ),
                       )
-                    : SizedBox.shrink(),
+                    : const SizedBox.shrink(),
               ],
             ),
           ],

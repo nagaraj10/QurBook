@@ -1,33 +1,35 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:get/get.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/landing/model/qur_plan_dashboard_model.dart';
-import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/telehealth/features/chat/constants/const.dart';
-import 'package:myfhb/telehealth/features/chat/view/chat.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 
 import '../../../../common/CommonUtil.dart';
-import 'package:myfhb/common/errors_widget.dart';
+import '../../../../common/PreferenceUtil.dart';
+import '../../../../common/common_circular_indicator.dart';
+import '../../../../common/errors_widget.dart';
+import '../../../../constants/fhb_constants.dart' as Constants;
+import '../../../../constants/fhb_constants.dart';
+import '../../../../constants/router_variable.dart';
+import '../../../../constants/variable_constant.dart' as variable;
+import '../../../../landing/model/qur_plan_dashboard_model.dart';
+import '../../../../landing/view/landing_arguments.dart';
+import '../../../../src/model/user/MyProfileModel.dart';
+import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../../widgets/GradientAppBar.dart';
+import '../constants/const.dart';
+import '../viewModel/ChatViewModel.dart';
+import 'chat.dart';
+
+import '../../../../services/notification_helper.dart';
 
 class ChatHomeScreen extends StatefulWidget {
   ChatHomeScreen({
@@ -60,25 +62,6 @@ class HomeScreenState extends State<ChatHomeScreen> {
   String patientName = '';
 
   ChatViewModel chatViewModel = ChatViewModel();
-
-  @override
-  void initState() {
-    super.initState();
-    //registerNotification();
-    //configLocalNotification();
-    mInitialTime = DateTime.now();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Chat Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
-  }
 
   Future<String?> getPatientDetails() async {
     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -125,7 +108,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
   void configLocalNotification() {
     var initializationSettingsAndroid =
         AndroidInitializationSettings(STR_MIP_MAP_LAUNCHER);
-    var initializationSettingsIOS = IOSInitializationSettings();
+    var initializationSettingsIOS = DarwinInitializationSettings(
+        notificationCategories: darwinIOSCategories);
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
@@ -137,13 +121,13 @@ class HomeScreenState extends State<ChatHomeScreen> {
           ? 'com.ventechsolutions.myFHB'
           : 'com.ventechsolutions.myFHB',
       'Flutter chat demo',
-      'your channel description',
+      channelDescription: 'your channel description',
       playSound: true,
       enableVibration: true,
       importance: Importance.max,
       priority: Priority.high,
     );
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var iOSPlatformChannelSpecifics = DarwinNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);
@@ -266,7 +250,6 @@ class HomeScreenState extends State<ChatHomeScreen> {
         break;
       case 1:
         exit(0);
-        break;
     }
   }
 

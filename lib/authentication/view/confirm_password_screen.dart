@@ -1,22 +1,19 @@
-
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/widgets/app_primary_button.dart';
+import 'package:provider/provider.dart';
 import 'package:sms_autofill/sms_autofill.dart';
-import '../constants/constants.dart';
-import '../model/confirm_password_model.dart';
-import '../model/confirm_password_model.dart' as confirmPasswordModel;
-import 'authentication_validator.dart';
-import 'login_screen.dart';
-import '../view_model/otp_view_model.dart';
-import '../view_model/patientauth_view_model.dart';
+
 import '../../common/CommonUtil.dart';
-import '../../constants/fhb_constants.dart';
 import '../../src/ui/loader_class.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
-import '../../widgets/RaisedGradientButton.dart';
-import 'package:provider/provider.dart';
+import '../../widgets/app_primary_button.dart';
+import '../constants/constants.dart';
+import '../model/confirm_password_model.dart';
+import '../view_model/otp_view_model.dart';
+import '../view_model/patientauth_view_model.dart';
+import 'authentication_validator.dart';
+import 'login_screen.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   ChangePasswordScreen({this.userName, this.isVirtualNumber = false});
@@ -45,7 +42,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
     listenForCode();
     SmsAutoFill().listenForCode;
@@ -60,12 +56,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
     super.dispose();
     otpViewModel?.stopTimer();
     otpViewModel?.stopOTPTimer();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Confirm Password Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -140,11 +130,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                                 ),
                               ),
                               controller: CodeController,
-                              autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
+                              autovalidateMode: _autoValidateBool
+                                  ? AutovalidateMode.always
+                                  : AutovalidateMode.disabled,
                               validator: (value) {
                                 return AuthenticationValidator()
-                                    .phoneOtpValidation(
-                                        value!, patternOtp as String, strEnterOtpp);
+                                    .phoneOtpValidation(value!,
+                                        patternOtp as String, strEnterOtpp);
                               },
                               onSaved: (value) {},
                             ),
@@ -162,7 +154,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
                                   ),
-                                  autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
+                                  autovalidateMode: _autoValidateBool
+                                      ? AutovalidateMode.always
+                                      : AutovalidateMode.disabled,
                                   obscureText: _isHidden,
                                   decoration: InputDecoration(
                                     hintText: strNewPasswordHintTxt,
@@ -193,8 +187,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                                   ),
                                   validator: (value) {
                                     return AuthenticationValidator()
-                                        .passwordValidation(value!,
-                                            patternPassword as String, strPassCantEmpty);
+                                        .passwordValidation(
+                                            value!,
+                                            patternPassword as String,
+                                            strPassCantEmpty);
                                   },
                                   controller: NewPasswordController,
                                   onSaved: (value) {},
@@ -208,7 +204,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
                                   ),
-                                  autovalidateMode: _autoValidateBool ? AutovalidateMode.always : AutovalidateMode.disabled,
+                                  autovalidateMode: _autoValidateBool
+                                      ? AutovalidateMode.always
+                                      : AutovalidateMode.disabled,
                                   obscureText: _isHiddenSecondary,
                                   decoration: InputDecoration(
                                     hintText: strNewPasswordAgainHintText,
@@ -296,28 +294,27 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                     ),
                     SizedBox(height: 10.0.h),
                     Visibility(
-                      visible: otpViewModel!.timerSeconds == 0,
-                      child: AppPrimaryButton(
-                        text:strVerifyCall,
-                        isSecondaryButton: true,
-                        onTap:otpViewModel!.timerSeconds == 0
-                            ? () {
-                          if (_ChangePasswordKey.currentState!
-                              .validate()) {
-                            otpViewModel?.stopOTPTimer();
-                            otpViewModel!.confirmViaCall(
-                              phoneNumber: widget.userName ?? '',
-                              onOtpReceived: (otpCode) {
-                                _verifyDetails(
-                                  otpCode: otpCode,
-                                );
-                              },
-                            );
-                          }
-                        }
-                            :(){},
-                      )
-                    ),
+                        visible: otpViewModel!.timerSeconds == 0,
+                        child: AppPrimaryButton(
+                          text: strVerifyCall,
+                          isSecondaryButton: true,
+                          onTap: otpViewModel!.timerSeconds == 0
+                              ? () {
+                                  if (_ChangePasswordKey.currentState!
+                                      .validate()) {
+                                    otpViewModel?.stopOTPTimer();
+                                    otpViewModel!.confirmViaCall(
+                                      phoneNumber: widget.userName ?? '',
+                                      onOtpReceived: (otpCode) {
+                                        _verifyDetails(
+                                          otpCode: otpCode,
+                                        );
+                                      },
+                                    );
+                                  }
+                                }
+                              : () {},
+                        )),
                   ],
                 ),
               ),
@@ -340,11 +337,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
     });
   }
 
-  
   Widget _backbutton() {
     return AppPrimaryButton(
-      text:strBackText,
-      onTap: (){
+      text: strBackText,
+      onTap: () {
         FocusScope.of(context).unfocus();
         Navigator.of(context).pop();
       },
@@ -388,10 +384,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
   }
 
   Widget _changePassword() {
-    return AppPrimaryButton(onTap:(){
-      _verifyDetails();
-    },
-      text:strChangeButtonText ,
+    return AppPrimaryButton(
+      onTap: () {
+        _verifyDetails();
+      },
+      text: strChangeButtonText,
     );
   }
 

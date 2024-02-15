@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/src/ui/Dashboard.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/constants/variable_constant.dart';
+
+import '../../common/CommonUtil.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart';
+import '../../constants/variable_constant.dart';
+import '../../landing/view/landing_arguments.dart';
+import '../../widgets/GradientAppBar.dart';
+import '../utils/screenutils/size_extensions.dart';
+import 'Dashboard.dart';
 
 class DevicesScreen extends StatelessWidget {
+  const DevicesScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
+    FABService.trackCurrentScreen(FBAVitalsScreen);
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
@@ -41,13 +46,13 @@ class DevicesScreen extends StatelessWidget {
     );
   }
 
-  onBackPressed(BuildContext context) {
+  void onBackPressed(BuildContext context) {
     if (Navigator.canPop(context)) {
       Get.back();
     } else {
       Get.offAllNamed(
         rt_Landing,
-        arguments: LandingArguments(
+        arguments: const LandingArguments(
           needFreshLoad: false,
         ),
       );

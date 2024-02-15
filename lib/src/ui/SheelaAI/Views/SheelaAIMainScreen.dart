@@ -9,6 +9,7 @@ import 'package:myfhb/language/repository/LanguageRepository.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BLEBlinkingIcon.dart';
+import '../../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../Widgets/common_bluetooth_widget.dart';
 
 import '../../../../common/CommonUtil.dart';
@@ -43,7 +44,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    FABService.trackCurrentScreen(FBASheelaScreen);
+    WidgetsBinding.instance.addObserver(this);
     controller.conversations = [];
     controller.btnTextLocal = '';
     controller.isRetakeCapture = false;
@@ -330,11 +332,12 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       actions: [
         Row(
           children: [
-            if (!CommonUtil.isUSRegion() && (widget.arguments?.takeActiveDeviceReadings ?? false))
+            if (!CommonUtil.isUSRegion() &&
+                (widget.arguments?.takeActiveDeviceReadings ?? false))
               hubListViewController.isUserHasParedDevice.value
                   ? controller.isBLEStatus.value == BLEStatus.Disabled
                       ? CommonBluetoothWidget.getDisabledBluetoothIcon()
-                      :    MyBlinkingBLEIcon()
+                      : MyBlinkingBLEIcon()
                   : SizedBox.shrink(),
             SizedBox(width: 12.w),
             if (CommonUtil.isUSRegion()) _getMuteUnMuteIcon(),
@@ -453,7 +456,9 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                             ),
                           ),
                           SizedBox(width: 12.w),
-                          hubListViewController.isUserHasParedDevice.value &&  (widget.arguments?.takeActiveDeviceReadings ?? false)
+                          hubListViewController.isUserHasParedDevice.value &&
+                                  (widget.arguments?.takeActiveDeviceReadings ??
+                                      false)
                               ? controller.isBLEStatus.value ==
                                       BLEStatus.Disabled
                                   ? CommonBluetoothWidget

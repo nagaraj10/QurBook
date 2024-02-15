@@ -1,7 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+
+import 'package:dotted_border/dotted_border.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -9,57 +14,53 @@ import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
-// TODO: multi_image_picker deprecated so need to FIX
-// import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/colors/fhb_colors.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/exception/FetchException.dart';
-import 'package:myfhb/my_providers/bloc/providers_block.dart';
-import 'package:myfhb/my_providers/models/Doctors.dart';
-import 'package:myfhb/my_providers/models/Hospitals.dart';
-import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
-import 'package:myfhb/my_providers/models/User.dart';
-import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
-import 'package:myfhb/plan_wizard/models/health_condition_response_model.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/search_providers/models/search_arguments.dart';
-import 'package:myfhb/search_providers/screens/search_specific_list.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
-import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/src/ui/MyRecordsArguments.dart';
-import 'package:myfhb/src/utils/alert.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
-import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
-import 'package:myfhb/ticket_support/model/ticket_list_model/images_model.dart';
-import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
-import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
 import 'package:open_filex/open_filex.dart';
-//import 'package:open_file/open_file.dart'; FU2.5
 import 'package:provider/provider.dart';
-import '../../constants/fhb_constants.dart' as tckConstants;
-import '../../widgets/GradientAppBar.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
-import 'my_tickets_screen.dart';
-import '../../src/utils/FHBUtils.dart';
-import '../../constants/variable_constant.dart' as variable;
-import 'dart:convert';
-import '../../../my_providers/models/UserAddressCollection.dart' as address;
-import '../../constants/fhb_parameters.dart' as parameters;
-//FU2.5
-import '../../common/PreferenceUtil.dart';
-import '../../constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/src/resources/network/api_services.dart';
-import 'package:myfhb/search_providers/models/CityListModel.dart'
-    as cityListModel;
+
 import '../../../../common/keysofmodel.dart';
+import '../../../my_providers/models/UserAddressCollection.dart' as address;
+import '../../authentication/constants/constants.dart';
+import '../../colors/fhb_colors.dart';
+import '../../common/CommonConstants.dart';
+import '../../common/FHBBasicWidget.dart';
+
+import '../../common/PreferenceUtil.dart';
+import '../../common/common_circular_indicator.dart';
+import '../../common/errors_widget.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_constants.dart' as tckConstants;
+import '../../constants/fhb_parameters.dart';
+import '../../constants/fhb_parameters.dart' as parameters;
+import '../../constants/variable_constant.dart' as variable;
+import '../../exception/FetchException.dart';
+import '../../my_providers/bloc/providers_block.dart';
+import '../../my_providers/models/Doctors.dart';
+import '../../my_providers/models/Hospitals.dart';
+import '../../my_providers/models/MyProviderResponseNew.dart';
+import '../../my_providers/models/User.dart';
+import '../../plan_dashboard/model/PlanListModel.dart';
+import '../../plan_wizard/models/health_condition_response_model.dart';
+import '../../plan_wizard/view_model/plan_wizard_view_model.dart';
+import '../../search_providers/models/CityListModel.dart' as cityListModel;
+import '../../search_providers/models/search_arguments.dart';
+import '../../search_providers/screens/search_specific_list.dart';
+import '../../src/model/Health/asgard/health_record_collection.dart';
+import '../../src/model/Health/asgard/health_record_list.dart';
+import '../../src/resources/network/ApiBaseHelper.dart';
+import '../../src/resources/network/api_services.dart';
+import '../../src/ui/MyRecord.dart';
+import '../../src/ui/MyRecordsArguments.dart';
+import '../../src/utils/FHBUtils.dart';
+import '../../src/utils/alert.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../telehealth/features/MyProvider/view/CommonWidgets.dart';
+import '../../widgets/GradientAppBar.dart';
+import '../model/ticket_list_model/images_model.dart';
+import '../model/ticket_types_model.dart';
+import '../view_model/tickets_view_model.dart';
+import 'my_tickets_screen.dart';
 
 class CreateTicketScreen extends StatefulWidget {
   CreateTicketScreen(this.ticketList);
@@ -85,8 +86,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   final descController = TextEditingController();
   FocusNode preferredDateFocus = FocusNode();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
-  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
-  var controller = Get.put(CreateTicketController());
+  GlobalKey<ScaffoldMessengerState> scaffold_state =
+      GlobalKey<ScaffoldMessengerState>();
+  var controller = CommonUtil().onInitCreateTicketController();
   var regController = CommonUtil().onInitQurhomeRegimenController();
   Hospitals? selectedLab;
   Doctors? selectedDoctor;
@@ -146,15 +148,15 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
   Future<void> _selectDate(BuildContext context) async {
     final picked = await showDatePicker(
-        initialDatePickerMode: DatePickerMode.day,
-        context: context,
-        initialDate: dateTime,
-        firstDate: DateTime.now(),
-        lastDate: DateTime(2100),
-      builder: (context,child) => Theme(
+      initialDatePickerMode: DatePickerMode.day,
+      context: context,
+      initialDate: dateTime,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+      builder: (context, child) => Theme(
         data: ThemeData.light().copyWith(
           colorScheme: ColorScheme.light().copyWith(
-            primary:Color(CommonUtil().getMyPrimaryColor()),
+            primary: Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
         child: child!,
@@ -191,10 +193,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           preferredTimeController.text = preferredTimeStr;
         });
       }
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       //print(e);
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -202,11 +203,15 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   void initState() {
     try {
       super.initState();
-
+      FABService.trackCurrentScreen(FBACreateTicketScreen);
       setDefaultValues();
       _getInitialDate(context);
       tckConstants.tckTitleOpt = widget.ticketList!.name;
       setAuthToken();
+      if (widget.ticketList!.name.toString().toLowerCase() ==
+          variable.strDoctorAppointment) {
+        isDoctor = true;
+      }
       _medicalPreferenceList =
           _providersBloc!.getMedicalPreferencesForDoctors();
       _medicalhospitalPreferenceList =
@@ -216,8 +221,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               .getHealthConditions();
 
       setBooleanValues();
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       if (kDebugMode) {
         print(e);
@@ -237,10 +242,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       });
 
       super.dispose();
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       //print(e);
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -256,88 +260,93 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               i < widget.ticketList!.additionalInfo!.field!.length;
               i++) {
             Field field = widget.ticketList!.additionalInfo!.field![i];
-            if (field.type == tckConstants.tckTypeTitle &&
-                field.name == tckConstants.tckMainTitle) {
-              isTxt = true;
-            }
-            if (field.type == tckConstants.tckTypeTitle &&
-                (field.name != tckConstants.tckMainTitle &&
-                    field.name != tckConstants.tckPackageTitle) &&
-                field.isVisible == null) {
+            if (isDoctor || controller.labBookAppointment.value) {
               getTextField(field);
-            }
-
-            if (field.type == tckConstants.tckTypeTitle &&
-                (field.name != tckConstants.tckMainTitle &&
-                    field.name != tckConstants.tckPackageTitle) &&
-                field.isVisible != null) {
-              getTextField(field);
-            }
-
-            if (field.type == tckConstants.tckTypeDescription &&
-                field.name == tckConstants.tckMainDescription) {
-              isDescription = true;
-            }
-            if (field.type == tckConstants.tckTypeDescription &&
-                field.name != tckConstants.tckMainDescription &&
-                field.isVisible == null) {
-              getTextField(field);
-            }
-
-            if (field.type == tckConstants.tckTypeDescription &&
-                field.name != tckConstants.tckMainDescription &&
-                field.isVisible != null) {
-              getTextField(field);
-            }
-
-            if (field.type == tckConstants.tckTypeDropdown && field.isDoctor!) {
-              isDoctor = true;
-            }
-            if (field.type == tckConstants.tckTypeDropdown &&
-                field.isHospital!) {
-              isHospital = true;
-            }
-            if (field.type == tckConstants.tckTypeDate) {
-              isPreferredDate = true;
-            }
-            if (field.type == tckConstants.tckTypeFile) {
-              isFileUpload = true;
-            }
-            if (field.type == tckConstants.tckTypeDropdown &&
-                field.fieldData != null &&
-                (field.fieldData?.length ?? 0) > 0) {
-              getTextField(field);
-              if (field.fieldData!.length == 1) {
-                onSelectDD(field.fieldData![0], field);
+            } else {
+              if (field.type == tckConstants.tckTypeTitle &&
+                  field.name == tckConstants.tckMainTitle) {
+                isTxt = true;
               }
-            }
-
-            if (field.type == tckConstants.tckTypeDropdown &&
-                (field.isProvider != null && field.isProvider!)) {
-              if (field.providerType != null &&
-                  field.providerType!.length > 0) {
-                await controller.getProviderList(field.providerType![0], field);
+              if (field.type == tckConstants.tckTypeTitle &&
+                  (field.name != tckConstants.tckMainTitle &&
+                      field.name != tckConstants.tckPackageTitle) &&
+                  field.isVisible == null) {
+                getTextField(field);
               }
-              getTextField(field);
-              if (field.fieldData != null &&
-                  (field.fieldData?.length ?? 0) > 0 &&
-                  field.fieldData?.length == 1) {
-                await Future.delayed(Duration(milliseconds: 50));
-                onSelectDD(field.fieldData![0], field);
-              }
-            }
 
-            if ((field.type == tckConstants.tckTypeDropdown ||
-                    field.type == tckConstants.tckTypeLookUp) &&
-                field.name == strCity) {
-              getTextField(field);
+              if (field.type == tckConstants.tckTypeTitle &&
+                  (field.name != tckConstants.tckMainTitle &&
+                      field.name != tckConstants.tckPackageTitle) &&
+                  field.isVisible != null) {
+                getTextField(field);
+              }
+
+              if (field.type == tckConstants.tckTypeDescription &&
+                  field.name == tckConstants.tckMainDescription) {
+                isDescription = true;
+              }
+              if (field.type == tckConstants.tckTypeDescription &&
+                  field.name != tckConstants.tckMainDescription &&
+                  field.isVisible == null) {
+                getTextField(field);
+              }
+
+              if (field.type == tckConstants.tckTypeDescription &&
+                  field.name != tckConstants.tckMainDescription &&
+                  field.isVisible != null) {
+                getTextField(field);
+              }
+
+              if (field.type == tckConstants.tckTypeDropdown &&
+                  field.isDoctor!) {
+                isDoctor = true;
+              }
+              if (field.type == tckConstants.tckTypeDropdown &&
+                  field.isHospital!) {
+                isHospital = true;
+              }
+              if (field.type == tckConstants.tckTypeDate) {
+                isPreferredDate = true;
+              }
+              if (field.type == tckConstants.tckTypeFile) {
+                isFileUpload = true;
+              }
+              if (field.type == tckConstants.tckTypeDropdown &&
+                  field.fieldData != null &&
+                  (field.fieldData?.length ?? 0) > 0) {
+                getTextField(field);
+                if (field.fieldData!.length == 1) {
+                  onSelectDD(field.fieldData![0], field);
+                }
+              }
+
+              if (field.type == tckConstants.tckTypeDropdown &&
+                  (field.isProvider != null && field.isProvider!)) {
+                if (field.providerType != null &&
+                    field.providerType!.length > 0) {
+                  await controller.getProviderList(
+                      field.providerType![0], field);
+                }
+                getTextField(field);
+                if (field.fieldData != null &&
+                    (field.fieldData?.length ?? 0) > 0 &&
+                    field.fieldData?.length == 1) {
+                  await Future.delayed(Duration(milliseconds: 50));
+                  onSelectDD(field.fieldData![0], field);
+                }
+              }
+
+              if ((field.type == tckConstants.tckTypeDropdown ||
+                      field.type == tckConstants.tckTypeLookUp) &&
+                  field.name == strCity) {
+                getTextField(field);
+              }
             }
           }
       }
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       //print(e);
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -346,8 +355,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       var textEditingController = TextEditingController();
       textEditingControllers.putIfAbsent(
           CommonUtil().getFieldName(field.name), () => textEditingController);
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -358,6 +367,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           flexibleSpace: GradientAppBar(),
           backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
           elevation: 0,
+          titleSpacing: 0.0,
           leading: IconWidget(
             icon: Icons.arrow_back_ios,
             colors: Colors.white,
@@ -366,7 +376,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               Navigator.pop(context);
             },
           ),
-          title: Text(tckConstants.strAddMyTicket,
+          title: Text(
+              isDoctor
+                  ? tckConstants.strDoctorAppoinmetRequest
+                  : controller.labBookAppointment.value
+                      ? tckConstants.strLabAppointmentRequest
+                      : tckConstants.strAddMyTicket,
               style: TextStyle(
                   fontSize: (CommonUtil().isTablet ?? false)
                       ? tabFontTitle
@@ -387,17 +402,25 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Row(
-                              children: [
-                                getWidgetForTitleText(
-                                    title: "Ticket Type : ", isbold: false),
-                                getWidgetForTitleText(
-                                    title: tckConstants.tckTitleOpt,
-                                    isbold: true)
-                              ],
-                            ),
-                            SizedBox(height: 25.h),
+                            if (!(isDoctor ||
+                                controller.labBookAppointment.value)) ...{
+                              Row(
+                                children: [
+                                  getWidgetForTitleText(
+                                      title: "Ticket Type : ", isbold: false),
+                                  getWidgetForTitleText(
+                                      title: tckConstants.tckTitleOpt,
+                                      isbold: true)
+                                ],
+                              ),
+                              SizedBox(height: 25.h),
+                            },
                             getColumnBody(widget.ticketList!),
+                            if (isDoctor ||
+                                controller.labBookAppointment.value) ...[
+                              SizedBox(height: 25.h),
+                              noteBox(),
+                            ],
                             SizedBox(height: 25.h),
                             getWidgetForCreateButton()
                           ],
@@ -436,9 +459,136 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               }
             }
           }
-          //print("displayName2 $displayName");
 
-          /*if (field.type == tckConstants.tckTypeDropdown &&
+          if ((ticketTypesResult.name.toString().toLowerCase() ==
+                  variable.strDoctorAppointment) ||
+              (ticketTypesResult.name.toString().toLowerCase() ==
+                  variable.strLabAppointment)) {
+            if (field.type == tckConstants.tckTypeDropdown &&
+                field.fieldData != null &&
+                field.fieldData!.length > 0) {
+              widgetForColumn.add(Container(
+                margin: EdgeInsets.only(top: 30.h),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      _getIconType(field),
+                      width: 30.h,
+                      height: 30.h,
+                      fit: BoxFit.cover,
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                    ),
+                    SizedBox(
+                      width: 20.w,
+                    ),
+                    Expanded(
+                      child: getDropDownFields(field,
+                          customButton: getIconTextField(
+                              fieldName: CommonUtil().getFieldName(field.name),
+                              displayName: field.displayName,
+                              isRequired: field.isRequired,
+                              readonly: true)),
+                    ),
+                  ],
+                ),
+              ));
+            } else if (field.name.toString().toLowerCase() ==
+                    tckConstants.tckPrefferedDate &&
+                field.type.toString().toLowerCase() ==
+                    tckConstants.tckTypeDateTime) {
+              widgetForColumn.add(Container(
+                margin: EdgeInsets.only(top: 20.h),
+                child: GestureDetector(
+                  onTap: () {
+                    _selectDateTime(
+                        context, CommonUtil().getFieldName(field.name));
+                  },
+                  child: getIconTextField(
+                      icon: _getIconType(field),
+                      fieldName: CommonUtil().getFieldName(field.name),
+                      displayName: field.displayName,
+                      isRequired: field.isRequired,
+                      readonly: true),
+                ),
+              ));
+            } else if (field.name.toString().toLowerCase() ==
+                tckConstants.tckChooseDoctor) {
+              widgetForColumn.add(Container(
+                margin: EdgeInsets.only(top: 30.h),
+                child: GestureDetector(
+                  onTap: () {
+                    moveToSearchScreen(
+                        context, CommonConstants.keyDoctor, field,
+                        setState: setState);
+                  },
+                  child: getIconTextField(
+                      icon: _getIconType(field),
+                      fieldName: CommonUtil().getFieldName(field.name),
+                      displayName: field.displayName,
+                      isRequired: field.isRequired,
+                      additionalText: controller.docSpecialization.value,
+                      readonly: true),
+                ),
+              ));
+            } else if (field.name.toString().toLowerCase() ==
+                tckConstants.str_preferred_lab) {
+              widgetForColumn.add(Container(
+                margin: EdgeInsets.only(top: 30.h),
+                child: GestureDetector(
+                  onTap: () async {
+                    bool serviceEnabled = await CommonUtil().checkGPSIsOn();
+                    if (!serviceEnabled) {
+                      FlutterToast().getToast(
+                          'Please turn on your GPS location services and try again',
+                          Colors.red);
+                      return;
+                    }
+                    await regController.getCurrentLocation();
+                    moveToSearchScreen(context, CommonConstants.keyLabs, field,
+                        setState: setState);
+                  },
+                  child: getIconTextField(
+                      icon: _getIconType(field),
+                      fieldName: CommonUtil().getFieldName(field.name),
+                      displayName: field.displayName,
+                      isRequired: field.isRequired,
+                      additionalText: controller.selLabAddress.value,
+                      readonly: true),
+                ),
+              ));
+            } else if (field.name.toString().toLowerCase() ==
+                tckConstants.strPinCode) {
+              /// Add Condition for specifically pincode
+              widgetForColumn
+                ..add(field.isVisible != null &&
+                        field.name == tckConstants.strAddressLine
+                    ? Visibility(
+                        visible: isVisible,
+                        child: getTextWidget(tckConstants.address))
+                    : const SizedBox.shrink())
+                ..add(field.isVisible != null
+                    ? Visibility(
+                        visible: isVisible,
+                        child: getTextFieldWidget(field, isPincode: true))
+                    : getTextFieldWidget(field, isPincode: CommonUtil.REGION_CODE == 'IN',));
+            } else {
+              // Handle address fields
+              widgetForColumn.add(field.isVisible != null &&
+                      field.name == tckConstants.strAddressLine
+                  ? Visibility(
+                      visible: isVisible,
+                      child: getTextWidget(tckConstants.address))
+                  : const SizedBox.shrink());
+
+              widgetForColumn.add(field.isVisible != null
+                  ? Visibility(
+                      visible: isVisible, child: getTextFieldWidget(field))
+                  : getTextFieldWidget(field));
+            }
+          } else {
+            //print("displayName2 $displayName");
+
+            /*if (field.type == tckConstants.tckTypeDropdown &&
               field.name == tckConstants.tckTypeModeOfService &&
               field.fieldData != null &&
               field.fieldData.length == 1) {
@@ -448,416 +598,185 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 : '';
           }*/
 
-          (field.type == tckConstants.tckTypeTitle &&
-                  field.name == tckConstants.tckMainTitle)
-              ? widgetForColumn.add(Column(
-                  children: [
-                    SizedBox(height: 15.h),
-                    getWidgetForTitleText(
-                        title: displayName,
-                        isRequired: field.isRequired ?? false),
-                    SizedBox(height: 10.h),
-                    getWidgetForTitleValue()
-                  ],
-                ))
-              : SizedBox.shrink();
-
-          (field.type == tckConstants.tckTypeTitle &&
-                  (field.name != tckConstants.tckMainTitle &&
-                      field.name != tckConstants.tckPackageTitle) &&
-                  field.isVisible == null)
-              ? widgetForColumn.add(Column(
-                  children: [
-                    SizedBox(height: 15.h),
-                    getWidgetForTitleText(
-                        title: displayName,
-                        isRequired: field.isRequired ?? false),
-                    SizedBox(height: 10.h),
-                    getWidgetForTextValue(
-                        i, CommonUtil().getFieldName(field.name), field),
-                  ],
-                ))
-              : SizedBox.shrink();
-
-          (field.type == tckConstants.tckTypeTitle &&
-                  (field.name != tckConstants.tckMainTitle &&
-                      field.name != tckConstants.tckPackageTitle) &&
-                  field.isVisible != null)
-              ? widgetForColumn.add(Visibility(
-                  visible: isVisible,
-                  child: Column(
+            (field.type == tckConstants.tckTypeTitle &&
+                    field.name == tckConstants.tckMainTitle)
+                ? widgetForColumn.add(Column(
                     children: [
                       SizedBox(height: 15.h),
                       getWidgetForTitleText(
                           title: displayName,
-                          isRequired: /*field.isRequired*/ isVisible),
+                          isRequired: field.isRequired ?? false),
+                      SizedBox(height: 10.h),
+                      getWidgetForTitleValue()
+                    ],
+                  ))
+                : SizedBox.shrink();
+            /// add field.name != tckConstants.strPinCode for to avoid this
+            (field.type == tckConstants.tckTypeTitle &&
+                    (field.name != tckConstants.tckMainTitle &&
+                        field.name != tckConstants.tckPackageTitle &&
+                        field.name != tckConstants.strPinCode) &&
+                    field.isVisible == null)
+                ? widgetForColumn.add(Column(
+                    children: [
+                      SizedBox(height: 15.h),
+                      getWidgetForTitleText(
+                          title: displayName,
+                          isRequired: field.isRequired ?? false),
                       SizedBox(height: 10.h),
                       getWidgetForTextValue(
                           i, CommonUtil().getFieldName(field.name), field),
                     ],
-                  ),
-                ))
-              : SizedBox.shrink();
+                  ))
+                : SizedBox.shrink();
 
-          field.type == tckConstants.tckTypeDescription &&
-                  field.name == tckConstants.tckMainDescription
-              ? widgetForColumn.add(Column(
-                  children: [
-                    SizedBox(height: 15.h),
-                    getWidgetForTitleDescription(
-                        isRequired: field.isRequired ?? false),
-                    SizedBox(height: 10.h),
-                    getWidgetForTitleDescriptionValue(),
-                  ],
-                ))
-              : SizedBox.shrink();
-
-          field.type == tckConstants.tckTypeDescription &&
-                  field.name != tckConstants.tckMainDescription &&
-                  field.isVisible != null
-              ? widgetForColumn.add(Visibility(
-                  visible: isVisible,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 15.h),
-                      getWidgetForTitleText(
-                          title: displayName,
-                          isRequired: /*field.isRequired*/ isVisible),
-                      SizedBox(height: 10.h),
-                      getWidgetForTextAreaValue(
-                          i, CommonUtil().getFieldName(field.name)),
-                    ],
-                  ),
-                ))
-              : SizedBox.shrink();
-
-          field.type == tckConstants.tckTypeDescription &&
-                  field.name != tckConstants.tckMainDescription &&
-                  field.isVisible == null
-              ? widgetForColumn.add(Column(
-                  children: [
-                    SizedBox(height: 15.h),
-                    getWidgetForTitleText(
-                        title: displayName,
-                        isRequired: field.isRequired ?? false),
-                    SizedBox(height: 10.h),
-                    getWidgetForTextAreaValue(
-                        i, CommonUtil().getFieldName(field.name)),
-                  ],
-                ))
-              : SizedBox.shrink();
-
-          (field.type == tckConstants.tckTypeDropdown && field.isDoctor!)
-              ? widgetForColumn.add(Column(
-                  children: [
-                    SizedBox(height: 15.h),
-                    getWidgetForTitleText(
-                        title: displayName,
-                        isRequired: field.isRequired ?? false),
-                    SizedBox(height: 10.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: fhbBasicWidget.getTextFiledWithHint(
-                              context, 'Choose Doctor', doctor,
-                              enabled: false),
-                        ),
-                        Container(
-                          height: 50,
-                          child: doctorsListFromProvider != null
-                              ? getDoctorDropDown(
-                                  doctorsListFromProvider,
-                                  doctorObj,
-                                  () {
-                                    Navigator.pop(context);
-                                    moveToSearchScreen(context,
-                                        CommonConstants.keyDoctor, field,
-                                        setState: setState);
-                                  },
-                                )
-                              : getAllCustomRoles(doctorObj, () {
-                                  Navigator.pop(context);
-                                  moveToSearchScreen(
-                                      context, CommonConstants.keyDoctor, field,
-                                      setState: setState);
-                                }),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10.h),
-                  ],
-                ))
-              //widgetForColumn.add(getWidgetForDoctors())
-              : SizedBox();
-          /*widgetForColumn.add(SizedBox(
-            height: 10,
-          ));*/
-          (field.type == tckConstants.tckTypeDropdown && field.isHospital!)
-              ? widgetForColumn.add(Column(
-                  children: [
-                    SizedBox(height: 15.h),
-                    getWidgetForTitleText(
-                        title: displayName,
-                        isRequired: field.isRequired ?? false),
-                    SizedBox(height: 10.h),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: fhbBasicWidget.getTextFiledWithHint(
-                              context, 'Choose Hospital', hospital,
-                              enabled: false),
-                        ),
-                        Container(
-                          height: 50,
-                          child: hospitalListFromProvider != null
-                              ? getHospitalDropDown(
-                                  hospitalListFromProvider,
-                                  hospitalObj,
-                                  () {
-                                    Navigator.pop(context);
-                                    moveToSearchScreen(context,
-                                        CommonConstants.keyHospital, field,
-                                        setState: setState);
-                                  },
-                                )
-                              : getAllHospitalRoles(hospitalObj, () {
-                                  Navigator.pop(context);
-                                  moveToSearchScreen(context,
-                                      CommonConstants.keyHospital, field,
-                                      setState: setState);
-                                }),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10.h),
-                  ],
-                ))
-              : SizedBox.shrink();
-
-          /*widgetForColumn.add(SizedBox(
-            height: 10,
-          ));*/
-
-          (field.type == tckConstants.tckTypeDropdown &&
-                  field.fieldData != null &&
-                  field.fieldData!.length > 0)
-              ? widgetForColumn.add(Column(
-                  children: [
-                    SizedBox(height: 15.h),
-                    getWidgetForTitleText(
-                        title: displayName,
-                        isRequired: field.isRequired ?? false),
-                    SizedBox(height: 10.h),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: fhbBasicWidget.getTextFiledWithHint(
-                              context,
-                              placeHolderName,
-                              textEditingControllers[
-                                  CommonUtil().getFieldName(field.name)],
-                              enabled: false),
-                        ),
-                        Container(
-                          height: 50,
-                          child: getDropDownFields(field),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10.h),
-                  ],
-                ))
-              : SizedBox.shrink();
-
-          (field.type == tckConstants.tckTypeDate)
-              ? widgetForColumn.add(Column(
-                  children: [
-                    SizedBox(height: 15.h),
-                    getWidgetForPreferredDate(
-                        isRequired: field.isRequired ?? false),
-                    SizedBox(height: 10.h),
-                    getWidgetForPreferredDateValue(),
-                    //SizedBox(height: 25.h),
-                  ],
-                ))
-              : SizedBox.shrink();
-
-          (field.type == tckConstants.tckTypeTime)
-              ? widgetForColumn.add(Column(
-                  children: [
-                    SizedBox(height: 15.h),
-                    getWidgetForPreferredTime(
-                        isRequired: field.isRequired ?? false),
-                    SizedBox(height: 10.h),
-                    getWidgetForPreferredTimeValue(),
-                    //SizedBox(height: 25.h),
-                  ],
-                ))
-              : SizedBox.shrink();
-
-          field.type == tckConstants.tckTypeFile
-              ? widgetForColumn.add(Column(
-                  children: [
-                    SizedBox(height: 15.h),
-                    getWidgetForFileText(isRequired: field.isRequired ?? false),
-                    imagePaths.length > 0 ? SizedBox(height: 20.h) : SizedBox(),
-                    imagePaths.length > 0 ? buildGridView() : SizedBox()
-                  ],
-                ))
-              : SizedBox.shrink();
-
-          (field.type == tckConstants.tckTypeTitle &&
-                  field.name == tckConstants.tckPackageTitle)
-              ? widgetForColumn.add(Column(
-                  children: [
-                    SizedBox(height: 15.h),
-                    getWidgetForTitleText(
-                        title: displayName,
-                        isRequired: field.isRequired ?? false),
-                    SizedBox(height: 10.h),
-                    getTitleForPlanPackage()
-                  ],
-                ))
-              : SizedBox.shrink();
-
-          (field.type == tckConstants.tckTypeDropdown && field.isCategory!)
-              ? widgetForColumn.add(Column(
-                  children: [
-                    SizedBox(height: 15.h),
-                    getWidgetForTitleText(
-                        title: displayName,
-                        isRequired: field.isRequired ?? false),
-                    SizedBox(height: 10.h),
-                    healthConditionsResult != null
-                        ? getDropDownForPlanCategory(
-                            healthConditionsResult!) //getDropDownForPlanCategory(healthConditionsResult)
-                        : getExpandedDropdownForCategory(),
-                    SizedBox(height: 10.h),
-                  ],
-                ))
-              : SizedBox.shrink();
-
-          ((field.type == tckConstants.tckTypeDropdown ||
-                      field.type == tckConstants.tckTypeLookUp) &&
-                  field.isLab!)
-              ? CommonUtil.REGION_CODE == "IN"
-                  ? widgetForColumn.add(Column(
+            /// Add Condition for specifically pincode
+            (field.type == tckConstants.tckTypeTitle &&
+                    (field.name == tckConstants.strPinCode))
+                ? widgetForColumn.add(
+                    Column(
                       children: [
                         SizedBox(height: 15.h),
                         getWidgetForTitleText(
                             title: displayName,
-                            isRequired: field.isRequired ?? false),
+                            isRequired: /*field.isRequired*/ isVisible),
                         SizedBox(height: 10.h),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: fhbBasicWidget.getTextFiledWithHint(
-                                  context, '$placeHolderName', lab,
-                                  enabled: false),
-                            ),
-                            Container(
-                              height: 50,
-                              child: GestureDetector(
-                                  onTap: () async {
-                                    try {
-                                      //Navigator.pop(context);
-                                      bool serviceEnabled =
-                                          await CommonUtil().checkGPSIsOn();
-                                      if (!serviceEnabled) {
-                                        FlutterToast().getToast(
-                                            'Please turn on your GPS location services and try again',
-                                            Colors.red);
-                                        return;
-                                      }
-                                      await regController.getCurrentLocation();
-                                      moveToSearchScreen(context,
-                                          CommonConstants.keyLabs, field,
-                                          setState: setState);
-                                    } catch (e,stackTrace) {
-                                      //print(e);
-                                            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-                                    }
-                                  },
-                                  child: getIconButton()),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10.h),
-                        controller.strAddressLine.value.trim().isNotEmpty &&
-                                isLabAddressVisible
-                            ? CommonUtil().commonWidgetForTitleValue(
-                                tckConstants.address,
-                                controller.strAddressLine.value)
-                            : SizedBox.shrink(),
-                        controller.strCityName.value.trim().isNotEmpty &&
-                                isLabAddressVisible
-                            ? CommonUtil().commonWidgetForTitleValue(
-                                tckConstants.city, controller.strCityName.value)
-                            : SizedBox.shrink(),
-                        controller.strStateName.value.trim().isNotEmpty &&
-                                isLabAddressVisible
-                            ? CommonUtil().commonWidgetForTitleValue(
-                                tckConstants.state,
-                                controller.strStateName.value)
-                            : SizedBox.shrink(),
-                        controller.strPincode.value.trim().isNotEmpty &&
-                                isLabAddressVisible
-                            ? CommonUtil().commonWidgetForTitleValue(
-                                tckConstants.pincode,
-                                controller.strPincode.value)
-                            : SizedBox.shrink(),
+                        getWidgetForTextValue(
+                            i, CommonUtil().getFieldName(field.name), field,
+                            isPincode: CommonUtil.REGION_CODE == 'IN'),
                       ],
-                    ))
-                  : widgetForColumn.add(getWidgetForLab())
-              : SizedBox.shrink();
+                    ),
+                  )
+                : const SizedBox.shrink();
 
-          (field.type == tckTypeTitle &&
-                  field.isVisible != null &&
-                  field.name == strLabName &&
-                  isLabNameOthers)
-              ? widgetForColumn.add(Visibility(
-                  visible: isLabNameOthers,
-                  child: Column(
+            /// add field.name != tckConstants.strPinCode for to avoid this
+            (field.type == tckConstants.tckTypeTitle &&
+                    (field.name != tckConstants.tckMainTitle &&
+                        field.name != tckConstants.tckPackageTitle &&
+                        field.name != tckConstants.strPinCode) &&
+                    field.isVisible != null)
+                ? widgetForColumn.add(Visibility(
+                    visible: isVisible,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 15.h),
+                        getWidgetForTitleText(
+                            title: displayName,
+                            isRequired: /*field.isRequired*/ isVisible),
+                        SizedBox(height: 10.h),
+                        getWidgetForTextValue(
+                            i, CommonUtil().getFieldName(field.name), field),
+                      ],
+                    ),
+                  ))
+                : SizedBox.shrink();
+
+            field.type == tckConstants.tckTypeDescription &&
+                    field.name == tckConstants.tckMainDescription
+                ? widgetForColumn.add(Column(
                     children: [
                       SizedBox(height: 15.h),
-                      getWidgetForTitleText(
-                          title: displayName, isRequired: isLabNameOthers),
+                      getWidgetForTitleDescription(
+                          isRequired: field.isRequired ?? false),
                       SizedBox(height: 10.h),
-                      getWidgetForTextValue(
-                          i, CommonUtil().getFieldName(field.name), field),
+                      getWidgetForTitleDescriptionValue(),
                     ],
-                  ),
-                ))
-              : SizedBox.shrink();
+                  ))
+                : SizedBox.shrink();
 
-          ((field.type == tckConstants.tckTypeDropdown ||
-                      field.type == tckConstants.tckTypeLookUp) &&
-                  field.name == strCity)
-              ? widgetForColumn.add(Visibility(
-                  visible: field.isVisible != null ? isVisible : true,
-                  child: Column(
+            field.type == tckConstants.tckTypeDescription &&
+                    field.name != tckConstants.tckMainDescription &&
+                    field.isVisible != null
+                ? widgetForColumn.add(Visibility(
+                    visible: isVisible,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 15.h),
+                        getWidgetForTitleText(
+                            title: displayName,
+                            isRequired: /*field.isRequired*/ isVisible),
+                        SizedBox(height: 10.h),
+                        getWidgetForTextAreaValue(
+                            i, CommonUtil().getFieldName(field.name)),
+                      ],
+                    ),
+                  ))
+                : SizedBox.shrink();
+
+            field.type == tckConstants.tckTypeDescription &&
+                    field.name != tckConstants.tckMainDescription &&
+                    field.isVisible == null
+                ? widgetForColumn.add(Column(
                     children: [
                       SizedBox(height: 15.h),
                       getWidgetForTitleText(
-                          title: displayName, isRequired: isVisible),
+                          title: displayName,
+                          isRequired: field.isRequired ?? false),
+                      SizedBox(height: 10.h),
+                      getWidgetForTextAreaValue(
+                          i, CommonUtil().getFieldName(field.name)),
+                    ],
+                  ))
+                : SizedBox.shrink();
+
+            /*   (field.type == tckConstants.tckTypeDropdown && field.isDoctor!)
+              ? widgetForColumn.add(Column(
+            children: [
+              SizedBox(height: 15.h),
+              getWidgetForTitleText(
+                  title: displayName,
+                  isRequired: field.isRequired ?? false),
+              SizedBox(height: 10.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: fhbBasicWidget.getTextFiledWithHint(
+                        context, 'Choose Doctor', doctor,
+                        enabled: false),
+                  ),
+                  Container(
+                    height: 50,
+                    child: doctorsListFromProvider != null
+                        ? getDoctorDropDown(
+                      doctorsListFromProvider,
+                      doctorObj,
+                          () {
+                        Navigator.pop(context);
+                        moveToSearchScreen(context,
+                            CommonConstants.keyDoctor, field,
+                            setState: setState);
+                      },
+                    )
+                        : getAllCustomRoles(doctorObj, () {
+                      Navigator.pop(context);
+                      moveToSearchScreen(
+                          context, CommonConstants.keyDoctor, field,
+                          setState: setState);
+                    }),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.h),
+            ],
+          ))
+          //widgetForColumn.add(getWidgetForDoctors())
+              : SizedBox();*/
+            /*widgetForColumn.add(SizedBox(
+            height: 10,
+          ));*/
+            (field.type == tckConstants.tckTypeDropdown && field.isHospital!)
+                ? widgetForColumn.add(Column(
+                    children: [
+                      SizedBox(height: 15.h),
+                      getWidgetForTitleText(
+                          title: displayName,
+                          isRequired: field.isRequired ?? false),
                       SizedBox(height: 10.h),
                       Row(
                         children: [
@@ -867,44 +786,253 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                           Expanded(
                             flex: 2,
                             child: fhbBasicWidget.getTextFiledWithHint(
-                                context,
-                                placeHolderName,
-                                textEditingControllers[
-                                    CommonUtil().getFieldName(field.name)],
+                                context, 'Choose Hospital', hospital,
                                 enabled: false),
                           ),
                           Container(
                             height: 50,
-                            child: GestureDetector(
-                                onTap: () async {
-                                  try {
-                                    moveToSearchScreen(
-                                        context, CommonConstants.keyCity, field,
+                            child: hospitalListFromProvider != null
+                                ? getHospitalDropDown(
+                                    hospitalListFromProvider,
+                                    hospitalObj,
+                                    () {
+                                      Navigator.pop(context);
+                                      moveToSearchScreen(context,
+                                          CommonConstants.keyHospital, field,
+                                          setState: setState);
+                                    },
+                                  )
+                                : getAllHospitalRoles(hospitalObj, () {
+                                    Navigator.pop(context);
+                                    moveToSearchScreen(context,
+                                        CommonConstants.keyHospital, field,
                                         setState: setState);
-                                  } catch (e,stackTrace) {
-                                          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-                                  }
-                                },
-                                child: getIconButton()),
+                                  }),
                           ),
                         ],
                       ),
                       SizedBox(height: 10.h),
                     ],
-                  ),
-                ))
-              : SizedBox.shrink();
+                  ))
+                : SizedBox.shrink();
 
+            /*widgetForColumn.add(SizedBox(
+            height: 10,
+          ));*/
+
+            (field.type == tckConstants.tckTypeDropdown &&
+                    field.fieldData != null &&
+                    field.fieldData!.length > 0)
+                ? widgetForColumn.add(Column(
+                    children: [
+                      SizedBox(height: 15.h),
+                      getWidgetForTitleText(
+                          title: displayName,
+                          isRequired: field.isRequired ?? false),
+                      SizedBox(height: 10.h),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: getDropDownFields(
+                              field,
+                              customButton: Row(
+                                children: [
+                                  Expanded(
+                                    child: fhbBasicWidget.getTextFiledWithHint(
+                                        context,
+                                        placeHolderName,
+                                        textEditingControllers[CommonUtil()
+                                            .getFieldName(field.name)],
+                                        enabled: false),
+                                  ),
+                                  getIconButton()
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 10.h),
+                    ],
+                  ))
+                : SizedBox.shrink();
+
+            (field.type == tckConstants.tckTypeDate)
+                ? widgetForColumn.add(Column(
+                    children: [
+                      SizedBox(height: 15.h),
+                      getWidgetForPreferredDate(
+                          isRequired: field.isRequired ?? false),
+                      SizedBox(height: 10.h),
+                      getWidgetForPreferredDateValue(),
+                      //SizedBox(height: 25.h),
+                    ],
+                  ))
+                : SizedBox.shrink();
+
+            (field.type == tckConstants.tckTypeTime)
+                ? widgetForColumn.add(Column(
+                    children: [
+                      SizedBox(height: 15.h),
+                      getWidgetForPreferredTime(
+                          isRequired: field.isRequired ?? false),
+                      SizedBox(height: 10.h),
+                      getWidgetForPreferredTimeValue(),
+                      //SizedBox(height: 25.h),
+                    ],
+                  ))
+                : SizedBox.shrink();
+
+            field.type == tckConstants.tckTypeFile
+                ? widgetForColumn.add(Column(
+                    children: [
+                      SizedBox(height: 15.h),
+                      getWidgetForFileText(
+                          isRequired: field.isRequired ?? false),
+                      imagePaths.length > 0
+                          ? SizedBox(height: 20.h)
+                          : SizedBox(),
+                      imagePaths.length > 0 ? buildGridView() : SizedBox()
+                    ],
+                  ))
+                : SizedBox.shrink();
+
+            (field.type == tckConstants.tckTypeTitle &&
+                    field.name == tckConstants.tckPackageTitle)
+                ? widgetForColumn.add(Column(
+                    children: [
+                      SizedBox(height: 15.h),
+                      getWidgetForTitleText(
+                          title: displayName,
+                          isRequired: field.isRequired ?? false),
+                      SizedBox(height: 10.h),
+                      getTitleForPlanPackage()
+                    ],
+                  ))
+                : SizedBox.shrink();
+
+            (field.type == tckConstants.tckTypeDropdown && field.isCategory!)
+                ? widgetForColumn.add(Column(
+                    children: [
+                      SizedBox(height: 15.h),
+                      getWidgetForTitleText(
+                          title: displayName,
+                          isRequired: field.isRequired ?? false),
+                      SizedBox(height: 10.h),
+                      healthConditionsResult != null
+                          ? getDropDownForPlanCategory(
+                              healthConditionsResult!) //getDropDownForPlanCategory(healthConditionsResult)
+                          : getExpandedDropdownForCategory(),
+                      SizedBox(height: 10.h),
+                    ],
+                  ))
+                : SizedBox.shrink();
+
+            (field.type == tckTypeTitle &&
+                    field.isVisible != null &&
+                    field.name == strLabName &&
+                    isLabNameOthers)
+                ? widgetForColumn.add(Visibility(
+                    visible: isLabNameOthers,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 15.h),
+                        getWidgetForTitleText(
+                            title: displayName, isRequired: isLabNameOthers),
+                        SizedBox(height: 10.h),
+                        getWidgetForTextValue(
+                            i, CommonUtil().getFieldName(field.name), field),
+                      ],
+                    ),
+                  ))
+                : SizedBox.shrink();
+
+            ((field.type == tckConstants.tckTypeDropdown ||
+                        field.type == tckConstants.tckTypeLookUp) &&
+                    field.name == strCity)
+                ? widgetForColumn.add(Visibility(
+                    visible: field.isVisible != null ? isVisible : true,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 15.h),
+                        getWidgetForTitleText(
+                            title: displayName, isRequired: isVisible),
+                        SizedBox(height: 10.h),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: fhbBasicWidget.getTextFiledWithHint(
+                                  context,
+                                  placeHolderName,
+                                  textEditingControllers[
+                                      CommonUtil().getFieldName(field.name)],
+                                  enabled: false),
+                            ),
+                            Container(
+                              height: 50,
+                              child: GestureDetector(
+                                  onTap: () async {
+                                    try {
+                                      moveToSearchScreen(context,
+                                          CommonConstants.keyCity, field,
+                                          setState: setState);
+                                    } catch (e, stackTrace) {
+                                      CommonUtil().appLogs(
+                                          message: e, stackTrace: stackTrace);
+                                    }
+                                  },
+                                  child: getIconButton()),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                      ],
+                    ),
+                  ))
+                : SizedBox.shrink();
+          }
           isFirstTym = false;
         }
       }
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       //print(e.toString());
     }
     // widgetForColumn.add(getWidgetForLab());
 
     return Column(children: widgetForColumn);
+  }
+
+  Widget noteBox() {
+    return DottedBorder(
+        borderType: BorderType.RRect,
+        color: Colors.grey,
+        padding: EdgeInsets.all(10),
+        radius: Radius.circular(10),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            tckConstants.strNote,
+            style: TextStyle(
+                decoration: TextDecoration.underline,
+                fontWeight: FontWeight.w500),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+              child: Text(
+            tckConstants.strTicketNoteDesc,
+            style: TextStyle(fontSize: 12.sp),
+          ))
+        ]));
   }
 
   moveToSearchScreen(BuildContext context, String searchParam, Field field,
@@ -925,8 +1053,43 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         if (results != null) {
           if (results.containsKey(tckConstants.keyDoctor)) {
             doctorsData = json.decode(results[tckConstants.keyDoctor]);
-            doctor.text = doctorsData[parameters.strName];
+            //doctor.text = doctorsData[parameters.strName];
+            textEditingControllers[CommonUtil().getFieldName(field.name)]
+                ?.text = doctorsData[parameters.strName];
             docId = doctorsData[parameters.strDoctorId];
+
+            // Initialize a variable to store the combined specialization and experience string
+            var docSpecializationExperience = '';
+
+            // Extract and validate the doctor's specialization from the data
+            var docSpecialization = CommonUtil()
+                .validString(doctorsData[parameters.strspecialty] ?? '');
+
+            // Extract and validate the doctor's experience from the data
+            var strExperience = CommonUtil().validString(
+                doctorsData[parameters.stringExperience]?.toString() ?? '');
+
+            // Format the experience string with years if it's not empty and not '0'
+            strExperience = (strExperience?.trim().isNotEmpty ?? false)
+                ? (strExperience != '0'
+                    ? '$strExperience ${Constants.strYears}'
+                    : '')
+                : '';
+
+            // Check if the doctor's specialization is not empty and append it to the result
+            if (docSpecialization.isNotEmpty) {
+              docSpecializationExperience += docSpecialization;
+            }
+
+            // Append the experience to the result if both specialization and experience are not empty
+            docSpecializationExperience +=
+                (docSpecializationExperience.isNotEmpty &&
+                        strExperience.isNotEmpty)
+                    ? ' - $strExperience'
+                    : strExperience;
+
+            // Set the combined specialization and experience string to the controller value
+            controller.docSpecialization.value = docSpecializationExperience;
           } else if (results.containsKey(tckConstants.keyHospital)) {
             hospitalData = json.decode(results[tckConstants.keyHospital]);
 
@@ -935,6 +1098,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           } else if (results.containsKey(tckConstants.keyLab)) {
             labData = json.decode(results[tckConstants.keyLab]);
             lab.text = labData[parameters.strHealthOrganizationName];
+            textEditingControllers[CommonUtil().getFieldName(field.name)]
+                ?.text = labData[parameters.strHealthOrganizationName];
             controller.selPrefLab.value =
                 labData[parameters.strHealthOrganizationName];
             controller.selPrefLabId.value =
@@ -947,11 +1112,30 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 CommonUtil().validString(labData[parameters.strpincode]);
             controller.strStateName.value =
                 CommonUtil().validString(labData[parameters.strstateName]);
-            if (lab.text.trim().toLowerCase() == strOthers) {
-              isLabNameOthers = true;
-            } else {
-              isLabNameOthers = false;
+
+            var address = '';
+
+            if (controller.strAddressLine.value.isNotEmpty) {
+              address += controller.strAddressLine.value.trim();
             }
+
+            if (controller.strCityName.value.isNotEmpty) {
+              if (address.isNotEmpty) address += ', ';
+              address += controller.strCityName.value.trim();
+            }
+
+            if (controller.strStateName.value.isNotEmpty) {
+              if (address.isNotEmpty) address += ', ';
+              address += controller.strStateName.value.trim();
+            }
+
+            if (controller.strPincode.value.isNotEmpty) {
+              if (address.isNotEmpty) address += ', ';
+              address += controller.strPincode.value.trim();
+            }
+
+            controller.selLabAddress.value = address;
+
             onRefreshWidget();
           } else if (results.containsKey(tckConstants.keyCity)) {
             cityListData = results[tckConstants.keyCity];
@@ -963,9 +1147,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           }
         }
       });
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       //print(e);
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -1073,17 +1257,22 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                       tckConstants.STR_NO_CONNECTIVITY, scaffold_state);
                 }
               });
-            } catch (e,stackTrace) {
+            } catch (e, stackTrace) {
               //print(e);
-                    CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+              CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             }
           },
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.85,
+            width: (isDoctor || controller.labBookAppointment.value)
+                ? MediaQuery.of(context).size.width * 0.60
+                : MediaQuery.of(context).size.width * 0.85,
             padding: EdgeInsets.all(15.0),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderRadius: BorderRadius.all(Radius.circular(
+                    (isDoctor || controller.labBookAppointment.value)
+                        ? 30
+                        : 10)),
                 boxShadow: <BoxShadow>[
                   BoxShadow(
                       color: Colors.grey.shade200,
@@ -1306,11 +1495,15 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     );
   }
 
-  Widget getWidgetForTextValue(int index, String? strName, Field field) {
+  /// isPincode An optional parameter to indicate whether the widget is
+  /// specifically intended for PIN code input. Defaults to `false`.
+  Widget getWidgetForTextValue(int index, String? strName, Field field,
+      {bool isPincode = false}) {
     return TextField(
       textCapitalization: TextCapitalization.sentences,
       autofocus: false,
       controller: textEditingControllers[strName],
+      keyboardType: isPincode ? TextInputType.number : null,
       decoration: InputDecoration(
         fillColor: Colors.white,
         filled: true,
@@ -1391,7 +1584,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               if (titleController.text.trim().isNotEmpty) {
                 tckConstants.tckTitle = titleController.text.toString();
               } else if (field.isRequired!) {
-                showAlertMsg("Please fill $displayName");
+                showAlertMsg("${tckConstants.strPleaseFill} $displayName");
                 return;
               }
             }
@@ -1402,40 +1595,62 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 controller.dynamicTextFiledObj[field.name] =
                     package_title_ctrl.text.toString();
               } else if (field.isRequired!) {
-                showAlertMsg("Please fill $displayName");
+                showAlertMsg("${tckConstants.strPleaseFill} $displayName");
                 return;
               }
             }
 
             if (field.type == tckConstants.tckTypeDescription &&
-                field.name == tckConstants.tckMainDescription) {
+                field.name == tckConstants.tckMainDescription &&
+                !(isDoctor || controller.labBookAppointment.value)) {
               if (descController.text.isNotEmpty) {
                 tckConstants.tckDesc = descController.text.toString();
                 controller.dynamicTextFiledObj[field.name] =
                     descController.text.toString();
               } else if (field.isRequired!) {
-                showAlertMsg("Please fill $displayName");
+                showAlertMsg("${tckConstants.strPleaseFill} $displayName");
                 return;
               }
             }
 
-            if (field.type == tckConstants.tckTypeDropdown && field.isDoctor!) {
+            if (field.isRequired! &&
+                textEditingControllers[CommonUtil().getFieldName(field.name)]!
+                    .text
+                    .isEmpty) {
+              showAlertMsg(
+                  "${(field.type == tckConstants.tckTypeDropdown || field.type == tckConstants.tckTypeLookUp) ? tckConstants.strPleaseSelect : tckConstants.strPleaseFill} $displayName");
+              return;
+            } else {
+              if (field.name.toString().toLowerCase() ==
+                      tckConstants.tckChooseDoctor &&
+                  isDoctor) {
+                tckConstants.tckSelectedDoctor = textEditingControllers[
+                        CommonUtil().getFieldName(field.name)]!
+                    .text;
+                tckConstants.tckSelectedDoctorId = docId;
+              } else {
+                controller.dynamicTextFiledObj[field.name] =
+                    textEditingControllers[
+                            CommonUtil().getFieldName(field.name)]!
+                        .text;
+              }
+            }
+            /*if (field.type == tckConstants.tckTypeDropdown && field.isDoctor!) {
               if (doctor.text.isNotEmpty) {
                 tckConstants.tckSelectedDoctor = doctor.text;
                 tckConstants.tckSelectedDoctorId = docId;
               } else if (field.isRequired!) {
-                showAlertMsg("Please choose $displayName");
+                showAlertMsg("${tckConstants.strPleaseChoose} $displayName");
                 return;
               }
-            }
-
+            }*/
             if (field.type == tckConstants.tckTypeDropdown &&
                 field.isHospital!) {
               if (hospital.text.isNotEmpty) {
                 tckConstants.tckSelectedHospital = hospital.text;
                 tckConstants.tckSelectedHospitalId = hosId;
               } else if (field.isRequired!) {
-                showAlertMsg("Please choose $displayName");
+                showAlertMsg("${tckConstants.strPleaseChoose} $displayName");
                 return;
               }
             }
@@ -1452,7 +1667,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         lab.text.toString().trim();
                   }
                 } else if (field.isRequired!) {
-                  showAlertMsg("Please choose $displayName");
+                  showAlertMsg("${tckConstants.strPleaseChoose} $displayName");
                   return;
                 }
               } else {
@@ -1470,7 +1685,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 controller.dynamicTextFiledObj[field.name] =
                     preferredDateController.text.toString();
               } else if (field.isRequired!) {
-                showAlertMsg("Please select $displayName");
+                showAlertMsg("${tckConstants.strPleaseSelect} $displayName");
                 return;
               }
             }
@@ -1480,7 +1695,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               if (dropdownValue != null) {
                 controller.dynamicTextFiledObj[field.name] = dropdownValue;
               } else if (field.isRequired!) {
-                showAlertMsg("Please choose $displayName");
+                showAlertMsg("${tckConstants.strPleaseChoose} $displayName");
                 return;
               }
             }
@@ -1546,9 +1761,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       selectedTime = TimeOfDay.now();
       preferredTimeStr = FHBUtils().formatTimeOfDay(selectedTime);
       preferredTimeController.text = preferredTimeStr;
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       //print(e);
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -1565,9 +1780,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           }
         }
       }
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       //print(e);
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     return SizedBoxWithChild(
       height: 50,
@@ -1616,8 +1831,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 controller.selPrefLabId.value =
                     CommonUtil().validString(currLab.id);
                 setState(() {});
-              } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+              } catch (e, stackTrace) {
+                CommonUtil().appLogs(message: e, stackTrace: stackTrace);
               }
             },
           ),
@@ -1637,9 +1852,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           }
         }
       }
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       //print(e);
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     return SizedBoxWithChild(
       height: 50,
@@ -1688,8 +1903,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 controller.selPrefDoctorId.value =
                     CommonUtil().validString(currDoc.id);
                 setState(() {});
-              } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+              } catch (e, stackTrace) {
+                CommonUtil().appLogs(message: e, stackTrace: stackTrace);
               }
             },
           ),
@@ -1817,8 +2032,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                               padding: EdgeInsets.symmetric(vertical: 10),
                               width: 0.5.sw,
                               child: Text(element!.user != null
-                                  ? CommonUtil()
-                                      .getDoctorName(element.user!)!
+                                  ? CommonUtil().getDoctorName(element.user!)!
                                   : ''),
                             ),
                             SizedBox(height: 10),
@@ -2301,7 +2515,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               tckConstants.tckPrefMOSName = strMOS;
               controller.dynamicTextFiledObj[field.name] = field.selValueDD;
             } else if (field.isRequired!) {
-              showAlertMsg("Please choose $displayName");
+              showAlertMsg("${tckConstants.strPleaseChoose} $displayName");
               return;
             }
           }
@@ -2317,7 +2531,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     field.selValueDD?.name;
               }
             } else if (field.isRequired!) {
-              showAlertMsg("Please choose $displayName");
+              showAlertMsg("${tckConstants.strPleaseChoose} $displayName");
               return;
             }
           }
@@ -2345,7 +2559,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               tckConstants.tckPrefTime = strTime;
               controller.dynamicTextFiledObj[field.name] = strTime;
             } else if (field.isRequired!) {
-              showAlertMsg("Please select $displayName");
+              showAlertMsg("${tckConstants.strPleaseSelect} $displayName");
               return;
             }
           }
@@ -2357,8 +2571,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             String strText = getText(field);
             if (strText.isNotEmpty) {
               controller.dynamicTextFiledObj[field.name] = strText;
-            } else if (field.isRequired!) {
-              showAlertMsg("Please fill $displayName");
+            } else if (field.isRequired ?? false) {
+              showAlertMsg("${tckConstants.strPleaseFill} $displayName");
               return;
             }
           }
@@ -2371,8 +2585,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             if (isVisible) {
               if (strText.isNotEmpty) {
                 controller.dynamicTextFiledObj[field.name] = strText;
-              } else if (isVisible) {
-                showAlertMsg("Please fill $displayName");
+              } else if (field.isRequired ?? false) {
+                showAlertMsg("${tckConstants.strPleaseFill} $displayName");
                 return;
               }
             }
@@ -2380,12 +2594,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
           if (field.type == tckConstants.tckTypeDescription &&
               field.name != tckConstants.tckMainDescription &&
-              field.isVisible == null) {
+              field.isVisible == null &&
+              !(isDoctor || controller.labBookAppointment.value)) {
             String strText = getText(field);
             if (strText.isNotEmpty) {
               controller.dynamicTextFiledObj[field.name] = strText;
             } else if (field.isRequired!) {
-              showAlertMsg("Please fill $displayName");
+              showAlertMsg("${tckConstants.strPleaseFill} $displayName");
               return;
             }
           }
@@ -2397,8 +2612,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             if (isVisible) {
               if (strText.isNotEmpty) {
                 controller.dynamicTextFiledObj[field.name] = strText;
-              } else if (isVisible) {
-                showAlertMsg("Please fill $displayName");
+              } else if (field.isRequired ?? false) {
+                showAlertMsg("${tckConstants.strPleaseFill} $displayName");
                 return;
               }
             }
@@ -2412,7 +2627,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             if (strText.isNotEmpty) {
               controller.dynamicTextFiledObj[field.name] = strText;
             } else if (isLabNameOthers) {
-              showAlertMsg("Please fill $displayName");
+              showAlertMsg("${tckConstants.strPleaseFill} $displayName");
               return;
             }
           }
@@ -2428,8 +2643,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             controller.dynamicTextFiledObj[field.name] = cityListData?.id ?? "";
             controller.dynamicTextFiledObj[strcityName] =
                 cityListData?.name ?? "";
-            if (isVisibleTrue && strText.trim().isEmpty) {
-              showAlertMsg("Please select $displayName");
+            if ((field.isRequired ?? false) && strText.trim().isEmpty) {
+              showAlertMsg("${tckConstants.strPleaseSelect} $displayName");
               return;
             }
           }
@@ -2478,7 +2693,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   );
                 } as FutureOr<List<dynamic>> Function(dynamic));
           } else {
-            FlutterToast().getToast('Ticket Created Successfully', Colors.grey);
+            FlutterToast().getToast(
+                (isDoctor || controller.labBookAppointment.value)
+                    ? variable.request_sent_successfully
+                    : 'Ticket Created Successfully',
+                Colors.grey);
             Navigator.of(context).pop();
             Navigator.of(context).pop();
             //print('Hitting API .. : ${value.toJson()}');
@@ -2494,18 +2713,18 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             if (strMsg.trim().isNotEmpty) {
               FlutterToast().getToast(strMsg, Colors.red);
             }
-          } catch (e,stackTrace) {
+          } catch (e, stackTrace) {
             //print(e);
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
           }
         }
       }).catchError((error) {
         Navigator.of(context, rootNavigator: true).pop();
         //print('API Error Occured : $error');
       });
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       //print(e);
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -2620,7 +2839,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       //     selectCircleStrokeColor: fhbColors.colorBlack,
       //   ),
       // );
-    } on FetchException catch (e,stackTrace) {}
+    } on FetchException catch (e, stackTrace) {}
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
@@ -2829,6 +3048,129 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     return planListModelList;
   }
 
+  /// isPincode An optional parameter to indicate whether the widget is
+  /// specifically intended for PIN code input. Defaults to `false`.
+  Widget getIconTextField(
+          {String? icon,
+          String? fieldName,
+          String? displayName,
+          bool? isRequired,
+          bool? isPincode,
+          bool? readonly,
+          TextEditingController? controller,
+          bool? isTextArea,
+          String? additionalText}) =>
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (icon?.isNotEmpty == true) ...[
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: SvgPicture.asset(
+                icon ?? '',
+                width: 30.h,
+                height: 30.h,
+                fit: BoxFit.cover,
+                color: Color(CommonUtil().getMyPrimaryColor()),
+              ),
+            ),
+            SizedBox(
+              width: 20.w,
+            ),
+          ],
+          if (icon?.isEmpty == true) ...[
+            Container(
+              width: 30.h + 20.w, // Width of SvgPicture + SizedBox
+              height: 30.h,
+              // You can add decoration or other properties as needed
+            ),
+          ],
+          Expanded(
+            child: AbsorbPointer(
+              absorbing: readonly ?? false,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFormField(
+                    textCapitalization: TextCapitalization.sentences,
+                    controller: controller ?? textEditingControllers[fieldName],
+                    keyboardType: isTextArea == true
+                        ? TextInputType.multiline
+                        : isPincode ?? false
+                            ? TextInputType.number
+                            : null,
+                    maxLines: isTextArea == true ? 8 : null,
+                    decoration: isTextArea == true
+                        ? InputDecoration(
+                            hintText: isRequired == true
+                                ? '$displayName *'
+                                : displayName,
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0)),
+                              borderSide:
+                                  BorderSide(width: 0, color: Colors.white),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              borderSide: BorderSide(
+                                color: Color(CommonUtil().getMyPrimaryColor()),
+                              ),
+                            ),
+                          )
+                        : InputDecoration(
+                            labelText: isRequired == true
+                                ? '${displayName} *'
+                                : displayName,
+                            contentPadding:
+                                EdgeInsets.zero, // Remove padding here
+                            border: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(CommonUtil().getMyPrimaryColor()),
+                              ),
+                            ),
+                          ),
+                  ),
+                  if (additionalText != null && additionalText.isNotEmpty)
+                    Text(
+                      additionalText.toString(),
+                      style: TextStyle(
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          fontSize: 10.sp),
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    )
+                ],
+              ),
+            ),
+          )
+        ],
+      );
+
+  String _getIconType(Field field) {
+    Map<String, String> iconMappings = {
+      tckConstants.tckPrefferedDate: variable.icon_dateTime,
+      tckConstants.tckTypeModeOfService: variable.icon_modeOfService,
+      tckConstants.tckChooseDoctor: variable.icon_chooseDoctor,
+      tckConstants.tckMainDescription: variable.icon_information,
+      tckConstants.str_preferred_lab: variable.icon_choose_lab,
+      tckConstants.address.toLowerCase(): variable.icon_address,
+    };
+    return iconMappings[field.name] ??
+        ''; // Use the null-aware operator to handle cases where field.name is not found in the map.
+  }
+
   fetchData() async {
     var responses = await Future.wait([
       Provider.of<PlanWizardViewModel>(context, listen: false)
@@ -2990,9 +3332,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           //print("file.path" + file.path);
           filePathist.add(file.path);
         });
-      } catch (e,stackTrace) {
+      } catch (e, stackTrace) {
         //print('$e exception thrown');
-              CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
     }
     if (filePathist.length == imagesPathMain.length) {
@@ -3021,6 +3363,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
   void setDefaultValues() {
     try {
+      controller.docSpecialization.value = '';
       Constants.tckTitle = '';
       Constants.tckDesc = '';
       Constants.tckPrefDate = 'pref_date';
@@ -3043,13 +3386,15 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       controller.strCityName.value = "";
       controller.strPincode.value = "";
       controller.strStateName.value = "";
-    } catch (e,stackTrace) {
+
+      controller.selLabAddress.value = '';
+    } catch (e, stackTrace) {
       //print(e);
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
-  getDropDownFields(Field field, {Widget? child}) {
+  getDropDownFields(Field field, {Widget? customButton}) {
     if (field.selValueDD != null) {
       for (var modeOfServiceObj in field.fieldData!) {
         if (modeOfServiceObj.id == field.selValueDD!.id) {
@@ -3058,48 +3403,95 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         }
       }
     }
+    return StatefulBuilder(
+        builder: (context, setState) => DropdownButtonHideUnderline(
+              child: DropdownButton2<FieldData>(
+                customButton: customButton,
+                isExpanded: true,
+                isDense: true,
+                value: field.selValueDD,
+                items: field.fieldData != null
+                    ? field.fieldData!
+                        .mapIndexed(
+                            (index, item) => DropdownMenuItem<FieldData>(
+                                  child: Text(
+                                    item.name ?? '',
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  value: item,
+                                ))
+                        .toList()
+                    : [],
+                onChanged: (value) {
+                  // Handle onChanged event here
+                  if (value != null) {
+                    onSelectDD(value, field);
+                  }
+                },
+              ),
+            ));
+  }
 
-    return StatefulBuilder(builder: (context, setState) {
-      return PopupMenuButton<FieldData>(
-        offset: Offset(-100, 60),
-        //padding: EdgeInsets.all(20),
+  /// isPincode An optional parameter to indicate whether the widget is
+  /// specifically intended for PIN code input. Defaults to `false`.
+  getTextFieldWidget(Field field, {bool isPincode = false}) {
+    return Container(
+      margin: EdgeInsets.only(top: 30.h),
+      child: getIconTextField(
+          icon: _getIconType(field),
+          fieldName: CommonUtil().getFieldName(field.name),
+          displayName: field.displayName,
+          isRequired: field.isRequired,
+          isPincode: isPincode,
+          isTextArea: field.type == tckConstants.tckTypeDescription),
+    );
+  }
 
-        itemBuilder: (context) => (field.fieldData != null &&
-                field.fieldData!.isNotEmpty)
-            ? field.fieldData!
-                .mapIndexed((index, element) => index ==
-                        field.fieldData!.length - 1
-                    ? PopupMenuItem<FieldData>(
-                        value: element,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              width: 0.5.sw,
-                              child: Text(
-                                  element.name != null ? element.name! : ''),
-                            ),
-                            SizedBox(height: 10),
-                          ],
-                        ))
-                    : PopupMenuItem<FieldData>(
-                        value: element,
-                        child: Container(
-                          width: 0.5.sw,
-                          child:
-                              Text(element.name != null ? element.name! : ''),
-                        ),
-                      ))
-                .toList()
-            : SizedBox.shrink() as List<PopupMenuEntry<FieldData>>,
-        onSelected: (value) {
-          onSelectDD(value, field);
-        },
-        child: child ?? getIconButton(),
-      );
-    });
+  // Function to create a container with an icon and a text widget
+  getTextWidget(String text) {
+    return Container(
+      margin: EdgeInsets.only(top: 30.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: SvgPicture.asset(
+              variable.icon_address,
+              width: 30.h,
+              height: 30.h,
+              fit: BoxFit.cover,
+              color: Color(CommonUtil().getMyPrimaryColor()),
+            ),
+          ),
+          SizedBox(
+            width: 20.w,
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: Text(
+              text,
+              style: TextStyle(
+                color: Color(CommonUtil().getMyPrimaryColor()),
+                fontSize: (CommonUtil().isTablet ?? false) ? 20.0.sp : 16.0.sp,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Offset calculateOffset(BuildContext context) {
+    final RenderBox textFieldRenderBox =
+        context.findRenderObject() as RenderBox;
+    final Offset textFieldPosition =
+        textFieldRenderBox.localToGlobal(Offset.zero);
+
+    return Offset(
+      textFieldPosition.dx,
+      textFieldPosition.dy + textFieldRenderBox.size.height,
+    );
   }
 
   onSelectDD(FieldData value, Field field) {
@@ -3125,17 +3517,17 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             field.selValueDD!.name!;
       });
       onRefreshWidget();
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
   onRefreshWidget() {
     try {
       setState(() {});
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       //print(e);
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -3147,8 +3539,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           ? displayName
           : CommonUtil().getFieldName(field.name)!;
       return displayName;
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     return displayName;
   }
@@ -3159,10 +3551,52 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       strText = CommonUtil().validString(
           textEditingControllers[CommonUtil().getFieldName(field.name)]!.text);
       return strText;
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     return strText;
+  }
+
+  Future<void> _selectDateTime(BuildContext context, String? fieldName) async {
+    // Show date picker dialog and wait for user input
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: controller.labBookAppointment.value
+          ? DateTime.now()
+          : DateTime.now()
+              .add(Duration(days: 1)), // Set initial date to tomorrow
+      firstDate: controller.labBookAppointment.value
+          ? DateTime.now()
+          : DateTime.now().add(Duration(days: 1)),
+      // Allow selecting dates from tomorrow onwards
+      lastDate: DateTime(2100), // Limit selection up to year 2100
+    );
+
+    if (pickedDate != null) {
+      // Show time picker dialog and wait for user input
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(), // Set initial time to current time
+      );
+
+      if (pickedTime != null) {
+        // Combine selected date and time into a single DateTime object
+        final DateTime selectedDateTime = DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+        // Update UI state with the selected date and time
+        setState(() {
+          // Set the text field value using a formatted date string
+          textEditingControllers[fieldName]?.text = FHBUtils()
+              .getPreferredDateString(selectedDateTime.toString(),
+                  isDateTime: true);
+        });
+      }
+    }
   }
 }
 

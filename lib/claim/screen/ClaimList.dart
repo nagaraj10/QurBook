@@ -1,31 +1,29 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/claim/bloc/ClaimListBloc.dart';
-import 'package:myfhb/claim/model/claimexpiry/ClaimExpiryResponse.dart';
-import 'package:myfhb/claim/model/claimexpiry/ClaimExpiryResult.dart';
-import 'package:myfhb/claim/model/claimmodel/ClaimListResponse.dart';
-import 'package:myfhb/claim/model/claimmodel/ClaimListResult.dart';
-import 'package:myfhb/claim/model/credit/CreditBalance.dart';
-import 'package:myfhb/claim/model/members/MembershipDetails.dart';
-import 'package:myfhb/claim/screen/ClaimRecordDisplay.dart';
-import 'package:myfhb/claim/service/ClaimListRepository.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
-import 'package:myfhb/src/model/Category/catergory_data_list.dart';
-import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/resources/repository/CategoryRepository/CategoryResponseListRepository.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/router_variable.dart' as router;
+
 import '../../../constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/styles/styles.dart' as fhbStyles;
+import '../../common/CommonUtil.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart' as variable;
+import '../../src/blocs/Category/CategoryListBlock.dart';
+import '../../src/model/Category/catergory_data_list.dart';
+import '../../src/model/Category/catergory_result.dart';
+import '../../src/resources/repository/CategoryRepository/CategoryResponseListRepository.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import '../../styles/styles.dart' as fhbStyles;
+import '../bloc/ClaimListBloc.dart';
+import '../model/claimexpiry/ClaimExpiryResponse.dart';
+import '../model/claimexpiry/ClaimExpiryResult.dart';
+import '../model/claimmodel/ClaimListResponse.dart';
+import '../model/claimmodel/ClaimListResult.dart';
+import '../model/credit/CreditBalance.dart';
+import '../model/members/MembershipDetails.dart';
+import '../service/ClaimListRepository.dart';
+import 'ClaimRecordDisplay.dart';
 
 class ClaimList extends StatefulWidget {
   @override
@@ -56,12 +54,13 @@ class _ClaimListState extends State<ClaimList> {
   Future<ClaimExpiryResponse?>? claimExpiryResponse;
 
   List<String> exercises = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+      GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
+    FABService.trackCurrentScreen(FBAMyClaimScreen);
     claimListRepository = ClaimListRepository();
     _categoryResponseListRepository = CategoryResponseListRepository();
     claimListResponse = ClaimListResponse();
@@ -105,17 +104,6 @@ class _ClaimListState extends State<ClaimList> {
           ),
           visible: isCreditBalnceZero ? false : true,
         ));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Health Organization Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   getCliamList() {
@@ -341,8 +329,8 @@ class _ClaimListState extends State<ClaimList> {
       } else {
         isCreditBalnceZero = false;
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       ClaimAmount = "";
       isCreditBalnceZero = false;
     }
@@ -425,8 +413,8 @@ class _ClaimListState extends State<ClaimList> {
       } else {
         setCategoryId(categoryDataList);
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       _categoryListBlock = CategoryListBlock();
       _categoryListBlock.getCategoryLists();
 
@@ -615,8 +603,8 @@ class _ClaimListState extends State<ClaimList> {
         final df = DateFormat('dd-MMM-yyyy');
 
         return df.format(now);
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         return "";
       }
     } else {
@@ -634,8 +622,8 @@ class _ClaimListState extends State<ClaimList> {
             CommonUtil.REGION_CODE == 'IN' ? 'dd-MMM-yyyy' : 'MMM-dd-yyyy');
 
         return df.format(now);
-      } catch (e,stackTrace) {
-        CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         return "";
       }
     } else {

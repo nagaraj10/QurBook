@@ -1,20 +1,18 @@
-// import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+
 import '../../add_providers/models/add_providers_arguments.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
-import '../bloc/providers_block.dart';
-import '../models/Hospitals.dart';
-import 'package:myfhb/my_providers/screens/my_provider.dart';
 import '../../src/utils/colors_utils.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/MyProvider/view/CommonWidgets.dart';
 import '../../telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
-
+import '../bloc/providers_block.dart';
+import '../models/Hospitals.dart';
 import 'my_provider.dart';
 
 class MyProvidersHospitalsList extends StatefulWidget {
@@ -43,19 +41,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
       GlobalKey<RefreshIndicatorState>();
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'My Providers Hospital list Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override

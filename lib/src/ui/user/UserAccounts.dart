@@ -1,32 +1,32 @@
 import 'dart:io';
-import 'package:get/get.dart';
-import 'package:myfhb/common/SwitchProfile.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import '../../../common/firestore_services.dart';
-import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/landing/view_model/landing_view_model.dart';
-import 'package:myfhb/myPlan/view/myPlanList.dart';
-import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+
 import 'package:flutter/material.dart';
-import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/my_family/screens/MyFamily.dart';
-import 'package:myfhb/my_providers/screens/my_provider.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
+import '../../../add_family_user_info/services/add_family_user_info_repository.dart';
+import '../../../common/CommonUtil.dart';
+import '../../../common/PreferenceUtil.dart';
+import '../../../common/SwitchProfile.dart';
+import '../../../common/common_circular_indicator.dart';
+import '../../../common/firestore_services.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/router_variable.dart' as router;
+import '../../../constants/variable_constant.dart' as variable;
+import '../../../landing/view/landing_arguments.dart';
+import '../../../landing/view_model/landing_view_model.dart';
+import '../../../myPlan/view/myPlanList.dart';
+import '../../../my_family/screens/MyFamily.dart';
+import '../../../my_providers/screens/my_provider.dart';
+import '../../model/GetDeviceSelectionModel.dart';
+import '../../model/user/MyProfileModel.dart';
+import '../../model/user/user_accounts_arguments.dart';
+import '../../utils/screenutils/size_extensions.dart';
 import 'MyProfilePage.dart';
 
 class UserAccounts extends StatefulWidget {
+  UserAccounts({super.key, this.arguments});
   UserAccountsArguments? arguments;
-
-  UserAccounts({this.arguments});
 
   @override
   _UserAccountsState createState() => _UserAccountsState();
@@ -53,10 +53,13 @@ class _UserAccountsState extends State<UserAccounts>
   @override
   void initState() {
     super.initState();
+
     PreferenceUtil.init();
-    //fetchUserProfileInfo();
     _sliverTabController = TabController(
-        vsync: this, length: 4, initialIndex: widget.arguments!.selectedIndex!);
+      vsync: this,
+      length: 4,
+      initialIndex: widget.arguments!.selectedIndex!,
+    );
     _sliverTabController!.addListener(_handleSelected);
 
     setValueForProfile();
@@ -93,7 +96,7 @@ class _UserAccountsState extends State<UserAccounts>
     } else {
       Get.offAllNamed(
         router.rt_Landing,
-        arguments: LandingArguments(
+        arguments: const LandingArguments(
           needFreshLoad: false,
         ),
       );
@@ -130,27 +133,8 @@ class _UserAccountsState extends State<UserAccounts>
                 Icons.arrow_back_ios,
                 size: 24.0.sp,
               ),
-              onPressed: () => onBackPressed(
-                  context), /* {
-                Navigator.popUntil(context, (Route<dynamic> route) {
-                  if (Navigator.canPop(context)) {
-                    bool shouldPop = false;
-                    if (route.settings.name == router.rt_Landing ||
-                        route.settings == null) {
-                      shouldPop = true;
-                    }
-                    return shouldPop;
-                  } else {
-                    return true;
-                  }
-                });
-                // Navigator.pop(context);
-              } */
+              onPressed: () => onBackPressed(context),
             ),
-            actions: <Widget>[
-              // if (CommonUtil.REGION_CODE != 'IN')
-              // if (selectedTab == 1) getSwitchProfileWidget()
-            ],
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(50.0.h),
               child: TabBar(
@@ -173,16 +157,14 @@ class _UserAccountsState extends State<UserAccounts>
               ),
             ),
           ),
-          body: Container(
-            child: TabBarView(
-              controller: _sliverTabController,
-              children: <Widget>[
-                MyProfilePage(),
-                MyFamily(),
-                MyProvider(),
-                MyPlanList()
-              ],
-            ),
+          body: TabBarView(
+            controller: _sliverTabController,
+            children: <Widget>[
+              const MyProfilePage(),
+              MyFamily(),
+              MyProvider(),
+              MyPlanList()
+            ],
           ),
         ));
   }
@@ -196,7 +178,7 @@ class _UserAccountsState extends State<UserAccounts>
       future: getSwitchIcon(),
       initialData: const SizedBox.shrink(),
       builder: (context, snapshot) {
-        return snapshot.data ?? SizedBox();
+        return snapshot.data ?? const SizedBox();
       },
     );
   }
@@ -219,7 +201,7 @@ class _UserAccountsState extends State<UserAccounts>
   }
 
   Widget getSwitchProfileWidget() {
-    Widget profileWidget = SizedBox();
+    Widget profileWidget = const SizedBox();
 
     return FutureBuilder<MyProfileModel>(
         future: getMyProfile(),

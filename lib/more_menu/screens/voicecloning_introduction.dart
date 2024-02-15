@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/more_menu/screens/terms_and_conditon.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+
+import '../../common/CommonUtil.dart';
+import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
+import 'terms_and_conditon.dart';
 
 class VoiceCloningIntroducuton extends StatefulWidget {
   const VoiceCloningIntroducuton();
@@ -17,22 +18,6 @@ class _MyFhbWebViewState extends State<VoiceCloningIntroducuton> {
   bool isLoading = true;
   double iconSize = CommonUtil().isTablet! ? tabFontTitle : mobileFontTitle;
   //set value of text based on type of device
-  @override
-  void initState() {
-    mInitialTime = DateTime.now();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Terms And Condition Voice Cloning',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

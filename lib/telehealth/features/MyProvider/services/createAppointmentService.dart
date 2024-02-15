@@ -22,6 +22,7 @@ class CreateAppointmentService {
     bool? isCSRDiscount, {
     Past? doc,
     bool isResidentDoctorMembership = false,
+        String? walletDeductionAmount,
   }) async {
     var slotInput = {};
     slotInput[qr_created_by] = createdBy;
@@ -32,6 +33,9 @@ class CreateAppointmentService {
     slotInput[qr_is_medical_shared] = isMedicalShared;
     slotInput[qr_is_followup] = isFollowUp;
     slotInput[qr_health_record_ref] = healthRecords;
+    if(walletDeductionAmount!=null){
+      slotInput[qr_wallet_deduction_amount]= walletDeductionAmount;
+    }
     /*if (isFollowUp) {
       var parentAppoint = {};
 
@@ -49,7 +53,7 @@ class CreateAppointmentService {
     }
     slotInput[qr_discountType] = isCSRDiscount ?? false
         ? qr_csr_discount
-        : isResidentDoctorMembership
+        : isResidentDoctorMembership || walletDeductionAmount!=null//Added or condition for on apply membership we need to send as membership discount.
             ? qr_MEMBERSHIP_DISCOUNT
             : 'nil';
     var jsonString = convert.jsonEncode(slotInput);

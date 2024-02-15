@@ -85,48 +85,6 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
       return -1;
     });
 
-    // // 1
-    // // Doctors
-    // doctorsModel.sort((a, b) => a.user.name
-    //     .toString()
-    //     .toLowerCase()
-    //     .compareTo(b.user.name.toString().toLowerCase()));
-    //
-    // doctorsModel.sort((a, b) => (a.user.isDefault
-    //         ? a.user.name
-    //             .toString()
-    //             .toLowerCase()
-    //             .compareTo(b.user.name.toString().toLowerCase())
-    //         : 0)
-    //     .compareTo(b.isDefault
-    //         ? a.user.name
-    //             .toString()
-    //             .toLowerCase()
-    //             .compareTo(b.user.name.toString().toLowerCase())
-    //         : 0));
-    //
-    // // 2
-    // // Hospital
-    // hospitalsModel.sort((a, b) => a.name
-    //     .toString()
-    //     .toLowerCase()
-    //     .compareTo(b.name.toString().toLowerCase()));
-    //
-    // hospitalsModel.sort((a, b) => (a.isDefault
-    //         ? a.name
-    //             .toString()
-    //             .toLowerCase()
-    //             .compareTo(b.name.toString().toLowerCase())
-    //         : 0)
-    //     .compareTo(b.isDefault
-    //         ? a.name
-    //             .toString()
-    //             .toLowerCase()
-    //             .compareTo(b.name.toString().toLowerCase())
-    //         : 0));
-
-    // 3
-    // Labs
     labsModel?.sort((a, b) => a.name
         .toString()
         .toLowerCase()
@@ -138,19 +96,6 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
       }
       return -1;
     });
-
-    /*  labsModel.sort((a, b) => (a.isDefault
-            ? a.name
-                .toString()
-                .toLowerCase()
-                .compareTo(b.name.toString().toLowerCase())
-            : 0)
-        .compareTo(b.isDefault
-            ? a.name
-                .toString()
-                .toLowerCase()
-                .compareTo(b.name.toString().toLowerCase())
-            : 0));*/
   }
 
   @override

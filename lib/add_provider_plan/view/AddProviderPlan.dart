@@ -1,21 +1,20 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/add_provider_plan/model/AddProviderPlanResponse.dart';
-import 'package:myfhb/add_provider_plan/model/ProviderOrganizationResponse.dart';
-import 'package:myfhb/add_provider_plan/service/PlanProviderViewModel.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/common/errors_widget.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/plan_wizard/view/widgets/Rounded_CheckBox.dart';
-import 'package:myfhb/src/ui/loader_class.dart';
-import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:provider/provider.dart';
+
+import '../../colors/fhb_colors.dart' as fhbColors;
+import '../../common/CommonUtil.dart';
+import '../../common/common_circular_indicator.dart';
+import '../../common/errors_widget.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../../plan_wizard/view/widgets/Rounded_CheckBox.dart';
+import '../../src/ui/loader_class.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
+import '../model/AddProviderPlanResponse.dart';
+import '../model/ProviderOrganizationResponse.dart';
+import '../service/PlanProviderViewModel.dart';
 
 class AddProviderPlan extends StatefulWidget {
   String? selectedTag;
@@ -40,16 +39,14 @@ class AddProviderPlanState extends State<AddProviderPlan> {
 
   @override
   void initState() {
+    super.initState();
     try {
-// TODO: implement initState
-      mInitialTime = DateTime.now();
       providerOrganizationResult =
           Provider.of<PlanProviderViewModel>(context, listen: false)
                   .getCarePlanList(widget.selectedTag!)
               as Future<ProviderOrganisationResponse>?;
-      //Provider.of<PlanProviderViewModel>(context, listen: false).hasSelectAllData=false;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       print(e);
     }
   }
@@ -59,14 +56,8 @@ class AddProviderPlanState extends State<AddProviderPlan> {
     try {
       FocusManager.instance.primaryFocus!.unfocus();
       super.dispose();
-      fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'pageName': 'AddProviderPlan Screen',
-        'screenSessionTime':
-            '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-      });
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       print(e);
     }
   }
@@ -117,8 +108,8 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       onTap: () {
         try {
           _addBtnTapped(providerList);
-        } catch (e,stackTrace) {
-          CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
           print(e);
         }
       },
@@ -213,8 +204,8 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         providerMainList = planListProvider.getProviderSearch(providerName);
       }
       setState(() {});
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       print(e);
     }
   }
@@ -364,8 +355,8 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       if (planList.specialty != null && planList.specialty!.length > 0) {
         specialityName = planList.specialty![0].name;
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     return InkWell(
       onLongPress: () {},
@@ -448,8 +439,8 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       } else {
         toast.getToast("Please select a provider", Colors.red);
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       print(e);
     }
   }
@@ -464,8 +455,8 @@ class AddProviderPlanState extends State<AddProviderPlan> {
           selectedCategories.add(mediaResultObj.id);
         }
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       print(e);
     }
   }
@@ -475,8 +466,8 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       for (final mediaResultObj in providerList) {
         mediaResultObj.isBookmarked = !isSelectedALL;
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       print(e);
     }
   }

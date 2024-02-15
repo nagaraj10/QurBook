@@ -1,17 +1,17 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:myfhb/telehealth/features/appointments/view/appointments.dart';
-import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsListViewModel.dart';
-import 'package:myfhb/telehealth/features/appointments/viewModel/cancelAppointmentViewModel.dart';
-import 'package:myfhb/telehealth/features/appointments/viewModel/resheduleAppointmentViewModel.dart';
 import 'package:provider/provider.dart';
+
+import '../viewModel/appointmentsListViewModel.dart';
+import '../viewModel/cancelAppointmentViewModel.dart';
+import '../viewModel/resheduleAppointmentViewModel.dart';
+import 'appointments.dart';
 
 class AppointmentsMain extends StatefulWidget {
   AppointmentsMain({
+    super.key,
     this.isHome = false,
     this.onBackPressed,
-    this.isFromQurday=false,
+    this.isFromQurday = false,
   });
 
   final bool isHome;
@@ -24,96 +24,30 @@ class AppointmentsMain extends StatefulWidget {
 
 class _AppointmentsMainState extends State<AppointmentsMain> {
   @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        if (widget.isHome) {
-          widget.onBackPressed!();
-        }
-        return Future.value(widget.isHome ? false : true);
-      },
-      child: Scaffold(
-          /*appBar: appBar(),*/
-          body: MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-            create: (context) => AppointmentsListViewModel(),
-          ),
-          ChangeNotifierProvider<CancelAppointmentViewModel>(
-            create: (_) => CancelAppointmentViewModel(),
-          ),
-          ChangeNotifierProvider<ResheduleAppointmentViewModel>(
-            create: (_) => ResheduleAppointmentViewModel(),
-          ),
-        ],
-        child: Appointments(
-          isHome: widget.isHome,
-          isFromQurday: widget.isFromQurday,
-        ),
-      )),
-    );
-  }
-
-  /* Widget appBar() {
-    return AppBar(
-        flexibleSpace: GradientAppBar(),
-        leading: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            SizedBoxWidget(
-              height: 0,
-              width: 30,
+  Widget build(BuildContext context) => WillPopScope(
+        onWillPop: () {
+          if (widget.isHome) {
+            widget.onBackPressed!();
+          }
+          return Future.value(!widget.isHome);
+        },
+        child: Scaffold(
+            body: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (context) => AppointmentsListViewModel(),
             ),
-            IconWidget(
-              icon: Icons.arrow_back_ios,
-              colors: Colors.white,
-              size: 20,
-              onTap: () {
-                Navigator.pop(context);
-              },
+            ChangeNotifierProvider<CancelAppointmentViewModel>(
+              create: (_) => CancelAppointmentViewModel(),
+            ),
+            ChangeNotifierProvider<ResheduleAppointmentViewModel>(
+              create: (_) => ResheduleAppointmentViewModel(),
             ),
           ],
-        ),
-        title: getTitle());
-  }
-
-  Widget getTitle() {
-    return Row(
-      children: [
-        Expanded(
-          child: TextWidget(
-            text: TranslationConstants.appointments.t(),
-            colors: Colors.white,
-            overflow: TextOverflow.visible,
-            fontWeight: FontWeight.w600,
-            fontsize: 18.0.sp,
-            softwrap: true,
+          child: Appointments(
+            isHome: widget.isHome,
+            isFromQurday: widget.isFromQurday,
           ),
-        ),
-        IconWidget(
-          icon: Icons.notifications,
-          colors: Colors.white,
-          size: 22,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => NotificationMain()),
-            );
-          },
-        ),
-        SwitchProfile().buildActions(context, _key, callBackToRefresh),
-        // IconWidget(
-        //   icon: Icons.more_vert,
-        //   colors: Colors.white,
-        //   size: 24,
-        //   onTap: () {},
-        // ),
-      ],
-    );
-  }
-
-  void callBackToRefresh() {
-    (context as Element).markNeedsBuild();
-  }*/
+        )),
+      );
 }

@@ -15,6 +15,7 @@ import LS202_DeviceManager
 import LSBluetoothPlugin
 import CallKit
 import PushKit
+import flutter_local_notifications
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate, SFSpeechRecognizerDelegate {
@@ -100,15 +101,19 @@ import PushKit
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         
-        // 1
+                // 1
         // Google Api Key
         GMSServices.provideAPIKey(Constants.googlekey)
-                
+
+        FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
+            GeneratedPluginRegistrant.register(with: registry)
+        }
+        
         // 1
         // Local Notification
         if #available(iOS 10.0, *) {
             // For iOS 10 display notification (sent via APNS)
-            UNUserNotificationCenter.current().delegate = self
+            UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
             let authOptions: UNAuthorizationOptions = [.alert,  .sound]
             DispatchQueue.main.asyncAfter(deadline: .now()+3, execute:  {
                 UNUserNotificationCenter.current().requestAuthorization(
@@ -123,28 +128,27 @@ import PushKit
         application.registerForRemoteNotifications()
         
         // Use Firebase library to configure APIs
-        FirebaseApp.configure()
-        Messaging.messaging().delegate = self
+        // FirebaseApp.configure()
+        // Messaging.messaging().delegate = self
         receiveCallKitMethodFromNative()
         flutterController = window?.rootViewController as! FlutterViewController
 
         setUpReminders(messanger: flutterController.binaryMessenger)
         requestAuthorization();
-        notificationCenter.getDeliveredNotifications { [weak self](data) in
-            guard let self = self else { return }
-            if(data.contains(where: { elem in
-                return elem.request.identifier == "criticalappnotification"
-            })){
-                self.notificationCenter.removeDeliveredNotifications(withIdentifiers: ["criticalappnotification"])
-            }
-        }
-        notificationCenter.getPendingNotificationRequests { [weak self](data) in
-            guard let self = self else { return }
-            self.listOfScheduledNotificaitons = data
-        }
+//        notificationCenter.getDeliveredNotifications { [weak self](data) in
+//            guard let self = self else { return }
+//            if(data.contains(where: { elem in
+//                return elem.request.identifier == "criticalappnotification"
+//            })){
+//                self.notificationCenter.removeDeliveredNotifications(withIdentifiers: ["criticalappnotification"])
+//            }
+//        }
+//        notificationCenter.getPendingNotificationRequests { [weak self](data) in
+//            guard let self = self else { return }
+//            self.listOfScheduledNotificaitons = data
+//        }
         IQKeyboardManager.shared.enable = true
 
-        setUpNotificationButtons()
         setupTTSMethodChannels()
         setupBLEMethodChannels()
 

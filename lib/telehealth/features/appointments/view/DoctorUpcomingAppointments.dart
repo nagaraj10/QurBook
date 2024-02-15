@@ -1,6 +1,5 @@
-
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,32 +8,31 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/chat_socket/view/ChatDetail.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/src/ui/MyRecordsArguments.dart';
-import 'package:myfhb/src/utils/language/language_utils.dart';
-import 'package:myfhb/styles/styles.dart' as fhbStyles;
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
-import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart';
-import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
-import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/cancelModel.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
-import 'package:myfhb/telehealth/features/appointments/view/DoctorTimeSlotWidget.dart';
-import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
-import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
-as Constants;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
-import 'package:myfhb/telehealth/features/appointments/viewModel/cancelAppointmentViewModel.dart';
-import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../chat_socket/view/ChatDetail.dart';
+import '../../../../constants/fhb_parameters.dart' as parameters;
+import '../../../../src/blocs/Category/CategoryListBlock.dart';
+import '../../../../src/model/Category/catergory_result.dart';
+import '../../../../src/ui/MyRecord.dart';
+import '../../../../src/ui/MyRecordsArguments.dart';
+import '../../../../src/utils/language/language_utils.dart';
+import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../../styles/styles.dart' as fhbStyles;
+import '../../chat/viewModel/ChatViewModel.dart';
+import '../constants/appointments_constants.dart' as Constants;
+import '../constants/appointments_parameters.dart';
+import '../controller/AppointmentDetailsController.dart';
+import '../model/cancelAppointments/cancelModel.dart';
+import '../model/fetchAppointments/healthRecord.dart';
+import '../model/fetchAppointments/past.dart';
+import '../viewModel/cancelAppointmentViewModel.dart';
 import 'AppointmentDetailScreen.dart';
+import 'DoctorTimeSlotWidget.dart';
+import 'appointmentsCommonWidget.dart';
+import 'resheduleMain.dart';
+
 
 class DoctorUpcomingAppointments extends StatefulWidget {
   Past? doc;
@@ -43,7 +41,7 @@ class DoctorUpcomingAppointments extends StatefulWidget {
   String? days;
   ValueChanged<String>? onChanged;
 
-  DoctorUpcomingAppointments({this.doc, this.onChanged});
+  DoctorUpcomingAppointments({super.key, this.doc, this.onChanged});
 
   @override
   DoctorUpcomingAppointmentState createState() =>
@@ -62,11 +60,11 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   List<CategoryResult> filteredCategoryData = [];
   CategoryListBlock _categoryListBlock = CategoryListBlock();
 
-  AppointmentDetailsController appointmentDetailsController= CommonUtil().onInitAppointmentDetailsController();
+  AppointmentDetailsController appointmentDetailsController =
+      CommonUtil().onInitAppointmentDetailsController();
 
   @override
   void initState() {
-    // TODO: implement initState
     cancelAppointmentViewModel =
         Provider.of<CancelAppointmentViewModel>(context, listen: false);
     getCategoryList();
@@ -87,8 +85,8 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
           appointmentDetailsController
               .getAppointmentDetail(widget.doc?.id ?? "");
           Get.to(() => AppointmentDetailScreen());
-        } catch (e,stackTrace) {
-                      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        } catch (e, stackTrace) {
+          CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
           if (kDebugMode) {
             printError(info: e.toString());
@@ -119,102 +117,118 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                 child: Container(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       commonWidget.docName(
                                           context,
-                                          commonWidget.getDoctorAndHealthOrganizationName(
-                                              widget.doc!)),
-                                      SizedBoxWidget(height: 3.0.h, width: 0.0.h),
+                                          commonWidget
+                                              .getDoctorAndHealthOrganizationName(
+                                                  widget.doc!)),
+                                      SizedBoxWidget(
+                                          height: 3.0.h, width: 0.0.h),
                                       widget.doc!.doctorSessionId == null ||
-                                          widget.doc?.doctor?.specialization == null
+                                              widget.doc?.doctor
+                                                      ?.specialization ==
+                                                  null
                                           ? SizedBox.shrink()
                                           : Container(
-                                        width: 1.sw / 2,
-                                        child: Text(
-                                          toBeginningOfSentenceCase((widget
-                                              .doc!
-                                              .doctor!
-                                              .doctorProfessionalDetailCollection !=
-                                              null &&
-                                              widget
-                                                  .doc!
-                                                  .doctor!
-                                                  .doctorProfessionalDetailCollection!
-                                                  .length >
-                                                  0)
-                                              ? widget
-                                              .doc!
-                                              .doctor!
-                                              .doctorProfessionalDetailCollection![
-                                          0]
-                                              .specialty !=
-                                              null
-                                              ? widget
-                                              .doc!
-                                              .doctor!
-                                              .doctorProfessionalDetailCollection![
-                                          0]
-                                              .specialty!
-                                              .name !=
-                                              null
-                                              ? widget
-                                              .doc!
-                                              .doctor!
-                                              .doctorProfessionalDetailCollection![
-                                          0]
-                                              .specialty!
-                                              .name
-                                              : ''
-                                              : ''
-                                              : '')!,
-                                          style: TextStyle(
-                                              fontSize:
-                                              fhbStyles.fnt_doc_specialist),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
+                                              width: 1.sw / 2,
+                                              child: Text(
+                                                toBeginningOfSentenceCase((widget
+                                                                .doc!
+                                                                .doctor!
+                                                                .doctorProfessionalDetailCollection !=
+                                                            null &&
+                                                        widget
+                                                                .doc!
+                                                                .doctor!
+                                                                .doctorProfessionalDetailCollection!
+                                                                .length >
+                                                            0)
+                                                    ? widget
+                                                                .doc!
+                                                                .doctor!
+                                                                .doctorProfessionalDetailCollection![
+                                                                    0]
+                                                                .specialty !=
+                                                            null
+                                                        ? widget
+                                                                    .doc!
+                                                                    .doctor!
+                                                                    .doctorProfessionalDetailCollection![
+                                                                        0]
+                                                                    .specialty!
+                                                                    .name !=
+                                                                null
+                                                            ? widget
+                                                                .doc!
+                                                                .doctor!
+                                                                .doctorProfessionalDetailCollection![
+                                                                    0]
+                                                                .specialty!
+                                                                .name
+                                                            : ''
+                                                        : ''
+                                                    : '')!,
+                                                style: TextStyle(
+                                                    fontSize: fhbStyles
+                                                        .fnt_doc_specialist),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
                                       widget.doc!.doctorSessionId == null ||
-                                          widget.doc?.doctor?.specialization == null
+                                              widget.doc?.doctor
+                                                      ?.specialization ==
+                                                  null
                                           ? SizedBox.shrink()
                                           : SizedBox(height: 3.0),
-                                      commonWidget.docLoc(context,
-                                          commonWidget.getLocation(widget.doc!)),
+                                      commonWidget.docLoc(
+                                          context,
+                                          commonWidget
+                                              .getLocation(widget.doc!)),
                                       widget.doc!.doctorSessionId == null ||
-                                          widget.doc?.doctor?.specialization == null
+                                              widget.doc?.doctor
+                                                      ?.specialization ==
+                                                  null
                                           ? SizedBox.shrink()
                                           : SizedBox(height: 3.0),
                                       widget.doc!.doctorSessionId == null
                                           ? commonWidget.docLoc(
-                                          context,
-                                          commonWidget
-                                              .getServiceCategory(widget.doc!))
+                                              context,
+                                              commonWidget.getServiceCategory(
+                                                  widget.doc!))
                                           : SizedBox.shrink(),
                                       widget.doc!.doctorSessionId == null ||
-                                          widget.doc?.doctor?.specialization == null
+                                              widget.doc?.doctor
+                                                      ?.specialization ==
+                                                  null
                                           ? SizedBox.shrink()
                                           : SizedBox(height: 3.0),
                                       widget.doc!.doctorSessionId == null
-                                          ? commonWidget.docLoc(context,
-                                          commonWidget.getModeOfService(widget.doc!))
+                                          ? commonWidget.docLoc(
+                                              context,
+                                              commonWidget.getModeOfService(
+                                                  widget.doc!))
                                           : SizedBox.shrink(),
                                       SizedBox(height: 5.0),
                                       widget.doc!.doctorSessionId == null
                                           ? SizedBox.shrink()
                                           : DoctorTimeSlotWidget(
-                                        doc: widget.doc,
-                                        onChanged: widget.onChanged,
-                                      ),
+                                              doc: widget.doc,
+                                              onChanged: widget.onChanged,
+                                            ),
                                       SizedBoxWidget(height: 15.0),
                                       widget.doc!.doctorSessionId == null
                                           ? SizedBox.shrink()
-                                          : commonWidget
-                                          .docIcons(true, widget.doc!, context, () {
-                                        widget.onChanged!(
-                                            TranslationConstants.callback.t());
-                                        setState(() {});
-                                      })
+                                          : commonWidget.docIcons(
+                                              true, widget.doc!, context, () {
+                                              widget.onChanged!(
+                                                  TranslationConstants.callback
+                                                      .t());
+                                              setState(() {});
+                                            })
                                     ],
                                   ),
                                 ),
@@ -232,13 +246,13 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                               widget.doc!.doctorSessionId == null
                                   ? SizedBox.shrink()
                                   : IconButton(
-                                  icon: ImageIcon(AssetImage(
-                                      Constants.Appointments_chatImage)),
-                                  onPressed: () {
-                                    FocusManager.instance.primaryFocus!
-                                        .unfocus();
-                                    goToChatIntegration(widget.doc!);
-                                  }),
+                                      icon: ImageIcon(AssetImage(
+                                          Constants.Appointments_chatImage)),
+                                      onPressed: () {
+                                        FocusManager.instance.primaryFocus!
+                                            .unfocus();
+                                        goToChatIntegration(widget.doc!);
+                                      }),
 //                          SizedBoxWidget(
 //                            height: (widget.hour == Constants.STATIC_HOUR ||
 //                                widget.minute == Constants.STATIC_HOUR)
@@ -246,9 +260,9 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
 //                                : 15,
 //                          ),
                               SizedBoxWidget(
-                                height:
-                                widget.doc?.doctor?.specialization == null ||
-                                    widget.doc!.doctorSessionId == null
+                                height: widget.doc?.doctor?.specialization ==
+                                            null ||
+                                        widget.doc!.doctorSessionId == null
                                     ? 10
                                     : 20,
                               ),
@@ -258,10 +272,10 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                               TextWidget(
                                 fontsize: 12.0.sp,
                                 text: DateFormat(CommonUtil.REGION_CODE == 'IN'
-                                    ? Constants.Appointments_time_format
-                                    : Constants.Appointments_time_formatUS)
+                                        ? Constants.Appointments_time_format
+                                        : Constants.Appointments_time_formatUS)
                                     .format(DateTime.parse(
-                                    widget.doc!.plannedStartDateTime!))
+                                        widget.doc!.plannedStartDateTime!))
                                     .toString(),
                                 fontWeight: FontWeight.w600,
                                 colors: Color(CommonUtil().getMyPrimaryColor()),
@@ -270,7 +284,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                 fontsize: 12.0.sp,
                                 text: DateFormat.yMMMEd()
                                     .format(DateTime.parse(
-                                    widget.doc!.plannedStartDateTime!))
+                                        widget.doc!.plannedStartDateTime!))
                                     .toString(),
                                 fontWeight: FontWeight.w500,
                                 overflow: TextOverflow.visible,
@@ -287,46 +301,48 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
               widget.doc!.doctorSessionId == null
                   ? SizedBox.shrink()
                   : Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.only(left: 67, top: 10, bottom: 10),
-                child: Row(
-                  children: [
-                    commonWidget.iconWithText(
-                        Constants.Appointments_receiptImage,
-                        Colors.black38,
-                        TranslationConstants.receipt.t(), () {
-                      moveToBilsPage(widget.doc!.healthRecord);
-                    }, null),
-                    SizedBoxWidget(width: 15.0.w),
-                    commonWidget.iconWithText(
-                        Constants.Appointments_resheduleImage,
-                        Colors.black38,
-                        TranslationConstants.reschedule.t(), () {
-                      FocusManager.instance.primaryFocus!.unfocus();
-                      (widget.doc!.status != null &&
-                          widget.doc!.status!.code == Constants.PATDNA)
-                          ? toast.getToast(
-                          TranslationConstants.dnaAppointment.t(),
-                          Colors.red)
-                          : navigateToProviderScreen(widget.doc, true);
-                    }, null),
-                    SizedBoxWidget(width: 15.0.w),
-                    commonWidget.iconWithText(
-                        Constants.Appointments_cancelImage,
-                        Colors.black38,
-                        TranslationConstants.cancel.t(), () {
-                      FocusManager.instance.primaryFocus!.unfocus();
-                      (widget.doc!.status != null &&
-                          widget.doc!.status!.code == Constants.PATDNA)
-                          ? toast.getToast(
-                          TranslationConstants.dnaAppointment.t(),
-                          Colors.red)
-                          : _displayDialog(context, [widget.doc]);
-                    }, null),
-                    SizedBoxWidget(width: 15.0.w),
-                  ],
-                ),
-              )
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.only(left: 67, top: 10, bottom: 10),
+                      child: Row(
+                        children: [
+                          commonWidget.iconWithText(
+                              Constants.Appointments_receiptImage,
+                              Colors.black38,
+                              TranslationConstants.receipt.t(), () {
+                            moveToBilsPage(widget.doc!.healthRecord);
+                          }, null),
+                          SizedBoxWidget(width: 15.0.w),
+                          commonWidget.iconWithText(
+                              Constants.Appointments_resheduleImage,
+                              Colors.black38,
+                              TranslationConstants.reschedule.t(), () {
+                            FocusManager.instance.primaryFocus!.unfocus();
+                            (widget.doc!.status != null &&
+                                    widget.doc!.status!.code ==
+                                        Constants.PATDNA)
+                                ? toast.getToast(
+                                    TranslationConstants.dnaAppointment.t(),
+                                    Colors.red)
+                                : navigateToProviderScreen(widget.doc, true);
+                          }, null),
+                          SizedBoxWidget(width: 15.0.w),
+                          commonWidget.iconWithText(
+                              Constants.Appointments_cancelImage,
+                              Colors.black38,
+                              TranslationConstants.cancel.t(), () {
+                            FocusManager.instance.primaryFocus!.unfocus();
+                            (widget.doc!.status != null &&
+                                    widget.doc!.status!.code ==
+                                        Constants.PATDNA)
+                                ? toast.getToast(
+                                    TranslationConstants.dnaAppointment.t(),
+                                    Colors.red)
+                                : _displayDialog(context, [widget.doc]);
+                          }, null),
+                          SizedBoxWidget(width: 15.0.w),
+                        ],
+                      ),
+                    )
             ],
           )),
     );
@@ -340,7 +356,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     String? doctorPic = doc.doctor!.user!.profilePicThumbnailUrl;
     String? chatListId = doc.chatListId;
     String strLastDate = doc.chatMessage!.deliveredOn != null &&
-        doc.chatMessage!.deliveredOn != ''
+            doc.chatMessage!.deliveredOn != ''
         ? CommonUtil().getFormattedDateTime(doc.chatMessage!.deliveredOn!)
         : '';
     /* chatViewModel.storePatientDetailsToFCM(
@@ -366,11 +382,11 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
       context,
       MaterialPageRoute(
           builder: (context) => ResheduleMain(
-            doc: doc,
-            isReshedule: isReshedule,
-            isFromFollowUpApp: false,
-            isFromNotification: false,
-          )),
+                doc: doc,
+                isReshedule: isReshedule,
+                isFromFollowUpApp: false,
+                isFromNotification: false,
+              )),
     ).then((value) => widget.onChanged!(TranslationConstants.callback.t()));
   }
 
@@ -408,41 +424,41 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                               widget.doc?.feeDetails == null
                                   ? Container()
                                   : widget.doc?.feeDetails
-                                  ?.doctorCancellationCharge ==
-                                  null
-                                  ? Container()
-                                  : RichText(
-                                  text: TextSpan(
-                                      text: TranslationConstants
-                                          .cancellationCharge
-                                          .t(),
-                                      style: TextStyle(
-                                          fontSize: 14.0.sp,
-                                          fontFamily: Constants.poppins,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black),
-                                      children: <InlineSpan>[
-                                        TextSpan(
-                                            text: widget.doc?.feeDetails
-                                                ?.paymentMode ==
-                                                strOFFMODE
-                                                ? ' ${CommonUtil.CURRENCY} 0'
-                                                : ' ${CommonUtil.CURRENCY} ${widget.doc!.feeDetails!.doctorCancellationCharge}',
-                                            style: TextStyle(
-                                                fontSize: 14.0.sp,
-                                                fontFamily:
-                                                Constants.poppins,
-                                                fontWeight:
-                                                FontWeight.w500,
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor())))
-                                      ])),
+                                              ?.doctorCancellationCharge ==
+                                          null
+                                      ? Container()
+                                      : RichText(
+                                          text: TextSpan(
+                                              text: TranslationConstants
+                                                  .cancellationCharge
+                                                  .t(),
+                                              style: TextStyle(
+                                                  fontSize: 14.0.sp,
+                                                  fontFamily: Constants.poppins,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black),
+                                              children: <InlineSpan>[
+                                              TextSpan(
+                                                  text: widget.doc?.feeDetails
+                                                              ?.paymentMode ==
+                                                          strOFFMODE
+                                                      ? ' ${CommonUtil.CURRENCY} 0'
+                                                      : ' ${CommonUtil.CURRENCY} ${widget.doc!.feeDetails!.doctorCancellationCharge}',
+                                                  style: TextStyle(
+                                                      fontSize: 14.0.sp,
+                                                      fontFamily:
+                                                          Constants.poppins,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Color(CommonUtil()
+                                                          .getMyPrimaryColor())))
+                                            ])),
                               SizedBoxWidget(
                                 height: 10,
                               ),
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
+                                    MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   SizedBoxWithChild(
                                     width: 90.0.w,
@@ -480,8 +496,8 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                                 color: Color(CommonUtil()
                                                     .getMyPrimaryColor()))),
                                         backgroundColor: Colors.transparent,
-                                        foregroundColor: Color(CommonUtil()
-                                            .getMyPrimaryColor()),
+                                        foregroundColor: Color(
+                                            CommonUtil().getMyPrimaryColor()),
                                         padding: const EdgeInsets.all(8),
                                       ),
                                       onPressed: () {
@@ -511,18 +527,18 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   getCancelAppoitment(List<Past?> appointments) {
     try {
       cancelAppointment(appointments).then((value) {
-            if (value == null) {
-              toast.getToast(TranslationConstants.bookingCancel.t(), Colors.red);
-            } else if (value.isSuccess == true) {
-              widget.onChanged!(TranslationConstants.callback.t());
-              toast.getToast(
-                  TranslationConstants.yourBookingSuccess.t(), Colors.green);
-            } else {
-              toast.getToast(TranslationConstants.bookingCancel.t(), Colors.red);
-            }
-          });
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+        if (value == null) {
+          toast.getToast(TranslationConstants.bookingCancel.t(), Colors.red);
+        } else if (value.isSuccess == true) {
+          widget.onChanged!(TranslationConstants.callback.t());
+          toast.getToast(
+              TranslationConstants.yourBookingSuccess.t(), Colors.green);
+        } else {
+          toast.getToast(TranslationConstants.bookingCancel.t(), Colors.red);
+        }
+      });
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -532,15 +548,16 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
       List<Past?> appointments) async {
     try {
       for (int i = 0; i < appointments.length; i++) {
-            bookingIds.add(appointments[i]!.bookingId);
-            dates.add(appointments[i]!.plannedStartDateTime);
-          }
-      CancelAppointmentModel? cancelAppointment = await cancelAppointmentViewModel
-              .fetchCancelAppointment(bookingIds, dates);
+        bookingIds.add(appointments[i]!.bookingId);
+        dates.add(appointments[i]!.plannedStartDateTime);
+      }
+      CancelAppointmentModel? cancelAppointment =
+          await cancelAppointmentViewModel.fetchCancelAppointment(
+              bookingIds, dates);
 
-      return cancelAppointment??CancelAppointmentModel();
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+      return cancelAppointment ?? CancelAppointmentModel();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       print(e);
     }
@@ -606,8 +623,8 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     List<CategoryResult>? categoryDataList = [];
     categoryDataList = getCategoryList();
     for (int i = 0;
-    i < (categoryDataList == null ? 0 : categoryDataList.length);
-    i++) {
+        i < (categoryDataList == null ? 0 : categoryDataList.length);
+        i++) {
       if (categoryName == categoryDataList![i].categoryName) {
         print(categoryName + ' ****' + categoryDataList[i].categoryName!);
         position = i;

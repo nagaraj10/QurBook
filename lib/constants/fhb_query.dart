@@ -141,6 +141,7 @@ const String qr_slot_number = 'slotNumber';
 const String qr_is_medical_shared = 'isMedicalRecordsShared';
 const String qr_is_followup = 'isFollowUp';
 const String qr_health_record_ref = 'healthRecordReference';
+const String qr_wallet_deduction_amount = 'walletDeductionAmount';
 const String qr_parent_appointment = 'parentAppointment';
 const String qr_is_csr_discount = 'isCsrDiscount';
 const String qr_discountType = 'discountType';
@@ -484,3 +485,10 @@ const String save_voice_clone_patient_assignment_status = 'voice-clone/accept-re
 const String qr_TTS_Proxy_URL = 'tts/proxy';
 const String qr_Get_VoiceId = 'voice-clone/user-vc-details?userId=';
 const String qr_voiceId = 'voiceId';
+
+// Define a constant string for the key 'doctor/service-request/list'
+const String doctor_service_request_list = 'doctor/service-request/list';
+
+// Define a constant String named 'lab_service_request_list' with the value 'health-organization/service-request/list'
+const String lab_service_request_list = 'health-organization/service-request/list';
+

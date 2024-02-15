@@ -2,14 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -23,6 +21,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/language/repository/LanguageRepository.dart';
+import 'package:myfhb/main.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
@@ -31,12 +30,15 @@ import 'package:myfhb/src/ui/SheelaAI/Views/AttachmentListSheela.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/video_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
-import 'package:myfhb/src/ui/camera/camera_timer_screen.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:uuid/uuid.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart' as youtube;
 
 import '../../../../common/PreferenceUtil.dart';
@@ -62,10 +64,7 @@ import '../Models/SheelaResponse.dart';
 import '../Models/sheela_arguments.dart';
 import '../Services/SheelaAIAPIServices.dart';
 import '../Services/SheelaAIBLEServices.dart';
-import 'package:image/image.dart' as img;
-import 'package:speech_to_text/speech_recognition_result.dart';
-import 'package:speech_to_text/speech_to_text.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 enum BLEStatus { Searching, Connected, Disabled }
 
@@ -120,7 +119,7 @@ class SheelaAIController extends GetxController {
   LanguageRepository languageBlock = LanguageRepository();
   Map<String, dynamic> langaugeDropdownList = {};
 
-  List<String> sheelaTTSWordList = ["sheila", "sila", "shila", "shiela"];
+  List<String> sheelaTTSWordList = ['sheila', 'sila', 'shila', 'shiela'];
 
   bool isAllowSheelaLiveReminders = true;
   SheelaBadgeModel? _sheelaBadgeModel;
@@ -159,10 +158,15 @@ class SheelaAIController extends GetxController {
   final ApiBaseHelper _helper = ApiBaseHelper();
   Timer? _debounceRecognizedWords;
 
+  // Create a Map to store reminder timers. The keys are String identifiers (presumably related to reminders),
+  // and the values are Timer objects that will be used for managing timing events associated with reminders.
+  Map<String, Timer> reminderTimers = {};
+
   @override
   void onInit() {
     super.onInit();
     setDefaultValues();
+    onInitActivitySheelaRemainder();
   }
 
   setDefaultValues() async {
@@ -223,7 +227,7 @@ class SheelaAIController extends GetxController {
           } else {
             gettingReposnseFromNative();
           }
-        } else if ((conversations.last.redirectTo ?? "") == strRegimen.toLowerCase()) {
+        } else if ((conversations.last.redirectTo ?? '') == strRegimen.toLowerCase()) {
           if (PreferenceUtil.getIfQurhomeisAcive()) {
             Get.to(
               () => QurHomeRegimenScreen(
@@ -233,9 +237,9 @@ class SheelaAIController extends GetxController {
           } else {
             Get.toNamed(rt_Regimen);
           }
-        } else if ((conversations.last.redirectTo ?? "") == strMyFamilyList.toLowerCase()) {
+        } else if ((conversations.last.redirectTo ?? '') == strMyFamilyList.toLowerCase()) {
           Get.to(UserAccounts(arguments: UserAccountsArguments(selectedIndex: 1)));
-        } else if ((conversations.last.redirectTo ?? "") == strHomeScreen.toLowerCase()) {
+        } else if ((conversations.last.redirectTo ?? '') == strHomeScreen.toLowerCase()) {
           startTimer();
         }
       } catch (e, stackTrace) {
@@ -398,7 +402,7 @@ class SheelaAIController extends GetxController {
         additionalInfo: json.encode(additionalInfo),
         localDateTime: CommonUtil.dateFormatterWithdatetimesecondsApiFormatAI(DateTime.now()),
         endPoint: BASE_URL,
-        directCall: isUnAvailableCC ? "UNAVAILABLE" : null,
+        directCall: isUnAvailableCC ? 'UNAVAILABLE' : null,
       );
       if (getCurrentLanCode() == 'undef') {
         sheelaRequest.message = '/provider_message';
@@ -433,7 +437,7 @@ class SheelaAIController extends GetxController {
         sheelaRequest.message = KIOSK_SHEELA_UNREAD_MSG;
         arguments!.showUnreadMessage = false;
       } else if (arguments?.eventType != null && arguments?.eventType == strWrapperCall) {
-        sheelaRequest.additionalInfo = arguments?.others ?? "";
+        sheelaRequest.additionalInfo = arguments?.others ?? '';
         arguments?.eventType = null;
       } else if (arguments?.sheelReminder ?? false) {
         reqJson = {KIOSK_task: KIOSK_messages, KIOSK_chatId: arguments!.chatMessageIdSocket};
@@ -457,7 +461,7 @@ class SheelaAIController extends GetxController {
         if (apiResponse.isSuccess! && apiResponse.result != null) {
           var currentResponse = apiResponse.result!;
           if ((currentResponse.recipientId ?? '').isEmpty) {
-            currentResponse.recipientId = "Sheela Response";
+            currentResponse.recipientId = 'Sheela Response';
           }
           currentResponse = (await getGoogleTTSForConversation(currentResponse))!;
           currentPlayingConversation = currentResponse;
@@ -578,7 +582,7 @@ class SheelaAIController extends GetxController {
             try {
               if (!conversations.last.endOfConv) {
                 gettingReposnseFromNative();
-              } else if ((conversations.last.redirectTo ?? "") == strRegimen.toLowerCase()) {
+              } else if ((conversations.last.redirectTo ?? '') == strRegimen.toLowerCase()) {
                 if (PreferenceUtil.getIfQurhomeisAcive()) {
                   Get.to(
                     () => QurHomeRegimenScreen(
@@ -668,7 +672,7 @@ class SheelaAIController extends GetxController {
               final dir = await getTemporaryDirectory();
               final file = File('${dir.path}/tempAudioFile.mp3');
               await file.writeAsBytes(bytes);
-              final path = "${dir.path}/tempAudioFile.mp3";
+              final path = '${dir.path}/tempAudioFile.mp3';
               currentPlayingConversation!.isPlaying.value = true;
               await player!.play(path, isLocal: true);
             }
@@ -692,7 +696,7 @@ class SheelaAIController extends GetxController {
   stopTTS() {
     player?.stop();
     if (useLocalTTSEngine) {
-      playUsingLocalTTSEngineFor("", close: true);
+      playUsingLocalTTSEngineFor('', close: true);
     }
     if (isMicListening.isTrue) {
       isMicListening(false);
@@ -832,12 +836,12 @@ class SheelaAIController extends GetxController {
   String? getCurrentLanCode({bool splittedCode = false}) {
     try {
       String? currentLang = PreferenceUtil.getStringValue(SHEELA_LANG);
-      if (!((currentLang ?? '').contains("-"))) {
+      if (!((currentLang ?? '').contains('-'))) {
         currentLang = CommonUtil.langaugeCodes[currentLang ?? 'undef'];
       }
       if ((currentLang ?? '').isNotEmpty) {
-        if (splittedCode && (currentLang != "undef")) {
-          final langCode = currentLang!.split("-").first;
+        if (splittedCode && (currentLang != 'undef')) {
+          final langCode = currentLang!.split('-').first;
           currentLang = langCode;
         }
       } else {
@@ -916,7 +920,9 @@ class SheelaAIController extends GetxController {
           currentDeviceStatus.allowAppointmentNotification,
           currentDeviceStatus.allowVitalNotification,
           currentDeviceStatus.allowSymptomsNotification,
-          currentDeviceStatus.voiceCloning);
+          currentDeviceStatus.voiceCloning,
+        currentDeviceStatus.useClonedVoice
+      );
       return data;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -968,7 +974,8 @@ class SheelaAIController extends GetxController {
         currentDeviceStatus.allowSymptomsNotification,
         currentDeviceStatus.preferredMeasurement,
         currentDeviceStatus.voiceCloning,
-        null);
+       currentDeviceStatus.useClonedVoice
+    );
     if (value.isSuccess ?? false) {
       //updated
     } else {
@@ -981,6 +988,7 @@ class SheelaAIController extends GetxController {
       showRemainderBasedOnCondition(isFromQurHomeRegimen: isFromQurHomeRegimen, isNeedSheelaDialog: isNeedSheelaDialog);
     }
   }
+
 /*
 getSheelaBadgeCount is used to get the latest Sheela Queue badge count.
 makeApiRequest is used to update the data with latest data
@@ -1048,7 +1056,7 @@ makeApiRequest is used to update the data with latest data
       late AudioCache _audioCache;
       _audioCache = AudioCache();
 
-      String audioasset = "assets/raw/ns_final.mp3";
+      String audioasset = 'assets/raw/ns_final.mp3';
       ByteData bytes = await rootBundle.load(audioasset); //load sound from assets
       Uint8List soundbytes = bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
       int? result = await player?.playBytes(soundbytes);
@@ -1062,14 +1070,14 @@ makeApiRequest is used to update the data with latest data
   void updateTimer({bool enable = false}) {
     try {
       if (_popTimer != null && _popTimer!.isActive) {
-        printInfo(info: "Cancelled the timer");
+        printInfo(info: 'Cancelled the timer');
         _popTimer!.cancel();
         _popTimer = null;
       } else if (enable) {
-        printInfo(info: "started the timer");
+        printInfo(info: 'started the timer');
         _popTimer = Timer(const Duration(seconds: 30), () {
           if (isSheelaScreenActive && bleController == null) {
-            printInfo(info: "timeout the timer");
+            printInfo(info: 'timeout the timer');
             stopTTS();
             canSpeak = false;
             isSheelaScreenActive = false;
@@ -1099,7 +1107,7 @@ makeApiRequest is used to update the data with latest data
   }
 
   callToCC(SheelaResponse currentResponse) async {
-    if ((currentResponse.directCall != null && currentResponse.directCall!) && (currentResponse.recipient != null && currentResponse.recipient!.trim().toLowerCase() == "cc")) {
+    if ((currentResponse.directCall != null && currentResponse.directCall!) && (currentResponse.recipient != null && currentResponse.recipient!.trim().toLowerCase() == 'cc')) {
       var regController = CommonUtil().onInitQurhomeRegimenController();
       if (CommonUtil().validString(regController.careCoordinatorId.value).trim().isEmpty) {
         regController.getUserDetails();
@@ -1127,19 +1135,19 @@ makeApiRequest is used to update the data with latest data
         )!
             .then((value) {
           updateTimer(enable: true);
-          playPauseTTS(conversations.last ?? SheelaResponse());
+          playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
         });
       } else {
         isPlayPauseView.value = false;
         isFullScreenVideoPlayer.value = (CommonUtil().isTablet ?? false) ? true : false;
         Get.to(
           VideoPlayerScreen(
-            videoURL: (currentVideoLinkUrl ?? ""),
+            videoURL: (currentVideoLinkUrl ?? ''),
           ),
         )!
             .then((value) {
           updateTimer(enable: true);
-          playPauseTTS(conversations.last ?? SheelaResponse());
+          playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
         });
       }
     } catch (e, stackTrace) {
@@ -1154,11 +1162,11 @@ makeApiRequest is used to update the data with latest data
       }
       updateTimer(enable: false);
       Get.to(AudioPlayerScreen(
-        audioUrl: (audioURLLink ?? ""),
+        audioUrl: (audioURLLink ?? ''),
       ))!
           .then((value) {
         updateTimer(enable: true);
-        playPauseTTS(conversations.last ?? SheelaResponse());
+        playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
       });
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -1266,14 +1274,14 @@ makeApiRequest is used to update the data with latest data
     });
   }
 
-/**
- * This method checks the first and last activity time of the day
- * Get the list of times on which the remainder should popup based on
- * the interval time
- * If the device time matched the time with any of the value in the remainder
- * list then check if the remainder count in not empty
- * If not show popup dialog else doesnt
- */
+  /**
+   * This method checks the first and last activity time of the day
+   * Get the list of times on which the remainder should popup based on
+   * the interval time
+   * If the device time matched the time with any of the value in the remainder
+   * list then check if the remainder count in not empty
+   * If not show popup dialog else doesnt
+   */
   void showRemainderBasedOnCondition({bool isNeedSheelaDialog = false, bool isFromQurHomeRegimen = false}) async {
     String? startDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_START);
     String? endDate = PreferenceUtil.getStringValue(SHEELA_REMAINDER_END);
@@ -1283,7 +1291,7 @@ makeApiRequest is used to update the data with latest data
 
     List activitiesFilteredList = controllerQurhomeRegimen.remainderTimestamps ?? [];
 
-    if (startDate != null && startDate != "" && endDate != null && endDate != "") {
+    if (startDate != null && startDate != '' && endDate != null && endDate != '') {
       if ((DateTime.parse(startDate ?? '').isAtSameMomentAs(DateTime.now()) || DateTime.now().isAfter(DateTime.parse(startDate ?? ''))) &&
           (DateTime.now().isBefore(DateTime.parse(endDate ?? ''))) &&
           (qurhomeCOntroller.evryOneMinuteRemainder != null || qurhomeCOntroller.evryOneMinuteRemainder?.isActive == true)) {
@@ -1320,11 +1328,7 @@ makeApiRequest is used to update the data with latest data
       } else {
         stopTTS();
         currentPlayingConversation = chat;
-        if (((chat.imageThumbnailUrl != null) && (chat.imageThumbnailUrl != '')) || ((chat.audioThumbnailUrl != null) && (chat.audioThumbnailUrl != ''))) {
-          checkForButtonsAndPlay();
-        } else {
-          playTTS();
-        }
+        playTTS();
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -1334,7 +1338,7 @@ makeApiRequest is used to update the data with latest data
   String? prefixListFiltering(String strResponse) {
     try {
       for (String strSheelaText in sheelaTTSWordList) {
-        if ((strResponse ?? "").toLowerCase().contains(strSheelaText.toLowerCase())) {
+        if ((strResponse ?? '').toLowerCase().contains(strSheelaText.toLowerCase())) {
           var regEx = RegExp(strSheelaText, caseSensitive: false);
           strResponse = strResponse.replaceAll(regEx, sheelaText);
         }
@@ -1346,48 +1350,67 @@ makeApiRequest is used to update the data with latest data
     }
   }
 
-  void freeTextConversation({dynamic freeText}) {
+  Future<void> freeTextConversation({dynamic freeText}) async {
     try {
       if (freeText != null) {
-        // right user card
-        final cardResponse = SheelaResponse(text: freeText);
-        conversations.add(cardResponse);
+        // Translate user input and Sheela's response
+        List<String?> translationsText = await Future.wait([
+          getTextTranslate(freeText),
+          getTextTranslate(freeTextReply + (freeText ?? '') + freeTextReplyConfirm),
+        ]);
+
+        // Reset loading flag and remove the loading response from conversations
+        isLoading.value = false;
+        conversations.removeLast();
+
+        // Add user's response to the conversation (right user card)
+        conversations.add(SheelaResponse(text: translationsText[0]));
         scrollToEnd();
-        // left sheela card
-        Future.delayed(Duration(seconds: 2), () {
-          isLoading.value = true;
-          SheelaResponse currentCon = SheelaResponse();
-          currentCon.text = freeTextReply + (freeText ?? '') + freeTextReplyConfirm;
-          currentCon.recipientId = sheelaRecepId;
-          currentCon.endOfConv = false;
-          currentCon.endOfConvDiscardDialog = false;
-          currentCon.singleuse = true;
-          currentCon.isActionDone = false;
-          currentCon.isButtonNumber = false;
-          currentCon.recipientId = sheelaRecepId;
-          currentCon.buttons = freeTextButtons(freeTextPayload: freeText);
-          conversations.add(currentCon);
-          currentPlayingConversation = currentCon;
-          isLoading.value = false;
-          playTTS();
-          scrollToEnd();
-        });
+
+        // Add Sheela's response to the conversation (left sheela card)
+        await Future.delayed(Duration(seconds: 1));
+        isLoading.value = true;
+        conversations.add(SheelaResponse(loading: true)); // Add loading response to conversations
+        scrollToEnd(); // Scroll to the end of conversations
+        SheelaResponse currentCon = SheelaResponse(
+          text: translationsText[1],
+          recipientId: sheelaRecepId,
+          endOfConv: false,
+          endOfConvDiscardDialog: false,
+          singleuse: true,
+          isActionDone: false,
+          isButtonNumber: false,
+          buttons: await freeTextButtons(freeTextPayload: freeText),
+        );
+        // Reset loading flag and remove the loading response from conversations
+        isLoading.value = false;
+        conversations.removeLast();
+        conversations.add(currentCon);
+        currentPlayingConversation = currentCon;
+        isLoading.value = false;
+        playTTS();
+        scrollToEnd();
       }
     } catch (e, stackTrace) {
+      // Handle exceptions and log
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
-  List<Buttons> freeTextButtons({String? freeTextPayload}) {
-    List<Buttons> buttons = [
-      Buttons(
-        title: strContinue,
-        payload: freeTextPayload,
-      ),
-      Buttons(title: strRedo, btnRedirectTo: strRedirectRedo),
-      Buttons(title: strExit, payload: strExit, mute: sheela_hdn_btn_yes),
+  Future<List<Buttons>> freeTextButtons({String? freeTextPayload}) async {
+    // Translate button titles
+    List<String?> translatedTexts = await Future.wait([
+      getTextTranslate(strContinue),
+      getTextTranslate(strRedo),
+      getTextTranslate(strExit),
+    ]);
+
+    // Create Buttons with translated titles and payloads
+    return [
+      Buttons(title: translatedTexts[0], payload: freeTextPayload),
+      Buttons(title: translatedTexts[1], btnRedirectTo: strRedirectRedo),
+      Buttons(title: translatedTexts[2], payload: strExit, mute: sheela_hdn_btn_yes),
     ];
-    return buttons;
   }
 
   // Function to generate a list of button configurations for image preview
@@ -1411,33 +1434,63 @@ makeApiRequest is used to update the data with latest data
     return buttons;
   }
 
+  // Get the redirect action based on the request file type
   String? getRedirectTo(requestFileType) {
     switch (requestFileType) {
       case strImage:
         return strRedirectToUploadImage;
       case strAudio:
         return strRedirectToUploadAudio;
+      case strVideo:
+        return strRedirectToUploadVideo;
     }
+    // Return an empty string if the request file type is not recognized
     return '';
   }
 
+// Get the retake action based on the request file type
   String? getRetakeTo(requestFileType) {
     switch (requestFileType) {
       case strImage:
         return strRedirectRetakePicture;
       case strAudio:
         return strRedirectRetakeAudio;
+      case strVideo:
+        return strRedirectRetakeVideo;
     }
+    // Return an empty string if the request file type is not recognized
     return '';
   }
 
+  // Function to get the title based on the request file type
+  String? getTitle(requestFileType) {
+    // Using a switch statement to determine the file type
+    switch (requestFileType) {
+      case strImage:
+        // Return the title for an image file
+        return strImageConfirmTitle;
+      case strAudio:
+        // Return the title for an audio file
+        return strAudioConfirmTitle;
+      case strVideo:
+        // Return the title for a video file
+        return strVideoConfirmTitle;
+    }
+    // Return an empty string if the request file type is not recognized
+    return '';
+  }
+
+// Get the button title based on the request file type
   String? getButtonTitle(requestFileType) {
     switch (requestFileType) {
       case strImage:
         return strRecapture;
       case strAudio:
         return strRecordAgain;
+      case strVideo:
+        return strRecordAgain;
     }
+    // Return an empty string if the request file type is not recognized
     return '';
   }
 
@@ -1451,6 +1504,7 @@ makeApiRequest is used to update the data with latest data
       isLoading.value = true; // Set loading flag to true
       SheelaResponse currentCon = SheelaResponse(); // Create a new SheelaResponse instance
       currentCon.recipientId = sheelaRecepId; // Set recipient ID
+      currentCon.text = getTitle(requestFileType); // Set title to that card
       currentCon.endOfConv = false; // Set end of conversation flag to false
       currentCon.endOfConvDiscardDialog = false; // Set end of conversation discard dialog flag to false
       currentCon.singleuse = true; // Set single use flag to true
@@ -1462,6 +1516,9 @@ makeApiRequest is used to update the data with latest data
         currentCon.imageThumbnailUrl = selectedImagePath; // Set image thumbnail URL
       } else if (requestFileType == strAudio) {
         currentCon.audioThumbnailUrl = selectedImagePath; // Set audio thumbnail URL
+      } else if (requestFileType == strVideo) {
+        currentCon.videoThumbnailUrl = selectedImagePath; // Set audio thumbnail URL
+        Future.delayed(const Duration(seconds: 1)).then((_) => scrollToEnd());
       }
       if (isRetakeCapture ?? false) {
         isLoading.value = false; // Set loading flag to false
@@ -1472,7 +1529,7 @@ makeApiRequest is used to update the data with latest data
       isLoading.value = false; // Set loading flag to false
       isRetakeCapture = false; // Reset retake flag
       canSpeak = true;
-      checkForButtonsAndPlay(); // Check for buttons and play the conversation
+      playTTS(); // Check for play the conversation
       scrollToEnd(); // Scroll to the end of the conversation
     } catch (e, stackTrace) {
       // Catch any exceptions and log them
@@ -1481,7 +1538,7 @@ makeApiRequest is used to update the data with latest data
   }
 
   // A function to show a dialog with options to choose from Camera or Gallery
-  Future<void> showCameraGalleryDialog(String? btnTitle) {
+  Future<void> showCameraGalleryDialog(String? btnTitle, String? requestFileType) {
     // Show a dialog using the showDialog function
     return showDialog(
       context: Get.context!, // Use Get.context to get the current context
@@ -1495,44 +1552,24 @@ makeApiRequest is used to update the data with latest data
                 // Gallery option with GestureDetector
                 GestureDetector(
                   onTap: () {
-                    getOpenGallery(strGallery, btnTitle); // Handle action when Gallery is tapped
+                    getOpenGallery(requestFileType == strImage ? strGallery : strVideo, btnTitle, requestFileType); // Handle action when Gallery is tapped
                     Navigator.of(context).pop(); // Close the dialog
                   },
-                  child: Text("Gallery"), // Display "Gallery" text
+                  child: Text(requestFileType == strImage ? Gallery : strSelectVideo), // Display "Gallery" text
                 ),
                 Padding(padding: EdgeInsets.all(8)),
                 // Add padding between options
                 // Camera option with GestureDetector
                 GestureDetector(
-                  onTap: () async {
-                    List<CameraDescription> cameras = await availableCameras();
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return CameraPreviewScreen(
-                            cameras: cameras,
-                          );
-                        },
-                      ),
-                    ).then((value) {
-                      print(value);
-                      if (value != null) {
-                        File _image = File(value.path); // Create a File object from the captured image path
-
-                        // Trigger the image preview thumbnail with the captured image path
-                        sheelaFileStaticConversation(
-                            btnTitle: btnTitle, // Optional button title
-                            selectedImagePath: _image.path, // Path to the captured image
-                            requestFileType: strImage);
-                      }
-                    });
-                    // imgFromCamera(strGallery,
-                    //     btnTitle); // Handle action when Camera is tapped
-                    // Navigator.of(context).pop(); // Close the dialog
+                  onTap: () {
+                    if (requestFileType == strImage) {
+                      imgFromCamera(strGallery, btnTitle); // Handle action when Camera is tapped
+                    } else {
+                      openVideoCamera(btnTitle, requestFileType);
+                    }
+                    Navigator.of(context).pop(); // Close the dialog
                   },
-                  child: Text('Camera'), // Display "Camera" text
+                  child: Text(requestFileType == strImage ? Camera : strRecordVideo), // Display "Camera" text
                 ),
               ],
             ),
@@ -1543,43 +1580,51 @@ makeApiRequest is used to update the data with latest data
   }
 
   // Function to capture an image from the camera and trigger image preview
-  // imgFromCamera(String fromPath, String? btnTitle) async {
-  //   late File _image; // Declare a variable to store the captured image
-  //
-  //   var picker = ImagePicker(); // Create an instance of ImagePicker
-  //   var pickedFile = await picker.pickImage(source: ImageSource.camera, imageQuality: 80); // Capture an image from the camera
-  //
-  //   if (pickedFile != null) {
-  //     _image = File(pickedFile.path); // Create a File object from the captured image path
-  //
-  //     // Trigger the image preview thumbnail with the captured image path
-  //     sheelaFileStaticConversation(
-  //         btnTitle: btnTitle, // Optional button title
-  //         selectedImagePath: _image.path, // Path to the captured image
-  //         requestFileType: strImage);
-  //   }
-  // }
+  imgFromCamera(String fromPath, String? btnTitle) async {
+    late File _image; // Declare a variable to store the captured image
+
+    var picker = ImagePicker(); // Create an instance of ImagePicker
+    var pickedFile = await picker.pickImage(source: ImageSource.camera, imageQuality: 80); // Capture an image from the camera
+
+    if (pickedFile != null) {
+      _image = File(pickedFile.path); // Create a File object from the captured image path
+
+      // Trigger the image preview thumbnail with the captured image path
+      sheelaFileStaticConversation(
+          btnTitle: btnTitle, // Optional button title
+          selectedImagePath: _image.path, // Path to the captured image
+          requestFileType: strImage);
+    }
+  }
 
   // Function to open the gallery, crop the selected image, and trigger image preview
-  void getOpenGallery(String fromPath, String? btnTitle) {
+  void getOpenGallery(String fromPath, String? btnTitle, String? requestFileType) {
     // Use PickImageController to crop the image from the gallery
     PickImageController.instance.cropImageFromFile(fromPath).then((croppedFile) async {
       if (croppedFile != null) {
         // Validate the size of the cropped image
-        if (await validateImageSize(croppedFile)) {
+        if (await validateImageSize(croppedFile, requestFileType)) {
           var imagePathGallery = croppedFile.path;
 
           // Check if the image path is not null or empty
           if (imagePathGallery != null && imagePathGallery != '') {
             // Trigger the image preview thumbnail with the cropped image path
             sheelaFileStaticConversation(
-                btnTitle: btnTitle, // Optional button title
-                selectedImagePath: imagePathGallery, // Path to the cropped image
-                requestFileType: strImage);
+                btnTitle: btnTitle,
+                // Optional button title
+                selectedImagePath: imagePathGallery,
+                // Path to the cropped image
+                requestFileType: requestFileType);
           }
         } else {
-          // Display a toast message if the selected image exceeds the maximum allowed size
-          FlutterToast().getToast(strImageSizeValidation, Colors.red);
+          // Check if the requested file type is an image
+          if (requestFileType == strImage) {
+            // Display a long-duration toast with image size validation message in red
+            FlutterToast().getToastForLongTime(strImageSizeValidation, Colors.red);
+          } else {
+            // Display a long-duration toast with video size validation message in red
+            FlutterToast().getToastForLongTime(strVideoSizeValidation, Colors.red);
+          }
         }
       }
     });
@@ -1598,9 +1643,15 @@ makeApiRequest is used to update the data with latest data
   }
 
   // Function to validate the size of a selected image
-  Future<bool> validateImageSize(var _selectedImage) async {
+  Future<bool> validateImageSize(var _selectedImage, String? requestFileType) async {
     try {
-      int maxSizeInBytes = 5 * 1024 * 1024; // Set the maximum allowed size to 5MB
+      int maxSizeInBytes;
+      if (requestFileType == strImage) {
+        maxSizeInBytes = 5 * 1024 * 1024; // Set the maximum allowed size to 5MB to image
+      } else {
+        maxSizeInBytes = 100 * 1024 * 1024; // Set the maximum allowed size to 100MB to video
+      }
+
       int selectedImageSize = await _getImageSize(_selectedImage); // Get the size of the selected image
 
       // Check if the selected image size exceeds the maximum allowed size
@@ -1624,6 +1675,44 @@ makeApiRequest is used to update the data with latest data
     return length; // Return the size of the image file
   }
 
+  // Asynchronously get the file size of a video given its file path
+  Future<int> getVideoFileSize(String videoFilePath) async {
+    // Create a File object using the provided video file path
+    File videoFile = File(videoFilePath);
+
+    // Get the length (size) of the video file in bytes
+    int fileSizeInBytes = await videoFile.length();
+
+    // Convert the file size from bytes to megabytes
+    int fileSizeInMB = fileSizeInBytes ~/ (1024 * 1024);
+
+    // Return the file size in megabytes
+    return fileSizeInMB;
+  }
+
+  openVideoCamera(String? btnTitle, String? requestFileType) async {
+    late File _video; // Declare a variable to store the captured image
+    int maxFileSizeMB = 100;
+    var picker = ImagePicker(); // Create an instance of ImagePicker
+    var pickedFile = await picker.pickVideo(source: ImageSource.camera); // Capture an image from the camera
+
+    if (pickedFile != null) {
+      getVideoFileSize(pickedFile.path).then((fileSizeInMB) {
+        if (fileSizeInMB > maxFileSizeMB) {
+          FlutterToast().getToastForLongTime(strVideoSizeValidation, Colors.red);
+        } else {
+          _video = File(pickedFile.path); // Create a File object from the captured image path
+
+          // Trigger the image preview thumbnail with the captured image path
+          sheelaFileStaticConversation(
+              btnTitle: btnTitle, // Optional button title
+              selectedImagePath: _video.path, // Path to the captured image
+              requestFileType: strVideo);
+        }
+      });
+    }
+  }
+
   @override
   void onClose() {
     try {
@@ -1636,6 +1725,9 @@ makeApiRequest is used to update the data with latest data
 
       // Stop speech listening using a method (assuming it's defined in the same class)
       stopSpeechListening();
+
+      // Cancel all timers when the widget is disposed
+      clearAllTimers();
 
       // Call the parent class's onClose method
       super.onClose();
@@ -1907,25 +1999,20 @@ makeApiRequest is used to update the data with latest data
         var recognizedWords = result.recognizedWords;
         if (Platform.isIOS) {
           sheelaInputTextEditingController.text = '$recognizedWords ';
-          print('Mihir Response: ${recognizedWords}');
           // Perform further actions if the region is US
           if (CommonUtil.isUSRegion()) {
             // Extract the response from the input text, trim, and handle it
             final response = CommonUtil().validString(sheelaInputTextEditingController.text).trim();
             if (_debounceRecognizedWords?.isActive ?? false) {
               _debounceRecognizedWords?.cancel();
-              print('Mihir Response:  Timer Cancel');
             }
             _debounceRecognizedWords = Timer(const Duration(milliseconds: 500), () async {
-              print('Mihir Response:  Timer Called');
-
               await closeSheelaInputDialogAndStopListening();
 
               // Handle the Sheela's input response
               if (result.finalResult) {
                 // Close Sheela's input dialog and stop listening
                 await handleSheelaInputResponse(response);
-                print('Mihir Response: Done');
               }
             });
           }
@@ -2115,11 +2202,14 @@ makeApiRequest is used to update the data with latest data
       }*/
 
       if ((response ?? '').toString().isNotEmpty) {
-        if ((currentLanguageCode.value ?? "").contains("en")) {
+        if ((currentLanguageCode.value ?? '').contains('en')) {
           response = prefixListFiltering(response ?? '');
         }
         if ((conversations.isNotEmpty) && (conversations.last?.additionalInfoSheelaResponse?.reconfirmationFlag ?? false)) {
           redoCurrentPlayingConversation = conversations.last;
+          isLoading.value = true; // Set loading flag
+          conversations.add(SheelaResponse(loading: true)); // Add loading response to conversations
+          scrollToEnd(); // Scroll to the end of conversations
           freeTextConversation(freeText: response);
         } else {
           final newConversation = SheelaResponse(text: response);
@@ -2133,16 +2223,23 @@ makeApiRequest is used to update the data with latest data
                 if (responseRecived == carGiverSheela) {
                   responseRecived = careGiverSheela;
                 }
-                button = conversations.last?.buttons.firstWhere((element) => (element.title ?? "").toLowerCase() == responseRecived);
+                for (var btn in conversations.last?.buttons) {
+                  // Check if the title of the button matches the response or any of its synonyms
+                  if ((btn.title ?? '').toLowerCase() == responseRecived.toLowerCase() ||
+                      (btn.synonymsList != null && btn.synonymsList.any((synonym) => synonym.toLowerCase() == responseRecived.toLowerCase()))) {
+                    button = btn;
+                    break; // Exit the loop if a match is found
+                  }
+                }
               } else if ((conversations.last?.isButtonNumber ?? false)) {
                 bool isDigit = CommonUtil().isNumeric(responseRecived);
                 for (int i = 0; i < conversations.last?.buttons.length; i++) {
-                  var temp = conversations.last?.buttons[i].title.split(".");
+                  var temp = conversations.last?.buttons[i].title.split('.');
                   var realNumber = CommonUtil().realNumber(int.tryParse(temp[0].toString().trim()));
-                  var optionWithRealNumber = "Option ${realNumber.toString().trim()}";
-                  var optionWithDigit = "Option ${temp[0].toString().trim()}";
-                  var numberWithRealNumber = "Number ${realNumber.toString().trim()}";
-                  var numberWithDigit = "Number ${temp[0].toString().trim()}";
+                  var optionWithRealNumber = 'Option ${realNumber.toString().trim()}';
+                  var optionWithDigit = 'Option ${temp[0].toString().trim()}';
+                  var numberWithRealNumber = 'Number ${realNumber.toString().trim()}';
+                  var numberWithDigit = 'Number ${temp[0].toString().trim()}';
                   if (((temp[isDigit ? 0 : 1].toString().trim()).toLowerCase() == responseRecived) ||
                       (realNumber.toString().toLowerCase().trim() == responseRecived) ||
                       (optionWithRealNumber.toString().toLowerCase().trim() == responseRecived) ||
@@ -2167,7 +2264,7 @@ makeApiRequest is used to update the data with latest data
                       AttachmentListSheela(chatAttachments: button?.chatAttachments ?? []),
                     )?.then((value) {
                       isSheelaScreenActive = true;
-                      playPauseTTS(conversations.last ?? SheelaResponse());
+                      playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
                     });
                   }
                 } else if (button?.btnRedirectTo == strRedirectToHelpPreview) {
@@ -2182,7 +2279,7 @@ makeApiRequest is used to update the data with latest data
                       titleSheelaPreview: strImageTitle,
                     ))?.then((value) {
                       isSheelaScreenActive = true;
-                      playPauseTTS(conversations.last ?? SheelaResponse());
+                      playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
                     });
                   }
                 } else if (button?.btnRedirectTo == strRedirectRedo) {
@@ -2196,7 +2293,7 @@ makeApiRequest is used to update the data with latest data
                     playTTS();
                     scrollToEnd();
                   });
-                } else if ((button?.btnRedirectTo ?? "") == strHomeScreenForce.toLowerCase()) {
+                } else if ((button?.btnRedirectTo ?? '') == strHomeScreenForce.toLowerCase()) {
                   Get.back();
                 } else if ((button?.isSnoozeAction ?? false)) {
                   /// we can true this condition is for if snooze enable from api
@@ -2221,17 +2318,12 @@ makeApiRequest is used to update the data with latest data
                     for (var i = 0; i < data.length; i++) {
                       apiReminder = data[i];
                     }
-                    if (Platform.isAndroid) {
-                      // snooze invoke to android native for locally save the reminder data
-                      QurPlanReminders.getTheRemindersFromAPI(isSnooze: true, snoozeReminderData: apiReminder);
 
-                      // Start Sheela from button with specified parameters
-                      startSheelaFromButton(buttonText: button.title, payload: button.payload, buttons: button);
-                    } else {
-                      reminderMethodChannel.invokeMethod(snoozeReminderMethod, [apiReminder.toMap()]).then((value) {
-                        startSheelaFromButton(buttonText: button.title, payload: button.payload, buttons: button);
-                      });
-                    }
+                    // snooze invoke to android native for locally save the reminder data
+                    QurPlanReminders.getTheRemindersFromAPI(isSnooze: true, snoozeReminderData: apiReminder);
+
+                    // Start Sheela from button with specified parameters
+                    startSheelaFromButton(buttonText: button.title, payload: button.payload, buttons: button);
                   } catch (e, stackTrace) {
                     CommonUtil().appLogs(message: e, stackTrace: stackTrace);
                   }
@@ -2245,7 +2337,7 @@ makeApiRequest is used to update the data with latest data
                   updateTimer(enable: false); // disable the timer
                   btnTextLocal = button?.title ?? ''; // Set local button text
                   // Show the camera/gallery dialog and handle the result
-                  showCameraGalleryDialog(btnTextLocal ?? '').then((value) {
+                  showCameraGalleryDialog(btnTextLocal ?? '', strImage).then((value) {
                     isSheelaScreenActive = true; // Reactivate Sheela screen after dialog
                     updateTimer(enable: true); // disable the timer
                   });
@@ -2259,7 +2351,7 @@ makeApiRequest is used to update the data with latest data
                   updateTimer(enable: false); // disable the timer
                   isRetakeCapture = true; // Set flag for retake capture
                   // Show the camera/gallery dialog and handle the result
-                  showCameraGalleryDialog(btnTextLocal ?? '').then((value) {
+                  showCameraGalleryDialog(btnTextLocal ?? '', strImage).then((value) {
                     isSheelaScreenActive = true; // Reactivate Sheela screen after dialog
                     updateTimer(enable: true); // disable the timer
                   });
@@ -2375,6 +2467,70 @@ makeApiRequest is used to update the data with latest data
                       }
                     });
                   }
+                } else if (button?.needVideo ?? false) {
+                  // Check if the button requires a video
+                  if (isLoading.isTrue) {
+                    return; // If loading, do nothing
+                  }
+                  stopTTS(); // Stop Text-to-Speech
+                  updateTimer(enable: false); // disable the timer
+                  isSheelaScreenActive = false; // Deactivate Sheela screen
+                  btnTextLocal = button?.title ?? ''; // Set local button text
+                  // Show the camera/gallery dialog and handle the result
+                  showCameraGalleryDialog(btnTextLocal ?? '', strVideo).then((value) {
+                    /*controller.isSheelaScreenActive =
+                              true; // Reactivate Sheela screen after dialog
+                          controller.updateTimer(
+                              enable: true);*/ // enable the timer
+                  });
+                } else if (button?.btnRedirectTo == strRedirectRetakeVideo) {
+                  // Check if the button redirects to retake video
+                  if (isLoading.isTrue) {
+                    return; // If loading, do nothing
+                  }
+                  stopTTS(); // Stop Text-to-Speech
+                  isSheelaScreenActive = false; // Deactivate Sheela screen
+                  updateTimer(enable: false); // disable the timer
+                  isRetakeCapture = true; // Set flag for retake capture
+                  // Show the camera/gallery dialog and handle the result
+                  showCameraGalleryDialog(btnTextLocal ?? '', strVideo).then((value) {
+                    /*controller.isSheelaScreenActive =
+                              true; // Reactivate Sheela screen after dialog
+                          controller.updateTimer(
+                              enable: true); // enable the timer*/
+                  });
+                } else if (button?.btnRedirectTo == strRedirectToUploadVideo) {
+                  SheelaResponse sheelaLastConversation = SheelaResponse();
+                  sheelaLastConversation = conversations.last;
+                  // Check if the button redirects to upload video
+                  isLoading.value = true; // Set loading flag
+                  conversations.add(SheelaResponse(loading: true)); // Add loading response to conversations
+                  scrollToEnd(); // Scroll to the end of conversations
+                  if (sheelaLastConversation.videoThumbnailUrl != null && sheelaLastConversation.videoThumbnailUrl != '') {
+                    // Check if there is a valid image thumbnail URL
+                    saveMediaRegiment(sheelaLastConversation.videoThumbnailUrl ?? '', '') // Save media regiment
+                        .then((value) {
+                      isLoading.value = false; // Reset loading flag
+                      conversations.removeLast(); // Remove the loading response from conversations
+                      if (value.isSuccess ?? false) {
+                        fileRequestUrl = value.result?.accessUrl ?? '';
+                        if (isLoading.isTrue) {
+                          return; // If loading, do nothing
+                        }
+                        if (conversations.last.singleuse != null && conversations.last.singleuse! && conversations.last.isActionDone != null) {
+                          conversations.last.isActionDone = true; // Set action done flag if it's a single-use button
+                        }
+                        button?.isSelected = true; // Mark the button as selected
+                        // Start Sheela from the button with specified parameters
+                        startSheelaFromButton(buttonText: button?.title, payload: button?.payload, buttons: button, isFromImageUpload: true, requestFileType: strVideo // add requestFileType
+                            );
+                        // Delay for 3 seconds and then unselect the button
+                        Future.delayed(const Duration(seconds: 3), () {
+                          button?.isSelected = false;
+                        });
+                      }
+                    });
+                  }
                 } else {
                   startSheelaFromButton(buttonText: button.title, payload: button.payload, buttons: button);
                 }
@@ -2430,5 +2586,115 @@ makeApiRequest is used to update the data with latest data
         );
       }
     });
+  }
+
+  // Define a function to get the thumbnail image data from a video path
+  Future<Uint8List?> getThumbnailImage(path) async {
+    // Use the VideoThumbnail package to generate thumbnail data from the video path
+    return await VideoThumbnail.thumbnailData(
+      video: path, // Specify the video path
+      imageFormat: ImageFormat.JPEG, // Set the image format to JPEG
+      maxWidth: 128, // Specify the width of the thumbnail; let the height auto-scaled to keep the source aspect ratio
+      quality: 50, // Set the quality of the thumbnail
+    );
+  }
+
+  // Create a timer based on the scheduled time for a reminder.
+  Timer createTimer(Reminder reminder, tz.TZDateTime scheduledDateTime) {
+    // Calculate the duration until the scheduled time
+    Duration durationUntilScheduledTime = scheduledDateTime!.difference(DateTime.now());
+
+    // Schedule the method to be called after the calculated duration
+    return Timer(durationUntilScheduledTime, () {
+      // Call the scheduled method passing the reminder
+      scheduledMethod(reminder);
+      // Optional: Reschedule the method for the next occurrence
+      // rescheduleMethod(index);
+    });
+  }
+
+// Method called when the timer expires, triggers the reminder-related logic.
+  scheduledMethod(Reminder reminder) async {
+    final notificationId = int.tryParse('${reminder?.notificationListId}') ?? 0;
+    // Get the list of pending notifications
+    List<PendingNotificationRequest> pendingNotifications = await localNotificationsPlugin.pendingNotificationRequests();
+
+    // Check if the notification with the given ID is already scheduled
+    bool isScheduled = pendingNotifications.any(
+      (notification) => notification.id == notificationId,
+    );
+
+    // If already scheduled, cancel the existing notification with the same ID
+    if (isScheduled) {
+      final sheelaAIController = CommonUtil().onInitSheelaAIController();
+      // Construct an array of values for the reminder invocation
+      var strValue = '$strActivityRemainderInvokeSheela${reminder.eid}';
+      final passedValArr = strValue.split('&');
+      // Invoke the method to handle the reminder invocation
+      CommonUtil().getActivityRemainderInvokeSheela(passedValArr, sheelaAIController);
+    }
+  }
+
+// Add or update the timer associated with a reminder based on its scheduled time.
+  addScheduledTime(Reminder reminder, tz.TZDateTime scheduledDateTime) async {
+    await clearScheduledTime(reminder.notificationListId!);
+
+    // Create a new timer for the new scheduled time and add it to the map
+    final newTimer = createTimer(reminder, scheduledDateTime);
+    reminderTimers[reminder.notificationListId!] = newTimer;
+  }
+
+// Cancel and clear all timers associated with reminders.
+  clearAllTimers() {
+    for (var timer in reminderTimers.values) {
+      timer.cancel();
+    }
+    reminderTimers.clear();
+  }
+
+  // Function to clear the scheduled time for a reminder
+  clearScheduledTime(String notificationListId) {
+    // Check if a timer already exists for the given notificationListId
+    try {
+      if (reminderTimers.containsKey(notificationListId)) {
+        // If a timer exists, cancel it and remove it from the map
+        reminderTimers[notificationListId]?.cancel();
+        reminderTimers.remove(notificationListId);
+      }
+    } catch (e, stackTrace) {
+      // Handle any exceptions and log them using appLogs method
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+// Function to clear the scheduled time for a reminder
+  onInitActivitySheelaRemainder() async {
+    try {
+      // Initialize timers list
+      reminderTimers = {};
+
+      // Refresh activity reminders
+      await QurPlanReminders.refreshActivityReminders();
+    } catch (e, stackTrace) {
+      // Handle any exceptions and log them using appLogs method
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  // Function to get the TTS play again flag
+  bool getTTSPlayAgainFlag() {
+    // Using the nullish coalescing operator (??) to handle null cases
+    // If currentPlayingConversation is not null, check isPlayAgainMediaTTS; otherwise, default to false
+    return conversations.last
+        ?.additionalInfoSheelaResponse?.isAutoReadTTS ??
+        false;
+  }
+
+  playPauseTTSFromApi(){
+    // Check if TTS play again flag is true
+    if (getTTSPlayAgainFlag()) {
+      // Play or pause TTS with the last conversation, or a default SheelaResponse if conversations.last is null
+      playPauseTTS(conversations.last ?? SheelaResponse());
+    }
   }
 }

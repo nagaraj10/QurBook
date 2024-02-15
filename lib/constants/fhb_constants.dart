@@ -1,6 +1,5 @@
 library fhb_constants;
 
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 import '../common/CommonUtil.dart';
@@ -11,6 +10,8 @@ const String prodUSURL = "https://pushtejdookaacbhgm.vsolqur.com/api/";
 const String demoINURL = "https://thd1vqpl04nzmlaioqkss.vsolgmi.com/api1/";
 const String demoUSURL = "https://usuatnfnkjflaknlk.vsolgmi.com/api/";
 const String testUSURL = "https://ustestaktokskpped.vsolgmi.com/api/";
+
+const String refreshTokenEndPoint = 'auth/refresh-token';
 
 const String appQurbookBundleId = 'com.ventechsolutions.myFHB';
 const String appQurhomeBundleId = 'com.qurhealth.qurbook.us';
@@ -301,8 +302,6 @@ const String STR_ERROR_LOADING_DATA = 'Unable To Load Data,Please Try Again';
 const String STR_ERROR_LOADING_IMAGE = 'Unable To Load Image,Please Try Again';
 
 const String KEY_FAMILYREL = 'keyFamilyrel';
-//const String Auth_token='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb3VudHJ5Q29kZSI6Iis5MSIsImV4cGlyeURhdGUiOjE1OTQ0OTI1OTI1MjYsInJvbGVJZCI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsInNlc3Npb25EYXRlIjoxNTk0NDg4OTkyNTI2LCJzZXNzaW9uUm9sZXMiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJzb3VyY2VJbmZvIjp7InN1YlNvdXJjZUlkIjoiMjRlMTViZTMtOTY5NS00NGY3LTgyMjktMzRmZjRlZjgxMzk2IiwiZW50aXR5SWQiOiI5MmJkYzdiMS1kNTAwLTQ5MDEtYmZlOC04ZTE5YTA5ZmZhZDQiLCJyb2xlSWQiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJpc0RldmljZSI6ZmFsc2UsImRldmljZUlkIjoiIn0sInN1YmplY3QiOiI5MTc2MTE3ODc4IiwidXNlcklkIjoiYmRlMTQwZGItMGZmYy00YmU2LWI0YzAtNWU0NGI5ZjU0NTM1IiwiaWF0IjoxNTk0NDg4OTkyLCJleHAiOjE1OTgwODg5OTIsImF1ZCI6ImUxMzAxOWE0LTE0NDYtNDQxYi04YWYxLTcyYzQwYzcyNTU0OCIsImlzcyI6IkZIQiIsImp0aSI6ImE0ZTQ4MzY3LTM0M2EtNDIzNC1hYjEyLTgzMzEyMTZkZDUyYSJ9.qqSTMlm5UQKJ5vrCMQQ2NiPCM9lU8-5OStHAj1Q2Vfk';
-//const String Auth_token_slots='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb3VudHJ5Q29kZSI6Iis5MSIsImV4cGlyeURhdGUiOjE1OTQ1MjkzNzMzNDAsInJvbGVJZCI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsInNlc3Npb25EYXRlIjoxNTk0NTI1NzczMzQwLCJzZXNzaW9uUm9sZXMiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJzb3VyY2VJbmZvIjp7InN1YlNvdXJjZUlkIjoiMjRlMTViZTMtOTY5NS00NGY3LTgyMjktMzRmZjRlZjgxMzk2IiwiZW50aXR5SWQiOiI5MmJkYzdiMS1kNTAwLTQ5MDEtYmZlOC04ZTE5YTA5ZmZhZDQiLCJyb2xlSWQiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJpc0RldmljZSI6ZmFsc2UsImRldmljZUlkIjoiIn0sInN1YmplY3QiOiI5ODQwOTcyMjc1IiwidXNlcklkIjoiYWQ1ZDJkMzctNGVhZi00ZDkxLTk5ZTgtYTA3ODgxZDcyNjQ5IiwiaWF0IjoxNTk0NTI1NzczLCJleHAiOjE1OTgxMjU3NzMsImF1ZCI6ImUxMzAxOWE0LTE0NDYtNDQxYi04YWYxLTcyYzQwYzcyNTU0OCIsImlzcyI6IkZIQiIsImp0aSI6ImExNDUxMzNlLTA4NTctNGQyMi1iNTAwLWY3MjEyMDlmNmI5YiJ9.MGP2eiAC4pYgMsHzFig1nowJObJ9TSfjPLbuRJVQciw';
 const String ADD_NEW_FAMILY_MEMBER = 'Add new family member';
 const unassignedMember =
     'You are not assigned as a caregiver to any family member.';
@@ -342,9 +341,14 @@ const String ic_gold_member = 'assets/user/gold-member.png';
 
 //Voice Cloning
 const String icVoicePlay = 'assets/voice_clone/play_icon.svg';
-const String icVoiceMic= 'assets/voice_clone/mic_icon.svg';
+const String icVoiceMic = 'assets/voice_clone/mic_icon.svg';
 const String icVoicePause = 'assets/voice_clone/pause_icon.svg';
 const String icVoiceStop = 'assets/voice_clone/stop_icon.svg';
+
+//
+const String doctorSearchHospital = 'assets/doctor_search/hospital.svg';
+const String doctorSearchLanguage = 'assets/doctor_search/languages.svg';
+const String doctorSpecialization = 'assets/doctor_search/specialization.svg';
 
 // Path to the placeholder image asset.
 const String ic_placeholder = 'assets/icons/placeholder.jpg';
@@ -358,8 +362,6 @@ const String selectRHType = 'Select Rh type';
 const String selectBloodGroup = 'Select Blood group';
 
 const String makeAChoice = 'Make a Choice!';
-const String Gallery = 'Gallery';
-const String Camera = 'Camera';
 const String Associated_Member = 'Associated Member';
 const String Switch_User = 'Switch User';
 const String Set_as_Preferred = 'Set as Preferred';
@@ -732,6 +734,7 @@ const String Rmarks_HINT = "Remarks";
 // True desk
 const String strServiceRequests = 'Service Requests';
 const String strNewServiceRequests = 'New Service Request';
+const String strMembershipBenefits = 'Membership Benefits';
 const String strAddMyTicket = 'Create Ticket';
 const String strSubmitNewTicket = 'SUBMIT';
 const String strTicketTitle = 'Title';
@@ -745,14 +748,23 @@ const String strThereAreNoPreferredLabsInYourProfile =
 
 const String strPreferredDoctors = 'Preferred Doctors';
 
-
+//Create ticketNote
+const String strNote = 'Note:';
+const String strDoctorAppoinmetRequest = 'Doctor Appointment Request';
+const String strTicketNoteDesc =
+    'Please understand this is not a final booking.The request will be processed by the care coordinator and you\'ll be notified on the progress or confirmation.';
 
 //Voice cloning
-const String makeSureNotInNoiseDescription ='Make sure your are not in a noisy environment.';
-const String rec ='REC';
-const String fileShouldLess ='Error file should be less than 100 Mb';
-const String reRecord ='Re-Record';
-const String readTheDisplayContentDescription ='Read the displayed content on the screen once the timer concludes to record your voice';
+const String makeSureNotInNoiseDescription =
+    'Make sure your are not in a noisy environment.';
+const String rec = 'REC';
+const String fileShouldLess = 'Error file should be less than 100 Mb';
+const String reRecord = 'Re-Record';
+const String readTheDisplayContentDescription =
+    'Read the displayed content on the screen once the timer concludes to record your voice';
+
+// Define a constant string representing the text 'Lab Appointment Request'
+const String strLabAppointmentRequest = 'Lab Appointment Request';
 
 var tckTitle = '';
 String? tckTitleOpt = '';
@@ -782,6 +794,9 @@ var tckTypeDate = 'date';
 var tckTypeTime = 'time';
 var tckTypeFile = "file";
 var tckPackageTitle = "package_title";
+var tckChooseDoctor = "choose_doctor";
+var tckTypeDateTime = "datetime";
+var tckPrefferedDate = "preferred_date";
 var tckMainTitle = "title";
 var tckMainDescription = "description";
 var tckTypeModeOfService = "mode_of_service";
@@ -879,9 +894,6 @@ double kToolbarHeight = 56.0;
 double itemHeight = (height - kToolbarHeight - 24) / 8;
 double itemWidth = width / 2;
 
-FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics.instance;
-late var mInitialTime;
-
 const String address = 'Address';
 const String city = 'City';
 const String state = 'State';
@@ -912,6 +924,7 @@ const String strProviderName = 'provider_name';
 const String strServiceType = 'serviceType';
 const String str_preferred_lab = 'preferred_lab';
 const String strHealthOrganizationId = 'healthOrganizationId';
+const String strPinCode = 'pin_code';
 
 const String strNoteChat = 'Note: ';
 const String strRRTAppointmentLabelChat =
@@ -945,8 +958,7 @@ const String KEY_IS_Vitals_ManualRecording_Restricted =
     'isVitalsManualRecordingRestricted';
 
 // Define a constant for the key related to voice clone patient assignment
-const String strVoiceClonePatientAssignment =
-    'voiceClonePatientAssignment';
+const String strVoiceClonePatientAssignment = 'voiceClonePatientAssignment';
 
 // Flutter Speech-to-text
 const String strListening = 'Listening';
@@ -995,32 +1007,223 @@ String doseValueHigh = "2048";
 
 // sheela survey image capture
 
-const String strRecapture = 'Recapture';
-const String strRecordAgain = 'Record again';
-const String strRedirectRetakePicture = 'redirectRetakePicture';
-const String strRedirectRetakeAudio = 'redirectRetakeAudio';
-const String strRedirectToUploadImage = 'redirectUploadBucket';
-const String strRedirectToUploadAudio = 'redirectUploadBucketAudio';
+// Define constant strings for various messages or actions
+const String strRecapture = 'Recapture'; // Message for recapturing something
+const String strRecordAgain = 'Record again'; // Message for recording again
+const String strRedirectRetakePicture =
+    'redirectRetakePicture'; // Action for redirecting to retake a picture
+const String strRedirectRetakeAudio =
+    'redirectRetakeAudio'; // Action for redirecting to retake audio
+const String strRedirectRetakeVideo =
+    'redirectRetakeVideo'; // Action for redirecting to retake a video
+const String strRedirectToUploadImage =
+    'redirectUploadBucket'; // Action for redirecting to upload an image
+const String strRedirectToUploadAudio =
+    'redirectUploadBucketAudio'; // Action for redirecting to upload audio
+const String strRedirectToUploadVideo =
+    'redirectUploadBucketVideo'; // Action for redirecting to upload a video
+
+// Constant representing the confirmation title for image files
+const String strImageConfirmTitle =
+    'Please confirm if the image is okay to proceed?';
+
+// Constant representing the confirmation title for audio files
+const String strAudioConfirmTitle =
+    'Please confirm if the audio is okay to proceed?';
+
+// Constant representing the confirmation title for video files
+const String strVideoConfirmTitle =
+    'Please confirm if the video is okay to proceed?';
 
 // file upload feature in sheela
+// Constant for requesting a file URL
 const String strRequestFileUrl = 'requestFileUrl';
-const String strRequestType = 'requestFileType';
-const String strImage = 'image';
-const String strImageSizeValidation = 'Unable to upload photo. File size exceeds 5MB';
-const String strAudioSizeValidation = 'File size exceeds 100MB';
 
-Future<void> fbaLog({String? eveName, eveParams}) async {
-  try {
-    await _firebaseAnalytics.logEvent(
-        name: eveName ?? 'qurbook_ns_event',
-        parameters: eveParams ??
-            {
-              'eventTime': '${DateTime.now()}',
-              'navigationPage': 'Appointment page',
-              'ns_type': 'appointment_list'
-            });
-  } catch (e, stackTrace) {
-    print(e);
-    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-  }
+// Constant for requesting the file type
+const String strRequestType = 'requestFileType';
+
+// Constant representing the 'image' file type
+const String strImage = 'image';
+
+// Constant for the label 'Select video'
+const String strSelectVideo = 'Select video';
+
+// Constant for the label 'Record video'
+const String strRecordVideo = 'Record video';
+
+// Constant for the error message when image size exceeds 5MB
+const String strImageSizeValidation =
+    'Unable to upload photo. File size exceeds 5MB';
+
+// Constant for the error message when video size exceeds 100MB
+const String strVideoSizeValidation =
+    'Unable to upload video. File size exceeds 100MB';
+
+// Constant for the error message when audio file size exceeds 100MB
+const String strAudioSizeValidation =
+    'Unable to upload audio. File size exceeds 100MB';
+
+// Constant for the label 'Video preview'
+const String strVideoPreview = 'Video preview';
+
+const String strPleaseChoose = 'Please choose';
+const String strPleaseFill = 'Please fill';
+const String strPleaseSelect = 'Please select';
+const String strAddressLine = 'address_line_1';
+
+// Define a constant string for storing the current notification ID.
+const String strCurrentNotificationId = 'currentNotificationId';
+
+// Define constant strings for various actions
+const String strAction = 'action'; // General action string
+const String strCallback = 'Callback'; // Callback action string
+const String strChatwithcc =
+    'chatwithcc'; // Chat with customer care action string
+const String strViewrecord = 'viewrecord'; // View record action string
+const String strViewDetails = 'ViewDetails'; // View details action string
+const String strViewMember = 'ViewMember'; // View member action string
+const String strCommunicationsettings =
+    'Communicationsettings'; // Communication settings action string
+
+// Constant strings for various categories and actions
+const String strShowSingleButtonCat =
+    'showSingleButtonCat'; // Category to show a single button
+const String strShowBothButtonsCat =
+    'showBothButtonsCat'; // Category to show both buttons
+const String strRingtoneIOS = 'ringtone.aiff'; // iOS ringtone file name
+const String strScheduledtitle =
+    'scheduled title'; // Scheduled notification title
+const String strScheduledbody = 'scheduled body'; // Scheduled notification body
+const String strRemainderScheduleChannel =
+    'remainderScheduleChannel'; // Notification channel for remainder schedules
+const String strQurbookRemainderScheduleChannel =
+    'qurbook_remainder_schedule_channel'; // Notification channel for Qurbook remainder schedules
+const String strRemainderNotificationChannelDes =
+    'This channel is used for important remainder schedule notifications.'; // Description for remainder schedule notification channel
+const String strRemainderNotificationV3ChannelDes =
+    'This channel is used for important remainder schedulev3 notifications.'; // Description for remainder schedulev3 notification channel
+const String strRemainderScheduleV3Channel =
+    'remainderScheduleV3Channel'; // Notification channel for remainder schedulev3
+const String strQurbookRemainderScheduleV3Channel =
+    'qurbook_remainder_schedulev3_channel'; // Notification channel for Qurbook remainder schedulev3
+const String strMsgTone = 'msg_tone'; // Message tone
+const String strBeepBeep = 'beep_beep'; // Beep-beep sound
+const String strHelium = 'helium'; // Helium sound
+const String strQurbookChannel =
+    'Qurbook_channel'; // Qurbook notification channel
+const String strQurbookCallChannel =
+    'Qurbook_call_channel'; // Qurbook call notification channel
+const String strNormalQurbookChannelDesc =
+    'This channel is used for important notifications.'; // Description for normal Qurbook notification channel
+const String strDarwinCallCategory =
+    'darwinCall_category'; // Darwin call category
+const String strAcceptAction = 'accept_action'; // Accept action for calls
+const String strRejectAction = 'reject_action'; // Reject action for calls
+const String strShowTransportationNotification =
+    'showTransportationNotification'; // Show transportation notification
+const String strEscalateToCareCoordinatorButtons =
+    'escalateToCareCoordinatorButtons'; // Escalate to care coordinator buttons
+const String strShowViewMemberAndCommunicationButtons =
+    'showViewMemberAndCommunicationButtons'; // Show view member and communication buttons
+const String strViewMemberSpace = 'View Member'; // View member button label
+const String strCommunicationSettingsSpace =
+    'Communication settings'; // Communication settings button label
+const String strPlanRenewButton = 'planRenewButton'; // Plan renew button
+const String strCallbackSpace = 'Call back'; // Callback button label
+const String strAcceptDeclineButtonsCaregiver =
+    'acceptDeclineButtonsCaregiver'; // Accept/decline buttons for caregivers
+const String strChatCCAndViewrecordButtons =
+    'ChatCCAndViewrecordButtons'; // Chat with CC and view record buttons
+const String strChatwithccSpace = 'Chat with cc'; // Chat with CC button label
+const String strViewRecordSpace = 'View Record'; // View record button label
+const String strViewDetailsButton = 'viewDetailsButton'; // View details button
+const String strViewDetailsSpace = 'View Details'; // View details button label
+const String strPayNowButton = 'payNowButton'; // Pay now button
+const String strPayNow = 'PayNow'; // Pay now label
+const String strPayNowSpace = 'Pay Now'; // Pay now button label
+const String strChatwithCCSpace = 'Chat with CC'; // Chat with CC label
+const String strCallStatus = 'call_status'; // Call status
+const String strCallLog = 'call_log'; // Call log
+const String strAppNsQurhomeIcon =
+    'app_ns_qurhome_icon'; // App icon for Qurhome
+const String strAppNsQurbookIcon =
+    'app_ns_qurbook_icon'; // App icon for Qurbook
+const String strAppNsQurdayIcon =
+    'app_ns_qurday_icon'; // App icon for Qurday
+const String strIcLauncherQurhome =
+    'ic_launcher_qurhome'; // Launcher icon for Qurhome
+const String strIcLauncherQurDay =
+    'ic_launcher_qurday'; // Launcher icon for QurDay
+const String strIcLauncherQurbook =
+    'ic_launcher_qurbook'; // Launcher icon for Qurbook
+const String strMeetingId = 'meeting_id'; // Meeting ID
+const String strMipmapIcLauncher =
+    '@mipmap/ic_launcher'; // Mipmap launcher icon
+const String strTemplateName = 'templateName'; // Template name
+const String strFamilyProfile = 'familyProfile'; // Family profile
+const String strAppointmentPayment =
+    'appointmentPayment'; // Appointment payment
+const String strMycart = 'mycart'; // My cart
+const String strCallEndedByUser = 'call_ended_by_user'; // Call ended by user
+const String strAndroidNormalchannelId =
+    'androidNormalchannelId'; // Android normal channel ID
+const String strAndroidNormalCallchannelId =
+    'androidNormalCallchannelId'; // Android normal call channel ID
+// Constant string for invoking a remainder activity related to Sheela
+const String strActivityRemainderInvokeSheela =
+    'activityRemainderInvokeSheela&'; // Activity remainder for invoking Sheela
+
+// Define a constant string for 'Sort'
+const String strSort = 'Sort';
+
+// Define a constant string for 'Filter'
+const String strFilter = 'Filter';
+
+// Define a constant string for 'Years'
+const String strYears = 'Years';
+// Define a constant string for 'Year'
+const String strYear = 'Year';
+
+// Define a constant string for choosing a doctor
+const String strChooseDoctor = 'Choose Doctor';
+
+// Define another constant string for choosing a lab
+const String strChooseLab = 'Choose Lab';
+
+const String strApply = 'Apply'; // Label for the Apply button
+const String strSortby = 'Sort by'; // Label for the Sort by dropdown
+const String strAlphabetAZ = 'Alphabetical (A-Z)'; // Option for sorting alphabetically from A to Z
+const String strAlphabetZA = 'Alphabetical (Z-A)'; // Option for sorting alphabetically from Z to A
+const String strExperienceASC = 'Experience (Asc.)'; // Option for sorting by experience in ascending order
+const String strExperienceDESC = 'Experience (Desc.)'; // Option for sorting by experience in descending order
+const String strASC = 'ASC'; // Label for ascending order
+const String strDESC = 'DESC'; // Label for descending order
+
+// Define a constant variable for the health organization type
+const String strHealthOrganizationType = 'healthOrganizationType';
+
+// Define a constant variable for string data type
+const String strString = 'string';
+
+
+
+class DoctorFilterConstants {
+  static List<String> yearOfExperienceList = [
+    "0 to 5 years",
+    "5 to 10 years",
+    "10 to 20 years",
+    "20+ years"
+  ];
+  static List<String> genderList = ['Any', 'Male', 'Female'];
+  static String languageSpoken = "languageSpoken";
+  static String specialization = "specialization";
+  static String state = "state";
+  static String city = "city";
+  static String hospital = "hospital";
+  static String experience = "experience";
+  static String gender = "gender";
+  static String applyFilters = 'Apply Filters';
+  static String reset = 'Reset';
+  static String filterDoctors = 'Filter Doctors';
+  static String filterLabs = 'Filter Labs';
 }

@@ -1,15 +1,14 @@
-
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
+
+import '../../common/CommonConstants.dart';
+import '../../common/CommonUtil.dart';
+import '../../src/utils/colors_utils.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 import '../models/AddAddressArguments.dart';
 import '../models/place.dart';
 import '../services/google_map_service.dart';
 import '../widgets/add_address_list.dart';
-import '../../common/CommonConstants.dart';
-import '../../constants/fhb_constants.dart';
-import '../../src/utils/colors_utils.dart';
-import 'package:uuid/uuid.dart';
-import '../../common/CommonUtil.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
 
 class AddAddressScreen extends StatefulWidget {
   final AddAddressArguments? arguments;
@@ -36,19 +35,12 @@ class AddAddressScreenState extends State<AddAddressScreen> {
   @override
   void initState() {
     super.initState();
-    mInitialTime = DateTime.now();
     searchController.addListener(textListener);
   }
 
   @override
   void dispose() {
     super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Add address Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override

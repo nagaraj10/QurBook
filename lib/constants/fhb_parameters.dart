@@ -370,6 +370,8 @@ const String addNotes = 'Add Notes';
 const String addVoice = 'Add Voice';
 const String records = 'Records';
 const String deviceReading = 'Device Readings';
+const String applyMemberShipBenefit = 'Apply Membership Benefit';
+const String max = 'Max';
 const String payNow = 'Pay Now';
 const String slotsAreNotAvailable = 'Slot not available in this date';
 const String bookNow = 'Book Now';
@@ -871,3 +873,22 @@ const String strAppVersion = 'App Version';
 const String strOSVersion = 'OS Version';
 const String strErrorLog = 'Error Log';
 const String stringConnectedDevicesScreen = 'connectedDevicesScreen';
+
+// Define a constant string for a specific operation related to personal plan activities
+const String stringAssignOrUpdatePersonalPlanActivities = 'assign_or_update_personal_plan_activities';
+
+// Define a constant string for the regiment screen identifier.
+const String stringRegimentScreen = 'regiment_screen';
+
+// Define a constant string for the "Snooze" action.
+const String stringSnooze = 'Snooze';
+
+// Define a constant string for the "Dismiss" action.
+const String stringDismiss = 'Dismiss';
+
+// Define a constant string for the key 'experience'
+const String stringExperience = 'experience';
+
+const String stringDoctorExperience = 'doctorExperience'; // Represents a key or identifier for doctor experience data
+
+

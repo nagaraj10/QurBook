@@ -1,28 +1,25 @@
-import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
-import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
-import 'package:myfhb/landing/view_model/landing_view_model.dart';
-import 'package:myfhb/src/model/CreateDeviceSelectionModel.dart';
-import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
-import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
-import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 
-import 'package:myfhb/src/model/user/Tags.dart';
-
+import '../../../colors/fhb_colors.dart' as fhbColors;
+import '../../../common/CommonUtil.dart';
+import '../../../common/PreferenceUtil.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/variable_constant.dart' as variable;
+import '../../../device_integration/view/screens/Device_Data.dart';
+import '../../../device_integration/viewModel/Device_model.dart';
+import '../../../device_integration/viewModel/deviceDataHelper.dart';
+import '../../../landing/view_model/landing_view_model.dart';
+import '../../../widgets/GradientAppBar.dart';
+import '../../model/CreateDeviceSelectionModel.dart';
+import '../../model/GetDeviceSelectionModel.dart';
+import '../../model/UpdatedDeviceModel.dart';
+import '../../model/user/Tags.dart';
+import '../../resources/repository/health/HealthReportListForUserRepository.dart';
+import '../../utils/screenutils/size_extensions.dart';
+import '../SheelaAI/Controller/SheelaAIController.dart';
 
 class CareGiverSettings extends StatefulWidget {
   @override
@@ -55,6 +52,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
  * Declare variable neccessary to voice cloning 
  */
   bool voiceCloning = false;
+  bool useClonedVoice = false;
   bool providerAllowedVoiceCloningModule = true;
   bool superAdminAllowedVoiceCloningModule = true;
   String voiceCloningStatus = 'Inactive';
@@ -86,7 +84,6 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
     selectedList = [];
     _deviceModel = DevicesViewModel();
     super.initState();
@@ -120,19 +117,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
     }
     if (_isHealthFirstTime) {
       _isHKActive = false;
-      //PreferenceUtil.saveString(Constants.activateHK, _isHKActive.toString());
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Settings Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   Future<GetDeviceSelectionModel?> getDeviceSelectionValues() async {
@@ -206,7 +191,8 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
             allowAppointmentNotification,
             allowVitalNotification,
             allowSymptomsNotification,
-            voiceCloning)
+            voiceCloning,
+           useClonedVoice)
         .then((value) {
       Provider.of<LandingViewModel>(context, listen: false)
           .getQurPlanDashBoard();
@@ -423,6 +409,9 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
 
       voiceCloning =
           getDeviceSelectionModel.result![0].profileSetting!.voiceCloning ??
+              false;
+      useClonedVoice =
+          getDeviceSelectionModel.result![0].profileSetting!.useClonedVoice ??
               false;
 
       providerAllowedVoiceCloningModule = getDeviceSelectionModel

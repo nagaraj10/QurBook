@@ -1,31 +1,30 @@
-
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonDialogBox.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/device_integration/view/screens/Device_Widget.dart';
-import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
-import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
-import 'package:myfhb/src/model/Authentication/UserModel.dart';
-import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
+
+import '../../add_family_user_info/bloc/add_family_user_info_bloc.dart';
+import '../../common/CommonConstants.dart';
+import '../../common/CommonDialogBox.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/FHBBasicWidget.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_constants.dart';
+import '../../constants/router_variable.dart' as router;
+import '../../constants/variable_constant.dart' as variable;
+import '../../device_integration/view/screens/Device_Widget.dart';
+import '../../device_integration/viewModel/Device_model.dart';
+import '../../telehealth/features/chat/view/BadgeIcon.dart';
+import '../blocs/User/MyProfileBloc.dart';
+import '../model/Authentication/UserModel.dart';
+import '../model/home_screen_arguments.dart';
+import '../model/user/user_accounts_arguments.dart';
+import '../utils/FHBUtils.dart';
+import '../utils/colors_utils.dart';
 
 class DashboardScreen extends StatefulWidget {
   DashboardScreen({
@@ -52,51 +51,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String? devicevalue2;
 
   bool noInternet = true;
-  GlobalKey<ScaffoldMessengerState> scaffold_state = GlobalKey<ScaffoldMessengerState>();
+  GlobalKey<ScaffoldMessengerState> scaffold_state =
+      GlobalKey<ScaffoldMessengerState>();
 
-  //ChatViewModel chatViewModel = new ChatViewModel();
   CommonUtil commonUtil = CommonUtil();
 
   @override
   void initState() {
     super.initState();
-    mInitialTime = DateTime.now();
-    //chatViewModel.getUnreadMSGCount(PreferenceUtil.getStringValue(Constants.KEY_USERID));
-
-    /*
-    var isFirstTime =
-        PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_DASHBOARD);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(
-          Duration(milliseconds: 200),
-          () => isFirstTime
-              ? null
-              : ShowCaseWidget.of(_myContext).startShowCase(
-                  [_showMaya, _provider, _records, _family, _coverImage]));
-    });
-    */
-    //dbInitialize();
-    //callImportantsMethod();
-
-    String? profilebanner =
+    final profilebanner =
         PreferenceUtil.getStringValue(Constants.KEY_DASHBOARD_BANNER);
     if (profilebanner != null) {
       imageURIProfile = File(profilebanner);
     }
-    // try {
-    //   if (!widget.fromPlans) commonUtil.versionCheck(context);
-    // } catch (e,stackTrace) {}
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Dashboard Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
   }
 
   @override
@@ -131,14 +98,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ).then((value) {
       setState(() {});
     });
-
-    /* Navigator.of(context).push(
-      MaterialPageRoute(
-        settings: RouteSettings(name: router.rt_UserAccounts),
-        builder: (context) => UserAccounts(
-            arguments: UserAccountsArguments(selectedIndex: position)),
-      ),
-    );*/
   }
 
   moveToNextScreen(int position) {
@@ -232,68 +191,59 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void callImportantsMethod() async {
     try {
       getFamilyRelationAndMediaType();
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     try {
       getProfileData();
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     try {
       syncDevices();
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     try {
       await CommonUtil().getMedicalPreference();
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     try {
       CommonDialogBox().getCategoryList();
       getFamilyRelationAndMediaType();
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     try {
       AddFamilyUserInfoBloc addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
       addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
   void getFamilyRelationAndMediaType() async {
     try {
       await CommonUtil().getAllCustomRoles();
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     try {
       await CommonUtil().getMediaTypes();
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
   void getProfileData() async {
     try {
       await CommonUtil().getUserProfileData();
-    } catch (e,stackTrace) {
-                  CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 

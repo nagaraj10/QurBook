@@ -60,8 +60,8 @@ class HubListViewController extends GetxController {
         isUserHasParedDevice.value = false;
       }
       loadingData.value = false;
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       hubListResponse = null;
       isUserHasParedDevice.value = false;
@@ -95,8 +95,8 @@ class HubListViewController extends GetxController {
         );
         return false;
       }
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       FlutterToast().getToast(
         CommonUtil().validString(
@@ -136,16 +136,6 @@ class HubListViewController extends GetxController {
       searchingBleDevice.value = true;
       _bleController.setupListenerForReadings();
 
-      /*if (hubListResponse?.result?.hub == null) {
-        loadingData.value = true;
-        bool response = await callCreateVirtualHub();
-        loadingData.value = false;
-        if (!response) {
-          return;
-        }
-        await getHubList();
-      }*/
-
       Future.delayed(
         const Duration(
           seconds: 30,
@@ -165,8 +155,8 @@ class HubListViewController extends GetxController {
           }
         },
       );
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       printError(info: e.toString());
       searchingBleDevice.value = false;
@@ -183,8 +173,8 @@ class HubListViewController extends GetxController {
       loadingData.value = false;
       await Future.delayed(Duration(microseconds: 10));
       getHubList();
-    } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       printError(info: e.toString());
       loadingData.value = false;

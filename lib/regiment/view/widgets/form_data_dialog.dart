@@ -1276,11 +1276,15 @@ class FormDataDialogState extends State<FormDataDialog> {
           if (isAdd == null || isAdd) {
             isAdd = isAdd ?? false;
             final oldValue = saveMap.putIfAbsent(
-              isAdd ? 'pf_$title' : 'pf_${updatedFieldData.title}',
+              isAdd
+                  ? 'pf_$title'
+                  : 'pf_${updatedFieldData.title}',
               () => updatedFieldData.value,
             );
             if (oldValue != null) {
-              saveMap[isAdd ? 'pf_$title' : 'pf_${updatedFieldData.title}'] =
+              saveMap[isAdd
+                      ? 'pf_$title'
+                      : 'pf_${updatedFieldData.title}'] =
                   updatedFieldData.value;
             }
           } else {
