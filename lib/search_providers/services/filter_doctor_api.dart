@@ -5,7 +5,7 @@ import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/search_providers/models/labs_list_response_new.dart';
 
 import '../../constants/fhb_constants.dart' as Constants;
-import '../../constants/fhb_parameters.dart'as parameters;
+import '../../constants/fhb_parameters.dart' as parameters;
 import '../../constants/fhb_query.dart' as query;
 import '../../my_providers/models/UserAddressCollection.dart';
 import '../../src/model/user/State.dart' as s;
@@ -14,7 +14,6 @@ import '../models/doctor_list_response_new.dart';
 import '../models/doctor_specialization_model.dart';
 import '../models/hospital_list_response_new.dart';
 import '../screens/doctor_filter_request_model.dart';
-
 
 // Class responsible for handling API calls related to doctor filtering
 class FilterDoctorApi {
@@ -43,7 +42,7 @@ class FilterDoctorApi {
         uniqueCity.add(city.name!);
       }
     }
-    return uniqueCity.toList();
+    return uniqueCity.toList()..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
   }
 
   // Fetches the list of states based on the provided cityName
@@ -73,7 +72,7 @@ class FilterDoctorApi {
         uniqueState.add(stateName.name!);
       }
     }
-    return uniqueState.toList();
+    return uniqueState.toList()..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
   }
 
   // Fetches the list of doctor specializations based on the provided searchText
@@ -106,14 +105,16 @@ class FilterDoctorApi {
   Future<List<DoctorsListResult>> getFilterDoctorList(
     DoctorFilterRequestModel doctorFilterRequestModel,
   ) async {
-
     final doctorFilterList = <DoctorsListResult>[];
     try {
-      final response = await ApiBaseHelper().doctorFilterList(doctor_service_request_list, json.encode(doctorFilterRequestModel),);
+      final response = await ApiBaseHelper().doctorFilterList(
+        doctor_service_request_list,
+        json.encode(doctorFilterRequestModel),
+      );
       doctorFilterList.clear();
       if (response[parameters.strSuccess]) {
         response[parameters.dataResult][parameters.strData].forEach(
-              (f) {
+          (f) {
             doctorFilterList.add(DoctorsListResult.fromJson(f));
           },
         );
@@ -163,19 +164,19 @@ class FilterDoctorApi {
     return uniqueHospital.toList();
   }
 
-
   // Define a Future method named 'getFilterLabListResult' that takes a 'DoctorFilterRequestModel' as a parameter
   Future<List<LabListResult>> getFilterLabListResult(
-      DoctorFilterRequestModel doctorFilterRequestModel,
-      ) async {
+    DoctorFilterRequestModel doctorFilterRequestModel,
+  ) async {
     // Create an empty list to store LabListResult objects
     final labListFilterResult = <LabListResult>[];
 
     try {
       // Make an asynchronous call to the labFilterList method from the ApiBaseHelper class
       final response = await ApiBaseHelper().labFilterList(
-        lab_service_request_list,                  // Use the lab_service_request_list constant as the URL
-        json.encode(doctorFilterRequestModel),    // Encode the DoctorFilterRequestModel as JSON and provide it as the data
+        lab_service_request_list,
+        // Use the lab_service_request_list constant as the URL
+        json.encode(doctorFilterRequestModel), // Encode the DoctorFilterRequestModel as JSON and provide it as the data
       );
 
       // Clear the existing labListFilterResult list
@@ -185,7 +186,7 @@ class FilterDoctorApi {
       if (response[parameters.strSuccess]) {
         // Iterate through entities in the response and convert them to LabListResult objects
         response[parameters.dataResult][parameters.strData].forEach(
-              (f) {
+          (f) {
             labListFilterResult.add(LabListResult.fromJson(f));
           },
         );
@@ -197,7 +198,4 @@ class FilterDoctorApi {
     // Return the list of LabListResult objects
     return labListFilterResult.toList();
   }
-
-
-
 }
