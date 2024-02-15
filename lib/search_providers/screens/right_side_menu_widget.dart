@@ -79,6 +79,7 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
     selectedHospitalItems = widget.filterSelectdModel.selectedHospitalIndex;
     selectedYOEItems = widget.filterSelectdModel.selectedYOEIndex;
   }
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void dispose() {
@@ -93,6 +94,11 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
       searchFilterOption.clear();
       searchController.clear();
       isSearch = false;
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
     }
     selectedGenderItems = widget.filterSelectdModel.selectedGenderIndex;
     selectedLanguageItems = widget.filterSelectdModel.selectedLanguageIndex;
@@ -182,6 +188,8 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
                       )
                     : ListView.builder(
                         shrinkWrap: true,
+                        controller: _scrollController,
+                        
                         itemCount: isSearch ? searchFilterOption.length : widget.filterOptions.length,
                         itemBuilder: (BuildContext context, int index) {
                           final itemName = isSearch ? searchFilterOption[index] : widget.filterOptions[index];
@@ -344,6 +352,7 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
                                       selectedCityItems.isNotEmpty ? selectedCityItems.first : '',
                                       selectedStateItems.isNotEmpty ? selectedStateItems.first : '',
                                     );
+
                                     setState(() {});
                                   }
                                 },
