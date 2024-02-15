@@ -887,7 +887,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             allowSymptomsNotification,
             preferredMeasurement,
             voiceCloning,
-            isVoiceCloningChanged)
+            isVoiceCloningChanged,
+             useClonedVoice)
         .then((value) async {
       updateDeviceModel = value;
       if (updateDeviceModel!.isSuccess!) {
@@ -2131,12 +2132,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }
 
   Future<void> handleUseClonedVoiceSwitch(bool isEnabled) async {
-    if(isVoiceAssigned){
-     await  createAppColorSelection(preColor, greColor);
+    if(!isVoiceAssigned && !useClonedVoice){
+      toast.getToast(variable.strVoiceCloneNotSetByYourCaregiver, Colors.red);
+    }else{
+      useClonedVoice = isEnabled;
+      await updateDeviceSelectionModel(preColor, greColor);
       setState(() {
       });
-    }else{
-      toast.getToast(variable.strVoiceCloneNotSetByYourCaregiver, Colors.red);
     }
   }
 
@@ -2228,7 +2230,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
            ListTile(
               leading: ImageIcon(
                 AssetImage(variable.icon_voice_cloning),
-                size: iconSize
+                size: iconSize,
+                color: Colors.black,
               ),
               title: Text(variable.strUseClonedVoice,
                   style: TextStyle(
