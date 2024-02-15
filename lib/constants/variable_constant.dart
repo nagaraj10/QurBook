@@ -993,6 +993,11 @@ const String strCareDietPlan = "care/diet plan";
 const String strHomecareServices = "homecare services";
 const String strFoodDelivery = "food delivery";
 
+const String strHealthPlan = "health plan";        // Define a constant string for health plan
+const String strAmbulanceService = "ambulance service";  // Define a constant string for ambulance service
+const String strOrderMedicine = "order medicine";  // Define a constant string for ordering medicine
+
+
 const String strGetCityList = 'Getting City List';
 const String strSelValidMsg = 'Please select a valid';
 const String strLocationLink = "Location link";
