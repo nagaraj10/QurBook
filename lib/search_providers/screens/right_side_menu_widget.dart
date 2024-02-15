@@ -189,7 +189,6 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
                     : ListView.builder(
                         shrinkWrap: true,
                         controller: _scrollController,
-                        
                         itemCount: isSearch ? searchFilterOption.length : widget.filterOptions.length,
                         itemBuilder: (BuildContext context, int index) {
                           final itemName = isSearch ? searchFilterOption[index] : widget.filterOptions[index];
