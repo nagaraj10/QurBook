@@ -20,7 +20,8 @@ class DoctorsFilterScreen extends StatefulWidget {
     Map<String, List<String>> filterMenuCount,
     List<DoctorsListResult> doctorFilterList,
     FilteredSelectedModel selectdFilterItemIndex,
-    int count, DoctorFilterRequestModel doctorFilterRequestModel,
+    int count,
+    DoctorFilterRequestModel doctorFilterRequestModel,
   ) filterApplied;
   final FilteredSelectedModel selectedItems;
   final int filterMenuCount;
@@ -97,10 +98,9 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
         create: (context) => DoctorsFilterBloc()
           ..add(GetDoctorSpecializationList(
             selectedIndex: selectedIndex,
-            selectedMenu: createTicketController.searchWord.value ==
-                    CommonConstants.doctors
-                ? menu[0]
-                : labsMenu[0],
+            selectedMenu: createTicketController.searchWord.value == CommonConstants.doctors ? menu[0] : labsMenu[0],
+            stateName: selectedState,
+            cityName: selectedCity,
           )),
         child: BlocListener<DoctorsFilterBloc, DoctorsFilterState>(
           listener: (context, state) {
@@ -116,7 +116,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
               doctorFilterList = state.doctorFilterList;
               filterMenuCount = state.filterMenuCount;
               doctorFilterRequestModel = state.doctorFilterRequestModel;
-              widget.filterApplied(selectedItems, doctorFilterList, selectdFilterItemIndex, filterMenuCount,doctorFilterRequestModel);
+              widget.filterApplied(selectedItems, doctorFilterList, selectdFilterItemIndex, filterMenuCount, doctorFilterRequestModel);
               Navigator.pop(context);
             }
           },
@@ -134,9 +134,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                     Navigator.pop(context, [1]);
                   },
                 ),
-                title: Text(createTicketController.searchWord.value ==
-                    CommonConstants.doctors
-                    ?DoctorFilterConstants.filterDoctors:DoctorFilterConstants.filterLabs),
+                title: Text(createTicketController.searchWord.value == CommonConstants.doctors ? DoctorFilterConstants.filterDoctors : DoctorFilterConstants.filterLabs),
               ),
               body: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,9 +143,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                     child: Row(
                       children: [
                         LeftSideMenuWidget(
-                          menuItems: createTicketController.searchWord.value ==
-                              CommonConstants.doctors
-                              ?menu:labsMenu,
+                          menuItems: createTicketController.searchWord.value == CommonConstants.doctors ? menu : labsMenu,
                           selectedOptionChanged: (int value, String selectedMenuItem) {
                             BlocProvider.of<DoctorsFilterBloc>(context).add(GetDoctorSpecializationList(
                               selectedIndex: value,
@@ -174,7 +170,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                             selectdFilterItemIndex = selectedIndex;
 
                             checkAllListsEmpty();
-                            
+
                             setState(() {});
                           },
                         )
@@ -206,7 +202,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                                   selectedHospitalIndex: [],
                                   selectedYOEIndex: [],
                                 );
-                                widget.filterApplied({}, [], selectdFilterItemIndex, 0,new DoctorFilterRequestModel());
+                                widget.filterApplied({}, [], selectdFilterItemIndex, 0, new DoctorFilterRequestModel());
                                 Navigator.pop(context);
                                 setState(() {});
                               },
@@ -234,21 +230,20 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                           Expanded(
                             child: InkWell(
                               onTap: (!allListsEmpty)
-                                  ?() {
-                                BlocProvider.of<DoctorsFilterBloc>(context).add(
-                                  ApplyFilters(
-                                    selectedItems: selectedItems,
-                                    count: 0,
-                                  ),
-                                );
-                              }:null,
+                                  ? () {
+                                      BlocProvider.of<DoctorsFilterBloc>(context).add(
+                                        ApplyFilters(
+                                          selectedItems: selectedItems,
+                                          count: 0,
+                                        ),
+                                      );
+                                    }
+                                  : null,
                               child: Container(
                                 height: 48,
                                 padding: const EdgeInsets.all(10),
                                 decoration: ShapeDecoration(
-                                  color: (!allListsEmpty)
-                                      ? Color(CommonUtil().getMyPrimaryColor())
-                                      : Colors.grey.withOpacity(0.5),
+                                  color: (!allListsEmpty) ? Color(CommonUtil().getMyPrimaryColor()) : Colors.grey.withOpacity(0.5),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(50),
                                   ),
@@ -277,32 +272,25 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
   void checkAllListsEmpty() {
     try {
       // Check if selectedGenderIndex is null or empty
-      bool selectedGenderIndexIsNull = selectdFilterItemIndex?.selectedGenderIndex == null ||
-          selectdFilterItemIndex.selectedGenderIndex.isEmpty;
+      bool selectedGenderIndexIsNull = selectdFilterItemIndex?.selectedGenderIndex == null || selectdFilterItemIndex.selectedGenderIndex.isEmpty;
 
       // Check if selectedLanguageIndex is null or empty
-      bool selectedLanguageIndexIsNull = selectdFilterItemIndex?.selectedLanguageIndex == null ||
-          selectdFilterItemIndex.selectedLanguageIndex.isEmpty;
+      bool selectedLanguageIndexIsNull = selectdFilterItemIndex?.selectedLanguageIndex == null || selectdFilterItemIndex.selectedLanguageIndex.isEmpty;
 
       // Check if selectedSpecializationIndex is null or empty
-      bool selectedSpecializationIndexIsNull = selectdFilterItemIndex?.selectedSpecializationeIndex == null ||
-          selectdFilterItemIndex.selectedSpecializationeIndex.isEmpty;
+      bool selectedSpecializationIndexIsNull = selectdFilterItemIndex?.selectedSpecializationeIndex == null || selectdFilterItemIndex.selectedSpecializationeIndex.isEmpty;
 
       // Check if selectedStateIndex is null or empty
-      bool selectedStateIndexIsNull = selectdFilterItemIndex?.selectedStateIndex == null ||
-          selectdFilterItemIndex.selectedStateIndex.isEmpty;
+      bool selectedStateIndexIsNull = selectdFilterItemIndex?.selectedStateIndex == null || selectdFilterItemIndex.selectedStateIndex.isEmpty;
 
       // Check if selectedCityIndex is null or empty
-      bool selectedCityIndexIsNull = selectdFilterItemIndex?.selectedCityIndex == null ||
-          selectdFilterItemIndex.selectedCityIndex.isEmpty;
+      bool selectedCityIndexIsNull = selectdFilterItemIndex?.selectedCityIndex == null || selectdFilterItemIndex.selectedCityIndex.isEmpty;
 
       // Check if selectedHospitalIndex is null or empty
-      bool selectedHospitalIndexIsNull = selectdFilterItemIndex?.selectedHospitalIndex == null ||
-          selectdFilterItemIndex.selectedHospitalIndex.isEmpty;
+      bool selectedHospitalIndexIsNull = selectdFilterItemIndex?.selectedHospitalIndex == null || selectdFilterItemIndex.selectedHospitalIndex.isEmpty;
 
       // Check if selectedYOEIndex is null or empty
-      bool selectedYOEIndexIsNull = selectdFilterItemIndex?.selectedYOEIndex == null ||
-          selectdFilterItemIndex.selectedYOEIndex.isEmpty;
+      bool selectedYOEIndexIsNull = selectdFilterItemIndex?.selectedYOEIndex == null || selectdFilterItemIndex.selectedYOEIndex.isEmpty;
 
       // Set allListsEmpty based on whether all indexes are null or empty
       allListsEmpty = selectedGenderIndexIsNull &&
@@ -317,5 +305,4 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
-
 }
