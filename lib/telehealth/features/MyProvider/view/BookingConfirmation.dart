@@ -719,6 +719,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             onChanged: (newValue) {
               setState(() {
                 checkedValue = newValue;
+                originalPrice = originalFees;
                 if (checkedValue!) {
                   if(isApplyMemberShipBenefits){
                     isApplyMemberShipBenefits =false;
@@ -729,7 +730,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   }
                   INR_Price = getDiscountedFee(
                       double.parse(discount!), double.parse(originalFees));
-                  originalPrice = INR_Price;
                   if (INR_Price == '0' || INR_Price == '0.00') {
                     btnLabelChange = bookNow;
                   } else {
@@ -1686,17 +1686,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     return deductedAmount.toStringAsFixed(2);
   }
 
-  void checkIsAlreadyBenefitApplied() {
-    if (isApplyMemberShipBenefits) {
-      // If membership benefits are applied, reset the checked value
-      checkedValue = false;
-      INR_Price = originalPrice;
-    } else {
-      // If membership benefits are not applied, reset the membership flag
-      isApplyMemberShipBenefits = false;
-      INR_Price = originalPrice;
-    }
-  }
 
 
 
