@@ -36,6 +36,7 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
       ResolutionPreset.high,
     );
     await controller.initialize(); // Initialize the camera controller
+    await controller.setFlashMode(FlashMode.off); // Initialize the camera controller
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_secondsRemaining > 0) {
