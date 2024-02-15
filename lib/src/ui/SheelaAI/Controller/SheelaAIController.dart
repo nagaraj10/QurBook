@@ -1062,6 +1062,7 @@ class SheelaAIController extends GetxController {
         currentDeviceStatus.allowSymptomsNotification,
         currentDeviceStatus.preferredMeasurement,
         currentDeviceStatus.voiceCloning,
+        null,
         currentDeviceStatus.useClonedVoice);
     if (value.isSuccess ?? false) {
       //updated

@@ -188,9 +188,9 @@ class ProfileSetting {
             strInActive; //get the status of voice cloning
         voiceCloning = json[
             'voiceCloning'];
-        useClonedVoice = json['useClonedVoice']; // get the value if the cloned voice feature is enabled
-        voiceCloneAssigned = json['voiceCloneAssigned'];
       }
+      useClonedVoice = json['useClonedVoice']; // get the value if the cloned voice feature is enabled
+      voiceCloneAssigned = json['voiceCloneAssigned'];
 
       if (json.containsKey('preferred_measurement')) {
         preferredMeasurement = json['preferred_measurement'] != null

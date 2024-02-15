@@ -644,7 +644,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
             allowVitalNotification,
             allowSymptomsNotification,
             preferredMeasurement,
-            voiceCloning,null)
+            voiceCloning,null,
+           useClonedVoice)
         .then(
       (value) {
         if (value.isSuccess ?? false) {
