@@ -17,11 +17,11 @@ import 'right_side_menu_widget.dart';
 
 class DoctorsFilterScreen extends StatefulWidget {
   final Function(
-      Map<String, List<String>> filterMenuCount,
-      List<DoctorsListResult> doctorFilterList,
-      FilteredSelectedModel selectdFilterItemIndex,
-      int count, DoctorFilterRequestModel doctorFilterRequestModel,
-      ) filterApplied;
+    Map<String, List<String>> filterMenuCount,
+    List<DoctorsListResult> doctorFilterList,
+    FilteredSelectedModel selectdFilterItemIndex,
+    int count, DoctorFilterRequestModel doctorFilterRequestModel,
+  ) filterApplied;
   final FilteredSelectedModel selectedItems;
   final int filterMenuCount;
   final Map<String, List<String>> filterSelectedItems;
@@ -94,186 +94,186 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-    create: (context) => DoctorsFilterBloc()
-      ..add(GetDoctorSpecializationList(
-        selectedIndex: selectedIndex,
-        selectedMenu: createTicketController.searchWord.value ==
-            CommonConstants.doctors
-            ? menu[0]
-            : labsMenu[0],
-        stateName: selectedState,
-        cityName: selectedCity,
-      )),
-    child: BlocListener<DoctorsFilterBloc, DoctorsFilterState>(
-      listener: (context, state) {
-        if (state is ShowMenuItemList) {
-          selectedMenu = state.selectedMenu;
-          menuItems = state.menuItemList;
-          selectedIndex = state.selectedIndex;
-        } else if (state is HideProgressBar) {
-          LoaderClass.hideLoadingDialog(context);
-        } else if (state is ShowProgressBar) {
-          LoaderClass.showLoadingDialog(context);
-        } else if (state is ShowDoctorFilterList) {
-          doctorFilterList = state.doctorFilterList;
-          filterMenuCount = state.filterMenuCount;
-          doctorFilterRequestModel = state.doctorFilterRequestModel;
-          widget.filterApplied(selectedItems, doctorFilterList, selectdFilterItemIndex, filterMenuCount,doctorFilterRequestModel);
-          Navigator.pop(context);
-        }
-      },
-      child: BlocBuilder<DoctorsFilterBloc, DoctorsFilterState>(
-        builder: (context, state) => Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            flexibleSpace: GradientAppBar(),
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios,
-                size: 24.0.sp,
-              ),
-              onPressed: () {
-                Navigator.pop(context, [1]);
-              },
-            ),
-            title: Text(createTicketController.searchWord.value ==
-                CommonConstants.doctors
-                ?DoctorFilterConstants.filterDoctors:DoctorFilterConstants.filterLabs),
-          ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Flexible(
-                child: Row(
-                  children: [
-                    LeftSideMenuWidget(
-                      menuItems: createTicketController.searchWord.value ==
-                          CommonConstants.doctors
-                          ?menu:labsMenu,
-                      selectedOptionChanged: (int value, String selectedMenuItem) {
-                        BlocProvider.of<DoctorsFilterBloc>(context).add(GetDoctorSpecializationList(
-                          selectedIndex: value,
-                          selectedMenu: selectedMenuItem,
-                          cityName: selectedCity,
-                          stateName: selectedState,
-                        ));
-                      },
-                    ),
-                    RightSideMenuWidget(
-                      searchFilterOption: [],
-                      filterOptions: menuItems,
-                      selectedMenuIndex: selectedIndex,
-                      filterSelectdModel: selectdFilterItemIndex,
-                      selectedFilterOption: (
-                          Map<String, List<String>> value,
-                          FilteredSelectedModel selectedIndex,
-                          String city,
-                          String state,
-                          ) {
-                        selectedItems.addAll(value);
-                        selectedState = state;
-                        selectedCity = city;
-                        selectdFilterItemIndex = selectedIndex;
-
-                        checkAllListsEmpty();
-
-                        setState(() {});
-                      },
-                    )
-                  ],
+        create: (context) => DoctorsFilterBloc()
+          ..add(GetDoctorSpecializationList(
+            selectedIndex: selectedIndex,
+            selectedMenu: createTicketController.searchWord.value ==
+                    CommonConstants.doctors
+                ? menu[0]
+                : labsMenu[0],
+            stateName: selectedState,
+            cityName: selectedCity,
+          )),
+        child: BlocListener<DoctorsFilterBloc, DoctorsFilterState>(
+          listener: (context, state) {
+            if (state is ShowMenuItemList) {
+              selectedMenu = state.selectedMenu;
+              menuItems = state.menuItemList;
+              selectedIndex = state.selectedIndex;
+            } else if (state is HideProgressBar) {
+              LoaderClass.hideLoadingDialog(context);
+            } else if (state is ShowProgressBar) {
+              LoaderClass.showLoadingDialog(context);
+            } else if (state is ShowDoctorFilterList) {
+              doctorFilterList = state.doctorFilterList;
+              filterMenuCount = state.filterMenuCount;
+              doctorFilterRequestModel = state.doctorFilterRequestModel;
+              widget.filterApplied(selectedItems, doctorFilterList, selectdFilterItemIndex, filterMenuCount,doctorFilterRequestModel);
+              Navigator.pop(context);
+            }
+          },
+          child: BlocBuilder<DoctorsFilterBloc, DoctorsFilterState>(
+            builder: (context, state) => Scaffold(
+              appBar: AppBar(
+                elevation: 0,
+                flexibleSpace: GradientAppBar(),
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    size: 24.0.sp,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context, [1]);
+                  },
                 ),
+                title: Text(createTicketController.searchWord.value ==
+                    CommonConstants.doctors
+                    ?DoctorFilterConstants.filterDoctors:DoctorFilterConstants.filterLabs),
               ),
-              const Divider(
-                height: 1,
-              ),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: Platform.isIOS ? 30 : 10, left: 20, right: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap: () async {
-                            selectedItems.clear();
-                            selectedState = "";
-                            selectedCity = "";
-                            selectdFilterItemIndex = FilteredSelectedModel(
-                              selectedGenderIndex: [],
-                              selectedLanguageIndex: [],
-                              selectedSpecializationeIndex: [],
-                              selectedStateIndex: [],
-                              selectedCityIndex: [],
-                              selectedHospitalIndex: [],
-                              selectedYOEIndex: [],
-                            );
-                            widget.filterApplied({}, [], selectdFilterItemIndex, 0,new DoctorFilterRequestModel());
-                            Navigator.pop(context);
+              body: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: Row(
+                      children: [
+                        LeftSideMenuWidget(
+                          menuItems: createTicketController.searchWord.value ==
+                              CommonConstants.doctors
+                              ?menu:labsMenu,
+                          selectedOptionChanged: (int value, String selectedMenuItem) {
+                            BlocProvider.of<DoctorsFilterBloc>(context).add(GetDoctorSpecializationList(
+                              selectedIndex: value,
+                              selectedMenu: selectedMenuItem,
+                              cityName: selectedCity,
+                              stateName: selectedState,
+                            ));
+                          },
+                        ),
+                        RightSideMenuWidget(
+                          searchFilterOption: [],
+                          filterOptions: menuItems,
+                          selectedMenuIndex: selectedIndex,
+                          filterSelectdModel: selectdFilterItemIndex,
+                          selectedFilterOption: (
+                            Map<String, List<String>> value,
+                            FilteredSelectedModel selectedIndex,
+                            String city,
+                            String state,
+                          ) {
+                            selectedItems.addAll(value);
+                            selectedState = state;
+                            selectedCity = city;
+                            selectdFilterItemIndex = selectedIndex;
+
+                            checkAllListsEmpty();
+
                             setState(() {});
                           },
-                          child: Container(
-                            height: 48,
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                              ),
-                              borderRadius: const BorderRadius.all(Radius.circular(50)),
-                            ),
-                            child: Center(
-                              child: Text(
-                                DoctorFilterConstants.reset,
-                                style: TextStyle(
-                                  color: Color(CommonUtil().getMyPrimaryColor()),
+                        )
+                      ],
+                    ),
+                  ),
+                  const Divider(
+                    height: 1,
+                  ),
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 10, bottom: Platform.isIOS ? 30 : 10, left: 20, right: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: () async {
+                                selectedItems.clear();
+                                selectedState = "";
+                                selectedCity = "";
+                                selectdFilterItemIndex = FilteredSelectedModel(
+                                  selectedGenderIndex: [],
+                                  selectedLanguageIndex: [],
+                                  selectedSpecializationeIndex: [],
+                                  selectedStateIndex: [],
+                                  selectedCityIndex: [],
+                                  selectedHospitalIndex: [],
+                                  selectedYOEIndex: [],
+                                );
+                                widget.filterApplied({}, [], selectdFilterItemIndex, 0,new DoctorFilterRequestModel());
+                                Navigator.pop(context);
+                                setState(() {});
+                              },
+                              child: Container(
+                                height: 48,
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Color(CommonUtil().getMyPrimaryColor()),
+                                  ),
+                                  borderRadius: const BorderRadius.all(Radius.circular(50)),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    DoctorFilterConstants.reset,
+                                    style: TextStyle(
+                                      color: Color(CommonUtil().getMyPrimaryColor()),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: InkWell(
-                          onTap: (!allListsEmpty)
-                              ?() {
-                            BlocProvider.of<DoctorsFilterBloc>(context).add(
-                              ApplyFilters(
-                                selectedItems: selectedItems,
-                                count: 0,
-                              ),
-                            );
-                          }:null,
-                          child: Container(
-                            height: 48,
-                            padding: const EdgeInsets.all(10),
-                            decoration: ShapeDecoration(
-                              color: (!allListsEmpty)
-                                  ? Color(CommonUtil().getMyPrimaryColor())
-                                  : Colors.grey.withOpacity(0.5),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                DoctorFilterConstants.applyFilters,
-                                style: const TextStyle(color: Colors.white),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: InkWell(
+                              onTap: (!allListsEmpty)
+                                  ?() {
+                                BlocProvider.of<DoctorsFilterBloc>(context).add(
+                                  ApplyFilters(
+                                    selectedItems: selectedItems,
+                                    count: 0,
+                                  ),
+                                );
+                              }:null,
+                              child: Container(
+                                height: 48,
+                                padding: const EdgeInsets.all(10),
+                                decoration: ShapeDecoration(
+                                  color: (!allListsEmpty)
+                                      ? Color(CommonUtil().getMyPrimaryColor())
+                                      : Colors.grey.withOpacity(0.5),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    DoctorFilterConstants.applyFilters,
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 
   // Function to check if all filter indexes are empty
   void checkAllListsEmpty() {
