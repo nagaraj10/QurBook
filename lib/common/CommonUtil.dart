@@ -6734,8 +6734,7 @@ class CommonUtil {
         canEdit = true;
       } else if (regimen?.doseMealString == Constants.doseValueless ||
           regimen?.doseMealString == Constants.doseValueHigh) {
-        if (/*regimen?.activityOrgin == strSurvey &&*/
-            regimen?.otherinfo?.isAllDayActivity == true) {
+        if (regimen?.otherinfo?.isAllDayActivity == true) {
           DateTime selectedDateTime =
               CommonUtil.getDateBasedOnOnceInAPlan(selectedDate, regimen!);
 
@@ -6761,8 +6760,7 @@ class CommonUtil {
                       RegimentMode.Schedule;
         }
       } else {
-        if (/*regimen?.activityOrgin == strSurvey &&*/
-            regimen?.otherinfo?.isAllDayActivity == true) {
+        if (regimen?.otherinfo?.isAllDayActivity == true) {
           if (calculateDifference(regimen?.estart ?? DateTime.now()) <= 0) {
             canEdit = true;
           } else {
