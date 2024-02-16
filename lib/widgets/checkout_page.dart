@@ -782,7 +782,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     };
     /// Add `walletDeductionAmount` parameter only if patient apply Membership benefits checked
     if (value.checkedMembershipBenefits) {
-      final maxMembershipAmountLimit = getMembershipAmountLimit(value);
+      final maxMembershipAmountLimit = value.getFinalMembershipAmountLimit();
 
     final finalAmount = min(maxMembershipAmountLimit,
         value.totalProductCount);
@@ -1321,7 +1321,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     };
     /// Add `walletDeductionAmount` parameter only if patient apply Membership benefits checked
     if (value.checkedMembershipBenefits) {
-      final maxMembershipAmountLimit = getMembershipAmountLimit(value);
+      final maxMembershipAmountLimit = value.getFinalMembershipAmountLimit();
       final finalAmount =
           min(maxMembershipAmountLimit, value.totalProductCount);
       body['walletDeductionAmount'] = finalAmount;

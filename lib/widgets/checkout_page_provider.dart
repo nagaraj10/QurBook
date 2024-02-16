@@ -445,12 +445,7 @@ class CheckoutPageProvider extends ChangeNotifier {
     }
     subTotalProductCount = totalProductCount;
     if (checkedMembershipBenefits) {
-      final transactionLimit = memberShipDetailsResult
-              ?.additionalInfo?.benefitType
-              ?.lastWhere((element) =>
-                  element.fieldName == constant.strBenefitCareDietPlans)
-              .transactionLimit ??
-          0;
+      final transactionLimit = getFinalMembershipAmountLimit();
       totalProductCount = max(totalProductCount - transactionLimit.toInt(), 0);
     }
     notifyListeners();
