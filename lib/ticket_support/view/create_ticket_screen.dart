@@ -634,17 +634,20 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             (field.type == tckConstants.tckTypeTitle &&
                     (field.name == tckConstants.strPinCode))
                 ? widgetForColumn.add(
-                    Column(
-                      children: [
-                        SizedBox(height: 15.h),
-                        getWidgetForTitleText(
-                            title: displayName,
-                            isRequired: /*field.isRequired*/ isVisible),
-                        SizedBox(height: 10.h),
-                        getWidgetForTextValue(
-                            i, CommonUtil().getFieldName(field.name), field,
-                            isPincode: CommonUtil.REGION_CODE == 'IN'),
-                      ],
+                    Visibility(
+                      visible: field.isVisible != null ? isVisible : true,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 15.h),
+                          getWidgetForTitleText(
+                              title: displayName,
+                              isRequired: field.isRequired ?? false),
+                          SizedBox(height: 10.h),
+                          getWidgetForTextValue(
+                              i, CommonUtil().getFieldName(field.name), field,
+                              isPincode: CommonUtil.REGION_CODE == 'IN'),
+                        ],
+                      ),
                     ),
                   )
                 : const SizedBox.shrink();
@@ -662,7 +665,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         SizedBox(height: 15.h),
                         getWidgetForTitleText(
                             title: displayName,
-                            isRequired: /*field.isRequired*/ isVisible),
+                            isRequired: field.isRequired ?? false),
                         SizedBox(height: 10.h),
                         getWidgetForTextValue(
                             i, CommonUtil().getFieldName(field.name), field),
@@ -694,7 +697,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         SizedBox(height: 15.h),
                         getWidgetForTitleText(
                             title: displayName,
-                            isRequired: /*field.isRequired*/ isVisible),
+                            isRequired: field.isRequired ?? false),
                         SizedBox(height: 10.h),
                         getWidgetForTextAreaValue(
                             i, CommonUtil().getFieldName(field.name)),
@@ -960,7 +963,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                       children: [
                         SizedBox(height: 15.h),
                         getWidgetForTitleText(
-                            title: displayName, isRequired: isVisible),
+                            title: displayName, isRequired: field.isRequired ?? false),
                         SizedBox(height: 10.h),
                         Row(
                           children: [
@@ -1613,28 +1616,33 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               }
             }
 
-            if (field.isRequired! &&
-                textEditingControllers[CommonUtil().getFieldName(field.name)]!
-                    .text
-                    .isEmpty) {
-              showAlertMsg(
-                  "${(field.type == tckConstants.tckTypeDropdown || field.type == tckConstants.tckTypeLookUp) ? tckConstants.strPleaseSelect : tckConstants.strPleaseFill} $displayName");
-              return;
+            final textEditingController = textEditingControllers[CommonUtil().getFieldName(field.name)];
+
+            // Check if the field is required and if its text is empty
+            if (field.isRequired! && textEditingController != null && textEditingController!.text.trim().isEmpty) {
+              // If the field is a dropdown or lookup type, show a specific error message
+              final errorMsg = (field.type == tckConstants.tckTypeDropdown || field.type == tckConstants.tckTypeLookUp)
+                  ? tckConstants.strPleaseSelect
+                  : tckConstants.strPleaseFill;
+              // Show an alert message with the error message and the display name of the field
+              showAlertMsg("$errorMsg $displayName");
+              return; // Exit the function
             } else {
-              if (field.name.toString().toLowerCase() ==
-                      tckConstants.tckChooseDoctor &&
-                  isDoctor) {
-                tckConstants.tckSelectedDoctor = textEditingControllers[
-                        CommonUtil().getFieldName(field.name)]!
-                    .text;
-                tckConstants.tckSelectedDoctorId = docId;
+              // If the field is not empty or not required, proceed
+              if (field.name.toString().toLowerCase() == tckConstants.tckChooseDoctor && isDoctor) {
+                // If the field is for choosing a doctor and the user is a doctor
+                tckConstants.tckSelectedDoctor = textEditingController!.text; // Set the selected doctor
+                tckConstants.tckSelectedDoctorId = docId; // Set the selected doctor's ID
               } else {
-                controller.dynamicTextFiledObj[field.name] =
-                    textEditingControllers[
-                            CommonUtil().getFieldName(field.name)]!
-                        .text;
+                // For other fields
+                if (textEditingController != null) {
+                  // If the text editing controller is not null
+                  controller.dynamicTextFiledObj[field.name] = textEditingController.text; // Store the field's value in the controller
+                }
               }
             }
+
+
             /*if (field.type == tckConstants.tckTypeDropdown && field.isDoctor!) {
               if (doctor.text.isNotEmpty) {
                 tckConstants.tckSelectedDoctor = doctor.text;
@@ -1724,10 +1732,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         controller.dynamicTextFiledObj["serviceType"] = widget.ticketList!.name;
 
         commonMethodToCreateTicket(ticketListData);
-      } else if (strName.contains(variable.strOrderPrescription)) {
+      } else if (strName.contains(variable.strOrderPrescription) ||
+          strName.contains(variable.strOrderMedicine)) {
         controller.dynamicTextFiledObj["serviceType"] = widget.ticketList!.name;
         commonMethodToCreateTicket(ticketListData);
-      } else if (strName.contains(variable.strCareDietPlan)) {
+      } else if (strName.contains(variable.strCareDietPlan) ||
+          strName.contains(variable.strHealthPlan)) {
         tckConstants.tckSelectedCategory = dropdownValue?.title ?? "";
         Constants.tckPackageName = package_title_ctrl.text;
         controller.dynamicTextFiledObj["serviceType"] = widget.ticketList!.name;
@@ -1735,7 +1745,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       } else if (strName.contains(variable.strTransportation) ||
           strName.contains(variable.strHomecareServices) ||
           strName.contains(variable.strFoodDelivery) ||
-          strName.contains(strOthers)) {
+          strName.contains(strOthers)||strName.contains(variable.strAmbulanceService)) {
         controller.dynamicTextFiledObj["title"] =
             titleController.text.toString();
         controller.dynamicTextFiledObj["serviceType"] = widget.ticketList!.name;
@@ -2669,11 +2679,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
       ticketViewModel.createTicket().then((value) async {
         if (value != null && value.isSuccess!) {
-          if (CommonUtil()
-                  .validString(ticketListData.name)
-                  .toLowerCase()
-                  .contains("order prescription") &&
-              imagePaths.length > 0) {
+          final strName =
+              CommonUtil().validString(ticketListData.name ?? '').toLowerCase();
+          if ((strName.contains(variable.strOrderPrescription) ||
+              strName.contains(variable.strOrderMedicine)) &&
+              imagePaths.isNotEmpty) {
             ApiBaseHelper apiBaseHelper = ApiBaseHelper();
             List resposnes = await apiBaseHelper
                 .uploadAttachmentForTicket(
@@ -2682,7 +2692,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     imagePaths)
                 .then((values) {
                   FlutterToast()
-                      .getToast('Ticket Created Successfully', Colors.grey);
+                      .getToast(ticketCreatedSuccessfully, Colors.green);
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                   //print('Hitting API .. : ${value.toJson()}');
@@ -2691,13 +2701,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     MaterialPageRoute(
                         builder: (context) => MyTicketsListScreen()),
                   );
-                } as FutureOr<List<dynamic>> Function(dynamic));
+                  return <dynamic>[]; // Returning an empty list as FutureOr<List<dynamic>>
+                });
           } else {
             FlutterToast().getToast(
                 (isDoctor || controller.labBookAppointment.value)
                     ? variable.request_sent_successfully
-                    : 'Ticket Created Successfully',
-                Colors.grey);
+                    : ticketCreatedSuccessfully,
+                Colors.green);
             Navigator.of(context).pop();
             Navigator.of(context).pop();
             //print('Hitting API .. : ${value.toJson()}');

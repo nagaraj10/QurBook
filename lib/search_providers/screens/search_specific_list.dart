@@ -214,6 +214,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               .addPageRequestListener((pageKey) {
             createTicketController.fetchLabListData(pageKey);
           });
+        }else if (widget.arguments!.searchWord == CommonConstants.keyCity) {
+          _labsListBlock!.getCityList('a');
         }
       } else {
         if (value != '') {

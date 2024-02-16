@@ -445,14 +445,34 @@ class CheckoutPageProvider extends ChangeNotifier {
     }
     subTotalProductCount = totalProductCount;
     if (checkedMembershipBenefits) {
-      final transactionLimit = memberShipDetailsResult
-              ?.additionalInfo?.benefitType
-              ?.lastWhere((element) =>
-                  element.fieldName == constant.strBenefitCareDietPlans)
-              .transactionLimit ??
-          0;
+      final transactionLimit = getFinalMembershipAmountLimit();
       totalProductCount = max(totalProductCount - transactionLimit.toInt(), 0);
     }
     notifyListeners();
+  }
+
+  /// Returns the final membership amount limit based on the membership details.
+  /// Checks the membership amount limit from getMembershipAmountLimit(),
+  /// and falls back to
+  /// the number of care plans from the memberShipDetailsResult
+  /// if the limit is null.
+  num getFinalMembershipAmountLimit() {
+    var transactionLimit = getMembershipAmountLimit() ?? 0;
+    if (transactionLimit == 0) {
+      transactionLimit = memberShipDetailsResult?.noOfCarePlans ?? 0;
+    }
+    return transactionLimit;
+  }
+
+  /// Returns the transaction limit for care diet plans from
+  /// the membership benefits details, if available.
+  /// Checks the additionalInfo.benefitType list for the care diet plan benefit
+  /// and returns its transactionLimit field.
+  num? getMembershipAmountLimit() {
+    final benefitCareDietPlans =
+        memberShipDetailsResult?.additionalInfo?.benefitType?.firstWhereOrNull(
+      (element) => element.fieldName == constant.strBenefitCareDietPlans,
+    );
+    return benefitCareDietPlans?.transactionLimit;
   }
 }
