@@ -577,6 +577,8 @@ onInitScheduleNotification(Reminder? reminder) async {
 
     await scheduleReminder(reminder.remindin, reminder, subtract: false);
 
+    await scheduleRepeatEveryReminder(reminder.otherinfo?.postreminderdurationbyminutes, reminder, subtract: false);
+
   } catch (e, stackTrace) {
     CommonUtil().appLogs(message: e, stackTrace: stackTrace);
   }
@@ -600,6 +602,46 @@ scheduleReminder(String? remindDuration, Reminder reminder,
         calculateNotificationId(reminder, subtract);
         await zonedScheduleNotification(
             reminder, notificationId, scheduledDate, false, false);
+      }
+    }
+  } catch (e, stackTrace) {
+    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+  }
+}
+
+scheduleRepeatEveryReminder(String? remindDuration, Reminder reminder,
+    {bool subtract = false}) async {
+  try {
+    print(reminder.otherinfo?.postRemindercheck.toString());
+    print(reminder.otherinfo?.postreminderdurationbyminutes.toString());
+    if (remindDuration != null && (int.tryParse(remindDuration) ?? 0) > 0) {
+      int? remindInInt = int.tryParse(reminder.remindin ?? '0');
+      int? remindDurationInt = int.tryParse(remindDuration ?? '0');
+      if ((remindInInt != null) &&
+          (remindDurationInt != null) &&
+          (remindDurationInt > 0) &&
+          (remindInInt > 0)) {
+        double numberOfReminders = remindDurationInt.toDouble() / remindInInt.toDouble();
+        int numberOfRemindersInt = numberOfReminders.toInt();
+        if (numberOfRemindersInt > 0) {
+          for (int i = 2; i < numberOfRemindersInt; i++) {
+            var eventDateTime = reminder.estart ?? '';
+            var scheduledDate = parseDateTimeFromString(eventDateTime);
+
+            var remindDurationInMinutes = int.parse(remindDuration);
+            scheduledDate = subtract
+                ? scheduledDate
+                    .subtract(Duration(minutes: remindDurationInMinutes))
+                : scheduledDate.add(Duration(minutes: i * remindInInt));
+
+            if (scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
+              print('final schedule date:   '+scheduledDate.toString());
+              final notificationId = toSigned32BitInt(int.tryParse('${i+1}${reminder.eid}') ?? 0);
+              await zonedScheduleNotification(
+                  reminder, notificationId, scheduledDate, false, false);
+            }
+          }
+        }
       }
     }
   } catch (e, stackTrace) {
@@ -737,9 +779,9 @@ tz.TZDateTime parseDateTimeFromString(String dateTimeString) {
 
 // Calculate a notification ID based on the reminder and a subtraction flag.
 int calculateNotificationId(Reminder reminder, bool subtract) {
+  var baseId;
   // Create a base ID by prefixing with '0' or '1' based on the subtraction flag.
-  var baseId = subtract ? '${reminder.eid}00' : '${reminder.eid}11';
-
+  baseId = subtract ? '${reminder.eid}00' : '${reminder.eid}11';
   // Convert the base ID to a signed 32-bit integer using the toSigned32BitInt function.
   return toSigned32BitInt(int.tryParse(baseId) ?? 0);
 }

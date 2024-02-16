@@ -33,6 +33,8 @@ class Reminder {
   // Nullable integer to store the count of times the snooze action is tapped for the notification.
   int? snoozeTapCountTime;
 
+  Otherinfo? otherinfo;
+
 
 
 
@@ -55,7 +57,7 @@ class Reminder {
       this.importance = "0",
       this.ack = "",
       this.snoozeTime = '',
-      this.ack_local = "",this.dosemeal,this.notificationListId,this.redirectTo,this.snoozeTapCountTime});
+      this.ack_local = "",this.dosemeal,this.notificationListId,this.redirectTo,this.snoozeTapCountTime,this.otherinfo});
 
   Reminder copyWith(
       {String? eid,
@@ -76,7 +78,7 @@ class Reminder {
       int? importance,
       String? ack,
       String? snoozeTime,
-      String? ack_local,String? dosemeal,String? notificationListId,String? redirectTo,int? snoozeTapCountTime,tz.TZDateTime? scheduledDateTime}) {
+      String? ack_local,String? dosemeal,String? notificationListId,String? redirectTo,int? snoozeTapCountTime,tz.TZDateTime? scheduledDateTime,Otherinfo? otherinfo}) {
     return Reminder(
       eid: eid ?? this.eid,
       title: title ?? this.title,
@@ -101,6 +103,7 @@ class Reminder {
       notificationListId: notificationListId ?? this.notificationListId,
       redirectTo: redirectTo ?? this.redirectTo,
       snoozeTapCountTime: snoozeTapCountTime ?? this.snoozeTapCountTime,
+      otherinfo: otherinfo ?? this.otherinfo,
     );
   }
 
@@ -130,6 +133,7 @@ class Reminder {
       'notificationListId': notificationListId,
       'redirectTo': redirectTo,
       'snoozeTapCountTime': snoozeTapCountTime,
+      'otherinfo': otherinfo,
     };
   }
 
@@ -158,6 +162,10 @@ class Reminder {
       notificationListId: map['notificationListId'],
       redirectTo: map['redirectTo'],
       snoozeTapCountTime: map['snoozeTapCountTime'],
+      otherinfo:
+      map['otherinfo'] != null && map['otherinfo'].toString().isNotEmpty
+          ? Otherinfo.fromJson(jsonDecode(map['otherinfo'] ?? '{}'))
+          : null,
     );
   }
 
@@ -168,7 +176,7 @@ class Reminder {
 
   @override
   String toString() {
-    return 'Reminder(eid: $eid, title: $title, description: $description, estart: $estart, tplanid: $tplanid, teid_user: $teid_user, activityname: $activityname, uformname: $uformname, remindin: $remindin, remindin_type: $remindin_type, providerid: $providerid, providername: $providername, evDisabled: $evDisabled,ack: $ack,ack_local: $ack_local,dosemeal: $dosemeal,snoozeTime: $snoozeTime,notificationListId: $notificationListId,redirectTo: $redirectTo,snoozeTapCountTime: $snoozeTapCountTime)';
+    return 'Reminder(eid: $eid, title: $title, description: $description, estart: $estart, tplanid: $tplanid, teid_user: $teid_user, activityname: $activityname, uformname: $uformname, remindin: $remindin, remindin_type: $remindin_type, providerid: $providerid, providername: $providername, evDisabled: $evDisabled,ack: $ack,ack_local: $ack_local,dosemeal: $dosemeal,snoozeTime: $snoozeTime,notificationListId: $notificationListId,redirectTo: $redirectTo,snoozeTapCountTime: $snoozeTapCountTime,otherinfo:$otherinfo)';
   }
 
   @override
@@ -225,4 +233,63 @@ class Reminder {
         snoozeTapCountTime.hashCode ^
         evDisabled.hashCode;
   }
+}
+
+class Otherinfo {
+  Otherinfo(
+      {this.needPhoto,
+      this.needAudio,
+      this.needVideo,
+      this.needFile,
+      this.snoozeText,
+      this.introText,
+      this.isAllDayActivity,
+      this.isSkipAcknowledgement,
+      this.postRemindercheck,
+      this.postreminderdurationbyminutes});
+
+  final String? needPhoto;
+  final String? needAudio;
+  final String? needVideo;
+  final String? needFile;
+  final String? snoozeText;
+  final String? introText;
+  final bool? isAllDayActivity;
+  final String? isSkipAcknowledgement;
+  final bool? postRemindercheck;
+  final String? postreminderdurationbyminutes;
+
+  factory Otherinfo.fromJson(Map<String, dynamic> json) => Otherinfo(
+        needPhoto: (json['NeedPhoto'] ?? 0).toString(),
+        needAudio: (json['NeedAudio'] ?? 0).toString(),
+        needVideo: (json['NeedVideo'] ?? 0).toString(),
+        needFile: (json['NeedFile'] ?? 0).toString(),
+        snoozeText: json.containsKey('snoozeText') ? (json['snoozeText']) : '',
+        isAllDayActivity: json.containsKey('isAllDayActivity')
+            ? (json['isAllDayActivity'] ?? false)
+            : false,
+        isSkipAcknowledgement: json.containsKey('isSkipAcknowledgement')
+            ? (json['isSkipAcknowledgement'] ?? 0).toString()
+            : "0",
+        introText: json.containsKey('introtext') ? (json['introtext']) : '',
+        postRemindercheck: json.containsKey('postRemindercheck')
+            ? (json['postRemindercheck'])
+            : false,
+        postreminderdurationbyminutes:
+            json.containsKey('postreminderdurationbyminutes')
+                ? (json['postreminderdurationbyminutes'])
+                : '',
+      );
+
+  Map<String, dynamic> toJson() => {
+        'NeedPhoto': needPhoto,
+        'NeedAudio': needAudio,
+        'NeedVideo': needVideo,
+        'NeedFile': needFile,
+        'snoozeText': snoozeText,
+        'introtext': introText,
+        'isAllDayActivity': isAllDayActivity,
+        'postRemindercheck': postRemindercheck,
+        'postreminderdurationbyminutes': postreminderdurationbyminutes
+      };
 }
