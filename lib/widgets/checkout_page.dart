@@ -461,8 +461,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           },
                                         ),
                                         // Add Checkbox for Membership discount apply
-                                        Visibility(visible: (value.getMembershipAmountLimit() ?? 0) > 0,
-                                        child:
                                         Row(
                                           children: [
                                             SizedBox(
@@ -478,15 +476,25 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                         .getMyPrimaryColor(),
                                                   ),
                                                   checkColor: Colors.white,
-                                                  value:  value.
-                                                      checkedMembershipBenefits,
-                                                  onChanged: (newValue) {
-                                                    setState(() {
-                                                      value.checkedMembershipBenefits =
-                                                          newValue ?? false;
-                                                    });
-                                                    value.updateProductCountBasedOnCondiiton(isNeedRelod: true, firstTym: false);
-                                                  },
+                                                  value: value
+                                                      .checkedMembershipBenefits,
+                                                  onChanged:
+                                                      (value.getFinalMembershipAmountLimit() ??
+                                                                  0) >
+                                                              0
+                                                          ? (newValue) {
+                                                              setState(() {
+                                                                value.checkedMembershipBenefits =
+                                                                    newValue ??
+                                                                        false;
+                                                              });
+                                                              value.updateProductCountBasedOnCondiiton(
+                                                                  isNeedRelod:
+                                                                      true,
+                                                                  firstTym:
+                                                                      false);
+                                                            }
+                                                          : null,
                                                 ),
                                               ),
                                             ),
@@ -497,14 +505,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     getMembershipDiscount(
                                                         value),
                                                     style: TextStyle(
-                                                      color: Colors.black,
+                                                      color: (value.getFinalMembershipAmountLimit() ??
+                                                                  0) >
+                                                              0? Colors.black : Colors.grey,
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                             ),
                                           ],
-                                        ),)
+                                        ),
                                       ],
                                     ),
                                   ),
