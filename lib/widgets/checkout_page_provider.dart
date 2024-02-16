@@ -456,16 +456,23 @@ class CheckoutPageProvider extends ChangeNotifier {
   /// and falls back to
   /// the number of care plans from the memberShipDetailsResult
   /// if the limit is null.
-  num getFinalMembershipAmountLimit() =>
-      getMembershipAmountLimit() ?? memberShipDetailsResult?.noOfCarePlans ?? 0;
+  num getFinalMembershipAmountLimit() {
+    var transactionLimit = getMembershipAmountLimit() ?? 0;
+    if (transactionLimit == 0) {
+      transactionLimit = memberShipDetailsResult?.noOfCarePlans ?? 0;
+    }
+    return transactionLimit;
+  }
 
   /// Returns the transaction limit for care diet plans from
   /// the membership benefits details, if available.
   /// Checks the additionalInfo.benefitType list for the care diet plan benefit
   /// and returns its transactionLimit field.
-  num? getMembershipAmountLimit() => memberShipDetailsResult
-      ?.additionalInfo?.benefitType
-      ?.lastWhere(
-          (element) => element.fieldName == constant.strBenefitCareDietPlans)
-      .transactionLimit;
+  num? getMembershipAmountLimit() {
+    final benefitCareDietPlans =
+        memberShipDetailsResult?.additionalInfo?.benefitType?.firstWhereOrNull(
+      (element) => element.fieldName == constant.strBenefitCareDietPlans,
+    );
+    return benefitCareDietPlans?.transactionLimit;
+  }
 }
