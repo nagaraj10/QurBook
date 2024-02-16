@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -40,45 +39,45 @@ class Reminder {
 
   Reminder(
       {this.eid,
-      this.title,
-      this.description,
-      this.estart,
-      this.tplanid,
-      this.teid_user,
-      this.activityname,
-      this.uformname,
-      this.remindin,
-      this.remindin_type,
-      this.providerid,
-      this.providername,
-      this.remindbefore,
-      this.remindbefore_type,
-      this.evDisabled = false,
-      this.importance = "0",
-      this.ack = "",
-      this.snoozeTime = '',
-      this.ack_local = "",this.dosemeal,this.notificationListId,this.redirectTo,this.snoozeTapCountTime,this.otherinfo});
+        this.title,
+        this.description,
+        this.estart,
+        this.tplanid,
+        this.teid_user,
+        this.activityname,
+        this.uformname,
+        this.remindin,
+        this.remindin_type,
+        this.providerid,
+        this.providername,
+        this.remindbefore,
+        this.remindbefore_type,
+        this.evDisabled = false,
+        this.importance = "0",
+        this.ack = "",
+        this.snoozeTime = '',
+        this.ack_local = "",this.dosemeal,this.notificationListId,this.redirectTo,this.snoozeTapCountTime,this.otherinfo});
 
   Reminder copyWith(
       {String? eid,
-      String? title,
-      String? description,
-      String? estart,
-      String? tplanid,
-      String? teid_user,
-      String? activityname,
-      String? uformname,
-      String? remindin,
-      String? remindin_type,
-      String? remindbefore,
-      String? remindbefore_type,
-      String? providerid,
-      String? providername,
-      bool? evDisabled,
-      int? importance,
-      String? ack,
-      String? snoozeTime,
-      String? ack_local,String? dosemeal,String? notificationListId,String? redirectTo,int? snoozeTapCountTime,tz.TZDateTime? scheduledDateTime,Otherinfo? otherinfo}) {
+        String? title,
+        String? description,
+        String? estart,
+        String? tplanid,
+        String? teid_user,
+        String? activityname,
+        String? uformname,
+        String? remindin,
+        String? remindin_type,
+        String? remindbefore,
+        String? remindbefore_type,
+        String? providerid,
+        String? providername,
+        bool? evDisabled,
+        int? importance,
+        String? ack,
+        String? snoozeTime,
+        String? ack_local,String? dosemeal,String? notificationListId,String? redirectTo,int? snoozeTapCountTime,tz.TZDateTime? scheduledDateTime,Otherinfo? otherinfo}) {
     return Reminder(
       eid: eid ?? this.eid,
       title: title ?? this.title,
@@ -162,17 +161,16 @@ class Reminder {
       notificationListId: map['notificationListId'],
       redirectTo: map['redirectTo'],
       snoozeTapCountTime: map['snoozeTapCountTime'],
-      otherinfo:
-      map['otherinfo'] != null && map['otherinfo'].toString().isNotEmpty
-          ? Otherinfo.fromJson(jsonDecode(map['otherinfo'] ?? '{}'))
-          : null,
+      otherinfo:map['otherinfo'] != null && map['otherinfo'] is String
+          ? Otherinfo.fromJson(jsonDecode(map['otherinfo']))
+          :  Otherinfo.fromJson(map['otherinfo']??'{}'),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Reminder.fromJson(String source) =>
-      Reminder.fromMap(json.decode(source));
+  factory Reminder.fromJson(dynamic source) =>
+      Reminder.fromMap(jsonDecode(source));
 
   @override
   String toString() {
@@ -212,41 +210,41 @@ class Reminder {
   @override
   int get hashCode {
     return eid.hashCode ^
-        title.hashCode ^
-        description.hashCode ^
-        estart.hashCode ^
-        tplanid.hashCode ^
-        teid_user.hashCode ^
-        activityname.hashCode ^
-        uformname.hashCode ^
-        remindin.hashCode ^
-        remindin_type.hashCode ^
-        providerid.hashCode ^
-        providername.hashCode ^
-        importance.hashCode ^
-        ack.hashCode ^
-        snoozeTime.hashCode ^
-        ack_local.hashCode ^
-        dosemeal.hashCode ^
-        notificationListId.hashCode ^
-        redirectTo.hashCode ^
-        snoozeTapCountTime.hashCode ^
-        evDisabled.hashCode;
+    title.hashCode ^
+    description.hashCode ^
+    estart.hashCode ^
+    tplanid.hashCode ^
+    teid_user.hashCode ^
+    activityname.hashCode ^
+    uformname.hashCode ^
+    remindin.hashCode ^
+    remindin_type.hashCode ^
+    providerid.hashCode ^
+    providername.hashCode ^
+    importance.hashCode ^
+    ack.hashCode ^
+    snoozeTime.hashCode ^
+    ack_local.hashCode ^
+    dosemeal.hashCode ^
+    notificationListId.hashCode ^
+    redirectTo.hashCode ^
+    snoozeTapCountTime.hashCode ^
+    evDisabled.hashCode;
   }
 }
-
 class Otherinfo {
-  Otherinfo(
-      {this.needPhoto,
-      this.needAudio,
-      this.needVideo,
-      this.needFile,
-      this.snoozeText,
-      this.introText,
-      this.isAllDayActivity,
-      this.isSkipAcknowledgement,
-      this.postRemindercheck,
-      this.postreminderdurationbyminutes});
+  Otherinfo({
+    this.needPhoto,
+    this.needAudio,
+    this.needVideo,
+    this.needFile,
+    this.snoozeText,
+    this.introText,
+    this.isAllDayActivity,
+    this.isSkipAcknowledgement,
+    this.postRemindercheck,
+    this.postreminderdurationbyminutes,
+  });
 
   final String? needPhoto;
   final String? needAudio;
@@ -259,37 +257,33 @@ class Otherinfo {
   final bool? postRemindercheck;
   final String? postreminderdurationbyminutes;
 
-  factory Otherinfo.fromJson(Map<String, dynamic> json) => Otherinfo(
-        needPhoto: (json['NeedPhoto'] ?? 0).toString(),
-        needAudio: (json['NeedAudio'] ?? 0).toString(),
-        needVideo: (json['NeedVideo'] ?? 0).toString(),
-        needFile: (json['NeedFile'] ?? 0).toString(),
-        snoozeText: json.containsKey('snoozeText') ? (json['snoozeText']) : '',
-        isAllDayActivity: json.containsKey('isAllDayActivity')
-            ? (json['isAllDayActivity'] ?? false)
-            : false,
-        isSkipAcknowledgement: json.containsKey('isSkipAcknowledgement')
-            ? (json['isSkipAcknowledgement'] ?? 0).toString()
-            : "0",
-        introText: json.containsKey('introtext') ? (json['introtext']) : '',
-        postRemindercheck: json.containsKey('postRemindercheck')
-            ? (json['postRemindercheck'])
-            : false,
-        postreminderdurationbyminutes:
-            json.containsKey('postreminderdurationbyminutes')
-                ? (json['postreminderdurationbyminutes'])
-                : '',
-      );
+  factory Otherinfo.fromJson(Map<String, dynamic> json) {
+    return Otherinfo(
+      needPhoto: json['NeedPhoto'] ?? '0',
+      needAudio: json['NeedAudio'] ?? '0',
+      needVideo: json['NeedVideo'] ?? '0',
+      needFile: json['NeedFile'] ?? '0',
+      snoozeText: json['snoozeText'] ?? '',
+      introText: json['introtext'] ?? '',
+      isAllDayActivity: json['isAllDayActivity'] ?? false,
+      isSkipAcknowledgement: json['isSkipAcknowledgement'] ?? '0',
+      postRemindercheck: json['postRemindercheck'] ?? false,
+      postreminderdurationbyminutes: json['postreminderdurationbyminutes'] ?? '',
+    );
+  }
 
-  Map<String, dynamic> toJson() => {
-        'NeedPhoto': needPhoto,
-        'NeedAudio': needAudio,
-        'NeedVideo': needVideo,
-        'NeedFile': needFile,
-        'snoozeText': snoozeText,
-        'introtext': introText,
-        'isAllDayActivity': isAllDayActivity,
-        'postRemindercheck': postRemindercheck,
-        'postreminderdurationbyminutes': postreminderdurationbyminutes
-      };
+  Map<String, dynamic> toJson() {
+    return {
+      'NeedPhoto': needPhoto,
+      'NeedAudio': needAudio,
+      'NeedVideo': needVideo,
+      'NeedFile': needFile,
+      'snoozeText': snoozeText,
+      'introtext': introText,
+      'isAllDayActivity': isAllDayActivity,
+      'isSkipAcknowledgement': isSkipAcknowledgement,
+      'postRemindercheck': postRemindercheck,
+      'postreminderdurationbyminutes': postreminderdurationbyminutes,
+    };
+  }
 }

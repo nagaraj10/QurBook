@@ -286,27 +286,29 @@ class QurPlanReminders {
       }
 
       // Cancel reminder notifications if afterInt everyRepeat
-      var everyRepeat = int.tryParse(foundTheMatched.remindin!);
-      if (everyRepeat != null && everyRepeat > 0) {
-        if (foundTheMatched.otherinfo?.postreminderdurationbyminutes != null &&
-            (int.tryParse(foundTheMatched.otherinfo?.postreminderdurationbyminutes?? '0') ?? 0) > 0) {
-          int? remindInInt = int.tryParse(foundTheMatched.remindin ?? '0');
-          int? remindDurationInt =
-              int.tryParse(foundTheMatched.otherinfo?.postreminderdurationbyminutes ?? '0');
-          if ((remindInInt != null) &&
-              (remindDurationInt != null) &&
-              (remindDurationInt > 0) &&
-              (remindInInt > 0)) {
-            double numberOfReminders =
-                remindDurationInt.toDouble() / remindInInt.toDouble();
-            int numberOfRemindersInt = numberOfReminders.toInt();
-            if (numberOfRemindersInt > 0) {
-              for (int i = 2; i < numberOfRemindersInt; i++) {
-                final notificationId = toSigned32BitInt(
-                    int.tryParse('${i + 1}${foundTheMatched.eid}') ?? 0);
-                await localNotificationsPlugin.cancel(notificationId);
-                await sheelaAIController
-                    .clearScheduledTime(notificationId.toString());
+      if (foundTheMatched.otherinfo?.postRemindercheck ?? false) {
+        var everyRepeat = int.tryParse(foundTheMatched.remindin!);
+        if (everyRepeat != null && everyRepeat > 0) {
+          if (foundTheMatched.otherinfo?.postreminderdurationbyminutes != null &&
+              (int.tryParse(foundTheMatched.otherinfo?.postreminderdurationbyminutes?? '0') ?? 0) > 0) {
+            int? remindInInt = int.tryParse(foundTheMatched.remindin ?? '0');
+            int? remindDurationInt =
+            int.tryParse(foundTheMatched.otherinfo?.postreminderdurationbyminutes ?? '0');
+            if ((remindInInt != null) &&
+                (remindDurationInt != null) &&
+                (remindDurationInt > 0) &&
+                (remindInInt > 0)) {
+              double numberOfReminders =
+                  remindDurationInt.toDouble() / remindInInt.toDouble();
+              int numberOfRemindersInt = numberOfReminders.toInt();
+              if (numberOfRemindersInt > 0) {
+                for (int i = 0; i < numberOfRemindersInt-1; i++) {
+                  final notificationId = toSigned32BitInt(
+                      int.tryParse('${i + 1}${foundTheMatched.eid}') ?? 0);
+                  await localNotificationsPlugin.cancel(notificationId);
+                  await sheelaAIController
+                      .clearScheduledTime(notificationId.toString());
+                }
               }
             }
           }

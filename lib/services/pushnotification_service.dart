@@ -577,8 +577,11 @@ onInitScheduleNotification(Reminder? reminder) async {
 
     await scheduleReminder(reminder.remindin, reminder, subtract: false);
 
-    await scheduleRepeatEveryReminder(reminder.otherinfo?.postreminderdurationbyminutes, reminder, subtract: false);
-
+    if (reminder.otherinfo?.postRemindercheck ?? false) {
+      await scheduleRepeatEveryReminder(
+          reminder.otherinfo?.postreminderdurationbyminutes, reminder,
+          subtract: false);
+    }
   } catch (e, stackTrace) {
     CommonUtil().appLogs(message: e, stackTrace: stackTrace);
   }
@@ -612,8 +615,6 @@ scheduleReminder(String? remindDuration, Reminder reminder,
 scheduleRepeatEveryReminder(String? remindDuration, Reminder reminder,
     {bool subtract = false}) async {
   try {
-    print(reminder.otherinfo?.postRemindercheck.toString());
-    print(reminder.otherinfo?.postreminderdurationbyminutes.toString());
     if (remindDuration != null && (int.tryParse(remindDuration) ?? 0) > 0) {
       int? remindInInt = int.tryParse(reminder.remindin ?? '0');
       int? remindDurationInt = int.tryParse(remindDuration ?? '0');
@@ -624,21 +625,21 @@ scheduleRepeatEveryReminder(String? remindDuration, Reminder reminder,
         double numberOfReminders = remindDurationInt.toDouble() / remindInInt.toDouble();
         int numberOfRemindersInt = numberOfReminders.toInt();
         if (numberOfRemindersInt > 0) {
-          for (int i = 2; i < numberOfRemindersInt; i++) {
+          for (int i = 0; i < numberOfRemindersInt-1; i++) {
             var eventDateTime = reminder.estart ?? '';
             var scheduledDate = parseDateTimeFromString(eventDateTime);
-
+            var avoidActualReminder = scheduledDate.add(Duration(minutes: remindInInt));
+            var avoidPostReminder = avoidActualReminder.add(Duration(minutes: remindInInt));
             var remindDurationInMinutes = int.parse(remindDuration);
-            scheduledDate = subtract
-                ? scheduledDate
+            avoidPostReminder = subtract
+                ? avoidPostReminder
                     .subtract(Duration(minutes: remindDurationInMinutes))
-                : scheduledDate.add(Duration(minutes: i * remindInInt));
+                : avoidPostReminder.add(Duration(minutes: i * remindInInt));
 
-            if (scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
-              print('final schedule date:   '+scheduledDate.toString());
+            if (avoidPostReminder.isAfter(tz.TZDateTime.now(tz.local))) {
               final notificationId = toSigned32BitInt(int.tryParse('${i+1}${reminder.eid}') ?? 0);
               await zonedScheduleNotification(
-                  reminder, notificationId, scheduledDate, false, false);
+                  reminder, notificationId, avoidPostReminder, false, false);
             }
           }
         }
