@@ -455,4 +455,22 @@ class CheckoutPageProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  /// Returns the final membership amount limit based on the membership details.
+  /// Checks the membership amount limit from getMembershipAmountLimit(),
+  /// and falls back to
+  /// the number of care plans from the memberShipDetailsResult
+  /// if the limit is null.
+  num getFinalMembershipAmountLimit() =>
+      getMembershipAmountLimit() ?? memberShipDetailsResult?.noOfCarePlans ?? 0;
+
+  /// Returns the transaction limit for care diet plans from
+  /// the membership benefits details, if available.
+  /// Checks the additionalInfo.benefitType list for the care diet plan benefit
+  /// and returns its transactionLimit field.
+  num? getMembershipAmountLimit() => memberShipDetailsResult
+      ?.additionalInfo?.benefitType
+      ?.lastWhere(
+          (element) => element.fieldName == constant.strBenefitCareDietPlans)
+      .transactionLimit;
 }
