@@ -1397,15 +1397,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
     });
   }
 
-  /// Returns a formatted membership discount title string.
+  /// Returns a string with the membership discount title and optional
+  /// max discount amount.
   ///
-  /// Concatenates a base title with
-  /// the max membership amount limit if available.
-  /// Used to show membership discount info to the user.
+  /// The base title comes from a variable, and if there is a max membership
+  /// discount amount configured, it is appended to the title string.
+  ///
+  /// This allows showing the membership discount title and info to the user.
   String getMembershipDiscount(CheckoutPageProvider value) {
     final maxMembershipAmountLimit = value.getMembershipAmountLimit();
     var basedtitle = variable.strMembershipDiscount;
-    if (maxMembershipAmountLimit != null) {
+    if (maxMembershipAmountLimit != null && maxMembershipAmountLimit > 0) {
       basedtitle +=
           ' (Max. ${CommonUtil.formatAmount(maxMembershipAmountLimit)})';
     }
