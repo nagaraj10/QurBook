@@ -71,6 +71,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         cartId: widget.cartId,
         firstTym: true);
     Provider.of<CheckoutPageProvider>(context, listen: false).getMemberShip();
+    Provider.of<CheckoutPageProvider>(context, listen: false).checkedMembershipBenefits = false;
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     Provider.of<CheckoutPageProvider>(context, listen: false)
         .loader(false, isNeedRelod: false);
@@ -475,15 +476,25 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                         .getMyPrimaryColor(),
                                                   ),
                                                   checkColor: Colors.white,
-                                                  value:  value.
-                                                      checkedMembershipBenefits,
-                                                  onChanged: (newValue) {
-                                                    setState(() {
-                                                      value.checkedMembershipBenefits =
-                                                          newValue ?? false;
-                                                    });
-                                                    value.updateProductCountBasedOnCondiiton(isNeedRelod: true, firstTym: false);
-                                                  },
+                                                  value: value
+                                                      .checkedMembershipBenefits,
+                                                  onChanged:
+                                                      (value.getFinalMembershipAmountLimit() ??
+                                                                  0) >
+                                                              0
+                                                          ? (newValue) {
+                                                              setState(() {
+                                                                value.checkedMembershipBenefits =
+                                                                    newValue ??
+                                                                        false;
+                                                              });
+                                                              value.updateProductCountBasedOnCondiiton(
+                                                                  isNeedRelod:
+                                                                      true,
+                                                                  firstTym:
+                                                                      false);
+                                                            }
+                                                          : null,
                                                 ),
                                               ),
                                             ),
@@ -494,14 +505,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     getMembershipDiscount(
                                                         value),
                                                     style: TextStyle(
-                                                      color: Colors.black,
+                                                      color: (value.getFinalMembershipAmountLimit() ??
+                                                                  0) >
+                                                              0? Colors.black : Colors.grey,
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                             ),
                                           ],
-                                        )
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -558,7 +571,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         /// if Apply Membership Benefits then transactionlimit amount Deduct from subtotal
                                         Visibility(
                                           visible:
-                                              value.checkedMembershipBenefits,
+                                              value.checkedMembershipBenefits && (value.getMembershipAmountLimit() ?? 0) > 0,
                                           child: const Divider(),
                                         ),
                                         Visibility(
@@ -782,7 +795,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     };
     /// Add `walletDeductionAmount` parameter only if patient apply Membership benefits checked
     if (value.checkedMembershipBenefits) {
-      final maxMembershipAmountLimit = getMembershipAmountLimit(value);
+      final maxMembershipAmountLimit = value.getFinalMembershipAmountLimit();
 
     final finalAmount = min(maxMembershipAmountLimit,
         value.totalProductCount);
@@ -1321,7 +1334,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     };
     /// Add `walletDeductionAmount` parameter only if patient apply Membership benefits checked
     if (value.checkedMembershipBenefits) {
-      final maxMembershipAmountLimit = getMembershipAmountLimit(value);
+      final maxMembershipAmountLimit = value.getFinalMembershipAmountLimit();
       final finalAmount =
           min(maxMembershipAmountLimit, value.totalProductCount);
       body['walletDeductionAmount'] = finalAmount;
@@ -1397,35 +1410,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
     });
   }
 
-  /// Returns the membership discount title string, appending the
-  /// maximum membership discount amount if applicable.
+  /// Returns a string with the membership discount title and optional
+  /// max discount amount.
   ///
-  /// Parameters:
-  /// - value: The CheckoutPageProvider value.
+  /// The base title comes from a variable, and if there is a max membership
+  /// discount amount configured, it is appended to the title string.
   ///
-  /// Returns: The membership discount title string.
+  /// This allows showing the membership discount title and info to the user.
   String getMembershipDiscount(CheckoutPageProvider value) {
-    final maxMembershipAmountLimit = getMembershipAmountLimit(value);
+    final maxMembershipAmountLimit = value.getMembershipAmountLimit();
     var basedtitle = variable.strMembershipDiscount;
-    if (maxMembershipAmountLimit > 0) {
+    if (maxMembershipAmountLimit != null && maxMembershipAmountLimit > 0) {
       basedtitle +=
           ' (Max. ${CommonUtil.formatAmount(maxMembershipAmountLimit)})';
     }
     return basedtitle;
-  }
-
-  /// Returns the maximum membership discount amount limit based on the
-  /// membership details in the provided CheckoutPageProvider value.
-  ///
-  /// Checks the membership additional info for the 'benefitType' field
-  /// with name 'benefitCareDietPlans', and returns its 'transactionLimit'
-  /// value if available. Otherwise returns 0.
-  num getMembershipAmountLimit(CheckoutPageProvider value) {
-    return value.memberShipDetailsResult?.additionalInfo?.benefitType
-            ?.lastWhere((element) =>
-                element.fieldName == variable.strBenefitCareDietPlans)
-            .transactionLimit ??
-        0;
   }
 
   /// Returns the membership discount title string with currency formatting
