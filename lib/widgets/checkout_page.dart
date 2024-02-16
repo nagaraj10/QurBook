@@ -1414,20 +1414,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return basedtitle;
   }
 
-  /// Returns the maximum membership discount amount limit based on the
-  /// membership details in the provided CheckoutPageProvider value.
-  ///
-  /// Checks the membership additional info for the 'benefitType' field
-  /// with name 'benefitCareDietPlans', and returns its 'transactionLimit'
-  /// value if available. Otherwise returns 0.
-  num getMembershipAmountLimit(CheckoutPageProvider value) {
-    return value.memberShipDetailsResult?.additionalInfo?.benefitType
-            ?.lastWhere((element) =>
-                element.fieldName == variable.strBenefitCareDietPlans)
-            .transactionLimit ??
-        0;
-  }
-
   /// Returns the membership discount title string with currency formatting
   /// applied, based on the subTotalProductCount and totalProductCount values
   /// from the provided CheckoutPageProvider.
