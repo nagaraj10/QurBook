@@ -55,6 +55,8 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
   // Function to open gallery and select image
   Future<void> _openGallery() async {
     isGalleryOpen = true;
+    _timer.cancel();
+    setState(() {});
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -62,17 +64,19 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
     } else {
       _secondsRemaining = 30;
       isGalleryOpen = false;
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (_secondsRemaining > 0) {
+          _secondsRemaining--; // Decrement remaining seconds
+        } else {
+          _timer.cancel(); // Cancel the timer when time is up
+          _takePicture(); // Take the picture when time is up
+        }
+        setState(() {});
+      });
     }
-    setState(() {});
   }
 
-  // Function to toggle flash mode
-  void _toggleFlash() {
-    setState(() {
-      flashMode = flashMode == FlashMode.off ? FlashMode.always : FlashMode.off;
-      controller.setFlashMode(flashMode);
-    });
-  }
+
 
   @override
   void dispose() {
@@ -85,7 +89,6 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
   Future<void> _takePicture() async {
     try {
       final image = await controller.takePicture(); // Capture the picture
-
       imageFile = image; // Set the captured image file
       setState(() {});
       await NativeShutterSound.play(); // Play shutter sound
@@ -178,7 +181,7 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
           )
               : CameraPreview(controller), // Show camera preview if no image is captured
         ),
-        if (imageFile == null && !isGalleryOpen) // Show countdown only if no image is captured
+        if (imageFile == null && !isGalleryOpen && _timer.isActive) // Show countdown only if no image is captured
           Positioned(
             top: 50,
             left: 0,

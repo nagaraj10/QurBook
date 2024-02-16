@@ -1541,50 +1541,51 @@ makeApiRequest is used to update the data with latest data
 
   // A function to show a dialog with options to choose from Camera or Gallery
   Future<void> showCameraGalleryDialog(String? btnTitle, String? requestFileType) {
+    return imgFromCamera(strGallery, btnTitle);
     // Show a dialog using the showDialog function
-    return showDialog(
-      context: Get.context!, // Use Get.context to get the current context
-      builder: (context) {
-        // Return an AlertDialog with title and content
-        return AlertDialog(
-          title: Text('Choose an action'), // Set the title of the dialog
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                // Gallery option with GestureDetector
-                GestureDetector(
-                  onTap: () {
-                    getOpenGallery(requestFileType == strImage ? strGallery : strVideo, btnTitle, requestFileType); // Handle action when Gallery is tapped
-                    Navigator.of(context).pop(); // Close the dialog
-                  },
-                  child: Text(requestFileType == strImage ? Gallery : strSelectVideo), // Display "Gallery" text
-                ),
-                Padding(padding: EdgeInsets.all(8)),
-                // Add padding between options
-                // Camera option with GestureDetector
-                GestureDetector(
-                  onTap: () {
-                    if (requestFileType == strImage) {
-                      imgFromCamera(strGallery, btnTitle,context); // Handle action when Camera is tapped
-
-
-                    } else {
-                      openVideoCamera(btnTitle, requestFileType);
-                    }
-                    Navigator.of(context).pop(); // Close the dialog
-                  },
-                  child: Text(requestFileType == strImage ? Camera : strRecordVideo), // Display "Camera" text
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+    // return showDialog(
+    //   context: Get.context!, // Use Get.context to get the current context
+    //   builder: (context) {
+    //     // Return an AlertDialog with title and content
+    //     return AlertDialog(
+    //       title: Text('Choose an action'), // Set the title of the dialog
+    //       content: SingleChildScrollView(
+    //         child: ListBody(
+    //           children: <Widget>[
+    //             // Gallery option with GestureDetector
+    //             GestureDetector(
+    //               onTap: () {
+    //                 getOpenGallery(requestFileType == strImage ? strGallery : strVideo, btnTitle, requestFileType); // Handle action when Gallery is tapped
+    //                 Navigator.of(context).pop(); // Close the dialog
+    //               },
+    //               child: Text(requestFileType == strImage ? Gallery : strSelectVideo), // Display "Gallery" text
+    //             ),
+    //             Padding(padding: EdgeInsets.all(8)),
+    //             // Add padding between options
+    //             // Camera option with GestureDetector
+    //             GestureDetector(
+    //               onTap: () {
+    //                 if (requestFileType == strImage) {
+    //                   imgFromCamera(strGallery, btnTitle,context); // Handle action when Camera is tapped
+    //
+    //
+    //                 } else {
+    //                   openVideoCamera(btnTitle, requestFileType);
+    //                 }
+    //                 Navigator.of(context).pop(); // Close the dialog
+    //               },
+    //               child: Text(requestFileType == strImage ? Camera : strRecordVideo), // Display "Camera" text
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     );
+    //   },
+    // );
   }
 
   // Function to capture an image from the camera and trigger image preview
-  imgFromCamera(String fromPath, String? btnTitle,BuildContext context) async {
+  imgFromCamera(String fromPath, String? btnTitle) async {
     late File _image; // Declare a variable to store the captured image
     //
     // var picker = ImagePicker(); // Create an instance of ImagePicker
@@ -1599,15 +1600,10 @@ makeApiRequest is used to update the data with latest data
     //       selectedImagePath: _image.path, // Path to the captured image
     //       requestFileType: strImage);
     List<CameraDescription> cameras = await availableCameras();
-    Navigator.of(context).pop();
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-        builder: (context) {
-      return CameraPreviewScreen(
-        cameras: cameras,
-      );
-    })).then((value) {
+
+    Get.to( CameraPreviewScreen(
+      cameras: cameras,
+    ))?.then((value) {
       if(value!=null){
         _image = File(value.path); // Create a File object from the captured image path
 
@@ -1618,6 +1614,24 @@ makeApiRequest is used to update the data with latest data
             requestFileType: strImage);
       }
     });
+    // Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //     builder: (context) {
+    //   return CameraPreviewScreen(
+    //     cameras: cameras,
+    //   );
+    // })).then((value) {
+    //   if(value!=null){
+    //     _image = File(value.path); // Create a File object from the captured image path
+    //
+    //     // Trigger the image preview thumbnail with the captured image path
+    //     sheelaFileStaticConversation(
+    //         btnTitle: btnTitle, // Optional button title
+    //         selectedImagePath: _image.path, // Path to the captured image
+    //         requestFileType: strImage);
+    //   }
+    // });
 
   }
 
