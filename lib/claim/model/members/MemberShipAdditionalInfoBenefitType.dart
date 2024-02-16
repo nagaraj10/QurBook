@@ -23,7 +23,7 @@ class MemberShipAdditionalInfoBenefitType {
         code: json['code'],
         name: json['name'],
         fieldName: json['fieldName'],
-        transactionLimit: json['transactionLimit'].toString().parseNum() ?? 0,
+        transactionLimit: json['transactionLimit'].toString().parseNum(),
       );
 
   Map<String, dynamic> toJson() => {
