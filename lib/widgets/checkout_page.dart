@@ -71,6 +71,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         cartId: widget.cartId,
         firstTym: true);
     Provider.of<CheckoutPageProvider>(context, listen: false).getMemberShip();
+    Provider.of<CheckoutPageProvider>(context, listen: false).checkedMembershipBenefits = false;
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     Provider.of<CheckoutPageProvider>(context, listen: false)
         .loader(false, isNeedRelod: false);
@@ -460,6 +461,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           },
                                         ),
                                         // Add Checkbox for Membership discount apply
+                                        Visibility(visible: (value.getMembershipAmountLimit() ?? 0) > 0,
+                                        child:
                                         Row(
                                           children: [
                                             SizedBox(
@@ -501,7 +504,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               ),
                                             ),
                                           ],
-                                        )
+                                        ),)
                                       ],
                                     ),
                                   ),
@@ -558,7 +561,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         /// if Apply Membership Benefits then transactionlimit amount Deduct from subtotal
                                         Visibility(
                                           visible:
-                                              value.checkedMembershipBenefits,
+                                              value.checkedMembershipBenefits && (value.getMembershipAmountLimit() ?? 0) > 0,
                                           child: const Divider(),
                                         ),
                                         Visibility(
