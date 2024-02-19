@@ -284,6 +284,50 @@ class QurPlanReminders {
         await sheelaAIController
             .clearScheduledTime(afterNotificationId.toString());
       }
+
+      // Cancel reminder notifications if postRemindercheck is true in otherinfo
+      if (foundTheMatched.otherinfo?.postRemindercheck ?? false) {
+        // Extract the repeat interval from remindin field of foundTheMatched
+        var everyRepeat = int.tryParse(foundTheMatched.remindin!);
+
+        // Check if everyRepeat is a positive integer
+        if (everyRepeat != null && everyRepeat > 0) {
+
+          // Check if postreminderdurationbyminutes is not null and a positive integer
+          if (foundTheMatched.otherinfo?.postreminderdurationbyminutes != null &&
+              (int.tryParse(foundTheMatched.otherinfo?.postreminderdurationbyminutes ?? '0') ?? 0) > 0) {
+
+            // Parse remindIn and remindDuration to integers
+            int? remindInInt = int.tryParse(foundTheMatched.remindin ?? '0');
+            int? remindDurationInt = int.tryParse(foundTheMatched.otherinfo?.postreminderdurationbyminutes ?? '0');
+
+            // Check if parsed values are not null and greater than 0
+            if ((remindInInt != null) &&
+                (remindDurationInt != null) &&
+                (remindDurationInt > 0) &&
+                (remindInInt > 0)) {
+
+              // Calculate the number of reminders to cancel
+              double numberOfReminders = remindDurationInt.toDouble() / remindInInt.toDouble();
+              int numberOfRemindersInt = numberOfReminders.toInt();
+
+              // Check if there are more than 0 reminders to cancel
+              if (numberOfRemindersInt > 0) {
+
+                // Loop through the reminders to cancel
+                for (int i = 0; i < numberOfRemindersInt-1; i++) {
+                  // Generate a unique notification ID based on iteration and reminder ID
+                  final notificationId = toSigned32BitInt(int.tryParse('${i + 1}${foundTheMatched.eid}') ?? 0);
+
+                  // Cancel the local notification and clear scheduled time
+                  await localNotificationsPlugin.cancel(notificationId);
+                  await sheelaAIController.clearScheduledTime(notificationId.toString());
+                }
+              }
+            }
+          }
+        }
+      }
     } catch (e, stackTrace) {
       // Log any errors and their stack traces
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
