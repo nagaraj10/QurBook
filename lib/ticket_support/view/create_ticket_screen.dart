@@ -498,49 +498,45 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     tckConstants.tckTypeDateTime) {
               widgetForColumn.add(Container(
                 margin: EdgeInsets.only(top: 20.h),
-                child: getIconTextField(
-                  icon: _getIconType(field),
-                  fieldName: CommonUtil().getFieldName(field.name),
-                  displayName: field.displayName,
-                  isRequired: field.isRequired,
-                  readonly: true,
-                  onClicked: () {
+                child: GestureDetector(
+                  onTap: () {
                     _selectDateTime(
                         context, CommonUtil().getFieldName(field.name));
                   },
+                  child: getIconTextField(
+                      icon: _getIconType(field),
+                      fieldName: CommonUtil().getFieldName(field.name),
+                      displayName: field.displayName,
+                      isRequired: field.isRequired,
+                      readonly: true),
                 ),
               ));
             } else if (field.name.toString().toLowerCase() ==
                 tckConstants.tckChooseDoctor) {
               widgetForColumn.add(Container(
                 margin: EdgeInsets.only(top: 30.h),
-                child: getIconTextField(
-                  icon: _getIconType(field),
-                  fieldName: CommonUtil().getFieldName(field.name),
-                  displayName: field.displayName,
-                  isRequired: field.isRequired,
-                  additionalText: controller.docSpecialization.value,
-                  readonly: true,
-                  onClicked: () {
+                child: GestureDetector(
+                  onTap: () {
                     moveToSearchScreen(
                         context, CommonConstants.keyDoctor, field,
                         setState: setState);
                   },
+                  child: getIconTextField(
+                      icon: _getIconType(field),
+                      fieldName: CommonUtil().getFieldName(field.name),
+                      displayName: field.displayName,
+                      isRequired: field.isRequired,
+                      additionalText: controller.docSpecialization.value,
+                      readonly: true),
                 ),
               ));
             } else if (field.name.toString().toLowerCase() ==
                 tckConstants.str_preferred_lab) {
               widgetForColumn.add(Container(
                 margin: EdgeInsets.only(top: 30.h),
-                child: getIconTextField(
-                  icon: _getIconType(field),
-                  fieldName: CommonUtil().getFieldName(field.name),
-                  displayName: field.displayName,
-                  isRequired: field.isRequired,
-                  additionalText: controller.selLabAddress.value,
-                  readonly: true,
-                  onClicked: () async {
-                    var serviceEnabled = await CommonUtil().checkGPSIsOn();
+                child: GestureDetector(
+                  onTap: () async {
+                    bool serviceEnabled = await CommonUtil().checkGPSIsOn();
                     if (!serviceEnabled) {
                       FlutterToast().getToast(
                           Constants.strTurnOnGPS,
@@ -551,6 +547,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     moveToSearchScreen(context, CommonConstants.keyLabs, field,
                         setState: setState);
                   },
+                  child: getIconTextField(
+                      icon: _getIconType(field),
+                      fieldName: CommonUtil().getFieldName(field.name),
+                      displayName: field.displayName,
+                      isRequired: field.isRequired,
+                      additionalText: controller.selLabAddress.value,
+                      readonly: true),
                 ),
               ));
             } else if (field.name.toString().toLowerCase() ==
@@ -3059,15 +3062,15 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   /// isPincode An optional parameter to indicate whether the widget is
   /// specifically intended for PIN code input. Defaults to `false`.
   Widget getIconTextField(
-          {String? icon,
-          String? fieldName,
-          String? displayName,
-          bool? isRequired,
-          bool? isPincode,
-          bool? readonly,
-          TextEditingController? controller,
-          bool? isTextArea,
-          String? additionalText,VoidCallback? onClicked}) =>
+      {String? icon,
+        String? fieldName,
+        String? displayName,
+        bool? isRequired,
+        bool? isPincode,
+        bool? readonly,
+        TextEditingController? controller,
+        bool? isTextArea,
+        String? additionalText}) =>
       Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -3078,7 +3081,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 icon ?? '',
                 width: 30.h,
                 height: 30.h,
-                fit: BoxFit.fill,
+                fit: BoxFit.cover,
                 color: Color(CommonUtil().getMyPrimaryColor()),
               ),
             ),
@@ -3094,75 +3097,72 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             ),
           ],
           Expanded(
-            child: GestureDetector(
-              onTap: onClicked != null ? onClicked : null, // Check if onClicked is not null, if not null, assign onClicked as onTap callback, otherwise, assign null
-              child: AbsorbPointer(
-                absorbing: readonly ?? false,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      textCapitalization: TextCapitalization.sentences,
-                      controller: controller ?? textEditingControllers[fieldName],
-                      keyboardType: isTextArea == true
-                          ? TextInputType.multiline
-                          : isPincode ?? false
-                              ? TextInputType.number
-                              : null,
-                      maxLines: isTextArea == true ? 8 : null,
-                      decoration: isTextArea == true
-                          ? InputDecoration(
-                              hintText: isRequired == true
-                                  ? '$displayName *'
-                                  : displayName,
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8.0)),
-                                borderSide:
-                                    BorderSide(width: 0, color: Colors.white),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(
-                                  color: Color(CommonUtil().getMyPrimaryColor()),
-                                ),
-                              ),
-                            )
-                          : InputDecoration(
-                              labelText: isRequired == true
-                                  ? '${displayName} *'
-                                  : displayName,
-                              contentPadding:
-                                  EdgeInsets.zero, // Remove padding here
-                              border: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(CommonUtil().getMyPrimaryColor()),
-                                ),
-                              ),
-                            ),
+            child: AbsorbPointer(
+              absorbing: readonly ?? false,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFormField(
+                    textCapitalization: TextCapitalization.sentences,
+                    controller: controller ?? textEditingControllers[fieldName],
+                    keyboardType: isTextArea == true
+                        ? TextInputType.multiline
+                        : isPincode ?? false
+                        ? TextInputType.number
+                        : null,
+                    maxLines: isTextArea == true ? 8 : null,
+                    decoration: isTextArea == true
+                        ? InputDecoration(
+                      hintText: isRequired == true
+                          ? '$displayName *'
+                          : displayName,
+                      border: OutlineInputBorder(
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(8.0)),
+                        borderSide:
+                        BorderSide(width: 0, color: Colors.white),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                        ),
+                      ),
+                    )
+                        : InputDecoration(
+                      labelText: isRequired == true
+                          ? '${displayName} *'
+                          : displayName,
+                      contentPadding:
+                      EdgeInsets.zero, // Remove padding here
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                        ),
+                      ),
                     ),
-                    if (additionalText != null && additionalText.isNotEmpty)
-                      Text(
-                        additionalText.toString(),
-                        style: TextStyle(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
-                            fontSize: 10.sp),
-                        softWrap: false,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      )
-                  ],
-                ),
+                  ),
+                  if (additionalText != null && additionalText.isNotEmpty)
+                    Text(
+                      additionalText.toString(),
+                      style: TextStyle(
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          fontSize: 10.sp),
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    )
+                ],
               ),
             ),
           )
