@@ -67,7 +67,6 @@ class Ticket {
   String? sId;
   Subscribers? owner;
   String? subject;
-  // Group? group;
   Type? type;
   Priorities? priority;
   String? issue;
@@ -92,7 +91,6 @@ class Ticket {
       this.sId,
       this.owner,
       this.subject,
-      //this.group,
       this.type,
       this.priority,
       this.issue,
@@ -129,7 +127,6 @@ class Ticket {
       owner =
           json['owner'] != null ? Subscribers.fromJson(json['owner']) : null;
       subject = json['subject'];
-      //group = json['group'] != null ? Group.fromJson(json['group']) : null;
       type = json['type'] != null ? Type.fromJson(json['type']) : null;
       priority = json['priority'] != null
           ? Priorities.fromJson(json['priority'])
@@ -233,9 +230,7 @@ class Ticket {
       data['owner'] = this.owner!.toJson();
     }
     data['subject'] = this.subject;
-    /*if (this.group != null) {
-      data['group'] = this.group!.toJson();
-    }*/
+
     if (this.type != null) {
       data['type'] = this.type!.toJson();
     }
@@ -531,60 +526,6 @@ class Role {
     return data;
   }
 }
-
-/*
-class Group {
-  List<Members>? members;
-  List<dynamic>? sendMailTo;
-  bool? public;
-  String? sId;
-  String? name;
-  int? iV;
-
-  Group(
-      {this.members,
-      this.sendMailTo,
-      this.public,
-      this.sId,
-      this.name,
-      this.iV});
-
-  Group.fromJson(Map<String, dynamic> json) {
-    try {
-      if (json['members'] != null) {
-            members = <Members>[];
-            json['members'].forEach((v) {
-              members!.add(Members.fromJson(v));
-            });
-          }
-      if (json['sendMailTo'] != null) {
-            sendMailTo = json['sendMailTo'].cast<String>();
-          }
-      public = json['public'];
-      sId = json['_id'];
-      name = json['name'];
-      iV = json['__v'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    if (this.members != null) {
-      data['members'] = this.members!.map((v) => v.toJson()).toList();
-    }
-    if (this.sendMailTo != null) {
-      data['sendMailTo'] = this.sendMailTo;
-    }
-    data['public'] = this.public;
-    data['_id'] = this.sId;
-    data['name'] = this.name;
-    data['__v'] = this.iV;
-    return data;
-  }
-}
-*/
 
 class SendMailTo {
   SendMailTo({

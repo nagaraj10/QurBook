@@ -65,7 +65,6 @@ class Tickets {
   String? sId;
   Subscribers? owner;
   String? subject;
-  //Group? group;
   Type? type;
   Priority? priority;
   String? issue;
@@ -89,7 +88,6 @@ class Tickets {
       this.sId,
       this.owner,
       this.subject,
-      //this.group,
       this.type,
       this.priority,
       this.issue,
@@ -124,7 +122,6 @@ class Tickets {
       owner =
           json['owner'] != null ? Subscribers.fromJson(json['owner']) : null;
       subject = json['subject'];
-      // group = json['group'] != null ? Group.fromJson(json['group']) : null;
       type = json['type'] != null ? Type.fromJson(json['type']) : null;
       priority =
           json['priority'] != null ? Priority.fromJson(json['priority']) : null;
@@ -185,9 +182,6 @@ class Tickets {
       data['owner'] = this.owner!.toJson();
     }
     data['subject'] = this.subject;
-    /*if (this.group != null) {
-      data['group'] = this.group!.toJson();
-    }*/
     if (this.type != null) {
       data['type'] = this.type!.toJson();
     }
