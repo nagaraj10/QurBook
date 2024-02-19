@@ -398,8 +398,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                               ),
                             ),
                           );
+                          await landingViewModel.getQurPlanDashBoard();
                         }
-                        await landingViewModel.getQurPlanDashBoard();
                       },
                     ),
                   ],
