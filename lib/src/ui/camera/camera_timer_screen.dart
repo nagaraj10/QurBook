@@ -11,7 +11,6 @@ import '../../utils/screenutils/size_extensions.dart';
 // Define a StatefulWidget for the camera preview screen
 class CameraPreviewScreen extends StatefulWidget {
   final List<CameraDescription> cameras;
-
   const CameraPreviewScreen({Key? key, required this.cameras}) : super(key: key);
 
   @override
@@ -60,7 +59,8 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      imageFile = XFile(pickedFile.path); // Set the selected image file
+      imageFile = XFile(pickedFile.path);
+      setState(() {});// Set the selected image file
     } else {
       _secondsRemaining = 30;
       isGalleryOpen = false;
@@ -165,12 +165,6 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
         ],
       ),
     ),
-    // floatingActionButton: FloatingActionButton(
-    //   onPressed: _toggleFlash, // Toggle flash mode when the button is pressed
-    //   child: Icon(
-    //     flashMode == FlashMode.off ? Icons.flash_off : Icons.flash_on,
-    //   ),
-    // ),
     body: Stack(
       children: [
         Positioned.fill(
