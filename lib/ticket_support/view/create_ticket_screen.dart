@@ -475,7 +475,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                       _getIconType(field),
                       width: 30.h,
                       height: 30.h,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fill,
                       color: Color(CommonUtil().getMyPrimaryColor()),
                     ),
                     SizedBox(
@@ -539,7 +539,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     bool serviceEnabled = await CommonUtil().checkGPSIsOn();
                     if (!serviceEnabled) {
                       FlutterToast().getToast(
-                          'Please turn on your GPS location services and try again',
+                          Constants.strTurnOnGPS,
                           Colors.red);
                       return;
                     }
@@ -3062,15 +3062,15 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   /// isPincode An optional parameter to indicate whether the widget is
   /// specifically intended for PIN code input. Defaults to `false`.
   Widget getIconTextField(
-          {String? icon,
-          String? fieldName,
-          String? displayName,
-          bool? isRequired,
-          bool? isPincode,
-          bool? readonly,
-          TextEditingController? controller,
-          bool? isTextArea,
-          String? additionalText}) =>
+      {String? icon,
+        String? fieldName,
+        String? displayName,
+        bool? isRequired,
+        bool? isPincode,
+        bool? readonly,
+        TextEditingController? controller,
+        bool? isTextArea,
+        String? additionalText}) =>
       Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -3108,49 +3108,49 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     keyboardType: isTextArea == true
                         ? TextInputType.multiline
                         : isPincode ?? false
-                            ? TextInputType.number
-                            : null,
+                        ? TextInputType.number
+                        : null,
                     maxLines: isTextArea == true ? 8 : null,
                     decoration: isTextArea == true
                         ? InputDecoration(
-                            hintText: isRequired == true
-                                ? '$displayName *'
-                                : displayName,
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0)),
-                              borderSide:
-                                  BorderSide(width: 0, color: Colors.white),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                              borderSide: BorderSide(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                              ),
-                            ),
-                          )
+                      hintText: isRequired == true
+                          ? '$displayName *'
+                          : displayName,
+                      border: OutlineInputBorder(
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(8.0)),
+                        borderSide:
+                        BorderSide(width: 0, color: Colors.white),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                        ),
+                      ),
+                    )
                         : InputDecoration(
-                            labelText: isRequired == true
-                                ? '${displayName} *'
-                                : displayName,
-                            contentPadding:
-                                EdgeInsets.zero, // Remove padding here
-                            border: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                              ),
-                            ),
-                          ),
+                      labelText: isRequired == true
+                          ? '${displayName} *'
+                          : displayName,
+                      contentPadding:
+                      EdgeInsets.zero, // Remove padding here
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                        ),
+                      ),
+                    ),
                   ),
                   if (additionalText != null && additionalText.isNotEmpty)
                     Text(
@@ -3471,7 +3471,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               variable.icon_address,
               width: 30.h,
               height: 30.h,
-              fit: BoxFit.cover,
+              fit: BoxFit.fill,
               color: Color(CommonUtil().getMyPrimaryColor()),
             ),
           ),
