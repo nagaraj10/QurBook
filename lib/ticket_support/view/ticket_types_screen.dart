@@ -238,7 +238,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                 }
 
                 ticketList[i].additionalInfo != null
-                    ? Navigator.pushReplacement(
+                    ? Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) =>

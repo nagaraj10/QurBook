@@ -475,7 +475,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                       _getIconType(field),
                       width: 30.h,
                       height: 30.h,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fill,
                       color: Color(CommonUtil().getMyPrimaryColor()),
                     ),
                     SizedBox(
@@ -498,48 +498,52 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     tckConstants.tckTypeDateTime) {
               widgetForColumn.add(Container(
                 margin: EdgeInsets.only(top: 20.h),
-                child: GestureDetector(
-                  onTap: () {
+                child: getIconTextField(
+                  icon: _getIconType(field),
+                  fieldName: CommonUtil().getFieldName(field.name),
+                  displayName: field.displayName,
+                  isRequired: field.isRequired,
+                  readonly: true,
+                  onClicked: () {
                     _selectDateTime(
                         context, CommonUtil().getFieldName(field.name));
                   },
-                  child: getIconTextField(
-                      icon: _getIconType(field),
-                      fieldName: CommonUtil().getFieldName(field.name),
-                      displayName: field.displayName,
-                      isRequired: field.isRequired,
-                      readonly: true),
                 ),
               ));
             } else if (field.name.toString().toLowerCase() ==
                 tckConstants.tckChooseDoctor) {
               widgetForColumn.add(Container(
                 margin: EdgeInsets.only(top: 30.h),
-                child: GestureDetector(
-                  onTap: () {
+                child: getIconTextField(
+                  icon: _getIconType(field),
+                  fieldName: CommonUtil().getFieldName(field.name),
+                  displayName: field.displayName,
+                  isRequired: field.isRequired,
+                  additionalText: controller.docSpecialization.value,
+                  readonly: true,
+                  onClicked: () {
                     moveToSearchScreen(
                         context, CommonConstants.keyDoctor, field,
                         setState: setState);
                   },
-                  child: getIconTextField(
-                      icon: _getIconType(field),
-                      fieldName: CommonUtil().getFieldName(field.name),
-                      displayName: field.displayName,
-                      isRequired: field.isRequired,
-                      additionalText: controller.docSpecialization.value,
-                      readonly: true),
                 ),
               ));
             } else if (field.name.toString().toLowerCase() ==
                 tckConstants.str_preferred_lab) {
               widgetForColumn.add(Container(
                 margin: EdgeInsets.only(top: 30.h),
-                child: GestureDetector(
-                  onTap: () async {
-                    bool serviceEnabled = await CommonUtil().checkGPSIsOn();
+                child: getIconTextField(
+                  icon: _getIconType(field),
+                  fieldName: CommonUtil().getFieldName(field.name),
+                  displayName: field.displayName,
+                  isRequired: field.isRequired,
+                  additionalText: controller.selLabAddress.value,
+                  readonly: true,
+                  onClicked: () async {
+                    var serviceEnabled = await CommonUtil().checkGPSIsOn();
                     if (!serviceEnabled) {
                       FlutterToast().getToast(
-                          'Please turn on your GPS location services and try again',
+                          Constants.strTurnOnGPS,
                           Colors.red);
                       return;
                     }
@@ -547,13 +551,6 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     moveToSearchScreen(context, CommonConstants.keyLabs, field,
                         setState: setState);
                   },
-                  child: getIconTextField(
-                      icon: _getIconType(field),
-                      fieldName: CommonUtil().getFieldName(field.name),
-                      displayName: field.displayName,
-                      isRequired: field.isRequired,
-                      additionalText: controller.selLabAddress.value,
-                      readonly: true),
                 ),
               ));
             } else if (field.name.toString().toLowerCase() ==
@@ -3070,7 +3067,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           bool? readonly,
           TextEditingController? controller,
           bool? isTextArea,
-          String? additionalText}) =>
+          String? additionalText,VoidCallback? onClicked}) =>
       Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -3081,7 +3078,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 icon ?? '',
                 width: 30.h,
                 height: 30.h,
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
                 color: Color(CommonUtil().getMyPrimaryColor()),
               ),
             ),
@@ -3097,72 +3094,75 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             ),
           ],
           Expanded(
-            child: AbsorbPointer(
-              absorbing: readonly ?? false,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFormField(
-                    textCapitalization: TextCapitalization.sentences,
-                    controller: controller ?? textEditingControllers[fieldName],
-                    keyboardType: isTextArea == true
-                        ? TextInputType.multiline
-                        : isPincode ?? false
-                            ? TextInputType.number
-                            : null,
-                    maxLines: isTextArea == true ? 8 : null,
-                    decoration: isTextArea == true
-                        ? InputDecoration(
-                            hintText: isRequired == true
-                                ? '$displayName *'
-                                : displayName,
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0)),
-                              borderSide:
-                                  BorderSide(width: 0, color: Colors.white),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                              borderSide: BorderSide(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+            child: GestureDetector(
+              onTap: onClicked != null ? onClicked : null, // Check if onClicked is not null, if not null, assign onClicked as onTap callback, otherwise, assign null
+              child: AbsorbPointer(
+                absorbing: readonly ?? false,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextFormField(
+                      textCapitalization: TextCapitalization.sentences,
+                      controller: controller ?? textEditingControllers[fieldName],
+                      keyboardType: isTextArea == true
+                          ? TextInputType.multiline
+                          : isPincode ?? false
+                              ? TextInputType.number
+                              : null,
+                      maxLines: isTextArea == true ? 8 : null,
+                      decoration: isTextArea == true
+                          ? InputDecoration(
+                              hintText: isRequired == true
+                                  ? '$displayName *'
+                                  : displayName,
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8.0)),
+                                borderSide:
+                                    BorderSide(width: 0, color: Colors.white),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(
+                                  color: Color(CommonUtil().getMyPrimaryColor()),
+                                ),
+                              ),
+                            )
+                          : InputDecoration(
+                              labelText: isRequired == true
+                                  ? '${displayName} *'
+                                  : displayName,
+                              contentPadding:
+                                  EdgeInsets.zero, // Remove padding here
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(CommonUtil().getMyPrimaryColor()),
+                                ),
                               ),
                             ),
-                          )
-                        : InputDecoration(
-                            labelText: isRequired == true
-                                ? '${displayName} *'
-                                : displayName,
-                            contentPadding:
-                                EdgeInsets.zero, // Remove padding here
-                            border: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                              ),
-                            ),
-                          ),
-                  ),
-                  if (additionalText != null && additionalText.isNotEmpty)
-                    Text(
-                      additionalText.toString(),
-                      style: TextStyle(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
-                          fontSize: 10.sp),
-                      softWrap: false,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    )
-                ],
+                    ),
+                    if (additionalText != null && additionalText.isNotEmpty)
+                      Text(
+                        additionalText.toString(),
+                        style: TextStyle(
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            fontSize: 10.sp),
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      )
+                  ],
+                ),
               ),
             ),
           )
@@ -3471,7 +3471,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               variable.icon_address,
               width: 30.h,
               height: 30.h,
-              fit: BoxFit.cover,
+              fit: BoxFit.fill,
               color: Color(CommonUtil().getMyPrimaryColor()),
             ),
           ),

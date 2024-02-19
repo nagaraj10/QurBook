@@ -1205,6 +1205,9 @@ const String strHealthOrganizationType = 'healthOrganizationType';
 // Define a constant variable for string data type
 const String strString = 'string';
 
+const String strTurnOnGPS = 'Please turn on your GPS location services and try again'; // String message for prompting the user to turn on GPS
+
+
 
 
 class DoctorFilterConstants {
