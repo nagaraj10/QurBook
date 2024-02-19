@@ -388,7 +388,7 @@ class SheelaBLEController extends GetxController {
           return false;
         } else if (!serviceEnabled) {
           FlutterToast().getToast(
-              'Please turn on your GPS location services and try again',
+              strTurnOnGPS,
               Colors.red);
           return false;
         }

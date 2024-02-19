@@ -1902,7 +1902,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       bool serviceEnabled = await CommonUtil().checkGPSIsOn();
       if (!serviceEnabled) {
         FlutterToast().getToast(
-            'Please turn on your GPS location services and try again',
+            strTurnOnGPS,
             Colors.red);
         return;
       }

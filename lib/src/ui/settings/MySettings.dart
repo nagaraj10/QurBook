@@ -227,7 +227,7 @@ class _MySettingsState extends State<MySettings> {
             allowVitalNotification,
             allowSymptomsNotification,
             preferredMeasurement,
-            voiceCloning,null)
+            voiceCloning,null,useClonedVoice)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel!.isSuccess!) {
