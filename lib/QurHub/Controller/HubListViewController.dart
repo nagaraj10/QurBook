@@ -116,7 +116,7 @@ class HubListViewController extends GetxController {
         bool serviceEnabled = await CommonUtil().checkGPSIsOn();
         if (!serviceEnabled) {
           FlutterToast().getToast(
-            'Please turn on your GPS location services and try again',
+            strTurnOnGPS,
             Colors.red,
           );
           return;
