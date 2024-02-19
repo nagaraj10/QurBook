@@ -406,6 +406,7 @@ class ChatAttachments {
 class AdditionalInfoSheela {
   dynamic? sessionTimeoutMin;
   bool? reconfirmationFlag;
+  bool? isAutoReadTTS;
   SnoozeData? snoozeData;
 
   AdditionalInfoSheela({this.sessionTimeoutMin, this.reconfirmationFlag, this.snoozeData});
@@ -414,7 +415,10 @@ class AdditionalInfoSheela {
     try {
       sessionTimeoutMin = json['sessionTimeoutMin'];
       reconfirmationFlag = json['reconfirmationFlag'] ?? false;
-      snoozeData = json['snoozeData'] != null ? SnoozeData.fromJson(json['snoozeData']) : null;
+      isAutoReadTTS = json['isAutoReRead'] ?? false;
+      snoozeData = json['snoozeData'] != null
+          ? SnoozeData.fromJson(json['snoozeData'])
+          : null;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -424,6 +428,7 @@ class AdditionalInfoSheela {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['sessionTimeoutMin'] = this.sessionTimeoutMin;
     data['reconfirmationFlag'] = this.reconfirmationFlag;
+    data['isAutoReRead'] = this.isAutoReadTTS;
     data['snoozeData'] = this.snoozeData;
     return data;
   }

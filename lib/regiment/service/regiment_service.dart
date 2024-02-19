@@ -203,6 +203,7 @@ class RegimentService {
 
       /* Gets the application name from CommonUtil and converts it to uppercase.
       This is used to identify the application name in a standardized way.
+      We will get the name of the application such as Qurbook,Qurhome and Qurday
       */
       var source =
           (await CommonUtil().getSourceName()).toString().toUpperCase();

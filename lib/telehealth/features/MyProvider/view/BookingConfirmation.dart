@@ -710,19 +710,26 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         }
         widget = Center(
           child: CheckboxListTile(
-            title: Text('Qurhealth Discount (${discount!}%)'),
+            title: Text('Qurhealth Discount (${discount!}%)',
+            style: TextStyle(
+                fontSize: 12
+            ),),
             value: checkedValue,
             activeColor: Colors.green,
             onChanged: (newValue) {
               setState(() {
                 checkedValue = newValue;
+                originalPrice = originalFees;
                 if (checkedValue!) {
+                  if(isApplyMemberShipBenefits){
+                    isApplyMemberShipBenefits =false;
+                    INR_Price =originalPrice;
+                  }
                   if (originalFees.contains(',')) {
                     originalFees = originalFees.replaceAll(',', '');
                   }
                   INR_Price = getDiscountedFee(
                       double.parse(discount!), double.parse(originalFees));
-                  originalPrice = INR_Price;
                   if (INR_Price == '0' || INR_Price == '0.00') {
                     btnLabelChange = bookNow;
                   } else {
@@ -1638,6 +1645,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         setState(() {
           isApplyMemberShipBenefits = value!;
           if(value==true){
+            if(checkedValue==true){
+              checkedValue =false;
+              INR_Price = originalPrice;
+            }
             applyMembershipDiscountedAmount =  updateThaMembershipBenefit();
           }else{
            INR_Price= originalPrice;
@@ -1674,6 +1685,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     }
     return deductedAmount.toStringAsFixed(2);
   }
+
+
 
 
   showDialogForMembershipDiscount() async {
@@ -1769,6 +1782,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 ElevatedButton(
                   onPressed: () => Get.back(
                     result: true,
+                  ),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color(CommonUtil().getMyPrimaryColor())),// Set background color here
+                    // You can also customize other properties such as padding, shape, etc.
                   ),
                   child: const Text(
                     Constants.okButton,

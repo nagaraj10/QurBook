@@ -920,7 +920,9 @@ class SheelaAIController extends GetxController {
           currentDeviceStatus.allowAppointmentNotification,
           currentDeviceStatus.allowVitalNotification,
           currentDeviceStatus.allowSymptomsNotification,
-          currentDeviceStatus.voiceCloning);
+          currentDeviceStatus.voiceCloning,
+        currentDeviceStatus.useClonedVoice
+      );
       return data;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -972,7 +974,9 @@ class SheelaAIController extends GetxController {
         currentDeviceStatus.allowSymptomsNotification,
         currentDeviceStatus.preferredMeasurement,
         currentDeviceStatus.voiceCloning,
-        null);
+       null,
+       currentDeviceStatus.useClonedVoice
+    );
     if (value.isSuccess ?? false) {
       //updated
     } else {
@@ -1132,6 +1136,7 @@ makeApiRequest is used to update the data with latest data
         )!
             .then((value) {
           updateTimer(enable: true);
+          playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
         });
       } else {
         isPlayPauseView.value = false;
@@ -1143,6 +1148,7 @@ makeApiRequest is used to update the data with latest data
         )!
             .then((value) {
           updateTimer(enable: true);
+          playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
         });
       }
     } catch (e, stackTrace) {
@@ -1161,6 +1167,7 @@ makeApiRequest is used to update the data with latest data
       ))!
           .then((value) {
         updateTimer(enable: true);
+        playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
       });
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -2258,6 +2265,7 @@ makeApiRequest is used to update the data with latest data
                       AttachmentListSheela(chatAttachments: button?.chatAttachments ?? []),
                     )?.then((value) {
                       isSheelaScreenActive = true;
+                      playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
                     });
                   }
                 } else if (button?.btnRedirectTo == strRedirectToHelpPreview) {
@@ -2272,6 +2280,7 @@ makeApiRequest is used to update the data with latest data
                       titleSheelaPreview: strImageTitle,
                     ))?.then((value) {
                       isSheelaScreenActive = true;
+                      playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
                     });
                   }
                 } else if (button?.btnRedirectTo == strRedirectRedo) {
@@ -2670,6 +2679,23 @@ makeApiRequest is used to update the data with latest data
     } catch (e, stackTrace) {
       // Handle any exceptions and log them using appLogs method
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+  }
+
+  // Function to get the TTS play again flag
+  bool getTTSPlayAgainFlag() {
+    // Using the nullish coalescing operator (??) to handle null cases
+    // If currentPlayingConversation is not null, check isPlayAgainMediaTTS; otherwise, default to false
+    return conversations.last
+        ?.additionalInfoSheelaResponse?.isAutoReadTTS ??
+        false;
+  }
+
+  playPauseTTSFromApi(){
+    // Check if TTS play again flag is true
+    if (getTTSPlayAgainFlag()) {
+      // Play or pause TTS with the last conversation, or a default SheelaResponse if conversations.last is null
+      playPauseTTS(conversations.last ?? SheelaResponse());
     }
   }
 }

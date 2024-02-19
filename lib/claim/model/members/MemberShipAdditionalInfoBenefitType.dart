@@ -1,3 +1,5 @@
+import '../../../src/utils/screenutils/size_extensions.dart';
+
 /// A class representing the additional information related to a membership benefit type.
 class MemberShipAdditionalInfoBenefitType {
   String? id;
@@ -21,7 +23,7 @@ class MemberShipAdditionalInfoBenefitType {
         code: json['code'],
         name: json['name'],
         fieldName: json['fieldName'],
-        transactionLimit: json['transactionLimit']
+        transactionLimit: json['transactionLimit'].toString().parseNum(),
       );
 
   Map<String, dynamic> toJson() => {

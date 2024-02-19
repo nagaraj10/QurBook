@@ -337,7 +337,8 @@ class HealthReportListForUserRepository {
       bool? allowAppointmentALert,
       bool? allowVitalALerts,
       bool? allowsymptomsAlert,
-      bool? voiceCloning) async {
+      bool? voiceCloning,
+      bool? useClonedVoice) async {
     var userIDMain =
         await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     var body = jsonEncode({
@@ -356,6 +357,7 @@ class HealthReportListForUserRepository {
         "greColor": greColor,
         "priColor": priColor,
         "voiceCloning": bpMonitor,
+        "useClonedVoice":useClonedVoice,
         'preferred_language': preferred_language,
         'qa-subscription': qa_subscription,
         'qurhome_ui': PreferenceUtil.getIfQurhomeisDefaultUI(),
@@ -396,7 +398,8 @@ class HealthReportListForUserRepository {
       PreferredMeasurement? preferredMeasurement,
       bool? voiceCloning,
       // should pass when voice clone is changed otherwise it null.
-      bool? isVoiceCloningChanged) async {
+      bool? isVoiceCloningChanged,
+      bool? useClonedVoice) async {
     var body = jsonEncode({
       'id': userMappingId,
       'profileSetting': {
@@ -412,6 +415,7 @@ class HealthReportListForUserRepository {
         'weighScale': weighScale,
         "greColor": greColor,
         "priColor": priColor,
+        "useClonedVoice":useClonedVoice,
         'preferred_language': preferred_language,
         'qa-subscription': qa_subscription,
         'voiceCloning': voiceCloning,

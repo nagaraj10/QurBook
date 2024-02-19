@@ -6734,8 +6734,7 @@ class CommonUtil {
         canEdit = true;
       } else if (regimen?.doseMealString == Constants.doseValueless ||
           regimen?.doseMealString == Constants.doseValueHigh) {
-        if (regimen?.activityOrgin == strSurvey &&
-            regimen?.otherinfo?.isAllDayActivity == true) {
+        if (regimen?.otherinfo?.isAllDayActivity == true) {
           DateTime selectedDateTime =
               CommonUtil.getDateBasedOnOnceInAPlan(selectedDate, regimen!);
 
@@ -6761,8 +6760,7 @@ class CommonUtil {
                       RegimentMode.Schedule;
         }
       } else {
-        if (regimen?.activityOrgin == strSurvey &&
-            regimen?.otherinfo?.isAllDayActivity == true) {
+        if (regimen?.otherinfo?.isAllDayActivity == true) {
           if (calculateDifference(regimen?.estart ?? DateTime.now()) <= 0) {
             canEdit = true;
           } else {
@@ -7733,9 +7731,16 @@ class CommonUtil {
     return createTicketController;
   }
 
+  /// Formats the given [amount] number to a string with 2 decimal places,
+  /// unless the amount is an integer, in which case no decimal places are used.
+  ///
+  /// @param amount The number to format as a string.
+  /// @return The formatted string representing the amount.
+  static String formatAmount(num amount) =>
+      '${amount % 1 == 0 ? amount : amount.toStringAsFixed(2)}';
   /**
     Gets the source name for the app based on the package name.
-    Checks the package name from PackageInfo against known bundle IDs 
+    Checks the package name from PackageInfo against known bundle IDs
     to determine the source name for the current app.
     Returns a string containing the determined source name.
    */

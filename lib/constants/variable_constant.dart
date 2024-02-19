@@ -67,6 +67,7 @@ const String Self = 'Self';
 const String Delink = 'Delink';
 const String Please_Wait = 'Please Wait';
 const String parentToChild = 'parentToChild';
+const String stringUpdateCart = 'Update Cart';
 const String DeLink = 'De-Link';
 const String Error = 'Error';
 const String Success = 'Success';
@@ -194,6 +195,8 @@ const String lock_icon = 'assets/lock_icon.png';
 const String remove_user = 'assets/settings/remove_user.png';
 const String icon_voice_cloning =
     'assets/settings/icon_voicecloning.png'; //path where voice clon icon is placed
+const String icon_mic_icon =
+    'assets/settings/mic_icon.png'; //path where voice clon icon is placed
 
 const String icon_records = 'assets/navicons/records.png';
 const String icon_chat = 'assets/navicons/chat.png';
@@ -742,6 +745,14 @@ const String strAllowVoiceCloning =
     'Allow voice cloning'; //String declared for Allow voice cloning
 const String strSheelaDesc =
     'Sheela clones your voice for family member communication'; // descrption for voice cloning
+const String strUseClonedVoice =
+    'Use cloned voice'; //String declared for use cloned voice
+
+const String strVoiceCloneNotSetByYourCaregiver = 'Voice clone sample not set by your caregiver'; //String declared for VoiceCloneNotSetByYourCaregiver
+
+const String strUseClonedVoiceDesc =
+    'Option to allow using the cloned voice for sheela conversation';//description for Usecloned Voice
+
 const String strStatus = 'Status : ';
 //Create common String for voice cloning text
 const String strVoiceTerms = 'Accept And Continue';
@@ -982,6 +993,11 @@ const String strCareDietPlan = "care/diet plan";
 const String strHomecareServices = "homecare services";
 const String strFoodDelivery = "food delivery";
 
+const String strHealthPlan = "health plan";        // Define a constant string for health plan
+const String strAmbulanceService = "ambulance service";  // Define a constant string for ambulance service
+const String strOrderMedicine = "order medicine";  // Define a constant string for ordering medicine
+
+
 const String strGetCityList = 'Getting City List';
 const String strSelValidMsg = 'Please select a valid';
 const String strLocationLink = "Location link";
@@ -1018,6 +1034,7 @@ const String strAvailableServices = 'Available Services';
 const String strAvailableBalance = 'Available balance';
 const String strShowAvailableBenefits = 'Show available benefits';
 
+const String strMembershipDiscount = 'Membership discount';
 const String strBenefitHomecareService = 'Homecare Service';
 const String strBenefitHomecareServices = 'Homecare Services';
 const String strBenefitHealthPlan = 'Health Plan';
