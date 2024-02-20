@@ -797,8 +797,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
     if (value.checkedMembershipBenefits) {
       final maxMembershipAmountLimit = value.getFinalMembershipAmountLimit();
 
-    final finalAmount = min(maxMembershipAmountLimit,
-        value.totalProductCount);
+    final finalAmount = CommonUtil.formatAmount(
+        value.subTotalProductCount - value.totalProductCount);
       body['walletDeductionAmount'] = finalAmount;
     }
     FetchingCartItemsModel? fetchingCartItemsModel =
@@ -1335,8 +1335,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
     /// Add `walletDeductionAmount` parameter only if patient apply Membership benefits checked
     if (value.checkedMembershipBenefits) {
       final maxMembershipAmountLimit = value.getFinalMembershipAmountLimit();
-      final finalAmount =
-          min(maxMembershipAmountLimit, value.totalProductCount);
+      final finalAmount = CommonUtil.formatAmount(
+        value.subTotalProductCount - value.totalProductCount);
       body['walletDeductionAmount'] = finalAmount;
     }
     FetchingCartItemsModel? fetchingCartItemsModel =
