@@ -1602,7 +1602,7 @@ makeApiRequest is used to update the data with latest data
     //       requestFileType: strImage);
     List<CameraDescription> cameras = await availableCameras();
 
-    Get.to( CameraPreviewScreen(
+    await Get.to( CameraPreviewScreen(
       cameras: cameras,
     ))?.then((value) {
       if(value!=null){

@@ -25,6 +25,7 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
   XFile? imageFile; // Variable to store the captured image file
   bool isGalleryOpen = false;
   FlashMode flashMode = FlashMode.off; // State variable for flash mode
+  int selectedCameraIndex =0;
 
   @override
   void initState() {
@@ -35,7 +36,7 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
   // Initialize the camera
   Future<void> cameraInitialization() async {
     controller = CameraController(
-      widget.cameras[0], // Use the first camera from the list
+      widget.cameras[selectedCameraIndex], // Use the first camera from the list
       ResolutionPreset.high,
     );
     await controller.initialize(); // Initialize the camera controller
@@ -98,6 +99,19 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
     }
   }
 
+  void _toggleCamera() async {
+    selectedCameraIndex = selectedCameraIndex == 0 ? 1 : 0; // Toggle between the two cameras
+    _timer.cancel();
+    _secondsRemaining=30;
+    setState(() {});
+    await cameraInitialization(); // Reinitialize the camera with the new selected camera
+  }
+  void _onChangeFlash() async {
+    setState(() {
+      flashMode = flashMode == FlashMode.off ? FlashMode.always : FlashMode.off;
+    });
+    await controller.setFlashMode(flashMode);
+  }
   @override
   Widget build(BuildContext context) {
     if (!controller.value.isInitialized) {
@@ -110,9 +124,9 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
   Widget _buildCameraPreview() => Scaffold(
     backgroundColor: Colors.transparent,
     bottomNavigationBar: Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: imageFile != null?MainAxisAlignment.spaceBetween: MainAxisAlignment.spaceEvenly,
         children: [
           ElevatedButton(
             onPressed: () {
@@ -137,29 +151,39 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
           ),
           Visibility(
             visible: imageFile == null, // Show the capture button only if no image is captured
-            child: Padding(
-              padding: const EdgeInsets.only(right: 50),
-              child: ElevatedButton(
-                onPressed: _takePicture,
-                // Call _takePicture function when capture button is pressed
-                child: Icon(
-                  Icons.camera_alt_rounded,
-                  size: 32.0.sp,
-                ),
+            child: ElevatedButton(
+              onPressed: _takePicture,
+              // Call _takePicture function when capture button is pressed
+              child: Icon(
+                Icons.camera,
+                size: 32.0.sp,
               ),
             ),
           ),
           Visibility(
-            visible: imageFile != null, // Show the check button only if an image is captured
-            child: IconButton(
-              onPressed: () {
-                Navigator.of(context).pop(imageFile); // Navigate back with the captured image file
-              },
-              icon: Icon(
-                Icons.check,
-                color: Colors.white,
+            visible: imageFile == null, // Show the capture button only if no image is captured
+            child: ElevatedButton(
+              onPressed: _onChangeFlash,
+              child: Icon(
+                flashMode == FlashMode.off ? Icons.flash_off : Icons.flash_on,
                 size: 32.0.sp,
               ),
+            ),
+          ),
+
+          if (imageFile == null) ElevatedButton(
+            onPressed: _toggleCamera, // Toggle the camera when button is pressed
+            child: Icon(selectedCameraIndex == 0?Icons.flip_camera_ios: Icons.photo_camera_rounded,
+              size: 32.0.sp,
+            ),
+          ) else IconButton(
+            onPressed: () {
+              Navigator.of(context).pop(imageFile); // Navigate back with the captured image file
+            },
+            icon: Icon(
+              Icons.check,
+              color: Colors.white,
+              size: 32.0.sp,
             ),
           ),
         ],
