@@ -797,8 +797,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
     if (value.checkedMembershipBenefits) {
       final maxMembershipAmountLimit = value.getFinalMembershipAmountLimit();
 
-    final finalAmount = min(maxMembershipAmountLimit,
-        value.totalProductCount);
+    final finalAmount = CommonUtil.formatAmount(
+        value.subTotalProductCount - value.totalProductCount);
       body['walletDeductionAmount'] = finalAmount;
     }
     FetchingCartItemsModel? fetchingCartItemsModel =
@@ -858,13 +858,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 }
               });
             });
+          } else if ((value.isSuccess ?? false) &&
+              value.result != null &&
+              value.message == 'Wallet balance not enough') {
+            Provider.of<CheckoutPageProvider>(context, listen: false)
+                .loader(false, isNeedRelod: true);
+            FlutterToast().getToast(value.message ?? '', Colors.red);
           } else if ((value.isSuccess ?? false) && value.result != null) {
             Get.off(
               PaymentResultPage(
-                refNo: value.result!.orderId,
+              refNo: value.result!.orderId,
                 status: value.isSuccess,
                 isFreePlan: true,
                 isPaymentFromNotification: widget.isFromNotification,
+                cartId: widget.cartId,
               ),
             );
           } else {
@@ -1335,8 +1342,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
     /// Add `walletDeductionAmount` parameter only if patient apply Membership benefits checked
     if (value.checkedMembershipBenefits) {
       final maxMembershipAmountLimit = value.getFinalMembershipAmountLimit();
-      final finalAmount =
-          min(maxMembershipAmountLimit, value.totalProductCount);
+      final finalAmount = CommonUtil.formatAmount(
+        value.subTotalProductCount - value.totalProductCount);
       body['walletDeductionAmount'] = finalAmount;
     }
     FetchingCartItemsModel? fetchingCartItemsModel =
