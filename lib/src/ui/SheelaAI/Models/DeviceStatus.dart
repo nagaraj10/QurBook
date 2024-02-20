@@ -26,7 +26,8 @@ class DeviceStatus {
       this.qa_subscription,
       this.tagsList,
       this.preferredMeasurement,
-      this.voiceCloning});
+      this.voiceCloning,
+      this.useClonedVoice});
 
   String? userMappingId = '';
   bool? isdigitRecognition = true;
@@ -51,4 +52,5 @@ class DeviceStatus {
   List<Tags>? tagsList = [];
   PreferredMeasurement? preferredMeasurement;
   bool? voiceCloning = false; // added a parameter for voice cloning
+  bool? useClonedVoice = false; // added a parameter for voice cloning
 }

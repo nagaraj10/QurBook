@@ -21,6 +21,8 @@ import 'package:myfhb/widgets/checkout_page_provider.dart';
 import 'package:myfhb/widgets/fetching_cart_items_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../claim/model/members/MembershipDetails.dart';
+
 class PlanWizardViewModel extends ChangeNotifier {
   PlanWizardService planWizardService = PlanWizardService();
   final PageController pageController = PageController();
@@ -76,7 +78,8 @@ class PlanWizardViewModel extends ChangeNotifier {
   int carePlanCount = 0;
   int dietPlanCount = 0;
   bool? isMembershipAVailable = false;
-
+  MemberShipDetails? memberShipDetailsResult;
+  
   void updateSingleSelectionProvider(String? packageId) {
     if (packageId == currentPackageProviderCareId) {
       currentPackageProviderCareId = '';
@@ -702,6 +705,22 @@ class PlanWizardViewModel extends ChangeNotifier {
         isMembershipAVailable = false;
       }
     });
+  }
+
+  /// Fetches the member ship details for the logged in user.
+  ///
+  /// Gets the user id from shared preferences. Calls the planWizardService
+  /// getMemberShip method passing the user id. Handles any errors by logging them.
+  /// Updates the memberShipDetailsResult with the api response.
+  Future<void> getMemberShip() async {
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    if (userId != null) {
+      try {
+        memberShipDetailsResult = await planWizardService.getMemberShip(userId);
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      }
+    }
   }
 
   updateCarePlanCount(bool isAdd) {

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ import '../common/CommonUtil.dart';
 import '../common/common_circular_indicator.dart';
 import '../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../constants/fhb_constants.dart';
-import '../constants/fhb_parameters.dart';
+import '../constants/fhb_parameters.dart' as fhb_parameters;
 import '../constants/router_variable.dart' as router;
 import '../constants/variable_constant.dart' as variable;
 import '../landing/view/landing_arguments.dart';
@@ -69,6 +70,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
         isPaymentLinkViaPush: widget.isFromNotification,
         cartId: widget.cartId,
         firstTym: true);
+    Provider.of<CheckoutPageProvider>(context, listen: false).getMemberShip();
+    Provider.of<CheckoutPageProvider>(context, listen: false).checkedMembershipBenefits = false;
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     Provider.of<CheckoutPageProvider>(context, listen: false)
         .loader(false, isNeedRelod: false);
@@ -303,7 +306,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                           children: <Widget>[
                                                                             Center(
                                                                               child: Text(
-                                                                                CLEAR_CART_MSG,
+                                                                                fhb_parameters.CLEAR_CART_MSG,
                                                                                 style: TextStyle(fontSize: CommonUtil().isTablet! ? tabHeader3 : mobileHeader3, fontWeight: FontWeight.w500),
                                                                                 textAlign: TextAlign.center,
                                                                               ),
@@ -360,7 +363,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                       }
                                                                                     },
                                                                                     child: TextWidget(
-                                                                                      text: ok,
+                                                                                      text: fhb_parameters.ok,
                                                                                       fontsize: 14.0.sp,
                                                                                     ),
                                                                                   ),
@@ -385,7 +388,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                       });
                                                 }
                                               },
-                                              child: Text('Clear cart'),
+                                              child: Text('Clear cart',
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          CommonUtil().isTablet!
+                                                              ? tabHeader1
+                                                              : mobileHeader1)),
                                               style: TextButton.styleFrom(
                                                 foregroundColor:
                                                     widget.isFromNotification
@@ -452,6 +460,61 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     .productList![index]);
                                           },
                                         ),
+                                        // Add Checkbox for Membership discount apply
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 35.0.w,
+                                              height: 25.0.w,
+                                              child: Container(
+                                                margin: const EdgeInsets.only(
+                                                  right: 10,
+                                                ),
+                                                child: Checkbox(
+                                                  activeColor: Color(
+                                                    CommonUtil()
+                                                        .getMyPrimaryColor(),
+                                                  ),
+                                                  checkColor: Colors.white,
+                                                  value: value
+                                                      .checkedMembershipBenefits,
+                                                  onChanged:
+                                                      (value.getFinalMembershipAmountLimit() ??
+                                                                  0) >
+                                                              0
+                                                          ? (newValue) {
+                                                              setState(() {
+                                                                value.checkedMembershipBenefits =
+                                                                    newValue ??
+                                                                        false;
+                                                              });
+                                                              value.updateProductCountBasedOnCondiiton(
+                                                                  isNeedRelod:
+                                                                      true,
+                                                                  firstTym:
+                                                                      false);
+                                                            }
+                                                          : null,
+                                                ),
+                                              ),
+                                            ),
+                                            Flexible(
+                                              child: Wrap(
+                                                children: [
+                                                  Text(
+                                                    getMembershipDiscount(
+                                                        value),
+                                                    style: TextStyle(
+                                                      color: (value.getFinalMembershipAmountLimit() ??
+                                                                  0) >
+                                                              0? Colors.black : Colors.grey,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -495,7 +558,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             : mobileHeader3)),
                                             Spacer(),
                                             Text(
-                                              '${CommonUtil.CURRENCY}${value.totalProductCount}',
+                                              //to showcase subtotal of product
+                                              '${CommonUtil.CURRENCY}${CommonUtil.formatAmount(value.subTotalProductCount)}',
                                               style: TextStyle(
                                                   fontSize:
                                                       CommonUtil().isTablet!
@@ -503,6 +567,39 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                           : mobileHeader3),
                                             ),
                                           ],
+                                        ),
+                                        /// if Apply Membership Benefits then transactionlimit amount Deduct from subtotal
+                                        Visibility(
+                                          visible:
+                                              value.checkedMembershipBenefits && (value.getMembershipAmountLimit() ?? 0) > 0,
+                                          child: const Divider(),
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              value.checkedMembershipBenefits,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                getMembershipDiscount(value),
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      CommonUtil().isTablet!
+                                                          ? tabHeader2
+                                                          : mobileHeader2,
+                                                ),
+                                              ),
+                                              const Spacer(),
+                                              Text(
+                                                getMembershipDiscountWithCurrency(value),
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      CommonUtil().isTablet!
+                                                          ? tabHeader3
+                                                          : mobileHeader3,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                         DottedLine(
                                             height: 1,
@@ -522,7 +619,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               width: 20.0.w,
                                             ),
                                             Text(
-                                              '${CommonUtil.CURRENCY}${value.totalProductCount}',
+                                              '${CommonUtil.CURRENCY}${CommonUtil.formatAmount(value.totalProductCount)}',
                                               style: TextStyle(
                                                   fontSize:
                                                       CommonUtil().isTablet!
@@ -568,7 +665,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '${CommonUtil.CURRENCY}${value.totalProductCount}',
+                                        '${CommonUtil.CURRENCY}${CommonUtil.formatAmount(value.totalProductCount)}',
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
@@ -605,15 +702,20 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 });
                                               },
                                         child: ConstrainedBox(
-                                          constraints:
-                                              BoxConstraints(minWidth: 200),
+                                          constraints: BoxConstraints(
+                                              minWidth: CommonUtil().isTablet!
+                                                  ? 230
+                                                  : 200),
                                           child: Container(
-                                            height: 50,
+                                            height: CommonUtil().isTablet!
+                                                ? 60
+                                                : 50,
                                             padding: EdgeInsets.symmetric(
-                                                vertical: 5.0.sp,
-                                                horizontal: 5.0.sp),
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
+                                              vertical: 5.0.sp,
+                                              horizontal: 20.0.sp,
+                                            ),
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(5)),
                                               boxShadow: <BoxShadow>[
@@ -640,8 +742,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     height: 20,
                                                     child:
                                                         CommonCircularIndicator())
-                                                : Text(
-                                                    value.cartType ==
+                                                : Text( value.cartType ==
                                                             CartType.RETRY_CART
                                                         ? strRetryPay
                                                         : (value.totalProductCount) >
@@ -692,6 +793,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
       "cartId": "${value.fetchingCartItemsModel!.result!.cart!.id}",
       "isQurbook": true
     };
+    /// Add `walletDeductionAmount` parameter only if patient apply Membership benefits checked
+    if (value.checkedMembershipBenefits) {
+      final maxMembershipAmountLimit = value.getFinalMembershipAmountLimit();
+
+    final finalAmount = min(maxMembershipAmountLimit,
+        value.totalProductCount);
+      body['walletDeductionAmount'] = finalAmount;
+    }
     FetchingCartItemsModel? fetchingCartItemsModel =
         await Provider.of<CheckoutPageProvider>(Get.context!, listen: false)
             .updateCartItems(
@@ -770,7 +879,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   Widget _cartItem(BuildContext context, ProductList item,
       {bool isFirsTym = true}) {
-    int productValue = 0;
+    num productValue = 0;
 
     if (!isFirsTym) {
       if (item.productDetail?.planSubscriptionFee != null &&
@@ -779,7 +888,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           productValue = 0;
         } else {
           productValue =
-              double.parse(item.productDetail!.planSubscriptionFee!).toInt();
+              num.parse(item.productDetail?.planSubscriptionFee ?? '0');
         }
       }
     } else {
@@ -788,26 +897,26 @@ class _CheckoutPageState extends State<CheckoutPage> {
         if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = double.parse(item.additionalInfo?.newFee).toInt();
+          productValue = num.parse(item.additionalInfo?.newFee ?? '0');
         }
       } else if (item.additionalInfo?.actualFee != null &&
           item.additionalInfo?.actualFee != "") {
         if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = double.parse(item.additionalInfo?.actualFee).toInt();
+          productValue = num.parse(item.additionalInfo?.actualFee);
         }
       } else if (item.paidAmount!.contains(".")) {
         if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = double.parse(item.paidAmount!).toInt();
+          productValue = num.parse(item.paidAmount ?? '0');
         }
       } else {
         if (item.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = int.parse(item.paidAmount!);
+          productValue = num.parse(item.paidAmount ?? '0');
         }
       }
     }
@@ -1132,7 +1241,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                 }
                                                               },
                                                               child: TextWidget(
-                                                                text: ok,
+                                                                text: fhb_parameters.ok,
                                                                 fontsize:
                                                                     14.0.sp,
                                                               ),
@@ -1160,7 +1269,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                     Spacer(),
                     Text(
-                      '${CommonUtil.CURRENCY}${productValue}',
+                      '${CommonUtil.CURRENCY}${CommonUtil.formatAmount(productValue)}',
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
@@ -1223,7 +1332,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
       "cartId": "${value.fetchingCartItemsModel!.result!.cart!.id}",
       "isQurbook": true
     };
-
+    /// Add `walletDeductionAmount` parameter only if patient apply Membership benefits checked
+    if (value.checkedMembershipBenefits) {
+      final maxMembershipAmountLimit = value.getFinalMembershipAmountLimit();
+      final finalAmount =
+          min(maxMembershipAmountLimit, value.totalProductCount);
+      body['walletDeductionAmount'] = finalAmount;
+    }
     FetchingCartItemsModel? fetchingCartItemsModel =
         await Provider.of<CheckoutPageProvider>(Get.context!, listen: false)
             .updateCartItems(
@@ -1249,7 +1364,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             }
           } else {
             Alert.displayConfirmProceed(Get.context!,
-                confirm: "Update Cart",
+                confirm: variable.stringUpdateCart,
                 title: "Update",
                 content: result.message ?? '', onPressedConfirm: () {
               ApiBaseHelper()
@@ -1293,5 +1408,34 @@ class _CheckoutPageState extends State<CheckoutPage> {
         }
       }
     });
+  }
+
+  /// Returns a string with the membership discount title and optional
+  /// max discount amount.
+  ///
+  /// The base title comes from a variable, and if there is a max membership
+  /// discount amount configured, it is appended to the title string.
+  ///
+  /// This allows showing the membership discount title and info to the user.
+  String getMembershipDiscount(CheckoutPageProvider value) {
+    final maxMembershipAmountLimit = value.getMembershipAmountLimit();
+    var basedtitle = variable.strMembershipDiscount;
+    if (maxMembershipAmountLimit != null && maxMembershipAmountLimit > 0) {
+      basedtitle +=
+          ' (Max. ${CommonUtil.formatAmount(maxMembershipAmountLimit)})';
+    }
+    return basedtitle;
+  }
+
+  /// Returns the membership discount title string with currency formatting
+  /// applied, based on the subTotalProductCount and totalProductCount values
+  /// from the provided CheckoutPageProvider.
+  ///
+  /// This is used to display the membership discount amount on the checkout
+  /// page.
+  String getMembershipDiscountWithCurrency(CheckoutPageProvider value) {
+    final finalAmount = CommonUtil.formatAmount(
+        value.subTotalProductCount - value.totalProductCount);
+    return '-${CommonUtil.CURRENCY}$finalAmount';
   }
 }

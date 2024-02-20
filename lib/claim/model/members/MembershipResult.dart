@@ -1,3 +1,4 @@
+import '../../../src/utils/screenutils/size_extensions.dart';
 import 'MembershipAdditionInfo.dart';
 import '../../../common/CommonUtil.dart';
 
@@ -11,15 +12,15 @@ class MemberShipResult {
     String? planEndDate;
     String? planSubscriptionInfoId;
   /// New Parameters added for Membership Benefits
-    int? planId;
+    num? planId;
     String? creditAmount;
-    int? noOfCarePlans;
-    int? noOfDoctorAppointments;
-    int? labAppointment;
-    int? medicineOrdering;
-    int? tranportation;
-    int? homecareServices;
-    int? familyMembersAllowed;
+    num? noOfCarePlans;
+    num? noOfDoctorAppointments;
+    num? labAppointment;
+    num? medicineOrdering;
+    num? tranportation;
+    num? homecareServices;
+    num? familyMembersAllowed;
 
   MemberShipResult(
       {this.id,
@@ -53,12 +54,22 @@ class MemberShipResult {
       planSubscriptionInfoId = json['planSubscriptionInfoId'];
       planId = json['planId'];
       creditAmount = json['creditAmount'];
-      noOfCarePlans = json['noOfCarePlans'];
-      noOfDoctorAppointments = json['noOfDoctorAppointments'];
-      labAppointment = json['labAppointment'];
-      medicineOrdering = json['medicineOrdering'];
-      tranportation = json['tranportation'];
-      homecareServices = json['homecareServices'];
+      noOfCarePlans = json['noOfCarePlans'] != null
+          ? int.tryParse(json['noOfCarePlans'].toString())
+          : null; // Parsing to int or null if it's null
+      noOfDoctorAppointments = json['noOfDoctorAppointments'].toString().parseNum();
+      labAppointment = json['labAppointment'] != null
+          ? int.tryParse(json['labAppointment'].toString())
+          : null; // Parsing to int or null if it's null
+      medicineOrdering = json['medicineOrdering'] != null
+          ? int.tryParse(json['medicineOrdering'].toString())
+          : null;
+      tranportation = json['tranportation'] != null
+          ? int.tryParse(json['tranportation'].toString())
+          : null; // Parsing to int or null if it's null
+      homecareServices = json['homecareServices'] != null
+          ? int.tryParse(json['homecareServices'].toString())
+          : null; // Parsing to int or null if it's null
       familyMembersAllowed = json['familyMembersAllowed'];
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);

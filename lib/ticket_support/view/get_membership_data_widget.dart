@@ -309,11 +309,11 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
   /// Widget Return Text
   /// Based on which MemberShipAdditionalInfoBenefitType is passed
   Widget getBalanceAmount(MemberShipAdditionalInfoBenefitType? type) {
-    var amount = 0;
+    num amount = 0;
 
     switch (type?.fieldName) {
       case strBenefitDoctorAppointment:
-        amount = widget.memberShipResult?.noOfDoctorAppointments ?? 0;
+        amount = widget.memberShipResult?.noOfDoctorAppointments?.toInt() ?? 0;
         break;
       case strBenefitCareDietPlans:
         amount = widget.memberShipResult?.noOfCarePlans ?? 0;
@@ -334,7 +334,9 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
     }
 
     return Text(
-      type?.code == 'BY_COST' ? '$_currentCurrency$amount /-' : '$amount',
+      type?.code == 'BY_COST'
+          ? '$_currentCurrency${CommonUtil.formatAmount(amount)} /-'
+          : '$amount',
       overflow: TextOverflow.visible,
       style: _amountTextStyle,
     );

@@ -388,7 +388,7 @@ class SheelaBLEController extends GetxController {
           return false;
         } else if (!serviceEnabled) {
           FlutterToast().getToast(
-              'Please turn on your GPS location services and try again',
+              strTurnOnGPS,
               Colors.red);
           return false;
         }
@@ -570,7 +570,7 @@ class SheelaBLEController extends GetxController {
         } else if (model.deviceType?.toLowerCase() == "bgl") {
           if ((model.data?.bgl ?? '').isNotEmpty) {
             String? strTextMsg = await SheelaController.getTextTranslate(
-                "Your Blood Glucose value ${model.data!.bgl} mg/dL is recorded successfully.");
+                "Your Blood Glucose value ${model.data!.bgl} is recorded successfully.");
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,

@@ -1,3 +1,4 @@
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -5,10 +6,17 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/claim/model/credit/CreditBalanceResult.dart';
 import 'package:myfhb/claim/service/ClaimListRepository.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' ;
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/widgets/fetching_cart_items_model.dart';
 import 'package:provider/provider.dart';
+
+import '../../constants/fhb_query.dart' as variable;
+import '../claim/model/members/MembershipDetails.dart';
+import '../claim/model/members/MembershipResult.dart';
+import '../common/PreferenceUtil.dart';
+import '../constants/variable_constant.dart' as constant;
 
 enum CartType {
   DEFAULT_CART,
@@ -24,6 +32,9 @@ class CheckoutPageProvider extends ChangeNotifier {
   CartStatus cartStatus = CartStatus.LOADED;
   ApiBaseHelper helper = ApiBaseHelper();
   FetchingCartItemsModel? fetchingCartItemsModel;
+  MemberShipResult? memberShipDetailsResult;
+
+  bool checkedMembershipBenefits = false;
 
   bool isMembershipCart = false;
 
@@ -32,13 +43,14 @@ class CheckoutPageProvider extends ChangeNotifier {
   bool isLoading = false;
   bool isFirstTym = true;
 
-  int totalProductCount = 0;
+  num totalProductCount = 0;
+  num subTotalProductCount = 0;
   List<ProductList>? productList;
   List<ProductList> cartList = [];
 
   int get currentCartCount => _cartCount;
 
-  int get _productCount => totalProductCount;
+  num get _productCount => totalProductCount;
 
   Future<void> loader(bool currentIsLoading, {bool isNeedRelod = false}) async{
     isLoading = currentIsLoading;
@@ -131,6 +143,28 @@ class CheckoutPageProvider extends ChangeNotifier {
         isNeedRelod: isNeedRelod);
     updateProductCountBasedOnCondiiton(firstTym: firstTym);
     return fetchingCartItemsModel;
+  }
+
+  /**
+   * Fetches membership details for the logged in user from the API.
+   * 
+   * Gets the user ID from preferences, executes a GraphQL query to get the membership details, 
+   * and updates the memberShipDetailsResult with the last membership with additional info.
+   */
+  Future<void> getMemberShip() async {
+    final userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+    if (userId != null) {
+      try {
+        final responseQuery = '${variable.qr_membership}$userId';
+        var response = await helper.getMemberShipDetails(responseQuery);
+        final memberShipDetailsResponse = MemberShipDetails.fromJson(response);
+        memberShipDetailsResult = memberShipDetailsResponse.result
+            ?.lastWhere((element) => element.additionalInfo != null);
+        notifyListeners();
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      }
+    }
   }
 
   Future<void> removeCartItem(
@@ -356,14 +390,14 @@ class CheckoutPageProvider extends ChangeNotifier {
 
   void updateProductCountBasedOnCondiiton(
       {bool isNeedRelod = true, bool firstTym = true}) {
-    if (productList != null && productList!.length > 0) {
-      productList!.clear();
-      totalProductCount = 0;
-    }
+    if (productList?.isNotEmpty ?? false) {
+        productList = [];
+        totalProductCount = 0;
+      }
 
     productList = fetchingCartItemsModel?.result?.cart?.productList;
-    if (productList != null && productList!.length > 0) {
-      productList!.forEach((product) {
+    if (productList != null && (productList?.length ?? 0) > 0) {
+      productList?.forEach((product) {
         if (product.additionalInfo!.isMembershipAvail ?? false) {
           totalProductCount = totalProductCount + 0;
         } else {
@@ -409,6 +443,36 @@ class CheckoutPageProvider extends ChangeNotifier {
         }
       });
     }
+    subTotalProductCount = totalProductCount;
+    if (checkedMembershipBenefits) {
+      final transactionLimit = getFinalMembershipAmountLimit();
+      totalProductCount = max(totalProductCount - transactionLimit.toInt(), 0);
+    }
     notifyListeners();
+  }
+
+  /// Returns the final membership amount limit based on the membership details.
+  /// Checks the membership amount limit from getMembershipAmountLimit(),
+  /// and falls back to
+  /// the number of care plans from the memberShipDetailsResult
+  /// if the limit is null.
+  num getFinalMembershipAmountLimit() {
+    var transactionLimit = getMembershipAmountLimit() ?? 0;
+    if (transactionLimit == 0) {
+      transactionLimit = memberShipDetailsResult?.noOfCarePlans ?? 0;
+    }
+    return transactionLimit;
+  }
+
+  /// Returns the transaction limit for care diet plans from
+  /// the membership benefits details, if available.
+  /// Checks the additionalInfo.benefitType list for the care diet plan benefit
+  /// and returns its transactionLimit field.
+  num? getMembershipAmountLimit() {
+    final benefitCareDietPlans =
+        memberShipDetailsResult?.additionalInfo?.benefitType?.firstWhereOrNull(
+      (element) => element.fieldName == constant.strBenefitCareDietPlans,
+    );
+    return benefitCareDietPlans?.transactionLimit;
   }
 }

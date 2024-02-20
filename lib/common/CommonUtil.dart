@@ -20,11 +20,11 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:html_unescape/html_unescape.dart';
@@ -37,10 +37,11 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/SheelaRemainderConfig.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/errorAppLogDataModel.dart';
-import 'package:myfhb/landing/controller/landing_screen_controller.dart';
 import 'package:myfhb/chat_socket/model/SheelaReminderResponse.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/landing/controller/landing_screen_controller.dart';
 import 'package:myfhb/main.dart';
+import 'package:myfhb/more_menu/trouble_shoot_controller.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
@@ -170,10 +171,7 @@ import 'ShowPDFFromFile.dart';
 import 'common_circular_indicator.dart';
 import 'firestore_services.dart';
 import 'keysofmodel.dart' as keysConstant;
-import 'package:myfhb/more_menu/trouble_shoot_controller.dart';
-
 import 'widgets/CommonWidgets.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -194,7 +192,7 @@ class CommonUtil {
   static String WEB_URL = '';
   static String PORTAL_URL = '';
 
-  static String AppName ='';
+  static String AppName = '';
 
   static String UNIT_CONFIGURATION_URL =
       'system-configuration/unit-configuration';
@@ -356,7 +354,8 @@ class CommonUtil {
   }
 
   // Function to replace a separator in a string with an empty string
-  String? replaceSeparator({required String? value, required String separator}) {
+  String? replaceSeparator(
+      {required String? value, required String separator}) {
     // Check if the value is not null and contains the separator
     if (value != null && value.contains(separator)) {
       // If it does, replace all occurrences of the separator with an empty string
@@ -365,8 +364,6 @@ class CommonUtil {
     // If the value is null or doesn't contain the separator, return the original value
     return value;
   }
-
-
 
   void commonMethodToSetPreference() async {
     var apiBaseHelper = ApiBaseHelper();
@@ -5512,8 +5509,7 @@ class CommonUtil {
         desc = fieldModel.strTitleDesc;
       }
       // Check if description is not null and not empty
-      else if (fieldModel.description != null &&
-          fieldModel.description != '') {
+      else if (fieldModel.description != null && fieldModel.description != '') {
         // Set desc to description
         desc = fieldModel.description;
       }
@@ -5553,7 +5549,6 @@ class CommonUtil {
     // Return the parsed HTML string
     return parseHtmlString(desc);
   }
-
 
   String showDescTextRegimenList(VitalsData vitalsData) {
     String? desc = '';
@@ -6739,8 +6734,7 @@ class CommonUtil {
         canEdit = true;
       } else if (regimen?.doseMealString == Constants.doseValueless ||
           regimen?.doseMealString == Constants.doseValueHigh) {
-        if (regimen?.activityOrgin == strSurvey &&
-            regimen?.otherinfo?.isAllDayActivity == true) {
+        if (regimen?.otherinfo?.isAllDayActivity == true) {
           DateTime selectedDateTime =
               CommonUtil.getDateBasedOnOnceInAPlan(selectedDate, regimen!);
 
@@ -6766,8 +6760,7 @@ class CommonUtil {
                       RegimentMode.Schedule;
         }
       } else {
-        if (regimen?.activityOrgin == strSurvey &&
-            regimen?.otherinfo?.isAllDayActivity == true) {
+        if (regimen?.otherinfo?.isAllDayActivity == true) {
           if (calculateDifference(regimen?.estart ?? DateTime.now()) <= 0) {
             canEdit = true;
           } else {
@@ -7559,7 +7552,7 @@ class CommonUtil {
     try {
       // Get details if the app was launched from a notification
       NotificationAppLaunchDetails? didLaunchFromNotification =
-      await localNotificationsPlugin.getNotificationAppLaunchDetails();
+          await localNotificationsPlugin.getNotificationAppLaunchDetails();
 
       // Get the notification response if available
       NotificationResponse? notificationResponse =
@@ -7588,7 +7581,8 @@ class CommonUtil {
   }
 
   // This function is responsible for handling the Sheela activity remainder invocation.
-  getActivityRemainderInvokeSheela(var passedValArr, SheelaAIController sheelaAIController) {
+  getActivityRemainderInvokeSheela(
+      var passedValArr, SheelaAIController sheelaAIController) {
     // Check if auto redirect to Sheela screen is allowed
     if (CommonUtil().isAllowSheelaLiveReminders()) {
       // Live reminder on default existing flow
@@ -7623,7 +7617,8 @@ class CommonUtil {
 
 // This function is responsible for navigating to the Sheela screen based on various conditions.
   getToSheelaNavigate(var passedValArr, SheelaAIController sheelaAIController,
-      {bool isFromAudio = false, bool isFromActivityRemainderInvokeSheela = false}) {
+      {bool isFromAudio = false,
+      bool isFromActivityRemainderInvokeSheela = false}) {
     if (isFromActivityRemainderInvokeSheela) {
       // If invoked from activity remainder, navigate to Sheela screen with arguments
       Get.toNamed(
@@ -7669,8 +7664,8 @@ class CommonUtil {
               allowBackBtnPress: true,
               isSheelaFollowup: true,
               textSpeechSheela: (passedValArr[2] != null &&
-                  passedValArr[2] != 'null' &&
-                  passedValArr[2] != '')
+                      passedValArr[2] != 'null' &&
+                      passedValArr[2] != '')
                   ? passedValArr[2]
                   : passedValArr[1],
               audioMessage: '',
@@ -7691,9 +7686,6 @@ class CommonUtil {
     }
   }
 
-
-
-
   /// Checks if the preferred language is English based on certain conditions.
   ///
   /// @param preferredLanguage The preferred language to be checked (nullable).
@@ -7702,14 +7694,15 @@ class CommonUtil {
     // Check if the preferredLanguage is not null and matches one of the English language codes
     try {
       if (preferredLanguage != null &&
-              (preferredLanguage == 'en-IN' ||  // English - India
-                  preferredLanguage == 'en' ||   // English
-                  preferredLanguage == 'undef')) {  // Undefined language (assuming 'undef' represents a special case)
-            return true;  // If any of the conditions are met, return true
-          } else {
-            return false;  // If none of the conditions are met, return false
-          }
-    } catch (e,stackTrace) {
+          (preferredLanguage == 'en-IN' || // English - India
+              preferredLanguage == 'en' || // English
+              preferredLanguage == 'undef')) {
+        // Undefined language (assuming 'undef' represents a special case)
+        return true; // If any of the conditions are met, return true
+      } else {
+        return false; // If none of the conditions are met, return false
+      }
+    } catch (e, stackTrace) {
       appLogs(message: e, stackTrace: stackTrace);
     }
   }
@@ -7738,7 +7731,13 @@ class CommonUtil {
     return createTicketController;
   }
 
-
+  /// Formats the given [amount] number to a string with 2 decimal places,
+  /// unless the amount is an integer, in which case no decimal places are used.
+  ///
+  /// @param amount The number to format as a string.
+  /// @return The formatted string representing the amount.
+  static String formatAmount(num amount) =>
+      '${amount % 1 == 0 ? amount : amount.toStringAsFixed(2)}';
 }
 
 extension CapExtension on String {

@@ -55,6 +55,7 @@ class _MySettingsState extends State<MySettings> {
  * Declare variable neccessary to voice cloning 
  */
   bool voiceCloning = false;
+  bool useClonedVoice = false;
   bool providerAllowedVoiceCloningModule = true;
   bool superAdminAllowedVoiceCloningModule = true;
   String voiceCloningStatus = 'Inactive';
@@ -185,7 +186,8 @@ class _MySettingsState extends State<MySettings> {
             allowAppointmentNotification,
             allowVitalNotification,
             allowSymptomsNotification,
-            voiceCloning)
+            voiceCloning,
+         useClonedVoice)
         .then((value) {
       Provider.of<LandingViewModel>(context, listen: false)
           .getQurPlanDashBoard();
@@ -225,7 +227,7 @@ class _MySettingsState extends State<MySettings> {
             allowVitalNotification,
             allowSymptomsNotification,
             preferredMeasurement,
-            voiceCloning,null)
+            voiceCloning,null,useClonedVoice)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel!.isSuccess!) {
@@ -419,7 +421,9 @@ class _MySettingsState extends State<MySettings> {
       voiceCloning =
           getDeviceSelectionModel.result![0].profileSetting!.voiceCloning ??
               false;
-
+      useClonedVoice =
+          getDeviceSelectionModel.result![0].profileSetting!.useClonedVoice ??
+              false;
       providerAllowedVoiceCloningModule = getDeviceSelectionModel
               .result![0]
               .primaryProvider
