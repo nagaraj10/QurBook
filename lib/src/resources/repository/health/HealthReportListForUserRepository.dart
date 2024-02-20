@@ -398,7 +398,8 @@ class HealthReportListForUserRepository {
       PreferredMeasurement? preferredMeasurement,
       bool? voiceCloning,
       // should pass when voice clone is changed otherwise it null.
-      bool? isVoiceCloningChanged) async {
+      bool? isVoiceCloningChanged,
+      bool? useClonedVoice) async {
     var body = jsonEncode({
       'id': userMappingId,
       'profileSetting': {
@@ -414,6 +415,7 @@ class HealthReportListForUserRepository {
         'weighScale': weighScale,
         "greColor": greColor,
         "priColor": priColor,
+        "useClonedVoice":useClonedVoice,
         'preferred_language': preferred_language,
         'qa-subscription': qa_subscription,
         'voiceCloning': voiceCloning,
