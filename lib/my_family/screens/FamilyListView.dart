@@ -31,18 +31,31 @@ class FamilyListView {
     FamilyListBloc _familyListBloc = FamilyListBloc();
 
 // return the combine family member list
-    sharedByUsersList =
-        _familyListBloc.getSharedByUsersCombinedList(data) ?? [];
+    sharedByUsersList = _familyListBloc.getSharedByUsersCombinedList(data);
 
-    return showDialog(
-        useSafeArea: true,
+    return showGeneralDialog(
         context: context,
-        builder: (context) {
-          return Align(
-              alignment: Alignment.centerLeft,
-              child: Material(
-                type: MaterialType.transparency,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 150),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              content: SizedBox(
+                width: (CommonUtil().isTablet!)
+                    ? (MediaQuery.of(context).orientation ==
+                            Orientation.landscape)
+                        ? MediaQuery.sizeOf(context).width / 2
+                        : MediaQuery.sizeOf(context).height / 1.5
+                    : MediaQuery.sizeOf(context).height /
+                        1.5, //  <------- Use SizedBox to limit width
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     if (data != null)
                       setupAlertDialoadContainer(sharedByUsersList, context,
@@ -126,7 +139,7 @@ class FamilyListView {
           decoration: BoxDecoration(
               color: const Color(fhbColors.bgColorContainer),
               borderRadius: BorderRadius.circular(10)),
-          margin: EdgeInsets.all(20),
+          //margin: EdgeInsets.all(20),
           padding: EdgeInsets.all(10),
           child: Column(
             children: <Widget>[
