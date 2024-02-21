@@ -65,6 +65,8 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
   List<String> searchFilterOption = [];
   bool isSearch = false;
   Timer? _debounce;
+  // Creating a ScrollController instance for managing scrolling behavior
+  final ScrollController _scrollController = ScrollController();
 
   var createTicketController = CommonUtil().onInitCreateTicketController();
 
@@ -79,7 +81,6 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
     selectedHospitalItems = widget.filterSelectdModel.selectedHospitalIndex;
     selectedYOEItems = widget.filterSelectdModel.selectedYOEIndex;
   }
-  final ScrollController _scrollController = ScrollController();
 
   @override
   void dispose() {
@@ -94,6 +95,7 @@ class _RightSideMenuWidgetState extends State<RightSideMenuWidget> {
       searchFilterOption.clear();
       searchController.clear();
       isSearch = false;
+      // Animating scroll to the top of the scroll view
       _scrollController.animateTo(
         0,
         duration: const Duration(milliseconds: 300),

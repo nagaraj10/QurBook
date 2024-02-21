@@ -43,6 +43,7 @@ class FilterDoctorApi {
         uniqueCity.add(city.name!);
       }
     }
+    // To sort a list of cities alphabetically
    return uniqueCity.toList()..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
   }
 
@@ -73,6 +74,7 @@ class FilterDoctorApi {
         uniqueState.add(stateName.name!);
       }
     }
+    // To sort a list of states alphabetically
     return uniqueState.toList()..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
   }
 
