@@ -795,8 +795,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
     };
     /// Add `walletDeductionAmount` parameter only if patient apply Membership benefits checked
     if (value.checkedMembershipBenefits) {
-      final maxMembershipAmountLimit = value.getFinalMembershipAmountLimit();
-
     final finalAmount = CommonUtil.formatAmount(
         value.subTotalProductCount - value.totalProductCount);
       body['walletDeductionAmount'] = finalAmount;
@@ -1327,10 +1325,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   void methodToCheckIfCartIsUpdated(CheckoutPageProvider value) async {
+    if (value.totalProductCount == 0) {
+      final checkValidation =
+          await CheckoutPageWidgets().profileValidationCheckOnCart(
+                context,
+                feeZero: true,
+              ) ??
+              false;
+      //return if reject button choose
+      if (!checkValidation) {
+        return;
+      }
+    }
     await Provider.of<CheckoutPageProvider>(context, listen: false)
         .loader(true);
-    CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
-
+    if (value.totalProductCount > 0) {
+      CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
+    }
     Provider.of<CheckoutPageProvider>(context, listen: false).isMembershipCart =
         Provider.of<PlanWizardViewModel>(context, listen: false)
             .checkCartForBundle();
@@ -1341,7 +1352,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
     };
     /// Add `walletDeductionAmount` parameter only if patient apply Membership benefits checked
     if (value.checkedMembershipBenefits) {
-      final maxMembershipAmountLimit = value.getFinalMembershipAmountLimit();
       final finalAmount = CommonUtil.formatAmount(
         value.subTotalProductCount - value.totalProductCount);
       body['walletDeductionAmount'] = finalAmount;
@@ -1360,14 +1370,43 @@ class _CheckoutPageState extends State<CheckoutPage> {
           .loader(false, isNeedRelod: false);
       if (result != null) {
         if (result.isSuccess!) {
-          Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
-
+          /**
+          * This code handles the response from making a payment request.
+          *
+          * It first checks if the payment result is null and the payment gateway detail is null.
+          * If so, it navigates to the PaymentResultPage, passing relevant info like orderId, payment status etc.
+          *
+          * Otherwise, it pops the loading dialog, does a profile validation check,
+          * and if that passes calls the planSubLogic method.
+          *
+          * The key steps are:
+          * 1. Check payment result and gateway detail for null values
+          * 2. If null, go to PaymentResultPage
+          * 3. Else close loading dialog and do profile validation check
+          * 4. If validation passes, call planSubLogic
+          */
           if (result.result != null) {
-            var checkValidation = await CheckoutPageWidgets()
-                .profileValidationCheckOnCart(context,
-                    feeZero: (value.totalProductCount) > 0 ? false : true);
-            if (checkValidation ?? false) {
-              planSubLogic(value);
+            if (result.result?.payment == null &&
+                result.result?.paymentGatewayDetail == null) {
+              Get.off(
+                PaymentResultPage(
+                  refNo: result.result!.orderId,
+                  status: result.isSuccess,
+                  isFreePlan: true,
+                  isPaymentFromNotification: widget.isFromNotification,
+                  cartId: widget.cartId,
+                ),
+              );
+            } else {
+              Navigator.of(_keyLoader.currentContext!, rootNavigator: true)
+                  .pop();
+
+              var checkValidation = await CheckoutPageWidgets()
+                  .profileValidationCheckOnCart(context,
+                      feeZero: (value.totalProductCount) > 0 ? false : true);
+              if (checkValidation ?? false) {
+                planSubLogic(value);
+              }
             }
           } else {
             Alert.displayConfirmProceed(Get.context!,
