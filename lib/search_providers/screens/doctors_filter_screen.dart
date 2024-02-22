@@ -101,6 +101,8 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                     CommonConstants.doctors
                 ? menu[0]
                 : labsMenu[0],
+            stateName: selectedState,
+            cityName: selectedCity,
           )),
         child: BlocListener<DoctorsFilterBloc, DoctorsFilterState>(
           listener: (context, state) {
@@ -174,7 +176,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                             selectdFilterItemIndex = selectedIndex;
 
                             checkAllListsEmpty();
-                            
+
                             setState(() {});
                           },
                         )
