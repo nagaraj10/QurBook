@@ -6280,7 +6280,10 @@ class CommonUtil {
         Get.put(ChatUserListController());
       }
 
-      Get.find<SheelaAIController>().getSheelaBadgeCount(
+      // Find and get the SheelaAIController instance
+      SheelaAIController sheelaController = Get.find<SheelaAIController>();
+
+      sheelaController.getSheelaBadgeCount(
         makeApiRequest: true,
       );
       await getMyProfilesetting();
@@ -6294,6 +6297,9 @@ class CommonUtil {
       }
       // Record the user's last access time
       saveUserLastAccessTime();
+
+      // Call the method to initialize Sheela's activity remainder
+      sheelaController.onInitActivitySheelaRemainder();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 

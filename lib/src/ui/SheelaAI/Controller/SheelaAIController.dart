@@ -166,7 +166,6 @@ class SheelaAIController extends GetxController {
   void onInit() {
     super.onInit();
     setDefaultValues();
-    onInitActivitySheelaRemainder();
   }
 
   setDefaultValues() async {
@@ -2602,8 +2601,12 @@ makeApiRequest is used to update the data with latest data
 
   // Create a timer based on the scheduled time for a reminder.
   Timer createTimer(Reminder reminder, tz.TZDateTime scheduledDateTime) {
-    // Calculate the duration until the scheduled time
-    Duration durationUntilScheduledTime = scheduledDateTime!.difference(DateTime.now());
+    // Convert the scheduledDateTime to UTC
+    final utcScheduledDateTime = scheduledDateTime.toUtc();
+
+    // Calculate the duration until the scheduled time based on UTC time
+    final durationUntilScheduledTime =
+        utcScheduledDateTime.difference(tz.TZDateTime.now(tz.UTC));
 
     // Schedule the method to be called after the calculated duration
     return Timer(durationUntilScheduledTime, () {
@@ -2627,6 +2630,7 @@ makeApiRequest is used to update the data with latest data
 
     // If already scheduled, cancel the existing notification with the same ID
     if (isScheduled) {
+      await Future.delayed(const Duration(milliseconds: 100));
       final sheelaAIController = CommonUtil().onInitSheelaAIController();
       // Construct an array of values for the reminder invocation
       var strValue = '$strActivityRemainderInvokeSheela${reminder.eid}';
@@ -2636,7 +2640,7 @@ makeApiRequest is used to update the data with latest data
     }
   }
 
-// Add or update the timer associated with a reminder based on its scheduled time.
+  // Add or update the timer associated with a reminder based on its scheduled time.
   addScheduledTime(Reminder reminder, tz.TZDateTime scheduledDateTime) async {
     await clearScheduledTime(reminder.notificationListId!);
 
