@@ -6280,10 +6280,7 @@ class CommonUtil {
         Get.put(ChatUserListController());
       }
 
-      // Find and get the SheelaAIController instance
-      SheelaAIController sheelaController = Get.find<SheelaAIController>();
-
-      sheelaController.getSheelaBadgeCount(
+      Get.find<SheelaAIController>().getSheelaBadgeCount(
         makeApiRequest: true,
       );
       await getMyProfilesetting();
@@ -6292,14 +6289,11 @@ class CommonUtil {
       FirestoreServices().setupListenerForFirestoreChanges();
       if (!Get.isRegistered<PDFViewController>()) {
         Get.lazyPut(
-          () => PDFViewController(),
+              () => PDFViewController(),
         );
       }
       // Record the user's last access time
       saveUserLastAccessTime();
-
-      // Call the method to initialize Sheela's activity remainder
-      sheelaController.onInitActivitySheelaRemainder();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 

@@ -698,15 +698,6 @@ zonedScheduleNotification(
           (notification) => notification.id == notificationId,
     );
 
-    // If already scheduled, cancel the existing notification with the same ID
-    if (isScheduled) {
-      // Cancel existing notification and clear scheduled time in SheelaAIController
-      var functionCalls = <Future<dynamic>>[
-        localNotificationsPlugin.cancel(notificationId),
-        sheelaAIController.clearScheduledTime(notificationId.toString())
-      ];
-      await Future.wait(functionCalls);
-    }
 
     var isDismissButtonOnlyShown = false;
     var channelId = remainderScheduleChannel.id;
@@ -771,6 +762,13 @@ zonedScheduleNotification(
     );
 
 
+    if (isScheduled) {
+      // If the reminder is scheduled, add the scheduled time using SheelaAIController
+      await sheelaAIController.addScheduledTime(reminderTemp!, scheduledDateTime);
+      return;
+    }
+
+
     // List to hold asynchronous function calls
     var functionCalls = <Future<dynamic>>[
       // Schedule a local notification
@@ -780,7 +778,7 @@ zonedScheduleNotification(
         reminderTemp?.description ?? strScheduledbody,
         scheduledDateTime,
         notificationDetails,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        androidScheduleMode: AndroidScheduleMode.alarmClock,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         payload: payLoadData,
