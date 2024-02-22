@@ -1849,6 +1849,8 @@ makeApiRequest is used to update the data with latest data
 
         // Stop speech listening as the countdown is complete
         stopSpeechListening();
+
+        // Set the value of isMicListening to false.
         isMicListening.value = false;
       }
     } catch (e, stackTrace) {
