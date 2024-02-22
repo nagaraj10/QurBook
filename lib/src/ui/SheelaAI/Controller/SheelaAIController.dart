@@ -1542,47 +1542,44 @@ makeApiRequest is used to update the data with latest data
 
   // A function to show a dialog with options to choose from Camera or Gallery
   Future<void> showCameraGalleryDialog(String? btnTitle, String? requestFileType) {
-    return imgFromCamera(strGallery, btnTitle);
-    // Show a dialog using the showDialog function
-    // return showDialog(
-    //   context: Get.context!, // Use Get.context to get the current context
-    //   builder: (context) {
-    //     // Return an AlertDialog with title and content
-    //     return AlertDialog(
-    //       title: Text('Choose an action'), // Set the title of the dialog
-    //       content: SingleChildScrollView(
-    //         child: ListBody(
-    //           children: <Widget>[
-    //             // Gallery option with GestureDetector
-    //             GestureDetector(
-    //               onTap: () {
-    //                 getOpenGallery(requestFileType == strImage ? strGallery : strVideo, btnTitle, requestFileType); // Handle action when Gallery is tapped
-    //                 Navigator.of(context).pop(); // Close the dialog
-    //               },
-    //               child: Text(requestFileType == strImage ? Gallery : strSelectVideo), // Display "Gallery" text
-    //             ),
-    //             Padding(padding: EdgeInsets.all(8)),
-    //             // Add padding between options
-    //             // Camera option with GestureDetector
-    //             GestureDetector(
-    //               onTap: () {
-    //                 if (requestFileType == strImage) {
-    //                   imgFromCamera(strGallery, btnTitle,context); // Handle action when Camera is tapped
-    //
-    //
-    //                 } else {
-    //                   openVideoCamera(btnTitle, requestFileType);
-    //                 }
-    //                 Navigator.of(context).pop(); // Close the dialog
-    //               },
-    //               child: Text(requestFileType == strImage ? Camera : strRecordVideo), // Display "Camera" text
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //     );
-    //   },
-    // );
+    if (requestFileType == strImage) {
+      return imgFromCamera(strGallery, btnTitle); // Handle action when Camera is tapped
+    } else {
+      // Show a dialog using the showDialog function
+    return showDialog(
+      context: Get.context!, // Use Get.context to get the current context
+      builder: (context) {
+        // Return an AlertDialog with title and content
+        return AlertDialog(
+          title: Text('Choose an action'), // Set the title of the dialog
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                // Gallery option with GestureDetector
+                GestureDetector(
+                  onTap: () {
+                    getOpenGallery(requestFileType == strImage ? strGallery : strVideo, btnTitle, requestFileType); // Handle action when Gallery is tapped
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: Text(requestFileType == strImage ? Gallery : strSelectVideo), // Display "Gallery" text
+                ),
+                Padding(padding: EdgeInsets.all(8)),
+                // Add padding between options
+                // Camera option with GestureDetector
+                GestureDetector(
+                  onTap: () {
+                    openVideoCamera(btnTitle, requestFileType);
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: Text(requestFileType == strImage ? Camera : strRecordVideo), // Display "Camera" text
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    }
   }
 
   // Function to capture an image from the camera and trigger image preview
