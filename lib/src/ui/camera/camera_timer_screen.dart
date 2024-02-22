@@ -90,7 +90,7 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
       await NativeShutterSound.play(); // Play shutter sound
       _timer.cancel(); // Cancel the timer
   }
-
+  // Function to toggle a camera - Front and rear
   Future<void> _toggleCamera() async {
     selectedCameraIndex = selectedCameraIndex == 0 ? 1 : 0; // Toggle between the two cameras
     _timer.cancel();
