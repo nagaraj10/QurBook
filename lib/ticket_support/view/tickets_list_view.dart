@@ -1,17 +1,17 @@
-
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
+    as constants;
 import 'package:myfhb/ticket_support/model/ticket_list_model/TicketsListResponse.dart';
 import 'package:myfhb/ticket_support/model/ticket_model.dart';
 import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
+
 import '../../common/errors_widget.dart';
+import '../../constants/fhb_constants.dart' as strConstants;
 import '../../constants/variable_constant.dart' as variable;
 import '../../src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
-    as constants;
-import '../../constants/fhb_constants.dart' as strConstants;
 
 class TicketsList extends StatefulWidget {
   @override
@@ -178,10 +178,9 @@ class _TicketsList extends State<TicketsList> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              //TO handle null exception
                               Text(
-                                ticketList[i]
-                                    .type!
-                                    .name
+                                (ticketList[i].type?.name ?? '')
                                     .toString()
                                     .capitalizeFirstofEach,
                                 style: TextStyle(
@@ -263,7 +262,8 @@ class _TicketsList extends State<TicketsList> {
                             ],
                           ),
                           (ticketList[i].subject.toString() !=
-                                  ticketList[i].type!.name)
+                                  (ticketList[i].type?.name ??
+                                      '')) //To handle null exception
                               ? Text(
                                   ticketList[i]
                                       .subject

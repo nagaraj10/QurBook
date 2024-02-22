@@ -1,11 +1,9 @@
-
 import 'package:myfhb/common/CommonUtil.dart';
 
-import 'Members.dart';
+import 'AdditionalInfo.dart';
 import 'attachments.dart';
 import 'comments.dart';
 import 'notes.dart';
-import 'AdditionalInfo.dart';
 
 class TicketsListResponse {
   bool? success;
@@ -29,18 +27,18 @@ class TicketsListResponse {
     try {
       success = json['success'];
       if (json['tickets'] != null) {
-            tickets = <Tickets>[];
-            json['tickets'].forEach((v) {
-              tickets!.add(Tickets.fromJson(v));
-            });
-          }
+        tickets = <Tickets>[];
+        json['tickets'].forEach((v) {
+          tickets!.add(Tickets.fromJson(v));
+        });
+      }
       count = json['count'];
       totalCount = json['totalCount'];
       page = json['page'];
       prevPage = json['prevPage'];
       nextPage = json['nextPage'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -67,7 +65,6 @@ class Tickets {
   String? sId;
   Subscribers? owner;
   String? subject;
-  Group? group;
   Type? type;
   Priority? priority;
   String? issue;
@@ -91,7 +88,6 @@ class Tickets {
       this.sId,
       this.owner,
       this.subject,
-      this.group,
       this.type,
       this.priority,
       this.issue,
@@ -111,65 +107,63 @@ class Tickets {
       deleted = json['deleted'];
       status = json['status'];
       if (json['tags'] != null) {
-            tags = <Tags>[];
-            json['tags'].forEach((v) {
-              tags!.add(Tags.fromJson(v));
-            });
-          }
+        tags = <Tags>[];
+        json['tags'].forEach((v) {
+          tags!.add(Tags.fromJson(v));
+        });
+      }
       if (json['subscribers'] != null) {
-            subscribers = <Subscribers>[];
-            json['subscribers'].forEach((v) {
-              subscribers!.add(Subscribers.fromJson(v));
-            });
-          }
+        subscribers = <Subscribers>[];
+        json['subscribers'].forEach((v) {
+          subscribers!.add(Subscribers.fromJson(v));
+        });
+      }
       sId = json['_id'];
       owner =
-              json['owner'] != null ? Subscribers.fromJson(json['owner']) : null;
+          json['owner'] != null ? Subscribers.fromJson(json['owner']) : null;
       subject = json['subject'];
-      group = json['group'] != null ? Group.fromJson(json['group']) : null;
       type = json['type'] != null ? Type.fromJson(json['type']) : null;
-      priority = json['priority'] != null
-              ? Priority.fromJson(json['priority'])
-              : null;
+      priority =
+          json['priority'] != null ? Priority.fromJson(json['priority']) : null;
       issue = json['issue'];
       assignee = json['assignee'] != null
-              ? Subscribers.fromJson(json['assignee'])
-              : null;
+          ? Subscribers.fromJson(json['assignee'])
+          : null;
       date = json['date'];
       preferredDate = json['preferredDate'];
       if (json['comments'] != null) {
-            comments = <Comments>[];
-            json['comments'].forEach((v) {
-              comments!.add(Comments.fromJson(v));
-            });
-          }
+        comments = <Comments>[];
+        json['comments'].forEach((v) {
+          comments!.add(Comments.fromJson(v));
+        });
+      }
       if (json['notes'] != null) {
-            notes = <Notes>[];
-            json['notes'].forEach((v) {
-              notes!.add(Notes.fromJson(v));
-            });
-          }
+        notes = <Notes>[];
+        json['notes'].forEach((v) {
+          notes!.add(Notes.fromJson(v));
+        });
+      }
       if (json['attachments'] != null) {
-            attachments = <Attachments>[];
-            json['attachments'].forEach((v) {
-              attachments!.add(Attachments.fromJson(v));
-            });
-          }
+        attachments = <Attachments>[];
+        json['attachments'].forEach((v) {
+          attachments!.add(Attachments.fromJson(v));
+        });
+      }
 
       additionalInfo = json['additionalInfo'] != null
-              ? AdditionalInfo.fromJson(json['additionalInfo'])
-              : null;
+          ? AdditionalInfo.fromJson(json['additionalInfo'])
+          : null;
 
       if (json['history'] != null) {
-            history = <History>[];
-            json['history'].forEach((v) {
-              history!.add(History.fromJson(v));
-            });
-          }
+        history = <History>[];
+        json['history'].forEach((v) {
+          history!.add(History.fromJson(v));
+        });
+      }
       uid = json['uid'];
       iV = json['__v'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -188,9 +182,6 @@ class Tickets {
       data['owner'] = this.owner!.toJson();
     }
     data['subject'] = this.subject;
-    if (this.group != null) {
-      data['group'] = this.group!.toJson();
-    }
     if (this.type != null) {
       data['type'] = this.type!.toJson();
     }
@@ -232,8 +223,8 @@ class Tags {
   Tags.fromJson(Map<String, dynamic> json) {
     try {
       id = json['id'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -268,8 +259,8 @@ class Subscribers {
       email = json['email'];
       role = json['role'] != null ? Role.fromJson(json['role']) : null;
       title = json['title'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -311,8 +302,8 @@ class Role {
       normalized = json['normalized'];
       isAdmin = json['isAdmin'];
       isAgent = json['isAgent'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -328,6 +319,7 @@ class Role {
   }
 }
 
+/*
 class Group {
   List<Members>? members;
   List<String>? sendMailTo;
@@ -340,17 +332,17 @@ class Group {
   Group.fromJson(Map<String, dynamic> json) {
     try {
       if (json['members'] != null) {
-            members = <Members>[];
-            json['members'].forEach((v) {
-              members!.add(Members.fromJson(v));
-            });
-          }
+        members = <Members>[];
+        json['members'].forEach((v) {
+          members!.add(Members.fromJson(v));
+        });
+      }
       sendMailTo = json['sendMailTo'].cast<String>();
       public = json['public'];
       sId = json['_id'];
       name = json['name'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -368,6 +360,7 @@ class Group {
     return data;
   }
 }
+*/
 
 class Type {
   List<Priorities>? priorities;
@@ -380,16 +373,16 @@ class Type {
   Type.fromJson(Map<String, dynamic> json) {
     try {
       if (json['priorities'] != null) {
-            priorities = <Priorities>[];
-            json['priorities'].forEach((v) {
-              priorities!.add(Priorities.fromJson(v));
-            });
-          }
+        priorities = <Priorities>[];
+        json['priorities'].forEach((v) {
+          priorities!.add(Priorities.fromJson(v));
+        });
+      }
       sId = json['_id'];
       name = json['name'];
       iV = json['__v'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -432,8 +425,8 @@ class Priorities {
       migrationNum = json['migrationNum'];
       defaultBool = json['defaultBool'];
       durationFormatted = json['durationFormatted'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -480,8 +473,8 @@ class Priority {
       defaultBool = json['defaultBool'];
       iV = json['__v'];
       durationFormatted = json['durationFormatted'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -514,10 +507,10 @@ class History {
       action = json['action'];
       description = json['description'];
       owner =
-              json['owner'] != null ? Subscribers.fromJson(json['owner']) : null;
+          json['owner'] != null ? Subscribers.fromJson(json['owner']) : null;
       date = json['date'];
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 

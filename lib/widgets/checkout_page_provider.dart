@@ -458,6 +458,9 @@ class CheckoutPageProvider extends ChangeNotifier {
   /// if the limit is null.
   num getFinalMembershipAmountLimit() {
     var transactionLimit = getMembershipAmountLimit() ?? 0;
+    if (transactionLimit > (memberShipDetailsResult?.noOfCarePlans ?? 0)) {
+      transactionLimit = memberShipDetailsResult?.noOfCarePlans ?? 0;
+    }
     if (transactionLimit == 0) {
       transactionLimit = memberShipDetailsResult?.noOfCarePlans ?? 0;
     }

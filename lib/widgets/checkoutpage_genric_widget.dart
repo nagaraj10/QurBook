@@ -363,14 +363,13 @@ class CheckoutPageWidgets {
       bool? feeZero,
       Function()? refresh}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
-    CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
+   CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
     await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
-      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
       myProfile = value;
     });
-
+    var checkValidation = false;
     if (myProfile != null) {
-      return await addressValidation(context,
+      checkValidation = await addressValidation(context,
           packageId: packageId,
           isSubscribed: isSubscribed,
           providerId: providerId,
@@ -380,6 +379,10 @@ class CheckoutPageWidgets {
     } else {
       FlutterToast().getToast(noGender, Colors.red);
     }
+    if (_keyLoader.currentContext != null) {
+      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+    }
+    return checkValidation;
   }
 
   Future<bool> addressValidation(BuildContext context,
