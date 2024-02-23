@@ -6323,9 +6323,10 @@ class CommonUtil {
       var regController = CommonUtil().onInitQurhomeRegimenController();
       regController.getRegimenList();
       FirestoreServices().setupListenerForFirestoreChanges();
+      FirestoreServices().updateDataFor('all');
       if (!Get.isRegistered<PDFViewController>()) {
         Get.lazyPut(
-              () => PDFViewController(),
+          () => PDFViewController(),
         );
       }
       // Record the user's last access time
