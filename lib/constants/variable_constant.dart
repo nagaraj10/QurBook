@@ -567,7 +567,7 @@ const String strRemainders = 'Reminders';
 
 //string added to set not on the remainder sheela dialog
 const String strSheelaDialogNote =
-    'Touch the Sheela icon to see new reminders. Touch anywhere else to go back to the home screen';
+    'Touch anywhere else to go back to the home screen';
 // for search providers
 
 const String strGetDoctorsList = 'Getting Doctor List';
