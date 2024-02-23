@@ -26,6 +26,7 @@ class PaymentResultPage extends StatefulWidget {
   final String? paymentId;
   final bool? isFromRazor;
   final bool isPaymentFromNotification;
+  final String? cartId;
 
   PaymentResultPage(
       {Key? key,
@@ -39,7 +40,7 @@ class PaymentResultPage extends StatefulWidget {
       this.paymentRetryUrl,
       this.paymentId,
       this.isFromRazor,
-      this.isPaymentFromNotification = false})
+      this.isPaymentFromNotification = false, this.cartId,})
       : super(key: key);
 
   @override
@@ -142,10 +143,13 @@ class _ResultPage extends State<PaymentResultPage> {
                               foregroundColor: Colors.white,
                               padding: EdgeInsets.all(12.0),
                             ),
-                            onPressed: () {
-                              Provider.of<CheckoutPageProvider>(context,
+                            onPressed: () async {
+                              await Provider.of<CheckoutPageProvider>(context,
                                       listen: false)
                                   .loader(false, isNeedRelod: true);
+                              await Provider.of<CheckoutPageProvider>(context,
+                                      listen: false)
+                                  .fetchCartItem();
 
                               if (status!) {
                                 //widget.closePage(STR_SUCCESS);
@@ -159,7 +163,7 @@ class _ResultPage extends State<PaymentResultPage> {
                                       ),
                                     );
                                   } else {
-                                    Get.offAllNamed(router.rt_MyPlans);
+                                   await Get.offAllNamed(router.rt_MyPlans);
                                   }
                                 });
                               } else {
@@ -221,9 +225,12 @@ class _ResultPage extends State<PaymentResultPage> {
                                       ),
                                     );
                                   } else {
-                                    Provider.of<CheckoutPageProvider>(context,
+                                   await Provider.of<CheckoutPageProvider>(context,
                                             listen: false)
                                         .loader(false, isNeedRelod: true);
+                                    await Provider.of<CheckoutPageProvider>(context,
+                                      listen: false)
+                                  .fetchCartItem();
                                     Provider.of<RegimentViewModel>(
                                       Get.context!,
                                       listen: false,
@@ -259,7 +266,7 @@ class _ResultPage extends State<PaymentResultPage> {
                                 foregroundColor: Colors.white,
                                 padding: EdgeInsets.all(12.0),
                               ),
-                              onPressed: () {
+                              onPressed: () async {
                                 if (widget.isPaymentFromNotification) {
                                   Get.offAllNamed(
                                     router.rt_Landing,
@@ -268,10 +275,14 @@ class _ResultPage extends State<PaymentResultPage> {
                                     ),
                                   );
                                 } else {
-                                  Provider.of<CheckoutPageProvider>(context,
+                                  await Provider.of<CheckoutPageProvider>(
+                                          context,
                                           listen: false)
                                       .loader(false, isNeedRelod: true);
-
+                                  await Provider.of<CheckoutPageProvider>(
+                                          context,
+                                          listen: false)
+                                      .fetchCartItem();
                                   Get.offAll(CheckoutPage(
                                     //cartType: CartType.RETRY_CART,
                                     cartUserId: widget.cartUserId,

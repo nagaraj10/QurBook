@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,6 +31,7 @@ import 'package:myfhb/src/ui/SheelaAI/Views/AttachmentListSheela.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/video_player_screen.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
+import 'package:myfhb/src/ui/camera/camera_timer_screen.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
@@ -38,7 +40,7 @@ import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:uuid/uuid.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:video_thumbnail/video_thumbnail.dart' as thumbnail;
 import 'package:youtube_player_flutter/youtube_player_flutter.dart' as youtube;
 
 import '../../../../common/PreferenceUtil.dart';
@@ -164,9 +166,13 @@ class SheelaAIController extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();
-    setDefaultValues();
-    onInitActivitySheelaRemainder();
+    try {
+      super.onInit();
+      setDefaultValues();
+      onInitActivitySheelaRemainder();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
   }
 
   setDefaultValues() async {
@@ -1540,7 +1546,10 @@ makeApiRequest is used to update the data with latest data
 
   // A function to show a dialog with options to choose from Camera or Gallery
   Future<void> showCameraGalleryDialog(String? btnTitle, String? requestFileType) {
-    // Show a dialog using the showDialog function
+    if (requestFileType == strImage) {
+      return imgFromCamera(strGallery, btnTitle); // Handle action when Camera is tapped
+    } else {
+      // Show a dialog using the showDialog function
     return showDialog(
       context: Get.context!, // Use Get.context to get the current context
       builder: (context) {
@@ -1563,11 +1572,7 @@ makeApiRequest is used to update the data with latest data
                 // Camera option with GestureDetector
                 GestureDetector(
                   onTap: () {
-                    if (requestFileType == strImage) {
-                      imgFromCamera(strGallery, btnTitle); // Handle action when Camera is tapped
-                    } else {
-                      openVideoCamera(btnTitle, requestFileType);
-                    }
+                    openVideoCamera(btnTitle, requestFileType);
                     Navigator.of(context).pop(); // Close the dialog
                   },
                   child: Text(requestFileType == strImage ? Camera : strRecordVideo), // Display "Camera" text
@@ -1578,24 +1583,58 @@ makeApiRequest is used to update the data with latest data
         );
       },
     );
+    }
   }
 
   // Function to capture an image from the camera and trigger image preview
   imgFromCamera(String fromPath, String? btnTitle) async {
     late File _image; // Declare a variable to store the captured image
+    //
+    // var picker = ImagePicker(); // Create an instance of ImagePicker
+    // var pickedFile = await picker.pickImage(source: ImageSource.camera, imageQuality: 80); // Capture an image from the camera
+    //
+    // if (pickedFile != null) {
+    //   _image = File(pickedFile.path); // Create a File object from the captured image path
+    //
+    //   // Trigger the image preview thumbnail with the captured image path
+    //   sheelaFileStaticConversation(
+    //       btnTitle: btnTitle, // Optional button title
+    //       selectedImagePath: _image.path, // Path to the captured image
+    //       requestFileType: strImage);
+    List<CameraDescription> cameras = await availableCameras();
 
-    var picker = ImagePicker(); // Create an instance of ImagePicker
-    var pickedFile = await picker.pickImage(source: ImageSource.camera, imageQuality: 80); // Capture an image from the camera
+    await Get.to( CameraPreviewScreen(
+      cameras: cameras,
+    ))?.then((value) {
+      if(value!=null){
+        _image = File(value.path); // Create a File object from the captured image path
 
-    if (pickedFile != null) {
-      _image = File(pickedFile.path); // Create a File object from the captured image path
+        // Trigger the image preview thumbnail with the captured image path
+        sheelaFileStaticConversation(
+            btnTitle: btnTitle, // Optional button title
+            selectedImagePath: _image.path, // Path to the captured image
+            requestFileType: strImage);
+      }
+    });
+    // Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //     builder: (context) {
+    //   return CameraPreviewScreen(
+    //     cameras: cameras,
+    //   );
+    // })).then((value) {
+    //   if(value!=null){
+    //     _image = File(value.path); // Create a File object from the captured image path
+    //
+    //     // Trigger the image preview thumbnail with the captured image path
+    //     sheelaFileStaticConversation(
+    //         btnTitle: btnTitle, // Optional button title
+    //         selectedImagePath: _image.path, // Path to the captured image
+    //         requestFileType: strImage);
+    //   }
+    // });
 
-      // Trigger the image preview thumbnail with the captured image path
-      sheelaFileStaticConversation(
-          btnTitle: btnTitle, // Optional button title
-          selectedImagePath: _image.path, // Path to the captured image
-          requestFileType: strImage);
-    }
   }
 
   // Function to open the gallery, crop the selected image, and trigger image preview
@@ -1810,6 +1849,9 @@ makeApiRequest is used to update the data with latest data
 
         // Stop speech listening as the countdown is complete
         stopSpeechListening();
+
+        // Set the value of isMicListening to false.
+        isMicListening.value = false;
       }
     } catch (e, stackTrace) {
       // Handle any exceptions that occur during the completion check and log them
@@ -2592,9 +2634,9 @@ makeApiRequest is used to update the data with latest data
   // Define a function to get the thumbnail image data from a video path
   Future<Uint8List?> getThumbnailImage(path) async {
     // Use the VideoThumbnail package to generate thumbnail data from the video path
-    return await VideoThumbnail.thumbnailData(
+    return await thumbnail.VideoThumbnail.thumbnailData(
       video: path, // Specify the video path
-      imageFormat: ImageFormat.JPEG, // Set the image format to JPEG
+      imageFormat: thumbnail.ImageFormat.JPEG, // Set the image format to JPEG
       maxWidth: 128, // Specify the width of the thumbnail; let the height auto-scaled to keep the source aspect ratio
       quality: 50, // Set the quality of the thumbnail
     );
@@ -2602,19 +2644,23 @@ makeApiRequest is used to update the data with latest data
 
   // Create a timer based on the scheduled time for a reminder.
   Timer createTimer(Reminder reminder, tz.TZDateTime scheduledDateTime) {
-    // Calculate the duration until the scheduled time
-    Duration durationUntilScheduledTime = scheduledDateTime!.difference(DateTime.now());
+    // Convert the scheduledDateTime to UTC
+    final utcScheduledDateTime = scheduledDateTime.toUtc();
+
+    // Calculate the duration until the scheduled time based on UTC time
+    final durationUntilScheduledTime =
+        utcScheduledDateTime.difference(tz.TZDateTime.now(tz.UTC));
 
     // Schedule the method to be called after the calculated duration
     return Timer(durationUntilScheduledTime, () {
       // Call the scheduled method passing the reminder
       scheduledMethod(reminder);
       // Optional: Reschedule the method for the next occurrence
-      // rescheduleMethod(index);
     });
   }
 
-// Method called when the timer expires, triggers the reminder-related logic.
+
+  // Method called when the timer expires, triggers the reminder-related logic.
   scheduledMethod(Reminder reminder) async {
     final notificationId = int.tryParse('${reminder?.notificationListId}') ?? 0;
     // Get the list of pending notifications
@@ -2627,30 +2673,40 @@ makeApiRequest is used to update the data with latest data
 
     // If already scheduled, cancel the existing notification with the same ID
     if (isScheduled) {
+      await Future.delayed(const Duration(milliseconds: 100));
       final sheelaAIController = CommonUtil().onInitSheelaAIController();
       // Construct an array of values for the reminder invocation
       var strValue = '$strActivityRemainderInvokeSheela${reminder.eid}';
       final passedValArr = strValue.split('&');
       // Invoke the method to handle the reminder invocation
-      CommonUtil().getActivityRemainderInvokeSheela(passedValArr, sheelaAIController);
+      await CommonUtil().getActivityRemainderInvokeSheela(passedValArr, sheelaAIController);
+      // Example usage of clearScheduledTime with null safety
+      clearScheduledTime(reminder?.notificationListId??'');
     }
   }
 
-// Add or update the timer associated with a reminder based on its scheduled time.
+  // Add or update the timer associated with a reminder based on its scheduled time.
   addScheduledTime(Reminder reminder, tz.TZDateTime scheduledDateTime) async {
     await clearScheduledTime(reminder.notificationListId!);
-
-    // Create a new timer for the new scheduled time and add it to the map
-    final newTimer = createTimer(reminder, scheduledDateTime);
-    reminderTimers[reminder.notificationListId!] = newTimer;
+    try {
+      // Create a new timer for the new scheduled time and add it to the map
+      final newTimer = createTimer(reminder, scheduledDateTime);
+      reminderTimers[reminder.notificationListId!] = newTimer;
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: 'Error adding scheduled time: $e', stackTrace: stackTrace);
+    }
   }
 
-// Cancel and clear all timers associated with reminders.
+  // Cancel and clear all timers associated with reminders.
   clearAllTimers() {
-    for (var timer in reminderTimers.values) {
-      timer.cancel();
+    try {
+      for (var timer in reminderTimers.values) {
+        timer.cancel();
+      }
+      reminderTimers.clear();
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: 'Error clearing all timers: $e', stackTrace: stackTrace);
     }
-    reminderTimers.clear();
   }
 
   // Function to clear the scheduled time for a reminder
@@ -2663,17 +2719,13 @@ makeApiRequest is used to update the data with latest data
         reminderTimers.remove(notificationListId);
       }
     } catch (e, stackTrace) {
-      // Handle any exceptions and log them using appLogs method
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      CommonUtil().appLogs(message: 'Error clearing scheduled time: $e', stackTrace: stackTrace);
     }
   }
 
-// Function to clear the scheduled time for a reminder
+  // Function to clear the scheduled time for a reminder
   onInitActivitySheelaRemainder() async {
     try {
-      // Initialize timers list
-      reminderTimers = {};
-
       // Refresh activity reminders
       await QurPlanReminders.refreshActivityReminders();
     } catch (e, stackTrace) {

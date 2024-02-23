@@ -43,7 +43,8 @@ class FilterDoctorApi {
         uniqueCity.add(city.name!);
       }
     }
-    return uniqueCity.toList();
+    // To sort a list of cities alphabetically
+   return uniqueCity.toList()..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
   }
 
   // Fetches the list of states based on the provided cityName
@@ -73,7 +74,8 @@ class FilterDoctorApi {
         uniqueState.add(stateName.name!);
       }
     }
-    return uniqueState.toList();
+    // To sort a list of states alphabetically
+    return uniqueState.toList()..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
   }
 
   // Fetches the list of doctor specializations based on the provided searchText
