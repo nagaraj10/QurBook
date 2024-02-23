@@ -266,7 +266,6 @@ const String icon_choose_lab = 'assets/icons/choose_lab.svg';
 // Define a constant string representing the file path for the 'ic_address.svg' icon
 const String icon_address = 'assets/icons/ic_address.svg';
 
-
 //string for troubleshooting
 const String strAppCompatibilty = 'App compatibility';
 const String strSDKCompatibilty = 'SDK compatibility';
@@ -567,7 +566,8 @@ const String strAppointments = 'Appointments';
 const String strRemainders = 'Reminders';
 
 //string added to set not on the remainder sheela dialog
-const String strSheelaDialogNote = 'Click Sheela icon to view unread reminders; click anywhere else to dismiss.';
+const String strSheelaDialogNote =
+    'Touch the Sheela icon to see new reminders. Touch anywhere else to go back to the home screen';
 // for search providers
 
 const String strGetDoctorsList = 'Getting Doctor List';
@@ -750,10 +750,11 @@ const String strSheelaDesc =
 const String strUseClonedVoice =
     'Use cloned voice'; //String declared for use cloned voice
 
-const String strVoiceCloneNotSetByYourCaregiver = 'Voice clone sample not set by your caregiver'; //String declared for VoiceCloneNotSetByYourCaregiver
+const String strVoiceCloneNotSetByYourCaregiver =
+    'Voice clone sample not set by your caregiver'; //String declared for VoiceCloneNotSetByYourCaregiver
 
 const String strUseClonedVoiceDesc =
-    'Option to allow using the cloned voice for sheela conversation';//description for Usecloned Voice
+    'Option to allow using the cloned voice for sheela conversation'; //description for Usecloned Voice
 
 const String strStatus = 'Status : ';
 //Create common String for voice cloning text
@@ -768,8 +769,10 @@ const String strApproved = 'Approved'; //status text for approved
 const String strDeclined = 'Declined'; //status text for declined
 const String strReason = 'Reason : '; //status text for reason,include spacing
 
-const String strSubVoice = 'Submitted voice sample'; //String for voice submitted
-const String strProVoice = 'Processed voice sample'; //String for voice processed
+const String strSubVoice =
+    'Submitted voice sample'; //String for voice submitted
+const String strProVoice =
+    'Processed voice sample'; //String for voice processed
 const String strChangeVoice = 'Change voice sample'; //String for voice print
 
 const String strStart = 'Start';
@@ -995,10 +998,12 @@ const String strCareDietPlan = "care/diet plan";
 const String strHomecareServices = "homecare services";
 const String strFoodDelivery = "food delivery";
 
-const String strHealthPlan = "health plan";        // Define a constant string for health plan
-const String strAmbulanceService = "ambulance service";  // Define a constant string for ambulance service
-const String strOrderMedicine = "order medicine";  // Define a constant string for ordering medicine
-
+const String strHealthPlan =
+    "health plan"; // Define a constant string for health plan
+const String strAmbulanceService =
+    "ambulance service"; // Define a constant string for ambulance service
+const String strOrderMedicine =
+    "order medicine"; // Define a constant string for ordering medicine
 
 const String strGetCityList = 'Getting City List';
 const String strSelValidMsg = 'Please select a valid';
