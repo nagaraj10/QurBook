@@ -1383,7 +1383,9 @@ makeApiRequest is used to update the data with latest data
     CommonUtil().dialogForSheelaQueueStable(Get.context!,
         unReadMsgCount:
             Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
-                .chatTotalCount, onTapSheelaRemainders: (value) {
+                .chatTotalCount,
+        fromQurhomeRegimen: isFromQurHomeRegimen,
+        onTapSheelaRemainders: (value) {
       isQueueDialogShowing.value = false;
       Get.back();
       Get.toNamed(
@@ -2965,7 +2967,6 @@ makeApiRequest is used to update the data with latest data
     });
   }
 
-
   // Method called when the timer expires, triggers the reminder-related logic.
   scheduledMethod(Reminder reminder) async {
     final notificationId = int.tryParse('${reminder?.notificationListId}') ?? 0;
@@ -2986,9 +2987,10 @@ makeApiRequest is used to update the data with latest data
       var strValue = '$strActivityRemainderInvokeSheela${reminder.eid}';
       final passedValArr = strValue.split('&');
       // Invoke the method to handle the reminder invocation
-      await CommonUtil().getActivityRemainderInvokeSheela(passedValArr, sheelaAIController);
+      await CommonUtil()
+          .getActivityRemainderInvokeSheela(passedValArr, sheelaAIController);
       // Example usage of clearScheduledTime with null safety
-      clearScheduledTime(reminder?.notificationListId??'');
+      clearScheduledTime(reminder?.notificationListId ?? '');
     }
   }
 
@@ -3000,7 +3002,8 @@ makeApiRequest is used to update the data with latest data
       final newTimer = createTimer(reminder, scheduledDateTime);
       reminderTimers[reminder.notificationListId!] = newTimer;
     } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: 'Error adding scheduled time: $e', stackTrace: stackTrace);
+      CommonUtil().appLogs(
+          message: 'Error adding scheduled time: $e', stackTrace: stackTrace);
     }
   }
 
@@ -3012,7 +3015,8 @@ makeApiRequest is used to update the data with latest data
       }
       reminderTimers.clear();
     } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: 'Error clearing all timers: $e', stackTrace: stackTrace);
+      CommonUtil().appLogs(
+          message: 'Error clearing all timers: $e', stackTrace: stackTrace);
     }
   }
 
@@ -3026,7 +3030,8 @@ makeApiRequest is used to update the data with latest data
         reminderTimers.remove(notificationListId);
       }
     } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: 'Error clearing scheduled time: $e', stackTrace: stackTrace);
+      CommonUtil().appLogs(
+          message: 'Error clearing scheduled time: $e', stackTrace: stackTrace);
     }
   }
 

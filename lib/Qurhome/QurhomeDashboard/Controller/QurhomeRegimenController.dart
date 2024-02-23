@@ -608,7 +608,7 @@ class QurhomeRegimenController extends GetxController {
             try {
               //Separte method to show remainder in tablet devices
               sheelaAIController.checkIfWeNeedToShowDialogBox(
-                  isNeedSheelaDialog: true);
+                  isNeedSheelaDialog: true, isFromQurHomeRegimen: true);
             } catch (e, stackTrace) {
               CommonUtil().appLogs(message: e, stackTrace: stackTrace);
             }
