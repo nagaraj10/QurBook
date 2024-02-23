@@ -566,6 +566,8 @@ const String dateFormatMMY = 'E d MMM, yyyy';
 const String strAppointments = 'Appointments';
 const String strRemainders = 'Reminders';
 
+//string added to set not on the remainder sheela dialog
+const String strSheelaDialogNote = 'Click Sheela icon to view unread reminders; click anywhere else to dismiss.';
 // for search providers
 
 const String strGetDoctorsList = 'Getting Doctor List';

@@ -932,6 +932,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   getSheelaBadgeCount() {
     try {
       sheelBadgeController.getSheelaBadgeCount(
+          isFromQurHomeRegimen: true,
           isNeedSheelaDialog:
               controller.estart.value.trim().isEmpty ? true : false);
     } catch (e, stackTrace) {
