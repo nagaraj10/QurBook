@@ -6325,7 +6325,7 @@ class CommonUtil {
       FirestoreServices().setupListenerForFirestoreChanges();
       if (!Get.isRegistered<PDFViewController>()) {
         Get.lazyPut(
-          () => PDFViewController(),
+              () => PDFViewController(),
         );
       }
       // Record the user's last access time
