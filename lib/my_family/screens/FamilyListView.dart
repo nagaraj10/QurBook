@@ -1,20 +1,16 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 
-import '../../src/utils/screenutils/size_extensions.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
+import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
-import '../models/FamilyData.dart';
-import '../models/FamilyMembersResponse.dart';
-import '../models/LinkedData.dart';
-import '../models/ProfileData.dart';
-import '../../common/CommonUtil.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../src/utils/screenutils/size_extensions.dart';
 import '../models/relationships.dart';
 
 class FamilyListView {
@@ -35,19 +31,34 @@ class FamilyListView {
     FamilyListBloc _familyListBloc = FamilyListBloc();
 
 // return the combine family member list
-    sharedByUsersList =
-        _familyListBloc?.getSharedByUsersCombinedList(data) ?? [];
+    sharedByUsersList = _familyListBloc.getSharedByUsersCombinedList(data);
 
-    return showDialog(
+    return showGeneralDialog(
         context: context,
-        builder: (context) {
-          return Material(
-              type: MaterialType.transparency,
-              child: Container(
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 150),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              content: SizedBox(
+                width: (CommonUtil().isTablet!)
+                    ? (MediaQuery.of(context).orientation ==
+                            Orientation.landscape)
+                        ? MediaQuery.sizeOf(context).width / 2
+                        : MediaQuery.sizeOf(context).height / 1.5
+                    : MediaQuery.sizeOf(context).height /
+                        1.5, //  <------- Use SizedBox to limit width
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     if (data != null)
-                      setupAlertDialoadContainer(sharedByUsersList!, context,
+                      setupAlertDialoadContainer(sharedByUsersList, context,
                           onTextFieldtap, _keyLoader,
                           removeDuplicate: removeDuplicate)
                     else
@@ -64,7 +75,7 @@ class FamilyListView {
     String? name = '';
     if (child.firstName != null) {
       name = child.firstName;
-      if (child.lastName != null) {
+      if (child.lastName != null && child.lastName != "") {
         name = name! + ' ' + child.lastName!;
       }
       //return toBeginningOfSentenceCase(name);
@@ -83,12 +94,6 @@ class FamilyListView {
       GlobalKey<State> _keyLoader,
       {bool removeDuplicate = false}) {
     var myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-
-    final profileData = ProfileData(
-        id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
-        userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN));
-    final linkedData =
-        LinkedData(roleName: variable.Self, nickName: variable.Self);
 
     try {
       String? name = "";
@@ -134,7 +139,7 @@ class FamilyListView {
           decoration: BoxDecoration(
               color: const Color(fhbColors.bgColorContainer),
               borderRadius: BorderRadius.circular(10)),
-          margin: EdgeInsets.all(20),
+          //margin: EdgeInsets.all(20),
           padding: EdgeInsets.all(10),
           child: Column(
             children: <Widget>[
@@ -170,8 +175,12 @@ class FamilyListView {
                 ),
               ),
               Container(
+                alignment: Alignment.center,
                 constraints: BoxConstraints(
-                  maxHeight: 440.0.h,
+                  maxHeight: (MediaQuery.of(context).orientation ==
+                          Orientation.landscape)
+                      ? MediaQuery.sizeOf(context).height / 1.5
+                      : MediaQuery.sizeOf(context).height / 2,
                 ),
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -246,10 +255,14 @@ class FamilyListView {
                                                                     .child!
                                                                     .firstName !=
                                                                 null &&
-                                                            sharedByMe[index]
-                                                                    .child!
-                                                                    .lastName !=
-                                                                null
+                                                            (sharedByMe[index]
+                                                                        .child!
+                                                                        .lastName !=
+                                                                    null &&
+                                                                sharedByMe[index]
+                                                                        .child!
+                                                                        .lastName !=
+                                                                    "")
                                                         ? sharedByMe[index]
                                                                 .child!
                                                                 .firstName![0]
@@ -316,7 +329,7 @@ class FamilyListView {
                                             : (sharedByMe[index].nickName !=
                                                     null
                                                 ? (sharedByMe[index]
-                                                            ?.nickName
+                                                            .nickName
                                                             ?.toLowerCase() ==
                                                         variable.Self
                                                             .toLowerCase())
@@ -327,7 +340,7 @@ class FamilyListView {
                                                     sharedByMe[index]
                                                         .nickName
                                                         .toLowerCase()) */
-                                                : '')!,
+                                                : ''),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
                                         style: TextStyle(
