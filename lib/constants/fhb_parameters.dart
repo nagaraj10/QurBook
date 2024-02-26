@@ -362,6 +362,7 @@ const String self = 'Self';
 const String theAppointmentIsFor = 'The Appointment is for';
 const String thePlanIsFor = 'The Plan is for';
 
+const String strVisitingCareCoordinator = 'Visiting Care Coordinator';
 const String dateAndTime = 'Date & Time';
 const String strNotes = 'Notes';
 const String confirmDetails = 'Confirmation Details';

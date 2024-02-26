@@ -4,6 +4,8 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
+import 'booked_additional_info.dart';
+
 class Booked {
   Booked({
     this.id,
@@ -37,34 +39,36 @@ class Booked {
   });
 
   String? id;
-  String? name;
-  dynamic userName;
-  String? firstName;
-  dynamic middleName;
-  String? lastName;
-  String? gender;
-  String? dateOfBirth;
-  dynamic bloodGroup;
-  dynamic countryCode;
-
-//  String profilePicUrl;
-  String? profilePicThumbnailUrl;
-  dynamic isTempUser;
-  dynamic isVirtualUser;
-  dynamic isMigrated;
-  dynamic isClaimed;
-  bool? isIeUser;
-  dynamic isEmailVerified;
-  bool? isCpUser;
-  dynamic communicationPreferences;
-  dynamic medicalPreferences;
-  bool? isSignedIn;
-  bool? isActive;
-  String? createdBy;
-  String? createdOn;
-  String? lastModifiedBy;
-  String? lastModifiedOn;
+    String? name;
+    dynamic userName;
+    String? firstName;
+    dynamic middleName;
+    String? lastName;
+    String? gender;
+    String? dateOfBirth;
+    dynamic bloodGroup;
+    dynamic countryCode;
+    String? profilePicThumbnailUrl;
+    dynamic isTempUser;
+    dynamic isVirtualUser;
+    dynamic isMigrated;
+    dynamic isClaimed;
+    bool? isIeUser;
+    dynamic isEmailVerified;
+    bool? isCpUser;
+    dynamic communicationPreferences;
+    dynamic medicalPreferences;
+    bool? isSignedIn;
+    bool? isActive;
+    String? createdBy;
+    String? createdOn;
+    String? lastModifiedBy;
+    String? lastModifiedOn;
   List<UserAddressCollection3>? userAddressCollection3;
+    String? providerId;
+    BookedAdditionalInfo? additionalInfo;
+    String? timezone;
+    dynamic profilePicUrl;
 
   Booked.fromJson(Map<String, dynamic> json) {
     try {
@@ -98,7 +102,13 @@ class Booked {
       userAddressCollection3 = json[parameters.strUserAddressCollection3] == null
               ? null
               : List<UserAddressCollection3>.from(json[parameters.strUserAddressCollection3]
-                  .map((x) => UserAddressCollection3.fromJson(x)));
+                      .map((x) => UserAddressCollection3.fromJson(x)));
+      providerId = json['providerId'];
+      additionalInfo = json['additionalInfo'] == null
+          ? null
+          : BookedAdditionalInfo.fromJson(json["additionalInfo"]);
+      timezone = json['timezone'];
+      profilePicUrl = json['profilePicUrl'];
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
