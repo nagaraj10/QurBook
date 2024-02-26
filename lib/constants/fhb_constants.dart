@@ -1207,8 +1207,8 @@ const String strString = 'string';
 
 const String strTurnOnGPS = 'Please turn on your GPS location services and try again'; // String message for prompting the user to turn on GPS
 
-
-
+// Declaring a constant string variable named 'strRefershStatusText' and assigning it the value 'refershStatusText'
+const String strRefershStatusText = 'refershStatusText';
 
 class DoctorFilterConstants {
   static List<String> yearOfExperienceList = [
