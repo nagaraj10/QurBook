@@ -42,14 +42,9 @@ import flutter_local_notifications
     
     let speechSynthesizer = AVSpeechSynthesizer()
     let reminderChannel = Constants.reminderMethodChannel
-    let addReminderMethod = Constants.addReminderMethod
-    let snoozeReminderMethod = Constants.snoozeReminderMethod
     let removeReminderMethod = Constants.removeReminderMethod
     
     let notificationCenter = UNUserNotificationCenter.current()
-    var listOfScheduledNotificaitons:[UNNotificationRequest] = []
-    let showBothButtonsCat = "showBothButtonsCat"
-    let showSingleButtonCat = "showSingleButtonCat"
     let showVCAcceptRejectedButtons = "showVCAcceptRejectedButtons"
     let planRenewButton = "planRenewButton"
     let escalateToCareCoordinatorButtons = "escalateToCareCoordinatorButtons"
@@ -90,12 +85,6 @@ import flutter_local_notifications
     var selectedDevicesList : [SelectedDevices] = []
     var deviceSearched = false
     //Reminders
-    var id = "";
-    var title = "";
-    var des = "";
-    var dateComponent:DateComponents = DateComponents();
-    var dateComponentBefore:DateComponents = DateComponents();
-    var dateComponentAfter:DateComponents = DateComponents();
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -132,8 +121,6 @@ import flutter_local_notifications
         // Messaging.messaging().delegate = self
         receiveCallKitMethodFromNative()
         flutterController = window?.rootViewController as! FlutterViewController
-
-        setUpReminders(messanger: flutterController.binaryMessenger)
         requestAuthorization();
 //        notificationCenter.getDeliveredNotifications { [weak self](data) in
 //            guard let self = self else { return }
