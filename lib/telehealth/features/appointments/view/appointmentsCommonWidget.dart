@@ -11,6 +11,8 @@ import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'
+as parameters;
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
@@ -594,6 +596,9 @@ class AppointmentsCommonWidget {
       return commonTextWidget(doc.additionalinfo?.healthOrganizationId ?? '');
     } else if (doc.doctorSessionId == null && doc.healthOrganization == null) {
       return Text(
+          doc.serviceCategory?.code.toString()==parameters.strHealthVisit?
+          CommonUtil()
+              .getFirstAndLastName(doc.bookedByProvider?.name! ?? ''):
           (doc.additionalinfo?.title != null && doc.additionalinfo?.title != '')
               ? CommonUtil()
                   .getFirstAndLastName(doc.additionalinfo?.title! ?? '')
@@ -689,7 +694,10 @@ class AppointmentsCommonWidget {
       name = doc.additionalinfo?.provider_name ?? '';
     } else if (doc.additionalinfo?.healthOrganizationId != null) {
       name = doc.additionalinfo?.healthOrganizationId ?? '';
-    } else if (doc.doctorSessionId == null && doc.healthOrganization == null) {
+    }else if(doc.serviceCategory?.code.toString()==parameters.strHealthVisit){
+      name = doc.bookedByProvider?.name.toString();
+    }
+    else if (doc.doctorSessionId == null && doc.healthOrganization == null) {
       name = doc.additionalinfo?.title ?? '';
     } else if (doc.doctorSessionId != null &&
         doc.doctor != null &&
@@ -726,6 +734,11 @@ class AppointmentsCommonWidget {
         doc.doctor?.user?.userAddressCollection3 != null &&
         doc.doctor!.user!.userAddressCollection3!.length > 0) {
       location = doc.doctor?.user?.userAddressCollection3![0].city?.name ?? "";
+    }
+    else if(doc.serviceCategory?.code.toString()==parameters.strHealthVisit &&
+        doc.additionalinfo != null ){
+      final city = doc.additionalinfo?.cityName;
+      location = city;
     }
 
     return location;

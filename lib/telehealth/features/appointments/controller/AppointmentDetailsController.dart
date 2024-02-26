@@ -36,6 +36,7 @@ class AppointmentDetailsController extends GetxController {
   var scheduleDateTime = "".obs;
   var slotNumber = "".obs;
   var hospitalName = "".obs;
+  var visitingCareCoordinator = ''.obs;
   List<String> list = [];
 
   var addressLine1 = "";
@@ -189,12 +190,30 @@ class AppointmentDetailsController extends GetxController {
           if (appointmentType.value.toLowerCase() == strLabAppointment) {
             providerName.value = toBeginningOfSentenceCase(
                 appointmentDetailsModel!.result!.additionalInfo!.labName!)!;
+          } else if (appointmentType.value.toLowerCase() ==
+              strHomeHealthVisit) {
+            providerName.value = toBeginningOfSentenceCase(
+                appointmentDetailsModel!.result!.bookedByProvider!.name!)!;
           } else {
             providerName.value = toBeginningOfSentenceCase(
                 appointmentDetailsModel!.result!.additionalInfo!.providerName)!;
           }
           getAddress();
         }
+      final careCoordinator = appointmentDetailsModel?.result?.ccId;
+        var visitingCareCoordinatorName = '';
+
+        if (careCoordinator?.firstName?.isNotEmpty ?? false) {
+          visitingCareCoordinatorName += careCoordinator?.firstName ?? '';
+        }
+        if (careCoordinator?.middleName?.isNotEmpty ?? false) {
+          visitingCareCoordinatorName +=
+              ' ${careCoordinator?.middleName ?? ''}';
+        }
+        if (careCoordinator?.lastName?.isNotEmpty ?? false) {
+          visitingCareCoordinatorName += ' ${careCoordinator?.lastName ?? ''}';
+        }
+        visitingCareCoordinator.value = visitingCareCoordinatorName;
 
         var isCustomAppointment = appointmentType.value.toLowerCase() !=
                     strLabAppointment.toLowerCase() &&
@@ -287,6 +306,7 @@ class AppointmentDetailsController extends GetxController {
 
   onClear() {
     try {
+      visitingCareCoordinator.value = '';
       appointmentType.value = "";
       appointmentIconUrl.value = "";
       appointmentModeOfService.value = "";

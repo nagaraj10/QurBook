@@ -2,6 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
+import 'fetchAppointments/booked.dart';
+import 'fetchAppointments/booked_by_provider.dart';
+import 'fetchAppointments/feeDetails.dart';
+import 'fetchAppointments/healthRecord.dart';
+
 class AppointmentDetailsModel {
   bool? isSuccess;
   Result? result;
@@ -37,6 +42,33 @@ class Result {
   Status? modeOfService;
   HealthOrganization? healthOrganization;
   Doctor? doctor;
+  String? id;
+  String? bookingId;
+  dynamic doctorSessionId;
+  dynamic actualStartDateTime;
+  dynamic actualEndDateTime;
+  String? bookedForId;
+  bool? isHealthRecordShared;
+  dynamic plannedFollowupDate;
+  bool? isRefunded;
+  bool? isFollowupFee;
+  dynamic isFollowup;
+  bool? isActive;
+  String? createdOn;
+  dynamic lastModifiedOn;
+  bool? isBookedByProvider;
+  bool? isCallDenied;
+  Booked? bookedFor;
+  Booked? bookedBy;
+  Status? status;
+  List<dynamic>? prescriptionCollection;
+  BookedByProvider? bookedByProvider;
+  Booked? ccId;
+  FeeDetails? feeDetails;
+  HealthRecord? healthRecord;
+  int? duration;
+  dynamic chatListId;
+
   Result(
       {this.plannedStartDateTime,
       this.plannedEndDateTime,
@@ -53,19 +85,47 @@ class Result {
       plannedEndDateTime = json['plannedEndDateTime'];
       slotNumber = json['slotNumber'];
       additionalInfo = json['additionalInfo'] != null
-          ? AdditionalInfo.fromJson(json['additionalInfo'])
-          : AdditionalInfo();
+            ? AdditionalInfo.fromJson(json['additionalInfo'])
+            : AdditionalInfo();
       serviceCategory = json['serviceCategory'] != null
-          ? ServiceCategory.fromJson(json['serviceCategory'])
-          : null;
+       ? ServiceCategory.fromJson(json['serviceCategory'])
+       : null;
       modeOfService = json['modeOfService'] != null
-          ? Status.fromJson(json['modeOfService'])
-          : null;
-      healthOrganization = json['healthOrganization'] != null
+      ? Status.fromJson(json['modeOfService'])
+      : null;
+       healthOrganization = json['healthOrganization'] != null
           ? HealthOrganization.fromJson(json['healthOrganization'])
           : null;
       doctor =
           json['doctor'] != null ? Doctor.fromJson(json['doctor']) : null;
+       
+
+      id = json['id'];
+        bookingId = json['bookingId'];
+        doctorSessionId = json['doctorSessionId'];
+        actualStartDateTime = json['actualStartDateTime'];
+        actualEndDateTime = json['actualEndDateTime'];
+        bookedForId = json['bookedForId'];
+        isHealthRecordShared = json['isHealthRecordShared'];
+        plannedFollowupDate =  json['plannedFollowupDate'];
+        isRefunded = json['isRefunded'];
+        isFollowupFee = json['isFollowupFee'];
+        isFollowup = json['isFollowup'];
+        isActive = json['isActive'];
+        createdOn=  json['createdOn'];
+        lastModifiedOn = json['lastModifiedOn'];
+        isBookedByProvider = json['isBookedByProvider'];
+        isCallDenied = json['isCallDenied'];
+        bookedFor = json['bookedFor'] == null ? null : Booked.fromJson(json['bookedFor']);
+        bookedBy = json['bookedBy'] == null ? null : Booked.fromJson(json['bookedBy']);
+        status = json['status'] == null ? null : Status.fromJson(json['status']);
+        prescriptionCollection = json['prescriptionCollection'] == null ? [] : List<dynamic>.from(json['prescriptionCollection']!.map((x) => x));
+        bookedByProvider = json['bookedByProvider'] == null ? null : BookedByProvider.fromJson(json['bookedByProvider']);
+        ccId = json['ccId'] == null ? null : Booked.fromJson(json['ccId']);
+        feeDetails = json['feeDetails'] == null ? null : FeeDetails.fromJson(json['feeDetails']);
+        healthRecord = json['healthRecord'] == null ? null : HealthRecord.fromJson(json['healthRecord']);
+        duration = json['duration'];
+        chatListId = json['chatListId'];
 
     } catch (e,stackTrace) {
                   CommonUtil().appLogs(message: e,stackTrace:stackTrace);
@@ -197,7 +257,8 @@ class AdditionalInfo {
       addressLine2 = json['address_line_2'];
       locationUrl = json['location_url'] != null ? json['location_url'] : "";
       providerName = json['provider_name'];
-      modeOfService = json['mode_of_service'] != null
+      modeOfService = (json['mode_of_service'] != null &&
+              json['mode_of_service'].runtimeType == Map)
           ? Status.fromJson(json['mode_of_service'])
           : null;
 

@@ -991,6 +991,7 @@ const String appointmentHospitalAddress = "Hospital Address";
 const String strTransportation = "transportation";
 const String strDoctorAppointment = "doctor appointment";
 const String strLabAppointment = "lab appointment";
+const String strHomeHealthVisit = "home health visit";
 const String strHomecareService = "homecare service";
 const String strGeneralHealth = "general health";
 const String strOrderPrescription = "order prescription";
