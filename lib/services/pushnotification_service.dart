@@ -685,6 +685,10 @@ zonedScheduleNotification(
     bool isSnoozePress,
     ) async {
   try {
+
+    // Initialize SheelaAIController
+    final sheelaAIController = CommonUtil().onInitSheelaAIController();
+
     // Get the list of pending notifications
     List<PendingNotificationRequest> pendingNotifications =
     await localNotificationsPlugin.pendingNotificationRequests();
@@ -694,13 +698,6 @@ zonedScheduleNotification(
           (notification) => notification.id == notificationId,
     );
 
-    // If already scheduled, cancel the existing notification with the same ID
-    if (isScheduled) {
-      await localNotificationsPlugin.cancel(notificationId);
-    }
-
-    // Initialize SheelaAIController
-    final sheelaAIController = CommonUtil().onInitSheelaAIController();
 
     var isDismissButtonOnlyShown = false;
     var channelId = remainderScheduleChannel.id;
@@ -764,20 +761,35 @@ zonedScheduleNotification(
       reminderTemp?.importance == '2' ? remainderScheduleV3Channel : remainderScheduleChannel,
     );
 
-    // Schedule the notification
-    await localNotificationsPlugin.zonedSchedule(
-      notificationId,
-      reminderTemp?.title ?? strScheduledtitle,
-      reminderTemp?.description ?? strScheduledbody,
-      scheduledDateTime,
-      notificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      payload: payLoadData,
-    );
 
-    // Add the scheduled time to SheelaAIController
-    await sheelaAIController.addScheduledTime(reminderTemp!, scheduledDateTime);
+    if (isScheduled) {
+      // If the reminder is scheduled, add the scheduled time using SheelaAIController
+      await sheelaAIController.addScheduledTime(reminderTemp!, scheduledDateTime);
+      return;
+    }
+
+
+    // List to hold asynchronous function calls
+    var functionCalls = <Future<dynamic>>[
+      // Schedule a local notification
+      localNotificationsPlugin.zonedSchedule(
+        notificationId,
+        reminderTemp?.title ?? strScheduledtitle,
+        reminderTemp?.description ?? strScheduledbody,
+        scheduledDateTime,
+        notificationDetails,
+        androidScheduleMode: AndroidScheduleMode.alarmClock,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        payload: payLoadData,
+      ),
+      // Add scheduled time using SheelaAIController
+      sheelaAIController.addScheduledTime(reminderTemp!, scheduledDateTime),
+    ];
+
+    // Wait for all functions to complete
+    await Future.wait(functionCalls);
+
   } catch (e, stackTrace) {
     // Handle exceptions and log errors
     CommonUtil().appLogs(message: e, stackTrace: stackTrace);

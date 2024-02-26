@@ -5876,7 +5876,13 @@ class CommonUtil {
   }
 
   void dialogForSheelaQueueStable(BuildContext context,
-      {int? unReadMsgCount, Function(bool)? onTapSheelaRemainders}) async {
+      {int? unReadMsgCount,
+      Function(bool)? onTapSheelaRemainders,
+
+      /// Checks if the user came from the Qurhome regimen flow and returns
+      /// the fromQurhomeRegimen value if it exists.
+      bool? fromQurhomeRegimen}) async {
+    bool isFirstTime = true;
     var sheelaAIController = Get.find<SheelaAIController>();
     showGeneralDialog(
         context: context,
@@ -5884,6 +5890,12 @@ class CommonUtil {
         barrierLabel: 'Label',
         barrierDismissible: true,
         pageBuilder: (_, __, ___) {
+          if (isFirstTime && sheelaAIController.isSheelaScreenActive) {
+            isFirstTime = false;
+            Future.delayed(Duration(seconds: 2), () {
+              Get.back();
+            });
+          }
           return WillPopScope(
             onWillPop: () async {
               sheelaDialogVisibleFalse();
@@ -5977,7 +5989,31 @@ class CommonUtil {
                                 ),
                               ],
                             ),
-                          )
+                          ),
+
+                          /// Conditionally renders a Text widget if 'fromQurhomeRegimen' is true, otherwise renders an empty SizedBox.
+                          /// This allows showing a note text only when relevant.
+                          (fromQurhomeRegimen == true &&
+                                  sheelaAIController.isSheelaScreenActive ==
+                                      false)
+                              ? Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text(
+                                      strSheelaDialogNote,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize:
+                                            (CommonUtil().isTablet ?? false)
+                                                ? 22
+                                                : 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox(),
                         ],
                       ),
                     ),
@@ -6287,6 +6323,7 @@ class CommonUtil {
       var regController = CommonUtil().onInitQurhomeRegimenController();
       regController.getRegimenList();
       FirestoreServices().setupListenerForFirestoreChanges();
+      FirestoreServices().updateDataFor('all');
       if (!Get.isRegistered<PDFViewController>()) {
         Get.lazyPut(
           () => PDFViewController(),
