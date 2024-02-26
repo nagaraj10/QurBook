@@ -2,6 +2,7 @@
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'
     as parameters;
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/BookedByProvider.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/booked.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart';
@@ -30,6 +31,7 @@ class Past {
       this.lastModifiedOn,
       this.bookedFor,
       this.bookedBy,
+        this.bookedByProvider,
       this.status,
       this.prescriptionCollection,
       this.healthRecord,
@@ -62,6 +64,7 @@ class Past {
   String? lastModifiedOn;
   Booked? bookedFor;
   Booked? bookedBy;
+  BookedByProvider? bookedByProvider;
   Status? status;
   List<dynamic>? prescriptionCollection;
   HealthRecord? healthRecord;
@@ -101,6 +104,9 @@ class Past {
       bookedBy = json[parameters.strBookedBy] == null
               ? null
               : Booked.fromJson(json[parameters.strBookedBy]);
+      bookedByProvider= json[parameters.strBookedByProvider]==null
+          ? null
+          : BookedByProvider.fromJson(json[parameters.strBookedByProvider]);
       status = json[parameters.strStatus] == null
               ? null
               : Status.fromJson(json[parameters.strStatus]);
@@ -166,6 +172,7 @@ class Past {
     data[parameters.strLastModifiedOn] = lastModifiedOn;
     data[parameters.strBookedFor] = bookedFor!.toJson();
     data[parameters.strBookedBy] = bookedBy!.toJson();
+    data[parameters.strBookedByProvider] = bookedByProvider?.toJson();
     data[parameters.strStatus] = status!.toJson();
     data[parameters.strIsFollowUpTaken] = isFollowUpTaken;
     data[parameters.strPrescriptionCollection] =
@@ -212,6 +219,7 @@ class ChatMessage {
 class AdditionalInfo {
   AdditionalInfo({
     this.title,
+    this.cityName,
     this.Address,
     this.description,
     this.serviceType,
@@ -221,6 +229,7 @@ class AdditionalInfo {
   });
 
   String? title;
+  String? cityName;
   String? Address;
   String? description;
   String? serviceType;
@@ -234,6 +243,7 @@ class AdditionalInfo {
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
     try {
       title = json.containsKey('title') ? json["title"] : '';
+      cityName = json.containsKey('cityName') ? json["cityName"] : '';
       Address = json.containsKey('Address') ? json["Address"] : '';
       description = json.containsKey('description') ? json["description"] : '';
       serviceType = json.containsKey('serviceType') ? json["serviceType"] : '';
@@ -249,6 +259,7 @@ class AdditionalInfo {
   Map<String, dynamic>? toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['title'] = title;
+    data['cityName'] = cityName;
     data['Address'] = Address;
     data['description'] = description;
     data['serviceType'] = serviceType;
