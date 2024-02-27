@@ -920,12 +920,9 @@ const String str_far = 'Fahrenheit';
 //Reminders
 //
 const reminderMethodChannel = MethodChannel('flutter.native/reminder');
-const addReminderMethod = 'addReminder';
-const snoozeReminderMethod = 'snoozeReminder';
 const navigateToSheelaReminderMethod = 'navigateToSheelaReminderMethod';
 const notificationReceivedMethod = "notificationReceived";
 const removeReminderMethod = 'removeReminder';
-const removeAllReminderMethod = 'removeAllReminder';
 const navigateToRegimentMethod = 'navigateToRegiment';
 const reponseToRemoteNotificationMethodChannel =
     MethodChannel('flutter.native.QurBook/notificationResponse');
