@@ -199,7 +199,7 @@ class _QurHomePatientRegimenListScreenState
                       child: Expanded(
                     child: CommonUtil.isUSRegion()
                         ? GetBuilder<QurhomeRegimenController>(
-                            id: "refershStatusText",
+                            id: strRefershStatusText,
                             builder: (val) {
                               return Visibility(
                                   visible: !controller.isTodaySelected.value,

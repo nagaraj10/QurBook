@@ -188,9 +188,13 @@ class QurhomeRegimenController extends GetxController {
           currentIndex = regimentList.length - 1;
         }
       }
+    } else {
+      statusText.value = '$stringViewTotalNumberOfActivites 0';
     }
 
     update(["newUpdate"]);
+    //Update the status text
+    update([strRefershStatusText]);
     if (isFirstTime.value) {
       isFirstTime.value = false;
       getUserDetails();
@@ -513,7 +517,7 @@ class QurhomeRegimenController extends GetxController {
         isTodaySelected.value = isLoading;
         statusText.value =
             "${stringViewTotalNumberOfActivites} ${qurHomeRegimenResponseModel?.regimentsList?.length ?? 0}";
-        update(["refershStatusText"]);
+        update([strRefershStatusText]);
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -560,7 +564,7 @@ class QurhomeRegimenController extends GetxController {
       String formattedDate = DateFormat('EEEE').format(now);
       prefix = formattedDate + ', ';
     }
-    update(["refershStatusText"]);
+    update([strRefershStatusText]);
 
     String formattedDate = DateFormat('dd MMM').format(now);
     return prefix + formattedDate;
