@@ -2213,6 +2213,8 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
 //                        }
 //                    }
                     selectedBle = ""
+                    //Initialize Scan for all BLE devices
+                    scanAllBleDevices()
                 }
             }
         )
