@@ -26,6 +26,7 @@ import '../../audio/AudioScreenArguments.dart';
 import '../../imageSlider.dart';
 import '../Controller/SheelaAIController.dart';
 import '../Models/SheelaResponse.dart';
+import '../Services/SheelaAIBLEServices.dart';
 import 'AttachmentListSheela.dart';
 import 'CommonUitls.dart';
 import 'youtube_player.dart';
@@ -330,7 +331,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
             onTap: ((chat.singleuse != null && chat.singleuse!) &&
                     (chat.isActionDone != null && chat.isActionDone!))
                 ? null
-                : () {
+                : () async {
                     try {
                       if (buttonData?.btnRedirectTo == strPreviewScreen) {
                         if (buttonData?.chatAttachments != null &&
@@ -720,6 +721,34 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             }
                           });
                         }
+                      }else if (buttonData?.btnRedirectTo == STR_RETRY) {
+                        if (controller.isLoading.isTrue) {
+                          return;
+                        }
+                        if (chat.singleuse != null &&
+                            chat.singleuse! &&
+                            chat.isActionDone != null) {
+                          chat.isActionDone = true;
+                        }
+                        buttonData?.isSelected = true;
+                        controller.stopTTS();
+                        controller.isLoading.value = true;
+                        final cardResponse = SheelaResponse(text: buttonData?.title);
+                        controller.conversations.add(cardResponse);
+                        controller.scrollToEnd();
+                        await Future.delayed(Duration(seconds: 2));
+                        SheelaBLEController? bleController = CommonUtil().onInitSheelaBLEController();
+                        final reconnectCard = SheelaResponse(
+                            text: await controller
+                                .getTextTranslate(strFailureRetry),
+                            recipientId: sheelaRecepId);
+                        bleController.addToConversationAndPlay(reconnectCard);
+                        controller.isLoading.value = false;
+                        await Future.delayed(Duration(seconds: 1));
+                        controller.resetBLE();
+                        Future.delayed(const Duration(seconds: 3), () {
+                          buttonData?.isSelected = false;
+                        });
                       } else {
                         if (controller.isLoading.isTrue) {
                           return;

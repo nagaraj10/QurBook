@@ -200,29 +200,36 @@ class SheelaBLEController extends GetxController {
                   if (isFromVitals || isFromRegiment) {
                     Get.back();
                   }
-                  if (SheelaController.isSheelaScreenActive) return;
-                  Get.to(
-                    () => SheelaAIMainScreen(
-                      arguments: SheelaArgument(
-                        deviceType: hublistController.bleDeviceType,
-                        takeActiveDeviceReadings: true,
+                  if (SheelaController.isSheelaScreenActive &&
+                      (SheelaController.isRetryScanFailure ?? false)) {
+                    //bleController = CommonUtil().onInitSheelaBLEController();
+                    startSheelaBLEDeviceReadings();
+                    SheelaController.isRetryScanFailure = false;
+                    SheelaController.isLoading(true);
+                  } else {
+                    Get.to(
+                      () => SheelaAIMainScreen(
+                        arguments: SheelaArgument(
+                          deviceType: hublistController.bleDeviceType,
+                          takeActiveDeviceReadings: true,
+                        ),
                       ),
-                    ),
-                  )?.then((_) {
-                    Future.delayed(const Duration(seconds: 1)).then((_) {
-                      if (Get.isRegistered<VitalDetailController>())
-                        Get.find<VitalDetailController>().getData();
-                    });
+                    )?.then((_) {
+                      Future.delayed(const Duration(seconds: 1)).then((_) {
+                        if (Get.isRegistered<VitalDetailController>())
+                          Get.find<VitalDetailController>().getData();
+                      });
 
-                    Future.delayed(const Duration(seconds: 1)).then((_) {
-                      if (Get.isRegistered<QurhomeRegimenController>()) {
-                        Get.find<QurhomeRegimenController>()
-                            .currLoggedEID
-                            .value = hublistController.eid ?? '';
-                        Get.find<QurhomeRegimenController>().getRegimenList();
-                      }
+                      Future.delayed(const Duration(seconds: 1)).then((_) {
+                        if (Get.isRegistered<QurhomeRegimenController>()) {
+                          Get.find<QurhomeRegimenController>()
+                              .currLoggedEID
+                              .value = hublistController.eid ?? '';
+                          Get.find<QurhomeRegimenController>().getRegimenList();
+                        }
+                      });
                     });
-                  });
+                  }
                 }
               }
               break;
@@ -453,9 +460,12 @@ class SheelaBLEController extends GetxController {
     }
   }
 
-  addToConversationAndPlay(SheelaResponse conv) {
+  addToConversationAndPlay(SheelaResponse conv,{bool playButtons = false}) {
     playConversations.add(conv);
-    playTTS();
+    //if(playButtons){
+      SheelaController.isLoading.value = false;
+    //}
+    playTTS(playButtons: playButtons);
   }
 
   showFailure() async {
@@ -464,13 +474,22 @@ class SheelaBLEController extends GetxController {
         !receivedData) {
       String? strTextMsg = await SheelaController.getTextTranslate(
           "Failed to save the values, Please try again");
+      SheelaController.isLoading.value = true;
+      SheelaController.isRetryScanFailure = true;
       addToConversationAndPlay(
         SheelaResponse(
           recipientId: conversationType,
           text: strTextMsg,
-        ),
+          buttons: await SheelaController.sheelaFailureRetryButtons(),
+          endOfConv: false,
+          endOfConvDiscardDialog: false,
+          singleuse: true,
+          isActionDone: false,
+          isButtonNumber: false,
+        ),playButtons: false
       );
-      isCompleted = true;
+      SheelaController.isLoading.value = false;
+      isCompleted = false;
       await Future.delayed(const Duration(seconds: 2));
     }
   }
@@ -618,6 +637,7 @@ class SheelaBLEController extends GetxController {
           }
         }
         isCompleted = true;
+        SheelaController.isRetryScanFailure = false;
       } catch (e, stackTrace) {
         CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
@@ -627,7 +647,7 @@ class SheelaBLEController extends GetxController {
     }
   }
 
-  playTTS() async {
+  playTTS({bool playButtons = false}) async {
     if ((playConversations).isEmpty || isPlaying) {
       return;
     }
@@ -666,16 +686,54 @@ class SheelaBLEController extends GetxController {
       }
     } else {
       String? textForPlaying;
-      if ((currentPlayingConversation.text ?? '').isNotEmpty) {
-        final result = await SheelaController.getGoogleTTSForText(
-            (getPronunciationText(currentPlayingConversation).trim().isNotEmpty
-                ? getPronunciationText(currentPlayingConversation)
-                : (currentPlayingConversation?.text)));
-        if ((result!.payload!.audioContent ?? '').isNotEmpty) {
-          textForPlaying = result.payload!.audioContent;
+      if (playButtons) {
+        final currentButton = currentPlayingConversation!
+            .buttons![currentPlayingConversation!.currentButtonPlayingIndex!];
+        if ((currentButton.title!.contains(StrExit)) ||
+            (currentButton.title!.contains(str_Undo)) ||
+            (currentButton.title!.contains(StrUndoAll)) ||
+            (playConversations.last.endOfConv ?? false)) {
+          if (playConversations.last.endOfConv??false) {
+            currentPlayingConversation!.isPlaying.value = false;
+            currentButton.isPlaying.value = false;
+          } else {
+            SheelaController.gettingReposnseFromNative();
+            return;
+          }
+        } else if ((currentButton.ttsResponse?.payload?.audioContent ?? '')
+            .isNotEmpty) {
+          if (currentButton.mute != sheela_hdn_btn_yes) {
+            textForPlaying = currentButton.ttsResponse!.payload!.audioContent;
+          }
+        } else if ((currentButton.title ?? '').isNotEmpty) {
+          var result;
+          try {
+            if ((currentButton.sayText ?? '').isNotEmpty) {
+              result = await SheelaController.getGoogleTTSForText(currentButton.sayText);
+            } else {
+              result = await SheelaController.getGoogleTTSForText(currentButton.title);
+            }
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+
+            result = await SheelaController.getGoogleTTSForText(currentButton.title);
+          }
+          if ((result.payload?.audioContent ?? '').isNotEmpty) {
+            textForPlaying = result.payload.audioContent;
+          }
         }
+      }else{
+        if ((currentPlayingConversation.text ?? '').isNotEmpty) {
+          final result = await SheelaController.getGoogleTTSForText(
+              (getPronunciationText(currentPlayingConversation).trim().isNotEmpty
+                  ? getPronunciationText(currentPlayingConversation)
+                  : (currentPlayingConversation?.text)));
+          if ((result!.payload!.audioContent ?? '').isNotEmpty) {
+            textForPlaying = result.payload!.audioContent;
+          }
+        }
+        playConversations.removeAt(0);
       }
-      playConversations.removeAt(0);
       if ((textForPlaying ?? '').isNotEmpty) {
         try {
           final bytes = base64Decode(textForPlaying!);
@@ -695,6 +753,7 @@ class SheelaBLEController extends GetxController {
             SheelaController.isMicListening.toggle();
             currentPlayingConversation.isPlaying.value = true;
             isPlaying = true;
+            SheelaController.scrollToEnd();
             await player.play('${dir.path}/tempAudioFile$randomNum.mp3',
                 isLocal: true);
           }

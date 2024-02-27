@@ -49,6 +49,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.conversations = [];
     controller.btnTextLocal = '';
     controller.isRetakeCapture = false;
+    controller.isRetryScanFailure = false;
 
     ///Surrendered with addPostFrameCallback for widget building issue///
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
@@ -257,7 +258,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
             floatingActionButton: animationController == null
                 ? null
                 : Visibility(
-                    visible: controller.bleController == null,
+                    visible: (controller.bleController == null) || (controller.isRetryScanFailure??false),
                     child: AnimatedBuilder(
                       animation: animationController!,
                       builder: (context, child) {

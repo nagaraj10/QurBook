@@ -156,6 +156,7 @@ class SheelaAIController extends GetxController {
 
   String? btnTextLocal = '';
   bool? isRetakeCapture = false;
+  bool? isRetryScanFailure = false;
   String? fileRequestUrl = '';
 
   final ApiBaseHelper _helper = ApiBaseHelper();
@@ -3061,5 +3062,19 @@ makeApiRequest is used to update the data with latest data
       // Play or pause TTS with the last conversation, or a default SheelaResponse if conversations.last is null
       playPauseTTS(conversations.last ?? SheelaResponse());
     }
+  }
+
+  Future<List<Buttons>> sheelaFailureRetryButtons() async {
+    List<String?> translatedTexts = await Future.wait([
+      getTextTranslate(STR_RETRY),
+      getTextTranslate(strExit),
+    ]);
+    return [
+      Buttons(title: translatedTexts[0], btnRedirectTo: STR_RETRY),
+      Buttons(
+          title: translatedTexts[1],
+          payload: strExit,
+          mute: sheela_hdn_btn_yes),
+    ];
   }
 }

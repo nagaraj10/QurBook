@@ -874,6 +874,8 @@ const String strExit = 'Exit';
 
 const String strRedirectRedo = 'redirectToRedo';
 
+const String strFailureRetry = 'Turn off your device and Turn it on again to reconnect';
+
 //fetchProfilePic
 const String FETCH_PROFILE_PIC = 'file-guard/fileData/profilePicture/';
 
