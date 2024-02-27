@@ -1649,7 +1649,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               checkedValue =false;
               INR_Price = originalPrice;
             }
-            applyMembershipDiscountedAmount =  updateThaMembershipBenefit();
+            applyMembershipDiscountedAmount =  updateTheMembershipBenefit();
           }else{
            INR_Price= originalPrice;
            applyMembershipDiscountedAmount ='';
@@ -1666,7 +1666,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     );
 
 
-   updateThaMembershipBenefit() {
+   updateTheMembershipBenefit() {
      INR_Price = CommonUtil().replaceSeparator(value:INR_Price!, separator: ',');
     double currentAmount = double.parse(INR_Price!);
     num deductedAmount = 0.0;
@@ -2308,11 +2308,15 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 )
               : const SizedBox.shrink(),
           Visibility(
-              visible: isActiveMember==true,
+              visible: isActiveMember == true &&
+                  (
+                      (widget.doctorAppoinmentTransLimit != null && widget.doctorAppoinmentTransLimit! > 0) ||
+                          (widget.noOfDoctorAppointments != null && widget.noOfDoctorAppointments! > 0)
+                  ),
               child: Container(
                 margin: EdgeInsets.only(bottom: 10),
                 child:applyMemberShipBenefitsWidget(),
-              )),
+              )),//visible only if transaction limit and no of doctor appoinment amount is greater than 0
           Container(
             child: Center(
               child: Text(
