@@ -99,6 +99,7 @@ class SheelaAIController extends GetxController {
   bool lastMsgIsOfButtons = false;
   Timer? _popTimer;
   Timer? _exitAutoTimer;
+  Timer? _reconnectTimer;
   Timer? _sessionTimeout;
   var sheelaIconBadgeCount = 0.obs;
   bool isUnAvailableCC = false;
@@ -264,6 +265,13 @@ class SheelaAIController extends GetxController {
         } else if ((conversations.last.redirectTo ?? '') ==
             strHomeScreen.toLowerCase()) {
           startTimer();
+        }
+        else if ((conversations.last.redirectTo ?? '') ==
+            strReconnect) {
+          Future.delayed(const Duration(seconds: 1), () {
+            resetBLE();
+          });
+          reconnectTimer();
         }
       } catch (e, stackTrace) {
         //gettingReposnseFromNative();
@@ -1210,6 +1218,19 @@ makeApiRequest is used to update the data with latest data
     if (_exitAutoTimer != null && _exitAutoTimer!.isActive) {
       _exitAutoTimer!.cancel();
       _exitAutoTimer = null;
+    }
+  }
+
+  void reconnectTimer() {
+    _reconnectTimer = Timer(const Duration(seconds: 120), () {
+      Get.back();
+    });
+  }
+
+  clearReconnectTimer() {
+    if (_reconnectTimer != null && _reconnectTimer!.isActive) {
+      _reconnectTimer!.cancel();
+      _reconnectTimer = null;
     }
   }
 
@@ -2880,6 +2901,31 @@ makeApiRequest is used to update the data with latest data
                       }
                     });
                   }
+                }else if (button?.btnRedirectTo == strReconnect) {
+                  if (isLoading.isTrue) {
+                    return;
+                  }
+                  if (conversations.last.singleuse != null &&
+                      conversations.last.singleuse! &&
+                      conversations.last.isActionDone != null) {
+                    conversations.last.isActionDone = true;
+                  }
+                  button?.isSelected = true;
+                  stopTTS();
+                  isLoading.value = true;
+                  final cardResponse = SheelaResponse(text: button?.title);
+                  conversations.add(cardResponse);
+                  scrollToEnd();
+                  await Future.delayed(Duration(seconds: 2));
+                  SheelaBLEController? bleController = CommonUtil().onInitSheelaBLEController();
+                  final reconnectCard = SheelaResponse(
+                      text: await getTextTranslate(strFailureRetry),
+                      recipientId: sheelaRecepId,redirectTo: strReconnect);
+                  bleController.addToConversationAndPlay(reconnectCard);
+                  isLoading.value = false;
+                  Future.delayed(const Duration(seconds: 3), () {
+                    button?.isSelected = false;
+                  });
                 } else {
                   startSheelaFromButton(
                       buttonText: button.title,
@@ -3067,11 +3113,11 @@ makeApiRequest is used to update the data with latest data
 
   Future<List<Buttons>> sheelaFailureRetryButtons() async {
     List<String?> translatedTexts = await Future.wait([
-      getTextTranslate(STR_RETRY),
+      getTextTranslate(strReconnect),
       getTextTranslate(strExit),
     ]);
     return [
-      Buttons(title: translatedTexts[0], btnRedirectTo: STR_RETRY),
+      Buttons(title: translatedTexts[0], btnRedirectTo: strReconnect),
       Buttons(
           title: translatedTexts[1],
           payload: strExit,

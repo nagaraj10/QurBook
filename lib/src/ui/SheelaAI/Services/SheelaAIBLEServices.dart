@@ -205,6 +205,7 @@ class SheelaBLEController extends GetxController {
                       (SheelaController.isRetryScanFailure ?? false)) {
                     //bleController = CommonUtil().onInitSheelaBLEController();
                     SheelaController.arguments?.deviceType = hublistController.bleDeviceType;
+                    SheelaController.clearReconnectTimer();
                     startSheelaBLEDeviceReadings();
                     SheelaController.isRetryScanFailure = false;
                     SheelaController.isLoading(true);

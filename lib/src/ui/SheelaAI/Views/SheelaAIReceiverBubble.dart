@@ -722,7 +722,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             }
                           });
                         }
-                      }else if (buttonData?.btnRedirectTo == STR_RETRY) {
+                      }else if (buttonData?.btnRedirectTo == strReconnect) {
                         if (controller.isLoading.isTrue) {
                           return;
                         }
@@ -742,11 +742,9 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         final reconnectCard = SheelaResponse(
                             text: await controller
                                 .getTextTranslate(strFailureRetry),
-                            recipientId: sheelaRecepId);
+                            recipientId: sheelaRecepId,redirectTo: strReconnect);
                         bleController.addToConversationAndPlay(reconnectCard);
                         controller.isLoading.value = false;
-                        await Future.delayed(Duration(seconds: 2));
-                        controller.resetBLE();
                         Future.delayed(const Duration(seconds: 3), () {
                           buttonData?.isSelected = false;
                         });

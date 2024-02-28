@@ -98,6 +98,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
   void dispose() {
     animationController?.dispose();
     controller.clearTimer();
+    controller.clearReconnectTimer();
     controller.clearTimerForSessionExpiry();
     WidgetsBinding.instance!.removeObserver(this);
     controller.stopTTS();
@@ -282,6 +283,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                       child: FloatingActionButton(
                         onPressed: () {
                           controller.clearTimer();
+                          controller.clearReconnectTimer();
                           if (controller.isLoading.isFalse) {
                             if (controller.currentPlayingConversation != null &&
                                 controller.currentPlayingConversation!.isPlaying
@@ -491,6 +493,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.getSheelaBadgeCount();
     controller.updateTimer(enable: false);
     controller.clearTimer();
+    controller.clearReconnectTimer();
     controller.clearTimerForSessionExpiry();
     Get.back();
   }
