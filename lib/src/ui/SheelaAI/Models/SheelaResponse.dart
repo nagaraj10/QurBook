@@ -169,6 +169,108 @@ class SheelaResponse {
           }
         });
         buttons = buttonsList;
+        //TODO: Remove code this is only for Testing purpose
+    //     [
+    //       Buttons.fromJson({
+    //         "payload": "0",
+    //         "title": "Good",
+    //         "mediaurl": "",
+    //         "synonyms": [
+    //           "Ok",
+    //           "Fine",
+    //           "Healthy",
+    //           "Strong"
+    //         ],
+    //         "next": "continue",
+    //         "seq": 1,
+    //         "media": null,
+    //         "mediaType": "image",
+    //         "needPhoto": true,
+    //         "needAudio": false,
+    //         "needVideo": false,
+    //         "synonymsList": [
+    //           "Ok",
+    //           "Fine",
+    //           "Healthy",
+    //           "Strong"
+    //         ],
+    //         "partialSynonym": false,
+    //         "partialtitle": true
+    //       }),
+    //      Buttons.fromJson( {
+    //         "payload": "1",
+    //         "title": "Bad",
+    //         "mediaurl": "",
+    //         "synonyms": [
+    //           "bad",
+    //           "Worst"
+    //         ],
+    //         "next": "continue",
+    //         "seq": 2,
+    //         "media": null,
+    //         "mediaType": "image",
+    //         "needPhoto": false,
+    //         "needAudio": true,
+    //         "needVideo": false,
+    //         "synonymsList": [
+    //           "bad",
+    //           "Worst"
+    //         ],
+    //         "partialSynonym": true,
+    //         "partialtitle": false,
+    //       },
+    //      ),
+    // Buttons.fromJson( {
+    // "payload": "3",
+    // "title": "Wonderful",
+    // "mediaurl": "",
+    // "synonyms": [
+    //   "Fantastic",
+    //   "Amazing",
+    //   "Marvelous"
+    // ],
+    // "next": "continue",
+    // "seq": 2,
+    // "media": null,
+    // "mediaType": "image",
+    // "needPhoto": false,
+    // "needAudio": true,
+    // "needVideo": false,
+    // "synonymsList": [
+    //   "Fantastic",
+    //   "Amazing",
+    //   "Marvelous"
+    // ],
+    // "partialSynonym": false,
+    // "partialtitle": false,
+    // }),
+    //       Buttons.fromJson( {
+    //         "payload": "3",
+    //         "title": "Great",
+    //         "mediaurl": "",
+    //         "synonyms": [
+    //           "Great Excellent",
+    //           "Outstanding",
+    //           "Superb",
+    //           "Terrific"
+    //         ],
+    //         "next": "continue",
+    //         "seq": 2,
+    //         "media": null,
+    //         "mediaType": "image",
+    //         "needPhoto": false,
+    //         "needAudio": true,
+    //         "needVideo": false,
+    //         "synonymsList": [
+    //           "Great Excellent",
+    //           "Outstanding",
+    //           "Superb",
+    //           "Terrific"
+    //         ],
+    //         "partialSynonym": true,
+    //         "partialtitle": true,
+    //       })
+    //     ];
       }
       pronunciationText = (json['pronunciationText'] ?? '');
     } catch (e, stackTrace) {
@@ -241,6 +343,8 @@ class Buttons {
   bool? needPhoto;
   bool? needAudio;
   bool? needVideo;
+  bool? partialTitle;
+  bool? partialSynonym;
   List<String>? synonymsList; // list of synonyms to match the voice input
 
   Buttons({
@@ -264,6 +368,8 @@ class Buttons {
     this.needPhoto = false,
     this.needAudio = false,
     this.needVideo = false,
+    this.partialSynonym=false,
+    this.partialTitle=false,
   });
 
   Buttons.fromJson(Map<String, dynamic> json) {
@@ -283,6 +389,8 @@ class Buttons {
       needPhoto = (json['needPhoto'] ?? false);
       needAudio = (json['needAudio'] ?? false);
       needVideo = (json['needVideo'] ?? false);
+      partialSynonym = (json['partialSynonym'] ?? false);
+      partialTitle = (json['partialtitle'] ?? false);
       synonymsList = json["synonymsList"] != null
           ? List<String>.from(json["synonymsList"])
           : []; // Assign synonymsList with an empty list if it's null, otherwise, convert the JSON list to a Dart list of strings

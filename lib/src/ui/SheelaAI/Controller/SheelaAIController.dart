@@ -2480,16 +2480,35 @@ makeApiRequest is used to update the data with latest data
                 if (responseRecived == carGiverSheela) {
                   responseRecived = careGiverSheela;
                 }
-                for (var btn in conversations.last?.buttons) {
-                  // Check if the title of the button matches the response or any of its synonyms
-                  if ((btn.title ?? '').toLowerCase() ==
-                          responseRecived.toLowerCase() ||
-                      (btn.synonymsList != null &&
-                          btn.synonymsList.any((synonym) =>
-                              synonym.toLowerCase() ==
-                              responseRecived.toLowerCase()))) {
-                    button = btn;
-                    break; // Exit the loop if a match is found
+                for (final btn in conversations.last?.buttons) {
+                  // Check if partial matching is enabled for title and title is not null or empty
+                  if (btn.partialTitle && btn.title != null && btn.title!.isNotEmpty) {
+                    final String title = btn.title!.toLowerCase();
+                    if (title.contains(responseRecived.toLowerCase()) || responseRecived.toLowerCase().contains(title)) {
+                      button = btn;
+                      break;
+                    } // Exit the loop if a match is found
+                  }
+
+                  // Check if partial matching is enabled for synonyms and synonyms list is not null or empty
+                  if (btn.partialSynonym && btn.synonymsList != null && btn.synonymsList!.isNotEmpty) {
+                    final bool isContained = btn.synonymsList.any((synonym) =>
+                    synonym.toLowerCase().contains(responseRecived.toLowerCase()) ||
+                        responseRecived.toLowerCase().contains(synonym.toLowerCase()));
+                    if (isContained) {
+                      button = btn;
+                      break; // Exit the loop if a match is found
+                    }
+                  }
+
+                  // Check if the title of the button or any of its synonyms matches the response
+                  if (!btn.partialTitle && !btn.partialSynonym) {
+                    if ((btn.title ?? '').toLowerCase() == responseRecived.toLowerCase() ||
+                        (btn.synonymsList != null &&
+                            btn.synonymsList.any((synonym) => synonym.toLowerCase() == responseRecived.toLowerCase()))) {
+                      button = btn;
+                      break; // Exit the loop if a match is found
+                    }
                   }
                 }
               } else if ((conversations.last?.isButtonNumber ?? false)) {
