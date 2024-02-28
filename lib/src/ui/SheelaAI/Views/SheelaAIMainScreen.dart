@@ -259,6 +259,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
             floatingActionButton: animationController == null
                 ? null
                 : Visibility(
+              // isRetryScanFailure for enable the mic button
                     visible: (controller.bleController == null) || (controller.isRetryScanFailure??false),
                     child: AnimatedBuilder(
                       animation: animationController!,

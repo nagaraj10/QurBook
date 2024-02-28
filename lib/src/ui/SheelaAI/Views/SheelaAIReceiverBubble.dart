@@ -722,29 +722,51 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             }
                           });
                         }
-                      }else if (buttonData?.btnRedirectTo == strReconnect) {
+                      } // Check if the button's redirection is to reconnect
+                      else if (buttonData?.btnRedirectTo == strReconnect) {
+                        // Check if loading is in progress, if true, return
                         if (controller.isLoading.isTrue) {
                           return;
                         }
+
+                        // Check if the chat is marked as singleuse and action is not done
                         if (chat.singleuse != null &&
                             chat.singleuse! &&
                             chat.isActionDone != null) {
                           chat.isActionDone = true;
                         }
+
+                        // Mark the button as selected, stop TTS, and set loading state to true
                         buttonData?.isSelected = true;
                         controller.stopTTS();
                         controller.isLoading.value = true;
-                        final cardResponse = SheelaResponse(text: buttonData?.title);
+
+                        // Add a card response with the button's title to the conversation
+                        final cardResponse =
+                            SheelaResponse(text: buttonData?.title);
                         controller.conversations.add(cardResponse);
                         controller.scrollToEnd();
+
+                        // Introduce a delay before further actions (2 seconds in this case)
                         await Future.delayed(Duration(seconds: 2));
-                        SheelaBLEController? bleController = CommonUtil().onInitSheelaBLEController();
+
+                        // Initialize SheelaBLEController
+                        SheelaBLEController? bleController =
+                            CommonUtil().onInitSheelaBLEController();
+
+                        // Create a reconnect card and add it to the conversation and play
                         final reconnectCard = SheelaResponse(
-                            text: await controller
-                                .getTextTranslate(strFailureRetry),
-                            recipientId: sheelaRecepId,redirectTo: strReconnect);
+                          text: await controller
+                              .getTextTranslate(strFailureRetry),
+                          recipientId: sheelaRecepId,
+                          redirectTo: strReconnect,
+                        );
                         bleController.addToConversationAndPlay(reconnectCard);
+
+                        // Set loading state to false
                         controller.isLoading.value = false;
+
+                        // Introduce a delay before resetting the button selection (3 seconds in this case)
                         Future.delayed(const Duration(seconds: 3), () {
                           buttonData?.isSelected = false;
                         });

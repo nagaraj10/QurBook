@@ -157,6 +157,7 @@ class SheelaAIController extends GetxController {
 
   String? btnTextLocal = '';
   bool? isRetakeCapture = false;
+  //reconnect feature enable flag
   bool? isRetryScanFailure = false;
   String? fileRequestUrl = '';
 
@@ -265,12 +266,13 @@ class SheelaAIController extends GetxController {
         } else if ((conversations.last.redirectTo ?? '') ==
             strHomeScreen.toLowerCase()) {
           startTimer();
-        }
-        else if ((conversations.last.redirectTo ?? '') ==
-            strReconnect) {
+        } // Check if the last conversation's redirectTo is equal to the specified value (strReconnect)
+        else if ((conversations.last.redirectTo ?? '') == strReconnect) {
+          // Introduce a delay before triggering the resetBLE function (1 second in this case)
           Future.delayed(const Duration(seconds: 1), () {
-            resetBLE();
+            resetBLE(); // Reset the BLE (Bluetooth Low Energy) connection
           });
+          // Set up a reconnect timer after the delay
           reconnectTimer();
         }
       } catch (e, stackTrace) {
@@ -1221,18 +1223,25 @@ makeApiRequest is used to update the data with latest data
     }
   }
 
+  // Method to set up a reconnect timer with a duration of 120 seconds
   void reconnectTimer() {
+    // Create a timer that closes the current screen after 120 seconds
     _reconnectTimer = Timer(const Duration(seconds: 120), () {
-      Get.back();
+      Get.back();  // Close the current screen
     });
   }
 
+// Method to clear the reconnect timer
   clearReconnectTimer() {
+    // Check if the timer is active and not null
     if (_reconnectTimer != null && _reconnectTimer!.isActive) {
+      // Cancel the timer to prevent it from triggering
       _reconnectTimer!.cancel();
+      // Set the timer reference to null after cancellation
       _reconnectTimer = null;
     }
   }
+
 
   callToCC(SheelaResponse currentResponse) async {
     if ((currentResponse.directCall != null && currentResponse.directCall!) &&
@@ -2901,28 +2910,49 @@ makeApiRequest is used to update the data with latest data
                       }
                     });
                   }
-                }else if (button?.btnRedirectTo == strReconnect) {
+                } // Check if the button's redirection is to reconnect
+                else if (button?.btnRedirectTo == strReconnect) {
+                  // Check if loading is in progress, if true, return
                   if (isLoading.isTrue) {
                     return;
                   }
+
+                  // Check if the last conversation is marked as singleuse and action is not done
                   if (conversations.last.singleuse != null &&
                       conversations.last.singleuse! &&
                       conversations.last.isActionDone != null) {
                     conversations.last.isActionDone = true;
                   }
+
+                  // Mark the button as selected, stop TTS, and set loading state to true
                   button?.isSelected = true;
                   stopTTS();
                   isLoading.value = true;
+
+                  // Add a card response with the button's title to the conversation
                   final cardResponse = SheelaResponse(text: button?.title);
                   conversations.add(cardResponse);
                   scrollToEnd();
+
+                  // Introduce a delay before further actions (2 seconds in this case)
                   await Future.delayed(Duration(seconds: 2));
-                  SheelaBLEController? bleController = CommonUtil().onInitSheelaBLEController();
+
+                  // Initialize SheelaBLEController
+                  SheelaBLEController? bleController =
+                      CommonUtil().onInitSheelaBLEController();
+
+                  // Create a reconnect card and add it to the conversation and play
                   final reconnectCard = SheelaResponse(
-                      text: await getTextTranslate(strFailureRetry),
-                      recipientId: sheelaRecepId,redirectTo: strReconnect);
+                    text: await getTextTranslate(strFailureRetry),
+                    recipientId: sheelaRecepId,
+                    redirectTo: strReconnect,
+                  );
                   bleController.addToConversationAndPlay(reconnectCard);
+
+                  // Set loading state to false
                   isLoading.value = false;
+
+                  // Introduce a delay before resetting the button selection (3 seconds in this case)
                   Future.delayed(const Duration(seconds: 3), () {
                     button?.isSelected = false;
                   });
@@ -3111,17 +3141,22 @@ makeApiRequest is used to update the data with latest data
     }
   }
 
+  // Future method to get a list of Buttons for sheelaFailureRetry
   Future<List<Buttons>> sheelaFailureRetryButtons() async {
+    // Use Future.wait to asynchronously translate the texts
     List<String?> translatedTexts = await Future.wait([
       getTextTranslate(strReconnect),
       getTextTranslate(strExit),
     ]);
+
+    // Return a list of Buttons with translated titles and redirections
     return [
       Buttons(title: translatedTexts[0], btnRedirectTo: strReconnect),
       Buttons(
-          title: translatedTexts[1],
-          payload: strExit,
-          mute: sheela_hdn_btn_yes),
+        title: translatedTexts[1],
+        payload: strExit,
+        mute: sheela_hdn_btn_yes,
+      ),
     ];
   }
 }

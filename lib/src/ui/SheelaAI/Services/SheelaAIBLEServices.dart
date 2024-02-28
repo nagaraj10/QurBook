@@ -63,6 +63,7 @@ class SheelaBLEController extends GetxController {
       (event) async {
         if (event == PlayerState.COMPLETED) {
           isPlaying = false;
+          // for play buttons
           SheelaController.afterCompletedAudioPlayer();
           if ((playConversations).isNotEmpty) {
             await playTTS();
@@ -201,13 +202,23 @@ class SheelaBLEController extends GetxController {
                   if (isFromVitals || isFromRegiment) {
                     Get.back();
                   }
+                  // Check if Sheela screen is active and there is a retry for scan failure
                   if (SheelaController.isSheelaScreenActive &&
                       (SheelaController.isRetryScanFailure ?? false)) {
-                    //bleController = CommonUtil().onInitSheelaBLEController();
-                    SheelaController.arguments?.deviceType = hublistController.bleDeviceType;
+                    // Set device type in SheelaController arguments based on bleDeviceType from hublistController
+                    SheelaController.arguments?.deviceType =
+                        hublistController.bleDeviceType;
+
+                    // Clear the reconnect timer in SheelaController
                     SheelaController.clearReconnectTimer();
+
+                    // Start reading Sheela BLE device readings
                     startSheelaBLEDeviceReadings();
+
+                    // Reset the retry scan failure flag
                     SheelaController.isRetryScanFailure = false;
+
+                    // Set loading state to true in SheelaController
                     SheelaController.isLoading(true);
                   } else {
                     Get.to(
@@ -471,14 +482,22 @@ class SheelaBLEController extends GetxController {
     playTTS(playButtons: playButtons);
   }
 
+  // Method to handle failure scenario
   showFailure() async {
-    if (SheelaController.isSheelaScreenActive &&
-        !isCompleted &&
-        !receivedData) {
+    // Check if Sheela screen is active and the operation is not completed and no data is received
+    if (SheelaController.isSheelaScreenActive && !isCompleted && !receivedData) {
+
+      // Get translated failure message
       String? strTextMsg = await SheelaController.getTextTranslate(
           "Failed to save the values, Please try again");
+
+      // Set loading state to true in SheelaController
       SheelaController.isLoading.value = true;
+
+      // Set retry scan failure flag to true in SheelaController
       SheelaController.isRetryScanFailure = true;
+
+      // Display failure message with options for retry
       addToConversationAndPlay(
         SheelaResponse(
           recipientId: conversationType,
@@ -489,13 +508,21 @@ class SheelaBLEController extends GetxController {
           singleuse: true,
           isActionDone: false,
           isButtonNumber: false,
-        ),playButtons: false
+        ),
+        playButtons: false,
       );
+
+      // Set loading state to false in SheelaController
       SheelaController.isLoading.value = false;
+
+      // Reset completed status
       isCompleted = false;
+
+      // Introduce a delay before proceeding (2 seconds in this case)
       await Future.delayed(const Duration(seconds: 2));
     }
   }
+
 
 // final model = BleDataModel(
 //         data: Data(bgl: "115.0"),
@@ -689,43 +716,6 @@ class SheelaBLEController extends GetxController {
       }
     } else {
       String? textForPlaying;
-      if (playButtons) {
-        final currentButton = currentPlayingConversation!
-            .buttons![currentPlayingConversation!.currentButtonPlayingIndex!];
-        if ((currentButton.title!.contains(StrExit)) ||
-            (currentButton.title!.contains(str_Undo)) ||
-            (currentButton.title!.contains(StrUndoAll)) ||
-            (playConversations.last.endOfConv ?? false)) {
-          if (playConversations.last.endOfConv??false) {
-            currentPlayingConversation!.isPlaying.value = false;
-            currentButton.isPlaying.value = false;
-          } else {
-            SheelaController.gettingReposnseFromNative();
-            return;
-          }
-        } else if ((currentButton.ttsResponse?.payload?.audioContent ?? '')
-            .isNotEmpty) {
-          if (currentButton.mute != sheela_hdn_btn_yes) {
-            textForPlaying = currentButton.ttsResponse!.payload!.audioContent;
-          }
-        } else if ((currentButton.title ?? '').isNotEmpty) {
-          var result;
-          try {
-            if ((currentButton.sayText ?? '').isNotEmpty) {
-              result = await SheelaController.getGoogleTTSForText(currentButton.sayText);
-            } else {
-              result = await SheelaController.getGoogleTTSForText(currentButton.title);
-            }
-          } catch (e, stackTrace) {
-            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-
-            result = await SheelaController.getGoogleTTSForText(currentButton.title);
-          }
-          if ((result.payload?.audioContent ?? '').isNotEmpty) {
-            textForPlaying = result.payload.audioContent;
-          }
-        }
-      }else{
         if ((currentPlayingConversation.text ?? '').isNotEmpty) {
           final result = await SheelaController.getGoogleTTSForText(
               (getPronunciationText(currentPlayingConversation).trim().isNotEmpty
@@ -736,7 +726,6 @@ class SheelaBLEController extends GetxController {
           }
         }
         playConversations.removeAt(0);
-      }
       if ((textForPlaying ?? '').isNotEmpty) {
         try {
           final bytes = base64Decode(textForPlaying!);
@@ -751,6 +740,7 @@ class SheelaBLEController extends GetxController {
             tempFile.writeAsBytesSync(
               bytes,
             );
+            // Assign the 'currentPlayingConversation' to 'SheelaController.currentPlayingConversation'
             SheelaController.currentPlayingConversation = currentPlayingConversation;
             SheelaController.conversations.add(currentPlayingConversation);
             SheelaController.isMicListening.toggle();
