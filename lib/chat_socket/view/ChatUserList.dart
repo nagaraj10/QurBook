@@ -805,39 +805,23 @@ class _ChatUserListState extends State<ChatUserList> {
                   child: Column(
                     children: [
                       Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 8, 4, 0),
-                          child: (userChatList.unReadCount != null &&
+                        padding: const EdgeInsets.fromLTRB(0, 8, 4, 0),
                         child: (userChatList.unReadCount != null &&
                                   userChatList.unReadCount != '' &&
-                                  !userChatList.unReadCount!.contains('0'))
-                              ? Container(
-                                  width: 60,
-                                  height: 50,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              0, 5, 0, 0),
-                                          child: CircleAvatar(
-                                            radius:
-                                                CommonUtil().isTablet != null &&
-                                                        CommonUtil().isTablet!
-                                                    ? 18
-                                                    : 15,
-                                            child: Text(
-                                              userChatList.unReadCount ?? '',
-                                              style: TextStyle(
-                                                fontSize: 12.0.sp,
-                                              ),
-                                            ),
-                                            backgroundColor: Color(CommonUtil()
-                                                .getMyPrimaryColor()),
-                                            foregroundColor: Colors.white,
-                                          )),
-                                    ],
-                                  ),
-                                )
-                              : Text('')),
+                                    ((userChatList.unReadCount ?? '0') != '0'))
+                                ? Container(
+                                    width: 60,
+                                    height: 50,
+                                    child: Column(
+                                      children: [
+                                        getUnreadCount(
+                                          userChatList.unReadCount!,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : const Text(''),
+                      ),
                       if (CommonUtil.isUSRegion() &&
                           userChatList.isPrimaryCareCoordinator!)
                         Container(
@@ -1001,4 +985,29 @@ class _ChatUserListState extends State<ChatUserList> {
             ),
     );
   }
+
+  Widget getUnreadCount(String unReadCount) {
+    try {
+      final unReadCountNumber = num.tryParse(unReadCount) ?? 0;
+      return CircleAvatar(
+        radius:
+            CommonUtil().isTablet != null && CommonUtil().isTablet! ? 18 : 15,
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        foregroundColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Text(
+            unReadCountNumber <= 99 ? '$unReadCountNumber' : '99+',
+            style: TextStyle(
+              fontSize: 12.0.sp,
+            ),
+          ),
+        ),
+      );
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      return const Text('');
+    }
+  }
 }
+
