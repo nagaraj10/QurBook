@@ -807,6 +807,7 @@ class _ChatUserListState extends State<ChatUserList> {
                       Padding(
                           padding: const EdgeInsets.fromLTRB(0, 8, 4, 0),
                           child: (userChatList.unReadCount != null &&
+                        child: (userChatList.unReadCount != null &&
                                   userChatList.unReadCount != '' &&
                                   !userChatList.unReadCount!.contains('0'))
                               ? Container(
