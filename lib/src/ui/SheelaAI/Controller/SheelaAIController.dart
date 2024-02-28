@@ -2621,6 +2621,7 @@ makeApiRequest is used to update the data with latest data
                     reminder.remindin_type = '0';
                     reminder.providerid = '0';
                     reminder.remindbefore = '0';
+                    reminder.otherinfo = Otherinfo();
                     List<Reminder> data = [reminder];
                     for (var i = 0; i < data.length; i++) {
                       apiReminder = data[i];
