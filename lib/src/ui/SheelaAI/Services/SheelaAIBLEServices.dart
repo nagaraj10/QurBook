@@ -63,8 +63,9 @@ class SheelaBLEController extends GetxController {
       (event) async {
         if (event == PlayerState.COMPLETED) {
           isPlaying = false;
+          SheelaController.afterCompletedAudioPlayer();
           if ((playConversations).isNotEmpty) {
-            playTTS();
+            await playTTS();
           } else if (isCompleted) {
             await Future.delayed(const Duration(seconds: 4));
             stopTTS();
@@ -203,6 +204,7 @@ class SheelaBLEController extends GetxController {
                   if (SheelaController.isSheelaScreenActive &&
                       (SheelaController.isRetryScanFailure ?? false)) {
                     //bleController = CommonUtil().onInitSheelaBLEController();
+                    SheelaController.arguments?.deviceType = hublistController.bleDeviceType;
                     startSheelaBLEDeviceReadings();
                     SheelaController.isRetryScanFailure = false;
                     SheelaController.isLoading(true);
@@ -748,7 +750,7 @@ class SheelaBLEController extends GetxController {
             tempFile.writeAsBytesSync(
               bytes,
             );
-
+            SheelaController.currentPlayingConversation = currentPlayingConversation;
             SheelaController.conversations.add(currentPlayingConversation);
             SheelaController.isMicListening.toggle();
             currentPlayingConversation.isPlaying.value = true;

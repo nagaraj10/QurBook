@@ -236,7 +236,7 @@ class SheelaAIController extends GetxController {
     } else {
       stopTTS();
       try {
-        if (!conversations.last.endOfConv) {
+        if (!(conversations.last.endOfConv??true)) {
           if (CommonUtil.isUSRegion()) {
             if (!isMuted.value) {
               if (!isDiscardDialogShown.value) {

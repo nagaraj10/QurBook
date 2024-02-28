@@ -744,7 +744,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             recipientId: sheelaRecepId);
                         bleController.addToConversationAndPlay(reconnectCard);
                         controller.isLoading.value = false;
-                        await Future.delayed(Duration(seconds: 1));
+                        await Future.delayed(Duration(seconds: 2));
                         controller.resetBLE();
                         Future.delayed(const Duration(seconds: 3), () {
                           buttonData?.isSelected = false;
