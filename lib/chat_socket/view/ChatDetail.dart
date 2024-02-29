@@ -17,6 +17,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:timeago/timeago.dart' as timeago;
+
 
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../../authentication/constants/constants.dart';
@@ -1682,44 +1684,63 @@ class ChatState extends State<ChatDetail> {
                             )
                           : Container(width: 38.0.w),
                       chatList.messages?.type == 0
-                          ? Card(
-                              color: Colors.transparent,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(25),
-                                      bottomLeft: Radius.circular(25),
-                                      bottomRight: Radius.circular(25))),
-                              child: Container(
-                                constraints: BoxConstraints(
-                                  maxWidth: 1.sw * .6,
-                                ),
-                                padding: const EdgeInsets.all(15.0),
-                                decoration: BoxDecoration(
-                                  color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(25),
-                                    bottomLeft: Radius.circular(25),
-                                    bottomRight: Radius.circular(25),
+                          ?
+                      Card(
+                        color: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(25),
+                            bottomLeft: Radius.circular(25),
+                            bottomRight: Radius.circular(25),
+                          ),
+                        ),
+                        child: Container(
+                          constraints: BoxConstraints(
+                            maxWidth: 1.sw * .6,
+                          ),
+                          padding: const EdgeInsets.all(15.0),
+                          decoration: BoxDecoration(
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(25),
+                              bottomLeft: Radius.circular(25),
+                              bottomRight: Radius.circular(25),
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: fontSizeOne,
                                   ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    RichText(
-                                      text: TextSpan(
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: fontSizeOne,
-                                          ),
-                                          children: textSpanList),
-                                    ),
-                                    isSentViaSheelaTextWidget(
-                                        chatList, Colors.white),
-                                  ],
+                                  children: textSpanList,
                                 ),
                               ),
-                            )
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5,bottom: 5),
+                                child: Text(
+                                  getFormattedDateTime(
+                                      DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                          chatList
+                                              .messages!.timestamp!.sSeconds!))
+                                          .toString()),
+                                  // getFormattedDateTime(chatList.messages!.timestamp!.sSeconds.toString()),
+                                  style: TextStyle(
+                                    color: greyColor,
+                                    fontSize: fontSizeThree,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                              ),
+                              isSentViaSheelaTextWidget(chatList, Colors.white),
+                            ],
+                          ),
+                        ),
+                      )
+
                           : chatList.messages?.type == 1
                               ? Container(
                                   child: TextButton(
@@ -1887,29 +1908,42 @@ class ChatState extends State<ChatDetail> {
                     ],
                   ),
                   // Time
-                  isIconNeed
-                      ? Container(
-                          child: Text(
-                            getFormattedDateTime(
-                                DateTime.fromMillisecondsSinceEpoch(int.parse(
-                                        chatList
-                                            .messages!.timestamp!.sSeconds!))
-                                    .toString()),
-                            style: TextStyle(
-                                color: greyColor,
-                                fontSize: fontSizeThree,
-                                fontStyle: FontStyle.italic),
-                          ),
-                          margin: EdgeInsets.only(
-                              left: 50.0, top: 5.0, bottom: 5.0),
-                        )
-                      : Container()
+                  // isIconNeed
+                  //     ? Container(
+                  //         child: Text(
+                  //           getFormattedDateTime(
+                  //               DateTime.fromMillisecondsSinceEpoch(int.parse(
+                  //                       chatList
+                  //                           .messages!.timestamp!.sSeconds!))
+                  //                   .toString()),
+                  //           style: TextStyle(
+                  //               color: greyColor,
+                  //               fontSize: fontSizeThree,
+                  //               fontStyle: FontStyle.italic),
+                  //         ),
+                  //         margin: EdgeInsets.only(
+                  //             left: 50.0, top: 5.0, bottom: 5.0),
+                  //       )
+                  //     : Container()
                 ],
                 crossAxisAlignment: CrossAxisAlignment.start,
               ),
             );
     }
   }
+  String formatDateTime(String timestamp) {
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp));
+    DateTime now = DateTime.now();
+    Duration difference = now.difference(dateTime);
+
+    if (difference.inDays == 0) {
+      return timeago.format(dateTime); // Show relative time for today
+    } else {
+      // Show date and time for other days in 12-hour format
+      return DateFormat('MMM d, hh:mm a').format(dateTime);
+    }
+  }
+
 
   TextSpan buildTextWithLinks(String textToLink, int index, bool isPatient) =>
       TextSpan(
