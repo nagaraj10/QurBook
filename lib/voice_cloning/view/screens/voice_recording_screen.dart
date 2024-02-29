@@ -19,11 +19,12 @@ class VoiceRecordingScreen extends StatefulWidget {
   State<VoiceRecordingScreen> createState() => _VoiceRecordingScreenState();
 }
 
-class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
+class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> with WidgetsBindingObserver {
   late VoiceCloningController _voiceCloningController;
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     ///Initializing the audio and player controllers
     Provider.of<VoiceCloningController>(context, listen: false)
         .initialiseControllers();
@@ -75,6 +76,14 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if(state == AppLifecycleState.paused){
+      _voiceCloningController.pauseRecorderAndPlayer();
+    }
   }
 
   ///Widget for the Recorder
@@ -304,6 +313,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     ///Dispose the player and recorder to avoid  memory leaks.
     _voiceCloningController.disposeRecorder();
     super.dispose();
