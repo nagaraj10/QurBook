@@ -268,10 +268,7 @@ class SheelaAIController extends GetxController {
           startTimer();
         } // Check if the last conversation's redirectTo is equal to the specified value (strReconnect)
         else if ((conversations.last.redirectTo ?? '') == strReconnect) {
-          // Introduce a delay before triggering the resetBLE function (1 second in this case)
-          Future.delayed(const Duration(seconds: 1), () {
-            resetBLE(); // Reset the BLE (Bluetooth Low Energy) connection
-          });
+          resetBLE(); // Reset the BLE (Bluetooth Low Energy) connection
           // Set up a reconnect timer after the delay
           reconnectTimer();
         }
