@@ -2523,7 +2523,7 @@ makeApiRequest is used to update the data with latest data
               var responseRecived = response.toString().toLowerCase().trim();
 
               dynamic button = null;
-
+              var translatedText = '';
               if (!(conversations.last?.isButtonNumber ?? false)) {
                 if (responseRecived == carGiverSheela) {
                   responseRecived = careGiverSheela;
@@ -2552,7 +2552,7 @@ makeApiRequest is used to update the data with latest data
                       if (!(currentLanguageCode.value ?? '').contains('en')) {
                         final strTextMsg =
                             await getTextTranslateToEnglish(responseRecived);
-                        responseRecived = strTextMsg ?? '';
+                        translatedText = strTextMsg ?? '';
                       }
                       final sheelaSynonymsRequestModel =
                           SheelaSynonymsRequestModel(
@@ -2562,7 +2562,8 @@ makeApiRequest is used to update the data with latest data
                           ftype: conversations.last?.ftype,
                           description: conversations.last?.fields.description,
                         ),
-                        message:
+                        message: (!(currentLanguageCode.value ?? '').contains('en'))?
+                        translatedText.toLowerCase().replaceAll("'", ' '):
                             responseRecived.toLowerCase().replaceAll("'", ' '),
                       );
                       // Call SheelaAISynonymsAPI
@@ -2582,6 +2583,8 @@ makeApiRequest is used to update the data with latest data
                           for (var synonymButton
                               in conversations.last?.buttons) {
                             if (sheelaSynonymsResponse.result != null &&
+                                sheelaSynonymsResponse.result!.payload!=null&&
+                                sheelaSynonymsResponse.result!.payload!.isNotEmpty &&
                                 sheelaSynonymsResponse.result!.payload ==
                                     synonymButton.payload) {
                               button = synonymButton;
