@@ -478,4 +478,22 @@ class CheckoutPageProvider extends ChangeNotifier {
     );
     return benefitCareDietPlans?.transactionLimit;
   }
+
+  /// Returns the pre-membership discount amount based on the
+  /// calculated membership transaction limit.
+  ///
+  /// If membership benefits are checked, returns the difference
+  /// between the subtotal and total product counts.
+  ///
+  /// Otherwise, returns the minimum of the total product count
+  /// and the final membership transaction limit.
+  ///
+  num getPreMembershipDiscount() {
+    if (checkedMembershipBenefits) {
+      return subTotalProductCount - totalProductCount;
+    } else {
+      final transactionLimit = getFinalMembershipAmountLimit();
+      return min(totalProductCount, transactionLimit.toInt());
+    }
+  }
 }
