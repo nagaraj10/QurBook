@@ -74,6 +74,8 @@ class SheelaResponse {
   String? audioThumbnailUrl;
   String? videoThumbnailUrl;
   Uint8List? videoThumbnailUrlData; // this for the videoThumbnail avoid loading issue
+  Fields? fields;
+  String? ftype;
 
   SheelaResponse({
     this.recipientId,
@@ -114,6 +116,8 @@ class SheelaResponse {
     this.audioThumbnailUrl,
     this.videoThumbnailUrl,
     this.videoThumbnailUrlData,
+    this.fields,
+    this.ftype
   });
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
@@ -169,110 +173,10 @@ class SheelaResponse {
           }
         });
         buttons = buttonsList;
-        //TODO: Remove code this is only for Testing purpose
-    //     [
-    //       Buttons.fromJson({
-    //         "payload": "0",
-    //         "title": "Good",
-    //         "mediaurl": "",
-    //         "synonyms": [
-    //           "Ok",
-    //           "Fine",
-    //           "Healthy",
-    //           "Strong"
-    //         ],
-    //         "next": "continue",
-    //         "seq": 1,
-    //         "media": null,
-    //         "mediaType": "image",
-    //         "needPhoto": true,
-    //         "needAudio": false,
-    //         "needVideo": false,
-    //         "synonymsList": [
-    //           "Ok",
-    //           "Fine",
-    //           "Healthy",
-    //           "Strong"
-    //         ],
-    //         "partialSynonym": false,
-    //         "partialtitle": true
-    //       }),
-    //      Buttons.fromJson( {
-    //         "payload": "1",
-    //         "title": "Bad",
-    //         "mediaurl": "",
-    //         "synonyms": [
-    //           "bad",
-    //           "Worst"
-    //         ],
-    //         "next": "continue",
-    //         "seq": 2,
-    //         "media": null,
-    //         "mediaType": "image",
-    //         "needPhoto": false,
-    //         "needAudio": true,
-    //         "needVideo": false,
-    //         "synonymsList": [
-    //           "bad",
-    //           "Worst"
-    //         ],
-    //         "partialSynonym": true,
-    //         "partialtitle": false,
-    //       },
-    //      ),
-    // Buttons.fromJson( {
-    // "payload": "3",
-    // "title": "Wonderful",
-    // "mediaurl": "",
-    // "synonyms": [
-    //   "Fantastic",
-    //   "Amazing",
-    //   "Marvelous"
-    // ],
-    // "next": "continue",
-    // "seq": 2,
-    // "media": null,
-    // "mediaType": "image",
-    // "needPhoto": false,
-    // "needAudio": true,
-    // "needVideo": false,
-    // "synonymsList": [
-    //   "Fantastic",
-    //   "Amazing",
-    //   "Marvelous"
-    // ],
-    // "partialSynonym": false,
-    // "partialtitle": false,
-    // }),
-    //       Buttons.fromJson( {
-    //         "payload": "3",
-    //         "title": "Great",
-    //         "mediaurl": "",
-    //         "synonyms": [
-    //           "Great Excellent",
-    //           "Outstanding",
-    //           "Superb",
-    //           "Terrific"
-    //         ],
-    //         "next": "continue",
-    //         "seq": 2,
-    //         "media": null,
-    //         "mediaType": "image",
-    //         "needPhoto": false,
-    //         "needAudio": true,
-    //         "needVideo": false,
-    //         "synonymsList": [
-    //           "Great Excellent",
-    //           "Outstanding",
-    //           "Superb",
-    //           "Terrific"
-    //         ],
-    //         "partialSynonym": true,
-    //         "partialtitle": true,
-    //       })
-    //     ];
       }
       pronunciationText = (json['pronunciationText'] ?? '');
+      fields = json["fields"] == null ? null : Fields.fromJson(json["fields"]);
+      ftype = json["ftype"]??'';
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -316,9 +220,13 @@ class SheelaResponse {
     data['imageThumbnailUrl'] = this.imageThumbnailUrl;
     data['audioThumbnailUrl'] = this.audioThumbnailUrl;
     data['videoThumbnailUrl'] = this.videoThumbnailUrl;
+    data['fields'] = this.fields;
+    data['ftype'] = this.ftype;
     return data;
   }
 }
+
+
 
 class Buttons {
   String? payload;
@@ -618,4 +526,28 @@ class Messages {
     data['chatMessageId'] = this.chatMessageId;
     return data;
   }
+}
+
+class Fields {
+  String? fdata;
+  String? description;
+  List<Buttons>? fdataA;
+
+  Fields({
+    this.fdata,
+    this.fdataA,
+    this.description,
+  });
+
+  factory Fields.fromJson(Map<String, dynamic> json) => Fields(
+    fdata: json["fdata"]??"",
+    description: json["description"]??"",
+    fdataA: json["fdataA"] == null ? [] : List<Buttons>.from(json["fdataA"]!.map((x) =>Buttons.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "fdata": fdata,
+    "description": description,
+    "fdataA": fdataA == null ? [] : List<dynamic>.from(fdataA!.map((x) => x.toJson())),
+  };
 }

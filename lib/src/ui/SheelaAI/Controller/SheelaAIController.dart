@@ -26,6 +26,8 @@ import 'package:myfhb/main.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
+import 'package:myfhb/src/ui/SheelaAI/Models/sheela_synonyms_request.dart';
+import 'package:myfhb/src/ui/SheelaAI/Models/sheela_synonyms_response.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/AttachmentListSheela.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
@@ -1376,6 +1378,51 @@ makeApiRequest is used to update the data with latest data
       return text;
     }
   }
+//Function to translate any language text to English
+  Future<String?> getTextTranslateToEnglish(String? text) async {
+    try {
+      // Get the currently selected language code
+      final selLanguageCode = getCurrentLanCode(splittedCode: true);
+      // If the selected language is English, return the text as is
+      if ((selLanguageCode ?? '').contains('en')) {
+        return text;
+      }
+      // Prepare request JSON for translation
+      Map<String, dynamic> reqJson = Map<String, dynamic>();
+      reqJson[qr_textToTranslate] = text;
+      reqJson[qr_targetLanguageCode] = 'en';
+      reqJson[qr_sourceLanguageCode] = getCurrentLanCode(splittedCode: true);
+      // Call Sheela AIAPIService to translate text
+      final response = await SheelAIAPIService().getTextTranslate(reqJson);
+      // Check if translation request was successful and response is not empty
+      if (response.statusCode == 200 && (response.body).isNotEmpty) {
+        // Parse response JSON
+        final data = jsonDecode(response.body);
+        final GoogleTTSResponseModel googleTTSResponseModel =
+        GoogleTTSResponseModel.fromJson(data);
+        // Check if translation was successful
+        if ((googleTTSResponseModel != null) &&
+            (googleTTSResponseModel.isSuccess ?? false)) {
+          // Get translated text from response
+          String strText = (googleTTSResponseModel?.result?.translatedText ?? '');
+          // Return translated text if it's not empty, otherwise return original text
+          return (strText.trim().isNotEmpty) ? strText : text;
+        } else {
+          // Return original text if translation failed
+          return text;
+        }
+      } else {
+        // Return original text if translation request failed
+        return text;
+      }
+    } catch (e, stackTrace) {
+      // Log any exceptions
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      // Return original text in case of an error
+      return text;
+    }
+  }
+
 
   void showDialogForSheelaBox(
       {bool isNeedSheelaDialog = false, bool isFromQurHomeRegimen = false}) {
@@ -2480,34 +2527,49 @@ makeApiRequest is used to update the data with latest data
                 if (responseRecived == carGiverSheela) {
                   responseRecived = careGiverSheela;
                 }
-                for (final btn in conversations.last?.buttons) {
-                  // Check if partial matching is enabled for title and title is not null or empty
-                  if (btn.partialTitle && btn.title != null && btn.title!.isNotEmpty) {
-                    final String title = btn.title!.toLowerCase();
-                    if (title.contains(responseRecived.toLowerCase()) || responseRecived.toLowerCase().contains(title)) {
-                      button = btn;
-                      break;
-                    } // Exit the loop if a match is found
-                  }
+                for (var btn in conversations.last?.buttons) {
+                  //check whether title is match the input
+                  if ((btn.title ?? '').toLowerCase() == responseRecived.toLowerCase()) {
+                    button = btn;
+                    break; // Exit the loop if a match is found
+                  }else {
+                    // Check if media is needed
+                    final needMedia = btn.needPhoto || btn.needAudio || btn.needVideo;
+                    if (needMedia){
+                      // If current language is not English, translate text to English
+                      if (!(currentLanguageCode.value ?? '').contains('en')) {
+                        final strTextMsg = await getTextTranslateToEnglish(responseRecived);
+                         responseRecived = strTextMsg??'';
+                      }
+                      final sheelaSynonymsRequestModel = SheelaSynonymsRequestModel(
+                        field: Field(
+                          fdata: conversations.last?.fields.fdata,
+                          fdataA: conversations.last?.fields.fdataA,
+                          ftype: conversations.last?.ftype,
+                          description: conversations.last?.fields.description,
+                        ),
+                        message: responseRecived.toLowerCase().replaceAll("'", ' '),
+                      );
+                      // Call SheelaAISynonymsAPI
+                      final response = await SheelAIAPIService().SheelaAISynonymsAPI(
+                        sheelaSynonymsRequestModel.toJson(),
+                      );
+                      // Check if API call was successful and response is not empty
+                      if (response.statusCode == 200 && (response.body).isNotEmpty) {
+                        final sheelaSynonymsResponse = SheelaSynonymsResponse.fromJson(jsonDecode(response.body));
+                        // Check if API call was successful
+                        if (sheelaSynonymsResponse.isSuccess ?? false) {
+                          // Find matching button based on payload in response
 
-                  // Check if partial matching is enabled for synonyms and synonyms list is not null or empty
-                  if (btn.partialSynonym && btn.synonymsList != null && btn.synonymsList!.isNotEmpty) {
-                    final bool isContained = btn.synonymsList.any((synonym) =>
-                    synonym.toLowerCase().contains(responseRecived.toLowerCase()) ||
-                        responseRecived.toLowerCase().contains(synonym.toLowerCase()));
-                    if (isContained) {
-                      button = btn;
-                      break; // Exit the loop if a match is found
-                    }
-                  }
-
-                  // Check if the title of the button or any of its synonyms matches the response
-                  if (!btn.partialTitle && !btn.partialSynonym) {
-                    if ((btn.title ?? '').toLowerCase() == responseRecived.toLowerCase() ||
-                        (btn.synonymsList != null &&
-                            btn.synonymsList.any((synonym) => synonym.toLowerCase() == responseRecived.toLowerCase()))) {
-                      button = btn;
-                      break; // Exit the loop if a match is found
+                          for (var synonymButton in conversations.last?.buttons) {
+                            if (sheelaSynonymsResponse.result != null &&
+                                sheelaSynonymsResponse.result!.payload == synonymButton.payload) {
+                              button = synonymButton;
+                              break;
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }

@@ -41,6 +41,30 @@ class SheelAIAPIService {
     }
   }
 
+  Future<Response> SheelaAISynonymsAPI(Map<String, dynamic> reqJson) async {
+    try {
+      final sheelaSynonymsUrl = BASE_URL + qr_sheela_synonyms;
+      // Encode request JSON
+      final jsonString = jsonEncode(reqJson);
+      // Get request headers
+      final Map<String, dynamic> headerRequest =
+      await HeaderRequest().getRequestHeader();
+      // Make POST request to Sheela AI ValidateSynonyms API
+      final response = await ApiServices.post(
+        sheelaSynonymsUrl,
+        body: jsonString,
+        headers: headerRequest as Map<String, String>?,
+      );
+      return response!;
+    } catch (e, stackTrace) {
+      // Log any exceptions
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      // Throw the exception
+      throw Exception('$e was thrown');
+    }
+  }
+
+
   Future<Response> getAudioFileTTS(Map<String, dynamic> reqJson) async {
     var strVoiceId = await getVoiceId();
     final urlForTTS = BASE_URL + qr_TTS_Proxy_URL;
