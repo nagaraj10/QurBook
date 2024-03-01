@@ -2542,10 +2542,7 @@ makeApiRequest is used to update the data with latest data
                     break; // Exit the loop if a match is found
                   } else {
                     // Check if media is needed
-                    final title = btn.title ?? '';
-                    final needMedia = (title == showImageHelp) ||
-                        (title == showAudioHelp) ||
-                        (title == showVideoHelp) ||
+                    final needMedia =(btn.btnRedirectTo!=null && btn.btnRedirectTo!.isNotEmpty) ||
                         btn.needPhoto || btn.needAudio || btn.needVideo;
                     if (needMedia) {
                       // If current language is not English, translate text to English
