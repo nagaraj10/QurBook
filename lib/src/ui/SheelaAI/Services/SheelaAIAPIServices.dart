@@ -41,6 +41,8 @@ class SheelAIAPIService {
     }
   }
 
+
+  //Function to used call sheela synonyms api
   Future<Response> SheelaAISynonymsAPI(Map<String, dynamic> reqJson) async {
     try {
       final sheelaSynonymsUrl = BASE_URL + qr_sheela_synonyms;

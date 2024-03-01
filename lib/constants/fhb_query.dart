@@ -492,5 +492,4 @@ const String doctor_service_request_list = 'doctor/service-request/list';
 // Define a constant String named 'lab_service_request_list' with the value 'health-organization/service-request/list'
 const String lab_service_request_list = 'health-organization/service-request/list';
 
-const String sheela_synonyms_url = "";
 
