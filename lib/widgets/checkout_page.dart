@@ -1464,9 +1464,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
   ///
   /// This allows showing the membership discount title and info to the user.
   String getMembershipDiscount(CheckoutPageProvider value) {
-    final maxMembershipAmountLimit = value.getMembershipAmountLimit();
     var basedtitle = variable.strMembershipDiscount;
-    if (maxMembershipAmountLimit != null && maxMembershipAmountLimit > 0) {
+    final maxMembershipAmountLimit = value.getPreMembershipDiscount();
+    if (maxMembershipAmountLimit > 0) {
       basedtitle +=
           ' (Max. ${CommonUtil.formatAmount(maxMembershipAmountLimit)})';
     }
@@ -1484,4 +1484,5 @@ class _CheckoutPageState extends State<CheckoutPage> {
         value.subTotalProductCount - value.totalProductCount);
     return '-${CommonUtil.CURRENCY}$finalAmount';
   }
+
 }
