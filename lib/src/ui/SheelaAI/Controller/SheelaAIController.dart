@@ -2582,7 +2582,7 @@ makeApiRequest is used to update the data with latest data
                       final sheelaSynonymsRequestModel =
                           SheelaSynonymsRequestModel(
                         field: Field(
-                          fdata: conversations.last?.fields.fdata,
+                          fdata: conversations.last?.fields.fdata, //send button original data
                           fdataA: conversations.last?.fields.fdataA,
                           ftype: conversations.last?.ftype,
                           description: conversations.last?.fields.description,
