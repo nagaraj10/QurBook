@@ -74,6 +74,8 @@ class SheelaResponse {
   String? audioThumbnailUrl;
   String? videoThumbnailUrl;
   Uint8List? videoThumbnailUrlData; // this for the videoThumbnail avoid loading issue
+  Fields? fields;
+  String? ftype;
 
   SheelaResponse({
     this.recipientId,
@@ -114,6 +116,8 @@ class SheelaResponse {
     this.audioThumbnailUrl,
     this.videoThumbnailUrl,
     this.videoThumbnailUrlData,
+    this.fields,
+    this.ftype
   });
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
@@ -171,6 +175,8 @@ class SheelaResponse {
         buttons = buttonsList;
       }
       pronunciationText = (json['pronunciationText'] ?? '');
+      fields = json["fields"] == null ? null : Fields.fromJson(json["fields"]);
+      ftype = json["ftype"]??'';
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -214,9 +220,13 @@ class SheelaResponse {
     data['imageThumbnailUrl'] = this.imageThumbnailUrl;
     data['audioThumbnailUrl'] = this.audioThumbnailUrl;
     data['videoThumbnailUrl'] = this.videoThumbnailUrl;
+    data['fields'] = this.fields;
+    data['ftype'] = this.ftype;
     return data;
   }
 }
+
+
 
 class Buttons {
   String? payload;
@@ -241,6 +251,8 @@ class Buttons {
   bool? needPhoto;
   bool? needAudio;
   bool? needVideo;
+  bool? partialTitle;
+  bool? partialSynonym;
   List<String>? synonymsList; // list of synonyms to match the voice input
 
   Buttons({
@@ -264,6 +276,8 @@ class Buttons {
     this.needPhoto = false,
     this.needAudio = false,
     this.needVideo = false,
+    this.partialSynonym=false,
+    this.partialTitle=false,
   });
 
   Buttons.fromJson(Map<String, dynamic> json) {
@@ -283,6 +297,8 @@ class Buttons {
       needPhoto = (json['needPhoto'] ?? false);
       needAudio = (json['needAudio'] ?? false);
       needVideo = (json['needVideo'] ?? false);
+      partialSynonym = (json['partialSynonym'] ?? false);
+      partialTitle = (json['partialtitle'] ?? false);
       synonymsList = json["synonymsList"] != null
           ? List<String>.from(json["synonymsList"])
           : []; // Assign synonymsList with an empty list if it's null, otherwise, convert the JSON list to a Dart list of strings
@@ -510,4 +526,28 @@ class Messages {
     data['chatMessageId'] = this.chatMessageId;
     return data;
   }
+}
+
+class Fields {
+  String? fdata;
+  String? description;
+  List<Buttons>? fdataA;
+
+  Fields({
+    this.fdata,
+    this.fdataA,
+    this.description,
+  });
+
+  factory Fields.fromJson(Map<String, dynamic> json) => Fields(
+    fdata: json["fdata"]??"",
+    description: json["description"]??"",
+    fdataA: json["fdataA"] == null ? [] : List<Buttons>.from(json["fdataA"]!.map((x) =>Buttons.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "fdata": fdata,
+    "description": description,
+    "fdataA": fdataA == null ? [] : List<dynamic>.from(fdataA!.map((x) => x.toJson())),
+  };
 }
