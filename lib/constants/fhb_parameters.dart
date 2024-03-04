@@ -158,6 +158,7 @@ const String strLocalDateTime = 'localDateTime';
 const String strQURHOME_LEX = 'QURHOME_LEX';
 
 const String qr_sheela_lex = 'sheela/wrapper';
+const String qr_sheela_synonyms = 'sheela/sheela-validate-synonyms';
 
 //for category
 const String strCategoryName = 'categoryName';
@@ -893,3 +894,7 @@ const String stringExperience = 'experience';
 const String stringDoctorExperience = 'doctorExperience'; // Represents a key or identifier for doctor experience data
 
 
+//Define constants for media
+const String showImageHelp = 'Show Image Help';
+const String showAudioHelp = 'Show Audio Help';
+const String showVideoHelp = 'Show Video Help';
