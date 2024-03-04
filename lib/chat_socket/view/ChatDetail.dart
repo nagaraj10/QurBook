@@ -1440,7 +1440,7 @@ class ChatState extends State<ChatDetail> {
                         constraints: BoxConstraints(
                           maxWidth: 1.sw * .6,
                         ),
-                        padding: const EdgeInsets.all(15.0),
+                        padding: const EdgeInsets.only(left: 15, right: 15,top: 10,bottom: 10),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.only(
@@ -1449,19 +1449,40 @@ class ChatState extends State<ChatDetail> {
                             bottomRight: Radius.circular(25),
                           ),
                         ),
+                        child:  Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                  style: TextStyle(
+                                    color: Color(CommonUtil().getMyPrimaryColor()),
+                                    fontSize: fontSizeOne,
+                                  ),
+                                  children: textSpanList),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5,),
+                              child: Text(
+                                getFormattedDateTime(
+                                    DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                        chatList
+                                            .messages!.timestamp!.sSeconds!))
+                                        .toString()),
+                                style: TextStyle(
+                                  color: greyColor,
+                                  fontSize: fontSizeThree,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ),
+
+                          ],
+                        ),
                         /*child: Text(
                       document[STR_CONTENT],
                       style: TextStyle(
                           color: Color(CommonUtil().getMyPrimaryColor())),
                     ),*/
-                        child: RichText(
-                          text: TextSpan(
-                              style: TextStyle(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                                fontSize: fontSizeOne,
-                              ),
-                              children: textSpanList),
-                        ),
                       ),
                     )
               : chatList.messages?.type == 1
@@ -1698,7 +1719,7 @@ class ChatState extends State<ChatDetail> {
                           constraints: BoxConstraints(
                             maxWidth: 1.sw * .6,
                           ),
-                          padding: const EdgeInsets.all(15.0),
+                          padding: const EdgeInsets.only(left: 15, right: 15,top: 10,bottom: 10),
                           decoration: BoxDecoration(
                             color: Color(CommonUtil().getMyPrimaryColor()),
                             borderRadius: BorderRadius.only(
@@ -1907,24 +1928,6 @@ class ChatState extends State<ChatDetail> {
                                         ),
                     ],
                   ),
-                  // Time
-                  // isIconNeed
-                  //     ? Container(
-                  //         child: Text(
-                  //           getFormattedDateTime(
-                  //               DateTime.fromMillisecondsSinceEpoch(int.parse(
-                  //                       chatList
-                  //                           .messages!.timestamp!.sSeconds!))
-                  //                   .toString()),
-                  //           style: TextStyle(
-                  //               color: greyColor,
-                  //               fontSize: fontSizeThree,
-                  //               fontStyle: FontStyle.italic),
-                  //         ),
-                  //         margin: EdgeInsets.only(
-                  //             left: 50.0, top: 5.0, bottom: 5.0),
-                  //       )
-                  //     : Container()
                 ],
                 crossAxisAlignment: CrossAxisAlignment.start,
               ),
