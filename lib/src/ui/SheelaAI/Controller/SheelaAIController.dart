@@ -1602,26 +1602,33 @@ makeApiRequest is used to update the data with latest data
   }
 
   // Function to generate a list of button configurations for image preview
-  List<Buttons> sheelaImagePreviewButtons(
-      String? btnTitle, String? requestFileType) {
-    List<Buttons> buttons = [
+  Future<List<Buttons>> sheelaImagePreviewButtons(
+      String? btnTitle, String? requestFileType) async {
+
+    // Translate button titles
+    List<String?> translatedTexts = await Future.wait([
+      getTextTranslate(strCamelYes),
+      getTextTranslate(getButtonTitle(requestFileType)),
+      getTextTranslate(strExit),
+    ]);
+
+    return [
       Buttons(
-        title: strCamelYes, // Button title
+        title: translatedTexts[0], // Button title
         payload: btnTitle, // Payload data (optional)
         btnRedirectTo:
-            getRedirectTo(requestFileType), // Redirection information
+        getRedirectTo(requestFileType), // Redirection information
       ),
       Buttons(
-        title: getButtonTitle(requestFileType), // Button title
+        title: translatedTexts[1], // Button title
         btnRedirectTo: getRetakeTo(requestFileType), // Redirection information
       ),
       Buttons(
-        title: strExit, // Button title
+        title: translatedTexts[2], // Button title
         payload: strExit, // Payload data
         mute: sheela_hdn_btn_yes, // Mute flag (optional)
       ),
     ];
-    return buttons;
   }
 
   // Get the redirect action based on the request file type
@@ -1695,7 +1702,7 @@ makeApiRequest is used to update the data with latest data
       SheelaResponse currentCon =
           SheelaResponse(); // Create a new SheelaResponse instance
       currentCon.recipientId = sheelaRecepId; // Set recipient ID
-      currentCon.text = getTitle(requestFileType); // Set title to that card
+      currentCon.text = await getTextTranslate(getTitle(requestFileType)); // Set title to that card
       currentCon.endOfConv = false; // Set end of conversation flag to false
       currentCon.endOfConvDiscardDialog =
           false; // Set end of conversation discard dialog flag to false
@@ -1704,7 +1711,7 @@ makeApiRequest is used to update the data with latest data
       currentCon.isButtonNumber = false; // Set button number flag to false
       currentCon.recipientId =
           sheelaRecepId; // Set recipient ID again (duplicated line?)
-      currentCon.buttons = sheelaImagePreviewButtons(
+      currentCon.buttons = await sheelaImagePreviewButtons(
           btnTitle, requestFileType); // Generate buttons for the Sheela card
       if (requestFileType == strImage) {
         currentCon.imageThumbnailUrl =
