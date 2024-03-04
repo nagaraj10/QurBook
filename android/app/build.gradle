@@ -169,6 +169,8 @@ dependencies {
     implementation files('libs/LS202_Device.jar')
     implementation files('libs/lifesense-device-ble-2.3.0-beta12.jar')
 
+    implementation 'com.google.android.recaptcha:recaptcha:18.4.0'
+
 //    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 
 

@@ -13,6 +13,7 @@ import 'package:myfhb/voice_cloning/view/widgets/countdown_timer_widget.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../common/CommonUtil.dart';
+import '../../constants/fhb_parameters.dart';
 
 class VoiceCloningController extends ChangeNotifier {
   var countdown = 10;
@@ -80,6 +81,18 @@ class VoiceCloningController extends ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  pauseRecorderAndPlayer() async {
+    if(recorderController.isRecording){
+      await recorderController.pause();
+      isRecording =false;
+      notifyListeners();
+    }
+    else if (playerController.playerState.isPlaying) {
+      await playerController.pausePlayer();
+    }
+
   }
 
   checkForMicPermission() async {
