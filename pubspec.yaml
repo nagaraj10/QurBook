@@ -108,7 +108,6 @@ dependencies:
   html_unescape: ^2.0.0
   #This Package used to navigate to device settings
   app_settings: ^4.1.6
-  timeago:
 
 
   audioplayers: 0.20.1

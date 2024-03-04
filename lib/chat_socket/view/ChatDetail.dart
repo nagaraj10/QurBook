@@ -17,7 +17,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
@@ -2097,18 +2096,6 @@ class ChatState extends State<ChatDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
               ),
             );
-    }
-  }
-  String formatDateTime(String timestamp) {
-    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp));
-    DateTime now = DateTime.now();
-    Duration difference = now.difference(dateTime);
-
-    if (difference.inDays == 0) {
-      return timeago.format(dateTime); // Show relative time for today
-    } else {
-      // Show date and time for other days in 12-hour format
-      return DateFormat('MMM d, hh:mm a').format(dateTime);
     }
   }
 
