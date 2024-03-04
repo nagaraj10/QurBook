@@ -1418,14 +1418,35 @@ class ChatState extends State<ChatDetail> {
                           color: Colors.grey[100],
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                         ),
-                        child: RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                              style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: fontSizeOne,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: fontSizeOne,
+                                  ),
+                                  children: textSpanList),
+                            ),
+                            //UI for show the date time
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5,),
+                              child: Text(
+                                getFormattedDateTime(
+                                    DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                        chatList
+                                            .messages!.timestamp!.sSeconds!))
+                                        .toString()),
+                                style: TextStyle(
+                                  color: greyColor,
+                                  fontSize: fontSizeThree,
+                                  fontStyle: FontStyle.italic,
+                                ),
                               ),
-                              children: textSpanList),
+                            ),
+                          ],
                         ),
                       ),
                     )
@@ -1460,6 +1481,7 @@ class ChatState extends State<ChatDetail> {
                                   ),
                                   children: textSpanList),
                             ),
+                            //UI for show the date time
                             Padding(
                               padding: const EdgeInsets.only(top: 5,),
                               child: Text(
@@ -1490,35 +1512,56 @@ class ChatState extends State<ChatDetail> {
                   ? Container(
                       child: TextButton(
                         child: Material(
-                          child: CachedNetworkImage(
-                            placeholder: (context, url) => Container(
-                              child: CommonCircularIndicator(),
-                              width: 200.0.h,
-                              height: 200.0.h,
-                              padding: EdgeInsets.all(70.0),
-                              decoration: BoxDecoration(
-                                color: greyColor2,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CachedNetworkImage(
+                                placeholder: (context, url) => Container(
+                                  child: CommonCircularIndicator(),
+                                  width: 200.0.h,
+                                  height: 200.0.h,
+                                  padding: EdgeInsets.all(70.0),
+                                  decoration: BoxDecoration(
+                                    color: greyColor2,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8.0),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            errorWidget: (context, url, error) => Material(
-                              child: Image.asset(
-                                'images/img_not_available.jpeg',
+                                errorWidget: (context, url, error) => Material(
+                                  child: Image.asset(
+                                    'images/img_not_available.jpeg',
+                                    width: 200.0.h,
+                                    height: 200.0.h,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8.0),
+                                  ),
+                                  clipBehavior: Clip.hardEdge,
+                                ),
+                                imageUrl: chatList.messages?.content ?? '',
                                 width: 200.0.h,
                                 height: 200.0.h,
                                 fit: BoxFit.cover,
                               ),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8.0),
+                              //UI for show the date time
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10, right: 15,top: 10,bottom: 10),
+                                child: Text(
+                                  getFormattedDateTime(
+                                      DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                          chatList
+                                              .messages!.timestamp!.sSeconds!))
+                                          .toString()),
+                                  style: TextStyle(
+                                    color: greyColor,
+                                    fontSize: fontSizeThree,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
                               ),
-                              clipBehavior: Clip.hardEdge,
-                            ),
-                            imageUrl: chatList.messages?.content ?? '',
-                            width: 200.0.h,
-                            height: 200.0.h,
-                            fit: BoxFit.cover,
+                            ],
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(8.0)),
                           clipBehavior: Clip.hardEdge,
@@ -1568,18 +1611,39 @@ class ChatState extends State<ChatDetail> {
                                   bottomRight: Radius.circular(25),
                                 ),
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(
-                                    Icons.picture_as_pdf,
-                                    size: 14,
-                                    color: Colors.black54,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Icon(
+                                        Icons.picture_as_pdf,
+                                        size: 14,
+                                        color: Colors.black54,
+                                      ),
+                                      SizedBoxWidget(
+                                        width: 5.0.w,
+                                      ),
+                                      getPdfViewLabel(chatList),
+                                    ],
                                   ),
-                                  SizedBoxWidget(
-                                    width: 5.0.w,
+                                  //UI for show the date time
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5,),
+                                    child: Text(
+                                      getFormattedDateTime(
+                                          DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                              chatList
+                                                  .messages!.timestamp!.sSeconds!))
+                                              .toString()),
+                                      style: TextStyle(
+                                        color: greyColor,
+                                        fontSize: fontSizeThree,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
                                   ),
-                                  getPdfViewLabel(chatList),
                                 ],
                               ),
                             ),
@@ -1595,12 +1659,33 @@ class ChatState extends State<ChatDetail> {
                                 child: Container(
                                   padding: EdgeInsets.all(10.0),
                                   width: 1.sw / 1.5,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      fhbBasicWidget.getAudioWidgetForChat(
-                                          chatList.messages?.content)
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          fhbBasicWidget.getAudioWidgetForChat(
+                                              chatList.messages?.content)
+                                        ],
+                                      ),
+                                      //UI for show the date time
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 5,),
+                                        child: Text(
+                                          getFormattedDateTime(
+                                              DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                                  chatList
+                                                      .messages!.timestamp!.sSeconds!))
+                                                  .toString()),
+                                          style: TextStyle(
+                                            color: greyColor,
+                                            fontSize: fontSizeThree,
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -1642,14 +1727,35 @@ class ChatState extends State<ChatDetail> {
                         color: Colors.grey[100],
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                       ),
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                            style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: fontSizeOne,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: fontSizeOne,
+                                ),
+                                children: textSpanList),
+                          ),
+                          //UI for show the date time
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5,),
+                            child: Text(
+                              getFormattedDateTime(
+                                  DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                      chatList
+                                          .messages!.timestamp!.sSeconds!))
+                                      .toString()),
+                              style: TextStyle(
+                                color: greyColor,
+                                fontSize: fontSizeThree,
+                                fontStyle: FontStyle.italic,
+                              ),
                             ),
-                            children: textSpanList),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -1740,6 +1846,9 @@ class ChatState extends State<ChatDetail> {
                                   children: textSpanList,
                                 ),
                               ),
+
+                              isSentViaSheelaTextWidget(chatList, Colors.white),
+                              //UI for show the date time
                               Padding(
                                 padding: const EdgeInsets.only(top: 5,bottom: 5),
                                 child: Text(
@@ -1756,7 +1865,6 @@ class ChatState extends State<ChatDetail> {
                                   ),
                                 ),
                               ),
-                              isSentViaSheelaTextWidget(chatList, Colors.white),
                             ],
                           ),
                         ),
@@ -1766,38 +1874,59 @@ class ChatState extends State<ChatDetail> {
                               ? Container(
                                   child: TextButton(
                                     child: Material(
-                                      child: CachedNetworkImage(
-                                        placeholder: (context, url) =>
-                                            Container(
-                                          child: CommonCircularIndicator(),
-                                          width: 200.0.h,
-                                          height: 200.0.h,
-                                          padding: EdgeInsets.all(70.0),
-                                          decoration: BoxDecoration(
-                                            color: greyColor2,
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          CachedNetworkImage(
+                                            placeholder: (context, url) =>
+                                                Container(
+                                              child: CommonCircularIndicator(),
+                                              width: 200.0.h,
+                                              height: 200.0.h,
+                                              padding: EdgeInsets.all(70.0),
+                                              decoration: BoxDecoration(
+                                                color: greyColor2,
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(8.0),
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                        errorWidget: (context, url, error) =>
-                                            Material(
-                                          child: Image.asset(
-                                            'images/img_not_available.jpeg',
+                                            errorWidget: (context, url, error) =>
+                                                Material(
+                                              child: Image.asset(
+                                                'images/img_not_available.jpeg',
+                                                width: 200.0.h,
+                                                height: 200.0.h,
+                                                fit: BoxFit.cover,
+                                              ),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(8.0),
+                                              ),
+                                              clipBehavior: Clip.hardEdge,
+                                            ),
+                                            imageUrl:
+                                                chatList.messages?.content ?? '',
                                             width: 200.0.h,
                                             height: 200.0.h,
                                             fit: BoxFit.cover,
                                           ),
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(8.0),
+                                          //Ui for showing the date and time
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 10, right: 15,top: 10,bottom: 10),
+                                            child: Text(
+                                              getFormattedDateTime(
+                                                  DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                                      chatList
+                                                          .messages!.timestamp!.sSeconds!))
+                                                      .toString()),
+                                              style: TextStyle(
+                                                color: greyColor,
+                                                fontSize: fontSizeThree,
+                                                fontStyle: FontStyle.italic,
+                                              ),
+                                            ),
                                           ),
-                                          clipBehavior: Clip.hardEdge,
-                                        ),
-                                        imageUrl:
-                                            chatList.messages?.content ?? '',
-                                        width: 200.0.h,
-                                        height: 200.0.h,
-                                        fit: BoxFit.cover,
+                                        ],
                                       ),
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(8.0)),
@@ -1856,23 +1985,44 @@ class ChatState extends State<ChatDetail> {
                                               bottomRight: Radius.circular(25),
                                             ),
                                           ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Icon(
-                                                Icons.picture_as_pdf,
-                                                size: 14,
-                                                color: Colors.black54,
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Icon(
+                                                    Icons.picture_as_pdf,
+                                                    size: 14,
+                                                    color: Colors.black54,
+                                                  ),
+                                                  SizedBoxWidget(
+                                                    width: 5.0.w,
+                                                  ),
+                                                  Text(
+                                                    'Click to view PDF',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: fontSizeOne,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              SizedBoxWidget(
-                                                width: 5.0.w,
-                                              ),
-                                              Text(
-                                                'Click to view PDF',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: fontSizeOne,
+                                              //UI for show the date time
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 5,),
+                                                child: Text(
+                                                  getFormattedDateTime(
+                                                      DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                                          chatList
+                                                              .messages!.timestamp!.sSeconds!))
+                                                          .toString()),
+                                                  style: TextStyle(
+                                                    color: greyColor,
+                                                    fontSize: fontSizeThree,
+                                                    fontStyle: FontStyle.italic,
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -1910,6 +2060,21 @@ class ChatState extends State<ChatDetail> {
                                                   ),
                                                   isSentViaSheelaTextWidget(
                                                       chatList, Colors.black),
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(top: 5,),
+                                                    child: Text(
+                                                      getFormattedDateTime(
+                                                          DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                                              chatList
+                                                                  .messages!.timestamp!.sSeconds!))
+                                                              .toString()),
+                                                      style: TextStyle(
+                                                        color: greyColor,
+                                                        fontSize: fontSizeThree,
+                                                        fontStyle: FontStyle.italic,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
                                             ),
