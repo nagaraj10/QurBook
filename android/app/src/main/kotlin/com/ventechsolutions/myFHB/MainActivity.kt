@@ -2215,6 +2215,9 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                     selectedBle = ""
                     //Initialize Scan for all BLE devices
                     scanAllBleDevices()
+
+                    // resolved reconneting issues
+                    startScanWowGoDevices()
                 }
             }
         )
@@ -2868,6 +2871,23 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             gCallbackFat
         )
         gManagerFat?.scanLeDevice(true)
+    }
+
+    // scan only for wow go for reconnecting flow
+    fun startScanWowGoDevices(){
+        gManager = GoldenBLEDeviceManager(applicationContext, gCallback)
+        gManager?.scanLeDevice(true)
+        gManagerBP = com.gsh.bloodpressure.api.GoldenBLEDeviceManager(
+            applicationContext,
+            gCallBackBP
+        )
+        gManagerBP?.scanLeDevice(true)
+        gManagerFat = com.gsh.weightscale.api.GoldenBLEDeviceManager(
+            applicationContext,
+            gCallbackFat
+        )
+        gManagerFat?.scanLeDevice(true)
+        startTransteckWowGoDevice()
     }
 
     @SuppressLint("MissingPermission")
