@@ -29,7 +29,7 @@ class VoiceCloningStatus extends StatefulWidget {
   _MyFhbWebViewState createState() => _MyFhbWebViewState();
 }
 
-class _MyFhbWebViewState extends State<VoiceCloningStatus> {
+class _MyFhbWebViewState extends State<VoiceCloningStatus>with WidgetsBindingObserver {
   bool isLoading = true;
   final controller = Get.put(VoiceCloneStatusController());
   double subtitle = CommonUtil().isTablet! ? tabHeader2 : mobileHeader2;
@@ -38,6 +38,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
   @override
   void initState() {
     controller.onInit();
+    WidgetsBinding.instance.addObserver(this);
     controller.initialiseControllers(); //initialize player
     //Api to get health organzation id and also the status of voice cloning
     controller.getUserHealthOrganizationId();
@@ -48,8 +49,18 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if(state == AppLifecycleState.paused){
+      if(controller.playerVoiceStatusController.playerState.isPlaying){
+        controller.playVoiceStatusPausePlayer();
+      }
+    }
+  }
+
+  @override
   void dispose() {
     controller.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 

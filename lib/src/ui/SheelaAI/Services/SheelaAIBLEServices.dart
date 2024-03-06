@@ -63,8 +63,10 @@ class SheelaBLEController extends GetxController {
       (event) async {
         if (event == PlayerState.COMPLETED) {
           isPlaying = false;
+          // for play buttons
+          SheelaController.afterCompletedAudioPlayer();
           if ((playConversations).isNotEmpty) {
-            playTTS();
+            await playTTS();
           } else if (isCompleted) {
             await Future.delayed(const Duration(seconds: 4));
             stopTTS();
@@ -200,29 +202,48 @@ class SheelaBLEController extends GetxController {
                   if (isFromVitals || isFromRegiment) {
                     Get.back();
                   }
-                  if (SheelaController.isSheelaScreenActive) return;
-                  Get.to(
-                    () => SheelaAIMainScreen(
-                      arguments: SheelaArgument(
-                        deviceType: hublistController.bleDeviceType,
-                        takeActiveDeviceReadings: true,
-                      ),
-                    ),
-                  )?.then((_) {
-                    Future.delayed(const Duration(seconds: 1)).then((_) {
-                      if (Get.isRegistered<VitalDetailController>())
-                        Get.find<VitalDetailController>().getData();
-                    });
+                  // Check if Sheela screen is active and there is a retry for scan failure
+                  if (SheelaController.isSheelaScreenActive &&
+                      (SheelaController.isRetryScanFailure ?? false)) {
+                    // Set device type in SheelaController arguments based on bleDeviceType from hublistController
+                    SheelaController.arguments?.deviceType =
+                        hublistController.bleDeviceType;
 
-                    Future.delayed(const Duration(seconds: 1)).then((_) {
-                      if (Get.isRegistered<QurhomeRegimenController>()) {
-                        Get.find<QurhomeRegimenController>()
-                            .currLoggedEID
-                            .value = hublistController.eid ?? '';
-                        Get.find<QurhomeRegimenController>().getRegimenList();
-                      }
+                    // Clear the reconnect timer in SheelaController
+                    SheelaController.clearReconnectTimer();
+
+                    // Start reading Sheela BLE device readings
+                    startSheelaBLEDeviceReadings();
+
+                    // Reset the retry scan failure flag
+                    SheelaController.isRetryScanFailure = false;
+
+                    // Set loading state to true in SheelaController
+                    SheelaController.isLoading(true);
+                  } else {
+                    Get.to(
+                      () => SheelaAIMainScreen(
+                        arguments: SheelaArgument(
+                          deviceType: hublistController.bleDeviceType,
+                          takeActiveDeviceReadings: true,
+                        ),
+                      ),
+                    )?.then((_) {
+                      Future.delayed(const Duration(seconds: 1)).then((_) {
+                        if (Get.isRegistered<VitalDetailController>())
+                          Get.find<VitalDetailController>().getData();
+                      });
+
+                      Future.delayed(const Duration(seconds: 1)).then((_) {
+                        if (Get.isRegistered<QurhomeRegimenController>()) {
+                          Get.find<QurhomeRegimenController>()
+                              .currLoggedEID
+                              .value = hublistController.eid ?? '';
+                          Get.find<QurhomeRegimenController>().getRegimenList();
+                        }
+                      });
                     });
-                  });
+                  }
                 }
               }
               break;
@@ -453,27 +474,55 @@ class SheelaBLEController extends GetxController {
     }
   }
 
-  addToConversationAndPlay(SheelaResponse conv) {
+  addToConversationAndPlay(SheelaResponse conv,{bool playButtons = false}) {
     playConversations.add(conv);
-    playTTS();
+    //if(playButtons){
+      SheelaController.isLoading.value = false;
+    //}
+    playTTS(playButtons: playButtons);
   }
 
+  // Method to handle failure scenario
   showFailure() async {
-    if (SheelaController.isSheelaScreenActive &&
-        !isCompleted &&
-        !receivedData) {
+    // Check if Sheela screen is active and the operation is not completed and no data is received
+    if (SheelaController.isSheelaScreenActive && !isCompleted && !receivedData) {
+
+      // Get translated failure message
       String? strTextMsg = await SheelaController.getTextTranslate(
           "Failed to save the values, Please try again");
+
+      // Set loading state to true in SheelaController
+      SheelaController.isLoading.value = true;
+
+      // Set retry scan failure flag to true in SheelaController
+      SheelaController.isRetryScanFailure = true;
+
+      // Display failure message with options for retry
       addToConversationAndPlay(
         SheelaResponse(
           recipientId: conversationType,
           text: strTextMsg,
+          buttons: await SheelaController.sheelaFailureRetryButtons(),
+          endOfConv: false,
+          endOfConvDiscardDialog: false,
+          singleuse: true,
+          isActionDone: false,
+          isButtonNumber: false,
         ),
+        playButtons: false,
       );
-      isCompleted = true;
+
+      // Set loading state to false in SheelaController
+      SheelaController.isLoading.value = false;
+
+      // Reset completed status
+      isCompleted = false;
+
+      // Introduce a delay before proceeding (2 seconds in this case)
       await Future.delayed(const Duration(seconds: 2));
     }
   }
+
 
 // final model = BleDataModel(
 //         data: Data(bgl: "115.0"),
@@ -618,6 +667,7 @@ class SheelaBLEController extends GetxController {
           }
         }
         isCompleted = true;
+        SheelaController.isRetryScanFailure = false;
       } catch (e, stackTrace) {
         CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
@@ -627,7 +677,7 @@ class SheelaBLEController extends GetxController {
     }
   }
 
-  playTTS() async {
+  playTTS({bool playButtons = false}) async {
     if ((playConversations).isEmpty || isPlaying) {
       return;
     }
@@ -666,16 +716,16 @@ class SheelaBLEController extends GetxController {
       }
     } else {
       String? textForPlaying;
-      if ((currentPlayingConversation.text ?? '').isNotEmpty) {
-        final result = await SheelaController.getGoogleTTSForText(
-            (getPronunciationText(currentPlayingConversation).trim().isNotEmpty
-                ? getPronunciationText(currentPlayingConversation)
-                : (currentPlayingConversation?.text)));
-        if ((result!.payload!.audioContent ?? '').isNotEmpty) {
-          textForPlaying = result.payload!.audioContent;
+        if ((currentPlayingConversation.text ?? '').isNotEmpty) {
+          final result = await SheelaController.getGoogleTTSForText(
+              (getPronunciationText(currentPlayingConversation).trim().isNotEmpty
+                  ? getPronunciationText(currentPlayingConversation)
+                  : (currentPlayingConversation?.text)));
+          if ((result!.payload!.audioContent ?? '').isNotEmpty) {
+            textForPlaying = result.payload!.audioContent;
+          }
         }
-      }
-      playConversations.removeAt(0);
+        playConversations.removeAt(0);
       if ((textForPlaying ?? '').isNotEmpty) {
         try {
           final bytes = base64Decode(textForPlaying!);
@@ -690,11 +740,13 @@ class SheelaBLEController extends GetxController {
             tempFile.writeAsBytesSync(
               bytes,
             );
-
+            // Assign the 'currentPlayingConversation' to 'SheelaController.currentPlayingConversation'
+            SheelaController.currentPlayingConversation = currentPlayingConversation;
             SheelaController.conversations.add(currentPlayingConversation);
             SheelaController.isMicListening.toggle();
             currentPlayingConversation.isPlaying.value = true;
             isPlaying = true;
+            SheelaController.scrollToEnd();
             await player.play('${dir.path}/tempAudioFile$randomNum.mp3',
                 isLocal: true);
           }

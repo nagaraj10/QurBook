@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
@@ -26,6 +25,8 @@ import 'package:myfhb/main.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
+import 'package:myfhb/src/ui/SheelaAI/Models/sheela_synonyms_request.dart';
+import 'package:myfhb/src/ui/SheelaAI/Models/sheela_synonyms_response.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/AttachmentListSheela.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/audio_player_screen.dart';
@@ -99,6 +100,7 @@ class SheelaAIController extends GetxController {
   bool lastMsgIsOfButtons = false;
   Timer? _popTimer;
   Timer? _exitAutoTimer;
+  Timer? _reconnectTimer;
   Timer? _sessionTimeout;
   var sheelaIconBadgeCount = 0.obs;
   bool isUnAvailableCC = false;
@@ -156,6 +158,8 @@ class SheelaAIController extends GetxController {
 
   String? btnTextLocal = '';
   bool? isRetakeCapture = false;
+  //reconnect feature enable flag
+  bool? isRetryScanFailure = false;
   String? fileRequestUrl = '';
 
   final ApiBaseHelper _helper = ApiBaseHelper();
@@ -235,7 +239,7 @@ class SheelaAIController extends GetxController {
     } else {
       stopTTS();
       try {
-        if (!conversations.last.endOfConv) {
+        if (!(conversations.last.endOfConv??true)) {
           if (CommonUtil.isUSRegion()) {
             if (!isMuted.value) {
               if (!isDiscardDialogShown.value) {
@@ -263,6 +267,11 @@ class SheelaAIController extends GetxController {
         } else if ((conversations.last.redirectTo ?? '') ==
             strHomeScreen.toLowerCase()) {
           startTimer();
+        } // Check if the last conversation's redirectTo is equal to the specified value (strReconnect)
+        else if ((conversations.last.redirectTo ?? '') == strReconnect) {
+          resetBLE(); // Reset the BLE (Bluetooth Low Energy) connection
+          // Set up a reconnect timer after the delay
+          reconnectTimer();
         }
       } catch (e, stackTrace) {
         //gettingReposnseFromNative();
@@ -1212,6 +1221,26 @@ makeApiRequest is used to update the data with latest data
     }
   }
 
+  // Method to set up a reconnect timer with a duration of 120 seconds
+  void reconnectTimer() {
+    // Create a timer that closes the current screen after 120 seconds
+    _reconnectTimer = Timer(const Duration(seconds: 120), () {
+      Get.back();  // Close the current screen
+    });
+  }
+
+// Method to clear the reconnect timer
+  clearReconnectTimer() {
+    // Check if the timer is active and not null
+    if (_reconnectTimer != null && _reconnectTimer!.isActive) {
+      // Cancel the timer to prevent it from triggering
+      _reconnectTimer!.cancel();
+      // Set the timer reference to null after cancellation
+      _reconnectTimer = null;
+    }
+  }
+
+
   callToCC(SheelaResponse currentResponse) async {
     if ((currentResponse.directCall != null && currentResponse.directCall!) &&
         (currentResponse.recipient != null &&
@@ -1373,6 +1402,52 @@ makeApiRequest is used to update the data with latest data
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      return text;
+    }
+  }
+
+//Function to translate any language text to English
+  Future<String?> getTextTranslateToEnglish(String? text) async {
+    try {
+      // Get the currently selected language code
+      final selLanguageCode = getCurrentLanCode(splittedCode: true);
+      // If the selected language is English, return the text as is
+      if ((selLanguageCode ?? '').contains('en')) {
+        return text;
+      }
+      // Prepare request JSON for translation
+      Map<String, dynamic> reqJson = Map<String, dynamic>();
+      reqJson[qr_textToTranslate] = text;
+      reqJson[qr_targetLanguageCode] = 'en';
+      reqJson[qr_sourceLanguageCode] = getCurrentLanCode(splittedCode: true);
+      // Call Sheela AIAPIService to translate text
+      final response = await SheelAIAPIService().getTextTranslate(reqJson);
+      // Check if translation request was successful and response is not empty
+      if (response.statusCode == 200 && (response.body).isNotEmpty) {
+        // Parse response JSON
+        final data = jsonDecode(response.body);
+        final GoogleTTSResponseModel googleTTSResponseModel =
+            GoogleTTSResponseModel.fromJson(data);
+        // Check if translation was successful
+        if ((googleTTSResponseModel != null) &&
+            (googleTTSResponseModel.isSuccess ?? false)) {
+          // Get translated text from response
+          String strText =
+              (googleTTSResponseModel?.result?.translatedText ?? '');
+          // Return translated text if it's not empty, otherwise return original text
+          return (strText.trim().isNotEmpty) ? strText : text;
+        } else {
+          // Return original text if translation failed
+          return text;
+        }
+      } else {
+        // Return original text if translation request failed
+        return text;
+      }
+    } catch (e, stackTrace) {
+      // Log any exceptions
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      // Return original text in case of an error
       return text;
     }
   }
@@ -2475,21 +2550,74 @@ makeApiRequest is used to update the data with latest data
               var responseRecived = response.toString().toLowerCase().trim();
 
               dynamic button = null;
-
+              var translatedText = '';
               if (!(conversations.last?.isButtonNumber ?? false)) {
                 if (responseRecived == carGiverSheela) {
                   responseRecived = careGiverSheela;
                 }
                 for (var btn in conversations.last?.buttons) {
-                  // Check if the title of the button matches the response or any of its synonyms
+                  //check whether title is match the input
                   if ((btn.title ?? '').toLowerCase() ==
-                          responseRecived.toLowerCase() ||
-                      (btn.synonymsList != null &&
-                          btn.synonymsList.any((synonym) =>
-                              synonym.toLowerCase() ==
-                              responseRecived.toLowerCase()))) {
+                      responseRecived.toLowerCase()) {
                     button = btn;
                     break; // Exit the loop if a match is found
+                  } else if (btn.synonymsList != null &&
+                      btn.synonymsList.any((synonym) =>
+                          synonym.toLowerCase() ==
+                          responseRecived.toLowerCase())) {
+                    button = btn;
+                    break; // Exit the loop if a match is found
+                  } else {
+                    // Check if media is needed
+                    final needMedia =(btn.btnRedirectTo!=null && btn.btnRedirectTo!.isNotEmpty) ||
+                        btn.needPhoto || btn.needAudio || btn.needVideo;
+                    if (needMedia) {
+                      // If current language is not English, translate text to English
+                      if (!(currentLanguageCode.value ?? '').contains('en')) {
+                        final strTextMsg =
+                            await getTextTranslateToEnglish(responseRecived);
+                        translatedText = strTextMsg ?? '';
+                      }
+                      final sheelaSynonymsRequestModel =
+                          SheelaSynonymsRequestModel(
+                        field: Field(
+                          fdata: conversations.last?.fields.fdata, //send button original data
+                          fdataA: conversations.last?.fields.fdataA,
+                          ftype: conversations.last?.ftype,
+                          description: conversations.last?.fields.description,
+                        ),
+                        message: (!(currentLanguageCode.value ?? '').contains('en'))?
+                        translatedText.toLowerCase().replaceAll("'", ' '):
+                            responseRecived.toLowerCase().replaceAll("'", ' '),
+                      );
+                      // Call SheelaAISynonymsAPI
+                      final response =
+                          await SheelAIAPIService().SheelaAISynonymsAPI(
+                        sheelaSynonymsRequestModel.toJson(),
+                      );
+                      // Check if API call was successful and response is not empty
+                      if (response.statusCode == 200 &&
+                          (response.body).isNotEmpty) {
+                        final sheelaSynonymsResponse =
+                            SheelaSynonymsResponse.fromJson(
+                                jsonDecode(response.body));
+                        // Check if API call was successful
+                        if (sheelaSynonymsResponse.isSuccess ?? false) {
+                          // Find matching button based on payload in response
+                          for (var synonymButton
+                              in conversations.last?.buttons) {
+                            if (sheelaSynonymsResponse.result != null &&
+                                sheelaSynonymsResponse.result!.payload!=null&&
+                                sheelaSynonymsResponse.result!.payload!.isNotEmpty &&
+                                sheelaSynonymsResponse.result!.payload ==
+                                    synonymButton.payload) {
+                              button = synonymButton;
+                              break;
+                            }
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               } else if ((conversations.last?.isButtonNumber ?? false)) {
@@ -2542,7 +2670,8 @@ makeApiRequest is used to update the data with latest data
                       playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
                     });
                   }
-                } else if (button?.btnRedirectTo == strRedirectToHelpPreview) {
+                }
+                else if (button?.btnRedirectTo == strRedirectToHelpPreview) {
                   if (button?.videoUrl != null && button?.videoUrl != '') {
                     playYoutube(button?.videoUrl);
                   } else if (button?.audioUrl != null &&
@@ -2620,6 +2749,7 @@ makeApiRequest is used to update the data with latest data
                     reminder.remindin_type = '0';
                     reminder.providerid = '0';
                     reminder.remindbefore = '0';
+                    reminder.otherinfo = Otherinfo();
                     List<Reminder> data = [reminder];
                     for (var i = 0; i < data.length; i++) {
                       apiReminder = data[i];
@@ -2878,6 +3008,52 @@ makeApiRequest is used to update the data with latest data
                       }
                     });
                   }
+                } // Check if the button's redirection is to reconnect
+                else if (button?.btnRedirectTo == strReconnect) {
+                  // Check if loading is in progress, if true, return
+                  if (isLoading.isTrue) {
+                    return;
+                  }
+
+                  // Check if the last conversation is marked as singleuse and action is not done
+                  if (conversations.last.singleuse != null &&
+                      conversations.last.singleuse! &&
+                      conversations.last.isActionDone != null) {
+                    conversations.last.isActionDone = true;
+                  }
+
+                  // Mark the button as selected, stop TTS, and set loading state to true
+                  button?.isSelected = true;
+                  stopTTS();
+                  isLoading.value = true;
+
+                  // Add a card response with the button's title to the conversation
+                  final cardResponse = SheelaResponse(text: button?.title);
+                  conversations.add(cardResponse);
+                  scrollToEnd();
+
+                  // Introduce a delay before further actions (2 seconds in this case)
+                  await Future.delayed(Duration(seconds: 2));
+
+                  // Initialize SheelaBLEController
+                  SheelaBLEController? bleController =
+                      CommonUtil().onInitSheelaBLEController();
+
+                  // Create a reconnect card and add it to the conversation and play
+                  final reconnectCard = SheelaResponse(
+                    text: await getTextTranslate(strFailureRetry),
+                    recipientId: sheelaRecepId,
+                    redirectTo: strReconnect,
+                  );
+                  bleController.addToConversationAndPlay(reconnectCard);
+
+                  // Set loading state to false
+                  isLoading.value = false;
+
+                  // Introduce a delay before resetting the button selection (3 seconds in this case)
+                  Future.delayed(const Duration(seconds: 3), () {
+                    button?.isSelected = false;
+                  });
                 } else {
                   startSheelaFromButton(
                       buttonText: button.title,
@@ -3061,5 +3237,24 @@ makeApiRequest is used to update the data with latest data
       // Play or pause TTS with the last conversation, or a default SheelaResponse if conversations.last is null
       playPauseTTS(conversations.last ?? SheelaResponse());
     }
+  }
+
+  // Future method to get a list of Buttons for sheelaFailureRetry
+  Future<List<Buttons>> sheelaFailureRetryButtons() async {
+    // Use Future.wait to asynchronously translate the texts
+    List<String?> translatedTexts = await Future.wait([
+      getTextTranslate(strReconnect),
+      getTextTranslate(strExit),
+    ]);
+
+    // Return a list of Buttons with translated titles and redirections
+    return [
+      Buttons(title: translatedTexts[0], btnRedirectTo: strReconnect),
+      Buttons(
+        title: translatedTexts[1],
+        payload: strExit,
+        mute: sheela_hdn_btn_yes,
+      ),
+    ];
   }
 }
