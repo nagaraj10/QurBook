@@ -2302,30 +2302,29 @@ makeApiRequest is used to update the data with latest data
       // Check if Sheela's input dialog is not showing, and show it if true
       if (!isSheelaInputDialogShowing.value && isSheelaInputStarted) {
         showSpeechToTextInputDialog();
-      } else {
+      }
+      if (Platform.isIOS) {
         var recognizedWords = result.recognizedWords;
-        if (Platform.isIOS) {
-          sheelaInputTextEditingController.text = '$recognizedWords ';
-          // Perform further actions if the region is US
-          if (CommonUtil.isUSRegion()) {
-            // Extract the response from the input text, trim, and handle it
-            final response = CommonUtil()
-                .validString(sheelaInputTextEditingController.text)
-                .trim();
-            if (_debounceRecognizedWords?.isActive ?? false) {
-              _debounceRecognizedWords?.cancel();
-            }
-            _debounceRecognizedWords =
-                Timer(const Duration(milliseconds: 500), () async {
-              await closeSheelaInputDialogAndStopListening();
-
-              // Handle the Sheela's input response
-              if (result.finalResult) {
-                // Close Sheela's input dialog and stop listening
-                await handleSheelaInputResponse(response);
-              }
-            });
+        sheelaInputTextEditingController.text = '$recognizedWords ';
+        // Perform further actions if the region is US
+        if (CommonUtil.isUSRegion()) {
+          // Extract the response from the input text, trim, and handle it
+          final response = CommonUtil()
+              .validString(sheelaInputTextEditingController.text)
+              .trim();
+          if (_debounceRecognizedWords?.isActive ?? false) {
+            _debounceRecognizedWords?.cancel();
           }
+          _debounceRecognizedWords =
+              Timer(const Duration(milliseconds: 500), () async {
+            await closeSheelaInputDialogAndStopListening();
+
+            // Handle the Sheela's input response
+            if (result.finalResult) {
+              // Close Sheela's input dialog and stop listening
+              await handleSheelaInputResponse(response);
+            }
+          });
         }
       }
 
