@@ -138,6 +138,7 @@ class _LandingScreenState extends State<LandingScreen> {
       controller.updateNewChatFloatShown(false);
       userId = PreferenceUtil.getStringValue(KEY_USERID);
 
+      // Retrieve the ChatSocketViewModel instance using Provider
       Provider.of<ChatSocketViewModel>(Get.context!, listen: false).initSocket();
 
       await callImportantsMethod();

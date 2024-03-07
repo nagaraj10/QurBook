@@ -104,6 +104,7 @@ class _SplashScreenState extends State<SplashScreen>
     PreferenceUtil.init();
     WidgetsBinding.instance.addObserver(this);
     CommonUtil().ListenForTokenUpdate();
+    // Retrieve the ChatSocketViewModel instance using Provider
     Provider.of<ChatSocketViewModel>(Get.context!, listen: false).initSocket();
     CommonUtil().OnInitAction();
 

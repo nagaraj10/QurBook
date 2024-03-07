@@ -160,6 +160,7 @@ class IosNotificationHandler {
 
   void handleNotificationResponse(Map<String, dynamic> jsonDecode) async {
 
+    // Declare a variable named isSheelaCondition
     var isSheelaCondition =
         jsonDecode[parameters.KIOSK_isSheela] ?? variable.strFalse;
 
