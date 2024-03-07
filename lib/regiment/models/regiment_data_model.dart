@@ -302,7 +302,8 @@ class Otherinfo {
       this.snoozeText,
       this.introText,
       this.isAllDayActivity,
-      this.isSkipAcknowledgement});
+      this.isSkipAcknowledgement,
+      this.roles});
 
   final String? needPhoto;
   final String? needAudio;
@@ -312,6 +313,21 @@ class Otherinfo {
   final String? introText;
   final bool? isAllDayActivity;
   final String? isSkipAcknowledgement;
+  final List<PatientRole>? roles;
+
+
+  /// Checks if the user has read only access based on the roles.
+  /// Iterates through the roles and returns true
+  /// if any role has read access but not manage access.
+  bool isReadOnlyAccess() {
+    var isReadOnly = false;
+    roles?.forEach((element) {
+      if (element.canRead == true && element.canManage == false) {
+        isReadOnly = true;
+      }
+    });
+    return isReadOnly;
+  }
 
   factory Otherinfo.fromJson(Map<String, dynamic> json) => Otherinfo(
         needPhoto: (json['NeedPhoto'] ?? 0).toString(),
@@ -326,6 +342,7 @@ class Otherinfo {
             ? (json['isSkipAcknowledgement'] ?? 0).toString()
             : "0",
         introText: json.containsKey('introtext') ? (json['introtext']) : '',
+        roles: json['roles'] == null ? [] : List<PatientRole>.from(json['roles']!.map((x) => PatientRole.fromJson(x),),),
       );
 
   Map<String, dynamic> toJson() => {
@@ -335,7 +352,41 @@ class Otherinfo {
         'NeedFile': needFile,
         'snoozeText': snoozeText,
         'introtext': introText,
-        'isAllDayActivity': isAllDayActivity
+        'isAllDayActivity': isAllDayActivity,
+        'roles': roles == null
+            ? []
+            : List<dynamic>.from(
+                roles!.map(
+                  (x) => x.toJson(),
+                ),
+              ),
+      };
+}
+
+class PatientRole {
+  PatientRole({
+    this.id,
+    this.code,
+    this.canRead,
+    this.canManage,
+  });
+  String? id;
+  String? code;
+  bool? canRead;
+  bool? canManage;
+
+  factory PatientRole.fromJson(Map<String, dynamic> json) => PatientRole(
+        id: json['id'],
+        code: json['code'],
+        canRead: json['canRead'],
+        canManage: json['canManage'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'code': code,
+        'canRead': canRead,
+        'canManage': canManage,
       };
 }
 
