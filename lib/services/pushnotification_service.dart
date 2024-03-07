@@ -144,8 +144,9 @@ class PushNotificationService {
 
 notificationBasedOnCategory(RemoteMessage message) {
   if (message.data['type'] == variable.strCall.toLowerCase() && Platform.isAndroid) {
-    listenEvent(message.data[strMeetingId]);
     showCallNotification(message);
+    //This will not work in Background so adding down below notification creation.
+    listenEvent(message.data[strMeetingId]);
   } else {
     if (message.data[strTemplateName] == parameters.familyMemberCaregiverRequest) {
       showFamilyMemberNotifications(message);
