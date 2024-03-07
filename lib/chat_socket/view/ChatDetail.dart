@@ -224,6 +224,9 @@ class ChatState extends State<ChatDetail> {
   double? fontSizeThree = (CommonUtil().isTablet ?? false) ? 18.0.sp : 14.0.sp;
   double? fontSizeFour = (CommonUtil().isTablet ?? false) ? 16.0.sp : 14.0.sp;
 
+  var qurhomeDashboardController =
+  CommonUtil().onInitQurhomeDashboardController();
+
   @override
   void initState() {
     super.initState();
@@ -299,6 +302,11 @@ class ChatState extends State<ChatDetail> {
     }
 
     textEditingController.text = widget.message;
+
+    qurhomeDashboardController.setActiveQurhomeDashboardToChat(
+      status: false,
+    );
+
   }
 
   void scrollToPosiiton(int commonIndex) async {
