@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../../authentication/constants/constants.dart';
 import '../../common/FHBBasicWidget.dart';
@@ -1416,14 +1417,35 @@ class ChatState extends State<ChatDetail> {
                           color: Colors.grey[100],
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                         ),
-                        child: RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                              style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: fontSizeOne,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: fontSizeOne,
+                                  ),
+                                  children: textSpanList),
+                            ),
+                            //UI for show the date time
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5,),
+                              child: Text(
+                                getFormattedDateTime(
+                                    DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                        chatList
+                                            .messages!.timestamp!.sSeconds!))
+                                        .toString()),
+                                style: TextStyle(
+                                  color: greyColor,
+                                  fontSize: fontSizeThree,
+                                  fontStyle: FontStyle.italic,
+                                ),
                               ),
-                              children: textSpanList),
+                            ),
+                          ],
                         ),
                       ),
                     )
@@ -1438,7 +1460,7 @@ class ChatState extends State<ChatDetail> {
                         constraints: BoxConstraints(
                           maxWidth: 1.sw * .6,
                         ),
-                        padding: const EdgeInsets.all(15.0),
+                        padding: const EdgeInsets.only(left: 15, right: 15,top: 10,bottom: 10),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.only(
@@ -1447,19 +1469,41 @@ class ChatState extends State<ChatDetail> {
                             bottomRight: Radius.circular(25),
                           ),
                         ),
+                        child:  Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                  style: TextStyle(
+                                    color: Color(CommonUtil().getMyPrimaryColor()),
+                                    fontSize: fontSizeOne,
+                                  ),
+                                  children: textSpanList),
+                            ),
+                            //UI for show the date time
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5,),
+                              child: Text(
+                                getFormattedDateTime(
+                                    DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                        chatList
+                                            .messages!.timestamp!.sSeconds!))
+                                        .toString()),
+                                style: TextStyle(
+                                  color: greyColor,
+                                  fontSize: fontSizeThree,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ),
+
+                          ],
+                        ),
                         /*child: Text(
                       document[STR_CONTENT],
                       style: TextStyle(
                           color: Color(CommonUtil().getMyPrimaryColor())),
                     ),*/
-                        child: RichText(
-                          text: TextSpan(
-                              style: TextStyle(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                                fontSize: fontSizeOne,
-                              ),
-                              children: textSpanList),
-                        ),
                       ),
                     )
               : chatList.messages?.type == 1
@@ -1467,35 +1511,56 @@ class ChatState extends State<ChatDetail> {
                   ? Container(
                       child: TextButton(
                         child: Material(
-                          child: CachedNetworkImage(
-                            placeholder: (context, url) => Container(
-                              child: CommonCircularIndicator(),
-                              width: 200.0.h,
-                              height: 200.0.h,
-                              padding: EdgeInsets.all(70.0),
-                              decoration: BoxDecoration(
-                                color: greyColor2,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CachedNetworkImage(
+                                placeholder: (context, url) => Container(
+                                  child: CommonCircularIndicator(),
+                                  width: 200.0.h,
+                                  height: 200.0.h,
+                                  padding: EdgeInsets.all(70.0),
+                                  decoration: BoxDecoration(
+                                    color: greyColor2,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8.0),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            errorWidget: (context, url, error) => Material(
-                              child: Image.asset(
-                                'images/img_not_available.jpeg',
+                                errorWidget: (context, url, error) => Material(
+                                  child: Image.asset(
+                                    'images/img_not_available.jpeg',
+                                    width: 200.0.h,
+                                    height: 200.0.h,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8.0),
+                                  ),
+                                  clipBehavior: Clip.hardEdge,
+                                ),
+                                imageUrl: chatList.messages?.content ?? '',
                                 width: 200.0.h,
                                 height: 200.0.h,
                                 fit: BoxFit.cover,
                               ),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8.0),
+                              //UI for show the date time
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10, right: 15,top: 10,bottom: 10),
+                                child: Text(
+                                  getFormattedDateTime(
+                                      DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                          chatList
+                                              .messages!.timestamp!.sSeconds!))
+                                          .toString()),
+                                  style: TextStyle(
+                                    color: greyColor,
+                                    fontSize: fontSizeThree,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
                               ),
-                              clipBehavior: Clip.hardEdge,
-                            ),
-                            imageUrl: chatList.messages?.content ?? '',
-                            width: 200.0.h,
-                            height: 200.0.h,
-                            fit: BoxFit.cover,
+                            ],
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(8.0)),
                           clipBehavior: Clip.hardEdge,
@@ -1545,18 +1610,39 @@ class ChatState extends State<ChatDetail> {
                                   bottomRight: Radius.circular(25),
                                 ),
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(
-                                    Icons.picture_as_pdf,
-                                    size: 14,
-                                    color: Colors.black54,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Icon(
+                                        Icons.picture_as_pdf,
+                                        size: 14,
+                                        color: Colors.black54,
+                                      ),
+                                      SizedBoxWidget(
+                                        width: 5.0.w,
+                                      ),
+                                      getPdfViewLabel(chatList),
+                                    ],
                                   ),
-                                  SizedBoxWidget(
-                                    width: 5.0.w,
+                                  //UI for show the date time
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5,),
+                                    child: Text(
+                                      getFormattedDateTime(
+                                          DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                              chatList
+                                                  .messages!.timestamp!.sSeconds!))
+                                              .toString()),
+                                      style: TextStyle(
+                                        color: greyColor,
+                                        fontSize: fontSizeThree,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
                                   ),
-                                  getPdfViewLabel(chatList),
                                 ],
                               ),
                             ),
@@ -1572,12 +1658,33 @@ class ChatState extends State<ChatDetail> {
                                 child: Container(
                                   padding: EdgeInsets.all(10.0),
                                   width: 1.sw / 1.5,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      fhbBasicWidget.getAudioWidgetForChat(
-                                          chatList.messages?.content)
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          fhbBasicWidget.getAudioWidgetForChat(
+                                              chatList.messages?.content)
+                                        ],
+                                      ),
+                                      //UI for show the date time
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 5,),
+                                        child: Text(
+                                          getFormattedDateTime(
+                                              DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                                  chatList
+                                                      .messages!.timestamp!.sSeconds!))
+                                                  .toString()),
+                                          style: TextStyle(
+                                            color: greyColor,
+                                            fontSize: fontSizeThree,
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -1619,14 +1726,35 @@ class ChatState extends State<ChatDetail> {
                         color: Colors.grey[100],
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                       ),
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                            style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: fontSizeOne,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: fontSizeOne,
+                                ),
+                                children: textSpanList),
+                          ),
+                          //UI for show the date time
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5,),
+                            child: Text(
+                              getFormattedDateTime(
+                                  DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                      chatList
+                                          .messages!.timestamp!.sSeconds!))
+                                      .toString()),
+                              style: TextStyle(
+                                color: greyColor,
+                                fontSize: fontSizeThree,
+                                fontStyle: FontStyle.italic,
+                              ),
                             ),
-                            children: textSpanList),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -1682,80 +1810,122 @@ class ChatState extends State<ChatDetail> {
                             )
                           : Container(width: 38.0.w),
                       chatList.messages?.type == 0
-                          ? Card(
-                              color: Colors.transparent,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(25),
-                                      bottomLeft: Radius.circular(25),
-                                      bottomRight: Radius.circular(25))),
-                              child: Container(
-                                constraints: BoxConstraints(
-                                  maxWidth: 1.sw * .6,
-                                ),
-                                padding: const EdgeInsets.all(15.0),
-                                decoration: BoxDecoration(
-                                  color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(25),
-                                    bottomLeft: Radius.circular(25),
-                                    bottomRight: Radius.circular(25),
+                          ?
+                      Card(
+                        color: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(25),
+                            bottomLeft: Radius.circular(25),
+                            bottomRight: Radius.circular(25),
+                          ),
+                        ),
+                        child: Container(
+                          constraints: BoxConstraints(
+                            maxWidth: 1.sw * .6,
+                          ),
+                          padding: const EdgeInsets.only(left: 15, right: 15,top: 10,bottom: 10),
+                          decoration: BoxDecoration(
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(25),
+                              bottomLeft: Radius.circular(25),
+                              bottomRight: Radius.circular(25),
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: fontSizeOne,
                                   ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    RichText(
-                                      text: TextSpan(
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: fontSizeOne,
-                                          ),
-                                          children: textSpanList),
-                                    ),
-                                    isSentViaSheelaTextWidget(
-                                        chatList, Colors.white),
-                                  ],
+                                  children: textSpanList,
                                 ),
                               ),
-                            )
+
+                              isSentViaSheelaTextWidget(chatList, Colors.white),
+                              //UI for show the date time
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5,bottom: 5),
+                                child: Text(
+                                  getFormattedDateTime(
+                                      DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                          chatList
+                                              .messages!.timestamp!.sSeconds!))
+                                          .toString()),
+                                  // getFormattedDateTime(chatList.messages!.timestamp!.sSeconds.toString()),
+                                  style: TextStyle(
+                                    color: greyColor,
+                                    fontSize: fontSizeThree,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+
                           : chatList.messages?.type == 1
                               ? Container(
                                   child: TextButton(
                                     child: Material(
-                                      child: CachedNetworkImage(
-                                        placeholder: (context, url) =>
-                                            Container(
-                                          child: CommonCircularIndicator(),
-                                          width: 200.0.h,
-                                          height: 200.0.h,
-                                          padding: EdgeInsets.all(70.0),
-                                          decoration: BoxDecoration(
-                                            color: greyColor2,
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          CachedNetworkImage(
+                                            placeholder: (context, url) =>
+                                                Container(
+                                              child: CommonCircularIndicator(),
+                                              width: 200.0.h,
+                                              height: 200.0.h,
+                                              padding: EdgeInsets.all(70.0),
+                                              decoration: BoxDecoration(
+                                                color: greyColor2,
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(8.0),
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                        errorWidget: (context, url, error) =>
-                                            Material(
-                                          child: Image.asset(
-                                            'images/img_not_available.jpeg',
+                                            errorWidget: (context, url, error) =>
+                                                Material(
+                                              child: Image.asset(
+                                                'images/img_not_available.jpeg',
+                                                width: 200.0.h,
+                                                height: 200.0.h,
+                                                fit: BoxFit.cover,
+                                              ),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(8.0),
+                                              ),
+                                              clipBehavior: Clip.hardEdge,
+                                            ),
+                                            imageUrl:
+                                                chatList.messages?.content ?? '',
                                             width: 200.0.h,
                                             height: 200.0.h,
                                             fit: BoxFit.cover,
                                           ),
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(8.0),
+                                          //Ui for showing the date and time
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 10, right: 15,top: 10,bottom: 10),
+                                            child: Text(
+                                              getFormattedDateTime(
+                                                  DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                                      chatList
+                                                          .messages!.timestamp!.sSeconds!))
+                                                      .toString()),
+                                              style: TextStyle(
+                                                color: greyColor,
+                                                fontSize: fontSizeThree,
+                                                fontStyle: FontStyle.italic,
+                                              ),
+                                            ),
                                           ),
-                                          clipBehavior: Clip.hardEdge,
-                                        ),
-                                        imageUrl:
-                                            chatList.messages?.content ?? '',
-                                        width: 200.0.h,
-                                        height: 200.0.h,
-                                        fit: BoxFit.cover,
+                                        ],
                                       ),
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(8.0)),
@@ -1814,23 +1984,44 @@ class ChatState extends State<ChatDetail> {
                                               bottomRight: Radius.circular(25),
                                             ),
                                           ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Icon(
-                                                Icons.picture_as_pdf,
-                                                size: 14,
-                                                color: Colors.black54,
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Icon(
+                                                    Icons.picture_as_pdf,
+                                                    size: 14,
+                                                    color: Colors.black54,
+                                                  ),
+                                                  SizedBoxWidget(
+                                                    width: 5.0.w,
+                                                  ),
+                                                  Text(
+                                                    'Click to view PDF',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: fontSizeOne,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              SizedBoxWidget(
-                                                width: 5.0.w,
-                                              ),
-                                              Text(
-                                                'Click to view PDF',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: fontSizeOne,
+                                              //UI for show the date time
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 5,),
+                                                child: Text(
+                                                  getFormattedDateTime(
+                                                      DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                                          chatList
+                                                              .messages!.timestamp!.sSeconds!))
+                                                          .toString()),
+                                                  style: TextStyle(
+                                                    color: greyColor,
+                                                    fontSize: fontSizeThree,
+                                                    fontStyle: FontStyle.italic,
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -1868,6 +2059,21 @@ class ChatState extends State<ChatDetail> {
                                                   ),
                                                   isSentViaSheelaTextWidget(
                                                       chatList, Colors.black),
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(top: 5,),
+                                                    child: Text(
+                                                      getFormattedDateTime(
+                                                          DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                                              chatList
+                                                                  .messages!.timestamp!.sSeconds!))
+                                                              .toString()),
+                                                      style: TextStyle(
+                                                        color: greyColor,
+                                                        fontSize: fontSizeThree,
+                                                        fontStyle: FontStyle.italic,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
                                             ),
@@ -1886,30 +2092,13 @@ class ChatState extends State<ChatDetail> {
                                         ),
                     ],
                   ),
-                  // Time
-                  isIconNeed
-                      ? Container(
-                          child: Text(
-                            getFormattedDateTime(
-                                DateTime.fromMillisecondsSinceEpoch(int.parse(
-                                        chatList
-                                            .messages!.timestamp!.sSeconds!))
-                                    .toString()),
-                            style: TextStyle(
-                                color: greyColor,
-                                fontSize: fontSizeThree,
-                                fontStyle: FontStyle.italic),
-                          ),
-                          margin: EdgeInsets.only(
-                              left: 50.0, top: 5.0, bottom: 5.0),
-                        )
-                      : Container()
                 ],
                 crossAxisAlignment: CrossAxisAlignment.start,
               ),
             );
     }
   }
+
 
   TextSpan buildTextWithLinks(String textToLink, int index, bool isPatient) =>
       TextSpan(
