@@ -169,6 +169,8 @@ class SheelaAIController extends GetxController {
   // and the values are Timer objects that will be used for managing timing events associated with reminders.
   Map<String, Timer> reminderTimers = {};
 
+  Rx<bool> isInternetConnection = true.obs;
+
   @override
   void onInit() {
     try {

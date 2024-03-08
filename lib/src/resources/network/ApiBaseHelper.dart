@@ -1064,11 +1064,15 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  void SnackbarToLogout({String? msg = 'something went wrong, please try again later.'}) {
-    PreferenceUtil.clearAllData().then((value) {
-      gett.Get.offAll(PatientSignInScreen());
-      gett.Get.snackbar(parameters.strMessage, msg!);
-    });
+  void SnackbarToLogout(
+      {String? msg = 'something went wrong, please try again later.'}) {
+    var sheelaAIController = CommonUtil().onInitSheelaAIController();
+    if (sheelaAIController.isInternetConnection.value) {
+      PreferenceUtil.clearAllData().then((value) {
+        gett.Get.offAll(PatientSignInScreen());
+        gett.Get.snackbar(parameters.strMessage, msg!);
+      });
+    }
   }
 
   Future<dynamic> bookAppointment(String url, String jsonBody) async {
@@ -2821,9 +2825,12 @@ class ApiBaseHelper {
 }
 
 void exitFromApp() async {
-  await PreferenceUtil.clearAllData().then((value) {
-    gett.Get.offAll(PatientSignInScreen());
-  });
+  var sheelaAIController = CommonUtil().onInitSheelaAIController();
+  if (sheelaAIController.isInternetConnection.value) {
+    await PreferenceUtil.clearAllData().then((value) {
+      gett.Get.offAll(PatientSignInScreen());
+    });
+  }
 }
 
 abstract class InnerException {
