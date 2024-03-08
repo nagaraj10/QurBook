@@ -659,12 +659,17 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Image.asset(
-                              'assets/Qurhome/seen.png',
-                              height: 12.0,
-                              width: 12.0,
-                              color: getTextAndIconColor(
-                                  itemIndex, nextRegimenPosition),
+                            Visibility(
+                              visible:
+                                  !(regimen.otherinfo?.isReadOnlyAccess() ??
+                                      true),
+                              child: Image.asset(
+                                'assets/Qurhome/seen.png',
+                                height: 12.0,
+                                width: 12.0,
+                                color: getTextAndIconColor(
+                                    itemIndex, nextRegimenPosition),
+                              ),
                             ),
                             SizedBox(
                               width: 2,
@@ -875,7 +880,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }
 
   showRegimenDialog(RegimentDataModel regimen, int index) {
-    if (regimen.ack == null)
+    if (regimen.ack == null &&
+        (regimen.otherinfo?.isReadOnlyAccess() ?? false) == false)
       showDialog(
           context: context,
           builder: (__) {
@@ -1184,7 +1190,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             });
           });
     else if (regimen.otherinfo?.isReadOnlyAccess() != null &&
-        regimen.hasform == false) {
+        regimen.ack == null) {
       if (CommonUtil.REGION_CODE != 'IN') {
         showDialog(
           context: context,
@@ -1353,7 +1359,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         );
       }
     } else if ((regimen.otherinfo?.isReadOnlyAccess() ?? true) &&
-        CommonUtil.REGION_CODE != 'IN') {
+        CommonUtil.REGION_CODE != 'IN'  &&
+        regimen.ack != null) {
       showDialog(
         context: context,
         builder: (__) => StatefulBuilder(
@@ -1509,7 +1516,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                   Divider(
                     height: CommonUtil().isTablet! ? 3.0.h : 4.0.h,
                   ),
-                  Padding(
+                  Visibility(
+                    visible: regimen.hasform != false && (regimen.otherinfo?.isReadOnlyAccess() ?? false),
+                      child: Padding(
                     padding: const EdgeInsets.only(
                       top: 30,
                       left: 15,
@@ -1569,7 +1578,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                         ),
                       ],
                     ),
-                  )
+                  )),
                 ],
               ),
             ),

@@ -1012,7 +1012,7 @@ const String strOnsite = 'Onsite';
 //for regimen
 const String strRecordedAt = 'Recorded at';
 const String strHasBeenRecordedBy = 'This has been recorded by ';
-const String strHasBeenRecordedByAt = ' At';
+const String strHasBeenRecordedByAt = ' at';
 const String strUndo = 'Undo';
 const String strEdit = 'Edit';
 const String strView = 'View';

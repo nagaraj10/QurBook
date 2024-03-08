@@ -112,7 +112,10 @@ class ResultAdditionalInfo {
         ack: json['ack'] == null ? null : DateTime.parse(json['ack']),
         eid: json['eid'],
         title: json['title'],
-        uform: json['uform'] == null ? null : Uform.fromJson(json['uform']),
+        uform: json['uform'] == null
+            ? null
+            : json['uform'].runtimeType == Map()
+                ? Uform.fromJson(json['uform']) : null,
         action: json['action'] == null ? null : Action.fromJson(json['action']),
         status: json['status'],
         cptCode: json['cpt_code'],
@@ -121,7 +124,8 @@ class ResultAdditionalInfo {
             ? null
             : DateTime.parse(json['ack_local']),
         issymptom: json['issymptom'],
-        uformdata: json['uformdata'] == null
+        uformdata: json['uformdata'] == null ||
+                json['uformdata'].runtimeType == String
             ? null
             : Uformdata.fromJson(json['uformdata']),
         activityTime: json['activityTime'],

@@ -306,7 +306,7 @@ class FormDataDialogState extends State<FormDataDialog> {
               floatingActionButton:
                   !widget.isReadOnly
                       ? onSaveBtn()
-                      : null,
+                      : onBackBtn(),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
             ),
@@ -774,6 +774,45 @@ class FormDataDialogState extends State<FormDataDialog> {
                       ),
                     ));
               }),
+        ],
+      ),
+    );
+  }
+
+  Widget onBackBtn() {
+    return Container(
+      width: widget.isFromQurHomeRegimen ? double.infinity : 0.75.sw,
+      margin: EdgeInsets.only(
+        bottom: widget.isFromQurHomeRegimen ? 5.0.h : 0.0,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+              onPressed: () {
+                Get.back(result: false);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: widget.fromView!
+                    ? Colors.grey
+                    : widget.isFromQurHomeSymptom || widget.isFromQurHomeRegimen
+                        ? Color(CommonUtil().getQurhomePrimaryColor())
+                        : Color(CommonUtil().getMyPrimaryColor()),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(
+                      5.0.sp,
+                    ),
+                  ),
+                ),
+              ),
+              child: Text(
+                strBack,
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                  color: Colors.white,
+                ),
+              ))
         ],
       ),
     );
