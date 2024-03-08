@@ -58,6 +58,7 @@ class FormDataDialog extends StatefulWidget {
     this.fromView = false,
     this.appBarTitle,
     this.regimen,
+    this.isReadOnly = false,
   });
 
   final List<FieldModel>? fieldsData;
@@ -79,6 +80,7 @@ class FormDataDialog extends StatefulWidget {
   final UformData? uformData;
   final String? appBarTitle;
   final RegimentDataModel? regimen;
+  final bool isReadOnly;
 
   @override
   State<StatefulWidget> createState() => FormDataDialogState();
@@ -269,7 +271,8 @@ class FormDataDialogState extends State<FormDataDialog> {
                             padding: EdgeInsets.only(
                               right: 7.0.w,
                             ),
-                            child: (widget.fromView!)
+                            child: (widget.fromView! &&
+                                    !widget.isReadOnly)
                                 ? Image.asset(
                                     icon_edit,
                                     height: 20.sp,
@@ -299,7 +302,10 @@ class FormDataDialogState extends State<FormDataDialog> {
                   ],
                 ),
               ),
-              floatingActionButton: onSaveBtn(),
+              floatingActionButton:
+                  !widget.isReadOnly
+                      ? onSaveBtn()
+                      : null,
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
             ),
@@ -1259,7 +1265,7 @@ class FormDataDialogState extends State<FormDataDialog> {
         bottom: 10.0.h,
       ),
       child: FormFieldWidget(
-        canEdit: widget.canEdit,
+        canEdit: widget.isReadOnly ? false : widget.canEdit,
         fieldData: fieldsData![index],
         vitalsData: vitalsDataParam,
         isFromQurHomeRegimen: widget.isFromQurHomeRegimen,
