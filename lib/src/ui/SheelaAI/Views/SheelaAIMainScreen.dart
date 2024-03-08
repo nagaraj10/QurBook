@@ -50,6 +50,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.btnTextLocal = '';
     controller.isRetakeCapture = false;
     controller.isRetryScanFailure = false;
+    controller.isDeviceConnectSheelaScreen = false;
 
     ///Surrendered with addPostFrameCallback for widget building issue///
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
@@ -260,7 +261,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                 ? null
                 : Visibility(
               // isRetryScanFailure for enable the mic button
-                    visible: (controller.bleController == null) || (controller.isRetryScanFailure??false),
+                    visible: (controller.bleController == null) || (controller.isRetryScanFailure??false) || (controller.isDeviceConnectSheelaScreen??false),
                     child: AnimatedBuilder(
                       animation: animationController!,
                       builder: (context, child) {

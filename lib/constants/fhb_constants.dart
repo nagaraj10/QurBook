@@ -876,8 +876,12 @@ const String strRedirectRedo = 'redirectToRedo';
 
 const String strFailureRetry = 'Turn off your device and Turn it on again to reconnect';
 
+const String strDeviceConnectionStart = 'Turn off your device and Turn it on again to reconnect';
+
 // for reconnect button title
 const String strReconnect = 'Reconnect';
+
+const String strDeviceConnection = 'device';
 
 //fetchProfilePic
 const String FETCH_PROFILE_PIC = 'file-guard/fileData/profilePicture/';

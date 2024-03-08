@@ -220,6 +220,23 @@ class SheelaBLEController extends GetxController {
 
                     // Set loading state to true in SheelaController
                     SheelaController.isLoading(true);
+                  }if (SheelaController.isSheelaScreenActive &&
+                      (SheelaController.isDeviceConnectSheelaScreen ?? false)) {
+                    // Set device type in SheelaController arguments based on bleDeviceType from hublistController
+                    SheelaController.arguments?.deviceType =
+                        hublistController.bleDeviceType;
+
+                    // Clear the reconnect timer in SheelaController
+                    SheelaController.clearReconnectTimer();
+
+                    // Start reading Sheela BLE device readings
+                    startSheelaBLEDeviceReadings();
+
+                    // Reset the retry scan failure flag
+                    SheelaController.isDeviceConnectSheelaScreen = false;
+
+                    // Set loading state to true in SheelaController
+                    SheelaController.isLoading(true);
                   } else {
                     Get.to(
                       () => SheelaAIMainScreen(
@@ -668,6 +685,7 @@ class SheelaBLEController extends GetxController {
         }
         isCompleted = true;
         SheelaController.isRetryScanFailure = false;
+        SheelaController.isDeviceConnectSheelaScreen = false;
       } catch (e, stackTrace) {
         CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 

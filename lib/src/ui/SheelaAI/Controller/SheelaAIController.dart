@@ -160,6 +160,7 @@ class SheelaAIController extends GetxController {
   bool? isRetakeCapture = false;
   //reconnect feature enable flag
   bool? isRetryScanFailure = false;
+  bool? isDeviceConnectSheelaScreen = false;
   String? fileRequestUrl = '';
 
   final ApiBaseHelper _helper = ApiBaseHelper();
@@ -272,6 +273,11 @@ class SheelaAIController extends GetxController {
           resetBLE(); // Reset the BLE (Bluetooth Low Energy) connection
           // Set up a reconnect timer after the delay
           reconnectTimer();
+        }
+        else if ((conversations.last.redirectTo ?? '') == strDeviceConnection) {
+          isRetryScanFailure = true;
+          updateTimer(enable: false); // disable the timer
+          resetBLE(); // Reset the BLE (Bluetooth Low Energy) connection
         }
       } catch (e, stackTrace) {
         //gettingReposnseFromNative();
