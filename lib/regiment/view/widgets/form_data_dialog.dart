@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -392,6 +393,7 @@ class FormDataDialogState extends State<FormDataDialog> {
             ),
           ),
         ),
+        noteBox(),
         Container(
           width: widget.isFromQurHomeRegimen ? double.infinity : 0.75.sw,
           child: Column(
@@ -696,6 +698,38 @@ class FormDataDialogState extends State<FormDataDialog> {
       ],
     );
   }
+
+  Widget noteBox() => Padding(
+        padding: const EdgeInsets.all(12),
+        child: DottedBorder(
+          borderType: BorderType.RRect,
+          color: Colors.grey,
+          padding: const EdgeInsets.all(10),
+          radius: const Radius.circular(10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                Constants.strNote,
+                style: TextStyle(
+                  decoration: TextDecoration.underline,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.red,
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Text(
+                  Constants.strProviderBasedPatientsHaveViewOnlyAccess,
+                  style: TextStyle(fontSize: 12.sp),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
 
   Widget onSaveBtn() {
     return Container(
