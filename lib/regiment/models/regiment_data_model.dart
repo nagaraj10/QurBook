@@ -288,8 +288,7 @@ class RegimentDataModel {
         'modeOfService': modeOfService!.toJson(),
         'hour_repeat': dayrepeat,
         'activityThreshold': activityThreshold,
-        'additionalInfo':
-            additionalInfo?.toJson() ?? Map<String, dynamic>(),
+        'additionalInfo': additionalInfo?.toJson() ?? <String, dynamic>{},
       };
 }
 
@@ -315,18 +314,27 @@ class Otherinfo {
   final String? isSkipAcknowledgement;
   final List<PatientRole>? roles;
 
-
-  /// Checks if the user has read only access based on the roles.
-  /// Iterates through the roles and returns true
-  /// if any role has read access but not manage access.
-  bool isReadOnlyAccess() {
-    var isReadOnly = false;
-    roles?.forEach((element) {
-      if (element.canRead == true && element.canManage == false) {
-        isReadOnly = true;
+  /// Checks if the user has read-only access based on the roles.
+  /// Returns true if the user has the 'PATIENT' role with
+  /// read but not manage access.
+  /// Also returns true if the user has the 'ALL_ROLES' role with
+  /// read but not manage access.
+  /// Returns false otherwise.
+  bool? isReadOnlyAccess() {
+    if (roles?.isEmpty ?? true) return null;
+    var isReadOnlyAccess = false;
+    for (final role in roles!) {
+      if (role.code == 'PATIENT') {
+        if (role.canRead == true && role.canManage == false) {
+          isReadOnlyAccess = true;
+        }
+      } else if (role.code == 'ALL_ROLES') {
+        if (role.canRead == true && role.canManage == false) {
+          isReadOnlyAccess = true;
+        }
       }
-    });
-    return isReadOnly;
+    }
+    return isReadOnlyAccess;
   }
 
   factory Otherinfo.fromJson(Map<String, dynamic> json) => Otherinfo(
@@ -342,7 +350,13 @@ class Otherinfo {
             ? (json['isSkipAcknowledgement'] ?? 0).toString()
             : "0",
         introText: json.containsKey('introtext') ? (json['introtext']) : '',
-        roles: json['roles'] == null ? [] : List<PatientRole>.from(json['roles']!.map((x) => PatientRole.fromJson(x),),),
+        roles: json['roles'] == null
+            ? []
+            : List<PatientRole>.from(
+                json['roles']!.map(
+                  (x) => PatientRole.fromJson(x),
+                ),
+              ),
       );
 
   Map<String, dynamic> toJson() => {

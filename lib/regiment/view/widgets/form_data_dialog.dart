@@ -393,7 +393,7 @@ class FormDataDialogState extends State<FormDataDialog> {
             ),
           ),
         ),
-        noteBox(),
+        if (widget.isReadOnly) getNoteBox() else const SizedBox.shrink(),
         Container(
           width: widget.isFromQurHomeRegimen ? double.infinity : 0.75.sw,
           child: Column(
@@ -699,7 +699,9 @@ class FormDataDialogState extends State<FormDataDialog> {
     );
   }
 
-  Widget noteBox() => Padding(
+  /// Returns a dotted border widget containing a note text.
+  /// The note indicates that provider-based patients have view-only access.
+  Widget getNoteBox() => Padding(
         padding: const EdgeInsets.all(12),
         child: DottedBorder(
           borderType: BorderType.RRect,
