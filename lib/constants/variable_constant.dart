@@ -664,7 +664,6 @@ const voice_platform = MethodChannel('flutter.native/voiceIntent');
 const version_platform = MethodChannel('flutter.native/versioncode');
 const tts_platform = MethodChannel('flutter.native/textToSpeech');
 const tts_platform_closeMic = 'CloseMic';
-const security = MethodChannel('flutter.native/security');
 const String strWaitLoading = 'wait! Its loading';
 
 const String _wordsFromMaya = 'waiting for maya to speak';
@@ -838,8 +837,6 @@ const String strOK = 'OK';
 const String strCANCEL = 'CANCEL';
 const String strOKAY = 'OKAY';
 const String strValidPhoneNumber = 'Enter a valid mobile number';
-const String strGetAppVersion = 'getAppVersion';
-const String strSecure = 'secureMe';
 const String strpop = 'SystemNavigator.pop';
 const String strDiscard = 'Discard';
 
@@ -942,7 +939,6 @@ const listenToCallStatusMethod = 'listenToCallStatus';
 const String strNoTicketsRaised = 'Tap on + icon to create Tickets';
 const String strNoTicketTypesAvaliable = 'No Ticket Types Found !!';
 
-var reminderMethodChannelAndroid = const MethodChannel('android/notification');
 
 // regimen appointment
 const String strAppointmentRegimen = 'Appointment';

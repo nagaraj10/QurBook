@@ -2,9 +2,7 @@ package com.ventechsolutions.myFHB.constants
 
 object Constants {
     var foregroundActivityRef=false
-    val FUN_APP_VERSION = "getAppVersion"
     val FUN_LISTEN_SMS = "listenForSMS"
-    val FUN_KEY_GAURD = "secureMe"
     val FUN_VOICE_ASST = "speakWithVoiceAssistant"
     val FUN_VALIDATE_MIC_AVAIL= "validateMicAvailability"
     val VOICE_ASST_PROMPT = "Need to speak"
@@ -19,19 +17,14 @@ object Constants {
     val CN_LISTEN4SMS = "flutter.native/listen4sms"
     val CN_VOICE_INTENT = "flutter.native/voiceIntent"
     val CN_TTS = "flutter.native/textToSpeech"
-    val CN_SECURE = "flutter.native/security"
-    val CN_ROUTE = "navigation.channel"
     val SHEELA_CHANNEL = "sheela.channel"
     val CN_ONG_NS = "ongoing_ns.channel"
-    val CN_EVE_STREAM = "com.example.agoraflutterquickstart/stream"
     val SPEECH_TO_TEXT_STREAM = "speechToText/stream"
     val Bluetooth_EVE_STREAM = "QurbookBLE/stream"
-    val Appointment_EVE_STREAM = "ScheduleAppointment/stream"
 
     val FROM_LANG = "com.example.agoraflutterquickstart/stream"
     val TO_LANG = "com.example.agoraflutterquickstart/stream"
     val EN_US = "en_US"
-    val FUN_GET_MY_ROUTE = "getMyRoute"
     val START_SHEELA_LISTENING = "startSheelaListening"
     val FUN_ONG_NS = "startOnGoingNS"
     val PROP_MODE = "mode"
