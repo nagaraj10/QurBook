@@ -145,6 +145,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
   }
 
+  /// Gets the weight and temperature units from shared preferences and assigns to variables.
+  ///
+  /// Fetches the weight unit value from shared preferences using the key 'weightUnitKey',
+  /// and assigns to [weightUnit].
+  ///
+  /// Fetches the temperature unit value from shared preferences using the key 'tempUnitKey',
+  /// and assigns to [tempUnit].
   getUnitValue() async {
     weightUnit = await PreferenceUtil.getStringValue(STR_KEY_WEIGHT);
     tempUnit = await PreferenceUtil.getStringValue(STR_KEY_TEMP);
@@ -704,6 +711,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                           ),
                         ),
                         Visibility(
+                          /// Controls the visibility of the child text widget based on whether the
+                          /// regimen's activity name matches Activityname.VITALS. Only shows the child text
+                          /// if the activity name matches.
                           visible: regimen.activityname == Activityname.VITALS,
                           child: Text(
                             getValuesOfVital(regimen),
@@ -747,7 +757,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             ),
                             if (regimen.ack != null)
                               Text(
-                                'Completed',
+                                strCompleted,
                                 style: TextStyle(
                                   fontSize: CommonUtil().isTablet!
                                       ? tabHeader1
@@ -3049,6 +3059,12 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
   }
 
+  /**
+   * Gets the vital value string from the given regimen data model. 
+   * Iterates through the regimen's vitals data list and concatenates the values based on description.
+   * Handles special cases for weight and temperature values.
+   * Returns default "NA" if error.
+  */
   getValuesOfVital(RegimentDataModel regimen) {
     String vitalValue = '    ';
     try {
@@ -3077,7 +3093,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               vitalValue += dynamicFieldModelList[i].value;
               if (i != dynamicFieldModelList.length - 1) vitalValue += "/";
             }
-            print(vitalValue);
           }
       } else {
         List<VitalsData> dynamicFieldModelList =
@@ -3113,7 +3128,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
       return "NA";
     }
-    print(vitalValue);
     return vitalValue;
   }
 }

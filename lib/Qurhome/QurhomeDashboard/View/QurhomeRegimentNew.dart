@@ -47,6 +47,9 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as fhbParameters;
 
+/**
+ * This class is to keep a backup of the old code
+ */
 class QurHomeRegimenScreen extends StatefulWidget {
   bool addAppBar;
 
