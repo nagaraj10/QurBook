@@ -69,7 +69,7 @@ class VoiceCloneStatusController extends GetxController {
   void getStatusOfUser() {}
 
   void getUserHealthOrganizationId() async {
-    var userId = await PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+/*    var userId = await PreferenceUtil.getStringValue(KEY_USERID_MAIN);
     loadingData.value = true;
     await healthReportListForUserRepository
         .getDeviceSelection(userIdFromBloc: userId)
@@ -90,10 +90,14 @@ class VoiceCloneStatusController extends GetxController {
       } else {
         loadingData.value = false;
       }
-    });
+    });*/
   }
 
   getStatusFromApi() async {
+    var id =  PreferenceUtil.getStringValue(keyHealthOrganizationId);
+    if(id!=null && id!=''){
+      healthOrganizationId.value = id;
+    }
     final userId = await PreferenceUtil.getStringValue(KEY_USERID_MAIN);
     final url = strURLVoiceCloneStatus +
         qr_userId +
@@ -106,7 +110,7 @@ class VoiceCloneStatusController extends GetxController {
     voiceCloneId.value = voiceCloneStatusModel?.result?.id ?? '';
     if (voiceCloneStatusModel?.result?.url != "")
       audioURL = voiceCloneStatusModel?.result?.url ?? '';
-    fetchFamilyMembersList(voiceCloneId.value);
+     fetchFamilyMembersList(voiceCloneId.value);
     //download path from url every time when api is called
     downloadAudioFile(audioURL);
   }
