@@ -66,15 +66,17 @@ class PushNotificationService {
     FirebaseMessaging.onBackgroundMessage(onBackgroundMessageReceived);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       if (Platform.isIOS) {
-        final mapResponse = message.data;
-        if (message.category != null) {
-          mapResponse[strAction] = message.category;
-        }
-        IosNotificationHandler()
-          ..isAlreadyLoaded = true
-          ..handleNotificationResponse(mapResponse);
+        onInitNotification(message);
       } else {
         notificationBasedOnCategory(message);
+        // Checking if message data is not null and it contains the 'KIOSK_isSheela' parameter set to 'true'
+        if (message.data != null &&
+            message.data[parameters.KIOSK_isSheela] != null &&
+            message.data[parameters.KIOSK_isSheela] == parameters.strTrue) {
+          // Calling the function to handle initialization of notifications
+          onInitNotification(message);
+        }
+
       }
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -143,9 +145,10 @@ class PushNotificationService {
 }
 
 notificationBasedOnCategory(RemoteMessage message) {
-  if (message.data['type'] == variable.strCall.toLowerCase && Platform.isAndroid) {
-    listenEvent(message.data[strMeetingId]);
+  if (message.data['type'] == variable.strCall.toLowerCase() && Platform.isAndroid) {
     showCallNotification(message);
+    //This will not work in Background so adding down below notification creation.
+    listenEvent(message.data[strMeetingId]);
   } else {
     if (message.data[strTemplateName] == parameters.familyMemberCaregiverRequest) {
       showFamilyMemberNotifications(message);
@@ -188,13 +191,7 @@ Future<void> onBackgroundMessageReceived(RemoteMessage message) async {
       CommonUtil.AppName= packageInfo.appName;
     }
     if (Platform.isIOS) {
-      final mapResponse = message.data;
-      if (message.category != null) {
-        mapResponse[strAction] = message.category;
-      }
-      IosNotificationHandler()
-        ..isAlreadyLoaded = true
-        ..handleNotificationResponse(mapResponse);
+      onInitNotification(message);
     } else {
       notificationBasedOnCategory(message);
     }
@@ -277,7 +274,7 @@ void showFamilyMemberNotifications(RemoteMessage message) async {
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(callChannel);
+      ?.createNotificationChannel(androidNormalchannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
       Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
@@ -304,7 +301,7 @@ void showViewMemberAndCommunication(RemoteMessage message) async {
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(callChannel);
+      ?.createNotificationChannel(androidNormalchannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
       Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
@@ -332,7 +329,7 @@ void showNotificationCaregiverForMedicalRecord(RemoteMessage message) async {
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(callChannel);
+      ?.createNotificationChannel(androidNormalchannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
       Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
@@ -361,7 +358,7 @@ void showNotificationCareGiverTransportRequestReminder(
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(callChannel);
+      ?.createNotificationChannel(androidNormalchannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
       Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
@@ -388,7 +385,7 @@ void showNotificationRenewNotification(RemoteMessage message) async {
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(callChannel);
+      ?.createNotificationChannel(androidNormalchannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
       Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
@@ -416,7 +413,7 @@ void showNotificationEscalate(RemoteMessage message) async {
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(callChannel);
+      ?.createNotificationChannel(androidNormalchannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
       Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
@@ -443,7 +440,7 @@ void showNotificationForFamilyAddition(RemoteMessage message) async {
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(callChannel);
+      ?.createNotificationChannel(androidNormalchannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
       Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
@@ -470,7 +467,7 @@ void showNotificationForAppointmentPayment(RemoteMessage message) async {
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(callChannel);
+      ?.createNotificationChannel(androidNormalchannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
       Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
@@ -497,7 +494,7 @@ void showNotificationForMyCartPayment(RemoteMessage message) async {
   await localNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(callChannel);
+      ?.createNotificationChannel(androidNormalchannel);
   localNotificationsPlugin.show(
       Platform.isIOS ? message.notification.hashCode : message.data.hashCode,
       Platform.isIOS ? message.notification!.title : message.data[parameters.strtitle],
@@ -823,5 +820,29 @@ int calculateNotificationId(Reminder reminder, bool subtract) {
   // Convert the base ID to a signed 32-bit integer using the toSigned32BitInt function.
   return toSigned32BitInt(int.tryParse(baseId) ?? 0);
 }
+
+
+// Function to handle initialization of notifications
+void onInitNotification(RemoteMessage message) {
+  try {
+    // Extracting data from the message
+    final mapResponse = message.data;
+
+    // Checking if the message has a category
+    if (message.category != null) {
+      // Assigning the message category to the 'strAction' key in the mapResponse
+      mapResponse[strAction] = message.category;
+    }
+
+    // Handling iOS notifications
+    IosNotificationHandler()
+      ..isAlreadyLoaded = true // Setting the notification handler as already loaded
+      ..handleNotificationResponse(mapResponse); // Handling the notification response
+  } catch (e, stackTrace) {
+    // Handling exceptions and logging errors
+    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+  }
+}
+
 
 

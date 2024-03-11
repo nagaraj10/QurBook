@@ -1218,6 +1218,10 @@ const String strTurnOnGPS = 'Please turn on your GPS location services and try a
 
 // Declaring a constant string variable named 'strRefershStatusText' and assigning it the value 'refershStatusText'
 const String strRefershStatusText = 'refershStatusText';
+const strAppointmentStartTimeShouldBeSetLaterToTheCurrentTime =
+    'Appointment start time should be set later to the current time.';
+const String strProviderBasedPatientsHaveViewOnlyAccess =
+    'This activity is provider-based. Patients have view-only access.';
 
 class DoctorFilterConstants {
   static List<String> yearOfExperienceList = [
