@@ -1274,7 +1274,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                           ),
                           child: Column(
                             children: [
-                              Text(strRecorded,
+                              Text(strRecordedAt,
                                   style: TextStyle(
                                       fontSize: 24.0.sp,
                                       color: Colors.grey,

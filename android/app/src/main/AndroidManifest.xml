@@ -159,55 +159,18 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-        <receiver android:exported="false" android:name=".services.AcceptTransportationAppointment" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.RejectTransportationAppointment" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.DeclineReciver" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.AcceptReceiver" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.CancelAppointment" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.RescheduleAppointment" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.OnTapNotification" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.ChatwithCC" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.OnTapNotificationBackground" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.Accept" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.EscalateCareGiver" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.AppointmentPaymentNotification" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.PlanPaymentNotification" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.FamilyAdditionNotification" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.ReferrelPatientAccept" tools:replace="android:exported" />
 
-                <receiver android:exported="false" android:name=".services.PartnerServiceTicket" tools:replace="android:exported" />
         <receiver android:exported="false" android:name="androidx.media.session.MediaButtonReceiver" tools:replace="android:exported" >
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
 
-        <receiver android:exported="false" android:name=".services.SheelaFollowReceiver" tools:replace="android:exported" />
-
-        <receiver android:exported="false" android:name=".services.Renew" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.Callback" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.Decline" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.AcceptCareGiver" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.RejectCareGiver" tools:replace="android:exported" />
 
         <service android:exported="false" android:name=".services.AVServices" tools:replace="android:exported" />
 
         <service android:exported="false" android:name=".services.CriticalAlertServices" tools:replace="android:exported" />
 
-        <receiver android:exported="false" android:name=".services.DismissReceiver" tools:replace="android:exported" />
-        <receiver  android:exported="false" android:name=".services.NoReceiver" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.SnoozeReceiver" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.ViewMemberReceiver" tools:replace="android:exported" />
-        <receiver android:exported="false" android:name=".services.CommunicationSettingReceiver" tools:replace="android:exported" />
-        <receiver
-            android:exported="false"
-        android:name=".services.ReminderBroadcaster"
-        android:process=":remote" tools:replace="android:exported" />
-
-        <receiver
-            android:exported="false"
-            android:name=".services.ScheduleAppointment"
-            android:process=":remote" tools:replace="android:exported" />
 
         <!-- Service for handling foreground tasks -->
         <service

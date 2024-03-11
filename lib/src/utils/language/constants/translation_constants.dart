@@ -739,7 +739,7 @@ class TranslationConstants {
   static const String strOKAY = 'OKAY';
   static const String strValidPhoneNumber = 'Enter a valid mobile number';
   static const String strGetAppVersion = 'getAppVersion';
-  static const String strSecure = 'secureMe';
+
 
   static const String strformateedAddress = 'formateedAddress';
   static const String strformateedPhoneNumber = 'formateedPhoneNumber';

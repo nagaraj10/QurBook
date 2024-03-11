@@ -43,7 +43,9 @@ import 'package:myfhb/src/utils/timezone/timezone_services.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../common/CommonConstants.dart';
 import '../../../constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_parameters.dart' as fhbParameters;
 
 class QurHomeRegimenScreen extends StatefulWidget {
   bool addAppBar;
@@ -96,6 +98,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       CommonUtil().onInitQurhomeDashboardController();
 
   final sheelBadgeController = Get.put(SheelaAIController());
+
+  String currentActivitiesCCProviderName = '';
 
   String? weightUnit = "kg", tempUnit = "F";
 
@@ -610,7 +614,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       }
     }
     return InkWell(
-      onTap: () {
+      onTap: () async {
         if (regimen.activityOrgin == strAppointmentRegimen) {
           if ((regimen.eid != null) && (regimen.eid != '')) {
             CommonUtil().goToAppointmentDetailScreen(regimen.eid);
@@ -619,6 +623,20 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           if (CommonUtil().checkIfSkipAcknowledgemnt(regimen)) {
             redirectToSheelaScreen(regimen);
           } else {
+            /// Checks if the user is in India and
+            /// if the regimen has read only access.
+            /// If so, gets the user activities history for the regimen's eid,
+            /// otherwise sets the provider name variable to empty string.
+            /// This allows handling read only access
+            /// differently in India vs other regions.
+            if (CommonUtil.REGION_CODE != 'IN' &&
+                (regimen.otherinfo?.isReadOnlyAccess() ?? true)) {
+              currentActivitiesCCProviderName =
+                  await controller.getUserActivitiesHistory(
+                        regimen.eid,
+                      ) ??
+                      '';
+            }
             showRegimenDialog(regimen, itemIndex);
           }
         }
@@ -910,7 +928,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }
 
   showRegimenDialog(RegimentDataModel regimen, int index) {
-    if (regimen.ack == null)
+    if (regimen.ack == null &&
+        (regimen.otherinfo?.isReadOnlyAccess() ?? false) == false)
       showDialog(
           context: context,
           builder: (__) {
@@ -1218,7 +1237,406 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                   ));
             });
           });
-    else {
+    else if (regimen.otherinfo?.isReadOnlyAccess() != null &&
+        regimen.ack == null) {
+      if (CommonUtil.REGION_CODE != 'IN') {
+        showDialog(
+          context: context,
+          builder: (__) => StatefulBuilder(
+            builder: (_, setState) => AlertDialog(
+              contentPadding: const EdgeInsets.all(0),
+              content: Container(
+                width: CommonUtil().isTablet! ? 0.5.sw : 1.sw,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        IconButton(
+                            padding: const EdgeInsets.all(8),
+                            icon: Icon(
+                              Icons.close,
+                              size: CommonUtil().isTablet!
+                                  ? imageCloseTab
+                                  : imageCloseMobile,
+                            ),
+                            onPressed: () {
+                              try {
+                                Navigator.pop(context);
+                              } catch (e, stackTrace) {
+                                CommonUtil().appLogs(
+                                    message: e, stackTrace: stackTrace);
+
+                                print(e);
+                              }
+                            })
+                      ],
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.only(
+                          left: 15,
+                          right: 15,
+                          bottom: 15,
+                        ),
+                        child: Row(
+                          children: [
+                            getIcon(regimen, regimen.activityname,
+                                regimen.uformname, regimen.metadata, index, 0,
+                                sizeOfIcon: CommonUtil().isTablet!
+                                    ? dialogIconTab
+                                    : dialogIconMobile),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                                child: Column(children: [
+                              Center(
+                                child: Text(
+                                  regimen.title.toString().trim(),
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                      color: Color(
+                                        CommonUtil().getQurhomeGredientColor(),
+                                      ),
+                                      fontSize: CommonUtil().isTablet!
+                                          ? tabHeader1
+                                          : mobileHeader1,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                              Center(
+                                child: Text(
+                                  regimen.estart != null
+                                      ? DateFormat('hh:mm a')
+                                          .format(regimen.estart!)
+                                      : '',
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: CommonUtil().isTablet!
+                                          ? tabHeader3
+                                          : mobileHeader3,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ])),
+                            SizedBox(
+                              height: CommonUtil().isTablet!
+                                  ? dialogIconTab
+                                  : dialogIconMobile,
+                              width: CommonUtil().isTablet!
+                                  ? dialogIconTab
+                                  : dialogIconMobile,
+                            ),
+                          ],
+                        )),
+                    Divider(
+                      height: CommonUtil().isTablet! ? 3.0.h : 4.0.h,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 30,
+                        left: 15,
+                        right: 15,
+                        bottom: 30,
+                      ),
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            ImageUrlUtils.sheelaActivityNoFormdataImage,
+                            width: 101.0.h,
+                            height: 120.0.h,
+                            fit: BoxFit.cover,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                            ),
+                            child: Container(
+                              width: 1,
+                              height: 120.0.h,
+                              color: Colors.grey[200],
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  strActivityYourHealthcareProvider,
+                                  maxLines: 4,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: CommonUtil().isTablet!
+                                        ? tabHeader1
+                                        : mobileHeader1,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  strNotifiedonceItIsDone,
+                                  maxLines: 5,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: CommonUtil().isTablet!
+                                        ? tabHeader1
+                                        : mobileHeader1,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      height: CommonUtil().isTablet! ? 3.0.h : 4.0.h,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+    } else if ((regimen.otherinfo?.isReadOnlyAccess() ?? true) &&
+        CommonUtil.REGION_CODE != 'IN' &&
+        regimen.ack != null) {
+      showDialog(
+        context: context,
+        builder: (__) => StatefulBuilder(
+          builder: (_, setState) => AlertDialog(
+            contentPadding: const EdgeInsets.all(0),
+            content: Container(
+              width: CommonUtil().isTablet! ? 0.5.sw : 1.sw,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      IconButton(
+                          padding: EdgeInsets.all(8.0),
+                          icon: Icon(
+                            Icons.close,
+                            size: CommonUtil().isTablet!
+                                ? imageCloseTab
+                                : imageCloseMobile,
+                          ),
+                          onPressed: () {
+                            try {
+                              Navigator.pop(context);
+                            } catch (e, stackTrace) {
+                              CommonUtil()
+                                  .appLogs(message: e, stackTrace: stackTrace);
+
+                              print(e);
+                            }
+                          })
+                    ],
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.only(
+                        left: 15.0,
+                        right: 15.0,
+                        bottom: 15.0,
+                      ),
+                      child: Row(
+                        children: [
+                          getIcon(regimen, regimen.activityname,
+                              regimen.uformname, regimen.metadata, index, 0,
+                              sizeOfIcon: CommonUtil().isTablet!
+                                  ? dialogIconTab
+                                  : dialogIconMobile),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Center(
+                                  child: Text(
+                                    regimen.title.toString().trim(),
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        color: Color(
+                                          CommonUtil()
+                                              .getQurhomeGredientColor(),
+                                        ),
+                                        fontSize: CommonUtil().isTablet!
+                                            ? tabHeader1
+                                            : mobileHeader1,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                                Center(
+                                  child: Text(
+                                    regimen.estart != null
+                                        ? DateFormat('hh:mm a')
+                                            .format(regimen.estart!)
+                                        : '',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: CommonUtil().isTablet!
+                                          ? tabHeader3
+                                          : mobileHeader3,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: CommonUtil().isTablet!
+                                ? dialogIconTab
+                                : dialogIconMobile,
+                            width: CommonUtil().isTablet!
+                                ? dialogIconTab
+                                : dialogIconMobile,
+                          ),
+                        ],
+                      )),
+                  Divider(
+                    height: CommonUtil().isTablet! ? 3.0.h : 4.0.h,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 30.0,
+                      left: 15.0,
+                      right: 15.0,
+                      bottom: 30.0,
+                    ),
+                    child: Column(
+                      children: [
+                        RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: strHasBeenRecordedBy,
+                                  style: TextStyle(
+                                    fontSize: 22.0.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: currentActivitiesCCProviderName,
+                                  style: TextStyle(
+                                    fontSize: 22.0.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: strHasBeenRecordedByAt,
+                                  style: TextStyle(
+                                    fontSize: 22.0.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            )),
+                        Text(
+                          '${CommonUtil().regimentDateFormat(
+                            regimen.asNeeded
+                                ? regimen.ack ?? DateTime.now()
+                                : regimen.ack ?? DateTime.now(),
+                            isAck: true,
+                            ackDate: true,
+                          )}',
+                          style: TextStyle(
+                              fontSize: 26.0.sp, fontWeight: FontWeight.w600),
+                        )
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    height: CommonUtil().isTablet! ? 3.0.h : 4.0.h,
+                  ),
+                  Visibility(
+                      visible: regimen.hasform != false &&
+                          (regimen.otherinfo?.isReadOnlyAccess() ?? false),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          top: 30,
+                          left: 15,
+                          right: 15,
+                          bottom: 30,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                if (regimen.hasform!) {
+                                  Navigator.pop(context);
+                                  onCardPressed(context, regimen,
+                                      aid: regimen.aid,
+                                      uid: regimen.uid,
+                                      formId: regimen.uformid,
+                                      formName: regimen.uformname,
+                                      canEditMain: false,
+                                      fromView: true,
+                                      isReadyOnly: true);
+                                } else if (regimen.hasform == false) {
+                                } else {
+                                  Navigator.pop(context);
+
+                                  callLogApi(regimen);
+                                }
+                              },
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(5),
+                                    child: Image.asset(
+                                      icon_view_eye,
+                                      height: 30,
+                                      width: 30,
+                                      color: (regimen.hasform == false)
+                                          ? Colors.grey
+                                          : Color(
+                                              CommonUtil()
+                                                  .getQurhomePrimaryColor(),
+                                            ),
+                                    ),
+                                  ),
+                                  Text(
+                                    strView,
+                                    style: TextStyle(
+                                      fontSize: 20.0.sp,
+                                      color: (regimen.hasform == false)
+                                          ? Colors.grey
+                                          : Color(
+                                              CommonUtil()
+                                                  .getQurhomePrimaryColor(),
+                                            ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
       final iconSize = 50.0.sp;
       if (CommonUtil.REGION_CODE != "IN")
         showDialog(
@@ -1326,7 +1744,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                           ),
                           child: Column(
                             children: [
-                              Text(strRecorded,
+                              Text(strRecordedAt,
                                   style: TextStyle(
                                       fontSize: 24.0.sp,
                                       color: Colors.grey,
@@ -1523,16 +1941,20 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     return string.replaceAll('_', '');
   }
 
-  Future<void> onCardPressed(BuildContext? context, RegimentDataModel? regimen,
-      {String? eventIdReturn,
-      String? followEventContext,
-      String? activityName,
-      dynamic uid,
-      dynamic aid,
-      dynamic formId,
-      dynamic formName,
-      bool canEditMain = false,
-      bool fromView = false}) async {
+  Future<void> onCardPressed(
+    BuildContext? context,
+    RegimentDataModel? regimen, {
+    String? eventIdReturn,
+    String? followEventContext,
+    String? activityName,
+    dynamic uid,
+    dynamic aid,
+    dynamic formId,
+    dynamic formName,
+    bool canEditMain = false,
+    bool fromView = false,
+    bool isReadyOnly = false,
+  }) async {
     stopRegimenTTS();
     var eventId = eventIdReturn ?? regimen!.eid;
     if (eventId == null || eventId == '' || eventId == 0) {
@@ -1577,16 +1999,22 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         if (checkCanEdit(regimen)) {
           if (canEditMain || fromView) {
             openFormDataDialog(
-                context, regimen, canEdit, eventId, fieldsResponseModel,
-                eventIdReturn: eventIdReturn,
-                followEventContext: followEventContext,
-                activityName: activityName,
-                uid: uid,
-                aid: aid,
-                formId: formId,
-                formName: formName,
-                canEditMain: canEditMain,
-                fromView: fromView);
+              context,
+              regimen,
+              canEdit,
+              eventId,
+              fieldsResponseModel,
+              eventIdReturn: eventIdReturn,
+              followEventContext: followEventContext,
+              activityName: activityName,
+              uid: uid,
+              aid: aid,
+              formId: formId,
+              formName: formName,
+              canEditMain: canEditMain,
+              fromView: fromView,
+              isReadOnly: isReadyOnly,
+            );
             return;
           }
           hubController.eid = regimen.eid;
@@ -1626,16 +2054,22 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         if (checkCanEdit(regimen)) {
           if (canEditMain || fromView) {
             openFormDataDialog(
-                context, regimen, canEdit, eventId, fieldsResponseModel,
-                eventIdReturn: eventIdReturn,
-                followEventContext: followEventContext,
-                activityName: activityName,
-                uid: uid,
-                aid: aid,
-                formId: formId,
-                formName: formName,
-                canEditMain: canEditMain,
-                fromView: fromView);
+              context,
+              regimen,
+              canEdit,
+              eventId,
+              fieldsResponseModel,
+              eventIdReturn: eventIdReturn,
+              followEventContext: followEventContext,
+              activityName: activityName,
+              uid: uid,
+              aid: aid,
+              formId: formId,
+              formName: formName,
+              canEditMain: canEditMain,
+              fromView: fromView,
+              isReadOnly: isReadyOnly,
+            );
             return;
           }
           hubController.eid = regimen.eid;
@@ -1672,16 +2106,22 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         if (checkCanEdit(regimen)) {
           if (canEditMain || fromView) {
             openFormDataDialog(
-                context, regimen, canEdit, eventId, fieldsResponseModel,
-                eventIdReturn: eventIdReturn,
-                followEventContext: followEventContext,
-                activityName: activityName,
-                uid: uid,
-                aid: aid,
-                formId: formId,
-                formName: formName,
-                canEditMain: canEditMain,
-                fromView: fromView);
+              context,
+              regimen,
+              canEdit,
+              eventId,
+              fieldsResponseModel,
+              eventIdReturn: eventIdReturn,
+              followEventContext: followEventContext,
+              activityName: activityName,
+              uid: uid,
+              aid: aid,
+              formId: formId,
+              formName: formName,
+              canEditMain: canEditMain,
+              fromView: fromView,
+              isReadOnly: isReadyOnly,
+            );
             return;
           }
           hubController.eid = regimen.eid;
@@ -1721,16 +2161,22 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         if (checkCanEdit(regimen)) {
           if (canEditMain || fromView) {
             openFormDataDialog(
-                context, regimen, canEdit, eventId, fieldsResponseModel,
-                eventIdReturn: eventIdReturn,
-                followEventContext: followEventContext,
-                activityName: activityName,
-                uid: uid,
-                aid: aid,
-                formId: formId,
-                formName: formName,
-                canEditMain: canEditMain,
-                fromView: fromView);
+              context,
+              regimen,
+              canEdit,
+              eventId,
+              fieldsResponseModel,
+              eventIdReturn: eventIdReturn,
+              followEventContext: followEventContext,
+              activityName: activityName,
+              uid: uid,
+              aid: aid,
+              formId: formId,
+              formName: formName,
+              canEditMain: canEditMain,
+              fromView: fromView,
+              isReadOnly: isReadyOnly,
+            );
             return;
           }
           hubController.eid = regimen.eid;
@@ -1767,16 +2213,22 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         if (checkCanEdit(regimen)) {
           if (canEditMain || fromView) {
             openFormDataDialog(
-                context, regimen, canEdit, eventId, fieldsResponseModel,
-                eventIdReturn: eventIdReturn,
-                followEventContext: followEventContext,
-                activityName: activityName,
-                uid: uid,
-                aid: aid,
-                formId: formId,
-                formName: formName,
-                canEditMain: canEditMain,
-                fromView: fromView);
+              context,
+              regimen,
+              canEdit,
+              eventId,
+              fieldsResponseModel,
+              eventIdReturn: eventIdReturn,
+              followEventContext: followEventContext,
+              activityName: activityName,
+              uid: uid,
+              aid: aid,
+              formId: formId,
+              formName: formName,
+              canEditMain: canEditMain,
+              fromView: fromView,
+              isReadOnly: isReadyOnly,
+            );
             return;
           }
           redirectToSheelaScreen(regimen);
@@ -1794,7 +2246,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             formId: formId,
             formName: formName,
             canEditMain: canEditMain,
-            fromView: fromView);
+            fromView: fromView,
+            isReadOnly: isReadyOnly);
       }
     } else if (!regimen.hasform!) {
       FlutterToast().getToast(
@@ -2494,20 +2947,22 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }
 
   openFormDataDialog(
-      BuildContext? context,
-      RegimentDataModel? regimen,
-      dynamic canEdit,
-      dynamic eventId,
-      FieldsResponseModel? fieldsResponseModel,
-      {String? eventIdReturn,
-      String? followEventContext,
-      String? activityName,
-      dynamic uid,
-      dynamic aid,
-      dynamic formId,
-      dynamic formName,
-      bool canEditMain = false,
-      bool fromView = false}) async {
+    BuildContext? context,
+    RegimentDataModel? regimen,
+    dynamic canEdit,
+    dynamic eventId,
+    FieldsResponseModel? fieldsResponseModel, {
+    String? eventIdReturn,
+    String? followEventContext,
+    String? activityName,
+    dynamic uid,
+    dynamic aid,
+    dynamic formId,
+    dynamic formName,
+    bool canEditMain = false,
+    bool fromView = false,
+    bool isReadOnly = false,
+  }) async {
     try {
       Provider.of<RegimentViewModel>(context!, listen: false)
           .updateRegimentStatus(RegimentStatus.DialogOpened);
@@ -2520,9 +2975,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         formTitle: getDialogTitle(context, regimen!, activityName, true),
         showEditIcon: canEditMain,
         fromView: fromView,
-        canEdit: regimen?.ack == null
-            ? (canEdit || isValidSymptom(context))
-            : canEditMain,
+        canEdit: (regimen.otherinfo?.isReadOnlyAccess() ?? false)
+            ? false
+            : regimen?.ack == null
+                ? (canEdit || isValidSymptom(context))
+                : canEditMain,
         isFromQurHomeSymptom: false,
         isFromQurHomeRegimen: true,
         triggerAction: (String? triggerEventId, String? followContext,
@@ -2540,6 +2997,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         isFollowEvent: eventIdReturn != null,
         appBarTitle: getDialogTitle(context, regimen!, activityName, false),
         regimen: regimen,
+        isReadOnly: isReadOnly,
       ))?.then(
         (value) {
           if (value != null && (value ?? false)) {

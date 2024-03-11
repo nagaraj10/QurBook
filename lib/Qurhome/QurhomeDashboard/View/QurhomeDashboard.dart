@@ -110,7 +110,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     try {
       if (CommonUtil.isUSRegion()) {
         try {
-          Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
+          // Retrieve the ChatSocketViewModel instance using Provider
+          Provider.of<ChatSocketViewModel>(context, listen: false).initSocket();
           CommonUtil().initSocket();
           CommonUtil().versionCheck(context);
           Provider.of<LandingViewModel>(context, listen: false)
