@@ -1006,13 +1006,19 @@ const String strCentreVisit = 'Centre Visit';
 const String strOnsite = 'Onsite';
 
 //for regimen
-const String strRecorded = 'Recorded at';
+const String strRecordedAt = 'Recorded at';
+const String strHasBeenRecordedBy = 'This has been recorded by ';
+const String strHasBeenRecordedByAt = ' at';
 const String strUndo = 'Undo';
 const String strEdit = 'Edit';
 const String strView = 'View';
 const String strConfirms = 'Are you sure?';
 const String strUpdateMsg = 'Do you want to update the changes';
 const String strDecline = 'Declined';
+const String strActivityYourHealthcareProvider =
+    'This activity will be performed by your healthcare provider.';
+
+const String strNotifiedonceItIsDone = 'You\'ll be notified once it is done.';
 
 //For Alert
 const String strEscalate = 'Escalate';

@@ -159,9 +159,16 @@ class IosNotificationHandler {
   }
 
   void handleNotificationResponse(Map<String, dynamic> jsonDecode) async {
+
+    // Declare a variable named isSheelaCondition
+    var isSheelaCondition =
+        jsonDecode[parameters.KIOSK_isSheela] ?? variable.strFalse;
+
     // Extract the notification ID from the JSON data or use '0' if not present
-    var tempNotificationId = jsonDecode[parameters.notificationListId] ??
-        getMyMeetingID().toString();
+    var tempNotificationId = isSheelaCondition == parameters.strTrue
+        ? getMyMeetingID().toString()
+        : jsonDecode[parameters.notificationListId] ??
+            getMyMeetingID().toString();
 
     // Get the current notification ID from the PreferenceUtil, or an empty string if not set
     var currentNotificationId =
