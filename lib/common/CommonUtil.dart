@@ -2669,6 +2669,7 @@ class CommonUtil {
       var apiBaseHelper = ApiBaseHelper();
       var endPoint = Platform.isIOS ? QURBOOK_iOS : QURBOOK_ANDROID;
       var response = await apiBaseHelper.getAppVersion(endPoint);
+      // Check if the response is not null
       if (response != null) {
         final deviceVersionModel = DeviceVersion.fromJson(response);
         var newVersion;

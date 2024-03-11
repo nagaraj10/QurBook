@@ -200,6 +200,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     myProfileSink.add(ApiResponse.loading(variable.strFetchRoles));
     MyProfileModel? myProfile;
 
+    // Retrieve the user ID from preferences
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
 
     try {

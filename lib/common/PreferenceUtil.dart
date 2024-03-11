@@ -94,6 +94,7 @@ class PreferenceUtil {
     if (_prefsInstance == null) {}
 
     final jsonString = _prefsInstance!.getString(Constants.KEY_METADATA);
+    // Check if the decoded data is not null
     if (jsonString != null) {
       final jsonData = json.decode(jsonString);
       if (jsonData != null) {
@@ -177,6 +178,7 @@ class PreferenceUtil {
       if (_prefsInstance == null) {}
 
       var jsonData = _prefsInstance!.getString(keyProfile) ?? '';
+      // Check if the decoded data is not null and if it is not empty after trimming
       if (jsonData != null && jsonData.trim().isNotEmpty) {
         var data = json.decode(jsonData);
         return MyProfileModel.fromJson(data);
@@ -536,6 +538,7 @@ class PreferenceUtil {
       if (_prefsInstance == null) {}
 
       final jsonString = _prefsInstance!.getString(keyFamilyRelation);
+      // Check if the JSON string is not null
       if (jsonString != null) {
         final jsonData = json.decode(jsonString);
         if (jsonData != null) {
