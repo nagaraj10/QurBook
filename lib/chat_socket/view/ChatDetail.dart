@@ -236,7 +236,7 @@ class ChatState extends State<ChatDetail> {
     FABService.trackCurrentScreen(FBAChatDetailsScreen);
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       Provider.of<ChatSocketViewModel>(
-        Get.context!,
+        context!,
         listen: false,
       ).updateChatHistoryList([], shouldUpdate: false);
     });
@@ -422,11 +422,11 @@ class ChatState extends State<ChatDetail> {
   }
 
   void initSocket() {
-    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+    Provider.of<ChatSocketViewModel>(context!, listen: false)
         .socket
         ?.off(message);
 
-    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+    Provider.of<ChatSocketViewModel>(context!, listen: false)
         .socket
         ?.on(message, (data) {
       if (data != null) {
@@ -435,13 +435,13 @@ class ChatState extends State<ChatDetail> {
         if (emitAckResponse != null) {
           if (isFromCareCoordinator ?? false) {
             if (carecoordinatorId == emitAckResponse.messages!.idFrom) {
-              Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+              Provider.of<ChatSocketViewModel>(context!, listen: false)
                   .onReceiveMessage(emitAckResponse);
               updateReadCount();
             }
           } else {
             if (chatPeerId == emitAckResponse.messages!.idFrom) {
-              Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+              Provider.of<ChatSocketViewModel>(context!, listen: false)
                   .onReceiveMessage(emitAckResponse);
               updateReadCount();
             }
@@ -454,7 +454,7 @@ class ChatState extends State<ChatDetail> {
   updateReadCount() {
     var data = {"chatListId": groupId, "userId": userId};
 
-    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+    Provider.of<ChatSocketViewModel>(context!, listen: false)
         .socket
         ?.emitWithAck(unreadNotification, data, ack: (res) {
       //print('emitWithackCount$res');
@@ -585,7 +585,7 @@ class ChatState extends State<ChatDetail> {
           /* if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
               snapshot?.data?.result?.length > 0) {*/
-          Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+          Provider.of<ChatSocketViewModel>(context!, listen: false)
               .updateChatHistoryList(snapshot.data?.result,
                   shouldUpdate: false);
 
@@ -615,7 +615,7 @@ class ChatState extends State<ChatDetail> {
   void dispose() {
     //socket.disconnect();
     //socket.disconnect();
-    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+    Provider.of<ChatSocketViewModel>(context!, listen: false)
         .socket
         ?.off(message);
     super.dispose();
@@ -641,7 +641,7 @@ class ChatState extends State<ChatDetail> {
         };
 
         try {
-          Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+          Provider.of<ChatSocketViewModel>(context!, listen: false)
               .socket
               ?.emitWithAck(message, data, ack: (res) {
             //print('emitWithack$res');
@@ -649,10 +649,10 @@ class ChatState extends State<ChatDetail> {
               EmitAckResponse emitAckResponse = EmitAckResponse.fromJson(res);
               if (emitAckResponse != null) {
                 if (emitAckResponse.lastSentMessageInfo != null) {
-                  Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
+                  Provider.of<ChatSocketViewModel>(context!, listen: false)
                       .messageEmit(emitAckResponse.lastSentMessageInfo);
                   /*listScrollController.scrollTo(
-                    index: Provider.of<ChatSocketViewModel>(Get.context,listen: false)?.chatHistoryList.length,
+                    index: Provider.of<ChatSocketViewModel>(context,listen: false)?.chatHistoryList.length,
                     duration: Duration(milliseconds: 100));*/
                 }
               }
@@ -1195,7 +1195,7 @@ class ChatState extends State<ChatDetail> {
         child: ScrollablePositionedList.builder(
       padding: EdgeInsets.all((CommonUtil().isTablet ?? false) ? 20.00 : 10.0),
       itemBuilder: (context, index) {
-        var chatList = Provider.of<ChatSocketViewModel>(Get.context!)
+        var chatList = Provider.of<ChatSocketViewModel>(context!)
             .chatHistoryList!
             .reversed
             .toList();
@@ -1221,7 +1221,7 @@ class ChatState extends State<ChatDetail> {
 
         return buildItem(chatList[index]!, index, isIconNeed);
       },
-      itemCount: Provider.of<ChatSocketViewModel>(Get.context!)
+      itemCount: Provider.of<ChatSocketViewModel>(context!)
               .chatHistoryList
               ?.reversed
               .toList()
@@ -2207,7 +2207,7 @@ class ChatState extends State<ChatDetail> {
                                     .substring(2, result.toString().length - 2);
                                 if (removedBrackets.length > 0) {
                                   Provider.of<ChatSocketViewModel>(
-                                    Get.context!,
+                                    context!,
                                     listen: false,
                                   ).initRRTNotificaiton(
                                     peerId: peerId,
