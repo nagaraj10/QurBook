@@ -400,6 +400,7 @@ class ImageUrlUtils {
   static String locationImg = 'assets/providers/location.png';
   static String otpVerifyImg = 'assets/icons/otp_icon.png';
   static String photoImg = 'assets/user/avatar.png';
+  static String sheelaActivityNoFormdataImage = 'assets/Qurhome/sheela-activity-no-formdata.png';
 }
 
 class GoogleApiKey {

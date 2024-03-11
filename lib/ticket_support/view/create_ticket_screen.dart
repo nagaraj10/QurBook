@@ -3599,6 +3599,19 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           pickedTime.hour,
           pickedTime.minute,
         );
+
+        /**
+         * Checks if the selected appointment date/time is before 
+         * the current date/time. 
+         * If so, shows an error toast and returns to
+         * prevent booking an appointment in the past.
+         */
+        if (selectedDateTime.isBefore(
+          DateTime.now(),
+        )) {
+          showAlertMsg(strAppointmentStartTimeShouldBeSetLaterToTheCurrentTime);
+          return;
+        }
         // Update UI state with the selected date and time
         setState(() {
           // Set the text field value using a formatted date string
