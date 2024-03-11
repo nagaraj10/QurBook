@@ -1142,7 +1142,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           }
         } else {
           pr.hide();
-          toast.getToast(noUrl, Colors.red);
+          // Checking if the value.message is not null and not empty, otherwise  "Something went wrong" will show.
+          toast.getToast(value.message?.isNotEmpty ?? false ? value.message! : noUrl, Colors.red);
         }
         PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
       }
