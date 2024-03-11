@@ -274,8 +274,9 @@ class SheelaAIController extends GetxController {
           // Set up a reconnect timer after the delay
           reconnectTimer();
         }
-        else if ((conversations.last.redirectTo ?? '') == strDeviceConnection) {
-          isRetryScanFailure = true;
+        else if ((conversations.last.redirectTo ?? '') ==
+            strDeviceConnection) {
+          isDeviceConnectSheelaScreen = true;
           updateTimer(enable: false); // disable the timer
           resetBLE(); // Reset the BLE (Bluetooth Low Energy) connection
         }
@@ -1197,7 +1198,9 @@ makeApiRequest is used to update the data with latest data
       } else if (enable) {
         printInfo(info: 'started the timer');
         _popTimer = Timer(const Duration(seconds: 30), () {
-          if (isSheelaScreenActive && bleController == null) {
+          if (isSheelaScreenActive &&
+              bleController == null &&
+              (!(isDeviceConnectSheelaScreen ?? false))) {
             printInfo(info: 'timeout the timer');
             stopTTS();
             canSpeak = false;
