@@ -542,7 +542,7 @@ class QurhomeRegimenController extends GetxController {
       // statusText.value = '';
       statusText.value =
           "${stringViewTotalNumberOfActivites} ${qurHomeRegimenResponseModel?.regimentsList?.length ?? 0}";
-      prefix = 'Today, ';
+      prefix = 'Today is ';
     } else if (CommonUtil().calculateDifference(now) < 0) {
       //past
       isTodaySelected.value = false;
@@ -566,7 +566,7 @@ class QurhomeRegimenController extends GetxController {
     }
     update([strRefershStatusText]);
 
-    String formattedDate = DateFormat('dd MMM').format(now);
+    String formattedDate = DateFormat('MMMM dd , yyyy').format(now);
     return prefix + formattedDate;
   }
 

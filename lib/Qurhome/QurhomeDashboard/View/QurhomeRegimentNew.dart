@@ -3,8 +3,10 @@ import 'dart:convert' as convert;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -20,7 +22,6 @@ import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as fhbParameters;
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
@@ -44,6 +45,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_parameters.dart' as fhbParameters;
 
 class QurHomeRegimenScreen extends StatefulWidget {
   bool addAppBar;
@@ -97,8 +99,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   final sheelBadgeController = Get.put(SheelaAIController());
 
-  String? weightUnit = "kg", tempUnit = "F";
-
   @override
   void initState() {
     try {
@@ -107,8 +107,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       });
       controller.currLoggedEID.value = "";
       controller.isFirstTime.value = true;
-
-      getUnitValue();
       Future.delayed(Duration.zero, () async {
         onInit();
         controller.initRemainderQueue();
@@ -139,11 +137,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
       print(e);
     }
-  }
-
-  getUnitValue() async {
-    weightUnit = await PreferenceUtil.getStringValue(STR_KEY_WEIGHT);
-    tempUnit = await PreferenceUtil.getStringValue(STR_KEY_TEMP);
   }
 
   onInit() async {
@@ -468,12 +461,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             ? Padding(
                 padding: const EdgeInsets.symmetric(vertical: 50.0),
                 child: Container(
-                    child: RawScrollbar(
-                  thumbColor: Color(
-                    CommonUtil().getQurhomePrimaryColor(),
-                  ),
-                  radius: Radius.circular(20),
-                  thickness: 5,
                   child: PageView.builder(
                     itemCount:
                         val.qurHomeRegimenResponseModel!.regimentsList!.length +
@@ -524,7 +511,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                       }
                     },
                   ),
-                )),
+                ),
               )
             : const Center(
                 child: Text(
@@ -560,11 +547,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
   }
 
-  Color getCardBackgroundColor(
-      int itemIndex, int nextRegimenPosition, RegimentDataModel regimen) {
-    if (regimen.ack != null) {
-      return Color(0xff511e);
-    } else if (controller.currentIndex == itemIndex) {
+  Color getCardBackgroundColor(int itemIndex, int nextRegimenPosition) {
+    if (controller.currentIndex == itemIndex) {
       return Colors.white;
     } else if (nextRegimenPosition == itemIndex) {
       return Color(
@@ -577,11 +561,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   Color getTextAndIconColor(int itemIndex, int nextRegimenPosition) {
     if (controller.currentIndex == itemIndex) {
-      return Colors.black;
+      return Color(
+        CommonUtil().getQurhomePrimaryColor(),
+      );
     } else if (nextRegimenPosition == itemIndex) {
-      return Colors.black;
+      return Colors.white;
     } else {
-      return Colors.black;
+      return Colors.grey;
     }
   }
 
@@ -628,56 +614,97 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         child: Padding(
           padding: EdgeInsets.symmetric(
               horizontal:
-                  isPortrait ? 12.0 : MediaQuery.of(context).size.width / 5,
+                  isPortrait ? 25.0 : MediaQuery.of(context).size.width / 5,
               vertical: 8.0),
           child: Container(
             decoration: BoxDecoration(
-              color: getCardBackgroundColor(
-                  itemIndex, nextRegimenPosition, regimen),
+              color: getCardBackgroundColor(itemIndex, nextRegimenPosition),
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.2),
                   spreadRadius: 5,
-                  blurRadius: 2,
+                  blurRadius: 7,
                   offset: Offset(0, 3), // changes position of shadow
                 ),
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Stack(
                 children: [
-                  Text(
-                    regimen.estart != null
-                        ? DateFormat('hh:mm a').format(regimen.estart!)
-                        : '',
-                    style: TextStyle(
-                      color: getTextAndIconColor(
-                        itemIndex,
-                        nextRegimenPosition,
+                  if (regimen.ack != null) ...{
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Visibility(
+                        visible: regimen.ack != null,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Image.asset(
+                              'assets/Qurhome/seen.png',
+                              height: 12.0,
+                              width: 12.0,
+                              color: getTextAndIconColor(
+                                  itemIndex, nextRegimenPosition),
+                            ),
+                            SizedBox(
+                              width: 2,
+                            ),
+                            CommonUtil.isUSRegion()
+                                ? SizedBox()
+                                : Text(
+                                    '${CommonUtil().regimentDateFormatV2(
+                                      regimen.asNeeded
+                                          ? regimen.ack ?? DateTime.now()
+                                          : regimen.ack ?? DateTime.now(),
+                                      isAck: true,
+                                    )}',
+                                    style: TextStyle(
+                                      fontSize: 11.0,
+                                      color: getTextAndIconColor(
+                                          itemIndex, nextRegimenPosition),
+                                    ),
+                                  ),
+                          ],
+                        ),
                       ),
-                      fontSize: 15.h,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    )
+                  },
+                  Align(
+                    alignment: Alignment.center,
+                    child: Row(
                       children: [
-                        Center(
+                        Text(
+                          regimen.estart != null
+                              ? DateFormat('hh:mm a').format(regimen.estart!)
+                              : '',
+                          style: TextStyle(
+                              color: getTextAndIconColor(
+                                  itemIndex, nextRegimenPosition),
+                              fontSize: 15.h,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        getIcon(
+                            regimen,
+                            regimen.activityname,
+                            regimen.uformname,
+                            regimen.metadata,
+                            itemIndex,
+                            nextRegimenPosition),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
                           child: Text(
                             strTitle.trim().isNotEmpty
                                 ? strTitle
                                 : regimen.title.toString().trim(),
                             maxLines: 2,
-                            textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: getTextAndIconColor(
                                     itemIndex, nextRegimenPosition),
@@ -685,85 +712,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                 fontWeight: FontWeight.w600),
                           ),
                         ),
-                        Visibility(
-                          visible: regimen.activityname == Activityname.VITALS,
-                          child: Text(
-                            getValuesOfVital(regimen),
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16.h,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Visibility(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            /* Image.asset(
-                                  'assets/Qurhome/seen.png',
-                                  height: 12.0,
-                                  width: 12.0,
-                                  color: getTextAndIconColor(
-                                      itemIndex, nextRegimenPosition),
-                                ),*/
-                            getIcon(
-                                regimen,
-                                regimen.activityname,
-                                regimen.uformname,
-                                regimen.metadata,
-                                itemIndex,
-                                nextRegimenPosition),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            if (regimen.ack != null)
-                              Text(
-                                'Completed',
-                                style: TextStyle(
-                                  fontSize: CommonUtil().isTablet!
-                                      ? tabHeader1
-                                      : mobileHeader1,
-                                  fontWeight: FontWeight.bold,
-                                  color: getTextAndIconColor(
-                                      itemIndex, nextRegimenPosition),
-                                ),
-                              )
-                            else
-                              const SizedBox()
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 2,
-                        ),
-                        if (regimen.ack != null)
-                          CommonUtil.isUSRegion()
-                              ? const SizedBox()
-                              : Text(
-                                  '${CommonUtil().regimentDateFormatV2(
-                                    regimen.asNeeded
-                                        ? regimen.ack ?? DateTime.now()
-                                        : regimen.ack ?? DateTime.now(),
-                                    isAck: true,
-                                  )}',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: getTextAndIconColor(
-                                        itemIndex, nextRegimenPosition),
-                                  ),
-                                )
-                        else
-                          const SizedBox()
                       ],
                     ),
                   ),
@@ -2589,74 +2537,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
-  }
-
-  getValuesOfVital(RegimentDataModel regimen) {
-    String vitalValue = '    ';
-    try {
-      List<VitalsData> dynamicFieldModelList =
-          regimen?.uformdata?.vitalsData ?? [];
-      if (dynamicFieldModelList.length > 0) {
-        for (int i = 0; i < dynamicFieldModelList.length; i++)
-          if (dynamicFieldModelList[i] != null &&
-              dynamicFieldModelList[i].value != null &&
-              dynamicFieldModelList[i].value != "") {
-            if (dynamicFieldModelList[i]?.description?.toLowerCase() ==
-                    "weight" ||
-                dynamicFieldModelList[i]?.description?.toLowerCase() ==
-                    "temperature" ||
-                dynamicFieldModelList[i]?.description?.toLowerCase() ==
-                    "body temperature") {
-              if (dynamicFieldModelList[i]?.description?.toLowerCase() ==
-                  "weight") {
-                vitalValue +=
-                    dynamicFieldModelList[i].value + " " + (weightUnit ?? "");
-              } else {
-                vitalValue +=
-                    dynamicFieldModelList[i].value + " " + (tempUnit ?? "");
-              }
-            } else {
-              vitalValue += dynamicFieldModelList[i].value;
-              if (i != dynamicFieldModelList.length - 1) vitalValue += "/";
-            }
-            print(vitalValue);
-          }
-      } else {
-        List<VitalsData> dynamicFieldModelList =
-            regimen?.uformdata?.vitalsData ?? [];
-        if (dynamicFieldModelList.length > 0) {
-          for (int i = 0; i < dynamicFieldModelList.length; i++)
-            if (dynamicFieldModelList[i] != null &&
-                dynamicFieldModelList[i].value != null &&
-                dynamicFieldModelList[i].value != "") {
-              if (dynamicFieldModelList[i]?.description?.toLowerCase() ==
-                      "weight" ||
-                  dynamicFieldModelList[i]?.description?.toLowerCase() ==
-                      "temperature" ||
-                  dynamicFieldModelList[i]?.description?.toLowerCase() ==
-                      "body temperature") {
-                if (dynamicFieldModelList[i]?.description?.toLowerCase() ==
-                    "weight") {
-                  vitalValue +=
-                      dynamicFieldModelList[i].value + " " + (weightUnit ?? "");
-                } else {
-                  vitalValue +=
-                      dynamicFieldModelList[i].value + " " + (tempUnit ?? "");
-                }
-              } else {
-                vitalValue += dynamicFieldModelList[i].value;
-                if (i != dynamicFieldModelList.length - 1) vitalValue += "/";
-              }
-            }
-        }
-      }
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-
-      return "NA";
-    }
-    print(vitalValue);
-    return vitalValue;
   }
 }
 

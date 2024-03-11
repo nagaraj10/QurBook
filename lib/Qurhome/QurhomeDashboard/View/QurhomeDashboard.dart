@@ -427,8 +427,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                             qurHomeRegimenController
                                                 .dateHeader.value,
                                             style: TextStyle(
-                                              fontSize: 12.h,
-                                              color: Colors.grey,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 11.h,
+                                              color: Colors.black,
                                             ),
                                           ),
                                   },
