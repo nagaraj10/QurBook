@@ -125,13 +125,7 @@
             android:screenOrientation="portrait"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
-            android:name=".NotificationActivity"
-            android:excludeFromRecents="true"
-            android:taskAffinity=""
-            android:exported="false"
-            android:showOnLockScreen="true"
-            android:theme="@style/FullScreenTheme" />
+
 
         <receiver android:exported="false" tools:node="merge" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" tools:replace="android:exported" />
         <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
@@ -181,15 +175,7 @@
         <!-- Receiver for handling action broadcasts -->
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver" />
 
-        <service
-            android:name=".services.MyFirebaseInstanceService"
-            android:enabled="true"
-            android:exported="false" tools:replace="android:exported">
-            <intent-filter>
-                <!--<action android:name="com.google.firebase.INSTANCE_ID_EVENT" />-->
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
 
