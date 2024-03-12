@@ -986,6 +986,10 @@ class _ChatUserListState extends State<ChatUserList> {
     );
   }
 
+  /// Returns a CircleAvatar widget displaying the unread count,
+  /// or empty text if parsing fails.
+  /// The radius is adjusted based on device type.
+  /// The CircleAvatar color and text style are customized.
   Widget getUnreadCount(String unReadCount) {
     try {
       final unReadCountNumber = num.tryParse(unReadCount) ?? 0;
