@@ -1143,6 +1143,7 @@ makeApiRequest is used to update the data with latest data
         final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
         // final isTablet = CommonUtil().isTablet ?? false;
         final isQueueDialogShowen = !isQueueDialogShowing.value;
+        //check if screen is ideal
           if (isScreenIdeal) {
             showDialogForSheelaBox(
               isFromQurHomeRegimen: isFromQurHomeRegimen,
@@ -1474,6 +1475,7 @@ makeApiRequest is used to update the data with latest data
         fromQurhomeRegimen: isFromQurHomeRegimen,
         onTapHideSheelaDialog: (value) {
           if(value){
+            //Update qurhome idle timer
             qurhomeDashboardController.isScreenIdle.value=true;
             qurhomeDashboardController.checkScreenIdle(isIdeal: true);
           }

@@ -38,7 +38,7 @@ class QurhomeDashboardController extends GetxController {
   Timer? get getBleTimer {
     return _bleTimer;
   }
-
+//Adding this code to check if the screen is idle or not
   Timer? get getIdleTimer {
     return _idleTimer;
   }
@@ -128,7 +128,7 @@ class QurhomeDashboardController extends GetxController {
       _bleTimer = null;
     }
   }
-
+//Function to check qur home is ideal for 5 minutes
   Future<void> checkScreenIdle({bool isIdeal = false}) async {
     _idleTimer = Timer.periodic(const Duration(minutes: 5), (timer) {
       try {
