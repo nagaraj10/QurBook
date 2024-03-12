@@ -251,9 +251,10 @@ class Buttons {
   bool? needPhoto;
   bool? needAudio;
   bool? needVideo;
-  bool? partialTitle;
-  bool? partialSynonym;
+  String? partialTitle;
+  String? partialSynonym;
   List<String>? synonymsList; // list of synonyms to match the voice input
+  List<String>? synonyms; // list of synonyms to match the voice input
 
   Buttons({
     this.payload,
@@ -266,6 +267,7 @@ class Buttons {
     this.ttsResponse,
     this.btnRedirectTo,
     this.synonymsList,
+    this.synonyms,
     this.imageUrl,
     this.videoUrl,
     this.audioUrl,
@@ -276,8 +278,8 @@ class Buttons {
     this.needPhoto = false,
     this.needAudio = false,
     this.needVideo = false,
-    this.partialSynonym=false,
-    this.partialTitle=false,
+    this.partialSynonym,
+    this.partialTitle,
   });
 
   Buttons.fromJson(Map<String, dynamic> json) {
@@ -297,11 +299,15 @@ class Buttons {
       needPhoto = (json['needPhoto'] ?? false);
       needAudio = (json['needAudio'] ?? false);
       needVideo = (json['needVideo'] ?? false);
-      partialSynonym = (json['partialSynonym'] ?? false);
-      partialTitle = (json['partialtitle'] ?? false);
+      partialSynonym = (json['partialsynonym'] ?? "");
+      partialTitle = (json['partialtitle'] ?? "");
       synonymsList = json["synonymsList"] != null
           ? List<String>.from(json["synonymsList"])
-          : []; // Assign synonymsList with an empty list if it's null, otherwise, convert the JSON list to a Dart list of strings
+          : [];
+      synonyms = json["synonyms"] != null
+          ? List<String>.from(json["synonyms"])
+          : [];
+      // Assign synonymsList with an empty list if it's null, otherwise, convert the JSON list to a Dart list of strings
       if (json['chatAttachments'] != null) {
         chatAttachments = <ChatAttachments>[];
         json['chatAttachments'].forEach((v) {
@@ -335,6 +341,9 @@ class Buttons {
     data['needAudio'] = this.needAudio;
     data['needVideo'] = this.needVideo;
     data['synonymsList'] = this.synonymsList;
+    data['synonyms'] = this.synonyms;
+    data['partialtitle'] = this.partialTitle;
+    data['partialsynonym'] = this.partialSynonym;
     if (this.chatAttachments != null) {
       data['chatAttachments'] = this.chatAttachments!.map((v) => v.toJson()).toList();
     }
