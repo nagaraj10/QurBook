@@ -7,7 +7,6 @@ import androidx.annotation.CallSuper
 import com.google.firebase.firestore.FirebaseFirestore
 import com.lifesense.plugin.ble.LSBluetoothManager
 import io.flutter.view.FlutterMain
-import jp.co.ohq.ble.OHQDeviceManager
 import java.lang.ref.WeakReference
 
 public class MyApp : Application(), Application.ActivityLifecycleCallbacks {
@@ -31,8 +30,6 @@ public class MyApp : Application(), Application.ActivityLifecycleCallbacks {
         var isMissedNSShown = true
         var recordId = ""
         const val TAG: String = "MyApp"
-        var snoozeTapCountTime: Int = 0
-        var snoozeSheelaTapCount: Int = 0
     }
 
     fun updateStatus(isAccept: Boolean) {
