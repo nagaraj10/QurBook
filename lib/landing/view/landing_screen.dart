@@ -119,7 +119,7 @@ class _LandingScreenState extends State<LandingScreen> {
       Future.delayed(Duration.zero, () async {
         onInit();
       });
-      SystemChannels.lifecycle.setMessageHandler((msg) {
+      SystemChannels.lifecycle.setMessageHandler((msg) async {
         if (msg != null) {
           if (msg == AppLifecycleState.resumed.toString()) {
             imageCache!.clear();
@@ -127,7 +127,8 @@ class _LandingScreenState extends State<LandingScreen> {
             profileData = getMyProfile();
           }
         }
-      } as Future<String?> Function(String?)?);
+        return null; // Since the handler expects a Future<String?>, you can return null here
+      });
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -865,12 +866,6 @@ class _LandingScreenState extends State<LandingScreen> {
     }
     try {
       getProfileData();
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-    }
-
-    try {
-      await CommonUtil().getMedicalPreference();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
