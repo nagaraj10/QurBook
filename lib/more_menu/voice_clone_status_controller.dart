@@ -68,51 +68,29 @@ class VoiceCloneStatusController extends GetxController {
 
   void getStatusOfUser() {}
 
-  void getUserHealthOrganizationId() async {
-/*    var userId = await PreferenceUtil.getStringValue(KEY_USERID_MAIN);
-    loadingData.value = true;
-    await healthReportListForUserRepository
-        .getDeviceSelection(userIdFromBloc: userId)
-        .then((value) async {
-      if (value?.isSuccess ?? false) {
-        if (value?.result != null && (value?.result?.length ?? 0) > 0) {
-          String id =
-              value?.result![0]?.primaryProvider?.healthorganizationid ?? '';
-          if (id != null && id != "") {
-            healthOrganizationId.value = id;
-            await getStatusFromApi(); //wait till the  next ap is also called
-          } else {
-            loadingData.value = false; // solved the family list issue loading
-          }
-        } else {
-          loadingData.value = false;
-        }
-      } else {
-        loadingData.value = false;
-      }
-    });*/
-  }
-
   getStatusFromApi() async {
+    loadingData.value = true;
     var id =  PreferenceUtil.getStringValue(keyHealthOrganizationId);
     if(id!=null && id!=''){
       healthOrganizationId.value = id;
-    }
-    final userId = await PreferenceUtil.getStringValue(KEY_USERID_MAIN);
-    final url = strURLVoiceCloneStatus +
-        qr_userId +
-        userId! +
-        qr_organizationid +
-        healthOrganizationId.value;
+      final userId = await PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+      final url = strURLVoiceCloneStatus +
+          qr_userId +
+          userId! +
+          qr_organizationid +
+          healthOrganizationId.value;
 
-    final response = await _helper.getStatusOfVoiceCloning(url);
-    voiceCloneStatusModel = VoiceCloneStatusModel.fromJson(response ?? '');
-    voiceCloneId.value = voiceCloneStatusModel?.result?.id ?? '';
-    if (voiceCloneStatusModel?.result?.url != "")
-      audioURL = voiceCloneStatusModel?.result?.url ?? '';
-     fetchFamilyMembersList(voiceCloneId.value);
-    //download path from url every time when api is called
-    downloadAudioFile(audioURL);
+      final response = await _helper.getStatusOfVoiceCloning(url);
+      voiceCloneStatusModel = VoiceCloneStatusModel.fromJson(response ?? '');
+      voiceCloneId.value = voiceCloneStatusModel?.result?.id ?? '';
+      if (voiceCloneStatusModel?.result?.url != "")
+        audioURL = voiceCloneStatusModel?.result?.url ?? '';
+      fetchFamilyMembersList(voiceCloneId.value);
+      //download path from url every time when api is called
+      downloadAudioFile(audioURL);
+    }else{
+      loadingData.value = false;
+    }
   }
 
   revokeSubmission(bool fromMenu) async {
@@ -245,7 +223,10 @@ class VoiceCloneStatusController extends GetxController {
       fileName,
     );
     final file = File(filePath);
-
+    if(file.existsSync()){
+      recordedPath.value = filePath;
+      return recordedPath;
+    }
     final request = await ApiServices.get(
       audioUrl ?? '',
       headers: {
