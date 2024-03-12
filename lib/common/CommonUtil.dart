@@ -5878,6 +5878,7 @@ class CommonUtil {
   void dialogForSheelaQueueStable(BuildContext context,
       {int? unReadMsgCount,
       Function(bool)? onTapSheelaRemainders,
+      Function(bool)? onTapHideSheelaDialog,
 
       /// Checks if the user came from the Qurhome regimen flow and returns
       /// the fromQurhomeRegimen value if it exists.
@@ -5899,6 +5900,7 @@ class CommonUtil {
           return WillPopScope(
             onWillPop: () async {
               sheelaDialogVisibleFalse();
+              onTapHideSheelaDialog?.call(true);
               return true;
             },
             child: Center(
@@ -5911,6 +5913,7 @@ class CommonUtil {
                     highlightColor: Colors.transparent,
                     onTap: () {
                       sheelaDialogVisibleFalse();
+                      onTapHideSheelaDialog?.call(true);
                       Get.back();
                     },
                     child: Container(

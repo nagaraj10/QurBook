@@ -612,7 +612,11 @@ class QurhomeRegimenController extends GetxController {
         Duration(minutes: 2),
         (Timer timer) {
           var sheelaAIController = Get.find<SheelaAIController>();
-          sheelaAIController.getSheelaBadgeCount(isFromQurHomeRegimen: true);
+          sheelaAIController.getSheelaBadgeCount(isFromQurHomeRegimen: true,
+            isScreenIdeal: qurhomeDashboardController.isScreenIdle.value,
+            isFromRegimenController: true,
+            makeApiRequest: true,
+          );
         },
       );
     } catch (e, stackTrace) {

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
@@ -22,6 +23,8 @@ import '../../../src/ui/SheelaAI/Models/sheela_arguments.dart';
 import '../../../src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 
+import '../View/QurhomeDashboard.dart';
+
 class QurhomeDashboardController extends GetxController {
   var currentSelectedIndex = 0.obs;
   var appBarTitle = ' '.obs;
@@ -30,9 +33,14 @@ class QurhomeDashboardController extends GetxController {
   late SheelaBLEController _sheelaBLEController;
   Timer? _bleTimer = null;
   bool isFirstTime = true;
+  Timer? _idleTimer = null;
 
   Timer? get getBleTimer {
     return _bleTimer;
+  }
+
+  Timer? get getIdleTimer {
+    return _idleTimer;
   }
 
   SheelaAIController? sheelaAIController =
@@ -59,7 +67,7 @@ class QurhomeDashboardController extends GetxController {
   int nextAlertPosition = 0;
   int currentIndex = 0;
   var isOnceInAPlanActivity = false.obs;
-
+  var isScreenIdle = false.obs;
   // Observable variable to track the current notification id
   var currentNotificationId = ' '.obs;
 
@@ -119,6 +127,24 @@ class QurhomeDashboardController extends GetxController {
       _bleTimer?.cancel();
       _bleTimer = null;
     }
+  }
+
+  Future<void> checkScreenIdle({bool isIdeal = false}) async {
+    _idleTimer = Timer.periodic(const Duration(minutes: 5), (timer) {
+      try {
+        sheelaAIController?.getSheelaBadgeCount(
+            isFromQurHomeRegimen: true,
+            isScreenIdeal: isScreenIdle.value,
+            makeApiRequest: true,
+            isNeedSheelaDialog: true);
+        _idleTimer?.cancel();
+      } catch (e, stackTrace) {
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    });
   }
 
   getHubDetails() async {
