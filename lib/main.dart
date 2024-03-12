@@ -17,17 +17,11 @@ import 'package:myfhb/voice_cloning/controller/voice_cloning_controller.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
-import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/Controller/HubListViewController.dart';
-import 'Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
 import 'authentication/service/authservice.dart';
 import 'authentication/view_model/otp_view_model.dart';
-import 'caregiverAssosication/caregiverAPIProvider.dart';
-import 'chat_socket/view/ChatDetail.dart';
-import 'chat_socket/view/ChatUserList.dart';
 import 'chat_socket/viewModel/chat_socket_view_model.dart';
-import 'claim/screen/ClaimRecordDisplay.dart';
 import 'common/CommonConstants.dart';
 import 'common/CommonUtil.dart';
 import 'common/DatabseUtil.dart';
@@ -35,37 +29,20 @@ import 'common/PreferenceUtil.dart';
 import 'common/firestore_services.dart';
 import 'constants/fhb_constants.dart' as Constants;
 import 'constants/fhb_constants.dart';
-import 'constants/fhb_parameters.dart';
 import 'constants/fhb_router.dart' as router;
-import 'constants/router_variable.dart' as router;
-import 'constants/router_variable.dart' as routervariable;
-import 'constants/router_variable.dart';
 import 'constants/variable_constant.dart' as variable;
 import 'device_integration/viewModel/Device_model.dart';
 import 'landing/view_model/landing_view_model.dart';
-import 'myPlan/view/myPlanDetail.dart';
 import 'my_family/viewmodel/my_family_view_model.dart';
-import 'my_family_detail/models/my_family_detail_arguments.dart';
-import 'my_family_detail/screens/my_family_detail_screen.dart';
 import 'plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'regiment/models/regiment_arguments.dart';
-import 'regiment/view/manage_activities/manage_activities_screen.dart';
 import 'regiment/view_model/regiment_view_model.dart';
-import 'schedules/add_reminders.dart';
-import 'services/notification_helper.dart';
 import 'src/blocs/Category/CategoryListBlock.dart';
-import 'src/model/home_screen_arguments.dart';
-import 'src/model/user/user_accounts_arguments.dart';
 import 'src/resources/network/ApiBaseHelper.dart';
 import 'src/ui/MyRecord.dart';
 import 'src/ui/SheelaAI/Controller/SheelaAIController.dart';
-import 'src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
-import 'src/ui/SheelaAI/Views/SuperMaya.dart';
 import 'src/ui/SplashScreen.dart';
-import 'src/ui/settings/CaregiverSettng.dart';
 import 'src/utils/FHBUtils.dart';
-import 'src/utils/PageNavigator.dart';
 import 'src/utils/cron_jobs.dart';
 import 'src/utils/dynamic_links.dart';
 import 'src/utils/language/language_utils.dart';
@@ -73,20 +50,8 @@ import 'src/utils/language/languages.dart';
 import 'src/utils/lifecycle_state_provider.dart';
 import 'src/utils/screenutils/screenutil.dart';
 import 'src/utils/timezone/timezone_services.dart';
-import 'telehealth/features/MyProvider/view/BookingConfirmation.dart';
-import 'telehealth/features/MyProvider/view/TelehealthProviders.dart';
-import 'telehealth/features/Notifications/services/notification_services.dart';
-import 'telehealth/features/appointments/controller/AppointmentDetailsController.dart';
-import 'telehealth/features/appointments/model/fetchAppointments/city.dart';
-import 'telehealth/features/appointments/model/fetchAppointments/doctor.dart'
-    as doc;
-import 'telehealth/features/appointments/model/fetchAppointments/past.dart';
-import 'telehealth/features/appointments/view/AppointmentDetailScreen.dart';
-import 'telehealth/features/appointments/view/resheduleMain.dart';
 import 'telehealth/features/chat/viewModel/ChatViewModel.dart';
-import 'ticket_support/view/detail_ticket_view_screen.dart';
 import 'user_plans/view_model/user_plans_view_model.dart';
-import 'video_call/pages/callmain.dart';
 import 'video_call/services/iOS_Notification_Handler.dart';
 import 'video_call/utils/audiocall_provider.dart';
 import 'video_call/utils/callstatus.dart';
@@ -94,7 +59,6 @@ import 'video_call/utils/hideprovider.dart';
 import 'video_call/utils/rtc_engine.dart';
 import 'video_call/utils/videoicon_provider.dart';
 import 'video_call/utils/videorequest_provider.dart';
-import 'widgets/checkout_page.dart';
 import 'widgets/checkout_page_provider.dart';
 import 'widgets/shopping_card_provider.dart';
 
@@ -391,22 +355,6 @@ class _MyFHBState extends State<MyFHB> {
 
   @override
   Widget build(BuildContext context) {
-    final nsSettingsForAndroid =
-        AndroidInitializationSettings(variable.strLauncher);
-
-    // Create an instance of DarwinInitializationSettings with notificationCategories
-    final nsSettingsForIOS = DarwinInitializationSettings(
-        notificationCategories: darwinIOSCategories);
-    final platform = InitializationSettings(
-        android: nsSettingsForAndroid, iOS: nsSettingsForIOS);
-
-    Future notificationAction(NotificationResponse details) async {
-      await Navigator.push(
-          context, MaterialPageRoute(builder: (context) => AddReminder()));
-    }
-
-/*    flutterLocalNotificationsPlugin.initialize(platform,
-        onDidReceiveNotificationResponse: notificationAction);*/
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<CallStatus>(
