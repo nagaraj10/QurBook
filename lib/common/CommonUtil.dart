@@ -952,88 +952,6 @@ class CommonUtil {
     return Sharedbyme(profileData: profileData, linkedData: linkedData);
   }
 
-  Future<void> getMedicalPreference({Function? callBackToRefresh}) async {
-    /* MyProfileBloc _myProfileBloc =MyProfileBloc();
-    try {
-      _myProfileBloc
-          .getCompleteProfileData(Constants.KEY_USERID)
-          .then((profileCompleteData) {
-        if (profileCompleteData?.response?.data?.medicalPreferences != null) {
-          MedicalPreferences medicalPreferences =
-              profileCompleteData.response.data.medicalPreferences;
-
-          PreferenceUtil.savePrefereDoctors(
-              Constants.KEY_PREFERRED_DOCTOR, null);
-
-          if (medicalPreferences.preferences.doctorIds != null &&
-              medicalPreferences.preferences.doctorIds.length > 0) {
-            medicalPreferences.preferences.doctorIds.sort(
-                (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
-
-            for (DoctorIds doctorIds
-                in medicalPreferences.preferences.doctorIds) {
-              if (doctorIds.isDefault) {
-                PreferenceUtil.savePrefereDoctors(
-                    Constants.KEY_PREFERRED_DOCTOR, doctorIds);
-              }
-            }
-          } else {
-            PreferenceUtil.savePrefereDoctors(
-                Constants.KEY_PREFERRED_DOCTOR, null);
-          }
-
-          if (medicalPreferences.preferences.hospitalIds != null &&
-              medicalPreferences.preferences.hospitalIds.length > 0) {
-            PreferenceUtil.savePrefereHospital(
-                Constants.KEY_PREFERRED_HOSPITAL, null);
-            medicalPreferences.preferences.hospitalIds.sort(
-                (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
-
-            for (HospitalIds hospitalIds
-                in medicalPreferences.preferences.hospitalIds) {
-              if (hospitalIds.isDefault) {
-                PreferenceUtil.savePrefereHospital(
-                    Constants.KEY_PREFERRED_HOSPITAL, hospitalIds);
-              }
-            }
-          } else {
-            PreferenceUtil.savePrefereHospital(
-                Constants.KEY_PREFERRED_HOSPITAL, null);
-          }
-
-          PreferenceUtil.savePreferedLab(Constants.KEY_PREFERRED_LAB, null);
-
-          if (medicalPreferences.preferences.laboratoryIds != null &&
-              medicalPreferences.preferences.laboratoryIds.length > 0) {
-            medicalPreferences.preferences.laboratoryIds.sort(
-                (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
-
-            for (LaboratoryIds laboratoryIds
-                in medicalPreferences.preferences.laboratoryIds) {
-              if (laboratoryIds.isDefault) {
-                PreferenceUtil.savePreferedLab(
-                    Constants.KEY_PREFERRED_LAB, laboratoryIds);
-              }
-            }
-          } else {
-            PreferenceUtil.savePreferedLab(Constants.KEY_PREFERRED_LAB, null);
-          }
-
-          // PreferenceUtil.saveCompleteProfileData(Constants.KEY_COMPLETE_PROFILEDATA,profileCompleteData);
-          callBackToRefresh();
-        } else {
-          PreferenceUtil.savePrefereDoctors(
-              Constants.KEY_PREFERRED_DOCTOR, null);
-          PreferenceUtil.savePrefereHospital(
-              Constants.KEY_PREFERRED_HOSPITAL, null);
-
-          PreferenceUtil.savePreferedLab(Constants.KEY_PREFERRED_LAB, null);
-        }
-      });
-    } catch (e,stackTrace) {}*/
-    callBackToRefresh!();
-  }
-
   int getThemeColor() {
     return PreferenceUtil.getSavedTheme(Constants.keyTheme) ?? 0xff0a72e8;
   }
@@ -2751,48 +2669,34 @@ class CommonUtil {
       var apiBaseHelper = ApiBaseHelper();
       var endPoint = Platform.isIOS ? QURBOOK_iOS : QURBOOK_ANDROID;
       var response = await apiBaseHelper.getAppVersion(endPoint);
-      final deviceVersionModel = DeviceVersion.fromJson(response);
-      var newVersion;
-      var isForceUpdate = false;
-      if (deviceVersionModel.isSuccess!) {
-        if (deviceVersionModel?.result != null) {
-          newVersion = double.parse(deviceVersionModel.result!.versionName!
-              .trim()
-              .replaceAll('.', ''));
-          if (deviceVersionModel.result!.additionalInfo! != null) {
-            isForceUpdate = deviceVersionModel
-                .result!.additionalInfo!.qurbook!.isForceUpdate!;
+      // Check if the response is not null
+      if (response != null) {
+        final deviceVersionModel = DeviceVersion.fromJson(response);
+        var newVersion;
+        var isForceUpdate = false;
+        if (deviceVersionModel.isSuccess!) {
+          if (deviceVersionModel?.result != null) {
+            newVersion = double.parse(deviceVersionModel.result!.versionName!
+                .trim()
+                .replaceAll('.', ''));
+            if (deviceVersionModel.result!.additionalInfo! != null) {
+              isForceUpdate = deviceVersionModel
+                  .result!.additionalInfo!.qurbook!.isForceUpdate!;
+            }
           }
         }
-      }
 
-      // //Get Latest version info from firebase config
-      // final remoteConfig = RemoteConfig.instance;
-      // await remoteConfig.fetch();
-      // await remoteConfig.activate();
-      // remoteConfig.getString(Platform.isIOS
-      //     ? STR_FIREBASE_REMOTE_KEY_IOS
-      //     : STR_FIREBASE_REMOTE_KEY);
-      //remoteConfig.getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
-      // final newVersion = double.parse(remoteConfig
-      //     .getString(Platform.isIOS
-      //         ? STR_FIREBASE_REMOTE_KEY_IOS
-      //         : STR_FIREBASE_REMOTE_KEY)
-      //     .trim()
-      //     .replaceAll('.', ''));
-      // var isForceUpdate = remoteConfig
-      //     .getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
+        if (newVersion > currentVersion) {
+          isVersionLatest = false;
 
-      if (newVersion > currentVersion) {
-        isVersionLatest = false;
+          if (showDialog) _showVersionDialog(context, isForceUpdate);
+        }
 
-        if (showDialog) _showVersionDialog(context, isForceUpdate);
-      }
-
-      if (newVersion > currentVersion) {
-        controller.isLatestVersion = false;
-      } else if (newVersion <= currentVersion) {
-        controller.isLatestVersion = true;
+        if (newVersion > currentVersion) {
+          controller.isLatestVersion = false;
+        } else if (newVersion <= currentVersion) {
+          controller.isLatestVersion = true;
+        }
       }
     } on FirebaseException catch (exception, stackTrace) {
       // Fetch throttled.
