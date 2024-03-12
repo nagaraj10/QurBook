@@ -1112,9 +1112,6 @@ makeApiRequest is used to update the data with latest data
     bool isScreenIdeal = false,
     bool isFromRegimenController = false,
   }) async {
-    if(isFromRegimenController) {
-      timerCountFromRegimenController++;
-    }
     try {
       // Check if sheelaIconBadgeCount is not greater than 0
       if (!(sheelaIconBadgeCount.value > 0)) {
@@ -1136,10 +1133,7 @@ makeApiRequest is used to update the data with latest data
         // Check conditions for showing the dialog
         if (isFromQurHomeRegimen && isQueueDialogShowing.value) {
           // Close existing dialog and update flags
-          if( isDialogOpen == true){
-            Get.back();
-          }
-
+          Get.back();
           isQueueDialogShowing.value = false;
           isNeedSheelaDialog = true;
         }
@@ -1147,29 +1141,19 @@ makeApiRequest is used to update the data with latest data
         // Extract conditions for showing the sheela dialog
         final hasQueueCount = (_sheelaBadgeModel?.result!.queueCount ?? 0) > 0;
         final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
-        final isTablet = CommonUtil().isTablet ?? false;
+        // final isTablet = CommonUtil().isTablet ?? false;
         final isQueueDialogShowen = !isQueueDialogShowing.value;
-        if(hasQueueCount) {
-          if (isScreenIdeal && isFromRegimenController && timerCountFromRegimenController >= 3) {
-            isDialogOpen = true;
-            showDialogForSheelaBox(
-              isFromQurHomeRegimen: isFromQurHomeRegimen,
-            );
-          } else if (isScreenIdeal && (!isFromRegimenController)) {
-            isDialogOpen = true;
+          if (isScreenIdeal) {
             showDialogForSheelaBox(
               isFromQurHomeRegimen: isFromQurHomeRegimen,
             );
           }
-        }
-
         // Check if all conditions are met to show the dialog
-       else if (isNeedSheelaDialog &&
+        else if (isNeedSheelaDialog &&
             hasQueueCount &&
             isQurhomeActive &&
-            isQueueDialogShowen &&
-            !isTablet) {
-          isDialogOpen = true;
+            isQueueDialogShowen
+            ) {
           showDialogForSheelaBox(
             isFromQurHomeRegimen: isFromQurHomeRegimen,
             isNeedSheelaDialog: isNeedSheelaDialog,
@@ -1479,8 +1463,10 @@ makeApiRequest is used to update the data with latest data
 
   void showDialogForSheelaBox(
       {bool isNeedSheelaDialog = false, bool isFromQurHomeRegimen = false}) {
-    isQueueDialogShowing.value = true;
     final qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
+    if(!qurhomeDashboardController.isScreenIdle.value){
+      isQueueDialogShowing.value = true;
+    }
     CommonUtil().dialogForSheelaQueueStable(Get.context!,
         unReadMsgCount:
             Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
@@ -1493,14 +1479,12 @@ makeApiRequest is used to update the data with latest data
           }
         },
         onTapSheelaRemainders: (value) {
-          // if(!qurhomeDashboardController.isScreenIdle.value){
-          //   isQueueDialogShowing.value = false;
-          // }else{
-          //   qurhomeDashboardController.isScreenIdle.value = false;
-          // }
-          isQueueDialogShowing.value = false;
-          qurhomeDashboardController.isScreenIdle.value = false;
-      Get.back();
+          if(!qurhomeDashboardController.isScreenIdle.value){
+            isQueueDialogShowing.value = false;
+          }else{
+            qurhomeDashboardController.isScreenIdle.value = false;
+          }
+          Get.back();
       Get.toNamed(
         rt_Sheela,
         arguments: value
