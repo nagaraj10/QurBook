@@ -12,6 +12,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/model/SheelaBadgeModel.dart';
@@ -168,6 +169,8 @@ class SheelaAIController extends GetxController {
   // Create a Map to store reminder timers. The keys are String identifiers (presumably related to reminders),
   // and the values are Timer objects that will be used for managing timing events associated with reminders.
   Map<String, Timer> reminderTimers = {};
+  bool isDialogOpen =false;
+  int timerCountFromRegimenController=0;
 
   @override
   void onInit() {
@@ -1106,6 +1109,8 @@ makeApiRequest is used to update the data with latest data
     bool isNeedSheelaDialog = false,
     bool isFromQurHomeRegimen = false,
     bool makeApiRequest = false,
+    bool isScreenIdeal = false,
+    bool isFromRegimenController = false,
   }) async {
     try {
       // Check if sheelaIconBadgeCount is not greater than 0
@@ -1136,15 +1141,20 @@ makeApiRequest is used to update the data with latest data
         // Extract conditions for showing the sheela dialog
         final hasQueueCount = (_sheelaBadgeModel?.result!.queueCount ?? 0) > 0;
         final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
-        final isTablet = CommonUtil().isTablet ?? false;
+        // final isTablet = CommonUtil().isTablet ?? false;
         final isQueueDialogShowen = !isQueueDialogShowing.value;
-
+        //check if screen is ideal
+          if (isScreenIdeal) {
+            showDialogForSheelaBox(
+              isFromQurHomeRegimen: isFromQurHomeRegimen,
+            );
+          }
         // Check if all conditions are met to show the dialog
-        if (isNeedSheelaDialog &&
+        else if (isNeedSheelaDialog &&
             hasQueueCount &&
             isQurhomeActive &&
-            isQueueDialogShowen &&
-            !isTablet) {
+            isQueueDialogShowen
+            ) {
           showDialogForSheelaBox(
             isFromQurHomeRegimen: isFromQurHomeRegimen,
             isNeedSheelaDialog: isNeedSheelaDialog,
@@ -1454,16 +1464,29 @@ makeApiRequest is used to update the data with latest data
 
   void showDialogForSheelaBox(
       {bool isNeedSheelaDialog = false, bool isFromQurHomeRegimen = false}) {
-    isQueueDialogShowing.value = true;
-
+    final qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
+    if(!qurhomeDashboardController.isScreenIdle.value){
+      isQueueDialogShowing.value = true;
+    }
     CommonUtil().dialogForSheelaQueueStable(Get.context!,
         unReadMsgCount:
             Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
                 .chatTotalCount,
         fromQurhomeRegimen: isFromQurHomeRegimen,
+        onTapHideSheelaDialog: (value) {
+          if(value){
+            //Update qurhome idle timer
+            qurhomeDashboardController.isScreenIdle.value=true;
+            qurhomeDashboardController.checkScreenIdle(isIdeal: true);
+          }
+        },
         onTapSheelaRemainders: (value) {
-      isQueueDialogShowing.value = false;
-      Get.back();
+          if(!qurhomeDashboardController.isScreenIdle.value){
+            isQueueDialogShowing.value = false;
+          }else{
+            qurhomeDashboardController.isScreenIdle.value = false;
+          }
+          Get.back();
       Get.toNamed(
         rt_Sheela,
         arguments: value
@@ -1473,7 +1496,8 @@ makeApiRequest is used to update the data with latest data
             : SheelaArgument(showUnreadMessage: true),
       )?.then((value) {
         ///Update Sheela remainder count
-        getSheelaBadgeCount(isNeedSheelaDialog: true);
+        qurhomeDashboardController.isScreenIdle.value=true;
+        qurhomeDashboardController.checkScreenIdle(isIdeal: true);
       });
     });
   }
