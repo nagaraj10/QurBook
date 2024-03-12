@@ -34,7 +34,6 @@ import 'package:myfhb/video_call/model/CallArguments.dart';
 import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:myfhb/voice_cloning/model/voice_cloning_choose_member_arguments.dart';
 import 'package:myfhb/voice_cloning/view/screens/voice_clone_choose_members.dart';
-import 'package:path/path.dart';
 import '../add_family_user_info/screens/add_family_user_info_clone.dart';
 import '../claim/model/members/MembershipBenefitListModel.dart';
 import '../telehealth/features/Notifications/view/notification_main.dart';
@@ -52,8 +51,6 @@ import '../my_providers/screens/my_provider.dart';
 import '../plan_dashboard/view/diseasesHome.dart';
 import '../plan_dashboard/view/plans_screen.dart';
 import '../regiment/view/regiment_screen.dart';
-import '../schedules/add_appointments.dart';
-import '../schedules/add_reminders.dart';
 import '../search_providers/screens/search_specific_list.dart';
 import '../src/ui/HomeScreen.dart';
 import '../src/ui/MyRecord.dart';
@@ -160,8 +157,6 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_FamilyInsurance: (context) => MyFamilyDetailView(
         arguments: ModalRoute.of(context)!.settings.arguments
             as MyFamilyDetailViewArguments?),
-    router.rt_AddReminders: (context) => AddReminder(),
-    router.rt_AddAppointments: (context) => AddAppointments(),
     router.rt_Feedbacks: (context) => Feedbacks(),
     router.rt_FeedbackSucess: (context) => FeedbackSuccess(),
     router.rt_TelehealthProvider: (context) => TelehealthProviders(

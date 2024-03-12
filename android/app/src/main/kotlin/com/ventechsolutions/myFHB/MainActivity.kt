@@ -1,21 +1,15 @@
 package com.ventechsolutions.myFHB
 
-/*import com.ventechsolutions.myFHB.bloodpressure.controller.SessionController*/
-/*import jp.co.ohq.ble.OHQDeviceManager
-import jp.co.ohq.ble.OHQDeviceManager.CompletionBlock
-import jp.co.ohq.ble.OHQDeviceManager.ScanObserverBlock*/
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.*
 import android.bluetooth.*
 import android.content.*
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.location.LocationManager
-import android.media.AudioAttributes
 import android.media.AudioManager
 import android.net.*
 import android.net.wifi.WifiConfiguration
@@ -41,11 +35,9 @@ import android.widget.*
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.multidex.BuildConfig
 import com.facebook.FacebookSdk
 import com.facebook.FacebookSdk.fullyInitialize
 import com.facebook.FacebookSdk.setAutoInitEnabled
@@ -57,8 +49,6 @@ import com.github.ybq.android.spinkit.SpinKitView
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.gsh.api.BluetoothStatus
 import com.gsh.spo2.api.GoldenBLEDeviceManager
 import com.gsh.spo2.api.GoldenBLEDeviceManagerCallback
@@ -90,9 +80,6 @@ import com.ventechsolutions.myFHB.bluetooth.callback.BleScanCallback
 import com.ventechsolutions.myFHB.bluetooth.data.BleDevice
 import com.ventechsolutions.myFHB.bluetooth.exception.BleException
 import com.ventechsolutions.myFHB.constants.Constants
-import com.ventechsolutions.myFHB.constants.Constants.eidSheela
-import com.ventechsolutions.myFHB.constants.Constants.idSheela
-import com.ventechsolutions.myFHB.constants.Constants.sayTextSheela
 import com.ventechsolutions.myFHB.services.*
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -107,11 +94,10 @@ import jp.co.ohq.ble.enumerate.*
 import jp.co.ohq.utility.Bundler
 import jp.co.ohq.utility.Types
 import java.util.*
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.experimental.and
 import kotlin.system.exitProcess
 
-class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
+class MainActivity : FlutterFragmentActivity(),
     BluetoothPowerController.Listener {
     private var wowGoDeviceList: ArrayList<String>?=null
     private var wowGoFunctionIndex=0
@@ -127,11 +113,9 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     private var enableBackgroundNotification = false
 
     //    private lateinit var bluetoothFlutterResult: MethodChannel.Result
-    private val VERSION_CODES_CHANNEL = Constants.CN_VC
     private val LISTEN4SMS = Constants.CN_LISTEN4SMS
     private val VOICE_CHANNEL = Constants.CN_VOICE_INTENT
     private val TTS_CHANNEL = Constants.CN_TTS
-    private val SHEELA_CHANNEL = Constants.SHEELA_CHANNEL
     private val ONGOING_NS_CHANNEL = Constants.CN_ONG_NS
     private val SPEECH_TO_TEXT_STREAM = Constants.SPEECH_TO_TEXT_STREAM
     private val WIFICONNECT = Constants.WIFI_WORKS
@@ -152,7 +136,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     private lateinit var BLEEventChannel: EventSink
     private val REQ_CODE = 112
     private val INTENT_AUTHENTICATE = 155
-    private var voiceText = ""
     private var langSource: String? = null
     private var langDest: String? = null
     private var FromLang = Constants.FROM_LANG
@@ -163,12 +146,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     var lang_ref = arrayOf("en_US", "ta_IN", "te_IN", "hi_IN")
     var tts: TextToSpeech? = null
     private var finalWords: String? = ""
-
-    private val STATE_START = 0
-    private val STATE_READY = 1
-    private val STATE_DONE = 2
-    private val STATE_FILE = 3
-    private val STATE_MIC = 4
 
 
     private var _result: MethodChannel.Result? = null
@@ -211,12 +188,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     internal lateinit var spin_kit: SpinKitView
     internal lateinit var close: ImageView
     internal lateinit var micOn: ImageView
-
-    private val REMINDER_METHOD_NAME = "addReminder"
-    private val CANCEL_REMINDER_METHOD_NAME = "removeReminder"
-    var alarmManager: AlarmManager? = null
-
-    var elapsedTime = 3000
 
     private val REQUEST_CODE_OPEN_GPS = 1
     private val REQUEST_CODE_PERMISSION_LOCATION = 2
@@ -277,10 +248,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     private var gManagerBP: com.gsh.bloodpressure.api.GoldenBLEDeviceManager? = null
     private var gManagerFat: com.gsh.weightscale.api.GoldenBLEDeviceManager? = null
     private var selectedBle = ""
-
-    private var appointmentId = ""
-    private var eid = ""
-    private var sayText = ""
 
     private val handlerBle = Handler(Looper.getMainLooper())
     private val handlerBleWowGo = Handler(Looper.getMainLooper())
@@ -2202,26 +2169,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             }
         }
 
-
-        /*MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            SNOOZE_REMINDER_STREAM
-        ).setMethodCallHandler { call, result ->
-            try {
-                // beolow method is for snooze reminder via sheela from sheela conversation
-                if (call.method == SNOOZE_SHEELA) {
-                    val data = call.argument<String>("data")
-                    val retMap: Map<String, Any> = Gson().fromJson(
-                        data, object : TypeToken<HashMap<String?, Any?>?>() {}.type
-                    )
-
-                    snoozeSheela(retMap)
-                    result.success("success")
-                }
-            } catch (e: Exception) {
-                print("exception" + e.message)
-            }
-        }*/
 
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
