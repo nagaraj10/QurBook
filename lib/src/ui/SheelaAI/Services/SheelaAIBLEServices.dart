@@ -68,9 +68,17 @@ class SheelaBLEController extends GetxController {
           if ((playConversations).isNotEmpty) {
             await playTTS();
           } else if (isCompleted) {
-            await Future.delayed(const Duration(seconds: 4));
-            stopTTS();
-            if (SheelaController.isSheelaScreenActive) Get.back();
+            if ((SheelaController.isDeviceConnectSheelaScreen ?? false) &&
+                (!(SheelaController.isLastActivityDevice ?? true))) {
+              Future.delayed(const Duration(seconds: 2)).then((value) {
+                SheelaController.getAIAPIResponseFor(
+                    sheelaQueueShowRemind, null);
+              });
+            } else {
+              await Future.delayed(const Duration(seconds: 4));
+              stopTTS();
+              if (SheelaController.isSheelaScreenActive) Get.back();
+            }
           }
         }
       },
@@ -222,25 +230,28 @@ class SheelaBLEController extends GetxController {
 
                     // Set loading state to true in SheelaController
                     SheelaController.isLoading(true);
-                  }else if (SheelaController.isSheelaScreenActive &&
+                  } else if (SheelaController.isSheelaScreenActive &&
                       (SheelaController.isDeviceConnectSheelaScreen ?? false)) {
                     // Set device type in SheelaController arguments based on bleDeviceType from hublistController
                     SheelaController.arguments?.deviceType =
                         hublistController.bleDeviceType;
 
-                    SheelaController.arguments?.takeActiveDeviceReadings = true;
+                    /*if (SheelaController.conversations.last?.additionalInfoSheelaResponse?.uformName ==
+                        getDeviceTypeName(deviceType)) {*/
+                      SheelaController.arguments?.takeActiveDeviceReadings =
+                          true;
 
-                    // Clear the reconnect timer in SheelaController
-                    //SheelaController.clearReconnectTimer();
+                      // Clear the reconnect timer in SheelaController
+                      //SheelaController.clearReconnectTimer();
 
-                    // Start reading Sheela BLE device readings
-                    startSheelaBLEDeviceReadings();
+                      // Start reading Sheela BLE device readings
+                      startSheelaBLEDeviceReadings();
 
-                    // Reset the retry scan failure flag
-                    SheelaController.isDeviceConnectSheelaScreen = false;
-
-                    // Set loading state to true in SheelaController
-                    SheelaController.isLoading(true);
+                      // Set loading state to true in SheelaController
+                      SheelaController.isLoading(true);
+                    /*} else {
+                      break;
+                    }*/
                   } else {
                     Get.to(
                       () => SheelaAIMainScreen(
@@ -689,7 +700,6 @@ class SheelaBLEController extends GetxController {
         }
         isCompleted = true;
         SheelaController.isRetryScanFailure = false;
-        SheelaController.isDeviceConnectSheelaScreen = false;
       } catch (e, stackTrace) {
         CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 

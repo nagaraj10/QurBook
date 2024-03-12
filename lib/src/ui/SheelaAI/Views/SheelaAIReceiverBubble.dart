@@ -483,7 +483,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                           print("");
                             CommonUtil().appLogs(message: e, stackTrace: stackTrace);
                         }
-                      } /*else if (buttonData?.needPhoto ?? false) {
+                      } else if (buttonData?.needPhoto ?? false) {
                         // Check if the button requires a photo
                         if (controller.isLoading.isTrue) {
                           return; // If loading, do nothing
@@ -497,7 +497,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                           controller.isSheelaScreenActive = true; // Reactivate Sheela screen after dialog
                           controller.updateTimer(enable: true); // enable the timer
                         });
-                      }*/ else if (buttonData?.btnRedirectTo == strRedirectRetakePicture) {
+                      } else if (buttonData?.btnRedirectTo == strRedirectRetakePicture) {
                         // Check if the button redirects to retake picture
                         if (controller.isLoading.isTrue) {
                           return; // If loading, do nothing

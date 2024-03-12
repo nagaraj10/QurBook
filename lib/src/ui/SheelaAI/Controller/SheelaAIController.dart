@@ -161,6 +161,7 @@ class SheelaAIController extends GetxController {
   //reconnect feature enable flag
   bool? isRetryScanFailure = false;
   bool? isDeviceConnectSheelaScreen = false;
+  bool? isLastActivityDevice = true;
   String? fileRequestUrl = '';
 
   final ApiBaseHelper _helper = ApiBaseHelper();
@@ -240,7 +241,8 @@ class SheelaAIController extends GetxController {
     } else {
       stopTTS();
       try {
-        if (!(conversations.last.endOfConv??true)) {
+        if (!(conversations.last.endOfConv ?? true) &&
+            (conversations.last.redirectTo ?? '') != strDeviceConnection) {
           if (CommonUtil.isUSRegion()) {
             if (!isMuted.value) {
               if (!isDiscardDialogShown.value) {
@@ -276,6 +278,9 @@ class SheelaAIController extends GetxController {
         }
         else if ((conversations.last.redirectTo ?? '') ==
             strDeviceConnection) {
+          isLastActivityDevice = (conversations
+              .last?.additionalInfoSheelaResponse?.isLastActivity ??
+              true);
           isDeviceConnectSheelaScreen = true;
           updateTimer(enable: false); // disable the timer
           resetBLE(); // Reset the BLE (Bluetooth Low Energy) connection
@@ -418,7 +423,7 @@ class SheelaAIController extends GetxController {
   }
 
   getAIAPIResponseFor(String? message, Buttons? buttonsList,
-      {bool? isFromImageUpload = false, String? requestFileType}) async {
+      {bool? isFromImageUpload = false, String? requestFileType, bool? restartSheelaDevice = false}) async {
     try {
       isCallStartFromSheela = false;
       isLoading.value = true;
@@ -433,6 +438,16 @@ class SheelaAIController extends GetxController {
             fileRequestUrl; // Add file URL to additionalInfo
         additionalInfo?[strRequestType] =
             requestFileType; // Add request type to additionalInfo
+      }
+      if (isDeviceConnectSheelaScreen ?? false) {
+        // If it's an image upload, update additionalInfo with the file URL and request type
+        additionalInfo?[isSkipRemiderCount] =
+            true; // Add file URL to additionalInfo
+        isDeviceConnectSheelaScreen = false;
+        isLastActivityDevice = true;
+      } else {
+        additionalInfo?[isSkipRemiderCount] =
+            false; // Add file URL to additionalInfo
       }
       final sheelaRequest = SheelaRequestModel(
         sender: userId,

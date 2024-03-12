@@ -1080,6 +1080,8 @@ const String strPleaseFill = 'Please fill';
 const String strPleaseSelect = 'Please select';
 const String strAddressLine = 'address_line_1';
 
+const String isSkipRemiderCount = 'isSkipReminderCount';
+
 // Define a constant string for storing the current notification ID.
 const String strCurrentNotificationId = 'currentNotificationId';
 

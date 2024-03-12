@@ -51,6 +51,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.isRetakeCapture = false;
     controller.isRetryScanFailure = false;
     controller.isDeviceConnectSheelaScreen = false;
+    controller.isLastActivityDevice = true;
 
     ///Surrendered with addPostFrameCallback for widget building issue///
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {

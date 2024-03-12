@@ -424,14 +424,16 @@ class AdditionalInfoSheela {
   bool? reconfirmationFlag;
   bool? isAutoReadTTS;
   SnoozeData? snoozeData;
+  bool? isLastActivity;
 
-  AdditionalInfoSheela({this.sessionTimeoutMin, this.reconfirmationFlag, this.snoozeData});
+  AdditionalInfoSheela({this.sessionTimeoutMin, this.reconfirmationFlag, this.snoozeData,this.isLastActivity});
 
   AdditionalInfoSheela.fromJson(Map<String, dynamic> json) {
     try {
       sessionTimeoutMin = json['sessionTimeoutMin'];
       reconfirmationFlag = json['reconfirmationFlag'] ?? false;
       isAutoReadTTS = json['isAutoReRead'] ?? false;
+      isLastActivity = json['isLastActivity'] ?? true;
       snoozeData = json['snoozeData'] != null
           ? SnoozeData.fromJson(json['snoozeData'])
           : null;
@@ -445,6 +447,7 @@ class AdditionalInfoSheela {
     data['sessionTimeoutMin'] = this.sessionTimeoutMin;
     data['reconfirmationFlag'] = this.reconfirmationFlag;
     data['isAutoReRead'] = this.isAutoReadTTS;
+    data['isLastActivity'] = this.isLastActivity;
     data['snoozeData'] = this.snoozeData;
     return data;
   }
