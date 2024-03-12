@@ -288,8 +288,7 @@ class RegimentDataModel {
         'modeOfService': modeOfService!.toJson(),
         'hour_repeat': dayrepeat,
         'activityThreshold': activityThreshold,
-        'additionalInfo':
-            additionalInfo?.toJson() ?? Map<String, dynamic>(),
+        'additionalInfo': additionalInfo?.toJson() ?? <String, dynamic>{},
       };
 }
 
@@ -302,7 +301,8 @@ class Otherinfo {
       this.snoozeText,
       this.introText,
       this.isAllDayActivity,
-      this.isSkipAcknowledgement});
+      this.isSkipAcknowledgement,
+      this.roles});
 
   final String? needPhoto;
   final String? needAudio;
@@ -312,6 +312,30 @@ class Otherinfo {
   final String? introText;
   final bool? isAllDayActivity;
   final String? isSkipAcknowledgement;
+  final List<PatientRole>? roles;
+
+  /// Checks if the user has read-only access based on the roles.
+  /// Returns true if the user has the 'PATIENT' role with
+  /// read but not manage access.
+  /// Also returns true if the user has the 'ALL_ROLES' role with
+  /// read but not manage access.
+  /// Returns false otherwise.
+  bool? isReadOnlyAccess() {
+    if (roles?.isEmpty ?? true) return null;
+    var isReadOnlyAccess = false;
+    for (final role in roles!) {
+      if (role.code == 'PATIENT') {
+        if (role.canRead == true && role.canManage == false) {
+          isReadOnlyAccess = true;
+        }
+      } else if (role.code == 'ALL_ROLES') {
+        if (role.canRead == true && role.canManage == false) {
+          isReadOnlyAccess = true;
+        }
+      }
+    }
+    return isReadOnlyAccess;
+  }
 
   factory Otherinfo.fromJson(Map<String, dynamic> json) => Otherinfo(
         needPhoto: (json['NeedPhoto'] ?? 0).toString(),
@@ -326,6 +350,13 @@ class Otherinfo {
             ? (json['isSkipAcknowledgement'] ?? 0).toString()
             : "0",
         introText: json.containsKey('introtext') ? (json['introtext']) : '',
+        roles: json['roles'] == null
+            ? []
+            : List<PatientRole>.from(
+                json['roles']!.map(
+                  (x) => PatientRole.fromJson(x),
+                ),
+              ),
       );
 
   Map<String, dynamic> toJson() => {
@@ -335,7 +366,41 @@ class Otherinfo {
         'NeedFile': needFile,
         'snoozeText': snoozeText,
         'introtext': introText,
-        'isAllDayActivity': isAllDayActivity
+        'isAllDayActivity': isAllDayActivity,
+        'roles': roles == null
+            ? []
+            : List<dynamic>.from(
+                roles!.map(
+                  (x) => x.toJson(),
+                ),
+              ),
+      };
+}
+
+class PatientRole {
+  PatientRole({
+    this.id,
+    this.code,
+    this.canRead,
+    this.canManage,
+  });
+  String? id;
+  String? code;
+  bool? canRead;
+  bool? canManage;
+
+  factory PatientRole.fromJson(Map<String, dynamic> json) => PatientRole(
+        id: json['id'],
+        code: json['code'],
+        canRead: json['canRead'],
+        canManage: json['canManage'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'code': code,
+        'canRead': canRead,
+        'canManage': canManage,
       };
 }
 

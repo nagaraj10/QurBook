@@ -23,10 +23,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ventechsolutions.myFHB.constants.Constants
-import com.ventechsolutions.myFHB.services.AcceptReceiver
-import com.ventechsolutions.myFHB.services.AutoDismissNotification
-import com.ventechsolutions.myFHB.services.DeclineReciver
-import com.ventechsolutions.myFHB.services.MyFirebaseInstanceService
 import java.lang.Exception
 import android.R.string.no
 import android.media.MediaPlayer
