@@ -92,11 +92,19 @@ class PreferenceUtil {
     var mediaData = <MediaResult>[];
 
     if (_prefsInstance == null) {}
-    json
-        .decode(_prefsInstance!.getString(Constants.KEY_METADATA)!)
-        .forEach((map) {
-      mediaData.add(MediaResult.fromJson(map));
-    });
+
+    final jsonString = _prefsInstance!.getString(Constants.KEY_METADATA);
+    // Check if the decoded data is not null
+    if (jsonString != null) {
+      final jsonData = json.decode(jsonString);
+      if (jsonData != null) {
+        jsonData.forEach((map) {
+          if (map != null) {
+            mediaData.add(MediaResult.fromJson(map));
+          }
+        });
+      }
+    }
 
     return mediaData;
   }
@@ -170,8 +178,13 @@ class PreferenceUtil {
       if (_prefsInstance == null) {}
 
       var jsonData = _prefsInstance!.getString(keyProfile) ?? '';
-      var data = json.decode(jsonData);
-      return MyProfileModel.fromJson(data);
+      // Check if the decoded data is not null and if it is not empty after trimming
+      if (jsonData != null && jsonData.trim().isNotEmpty) {
+        var data = json.decode(jsonData);
+        return MyProfileModel.fromJson(data);
+      } else {
+        return null;
+      }
     } catch (e, stackTrace) {
       print(e);
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -523,11 +536,20 @@ class PreferenceUtil {
 
     try {
       if (_prefsInstance == null) {}
-      json.decode(_prefsInstance!.getString(keyFamilyRelation)!).forEach((map) {
-        if (map != null) {
-          categoryData.add(RelationsShipModel.fromJson(map));
+
+      final jsonString = _prefsInstance!.getString(keyFamilyRelation);
+      // Check if the JSON string is not null
+      if (jsonString != null) {
+        final jsonData = json.decode(jsonString);
+        if (jsonData != null) {
+          jsonData.forEach((map) {
+            if (map != null) {
+              categoryData.add(RelationsShipModel.fromJson(map));
+            }
+          });
         }
-      });
+      }
+
 
       return categoryData;
     } catch (e, stackTrace) {

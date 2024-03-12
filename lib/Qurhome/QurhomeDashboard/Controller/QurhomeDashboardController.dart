@@ -25,7 +25,6 @@ import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRep
 class QurhomeDashboardController extends GetxController {
   var currentSelectedIndex = 0.obs;
   var appBarTitle = ' '.obs;
-  static const streamAppointment = EventChannel('ScheduleAppointment/stream');
   StreamSubscription? _appointmentSubscription;
   late HubListViewController hubController;
   late SheelaBLEController _sheelaBLEController;

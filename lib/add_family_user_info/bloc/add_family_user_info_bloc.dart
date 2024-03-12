@@ -26,7 +26,6 @@ import '../../src/resources/network/ApiResponse.dart';
 import '../models/verify_email_response.dart';
 import '../../constants/variable_constant.dart' as variable;
 import '../../src/resources/repository/health/HealthReportListForUserRepository.dart';
-import '../../constants/fhb_constants.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 
 class AddFamilyUserInfoBloc extends BaseBloc {
@@ -201,6 +200,9 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   Future<MyProfileModel?> getMyProfileInfo() async {
     myProfileSink.add(ApiResponse.loading(variable.strFetchRoles));
     MyProfileModel? myProfile;
+
+    // Retrieve the user ID from preferences
+    var userId = PreferenceUtil.getStringValue(KEY_USERID);
 
     try {
       myProfile =
