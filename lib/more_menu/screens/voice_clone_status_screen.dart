@@ -15,6 +15,7 @@ import '../../telehealth/features/Notifications/constants/notification_constants
 import '../../voice_cloning/model/voice_clone_status_arguments.dart';
 import '../../voice_cloning/model/voice_cloning_choose_member_arguments.dart';
 import '../../voice_cloning/view/widgets/voice_clone_family_members_list.dart';
+import '../../voice_cloning/view/widgets/voice_cloning_shimmer_widgets.dart';
 import '../voice_clone_status_controller.dart';
 import 'terms_and_conditon.dart';
 
@@ -175,6 +176,8 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus>with WidgetsBindingObs
                                               ?.status ??
                                           '')),
                             ]),
+                        controller.isFamilyMemberLoading.value?
+                        familyMemberListLoader():
                         Visibility(
                           visible: controller
                                       .voiceCloneStatusModel?.result?.status ==

@@ -25,6 +25,7 @@ import '../src/utils/FHBUtils.dart';
 
 class VoiceCloneStatusController extends GetxController {
   var loadingData = false.obs;
+  var isFamilyMemberLoading = false.obs;
   var _helper = ApiBaseHelper();
   var healthOrganizationId = ''.obs;
   var voiceCloneId = ''.obs;
@@ -85,9 +86,10 @@ class VoiceCloneStatusController extends GetxController {
       voiceCloneId.value = voiceCloneStatusModel?.result?.id ?? '';
       if (voiceCloneStatusModel?.result?.url != "")
         audioURL = voiceCloneStatusModel?.result?.url ?? '';
-      fetchFamilyMembersList(voiceCloneId.value);
       //download path from url every time when api is called
-      downloadAudioFile(audioURL);
+      await downloadAudioFile(audioURL);
+      loadingData.value = false;
+      fetchFamilyMembersList(voiceCloneId.value);
     }else{
       loadingData.value = false;
     }
@@ -145,6 +147,7 @@ class VoiceCloneStatusController extends GetxController {
   /// Fetch FamilyMembers list from API
   Future<void> fetchFamilyMembersList(String voiceCloneId) async {
     try {
+      isFamilyMemberLoading.value =true;
       selectedFamilyMembers = await fetchAlreadySelectedFamilyMembersList(
             voiceCloneId,
           ) ??
@@ -198,12 +201,11 @@ class VoiceCloneStatusController extends GetxController {
         }
       });
       listOfFamilyMembers.value = _customlistOfFamilyMembers;
-      loadingData.value = false;
     } catch (e, stackTrace) {
-      loadingData.value = false;
-
       CommonUtil()
           .appLogs(message: e.toString(), stackTrace: stackTrace.toString());
+    }finally{
+      isFamilyMemberLoading.value =false;
     }
   }
 
