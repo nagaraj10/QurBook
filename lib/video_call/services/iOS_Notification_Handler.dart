@@ -120,6 +120,7 @@ class IosNotificationHandler {
           if ((call.arguments['eid'] ?? '').isNotEmpty && isAlreadyLoaded) {
             //// allow the user to get notifications
             if (CommonUtil().isAllowSheelaLiveReminders()) {
+              // Prepare JSON data for adding to the sheela queue request
               final reqJson = {
                 KIOSK_task: KIOSK_remind,
                 KIOSK_eid: call.arguments['eid'],

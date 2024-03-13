@@ -5382,6 +5382,7 @@ class CommonUtil {
             var sheelaAIController = Get.find<SheelaAIController>();
             sheelaAIController.sheelaIconBadgeCount.value =
                 (value.result?.queueCount ?? 0);
+            // isNeedDialog condition for showing the dialog or not
             if(isNeedDialog){
               CommonUtil().dialogForSheelaQueue(Get.context!);
             }
