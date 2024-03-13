@@ -62,9 +62,10 @@ class VoiceCloneStatusController extends GetxController {
     // TODO: implement onInit
     super.onInit();
     loadingData = true.obs;
-    listOfFamilyMembers.value = [];
+    listOfFamilyMembers = <VoiceCloneSharedByUsers>[].obs;
     selectedFamilyMembers = [];
-    listOfExistingFamilyMembers.value = [];
+    listOfExistingFamilyMembers.value = <String>[].obs;
+
   }
 
   void getStatusOfUser() {}
@@ -89,7 +90,12 @@ class VoiceCloneStatusController extends GetxController {
       //download path from url every time when api is called
       await downloadAudioFile(audioURL);
       loadingData.value = false;
-      fetchFamilyMembersList(voiceCloneId.value);
+      ///Fetching the Assigned family memberlist only if the status is approved as per the previous implementation
+      /// This is unnecessary call because in UI List was displaying only if approved.
+      if(voiceCloneStatusModel?.result?.status ==
+          strApproved){
+        fetchFamilyMembersList(voiceCloneId.value);
+      }
     }else{
       loadingData.value = false;
     }
