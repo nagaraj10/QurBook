@@ -74,6 +74,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   AnimationController? animationController;
 
+  bool? isGetUserActivitiesHistoryCalled;
+
   int _counter = 0;
   StreamController<int> _events = StreamController<int>();
   Timer? _timer;
@@ -608,21 +610,29 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           if (CommonUtil().checkIfSkipAcknowledgemnt(regimen)) {
             redirectToSheelaScreen(regimen);
           } else {
-            /// Checks if the user is in India and
-            /// if the regimen has read only access.
-            /// If so, gets the user activities history for the regimen's eid,
-            /// otherwise sets the provider name variable to empty string.
-            /// This allows handling read only access
-            /// differently in India vs other regions.
-            if (CommonUtil.REGION_CODE != 'IN' &&
-                (regimen.otherinfo?.isReadOnlyAccess() ?? true)) {
-              currentActivitiesCCProviderName =
-                  await controller.getUserActivitiesHistory(
-                        regimen.eid,
-                      ) ??
-                      '';
+            /// Tries to show the regimen dialog for the given regimen at
+            /// the given index. Catches any errors and logs them.
+            ///
+            /// If the user is not in India and the regimen is read only,
+            /// it will fetch the user activities history for the regimen
+            /// before showing the dialog. This helps provide read only
+            /// access to regimens from other providers.
+            try {
+              if (CommonUtil.REGION_CODE != 'IN' &&
+                  (regimen.otherinfo?.isReadOnlyAccess() ?? true)) {
+                if (isGetUserActivitiesHistoryCalled != null) {
+                  return;
+                }
+                isGetUserActivitiesHistoryCalled = true;
+                currentActivitiesCCProviderName =
+                    await controller.getUserActivitiesHistory(regimen.eid) ??
+                        '';
+                isGetUserActivitiesHistoryCalled = null;
+              }
+              showRegimenDialog(regimen, itemIndex);
+            } catch (error, stackTrace) {
+              CommonUtil().appLogs(message: error, stackTrace: stackTrace);
             }
-            showRegimenDialog(regimen, itemIndex);
           }
         }
       },
@@ -1359,7 +1369,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         );
       }
     } else if ((regimen.otherinfo?.isReadOnlyAccess() ?? true) &&
-        CommonUtil.REGION_CODE != 'IN'  &&
+        CommonUtil.REGION_CODE != 'IN' &&
         regimen.ack != null) {
       showDialog(
         context: context,
@@ -1517,68 +1527,71 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                     height: CommonUtil().isTablet! ? 3.0.h : 4.0.h,
                   ),
                   Visibility(
-                    visible: regimen.hasform != false && (regimen.otherinfo?.isReadOnlyAccess() ?? false),
+                      visible: regimen.hasform != false &&
+                          (regimen.otherinfo?.isReadOnlyAccess() ?? false),
                       child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 30,
-                      left: 15,
-                      right: 15,
-                      bottom: 30,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            if (regimen.hasform!) {
-                              Navigator.pop(context);
-                              onCardPressed(context, regimen,
-                                  aid: regimen.aid,
-                                  uid: regimen.uid,
-                                  formId: regimen.uformid,
-                                  formName: regimen.uformname,
-                                  canEditMain: false,
-                                  fromView: true,
-                                  isReadyOnly: true);
-                            } else if (regimen.hasform == false) {
-                            } else {
-                              Navigator.pop(context);
-
-                              callLogApi(regimen);
-                            }
-                          },
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(5),
-                                child: Image.asset(
-                                  icon_view_eye,
-                                  height: 30,
-                                  width: 30,
-                                  color: (regimen.hasform == false)
-                                      ? Colors.grey
-                                      : Color(
-                                          CommonUtil().getQurhomePrimaryColor(),
-                                        ),
-                                ),
-                              ),
-                              Text(
-                                strView,
-                                style: TextStyle(
-                                  fontSize: 20.0.sp,
-                                  color: (regimen.hasform == false)
-                                      ? Colors.grey
-                                      : Color(
-                                          CommonUtil().getQurhomePrimaryColor(),
-                                        ),
-                                ),
-                              ),
-                            ],
-                          ),
+                        padding: const EdgeInsets.only(
+                          top: 30,
+                          left: 15,
+                          right: 15,
+                          bottom: 30,
                         ),
-                      ],
-                    ),
-                  )),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                if (regimen.hasform!) {
+                                  Navigator.pop(context);
+                                  onCardPressed(context, regimen,
+                                      aid: regimen.aid,
+                                      uid: regimen.uid,
+                                      formId: regimen.uformid,
+                                      formName: regimen.uformname,
+                                      canEditMain: false,
+                                      fromView: true,
+                                      isReadyOnly: true);
+                                } else if (regimen.hasform == false) {
+                                } else {
+                                  Navigator.pop(context);
+
+                                  callLogApi(regimen);
+                                }
+                              },
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(5),
+                                    child: Image.asset(
+                                      icon_view_eye,
+                                      height: 30,
+                                      width: 30,
+                                      color: (regimen.hasform == false)
+                                          ? Colors.grey
+                                          : Color(
+                                              CommonUtil()
+                                                  .getQurhomePrimaryColor(),
+                                            ),
+                                    ),
+                                  ),
+                                  Text(
+                                    strView,
+                                    style: TextStyle(
+                                      fontSize: 20.0.sp,
+                                      color: (regimen.hasform == false)
+                                          ? Colors.grey
+                                          : Color(
+                                              CommonUtil()
+                                                  .getQurhomePrimaryColor(),
+                                            ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
                 ],
               ),
             ),
