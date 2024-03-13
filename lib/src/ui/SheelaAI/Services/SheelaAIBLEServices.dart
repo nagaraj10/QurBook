@@ -236,8 +236,15 @@ class SheelaBLEController extends GetxController {
                     SheelaController.arguments?.deviceType =
                         hublistController.bleDeviceType;
 
-                    /*if (SheelaController.conversations.last?.additionalInfoSheelaResponse?.uformName ==
-                        getDeviceTypeName(deviceType)) {*/
+                    if (SheelaController
+                            .conversations
+                            .last
+                            ?.additionalInfoSheelaResponse
+                            ?.deviceData
+                            ?.shortName
+                            ?.toString()
+                            .toLowerCase() ==
+                        deviceType) {
                       SheelaController.arguments?.takeActiveDeviceReadings =
                           true;
 
@@ -249,9 +256,9 @@ class SheelaBLEController extends GetxController {
 
                       // Set loading state to true in SheelaController
                       SheelaController.isLoading(true);
-                    /*} else {
+                    } else {
                       break;
-                    }*/
+                    }
                   } else {
                     Get.to(
                       () => SheelaAIMainScreen(
