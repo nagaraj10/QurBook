@@ -1,18 +1,26 @@
+import 'package:myfhb/common/CommonUtil.dart';
+
 class GetUserActivitiesHistoryModel {
   GetUserActivitiesHistoryModel({
     this.isSuccess,
     this.result,
   });
 
-  factory GetUserActivitiesHistoryModel.fromJson(Map<String, dynamic> json) =>
-      GetUserActivitiesHistoryModel(
-        isSuccess: json['isSuccess'],
-        result: json['result'] == null
-            ? []
-            : List<Result>.from(json['result']!.map((x) => Result.fromJson(x))),
+  GetUserActivitiesHistoryModel.fromJson(Map<String, dynamic> json) {
+    try {
+      isSuccess = json['isSuccess'];
+      result = json['result'] == null
+          ? []
+          : List<Result>.from(json['result']!.map((x) => Result.fromJson(x)));
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(
+        message: e,
+        stackTrace: stackTrace,
       );
-  final bool? isSuccess;
-  final List<Result>? result;
+    }
+  }
+  bool? isSuccess;
+  List<Result>? result;
 
   Map<String, dynamic> toJson() => {
         'isSuccess': isSuccess,
@@ -42,37 +50,52 @@ class Result {
     this.user,
   });
 
-  factory Result.fromJson(Map<String, dynamic> json) => Result(
-        id: json['id'],
-        patientId: json['patientId'],
-        healthOrganizationId: json['healthOrganizationId'],
-        screen: json['screen'],
-        activity: json['activity'],
-        status: json['status'],
-        seconds: json['seconds'],
-        createdOn: json['createdOn'] == null
-            ? null
-            : DateTime.parse(json['createdOn']),
-        isActive: json['isActive'],
-        additionalInfo: json['additionalInfo'] == null
-            ? null
-            : ResultAdditionalInfo.fromJson(json['additionalInfo']),
-        patient:
-            json['patient'] == null ? null : Patient.fromJson(json['patient']),
-        user: json['user'] == null ? null : Patient.fromJson(json['user']),
+  Result.fromJson(Map<String, dynamic> json) {
+    try {
+      id = json['id'];
+      patientId = json['patientId'];
+      healthOrganizationId = json['healthOrganizationId'];
+      screen = json['screen'];
+      activity = json['activity'];
+      status = json['status'];
+      seconds = json['seconds'];
+      createdOn = json['createdOn'];
+      isActive = json['isActive'];
+      additionalInfo = json['additionalInfo'] == null
+          ? null
+          : ResultAdditionalInfo.fromJson(
+              json['additionalInfo'],
+            );
+      patient = json['patient'] == null
+          ? null
+          : Patient.fromJson(
+              json['patient'],
+            );
+      user = json['user'] == null
+          ? null
+          : Patient.fromJson(
+              json['user'],
+            );
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(
+        message: e,
+        stackTrace: stackTrace,
       );
-  final String? id;
-  final String? patientId;
-  final String? healthOrganizationId;
-  final String? screen;
-  final String? activity;
-  final String? status;
-  final int? seconds;
-  final DateTime? createdOn;
-  final bool? isActive;
-  final ResultAdditionalInfo? additionalInfo;
-  final Patient? patient;
-  final Patient? user;
+    }
+  }
+
+  String? id;
+  String? patientId;
+  String? healthOrganizationId;
+  String? screen;
+  String? activity;
+  String? status;
+  int? seconds;
+  String? createdOn;
+  bool? isActive;
+  ResultAdditionalInfo? additionalInfo;
+  Patient? patient;
+  Patient? user;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -82,7 +105,7 @@ class Result {
         'activity': activity,
         'status': status,
         'seconds': seconds,
-        'createdOn': createdOn?.toIso8601String(),
+        'createdOn': createdOn,
         'isActive': isActive,
         'additionalInfo': additionalInfo?.toJson(),
         'patient': patient?.toJson(),
@@ -107,46 +130,59 @@ class ResultAdditionalInfo {
     this.cptCodeDetails,
   });
 
-  factory ResultAdditionalInfo.fromJson(Map<String, dynamic> json) =>
-      ResultAdditionalInfo(
-        ack: json['ack'] == null ? null : DateTime.parse(json['ack']),
-        eid: json['eid'],
-        title: json['title'],
-        uform: json['uform'] == null
-            ? null
-            : json['uform'].runtimeType == Map()
-                ? Uform.fromJson(json['uform']) : null,
-        action: json['action'] == null ? null : Action.fromJson(json['action']),
-        status: json['status'],
-        cptCode: json['cpt_code'],
-        dosemeal: json['dosemeal'],
-        ackLocal: json['ack_local'] == null
-            ? null
-            : DateTime.parse(json['ack_local']),
-        issymptom: json['issymptom'],
-        uformdata: json['uformdata'] == null ||
-                json['uformdata'].runtimeType == String
-            ? null
-            : Uformdata.fromJson(json['uformdata']),
-        activityTime: json['activityTime'],
-        cptCodeDetails: json['cpt_code_details'],
+  ResultAdditionalInfo.fromJson(Map<String, dynamic> json) {
+    try {
+      ack = json['ack'];
+      eid = json['eid'];
+      title = json['title'];
+      uform = json['uform'] == null
+          ? null
+          : json['uform'].runtimeType == Map()
+              ? Uform.fromJson(
+                  json['uform'],
+                )
+              : null;
+      action = json['action'] == null
+          ? null
+          : Action.fromJson(
+              json['action'],
+            );
+      status = json['status'];
+      cptCode = json['cpt_code'];
+      dosemeal = json['dosemeal'];
+      ackLocal = json['ack_local'];
+      issymptom = json['issymptom'];
+      uformdata = json['uformdata'] == null || json['uformdata'].runtimeType == String
+              ? null
+              : Uformdata.fromJson(
+                  json['uformdata'],
+                );
+      activityTime = json['activityTime'];
+      cptCodeDetails = json['cpt_code_details'];
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(
+        message: e,
+        stackTrace: stackTrace,
       );
-  final DateTime? ack;
-  final int? eid;
-  final String? title;
-  final Uform? uform;
-  final Action? action;
-  final String? status;
-  final String? cptCode;
-  final int? dosemeal;
-  final DateTime? ackLocal;
-  final bool? issymptom;
-  final Uformdata? uformdata;
-  final String? activityTime;
-  final String? cptCodeDetails;
+    }
+  }
+
+  String? ack;
+  int? eid;
+  String? title;
+  Uform? uform;
+  Action? action;
+  String? status;
+  String? cptCode;
+  int? dosemeal;
+  String? ackLocal;
+  bool? issymptom;
+  Uformdata? uformdata;
+  String? activityTime;
+  String? cptCodeDetails;
 
   Map<String, dynamic> toJson() => {
-        'ack': ack?.toIso8601String(),
+        'ack': ack,
         'eid': eid,
         'title': title,
         'uform': uform?.toJson(),
@@ -154,7 +190,7 @@ class ResultAdditionalInfo {
         'status': status,
         'cpt_code': cptCode,
         'dosemeal': dosemeal,
-        'ack_local': ackLocal?.toIso8601String(),
+        'ack_local': ackLocal,
         'issymptom': issymptom,
         'uformdata': uformdata?.toJson(),
         'activityTime': activityTime,
@@ -170,16 +206,23 @@ class Action {
     this.comment,
   });
 
-  factory Action.fromJson(Map<String, dynamic> json) => Action(
-        id: json['id'],
-        code: json['code'],
-        name: json['name'],
-        comment: json['comment'],
+  Action.fromJson(Map<String, dynamic> json) {
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+      comment = json['comment'];
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(
+        message: e,
+        stackTrace: stackTrace,
       );
-  final String? id;
-  final String? code;
-  final String? name;
-  final String? comment;
+    }
+  }
+  String? id;
+  String? code;
+  String? name;
+  String? comment;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -194,12 +237,21 @@ class Uform {
     this.weight,
   });
 
-  factory Uform.fromJson(Map<String, dynamic> json) => Uform(
-        weight: json['Weight'] == null
-            ? null
-            : UformWeight.fromJson(json['Weight']),
+  Uform.fromJson(Map<String, dynamic> json) {
+    try {
+      weight = json['Weight'] == null
+          ? null
+          : UformWeight.fromJson(
+              json['Weight'],
+            );
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(
+        message: e,
+        stackTrace: stackTrace,
       );
-  final UformWeight? weight;
+    }
+  }
+  UformWeight? weight;
 
   Map<String, dynamic> toJson() => {
         'Weight': weight?.toJson(),
@@ -230,51 +282,59 @@ class UformWeight {
     this.lastModifiedBy,
   });
 
-  factory UformWeight.fromJson(Map<String, dynamic> json) => UformWeight(
-        ts: json['ts'] == null ? null : DateTime.parse(json['ts']),
-        seq: json['seq'],
-        amax: json['amax'],
-        amin: json['amin'],
-        info: json['info'],
-        vmax: json['vmax'],
-        vmin: json['vmin'],
-        depth: json['depth'],
-        fdata: json['fdata'],
-        ftype: json['ftype'],
-        title: json['title'],
-        uomid: json['uomid'],
-        formid: json['formid'],
-        deleted: json['deleted'],
-        fieldid: json['fieldid'],
-        otherinfo: json['otherinfo'],
-        providerid: json['providerid'],
-        validation: json['validation'],
-        description: json['description'],
-        lastModifiedBy: json['last_modified_by'],
+  UformWeight.fromJson(Map<String, dynamic> json) {
+    try {
+      ts = json['ts'];
+      seq = json['seq'];
+      amax = json['amax'];
+      amin = json['amin'];
+      info = json['info'];
+      vmax = json['vmax'];
+      vmin = json['vmin'];
+      depth = json['depth'];
+      fdata = json['fdata'];
+      ftype = json['ftype'];
+      title = json['title'];
+      uomid = json['uomid'];
+      formid = json['formid'];
+      deleted = json['deleted'];
+      fieldid = json['fieldid'];
+      otherinfo = json['otherinfo'];
+      providerid = json['providerid'];
+      validation = json['validation'];
+      description = json['description'];
+      lastModifiedBy = json['last_modified_by'];
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(
+        message: e,
+        stackTrace: stackTrace,
       );
-  final DateTime? ts;
-  final String? seq;
-  final String? amax;
-  final String? amin;
-  final String? info;
-  final String? vmax;
-  final String? vmin;
-  final String? depth;
-  final String? fdata;
-  final String? ftype;
-  final String? title;
-  final String? uomid;
-  final String? formid;
-  final String? deleted;
-  final String? fieldid;
-  final String? otherinfo;
-  final String? providerid;
-  final dynamic validation;
-  final String? description;
-  final dynamic lastModifiedBy;
+    }
+  }
+
+  String? ts;
+  String? seq;
+  String? amax;
+  String? amin;
+  String? info;
+  String? vmax;
+  String? vmin;
+  String? depth;
+  String? fdata;
+  String? ftype;
+  String? title;
+  String? uomid;
+  String? formid;
+  String? deleted;
+  String? fieldid;
+  String? otherinfo;
+  String? providerid;
+  dynamic validation;
+  String? description;
+  dynamic lastModifiedBy;
 
   Map<String, dynamic> toJson() => {
-        'ts': ts?.toIso8601String(),
+        'ts': ts,
         'seq': seq,
         'amax': amax,
         'amin': amin,
@@ -302,12 +362,21 @@ class Uformdata {
     this.weight,
   });
 
-  factory Uformdata.fromJson(Map<String, dynamic> json) => Uformdata(
-        weight: json['Weight'] == null
-            ? null
-            : UformdataWeight.fromJson(json['Weight']),
+  Uformdata.fromJson(Map<String, dynamic> json) {
+    try {
+      weight = json['Weight'] == null
+          ? null
+          : UformdataWeight.fromJson(
+              json['Weight'],
+            );
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(
+        message: e,
+        stackTrace: stackTrace,
       );
-  final UformdataWeight? weight;
+    }
+  }
+  UformdataWeight? weight;
 
   Map<String, dynamic> toJson() => {
         'Weight': weight?.toJson(),
@@ -329,33 +398,39 @@ class UformdataWeight {
     this.requestFileUrl,
     this.requestFileType,
   });
-  factory UformdataWeight.fromJson(Map<String, dynamic> json) =>
-      UformdataWeight(
-        seq: json['seq'],
-        amax: json['amax'],
-        amin: json['amin'],
-        type: json['type'],
-        vmax: json['vmax'],
-        vmin: json['vmin'],
-        alarm: json['alarm'],
-        value: json['value'],
-        display: json['display'],
-        description: json['description'],
-        requestFileUrl: json['requestFileUrl'],
-        requestFileType: json['requestFileType'],
+  UformdataWeight.fromJson(Map<String, dynamic> json) {
+    try {
+      seq = json['seq'];
+      amax = json['amax'];
+      amin = json['amin'];
+      type = json['type'];
+      vmax = json['vmax'];
+      vmin = json['vmin'];
+      alarm = json['alarm'];
+      value = json['value'];
+      display = json['display'];
+      description = json['description'];
+      requestFileUrl = json['requestFileUrl'];
+      requestFileType = json['requestFileType'];
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(
+        message: e,
+        stackTrace: stackTrace,
       );
-  final String? seq;
-  final String? amax;
-  final String? amin;
-  final String? type;
-  final String? vmax;
-  final String? vmin;
-  final int? alarm;
-  final String? value;
-  final String? display;
-  final String? description;
-  final dynamic requestFileUrl;
-  final dynamic requestFileType;
+    }
+  }
+  String? seq;
+  String? amax;
+  String? amin;
+  String? type;
+  String? vmax;
+  String? vmin;
+  int? alarm;
+  String? value;
+  String? display;
+  String? description;
+  dynamic requestFileUrl;
+  dynamic requestFileType;
 
   Map<String, dynamic> toJson() => {
         'seq': seq,
@@ -407,76 +482,79 @@ class Patient {
     this.timezone,
   });
 
-  factory Patient.fromJson(Map<String, dynamic> json) => Patient(
-        id: json['id'],
-        name: json['name'],
-        userName: json['userName'],
-        firstName: json['firstName'],
-        middleName: json['middleName'],
-        lastName: json['lastName'],
-        gender: json['gender'],
-        dateOfBirth: json['dateOfBirth'] == null
-            ? null
-            : DateTime.parse(json['dateOfBirth']),
-        bloodGroup: json['bloodGroup'],
-        countryCode: json['countryCode'],
-        profilePicUrl: json['profilePicUrl'],
-        profilePicThumbnailUrl: json['profilePicThumbnailUrl'],
-        isTempUser: json['isTempUser'],
-        isVirtualUser: json['isVirtualUser'],
-        isMigrated: json['isMigrated'],
-        isClaimed: json['isClaimed'],
-        isIeUser: json['isIeUser'],
-        isEmailVerified: json['isEmailVerified'],
-        isCpUser: json['isCpUser'],
-        communicationPreferences: json['communicationPreferences'],
-        medicalPreferences: json['medicalPreferences'],
-        isSignedIn: json['isSignedIn'],
-        isActive: json['isActive'],
-        createdBy: json['createdBy'],
-        createdOn: json['createdOn'] == null
-            ? null
-            : DateTime.parse(json['createdOn']),
-        lastModifiedBy: json['lastModifiedBy'],
-        lastModifiedOn: json['lastModifiedOn'] == null
-            ? null
-            : DateTime.parse(json['lastModifiedOn']),
-        providerId: json['providerId'],
-        additionalInfo: json['additionalInfo'] == null
-            ? null
-            : PatientAdditionalInfo.fromJson(json['additionalInfo']),
-        timezone: json['timezone'],
+  Patient.fromJson(Map<String, dynamic> json) {
+    try {
+      id = json['id'];
+      name = json['name'];
+      userName = json['userName'];
+      firstName = json['firstName'];
+      middleName = json['middleName'];
+      lastName = json['lastName'];
+      gender = json['gender'];
+      dateOfBirth = json['dateOfBirth'];
+      bloodGroup = json['bloodGroup'];
+      countryCode = json['countryCode'];
+      profilePicUrl = json['profilePicUrl'];
+      profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+      isTempUser = json['isTempUser'];
+      isVirtualUser = json['isVirtualUser'];
+      isMigrated = json['isMigrated'];
+      isClaimed = json['isClaimed'];
+      isIeUser = json['isIeUser'];
+      isEmailVerified = json['isEmailVerified'];
+      isCpUser = json['isCpUser'];
+      communicationPreferences = json['communicationPreferences'];
+      medicalPreferences = json['medicalPreferences'];
+      isSignedIn = json['isSignedIn'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedBy = json['lastModifiedBy'];
+      lastModifiedOn = json['lastModifiedOn'];
+      providerId = json['providerId'];
+      additionalInfo = json['additionalInfo'] == null
+          ? null
+          : PatientAdditionalInfo.fromJson(
+              json['additionalInfo'],
+            );
+      timezone = json['timezone'];
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(
+        message: e,
+        stackTrace: stackTrace,
       );
-  final String? id;
-  final dynamic name;
-  final String? userName;
-  final String? firstName;
-  final String? middleName;
-  final String? lastName;
-  final String? gender;
-  final DateTime? dateOfBirth;
-  final String? bloodGroup;
-  final dynamic countryCode;
-  final String? profilePicUrl;
-  final String? profilePicThumbnailUrl;
-  final dynamic isTempUser;
-  final dynamic isVirtualUser;
-  final dynamic isMigrated;
-  final dynamic isClaimed;
-  final bool? isIeUser;
-  final dynamic isEmailVerified;
-  final bool? isCpUser;
-  final dynamic communicationPreferences;
-  final dynamic medicalPreferences;
-  final bool? isSignedIn;
-  final bool? isActive;
-  final String? createdBy;
-  final DateTime? createdOn;
-  final String? lastModifiedBy;
-  final DateTime? lastModifiedOn;
-  final String? providerId;
-  final PatientAdditionalInfo? additionalInfo;
-  final String? timezone;
+    }
+  }
+  String? id;
+  dynamic name;
+  String? userName;
+  String? firstName;
+  String? middleName;
+  String? lastName;
+  String? gender;
+  String? dateOfBirth;
+  String? bloodGroup;
+  dynamic countryCode;
+  String? profilePicUrl;
+  String? profilePicThumbnailUrl;
+  dynamic isTempUser;
+  dynamic isVirtualUser;
+  dynamic isMigrated;
+  dynamic isClaimed;
+  bool? isIeUser;
+  dynamic isEmailVerified;
+  bool? isCpUser;
+  dynamic communicationPreferences;
+  dynamic medicalPreferences;
+  bool? isSignedIn;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
+  String? providerId;
+  PatientAdditionalInfo? additionalInfo;
+  String? timezone;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -486,8 +564,7 @@ class Patient {
         'middleName': middleName,
         'lastName': lastName,
         'gender': gender,
-        'dateOfBirth':
-            "${dateOfBirth!.year.toString().padLeft(4, '0')}-${dateOfBirth!.month.toString().padLeft(2, '0')}-${dateOfBirth!.day.toString().padLeft(2, '0')}",
+        'dateOfBirth': dateOfBirth,
         'bloodGroup': bloodGroup,
         'countryCode': countryCode,
         'profilePicUrl': profilePicUrl,
@@ -504,9 +581,9 @@ class Patient {
         'isSignedIn': isSignedIn,
         'isActive': isActive,
         'createdBy': createdBy,
-        'createdOn': createdOn?.toIso8601String(),
+        'createdOn': createdOn,
         'lastModifiedBy': lastModifiedBy,
-        'lastModifiedOn': lastModifiedOn?.toIso8601String(),
+        'lastModifiedOn': lastModifiedOn,
         'providerId': providerId,
         'additionalInfo': additionalInfo?.toJson(),
         'timezone': timezone,
@@ -521,19 +598,25 @@ class PatientAdditionalInfo {
     this.heightUnitCode,
     this.weightUnitCode,
   });
-  factory PatientAdditionalInfo.fromJson(Map<String, dynamic> json) =>
-      PatientAdditionalInfo(
-        height: json['height'],
-        offset: json['offset'],
-        weight: json['weight'],
-        heightUnitCode: json['heightUnitCode'],
-        weightUnitCode: json['weightUnitCode'],
+  PatientAdditionalInfo.fromJson(Map<String, dynamic> json) {
+    try {
+      height = json['height'];
+      offset = json['offset'];
+      weight = json['weight'];
+      heightUnitCode = json['heightUnitCode'];
+      weightUnitCode = json['weightUnitCode'];
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(
+        message: e,
+        stackTrace: stackTrace,
       );
-  final String? height;
-  final String? offset;
-  final String? weight;
-  final String? heightUnitCode;
-  final String? weightUnitCode;
+    }
+  }
+  String? height;
+  String? offset;
+  String? weight;
+  String? heightUnitCode;
+  String? weightUnitCode;
 
   Map<String, dynamic> toJson() => {
         'height': height,

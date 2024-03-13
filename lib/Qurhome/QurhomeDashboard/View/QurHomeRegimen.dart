@@ -1369,7 +1369,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         );
       }
     } else if ((regimen.otherinfo?.isReadOnlyAccess() ?? true) &&
-        CommonUtil.REGION_CODE != 'IN' &&
+        CommonUtil.REGION_CODE != 'IN'  &&
         regimen.ack != null) {
       showDialog(
         context: context,
@@ -1527,71 +1527,68 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                     height: CommonUtil().isTablet! ? 3.0.h : 4.0.h,
                   ),
                   Visibility(
-                      visible: regimen.hasform != false &&
-                          (regimen.otherinfo?.isReadOnlyAccess() ?? false),
+                    visible: regimen.hasform != false && (regimen.otherinfo?.isReadOnlyAccess() ?? false),
                       child: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 30,
-                          left: 15,
-                          right: 15,
-                          bottom: 30,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                if (regimen.hasform!) {
-                                  Navigator.pop(context);
-                                  onCardPressed(context, regimen,
-                                      aid: regimen.aid,
-                                      uid: regimen.uid,
-                                      formId: regimen.uformid,
-                                      formName: regimen.uformname,
-                                      canEditMain: false,
-                                      fromView: true,
-                                      isReadyOnly: true);
-                                } else if (regimen.hasform == false) {
-                                } else {
-                                  Navigator.pop(context);
+                    padding: const EdgeInsets.only(
+                      top: 30,
+                      left: 15,
+                      right: 15,
+                      bottom: 30,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            if (regimen.hasform!) {
+                              Navigator.pop(context);
+                              onCardPressed(context, regimen,
+                                  aid: regimen.aid,
+                                  uid: regimen.uid,
+                                  formId: regimen.uformid,
+                                  formName: regimen.uformname,
+                                  canEditMain: false,
+                                  fromView: true,
+                                  isReadyOnly: true);
+                            } else if (regimen.hasform == false) {
+                            } else {
+                              Navigator.pop(context);
 
-                                  callLogApi(regimen);
-                                }
-                              },
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Image.asset(
-                                      icon_view_eye,
-                                      height: 30,
-                                      width: 30,
-                                      color: (regimen.hasform == false)
-                                          ? Colors.grey
-                                          : Color(
-                                              CommonUtil()
-                                                  .getQurhomePrimaryColor(),
-                                            ),
-                                    ),
-                                  ),
-                                  Text(
-                                    strView,
-                                    style: TextStyle(
-                                      fontSize: 20.0.sp,
-                                      color: (regimen.hasform == false)
-                                          ? Colors.grey
-                                          : Color(
-                                              CommonUtil()
-                                                  .getQurhomePrimaryColor(),
-                                            ),
-                                    ),
-                                  ),
-                                ],
+                              callLogApi(regimen);
+                            }
+                          },
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: Image.asset(
+                                  icon_view_eye,
+                                  height: 30,
+                                  width: 30,
+                                  color: (regimen.hasform == false)
+                                      ? Colors.grey
+                                      : Color(
+                                          CommonUtil().getQurhomePrimaryColor(),
+                                        ),
+                                ),
                               ),
-                            ),
-                          ],
+                              Text(
+                                strView,
+                                style: TextStyle(
+                                  fontSize: 20.0.sp,
+                                  color: (regimen.hasform == false)
+                                      ? Colors.grey
+                                      : Color(
+                                          CommonUtil().getQurhomePrimaryColor(),
+                                        ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      )),
+                      ],
+                    ),
+                  )),
                 ],
               ),
             ),
