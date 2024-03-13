@@ -996,6 +996,8 @@ class SheelaAIController extends GetxController {
     currentDeviceStatus.allowSymptomsNotification =
         prof.caregiverCommunicationSetting?.symptoms ?? true;
     currentDeviceStatus.voiceCloning = prof.voiceCloning ?? false;
+    // Set useClonedVoice from profile settings.
+    currentDeviceStatus.useClonedVoice = prof.useClonedVoice??false;
 
     if (savePrefLang) {
       PreferenceUtil.saveString(
