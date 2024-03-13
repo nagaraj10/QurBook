@@ -5369,7 +5369,7 @@ class CommonUtil {
     );
   }
 
-  void callQueueNotificationPostApi(var json) {
+  void callQueueNotificationPostApi(var json,{bool isNeedDialog = true}) {
     //if (avoidExtraNotification) {
     //avoidExtraNotification = false;
     queueServices
@@ -5382,7 +5382,9 @@ class CommonUtil {
             var sheelaAIController = Get.find<SheelaAIController>();
             sheelaAIController.sheelaIconBadgeCount.value =
                 (value.result?.queueCount ?? 0);
-            CommonUtil().dialogForSheelaQueue(Get.context!);
+            if(isNeedDialog){
+              CommonUtil().dialogForSheelaQueue(Get.context!);
+            }
           }
         }
       }
@@ -7527,15 +7529,15 @@ class CommonUtil {
   // This function is responsible for handling the Sheela activity remainder invocation.
   getActivityRemainderInvokeSheela(
       var passedValArr, SheelaAIController sheelaAIController) {
+    var reqJson = {
+      KIOSK_task: KIOSK_remind,
+      KIOSK_eid: passedValArr[1].toString(),
+    };
     // Check if auto redirect to Sheela screen is allowed
     if (CommonUtil().isAllowSheelaLiveReminders()) {
       // Live reminder on default existing flow
       if (sheelaAIController.isSheelaScreenActive) {
         // If Sheela screen is active, send a reminder notification
-        var reqJson = {
-          KIOSK_task: KIOSK_remind,
-          KIOSK_eid: passedValArr[1].toString(),
-        };
         CommonUtil().callQueueNotificationPostApi(reqJson);
       } else {
         // If Sheela screen is not active and queue dialog is showing, dismiss it
@@ -7545,6 +7547,8 @@ class CommonUtil {
         }
         // Delayed navigation to Sheela screen
         Future.delayed(Duration(milliseconds: 500), () async {
+          // call queue insert api for adding the queue before navigate
+          CommonUtil().callQueueNotificationPostApi(reqJson,isNeedDialog: false);
           CommonUtil().getToSheelaNavigate(passedValArr, sheelaAIController,
               isFromActivityRemainderInvokeSheela: true);
         });
