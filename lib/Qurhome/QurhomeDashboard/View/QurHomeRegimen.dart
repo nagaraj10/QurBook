@@ -351,10 +351,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                         child: Padding(
                                           padding: EdgeInsets.only(top: 5),
                                           child: Card(
-                                            color: Color(
-                                              CommonUtil()
-                                                  .getQurhomePrimaryColor(),
-                                            ),
+                                            color:Colors.yellow,
+                                            // Color(
+                                            //   CommonUtil()
+                                            //       .getQurhomePrimaryColor(),
+                                            // ),
                                             child: Padding(
                                               padding: EdgeInsets.all(5),
                                               child: Text(
@@ -600,9 +601,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
     return InkWell(
       onTap: () async {
+        qurhomeDashboardController.getIdleTimer!.cancel();
+        qurhomeDashboardController.isScreenIdle.value=false;
         if (regimen.activityOrgin == strAppointmentRegimen) {
           if ((regimen.eid != null) && (regimen.eid != '')) {
-            CommonUtil().goToAppointmentDetailScreen(regimen.eid);
+            CommonUtil().goToAppointmentDetailScreen(regimen.eid,backFromAppointmentScreen: (value){
+              qurhomeDashboardController.isScreenIdle.value=true;
+              qurhomeDashboardController.checkScreenIdle();
+            });
           }
         } else {
           if (CommonUtil().checkIfSkipAcknowledgemnt(regimen)) {
@@ -622,7 +628,12 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                       ) ??
                       '';
             }
-            showRegimenDialog(regimen, itemIndex);
+            showRegimenDialog(regimen, itemIndex,onTapHideDialog: (value) {
+              if(value){
+                qurhomeDashboardController.isScreenIdle.value=true;
+                qurhomeDashboardController.checkScreenIdle();
+              }
+            },);
           }
         }
       },
@@ -879,7 +890,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     return first + second;
   }
 
-  showRegimenDialog(RegimentDataModel regimen, int index) {
+  showRegimenDialog(RegimentDataModel regimen, int index,{Function(bool)? onTapHideDialog}) {
     if (regimen.ack == null &&
         (regimen.otherinfo?.isReadOnlyAccess() ?? false) == false)
       showDialog(
@@ -908,6 +919,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                 onPressed: () {
                                   try {
                                     Navigator.pop(context);
+                                    onTapHideDialog?.call(true);
                                   } catch (e, stackTrace) {
                                     CommonUtil().appLogs(
                                         message: e, stackTrace: stackTrace);

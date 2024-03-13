@@ -6368,6 +6368,13 @@ class CommonUtil {
       if (PreferenceUtil.getIfQurhomeDashboardActiveChat() &&
           isAllowSheelaLiveReminders()) {
         if (chatListresponse != null) {
+          var qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
+
+          if(qurhomeDashboardController.isShowScreenIdleDialog.value){
+            Get.back();
+            qurhomeDashboardController.isShowScreenIdleDialog.value=false;
+            qurhomeDashboardController.isScreenIdle.value=false;
+          }
           SheelaReminderResponse chatList =
               SheelaReminderResponse.fromJson(chatListresponse);
           if (chatList != null) {
@@ -6377,7 +6384,13 @@ class CommonUtil {
                 rt_Sheela,
                 arguments: SheelaArgument(
                     sheelReminder: true, chatMessageIdSocket: chatMessageId),
-              );
+              )?.then((value) {
+                final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
+                if(isQurhomeActive) {
+                  qurhomeDashboardController.isScreenIdle.value = true;
+                  qurhomeDashboardController.checkScreenIdle(isIdeal: true);
+                }
+              });
             }
           }
         }
@@ -6490,13 +6503,16 @@ class CommonUtil {
     return sheelaAIController;
   }
 
-  void goToAppointmentDetailScreen(String appointmentId) {
+  void goToAppointmentDetailScreen(String appointmentId,{Function(bool)? backFromAppointmentScreen,}) {
     if (!Get.isRegistered<AppointmentDetailsController>())
       Get.lazyPut(() => AppointmentDetailsController());
     AppointmentDetailsController appointmentDetailsController =
         Get.find<AppointmentDetailsController>();
     appointmentDetailsController.getAppointmentDetail(appointmentId);
-    Get.to(() => AppointmentDetailScreen());
+    Get.to(() => AppointmentDetailScreen())?.then((value) {
+      backFromAppointmentScreen?.call(true);
+
+    });
   }
 
   Widget? startTheCall(String navRoute) {
@@ -7572,6 +7588,13 @@ class CommonUtil {
           .then((value) {
         try {
           sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+          final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
+          var qurhomeDashboardController = CommonUtil()
+              .onInitQurhomeDashboardController();
+          if(isQurhomeActive) {
+            qurhomeDashboardController.isScreenIdle.value = true;
+            qurhomeDashboardController.checkScreenIdle(isIdeal: true);
+          }
         } catch (e, stackTrace) {
           CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         }
