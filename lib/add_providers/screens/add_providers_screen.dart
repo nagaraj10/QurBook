@@ -907,7 +907,6 @@ class AddProvidersState extends State<AddProviders> {
 
             updateDoctorsIdWithUserDetails();
 
-            CommonUtil().getMedicalPreference();
 
             return Container();
           } else {
@@ -929,7 +928,6 @@ class AddProvidersState extends State<AddProviders> {
             updateProvidersBloc.providerId = streamData.response!.data!.id;
             updateHospitalsIdWithUserDetails();
 
-            CommonUtil().getMedicalPreference();
 
             return Container();
           } else {
@@ -950,8 +948,6 @@ class AddProvidersState extends State<AddProviders> {
             var streamData = snapshot.data! as AddLabsProvidersId;
             updateProvidersBloc.providerId = streamData.response!.data!.id;
             updateLabsIdWithUserDetails();
-
-            CommonUtil().getMedicalPreference();
 
             return Container();
           } else {
@@ -1414,7 +1410,6 @@ class AddProvidersState extends State<AddProviders> {
 
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData)
           .then((value) {
-        CommonUtil().getMedicalPreference();
 
         setState(() {
           selectedFamilyMemberName = profileData!.result!.firstName;
