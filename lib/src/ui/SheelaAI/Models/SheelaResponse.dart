@@ -433,16 +433,22 @@ class AdditionalInfoSheela {
   bool? reconfirmationFlag;
   bool? isAutoReadTTS;
   SnoozeData? snoozeData;
+  DeviceData? deviceData;
+  bool? isLastActivity;
 
-  AdditionalInfoSheela({this.sessionTimeoutMin, this.reconfirmationFlag, this.snoozeData});
+  AdditionalInfoSheela({this.sessionTimeoutMin, this.reconfirmationFlag, this.snoozeData,this.isLastActivity,this.deviceData});
 
   AdditionalInfoSheela.fromJson(Map<String, dynamic> json) {
     try {
       sessionTimeoutMin = json['sessionTimeoutMin'];
       reconfirmationFlag = json['reconfirmationFlag'] ?? false;
       isAutoReadTTS = json['isAutoReRead'] ?? false;
+      isLastActivity = json['isLastActivity'] ?? true;
       snoozeData = json['snoozeData'] != null
           ? SnoozeData.fromJson(json['snoozeData'])
+          : null;
+      deviceData = json['deviceData'] != null
+          ? DeviceData.fromJson(json['deviceData'])
           : null;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -454,7 +460,9 @@ class AdditionalInfoSheela {
     data['sessionTimeoutMin'] = this.sessionTimeoutMin;
     data['reconfirmationFlag'] = this.reconfirmationFlag;
     data['isAutoReRead'] = this.isAutoReadTTS;
+    data['isLastActivity'] = this.isLastActivity;
     data['snoozeData'] = this.snoozeData;
+    data['deviceData'] = this.deviceData;
     return data;
   }
 }
@@ -559,4 +567,23 @@ class Fields {
     "description": description,
     "fdataA": fdataA == null ? [] : List<dynamic>.from(fdataA!.map((x) => x.toJson())),
   };
+}
+
+class DeviceData {
+  String? fullName;
+  String? shortName;
+
+  DeviceData({this.fullName, this.shortName});
+
+  DeviceData.fromJson(Map<String, dynamic> json) {
+    fullName = json['fullName'];
+    shortName = json['shortName'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['fullName'] = this.fullName;
+    data['shortName'] = this.shortName;
+    return data;
+  }
 }

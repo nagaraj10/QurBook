@@ -50,6 +50,15 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.btnTextLocal = '';
     controller.isRetakeCapture = false;
     controller.isRetryScanFailure = false;
+    // Set the value of isDeviceConnectSheelaScreen to false in the controller.
+    controller.isDeviceConnectSheelaScreen.value = false;
+
+// Set the value of isLastActivityDevice to true in the controller.
+    controller.isLastActivityDevice = true;
+
+// Set the value of isSameVitalDevice to false in the controller.
+    controller.isSameVitalDevice = false;
+
 
     ///Surrendered with addPostFrameCallback for widget building issue///
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
@@ -291,12 +300,19 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                                     .value) {
                               controller.stopTTS();
                             } else {
-                              controller.gettingReposnseFromNative();
+                              // Check if the value of isDeviceConnectSheelaScreen in the controller is false.
+                              if (!controller.isDeviceConnectSheelaScreen.value) {
+                                // If isDeviceConnectSheelaScreen is false:
+
+                                // Call the gettingReposnseFromNative method in the controller.
+                                controller.gettingReposnseFromNative();
+                              }
                             }
                           }
                         },
                         elevation: 0,
-                        backgroundColor: controller.isLoading.value
+                        //controller.isDeviceConnectSheelaScreen.value this is for disable the button while device recording flow
+                        backgroundColor: controller.isLoading.value || (controller.isDeviceConnectSheelaScreen.value)
                             ? Colors.black45
                             : PreferenceUtil.getIfQurhomeisAcive()
                                 ? Color(CommonUtil().getQurhomeGredientColor())
@@ -306,7 +322,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                                   controller.currentPlayingConversation!
                                       .isPlaying.value)
                               ? Icons.pause
-                              : controller.isLoading.isTrue
+                          //controller.isDeviceConnectSheelaScreen.value this is for disable the button while device recording flow
+                              : controller.isLoading.isTrue || (controller.isDeviceConnectSheelaScreen.value)
                                   ? Icons.mic_off
                                   : Icons.mic,
                           color: Colors.white,
