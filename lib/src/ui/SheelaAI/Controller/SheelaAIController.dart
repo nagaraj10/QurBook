@@ -1115,6 +1115,7 @@ makeApiRequest is used to update the data with latest data
     bool isFromRegimenController = false,
   }) async {
     try {
+      var qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
       // Check if sheelaIconBadgeCount is not greater than 0
       if (!(sheelaIconBadgeCount.value > 0)) {
         // If not, set it to 0
@@ -1146,7 +1147,8 @@ makeApiRequest is used to update the data with latest data
         // final isTablet = CommonUtil().isTablet ?? false;
         final isQueueDialogShowen = !isQueueDialogShowing.value;
         //check if screen is ideal
-          if (isScreenIdeal) {
+          if (isScreenIdeal&&  !qurhomeDashboardController.isShowScreenIdleDialog.value) {
+            qurhomeDashboardController.isShowScreenIdleDialog.value=true;
             showDialogForSheelaBox(
               isFromQurHomeRegimen: isFromQurHomeRegimen,
             );
@@ -1154,10 +1156,10 @@ makeApiRequest is used to update the data with latest data
         // Check if all conditions are met to show the dialog
         else if (isNeedSheelaDialog &&
             hasQueueCount &&
-            isQurhomeActive &&
+            isQurhomeActive && !isScreenIdeal &&
             isQueueDialogShowen
             ) {
-          showDialogForSheelaBox(
+            showDialogForSheelaBox(
             isFromQurHomeRegimen: isFromQurHomeRegimen,
             isNeedSheelaDialog: isNeedSheelaDialog,
           );
@@ -1478,6 +1480,7 @@ makeApiRequest is used to update the data with latest data
         onTapHideSheelaDialog: (value) {
           if(value){
             //Update qurhome idle timer
+            qurhomeDashboardController.isShowScreenIdleDialog.value=false;
             qurhomeDashboardController.isScreenIdle.value=true;
             qurhomeDashboardController.checkScreenIdle(isIdeal: true);
           }
@@ -1499,6 +1502,7 @@ makeApiRequest is used to update the data with latest data
       )?.then((value) {
         ///Update Sheela remainder count
         qurhomeDashboardController.isScreenIdle.value=true;
+        qurhomeDashboardController.isShowScreenIdleDialog.value=false;
         qurhomeDashboardController.checkScreenIdle(isIdeal: true);
       });
     });
@@ -3183,6 +3187,14 @@ makeApiRequest is used to update the data with latest data
 
     // If already scheduled, cancel the existing notification with the same ID
     if (isScheduled) {
+      //Sheela inactive dialog exist close the dialog
+      var qurhomeDashboardController = CommonUtil()
+          .onInitQurhomeDashboardController();
+      if(qurhomeDashboardController.isShowScreenIdleDialog.value){
+        Get.back();
+        qurhomeDashboardController.isShowScreenIdleDialog.value=false;
+        qurhomeDashboardController.isScreenIdle.value=false;
+      }
       await Future.delayed(const Duration(milliseconds: 100));
       final sheelaAIController = CommonUtil().onInitSheelaAIController();
       // Construct an array of values for the reminder invocation
