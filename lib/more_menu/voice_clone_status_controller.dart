@@ -231,6 +231,7 @@ class VoiceCloneStatusController extends GetxController {
       fileName,
     );
     final file = File(filePath);
+    // If the file exists, get the file path
     if(file.existsSync()){
       recordedPath.value = filePath;
       return recordedPath;
