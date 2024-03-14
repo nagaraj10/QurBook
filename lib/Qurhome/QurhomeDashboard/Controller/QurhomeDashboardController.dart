@@ -131,10 +131,10 @@ class QurhomeDashboardController extends GetxController {
   }
 //Function to check qur home is ideal for 5 minutes
   Future<void> checkScreenIdle({bool isIdeal = false}) async {
-
-    _idleTimer = Timer.periodic(const Duration(seconds: 15), (timer) {
-      try {
-        sheelaAIController?.getSheelaBadgeCount(
+      _idleTimer = Timer.periodic(const Duration(minutes: 5), (timer) {
+        try {
+          _idleTimer?.cancel();
+          sheelaAIController?.getSheelaBadgeCount(
             isFromQurHomeRegimen: true,
             isScreenIdeal: isScreenIdle.value,
             makeApiRequest: true,

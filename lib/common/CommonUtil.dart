@@ -7587,13 +7587,13 @@ class CommonUtil {
       )!
           .then((value) {
         try {
-          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
           final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
           var qurhomeDashboardController = CommonUtil()
               .onInitQurhomeDashboardController();
+          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog:isQurhomeActive?false: true);
           if(isQurhomeActive) {
             qurhomeDashboardController.isScreenIdle.value = true;
-            qurhomeDashboardController.checkScreenIdle(isIdeal: true);
+            qurhomeDashboardController.checkScreenIdle();
           }
         } catch (e, stackTrace) {
           CommonUtil().appLogs(message: e, stackTrace: stackTrace);

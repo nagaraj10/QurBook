@@ -157,7 +157,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
         //Initilaize the screen idle timer
         controller.isScreenIdle.value=true;
-        controller.checkScreenIdle(isIdeal: true);
+        controller.checkScreenIdle();
       });
 
       if (Platform.isAndroid) {
