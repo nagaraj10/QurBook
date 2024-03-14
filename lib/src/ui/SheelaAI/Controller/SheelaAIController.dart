@@ -3187,7 +3187,7 @@ makeApiRequest is used to update the data with latest data
 
     // If already scheduled, cancel the existing notification with the same ID
     if (isScheduled) {
-      //Todo: Add condition
+      //Sheela inactive dialog exist close the dialog
       var qurhomeDashboardController = CommonUtil()
           .onInitQurhomeDashboardController();
       if(qurhomeDashboardController.isShowScreenIdleDialog.value){

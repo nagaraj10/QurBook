@@ -6368,8 +6368,9 @@ class CommonUtil {
       if (PreferenceUtil.getIfQurhomeDashboardActiveChat() &&
           isAllowSheelaLiveReminders()) {
         if (chatListresponse != null) {
+          //Check whether the sheela inactive dialog is there
           var qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
-
+          //close sheela inactive dialog if already exist
           if(qurhomeDashboardController.isShowScreenIdleDialog.value){
             Get.back();
             qurhomeDashboardController.isShowScreenIdleDialog.value=false;
@@ -6385,6 +6386,7 @@ class CommonUtil {
                 arguments: SheelaArgument(
                     sheelReminder: true, chatMessageIdSocket: chatMessageId),
               )?.then((value) {
+                //Start the timer if qurhome is true
                 final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
                 if(isQurhomeActive) {
                   qurhomeDashboardController.isScreenIdle.value = true;
@@ -6510,8 +6512,8 @@ class CommonUtil {
         Get.find<AppointmentDetailsController>();
     appointmentDetailsController.getAppointmentDetail(appointmentId);
     Get.to(() => AppointmentDetailScreen())?.then((value) {
+      //Add appointment callback for pop the screen
       backFromAppointmentScreen?.call(true);
-
     });
   }
 
@@ -7592,6 +7594,7 @@ class CommonUtil {
               .onInitQurhomeDashboardController();
           sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog:isQurhomeActive?false: true);
           if(isQurhomeActive) {
+            //Initialize the timer when the qurhome is ideal
             qurhomeDashboardController.isScreenIdle.value = true;
             qurhomeDashboardController.checkScreenIdle();
           }

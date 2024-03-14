@@ -300,14 +300,15 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         body: Listener(
           behavior: HitTestBehavior.opaque,
           onPointerDown: (event) {
-            print(event);
+            //check whether the any interaction is happen and close the timer
             qurhomeDashboardController.getIdleTimer?.cancel();
             if(qurhomeDashboardController.isShowScreenIdleDialog.value){
+              //Sheela inactive dialog exist close the dialog
               Get.back();
               qurhomeDashboardController.isShowScreenIdleDialog.value=false;
               qurhomeDashboardController.isScreenIdle.value=false;
             }
-
+            //restart the timer for check the ideal flow
             qurhomeDashboardController.isScreenIdle.value=true;
             qurhomeDashboardController.checkScreenIdle();
           },
@@ -369,11 +370,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                           child: Padding(
                                             padding: EdgeInsets.only(top: 5),
                                             child: Card(
-                                              color:Colors.yellow,
-                                              // Color(
-                                              //   CommonUtil()
-                                              //       .getQurhomePrimaryColor(),
-                                              // ),
+                                              color: Color(
+                                                CommonUtil()
+                                                    .getQurhomePrimaryColor(),
+                                              ),
                                               child: Padding(
                                                 padding: EdgeInsets.all(5),
                                                 child: Text(
@@ -625,6 +625,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         if (regimen.activityOrgin == strAppointmentRegimen) {
           if ((regimen.eid != null) && (regimen.eid != '')) {
             CommonUtil().goToAppointmentDetailScreen(regimen.eid,backFromAppointmentScreen: (value){
+              //Initialize the timer when the qurhome is ideal
               qurhomeDashboardController.isScreenIdle.value=true;
               qurhomeDashboardController.checkScreenIdle();
             });

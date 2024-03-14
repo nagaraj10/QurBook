@@ -370,6 +370,7 @@ class IosNotificationHandler {
     } else if (model.isSheela ?? false) {
       //// allow the user for auto redirect to sheela screen on time
       var qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
+      //Sheela inactive dialog exist close the dialog
       if(qurhomeDashboardController.isShowScreenIdleDialog.value){
         Get.back();
         qurhomeDashboardController.isShowScreenIdleDialog.value=false;
@@ -386,6 +387,7 @@ class IosNotificationHandler {
               others: model.others,
             ),
           )?.then((value) {
+            //Restart the timer for check the ideal flow when the qurhome is active
             final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
             if(isQurhomeActive) {
               qurhomeDashboardController.isScreenIdle.value = true;
