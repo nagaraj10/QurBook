@@ -68,6 +68,7 @@ class QurhomeDashboardController extends GetxController {
   int currentIndex = 0;
   var isOnceInAPlanActivity = false.obs;
   var isScreenIdle = false.obs;
+  var isShowScreenIdleDialog = false.obs;
   // Observable variable to track the current notification id
   var currentNotificationId = ' '.obs;
 
@@ -130,13 +131,15 @@ class QurhomeDashboardController extends GetxController {
   }
 //Function to check qur home is ideal for 5 minutes
   Future<void> checkScreenIdle({bool isIdeal = false}) async {
-    _idleTimer = Timer.periodic(const Duration(minutes: 5), (timer) {
-      try {
-        sheelaAIController?.getSheelaBadgeCount(
+      _idleTimer = Timer.periodic(const Duration(minutes: 5), (timer) {
+        try {
+          _idleTimer?.cancel();
+          sheelaAIController?.getSheelaBadgeCount(
             isFromQurHomeRegimen: true,
             isScreenIdeal: isScreenIdle.value,
             makeApiRequest: true,
-            isNeedSheelaDialog: true);
+
+        );
         _idleTimer?.cancel();
       } catch (e, stackTrace) {
         CommonUtil().appLogs(message: e, stackTrace: stackTrace);
