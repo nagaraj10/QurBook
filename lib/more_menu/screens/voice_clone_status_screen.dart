@@ -42,7 +42,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus>with WidgetsBindingObs
     WidgetsBinding.instance.addObserver(this);
     controller.initialiseControllers(); //initialize player
     //Api to get health organzation id and also the status of voice cloning
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) { // Adding a post-frame callback to fetch status from the API after the current frame is rendered.
       controller.getStatusFromApi();
     });
     controller.isPlayWidgetClicked = false;
