@@ -153,11 +153,11 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       );
 
       WidgetsBinding.instance?.addPostFrameCallback((_) {
-        getSheelaBadgeCount();
+        // getSheelaBadgeCount();
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
         //Initilaize the screen idle timer
         controller.isScreenIdle.value=true;
-        controller.checkScreenIdle(isIdeal: true);
+        controller.checkScreenIdle();
       });
 
       if (Platform.isAndroid) {
@@ -584,6 +584,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                     ),
                                   )?.then((value) {
                                     getSheelaBadgeCount();
+                                    controller.isScreenIdle.value=true;
+                                    controller.checkScreenIdle();
                                   });
                                 } else {
                                   String sheela_lang =
