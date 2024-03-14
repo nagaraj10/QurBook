@@ -429,13 +429,13 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                               '';
                           reminder.estart = CommonUtil()
                               .snoozeDataFormat(DateTime.now().add(Duration(
-                              minutes: int.parse(buttonData?.payload ?? '0'))))
+                              minutes: int.parse('1'))))
                               .toString();
                           reminder.dosemeal = chat.additionalInfoSheelaResponse
                                   ?.snoozeData?.dosemeal ??
                               '';
                           reminder.snoozeTime = CommonUtil()
-                              .getTimeMillsSnooze(buttonData?.payload ?? '');
+                              .getTimeMillsSnooze('1');
                           reminder.tplanid = '0';
                           reminder.teid_user = '0';
                           reminder.remindin = '0';

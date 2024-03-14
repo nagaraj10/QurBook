@@ -161,8 +161,9 @@ class SheelaAIController extends GetxController {
   bool? isRetakeCapture = false;
   //reconnect feature enable flag
   bool? isRetryScanFailure = false;
-  bool? isDeviceConnectSheelaScreen = false;
+  Rx<bool> isDeviceConnectSheelaScreen = false.obs;
   bool? isLastActivityDevice = true;
+  bool? isSameVitalDevice = false;
   String? fileRequestUrl = '';
 
   final ApiBaseHelper _helper = ApiBaseHelper();
@@ -279,15 +280,15 @@ class SheelaAIController extends GetxController {
           // Set up a reconnect timer after the delay
           reconnectTimer();
         }
-        else if ((conversations.last.redirectTo ?? '') ==
+        /*else if ((conversations.last.redirectTo ?? '') ==
             strDeviceConnection) {
           isLastActivityDevice = (conversations
               .last?.additionalInfoSheelaResponse?.isLastActivity ??
               true);
-          isDeviceConnectSheelaScreen = true;
+          isDeviceConnectSheelaScreen.value = true;
           updateTimer(enable: false); // disable the timer
           resetBLE(); // Reset the BLE (Bluetooth Low Energy) connection
-        }
+        }*/
       } catch (e, stackTrace) {
         //gettingReposnseFromNative();
         if (kDebugMode)
@@ -442,11 +443,11 @@ class SheelaAIController extends GetxController {
         additionalInfo?[strRequestType] =
             requestFileType; // Add request type to additionalInfo
       }
-      if (isDeviceConnectSheelaScreen ?? false) {
+      if (isDeviceConnectSheelaScreen.value) {
         // If it's an image upload, update additionalInfo with the file URL and request type
         additionalInfo?[isSkipRemiderCount] =
             true; // Add file URL to additionalInfo
-        isDeviceConnectSheelaScreen = false;
+        isDeviceConnectSheelaScreen.value = false;
         isLastActivityDevice = true;
       } else {
         additionalInfo?[isSkipRemiderCount] =
@@ -595,6 +596,14 @@ class SheelaAIController extends GetxController {
             }
           } else {
             playTTS();
+          }
+          if ((conversations.last.redirectTo ?? '') == strDeviceConnection) {
+            isLastActivityDevice = (conversations
+                    .last?.additionalInfoSheelaResponse?.isLastActivity ??
+                true);
+            isDeviceConnectSheelaScreen.value = true;
+            updateTimer(enable: false); // disable the timer
+            resetBLE(); // Reset the BLE (Bluetooth Low Energy) connection
           }
           callToCC(currentResponse);
           /*if (currentResponse.lang != null && currentResponse.lang != '') {
@@ -1227,7 +1236,7 @@ makeApiRequest is used to update the data with latest data
         _popTimer = Timer(const Duration(seconds: 30), () {
           if (isSheelaScreenActive &&
               bleController == null &&
-              (!(isDeviceConnectSheelaScreen ?? false))) {
+              (!(isDeviceConnectSheelaScreen.value))) {
             printInfo(info: 'timeout the timer');
             stopTTS();
             canSpeak = false;

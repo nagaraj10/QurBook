@@ -50,8 +50,9 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.btnTextLocal = '';
     controller.isRetakeCapture = false;
     controller.isRetryScanFailure = false;
-    controller.isDeviceConnectSheelaScreen = false;
+    controller.isDeviceConnectSheelaScreen.value = false;
     controller.isLastActivityDevice = true;
+    controller.isSameVitalDevice = false;
 
     ///Surrendered with addPostFrameCallback for widget building issue///
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
@@ -262,7 +263,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                 ? null
                 : Visibility(
               // isRetryScanFailure for enable the mic button
-                    visible: (controller.bleController == null) || (controller.isRetryScanFailure??false) || (controller.isDeviceConnectSheelaScreen??false),
+                    visible: (controller.bleController == null) || (controller.isRetryScanFailure??false),
                     child: AnimatedBuilder(
                       animation: animationController!,
                       builder: (context, child) {
@@ -293,12 +294,15 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                                     .value) {
                               controller.stopTTS();
                             } else {
-                              controller.gettingReposnseFromNative();
+                              if (!controller
+                                  .isDeviceConnectSheelaScreen.value) {
+                                controller.gettingReposnseFromNative();
+                              }
                             }
                           }
                         },
                         elevation: 0,
-                        backgroundColor: controller.isLoading.value
+                        backgroundColor: controller.isLoading.value || (controller.isDeviceConnectSheelaScreen.value)
                             ? Colors.black45
                             : PreferenceUtil.getIfQurhomeisAcive()
                                 ? Color(CommonUtil().getQurhomeGredientColor())
@@ -308,7 +312,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                                   controller.currentPlayingConversation!
                                       .isPlaying.value)
                               ? Icons.pause
-                              : controller.isLoading.isTrue
+                              : controller.isLoading.isTrue || (controller.isDeviceConnectSheelaScreen.value)
                                   ? Icons.mic_off
                                   : Icons.mic,
                           color: Colors.white,

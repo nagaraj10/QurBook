@@ -68,7 +68,7 @@ class SheelaBLEController extends GetxController {
           if ((playConversations).isNotEmpty) {
             await playTTS();
           } else if (isCompleted) {
-            if ((SheelaController.isDeviceConnectSheelaScreen ?? false) &&
+            if ((SheelaController.isDeviceConnectSheelaScreen.value) &&
                 (!(SheelaController.isLastActivityDevice ?? true))) {
               Future.delayed(const Duration(seconds: 2)).then((value) {
                 SheelaController.getAIAPIResponseFor(
@@ -231,7 +231,7 @@ class SheelaBLEController extends GetxController {
                     // Set loading state to true in SheelaController
                     SheelaController.isLoading(true);
                   } else if (SheelaController.isSheelaScreenActive &&
-                      (SheelaController.isDeviceConnectSheelaScreen ?? false)) {
+                      (SheelaController.isDeviceConnectSheelaScreen.value)) {
                     // Set device type in SheelaController arguments based on bleDeviceType from hublistController
                     SheelaController.arguments?.deviceType =
                         hublistController.bleDeviceType;
@@ -245,6 +245,7 @@ class SheelaBLEController extends GetxController {
                             ?.toString()
                             .toLowerCase() ==
                         deviceType) {
+                      SheelaController.isSameVitalDevice = true;
                       SheelaController.arguments?.takeActiveDeviceReadings =
                           true;
 
@@ -282,6 +283,7 @@ class SheelaBLEController extends GetxController {
                         }
                       });
                     });
+                    SheelaController.isSameVitalDevice = false;
                   }
                 }
               }
@@ -335,6 +337,14 @@ class SheelaBLEController extends GetxController {
               showFailure();
               break;
             case "connectionfailed":
+              if (SheelaController.isSheelaScreenActive &&
+                  (SheelaController.isDeviceConnectSheelaScreen.value) &&
+                  (!(SheelaController.isSameVitalDevice ?? false))) {
+                Future.delayed(const Duration(seconds: 2)).then((value) {
+                  SheelaController.resetBLE();
+                });
+                break;
+              }
               _disableTimer();
               showFailure();
               await Future.delayed(const Duration(seconds: 2));
@@ -707,6 +717,7 @@ class SheelaBLEController extends GetxController {
         }
         isCompleted = true;
         SheelaController.isRetryScanFailure = false;
+        SheelaController.isSameVitalDevice = false;
       } catch (e, stackTrace) {
         CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
