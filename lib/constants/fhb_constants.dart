@@ -876,11 +876,10 @@ const String strRedirectRedo = 'redirectToRedo';
 
 const String strFailureRetry = 'Turn off your device and Turn it on again to reconnect';
 
-const String strDeviceConnectionStart = 'Turn off your device and Turn it on again to reconnect';
-
 // for reconnect button title
 const String strReconnect = 'Reconnect';
 
+// for device connection flow in sheela
 const String strDeviceConnection = 'device';
 
 //fetchProfilePic
@@ -1080,6 +1079,7 @@ const String strPleaseFill = 'Please fill';
 const String strPleaseSelect = 'Please select';
 const String strAddressLine = 'address_line_1';
 
+// isLast activity continue means call this isSkipReminderCount to api in payload
 const String isSkipRemiderCount = 'isSkipReminderCount';
 
 // Define a constant string for storing the current notification ID.
