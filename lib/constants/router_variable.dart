@@ -9,7 +9,6 @@ const String rt_FamilyInsurance = '/my-family-detail-view-insurance';
 const String rt_TakePicture = '/take-picture-screen';
 const String rt_SearchProvider = '/search-providers';
 const String rt_AddProvider = '/add-providers';
-const String rt_AddAppointments = '/add-appointments';
 const String rt_AddRemainder = '/add-reminders';
 const String rt_Dashboard = '/dashboard-screen';
 const String rt_Landing = '/landing-screen';

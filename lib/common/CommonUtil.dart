@@ -5782,6 +5782,7 @@ class CommonUtil {
   void dialogForSheelaQueueStable(BuildContext context,
       {int? unReadMsgCount,
       Function(bool)? onTapSheelaRemainders,
+      Function(bool)? onTapHideSheelaDialog,
 
       /// Checks if the user came from the Qurhome regimen flow and returns
       /// the fromQurhomeRegimen value if it exists.
@@ -5803,6 +5804,7 @@ class CommonUtil {
           return WillPopScope(
             onWillPop: () async {
               sheelaDialogVisibleFalse();
+              onTapHideSheelaDialog?.call(true);
               return true;
             },
             child: Center(
@@ -5815,6 +5817,7 @@ class CommonUtil {
                     highlightColor: Colors.transparent,
                     onTap: () {
                       sheelaDialogVisibleFalse();
+                      onTapHideSheelaDialog?.call(true);
                       Get.back();
                     },
                     child: Container(
@@ -6365,6 +6368,14 @@ class CommonUtil {
       if (PreferenceUtil.getIfQurhomeDashboardActiveChat() &&
           isAllowSheelaLiveReminders()) {
         if (chatListresponse != null) {
+          //Check whether the sheela inactive dialog is there
+          var qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
+          //close sheela inactive dialog if already exist
+          if(qurhomeDashboardController.isShowScreenIdleDialog.value){
+            Get.back();
+            qurhomeDashboardController.isShowScreenIdleDialog.value=false;
+            qurhomeDashboardController.isScreenIdle.value=false;
+          }
           SheelaReminderResponse chatList =
               SheelaReminderResponse.fromJson(chatListresponse);
           if (chatList != null) {
@@ -6374,7 +6385,14 @@ class CommonUtil {
                 rt_Sheela,
                 arguments: SheelaArgument(
                     sheelReminder: true, chatMessageIdSocket: chatMessageId),
-              );
+              )?.then((value) {
+                //Start the timer if qurhome is true
+                final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
+                if(isQurhomeActive) {
+                  qurhomeDashboardController.isScreenIdle.value = true;
+                  qurhomeDashboardController.checkScreenIdle(isIdeal: true);
+                }
+              });
             }
           }
         }
@@ -6487,13 +6505,16 @@ class CommonUtil {
     return sheelaAIController;
   }
 
-  void goToAppointmentDetailScreen(String appointmentId) {
+  void goToAppointmentDetailScreen(String appointmentId,{Function(bool)? backFromAppointmentScreen,}) {
     if (!Get.isRegistered<AppointmentDetailsController>())
       Get.lazyPut(() => AppointmentDetailsController());
     AppointmentDetailsController appointmentDetailsController =
         Get.find<AppointmentDetailsController>();
     appointmentDetailsController.getAppointmentDetail(appointmentId);
-    Get.to(() => AppointmentDetailScreen());
+    Get.to(() => AppointmentDetailScreen())?.then((value) {
+      //Add appointment callback for pop the screen
+      backFromAppointmentScreen?.call(true);
+    });
   }
 
   Widget? startTheCall(String navRoute) {
@@ -7568,7 +7589,15 @@ class CommonUtil {
       )!
           .then((value) {
         try {
-          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+          final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
+          var qurhomeDashboardController = CommonUtil()
+              .onInitQurhomeDashboardController();
+          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog:isQurhomeActive?false: true);
+          if(isQurhomeActive) {
+            //Initialize the timer when the qurhome is ideal
+            qurhomeDashboardController.isScreenIdle.value = true;
+            qurhomeDashboardController.checkScreenIdle();
+          }
         } catch (e, stackTrace) {
           CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         }
