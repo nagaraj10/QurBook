@@ -270,7 +270,10 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
             floatingActionButton: animationController == null
                 ? null
                 : Visibility(
-                    visible: (!controller.isDeviceConnectSheelaScreen.value) || (controller.isRetryScanFailure.value),
+                    // isDeviceConnectSheelaScreen if false only visible the icon
+                    // isRetryScanFailure if true only visible the icon
+                    visible: (!controller.isDeviceConnectSheelaScreen.value) ||
+                        (controller.isRetryScanFailure.value),
                     child: AnimatedBuilder(
                       animation: animationController!,
                       builder: (context, child) {
@@ -319,7 +322,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                                   controller.currentPlayingConversation!
                                       .isPlaying.value)
                               ? Icons.pause
-                          //controller.isDeviceConnectSheelaScreen.value this is for disable the button while device recording flow
+                              //controller.isDeviceConnectSheelaScreen.value this is for disable the button while device recording flow
                               : controller.isLoading.isTrue
                                   ? Icons.mic_off
                                   : Icons.mic,

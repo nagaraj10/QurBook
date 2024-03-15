@@ -183,6 +183,7 @@ class SheelaAIController extends GetxController {
   bool isDialogOpen =false;
   int timerCountFromRegimenController=0;
 
+  // this is for get the onInitHubListViewController
   final hubListViewController = CommonUtil().onInitHubListViewController();
 
   @override
@@ -628,7 +629,9 @@ class SheelaAIController extends GetxController {
             // Set the value of isDeviceConnectSheelaScreen to true, indicating a device connection.
             isDeviceConnectSheelaScreen.value = true;
 
+            // for getting the eid from payload api
             hubListViewController.eid = (conversations.last?.additionalInfoSheelaResponse?.eid ?? '').toString();
+            // for getting the uid from payload api
             hubListViewController.uid = (conversations.last?.additionalInfoSheelaResponse?.uid ?? '');
 
             // Disable the timer by calling the updateTimer function with enable set to false.
