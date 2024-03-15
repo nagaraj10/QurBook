@@ -108,6 +108,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     animationController?.dispose();
     controller.clearTimer();
     controller.clearReconnectTimer();
+    // Clear the clearDeviceConnectionTimer timer in SheelaController
+    controller.clearDeviceConnectionTimer();
     controller.clearTimerForSessionExpiry();
     WidgetsBinding.instance!.removeObserver(this);
     controller.stopTTS();
@@ -294,6 +296,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                         onPressed: () {
                           controller.clearTimer();
                           controller.clearReconnectTimer();
+                          // Clear the clearDeviceConnectionTimer timer in SheelaController
+                          controller.clearDeviceConnectionTimer();
                           if (controller.isLoading.isFalse) {
                             if (controller.currentPlayingConversation != null &&
                                 controller.currentPlayingConversation!.isPlaying
@@ -512,6 +516,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.updateTimer(enable: false);
     controller.clearTimer();
     controller.clearReconnectTimer();
+    // Clear the clearDeviceConnectionTimer timer in SheelaController
+    controller.clearDeviceConnectionTimer();
     controller.clearTimerForSessionExpiry();
     Get.back();
   }

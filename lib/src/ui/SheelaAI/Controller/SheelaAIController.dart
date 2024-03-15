@@ -102,6 +102,7 @@ class SheelaAIController extends GetxController {
   Timer? _popTimer;
   Timer? _exitAutoTimer;
   Timer? _reconnectTimer;
+  Timer? _deviceConnectionTimerSheela;
   Timer? _sessionTimeout;
   var sheelaIconBadgeCount = 0.obs;
   bool isUnAvailableCC = false;
@@ -632,6 +633,9 @@ class SheelaAIController extends GetxController {
 
             // Reset the BLE (Bluetooth Low Energy) connection.
             resetBLE();
+
+            // Set up a deviceConnectionTimer timer after the delay
+            deviceConnectionTimer();
           }
 
           callToCC(currentResponse);
@@ -1316,6 +1320,26 @@ makeApiRequest is used to update the data with latest data
       _reconnectTimer = null;
     }
   }
+
+  // Method to set up a reconnect timer with a duration of 120 seconds
+  void deviceConnectionTimer() {
+    // Create a timer that closes the current screen after 120 seconds
+    _deviceConnectionTimerSheela = Timer(const Duration(seconds: 120), () {
+      Get.back();  // Close the current screen
+    });
+  }
+
+// Method to clear the reconnect timer
+  clearDeviceConnectionTimer() {
+    // Check if the timer is active and not null
+    if (_deviceConnectionTimerSheela != null && _deviceConnectionTimerSheela!.isActive) {
+      // Cancel the timer to prevent it from triggering
+      _deviceConnectionTimerSheela!.cancel();
+      // Set the timer reference to null after cancellation
+      _deviceConnectionTimerSheela = null;
+    }
+  }
+
 
 
   callToCC(SheelaResponse currentResponse) async {

@@ -271,6 +271,9 @@ class SheelaBLEController extends GetxController {
                       // Start reading Sheela BLE device readings.
                       startSheelaBLEDeviceReadings();
 
+                      // Clear the clearDeviceConnectionTimer timer in SheelaController
+                      SheelaController.clearDeviceConnectionTimer();
+
                       // Set loading state to true in SheelaController.
                       SheelaController.isLoading(true);
                     } else {
