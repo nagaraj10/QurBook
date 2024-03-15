@@ -28,6 +28,7 @@ import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../../constants/fhb_constants.dart' as constants;
+import '../../../regiment/models/get_user_activities_history.dart';
 
 class QurhomeRegimenController extends GetxController {
   final _apiProvider = QurHomeApiProvider();
@@ -138,6 +139,31 @@ class QurhomeRegimenController extends GetxController {
       if (kDebugMode) {
         printError(info: "Regimentlist: " + e.toString());
       }
+    }
+  }
+
+  /// Retrieves the full name for the user with the given employee ID by
+  /// calling the API endpoint to get their activity history.
+  /// Returns the concatenated first and last name if found, or null
+  /// if the API response is null.
+  Future<String?> getUserActivitiesHistory(String eid) async {
+    try {
+      loadingDataWithoutProgress.value = true;
+      final responseJson = await _apiProvider.getUserActivitiesHistory(eid);
+      if (responseJson == null) {
+        return null;
+      }
+      final response = GetUserActivitiesHistoryModel.fromJson(responseJson);
+      var fullName = response.result?.first.user?.firstName ?? '';
+      if (response.result?.first.user?.lastName != null) {
+        fullName += ' ${response.result?.first.user?.lastName ?? ''}';
+      }
+      loadingDataWithoutProgress.value = false;
+      return fullName;
+    } catch (e, stackTrace) {
+      loadingDataWithoutProgress.value = false;
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      return null;
     }
   }
 
@@ -586,7 +612,11 @@ class QurhomeRegimenController extends GetxController {
         Duration(minutes: 2),
         (Timer timer) {
           var sheelaAIController = Get.find<SheelaAIController>();
-          sheelaAIController.getSheelaBadgeCount(isFromQurHomeRegimen: true);
+          sheelaAIController.getSheelaBadgeCount(
+            isFromQurHomeRegimen: true,
+            isFromRegimenController: true,//check whether it is coming from regimen screen
+            makeApiRequest: true,
+          );
         },
       );
     } catch (e, stackTrace) {

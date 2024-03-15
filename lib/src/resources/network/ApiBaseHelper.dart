@@ -1974,8 +1974,7 @@ class ApiBaseHelper {
       var body = jsonDecode(response?.body ?? '');
       return body ?? '';
     } else {
-      //throw Exception("Unable to perform request!");
-      throw InnerException('No Data Found');
+      return null;
     }
   }
 

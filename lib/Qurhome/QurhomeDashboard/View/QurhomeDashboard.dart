@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -39,6 +40,7 @@ import '../../../src/utils/screenutils/size_extensions.dart';
 import '../Controller/QurhomeDashboardController.dart';
 import 'QurHomeRegimen.dart';
 import 'package:myfhb/main.dart';
+
 
 class QurhomeDashboard extends StatefulWidget {
   bool forPatientList;
@@ -98,7 +100,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       }
     }
   }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -110,7 +111,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     try {
       if (CommonUtil.isUSRegion()) {
         try {
-          Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
+          // Retrieve the ChatSocketViewModel instance using Provider
+          Provider.of<ChatSocketViewModel>(context, listen: false).initSocket();
           CommonUtil().initSocket();
           CommonUtil().versionCheck(context);
           Provider.of<LandingViewModel>(context, listen: false)
@@ -139,7 +141,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         textFontSize = 26;
       }
       //Method To show remainder in qurbook tablet
-      await SheelaRemainderPopup.checkConditionToShowPopUp();
+      // await SheelaRemainderPopup.checkConditionToShowPopUp();
 
       controller.updateTabIndex(0);
       controller.setActiveQurhomeTo(
@@ -151,8 +153,11 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       );
 
       WidgetsBinding.instance?.addPostFrameCallback((_) {
-        getSheelaBadgeCount();
+        // getSheelaBadgeCount();
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
+        //Initilaize the screen idle timer
+        controller.isScreenIdle.value=true;
+        controller.checkScreenIdle();
       });
 
       if (Platform.isAndroid) {
@@ -189,10 +194,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       controller.updateBLETimer(Enable: false);
       MyFHB.routeObserver.unsubscribe(this);
       controller.clear();
+      controller.getIdleTimer!.cancel();
+      controller.isScreenIdle.value=false;
       super.dispose();
+
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-
       print(e);
     }
   }
@@ -577,11 +584,14 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                     ),
                                   )?.then((value) {
                                     getSheelaBadgeCount();
+                                    controller.isScreenIdle.value=true;
+                                    controller.checkScreenIdle();
                                   });
                                 } else {
                                   String sheela_lang =
                                       PreferenceUtil.getStringValue(
                                           SHEELA_LANG)!;
+                                  controller.isScreenIdle.value = false;
                                   Get.toNamed(
                                     rt_Sheela,
                                     arguments: SheelaArgument(
@@ -591,6 +601,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                     ),
                                   )?.then((value) {
                                     getSheelaBadgeCount();
+                                    controller.isScreenIdle.value=true;
+                                    controller.checkScreenIdle();
                                   });
                                 }
                               },

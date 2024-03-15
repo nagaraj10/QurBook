@@ -898,3 +898,6 @@ const String stringDoctorExperience = 'doctorExperience'; // Represents a key or
 const String showImageHelp = 'Show Image Help';
 const String showAudioHelp = 'Show Audio Help';
 const String showVideoHelp = 'Show Video Help';
+
+// Assigning the string 'true' to the constant variable strTrue
+const String strTrue = 'true';

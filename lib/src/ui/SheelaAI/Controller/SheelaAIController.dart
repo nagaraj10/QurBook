@@ -12,6 +12,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/model/SheelaBadgeModel.dart';
@@ -160,6 +161,16 @@ class SheelaAIController extends GetxController {
   bool? isRetakeCapture = false;
   //reconnect feature enable flag
   bool? isRetryScanFailure = false;
+  // Declaration of a Reactive variable `isDeviceConnectSheelaScreen` of type Rx<bool>
+// Initialized with a boolean value `false` and converted into an observable using `.obs`.
+  Rx<bool> isDeviceConnectSheelaScreen = false.obs;
+
+// Declaration of a nullable boolean variable `isLastActivityDevice` initialized with `true`.
+  bool? isLastActivityDevice = true;
+
+// Declaration of a nullable boolean variable `isSameVitalDevice` initialized with `false`.
+  bool? isSameVitalDevice = false;
+
   String? fileRequestUrl = '';
 
   final ApiBaseHelper _helper = ApiBaseHelper();
@@ -168,6 +179,8 @@ class SheelaAIController extends GetxController {
   // Create a Map to store reminder timers. The keys are String identifiers (presumably related to reminders),
   // and the values are Timer objects that will be used for managing timing events associated with reminders.
   Map<String, Timer> reminderTimers = {};
+  bool isDialogOpen =false;
+  int timerCountFromRegimenController=0;
 
   Rx<bool> isInternetConnection = true.obs;
 
@@ -241,7 +254,9 @@ class SheelaAIController extends GetxController {
     } else {
       stopTTS();
       try {
-        if (!(conversations.last.endOfConv??true)) {
+        // diasble the end of conversation and mic dialog for strDeviceConnection flow
+        if (!(conversations.last.endOfConv ?? true) &&
+            (conversations.last.redirectTo ?? '') != strDeviceConnection) {
           if (CommonUtil.isUSRegion()) {
             if (!isMuted.value) {
               if (!isDiscardDialogShown.value) {
@@ -275,6 +290,15 @@ class SheelaAIController extends GetxController {
           // Set up a reconnect timer after the delay
           reconnectTimer();
         }
+        /*else if ((conversations.last.redirectTo ?? '') ==
+            strDeviceConnection) {
+          isLastActivityDevice = (conversations
+              .last?.additionalInfoSheelaResponse?.isLastActivity ??
+              true);
+          isDeviceConnectSheelaScreen.value = true;
+          updateTimer(enable: false); // disable the timer
+          resetBLE(); // Reset the BLE (Bluetooth Low Energy) connection
+        }*/
       } catch (e, stackTrace) {
         //gettingReposnseFromNative();
         if (kDebugMode)
@@ -413,7 +437,7 @@ class SheelaAIController extends GetxController {
   }
 
   getAIAPIResponseFor(String? message, Buttons? buttonsList,
-      {bool? isFromImageUpload = false, String? requestFileType}) async {
+      {bool? isFromImageUpload = false, String? requestFileType, bool? restartSheelaDevice = false}) async {
     try {
       isCallStartFromSheela = false;
       isLoading.value = true;
@@ -429,6 +453,25 @@ class SheelaAIController extends GetxController {
         additionalInfo?[strRequestType] =
             requestFileType; // Add request type to additionalInfo
       }
+      // Check if the value of the observable is true
+      if (isDeviceConnectSheelaScreen.value) {
+        // If true, it indicates that it's an image upload.
+
+        // Update additionalInfo with the file URL and request type by setting isSkipReminderCount to true.
+        additionalInfo?[isSkipRemiderCount] = true;
+
+        // Reset isDeviceConnectSheelaScreen value to false after processing.
+        isDeviceConnectSheelaScreen.value = false;
+
+        // Reset isLastActivityDevice to true.
+        isLastActivityDevice = true;
+      } else {
+        // If the value of isDeviceConnectSheelaScreen is false, it means it's not an image upload.
+
+        // Update additionalInfo with isSkipReminderCount set to false.
+        additionalInfo?[isSkipRemiderCount] = false;
+      }
+
       final sheelaRequest = SheelaRequestModel(
         sender: userId,
         name: userName,
@@ -573,6 +616,24 @@ class SheelaAIController extends GetxController {
           } else {
             playTTS();
           }
+          // Check if the redirectTo property of the last conversation is equal to strDeviceConnection.
+          if ((conversations.last.redirectTo ?? '') == strDeviceConnection) {
+            // If redirectTo is equal to strDeviceConnection:
+
+            // Update isLastActivityDevice with the value of isLastActivity from the additionalInfoSheelaResponse,
+            // or set it to true if additionalInfoSheelaResponse or isLastActivity is null.
+            isLastActivityDevice = (conversations.last?.additionalInfoSheelaResponse?.isLastActivity ?? true);
+
+            // Set the value of isDeviceConnectSheelaScreen to true, indicating a device connection.
+            isDeviceConnectSheelaScreen.value = true;
+
+            // Disable the timer by calling the updateTimer function with enable set to false.
+            updateTimer(enable: false);
+
+            // Reset the BLE (Bluetooth Low Energy) connection.
+            resetBLE();
+          }
+
           callToCC(currentResponse);
           /*if (currentResponse.lang != null && currentResponse.lang != '') {
             PreferenceUtil.saveString(SHEELA_LANG, currentResponse.lang ?? "");
@@ -995,6 +1056,8 @@ class SheelaAIController extends GetxController {
     currentDeviceStatus.allowSymptomsNotification =
         prof.caregiverCommunicationSetting?.symptoms ?? true;
     currentDeviceStatus.voiceCloning = prof.voiceCloning ?? false;
+    // Set useClonedVoice from profile settings.
+    currentDeviceStatus.useClonedVoice = prof.useClonedVoice??false;
 
     if (savePrefLang) {
       PreferenceUtil.saveString(
@@ -1108,8 +1171,11 @@ makeApiRequest is used to update the data with latest data
     bool isNeedSheelaDialog = false,
     bool isFromQurHomeRegimen = false,
     bool makeApiRequest = false,
+    bool isScreenIdeal = false,
+    bool isFromRegimenController = false,
   }) async {
     try {
+      var qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
       // Check if sheelaIconBadgeCount is not greater than 0
       if (!(sheelaIconBadgeCount.value > 0)) {
         // If not, set it to 0
@@ -1138,16 +1204,22 @@ makeApiRequest is used to update the data with latest data
         // Extract conditions for showing the sheela dialog
         final hasQueueCount = (_sheelaBadgeModel?.result!.queueCount ?? 0) > 0;
         final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
-        final isTablet = CommonUtil().isTablet ?? false;
+        // final isTablet = CommonUtil().isTablet ?? false;
         final isQueueDialogShowen = !isQueueDialogShowing.value;
-
+        //check if screen is ideal
+          if (isScreenIdeal&&  !qurhomeDashboardController.isShowScreenIdleDialog.value) {
+            qurhomeDashboardController.isShowScreenIdleDialog.value=true;
+            showDialogForSheelaBox(
+              isFromQurHomeRegimen: isFromQurHomeRegimen,
+            );
+          }
         // Check if all conditions are met to show the dialog
-        if (isNeedSheelaDialog &&
+        else if (isNeedSheelaDialog &&
             hasQueueCount &&
-            isQurhomeActive &&
-            isQueueDialogShowen &&
-            !isTablet) {
-          showDialogForSheelaBox(
+            isQurhomeActive && !isScreenIdeal &&
+            isQueueDialogShowen
+            ) {
+            showDialogForSheelaBox(
             isFromQurHomeRegimen: isFromQurHomeRegimen,
             isNeedSheelaDialog: isNeedSheelaDialog,
           );
@@ -1193,7 +1265,10 @@ makeApiRequest is used to update the data with latest data
       } else if (enable) {
         printInfo(info: 'started the timer');
         _popTimer = Timer(const Duration(seconds: 30), () {
-          if (isSheelaScreenActive && bleController == null) {
+          //isDeviceConnectSheelaScreen.value is for disable the timer in device recoding flow
+          if (isSheelaScreenActive &&
+              bleController == null &&
+              (!(isDeviceConnectSheelaScreen.value))) {
             printInfo(info: 'timeout the timer');
             stopTTS();
             canSpeak = false;
@@ -1456,16 +1531,30 @@ makeApiRequest is used to update the data with latest data
 
   void showDialogForSheelaBox(
       {bool isNeedSheelaDialog = false, bool isFromQurHomeRegimen = false}) {
-    isQueueDialogShowing.value = true;
-
+    final qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
+    if(!qurhomeDashboardController.isScreenIdle.value){
+      isQueueDialogShowing.value = true;
+    }
     CommonUtil().dialogForSheelaQueueStable(Get.context!,
         unReadMsgCount:
             Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
                 .chatTotalCount,
         fromQurhomeRegimen: isFromQurHomeRegimen,
+        onTapHideSheelaDialog: (value) {
+          if(value){
+            //Update qurhome idle timer
+            qurhomeDashboardController.isShowScreenIdleDialog.value=false;
+            qurhomeDashboardController.isScreenIdle.value=true;
+            qurhomeDashboardController.checkScreenIdle(isIdeal: true);
+          }
+        },
         onTapSheelaRemainders: (value) {
-      isQueueDialogShowing.value = false;
-      Get.back();
+          if(!qurhomeDashboardController.isScreenIdle.value){
+            isQueueDialogShowing.value = false;
+          }else{
+            qurhomeDashboardController.isScreenIdle.value = false;
+          }
+          Get.back();
       Get.toNamed(
         rt_Sheela,
         arguments: value
@@ -1475,7 +1564,9 @@ makeApiRequest is used to update the data with latest data
             : SheelaArgument(showUnreadMessage: true),
       )?.then((value) {
         ///Update Sheela remainder count
-        getSheelaBadgeCount(isNeedSheelaDialog: true);
+        qurhomeDashboardController.isScreenIdle.value=true;
+        qurhomeDashboardController.isShowScreenIdleDialog.value=false;
+        qurhomeDashboardController.checkScreenIdle(isIdeal: true);
       });
     });
   }
@@ -3159,6 +3250,14 @@ makeApiRequest is used to update the data with latest data
 
     // If already scheduled, cancel the existing notification with the same ID
     if (isScheduled) {
+      //Sheela inactive dialog exist close the dialog
+      var qurhomeDashboardController = CommonUtil()
+          .onInitQurhomeDashboardController();
+      if(qurhomeDashboardController.isShowScreenIdleDialog.value){
+        Get.back();
+        qurhomeDashboardController.isShowScreenIdleDialog.value=false;
+        qurhomeDashboardController.isScreenIdle.value=false;
+      }
       await Future.delayed(const Duration(milliseconds: 100));
       final sheelaAIController = CommonUtil().onInitSheelaAIController();
       // Construct an array of values for the reminder invocation

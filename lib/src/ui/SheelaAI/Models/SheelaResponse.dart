@@ -251,9 +251,10 @@ class Buttons {
   bool? needPhoto;
   bool? needAudio;
   bool? needVideo;
-  bool? partialTitle;
-  bool? partialSynonym;
+  String? partialTitle;
+  String? partialSynonym;
   List<String>? synonymsList; // list of synonyms to match the voice input
+  List<String>? synonyms; // list of synonyms to match the voice input
 
   Buttons({
     this.payload,
@@ -266,6 +267,7 @@ class Buttons {
     this.ttsResponse,
     this.btnRedirectTo,
     this.synonymsList,
+    this.synonyms,
     this.imageUrl,
     this.videoUrl,
     this.audioUrl,
@@ -276,8 +278,8 @@ class Buttons {
     this.needPhoto = false,
     this.needAudio = false,
     this.needVideo = false,
-    this.partialSynonym=false,
-    this.partialTitle=false,
+    this.partialSynonym,
+    this.partialTitle,
   });
 
   Buttons.fromJson(Map<String, dynamic> json) {
@@ -297,11 +299,15 @@ class Buttons {
       needPhoto = (json['needPhoto'] ?? false);
       needAudio = (json['needAudio'] ?? false);
       needVideo = (json['needVideo'] ?? false);
-      partialSynonym = (json['partialSynonym'] ?? false);
-      partialTitle = (json['partialtitle'] ?? false);
+      partialSynonym = (json['partialsynonym'] ?? "");
+      partialTitle = (json['partialtitle'] ?? "");
       synonymsList = json["synonymsList"] != null
           ? List<String>.from(json["synonymsList"])
-          : []; // Assign synonymsList with an empty list if it's null, otherwise, convert the JSON list to a Dart list of strings
+          : [];
+      synonyms = json["synonyms"] != null
+          ? List<String>.from(json["synonyms"])
+          : [];
+      // Assign synonymsList with an empty list if it's null, otherwise, convert the JSON list to a Dart list of strings
       if (json['chatAttachments'] != null) {
         chatAttachments = <ChatAttachments>[];
         json['chatAttachments'].forEach((v) {
@@ -335,6 +341,9 @@ class Buttons {
     data['needAudio'] = this.needAudio;
     data['needVideo'] = this.needVideo;
     data['synonymsList'] = this.synonymsList;
+    data['synonyms'] = this.synonyms;
+    data['partialtitle'] = this.partialTitle;
+    data['partialsynonym'] = this.partialSynonym;
     if (this.chatAttachments != null) {
       data['chatAttachments'] = this.chatAttachments!.map((v) => v.toJson()).toList();
     }
@@ -424,16 +433,22 @@ class AdditionalInfoSheela {
   bool? reconfirmationFlag;
   bool? isAutoReadTTS;
   SnoozeData? snoozeData;
+  DeviceData? deviceData;
+  bool? isLastActivity;
 
-  AdditionalInfoSheela({this.sessionTimeoutMin, this.reconfirmationFlag, this.snoozeData});
+  AdditionalInfoSheela({this.sessionTimeoutMin, this.reconfirmationFlag, this.snoozeData,this.isLastActivity,this.deviceData});
 
   AdditionalInfoSheela.fromJson(Map<String, dynamic> json) {
     try {
       sessionTimeoutMin = json['sessionTimeoutMin'];
       reconfirmationFlag = json['reconfirmationFlag'] ?? false;
       isAutoReadTTS = json['isAutoReRead'] ?? false;
+      isLastActivity = json['isLastActivity'] ?? true;
       snoozeData = json['snoozeData'] != null
           ? SnoozeData.fromJson(json['snoozeData'])
+          : null;
+      deviceData = json['deviceData'] != null
+          ? DeviceData.fromJson(json['deviceData'])
           : null;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -445,7 +460,9 @@ class AdditionalInfoSheela {
     data['sessionTimeoutMin'] = this.sessionTimeoutMin;
     data['reconfirmationFlag'] = this.reconfirmationFlag;
     data['isAutoReRead'] = this.isAutoReadTTS;
+    data['isLastActivity'] = this.isLastActivity;
     data['snoozeData'] = this.snoozeData;
+    data['deviceData'] = this.deviceData;
     return data;
   }
 }
@@ -550,4 +567,23 @@ class Fields {
     "description": description,
     "fdataA": fdataA == null ? [] : List<dynamic>.from(fdataA!.map((x) => x.toJson())),
   };
+}
+
+class DeviceData {
+  String? fullName;
+  String? shortName;
+
+  DeviceData({this.fullName, this.shortName});
+
+  DeviceData.fromJson(Map<String, dynamic> json) {
+    fullName = json['fullName'];
+    shortName = json['shortName'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['fullName'] = this.fullName;
+    data['shortName'] = this.shortName;
+    return data;
+  }
 }

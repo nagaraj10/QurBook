@@ -83,6 +83,43 @@ class QurHomeApiProvider {
     }
   }
 
+  /// Gets the user activities history for the given event ID.
+  ///
+  /// Fetches the activities history for the user related to the provided
+  /// event ID, by calling the `get-user-activities-history` API endpoint.
+  ///
+  /// Parameters:
+  /// - eid: The event ID to get activities for.
+  ///
+  /// Returns: The API response body containing the activities history,
+  /// or null if the request failed.
+  Future<dynamic> getUserActivitiesHistory(String eid) async {
+    final userId = PreferenceUtil.getStringValue(KEY_USERID);
+    try {
+      final header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      final jsonBody = {
+        'patientId': userId,
+        'eid': eid,
+        'userId': userId,
+        'type': 'Regimen'
+      };
+      final responseJson = (await ApiServices.post(
+          '${Constants.BASE_URL}incident-alert/get-user-activities-history',
+          headers: header,
+          body: json.encode(jsonBody)))!;
+      if (responseJson.statusCode == 200) {
+        final body = jsonDecode(responseJson.body);
+
+        return body;
+      } else {
+        return null;
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      return null;
+    }
+  }
+
   Future<dynamic> getRegimenListCalendar(DateTime startDate, DateTime endDate,
       {String? patientId}) async {
     http.Response responseJson;

@@ -664,7 +664,6 @@ const voice_platform = MethodChannel('flutter.native/voiceIntent');
 const version_platform = MethodChannel('flutter.native/versioncode');
 const tts_platform = MethodChannel('flutter.native/textToSpeech');
 const tts_platform_closeMic = 'CloseMic';
-const security = MethodChannel('flutter.native/security');
 const String strWaitLoading = 'wait! Its loading';
 
 const String _wordsFromMaya = 'waiting for maya to speak';
@@ -761,6 +760,7 @@ const String strStatus = 'Status : ';
 const String strVoiceTerms = 'Accept And Continue';
 const String strInActive = 'InActive';
 const String strSubmit = 'Submit';
+const String strFetchingList = 'Fetching List';
 const String strVoiceCloningExistingMembersHeader =
     'Your cloned voice is in use for the following members:';
 const String strVoiceCloningAddMembersHeader =
@@ -838,8 +838,6 @@ const String strOK = 'OK';
 const String strCANCEL = 'CANCEL';
 const String strOKAY = 'OKAY';
 const String strValidPhoneNumber = 'Enter a valid mobile number';
-const String strGetAppVersion = 'getAppVersion';
-const String strSecure = 'secureMe';
 const String strpop = 'SystemNavigator.pop';
 const String strDiscard = 'Discard';
 
@@ -942,7 +940,6 @@ const listenToCallStatusMethod = 'listenToCallStatus';
 const String strNoTicketsRaised = 'Tap on + icon to create Tickets';
 const String strNoTicketTypesAvaliable = 'No Ticket Types Found !!';
 
-var reminderMethodChannelAndroid = const MethodChannel('android/notification');
 
 // regimen appointment
 const String strAppointmentRegimen = 'Appointment';
@@ -1010,13 +1007,19 @@ const String strCentreVisit = 'Centre Visit';
 const String strOnsite = 'Onsite';
 
 //for regimen
-const String strRecorded = 'Recorded at';
+const String strRecordedAt = 'Recorded at';
+const String strHasBeenRecordedBy = 'This has been recorded by ';
+const String strHasBeenRecordedByAt = ' at';
 const String strUndo = 'Undo';
 const String strEdit = 'Edit';
 const String strView = 'View';
 const String strConfirms = 'Are you sure?';
 const String strUpdateMsg = 'Do you want to update the changes';
 const String strDecline = 'Declined';
+const String strActivityYourHealthcareProvider =
+    'This activity will be performed by your healthcare provider.';
+
+const String strNotifiedonceItIsDone = 'You\'ll be notified once it is done.';
 
 //For Alert
 const String strEscalate = 'Escalate';
