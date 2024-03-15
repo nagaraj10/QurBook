@@ -568,7 +568,7 @@ class QurhomeRegimenController extends GetxController {
       // statusText.value = '';
       statusText.value =
           "${stringViewTotalNumberOfActivites} ${qurHomeRegimenResponseModel?.regimentsList?.length ?? 0}";
-      prefix = 'Today, ';
+      prefix = 'Today is ';
     } else if (CommonUtil().calculateDifference(now) < 0) {
       //past
       isTodaySelected.value = false;
@@ -592,7 +592,16 @@ class QurhomeRegimenController extends GetxController {
     }
     update([strRefershStatusText]);
 
-    String formattedDate = DateFormat('dd MMM').format(now);
+    /// Formats the given [DateTime] [now] to a readable date string
+    /// with a prefix indicating whether it is today, past, or future.
+    ///
+    /// The format used is 'MMMM dd, yyyy' (e.g. January 01, 2020).
+    ///
+    /// The [prefix] indicates whether [now] refers to today, the past,
+    /// or the future.
+    ///
+    /// Returns the formatted date string with prefix.
+    String formattedDate = DateFormat('MMMM dd , yyyy').format(now);
     return prefix + formattedDate;
   }
 
