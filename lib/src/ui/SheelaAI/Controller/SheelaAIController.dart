@@ -161,7 +161,7 @@ class SheelaAIController extends GetxController {
   String? btnTextLocal = '';
   bool? isRetakeCapture = false;
   //reconnect feature enable flag
-  bool? isRetryScanFailure = false;
+  Rx<bool> isRetryScanFailure = false.obs;
   // Declaration of a Reactive variable `isDeviceConnectSheelaScreen` of type Rx<bool>
 // Initialized with a boolean value `false` and converted into an observable using `.obs`.
   Rx<bool> isDeviceConnectSheelaScreen = false.obs;
@@ -182,6 +182,8 @@ class SheelaAIController extends GetxController {
   Map<String, Timer> reminderTimers = {};
   bool isDialogOpen =false;
   int timerCountFromRegimenController=0;
+
+  final hubListViewController = CommonUtil().onInitHubListViewController();
 
   @override
   void onInit() {
@@ -625,6 +627,9 @@ class SheelaAIController extends GetxController {
 
             // Set the value of isDeviceConnectSheelaScreen to true, indicating a device connection.
             isDeviceConnectSheelaScreen.value = true;
+
+            hubListViewController.eid = (conversations.last?.additionalInfoSheelaResponse?.eid ?? '').toString();
+            hubListViewController.uid = (conversations.last?.additionalInfoSheelaResponse?.uid ?? '');
 
             // Disable the timer by calling the updateTimer function with enable set to false.
             updateTimer(enable: false);

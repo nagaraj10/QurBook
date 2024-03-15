@@ -49,7 +49,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.conversations = [];
     controller.btnTextLocal = '';
     controller.isRetakeCapture = false;
-    controller.isRetryScanFailure = false;
+    controller.isRetryScanFailure.value = false;
     // Set the value of isDeviceConnectSheelaScreen to false in the controller.
     controller.isDeviceConnectSheelaScreen.value = false;
 
@@ -270,8 +270,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
             floatingActionButton: animationController == null
                 ? null
                 : Visibility(
-              // isRetryScanFailure for enable the mic button
-                    visible: (controller.bleController == null) || (controller.isRetryScanFailure??false),
+                    visible: (!controller.isDeviceConnectSheelaScreen.value) || (controller.isRetryScanFailure.value),
                     child: AnimatedBuilder(
                       animation: animationController!,
                       builder: (context, child) {
@@ -304,19 +303,13 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                                     .value) {
                               controller.stopTTS();
                             } else {
-                              // Check if the value of isDeviceConnectSheelaScreen in the controller is false.
-                              if (!controller.isDeviceConnectSheelaScreen.value) {
-                                // If isDeviceConnectSheelaScreen is false:
-
-                                // Call the gettingReposnseFromNative method in the controller.
-                                controller.gettingReposnseFromNative();
-                              }
+                              // Call the gettingReposnseFromNative method in the controller.
+                              controller.gettingReposnseFromNative();
                             }
                           }
                         },
                         elevation: 0,
-                        //controller.isDeviceConnectSheelaScreen.value this is for disable the button while device recording flow
-                        backgroundColor: controller.isLoading.value || (controller.isDeviceConnectSheelaScreen.value)
+                        backgroundColor: controller.isLoading.value
                             ? Colors.black45
                             : PreferenceUtil.getIfQurhomeisAcive()
                                 ? Color(CommonUtil().getQurhomeGredientColor())
@@ -327,7 +320,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                                       .isPlaying.value)
                               ? Icons.pause
                           //controller.isDeviceConnectSheelaScreen.value this is for disable the button while device recording flow
-                              : controller.isLoading.isTrue || (controller.isDeviceConnectSheelaScreen.value)
+                              : controller.isLoading.isTrue
                                   ? Icons.mic_off
                                   : Icons.mic,
                           color: Colors.white,
