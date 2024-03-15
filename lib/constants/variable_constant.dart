@@ -760,6 +760,7 @@ const String strStatus = 'Status : ';
 const String strVoiceTerms = 'Accept And Continue';
 const String strInActive = 'InActive';
 const String strSubmit = 'Submit';
+const String strFetchingList = 'Fetching List';
 const String strVoiceCloningExistingMembersHeader =
     'Your cloned voice is in use for the following members:';
 const String strVoiceCloningAddMembersHeader =
@@ -1004,6 +1005,8 @@ const String strSelValidMsg = 'Please select a valid';
 const String strLocationLink = "Location link";
 const String strCentreVisit = 'Centre Visit';
 const String strOnsite = 'Onsite';
+
+const String strCompleted='Completed';
 
 //for regimen
 const String strRecordedAt = 'Recorded at';

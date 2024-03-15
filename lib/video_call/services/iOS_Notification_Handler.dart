@@ -372,6 +372,13 @@ class IosNotificationHandler {
       await Get.to(CareGiverSettings());
     } else if (model.isSheela ?? false) {
       //// allow the user for auto redirect to sheela screen on time
+      var qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
+      //Sheela inactive dialog exist close the dialog
+      if(qurhomeDashboardController.isShowScreenIdleDialog.value){
+        Get.back();
+        qurhomeDashboardController.isShowScreenIdleDialog.value=false;
+        qurhomeDashboardController.isScreenIdle.value=false;
+      }
       if (CommonUtil().isAllowSheelaLiveReminders()) {
         if (model.eventType != null && model.eventType == strWrapperCall) {
           await Get.toNamed(
@@ -382,7 +389,14 @@ class IosNotificationHandler {
               eventType: model.eventType,
               others: model.others,
             ),
-          );
+          )?.then((value) {
+            //Restart the timer for check the ideal flow when the qurhome is active
+            final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
+            if(isQurhomeActive) {
+              qurhomeDashboardController.isScreenIdle.value = true;
+              qurhomeDashboardController.checkScreenIdle(isIdeal: true);
+            }
+          });
         } else if ((model.rawBody ?? '').isNotEmpty) {
           await Get.toNamed(
             rt_Sheela,
