@@ -120,7 +120,9 @@ class CancelAppointmentsService {
 
   void SnackbarToLogout(
       {String msg = 'something went wrong, please try again later.'}) {
+    // Initialize SheelaAIController using onInitSheelaAIController method from CommonUtil
     var sheelaAIController = CommonUtil().onInitSheelaAIController();
+    // Check if internet connection is available
     if (sheelaAIController.isInternetConnection.value) {
       PreferenceUtil.clearAllData().then((value) {
         Get.offAll(PatientSignInScreen());

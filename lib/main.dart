@@ -438,28 +438,40 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult? result) async {
+    // Check the result of the connectivity
     switch (result) {
+    // If connected via wifi or mobile network
       case ConnectivityResult.wifi:
       case ConnectivityResult.mobile:
+      // Call the method to set connection status
         setConnectionStatus();
         break;
+    // If no internet connection
       case ConnectivityResult.none:
+      // Set internet connection status to false
         sheelaAIController.isInternetConnection.value = false;
+        // Show a toast indicating no internet connection
         toast.getToast(no_internet_conn, Colors.red);
+        // Navigate to the network screen
         await Get.to(const NetworkScreen());
         break;
+    // For any other result (possibly unexpected)
       default:
+      // Show a toast indicating failed to get connectivity
         toast.getToast(failed_get_connectivity, Colors.red);
         break;
     }
   }
 
   void setConnectionStatus() {
+    // If internet connection status was previously false
     if (!sheelaAIController.isInternetConnection.value) {
+      // Close the network screen if it's open
       Get.back();
     }
-
+    // Set internet connection status to true
     sheelaAIController.isInternetConnection.value = true;
   }
+
 
 }

@@ -281,6 +281,7 @@ class SheelaBLEController extends GetxController {
                       break;
                     }
                   } else {
+                    // Check if internet connection is available
                     if (SheelaController.isInternetConnection.value) {
                       Get.to(
                         () => SheelaAIMainScreen(
