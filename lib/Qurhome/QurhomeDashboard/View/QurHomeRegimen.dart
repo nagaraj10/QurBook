@@ -2936,6 +2936,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         child: InkWell(
           onTap: () async {
             if (CommonUtil.isUSRegion() && regimen.activityOrgin != strDiet) {
+              // for sheela icon redirection from ack dialog in qurhome regimen
+              hubController.eid = regimen.eid;
+              hubController.uid = regimen.uid;
               if (checkCanEdit(regimen)) {
                 Navigator.pop(context);
                 if (regimen.activityOrgin == strSurvey) {
