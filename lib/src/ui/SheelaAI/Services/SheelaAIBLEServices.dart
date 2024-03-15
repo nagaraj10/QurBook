@@ -223,7 +223,7 @@ class SheelaBLEController extends GetxController {
                   }
                   // Check if Sheela screen is active and there is a retry for scan failure
                   if (SheelaController.isSheelaScreenActive &&
-                      (SheelaController.isRetryScanFailure ?? false)) {
+                      (SheelaController.isRetryScanFailure.value)) {
                     // Set device type in SheelaController arguments based on bleDeviceType from hublistController
                     SheelaController.arguments?.deviceType =
                         hublistController.bleDeviceType;
@@ -238,7 +238,7 @@ class SheelaBLEController extends GetxController {
                     startSheelaBLEDeviceReadings();
 
                     // Reset the retry scan failure flag
-                    SheelaController.isRetryScanFailure = false;
+                    SheelaController.isRetryScanFailure.value = false;
 
                     // Set loading state to true in SheelaController
                     SheelaController.isLoading(true);
@@ -565,7 +565,7 @@ class SheelaBLEController extends GetxController {
       SheelaController.isLoading.value = true;
 
       // Set retry scan failure flag to true in SheelaController
-      SheelaController.isRetryScanFailure = true;
+      SheelaController.isRetryScanFailure.value = true;
 
       // Display failure message with options for retry
       addToConversationAndPlay(
@@ -737,7 +737,7 @@ class SheelaBLEController extends GetxController {
           }
         }
         isCompleted = true;
-        SheelaController.isRetryScanFailure = false;
+        SheelaController.isRetryScanFailure.value = false;
         // this is for disable the isSameVitalDevice for other device try to connect
         SheelaController.isSameVitalDevice = false;
       } catch (e, stackTrace) {
