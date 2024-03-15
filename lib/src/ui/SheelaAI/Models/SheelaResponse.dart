@@ -435,8 +435,10 @@ class AdditionalInfoSheela {
   SnoozeData? snoozeData;
   DeviceData? deviceData;
   bool? isLastActivity;
+  dynamic eid;
+  String? uid;
 
-  AdditionalInfoSheela({this.sessionTimeoutMin, this.reconfirmationFlag, this.snoozeData,this.isLastActivity,this.deviceData});
+  AdditionalInfoSheela({this.sessionTimeoutMin, this.reconfirmationFlag, this.snoozeData,this.isLastActivity,this.deviceData,this.eid,this.uid});
 
   AdditionalInfoSheela.fromJson(Map<String, dynamic> json) {
     try {
@@ -450,6 +452,8 @@ class AdditionalInfoSheela {
       deviceData = json['deviceData'] != null
           ? DeviceData.fromJson(json['deviceData'])
           : null;
+      eid = json['eid'] ?? '';
+      uid = json['uid'] ?? '';
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
@@ -463,6 +467,8 @@ class AdditionalInfoSheela {
     data['isLastActivity'] = this.isLastActivity;
     data['snoozeData'] = this.snoozeData;
     data['deviceData'] = this.deviceData;
+    data['eid'] = this.eid;
+    data['uid'] = this.uid;
     return data;
   }
 }
