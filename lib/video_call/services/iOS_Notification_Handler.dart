@@ -120,13 +120,16 @@ class IosNotificationHandler {
           if ((call.arguments['eid'] ?? '').isNotEmpty && isAlreadyLoaded) {
             //// allow the user to get notifications
             if (CommonUtil().isAllowSheelaLiveReminders()) {
+              // Prepare JSON data for adding to the sheela queue request
+              final reqJson = {
+                KIOSK_task: KIOSK_remind,
+                KIOSK_eid: call.arguments['eid'],
+              };
               if (sheelaAIController!.isSheelaScreenActive) {
-                final reqJson = {
-                  KIOSK_task: KIOSK_remind,
-                  KIOSK_eid: call.arguments['eid'],
-                };
                 CommonUtil().callQueueNotificationPostApi(reqJson);
               } else {
+                // call queue insert api for adding the queue before navigate
+                CommonUtil().callQueueNotificationPostApi(reqJson,isNeedDialog: false);
                 await Get.toNamed(
                   rt_Sheela,
                   arguments: SheelaArgument(
@@ -440,6 +443,8 @@ class IosNotificationHandler {
             //Adding the notificaiton to sheela reminder Queue
             CommonUtil().callQueueNotificationPostApi(reqJson);
           } else if (PreferenceUtil.getIfQurhomeisAcive()) {
+            // call queue insert api for adding the queue before navigate
+            CommonUtil().callQueueNotificationPostApi(reqJson,isNeedDialog: false);
             // Navigate to Sheela screen with specific arguments
             await Get.toNamed(
               rt_Sheela,
