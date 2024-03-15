@@ -480,6 +480,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 padding: const EdgeInsets.symmetric(vertical: 50.0),
                 child: Container(
                     child: RawScrollbar(
+                  thumbVisibility: true,
                   thumbColor: Color(
                     CommonUtil().getQurhomePrimaryColor(),
                   ),
@@ -777,7 +778,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                         if (regimen.ack != null)
                           CommonUtil.isUSRegion()
                               ? const SizedBox()
-                              : Text(
+                              : const SizedBox() /*Text(
                                   '${CommonUtil().regimentDateFormatV2(
                                     regimen.asNeeded
                                         ? regimen.ack ?? DateTime.now()
@@ -789,7 +790,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                     color: getTextAndIconColor(
                                         itemIndex, nextRegimenPosition),
                                   ),
-                                )
+                                )*/
                         else
                           const SizedBox()
                       ],

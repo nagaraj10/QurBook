@@ -592,6 +592,15 @@ class QurhomeRegimenController extends GetxController {
     }
     update([strRefershStatusText]);
 
+    /// Formats the given [DateTime] [now] to a readable date string
+    /// with a prefix indicating whether it is today, past, or future.
+    ///
+    /// The format used is 'MMMM dd, yyyy' (e.g. January 01, 2020).
+    ///
+    /// The [prefix] indicates whether [now] refers to today, the past,
+    /// or the future.
+    ///
+    /// Returns the formatted date string with prefix.
     String formattedDate = DateFormat('MMMM dd , yyyy').format(now);
     return prefix + formattedDate;
   }
