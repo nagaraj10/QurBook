@@ -1006,6 +1006,8 @@ const String strLocationLink = "Location link";
 const String strCentreVisit = 'Centre Visit';
 const String strOnsite = 'Onsite';
 
+const String strCompleted='Completed';
+
 //for regimen
 const String strRecordedAt = 'Recorded at';
 const String strHasBeenRecordedBy = 'This has been recorded by ';
