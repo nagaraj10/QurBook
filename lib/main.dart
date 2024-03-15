@@ -3,7 +3,6 @@ import 'dart:io' show Platform;
 import 'package:camera/camera.dart';
 import 'package:myfhb/services/pushnotification_service.dart';
 import 'package:myfhb/src/ui/NetworkScreen.dart';
-import 'package:myfhb/voice_cloning/model/voice_clone_status_arguments.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -293,7 +292,6 @@ class _MyFHBState extends State<MyFHB> {
         () => SheelaBLEController(),
       );
 
-    //initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     // Function to set up cron job and event listeners which is called after
@@ -437,6 +435,31 @@ class _MyFHBState extends State<MyFHB> {
         });
       }),
     );
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult? result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.mobile:
+        setConnectionStatus();
+        break;
+      case ConnectivityResult.none:
+        sheelaAIController.isInternetConnection.value = false;
+        toast.getToast(no_internet_conn, Colors.red);
+        await Get.to(const NetworkScreen());
+        break;
+      default:
+        toast.getToast(failed_get_connectivity, Colors.red);
+        break;
+    }
+  }
+
+  void setConnectionStatus() {
+    if (!sheelaAIController.isInternetConnection.value) {
+      Get.back();
+    }
+
+    sheelaAIController.isInternetConnection.value = true;
   }
 
 }
