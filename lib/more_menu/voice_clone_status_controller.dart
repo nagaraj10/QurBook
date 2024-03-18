@@ -25,6 +25,7 @@ import '../src/utils/FHBUtils.dart';
 
 class VoiceCloneStatusController extends GetxController {
   var loadingData = false.obs;
+  var isFamilyMemberLoading = false.obs;
   var _helper = ApiBaseHelper();
   var healthOrganizationId = ''.obs;
   var voiceCloneId = ''.obs;
@@ -61,54 +62,43 @@ class VoiceCloneStatusController extends GetxController {
     // TODO: implement onInit
     super.onInit();
     loadingData = true.obs;
-    listOfFamilyMembers.value = [];
+    listOfFamilyMembers = <VoiceCloneSharedByUsers>[].obs;
     selectedFamilyMembers = [];
-    listOfExistingFamilyMembers.value = [];
+    listOfExistingFamilyMembers.value = <String>[].obs;
+
   }
 
   void getStatusOfUser() {}
 
-  void getUserHealthOrganizationId() async {
-    var userId = await PreferenceUtil.getStringValue(KEY_USERID_MAIN);
-    loadingData.value = true;
-    await healthReportListForUserRepository
-        .getDeviceSelection(userIdFromBloc: userId)
-        .then((value) async {
-      if (value?.isSuccess ?? false) {
-        if (value?.result != null && (value?.result?.length ?? 0) > 0) {
-          String id =
-              value?.result![0]?.primaryProvider?.healthorganizationid ?? '';
-          if (id != null && id != "") {
-            healthOrganizationId.value = id;
-            await getStatusFromApi(); //wait till the  next ap is also called
-          } else {
-            loadingData.value = false; // solved the family list issue loading
-          }
-        } else {
-          loadingData.value = false;
-        }
-      } else {
-        loadingData.value = false;
-      }
-    });
-  }
-
   getStatusFromApi() async {
-    final userId = await PreferenceUtil.getStringValue(KEY_USERID_MAIN);
-    final url = strURLVoiceCloneStatus +
-        qr_userId +
-        userId! +
-        qr_organizationid +
-        healthOrganizationId.value;
+    loadingData.value = true;
+    var id =  PreferenceUtil.getStringValue(keyHealthOrganizationId);
+    if(id!=null && id!=''){
+      healthOrganizationId.value = id;
+      final userId = await PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+      final url = strURLVoiceCloneStatus +
+          qr_userId +
+          userId! +
+          qr_organizationid +
+          healthOrganizationId.value;
 
-    final response = await _helper.getStatusOfVoiceCloning(url);
-    voiceCloneStatusModel = VoiceCloneStatusModel.fromJson(response ?? '');
-    voiceCloneId.value = voiceCloneStatusModel?.result?.id ?? '';
-    if (voiceCloneStatusModel?.result?.url != "")
-      audioURL = voiceCloneStatusModel?.result?.url ?? '';
-    fetchFamilyMembersList(voiceCloneId.value);
-    //download path from url every time when api is called
-    downloadAudioFile(audioURL);
+      final response = await _helper.getStatusOfVoiceCloning(url);
+      voiceCloneStatusModel = VoiceCloneStatusModel.fromJson(response ?? '');
+      voiceCloneId.value = voiceCloneStatusModel?.result?.id ?? '';
+      if (voiceCloneStatusModel?.result?.url != "")
+        audioURL = voiceCloneStatusModel?.result?.url ?? '';
+      //download path from url every time when api is called
+      await downloadAudioFile(audioURL);
+      loadingData.value = false;
+      ///Fetching the Assigned family memberlist only if the status is approved as per the previous implementation
+      /// This is unnecessary call because in UI List was displaying only if approved.
+      if(voiceCloneStatusModel?.result?.status ==
+          strApproved){
+        fetchFamilyMembersList(voiceCloneId.value);
+      }
+    }else{
+      loadingData.value = false;
+    }
   }
 
   revokeSubmission(bool fromMenu) async {
@@ -163,6 +153,7 @@ class VoiceCloneStatusController extends GetxController {
   /// Fetch FamilyMembers list from API
   Future<void> fetchFamilyMembersList(String voiceCloneId) async {
     try {
+      isFamilyMemberLoading.value =true;
       selectedFamilyMembers = await fetchAlreadySelectedFamilyMembersList(
             voiceCloneId,
           ) ??
@@ -216,12 +207,11 @@ class VoiceCloneStatusController extends GetxController {
         }
       });
       listOfFamilyMembers.value = _customlistOfFamilyMembers;
-      loadingData.value = false;
     } catch (e, stackTrace) {
-      loadingData.value = false;
-
       CommonUtil()
           .appLogs(message: e.toString(), stackTrace: stackTrace.toString());
+    }finally{
+      isFamilyMemberLoading.value =false;
     }
   }
 
@@ -241,7 +231,11 @@ class VoiceCloneStatusController extends GetxController {
       fileName,
     );
     final file = File(filePath);
-
+    // If the file exists, get the file path
+    if(file.existsSync()){
+      recordedPath.value = filePath;
+      return recordedPath;
+    }
     final request = await ApiServices.get(
       audioUrl ?? '',
       headers: {
