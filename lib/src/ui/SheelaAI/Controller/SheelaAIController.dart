@@ -186,6 +186,9 @@ class SheelaAIController extends GetxController {
   // this is for get the onInitHubListViewController
   final hubListViewController = CommonUtil().onInitHubListViewController();
 
+  //mic button enable or disable flag while reconnect
+  Rx<bool> micDisableReconnect = false.obs;
+
   @override
   void onInit() {
     try {
@@ -465,6 +468,9 @@ class SheelaAIController extends GetxController {
         // Reset isDeviceConnectSheelaScreen value to false after processing.
         isDeviceConnectSheelaScreen.value = false;
 
+        // disable the mic button while say reconnect
+        micDisableReconnect.value = false;
+
         // Reset isLastActivityDevice to true.
         isLastActivityDevice = true;
       } else {
@@ -628,6 +634,9 @@ class SheelaAIController extends GetxController {
 
             // Set the value of isDeviceConnectSheelaScreen to true, indicating a device connection.
             isDeviceConnectSheelaScreen.value = true;
+
+            // disable the mic button while say reconnect
+            micDisableReconnect.value = true;
 
             // for getting the eid from payload api
             hubListViewController.eid = (conversations.last?.additionalInfoSheelaResponse?.eid ?? '').toString();
@@ -3171,6 +3180,9 @@ makeApiRequest is used to update the data with latest data
 
                   // Set loading state to false
                   isLoading.value = false;
+
+                  // disable the mic button while say reconnect
+                  micDisableReconnect.value = true;
 
                   // Introduce a delay before resetting the button selection (3 seconds in this case)
                   Future.delayed(const Duration(seconds: 3), () {
