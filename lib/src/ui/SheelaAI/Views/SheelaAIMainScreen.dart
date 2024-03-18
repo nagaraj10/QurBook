@@ -50,6 +50,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.btnTextLocal = '';
     controller.isRetakeCapture = false;
     controller.isRetryScanFailure.value = false;
+    // Set the value of micDisableReconnect to false in the controller.
     controller.micDisableReconnect.value = false;
     // Set the value of isDeviceConnectSheelaScreen to false in the controller.
     controller.isDeviceConnectSheelaScreen.value = false;
