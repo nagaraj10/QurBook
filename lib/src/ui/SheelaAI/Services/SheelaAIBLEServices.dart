@@ -567,6 +567,9 @@ class SheelaBLEController extends GetxController {
       // Set retry scan failure flag to true in SheelaController
       SheelaController.isRetryScanFailure.value = true;
 
+      // Set the value of micDisableReconnect to false in the controller.
+      SheelaController.micDisableReconnect.value = false;
+
       // Display failure message with options for retry
       addToConversationAndPlay(
         SheelaResponse(
