@@ -271,8 +271,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
             floatingActionButton: animationController == null
                 ? null
                 : Visibility(
-                    // isDeviceConnectSheelaScreen if false only visible the icon
-                    // isRetryScanFailure if true only visible the icon
+                    // micDisableReconnect if false only visible the icon
                     visible: (!controller.micDisableReconnect.value),
                     child: AnimatedBuilder(
                       animation: animationController!,
