@@ -26,6 +26,7 @@ import '../../audio/AudioScreenArguments.dart';
 import '../../imageSlider.dart';
 import '../Controller/SheelaAIController.dart';
 import '../Models/SheelaResponse.dart';
+import '../Services/SheelaAIBLEServices.dart';
 import 'AttachmentListSheela.dart';
 import 'CommonUitls.dart';
 import 'youtube_player.dart';
@@ -330,7 +331,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
             onTap: ((chat.singleuse != null && chat.singleuse!) &&
                     (chat.isActionDone != null && chat.isActionDone!))
                 ? null
-                : () {
+                : () async {
                     try {
                       if (buttonData?.btnRedirectTo == strPreviewScreen) {
                         if (buttonData?.chatAttachments != null &&
@@ -441,6 +442,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                           reminder.remindin_type = '0';
                           reminder.providerid = '0';
                           reminder.remindbefore = '0';
+                          reminder.otherinfo = Otherinfo();
                           List<Reminder> data = [reminder];
                           for (var i = 0; i < data.length; i++) {
                             apiReminder = data[i];
@@ -720,6 +722,57 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                             }
                           });
                         }
+                      } // Check if the button's redirection is to reconnect
+                      else if (buttonData?.btnRedirectTo == strReconnect) {
+                        // Check if loading is in progress, if true, return
+                        if (controller.isLoading.isTrue) {
+                          return;
+                        }
+
+                        // Check if the chat is marked as singleuse and action is not done
+                        if (chat.singleuse != null &&
+                            chat.singleuse! &&
+                            chat.isActionDone != null) {
+                          chat.isActionDone = true;
+                        }
+
+                        // Mark the button as selected, stop TTS, and set loading state to true
+                        buttonData?.isSelected = true;
+                        controller.stopTTS();
+                        controller.isLoading.value = true;
+
+                        // Add a card response with the button's title to the conversation
+                        final cardResponse =
+                            SheelaResponse(text: buttonData?.title);
+                        controller.conversations.add(cardResponse);
+                        controller.scrollToEnd();
+
+                        // Introduce a delay before further actions (2 seconds in this case)
+                        await Future.delayed(Duration(seconds: 2));
+
+                        // Initialize SheelaBLEController
+                        SheelaBLEController? bleController =
+                            CommonUtil().onInitSheelaBLEController();
+
+                        // Create a reconnect card and add it to the conversation and play
+                        final reconnectCard = SheelaResponse(
+                          text: await controller
+                              .getTextTranslate(strFailureRetry),
+                          recipientId: sheelaRecepId,
+                          redirectTo: strReconnect,
+                        );
+                        bleController.addToConversationAndPlay(reconnectCard);
+
+                        // Set loading state to false
+                        controller.isLoading.value = false;
+
+                        // disable the mic button while tap reconnect
+                        controller.micDisableReconnect.value = true;
+
+                        // Introduce a delay before resetting the button selection (3 seconds in this case)
+                        Future.delayed(const Duration(seconds: 3), () {
+                          buttonData?.isSelected = false;
+                        });
                       } else {
                         if (controller.isLoading.isTrue) {
                           return;

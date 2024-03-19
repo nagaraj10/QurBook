@@ -49,6 +49,18 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.conversations = [];
     controller.btnTextLocal = '';
     controller.isRetakeCapture = false;
+    controller.isRetryScanFailure.value = false;
+    // Set the value of micDisableReconnect to false in the controller.
+    controller.micDisableReconnect.value = false;
+    // Set the value of isDeviceConnectSheelaScreen to false in the controller.
+    controller.isDeviceConnectSheelaScreen.value = false;
+
+// Set the value of isLastActivityDevice to true in the controller.
+    controller.isLastActivityDevice = true;
+
+// Set the value of isSameVitalDevice to false in the controller.
+    controller.isSameVitalDevice = false;
+
 
     ///Surrendered with addPostFrameCallback for widget building issue///
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
@@ -97,6 +109,9 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
   void dispose() {
     animationController?.dispose();
     controller.clearTimer();
+    controller.clearReconnectTimer();
+    // Clear the clearDeviceConnectionTimer timer in SheelaController
+    controller.clearDeviceConnectionTimer();
     controller.clearTimerForSessionExpiry();
     WidgetsBinding.instance!.removeObserver(this);
     controller.stopTTS();
@@ -257,7 +272,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
             floatingActionButton: animationController == null
                 ? null
                 : Visibility(
-                    visible: controller.bleController == null,
+                    // micDisableReconnect if false only visible the icon
+                    visible: (!controller.micDisableReconnect.value),
                     child: AnimatedBuilder(
                       animation: animationController!,
                       builder: (context, child) {
@@ -281,12 +297,16 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                       child: FloatingActionButton(
                         onPressed: () {
                           controller.clearTimer();
+                          controller.clearReconnectTimer();
+                          // Clear the clearDeviceConnectionTimer timer in SheelaController
+                          controller.clearDeviceConnectionTimer();
                           if (controller.isLoading.isFalse) {
                             if (controller.currentPlayingConversation != null &&
                                 controller.currentPlayingConversation!.isPlaying
                                     .value) {
                               controller.stopTTS();
                             } else {
+                              // Call the gettingReposnseFromNative method in the controller.
                               controller.gettingReposnseFromNative();
                             }
                           }
@@ -302,6 +322,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                                   controller.currentPlayingConversation!
                                       .isPlaying.value)
                               ? Icons.pause
+                              //controller.isDeviceConnectSheelaScreen.value this is for disable the button while device recording flow
                               : controller.isLoading.isTrue
                                   ? Icons.mic_off
                                   : Icons.mic,
@@ -487,9 +508,12 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.stopTTS();
     controller.canSpeak = false;
     controller.isSheelaScreenActive = false;
-    controller.getSheelaBadgeCount();
+    // controller.getSheelaBadgeCount();
     controller.updateTimer(enable: false);
     controller.clearTimer();
+    controller.clearReconnectTimer();
+    // Clear the clearDeviceConnectionTimer timer in SheelaController
+    controller.clearDeviceConnectionTimer();
     controller.clearTimerForSessionExpiry();
     Get.back();
   }

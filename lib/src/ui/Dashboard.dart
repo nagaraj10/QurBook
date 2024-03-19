@@ -206,12 +206,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
     try {
-      await CommonUtil().getMedicalPreference();
-    } catch (e, stackTrace) {
-      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
-    }
-
-    try {
       CommonDialogBox().getCategoryList();
       getFamilyRelationAndMediaType();
     } catch (e, stackTrace) {

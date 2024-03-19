@@ -120,13 +120,16 @@ class IosNotificationHandler {
           if ((call.arguments['eid'] ?? '').isNotEmpty && isAlreadyLoaded) {
             //// allow the user to get notifications
             if (CommonUtil().isAllowSheelaLiveReminders()) {
+              // Prepare JSON data for adding to the sheela queue request
+              final reqJson = {
+                KIOSK_task: KIOSK_remind,
+                KIOSK_eid: call.arguments['eid'],
+              };
               if (sheelaAIController!.isSheelaScreenActive) {
-                final reqJson = {
-                  KIOSK_task: KIOSK_remind,
-                  KIOSK_eid: call.arguments['eid'],
-                };
                 CommonUtil().callQueueNotificationPostApi(reqJson);
               } else {
+                // call queue insert api for adding the queue before navigate
+                CommonUtil().callQueueNotificationPostApi(reqJson,isNeedDialog: false);
                 await Get.toNamed(
                   rt_Sheela,
                   arguments: SheelaArgument(
@@ -159,9 +162,16 @@ class IosNotificationHandler {
   }
 
   void handleNotificationResponse(Map<String, dynamic> jsonDecode) async {
+
+    // Declare a variable named isSheelaCondition
+    var isSheelaCondition =
+        jsonDecode[parameters.KIOSK_isSheela] ?? variable.strFalse;
+
     // Extract the notification ID from the JSON data or use '0' if not present
-    var tempNotificationId = jsonDecode[parameters.notificationListId] ??
-        getMyMeetingID().toString();
+    var tempNotificationId = isSheelaCondition == parameters.strTrue
+        ? getMyMeetingID().toString()
+        : jsonDecode[parameters.notificationListId] ??
+            getMyMeetingID().toString();
 
     // Get the current notification ID from the PreferenceUtil, or an empty string if not set
     var currentNotificationId =
@@ -362,6 +372,13 @@ class IosNotificationHandler {
       await Get.to(CareGiverSettings());
     } else if (model.isSheela ?? false) {
       //// allow the user for auto redirect to sheela screen on time
+      var qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
+      //Sheela inactive dialog exist close the dialog
+      if(qurhomeDashboardController.isShowScreenIdleDialog.value){
+        Get.back();
+        qurhomeDashboardController.isShowScreenIdleDialog.value=false;
+        qurhomeDashboardController.isScreenIdle.value=false;
+      }
       if (CommonUtil().isAllowSheelaLiveReminders()) {
         if (model.eventType != null && model.eventType == strWrapperCall) {
           await Get.toNamed(
@@ -372,7 +389,14 @@ class IosNotificationHandler {
               eventType: model.eventType,
               others: model.others,
             ),
-          );
+          )?.then((value) {
+            //Restart the timer for check the ideal flow when the qurhome is active
+            final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
+            if(isQurhomeActive) {
+              qurhomeDashboardController.isScreenIdle.value = true;
+              qurhomeDashboardController.checkScreenIdle(isIdeal: true);
+            }
+          });
         } else if ((model.rawBody ?? '').isNotEmpty) {
           await Get.toNamed(
             rt_Sheela,
@@ -419,6 +443,8 @@ class IosNotificationHandler {
             //Adding the notificaiton to sheela reminder Queue
             CommonUtil().callQueueNotificationPostApi(reqJson);
           } else if (PreferenceUtil.getIfQurhomeisAcive()) {
+            // call queue insert api for adding the queue before navigate
+            CommonUtil().callQueueNotificationPostApi(reqJson,isNeedDialog: false);
             // Navigate to Sheela screen with specific arguments
             await Get.toNamed(
               rt_Sheela,

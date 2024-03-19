@@ -15,6 +15,7 @@ import '../../telehealth/features/Notifications/constants/notification_constants
 import '../../voice_cloning/model/voice_clone_status_arguments.dart';
 import '../../voice_cloning/model/voice_cloning_choose_member_arguments.dart';
 import '../../voice_cloning/view/widgets/voice_clone_family_members_list.dart';
+import '../../voice_cloning/view/widgets/voice_cloning_shimmer_widgets.dart';
 import '../voice_clone_status_controller.dart';
 import 'terms_and_conditon.dart';
 
@@ -29,7 +30,7 @@ class VoiceCloningStatus extends StatefulWidget {
   _MyFhbWebViewState createState() => _MyFhbWebViewState();
 }
 
-class _MyFhbWebViewState extends State<VoiceCloningStatus> {
+class _MyFhbWebViewState extends State<VoiceCloningStatus>with WidgetsBindingObserver {
   bool isLoading = true;
   final controller = Get.put(VoiceCloneStatusController());
   double subtitle = CommonUtil().isTablet! ? tabHeader2 : mobileHeader2;
@@ -38,9 +39,12 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
   @override
   void initState() {
     controller.onInit();
+    WidgetsBinding.instance.addObserver(this);
     controller.initialiseControllers(); //initialize player
     //Api to get health organzation id and also the status of voice cloning
-    controller.getUserHealthOrganizationId();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) { // Adding a post-frame callback to fetch status from the API after the current frame is rendered.
+      controller.getStatusFromApi();
+    });
     controller.isPlayWidgetClicked = false;
     //To start the player once again
     isForceStopPlayer = true;
@@ -48,8 +52,18 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if(state == AppLifecycleState.paused){
+      if(controller.playerVoiceStatusController.playerState.isPlaying){
+        controller.playVoiceStatusPausePlayer();
+      }
+    }
+  }
+
+  @override
   void dispose() {
     controller.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -162,6 +176,8 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus> {
                                               ?.status ??
                                           '')),
                             ]),
+                        controller.isFamilyMemberLoading.value?
+                        familyMemberListLoader():
                         Visibility(
                           visible: controller
                                       .voiceCloneStatusModel?.result?.status ==

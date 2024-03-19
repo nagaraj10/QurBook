@@ -266,7 +266,6 @@ const String icon_choose_lab = 'assets/icons/choose_lab.svg';
 // Define a constant string representing the file path for the 'ic_address.svg' icon
 const String icon_address = 'assets/icons/ic_address.svg';
 
-
 //string for troubleshooting
 const String strAppCompatibilty = 'App compatibility';
 const String strSDKCompatibilty = 'SDK compatibility';
@@ -566,6 +565,9 @@ const String dateFormatMMY = 'E d MMM, yyyy';
 const String strAppointments = 'Appointments';
 const String strRemainders = 'Reminders';
 
+//string added to set not on the remainder sheela dialog
+const String strSheelaDialogNote =
+    'Touch anywhere else to go back to the home screen';
 // for search providers
 
 const String strGetDoctorsList = 'Getting Doctor List';
@@ -662,7 +664,6 @@ const voice_platform = MethodChannel('flutter.native/voiceIntent');
 const version_platform = MethodChannel('flutter.native/versioncode');
 const tts_platform = MethodChannel('flutter.native/textToSpeech');
 const tts_platform_closeMic = 'CloseMic';
-const security = MethodChannel('flutter.native/security');
 const String strWaitLoading = 'wait! Its loading';
 
 const String _wordsFromMaya = 'waiting for maya to speak';
@@ -748,16 +749,18 @@ const String strSheelaDesc =
 const String strUseClonedVoice =
     'Use cloned voice'; //String declared for use cloned voice
 
-const String strVoiceCloneNotSetByYourCaregiver = 'Voice clone sample not set by your caregiver'; //String declared for VoiceCloneNotSetByYourCaregiver
+const String strVoiceCloneNotSetByYourCaregiver =
+    'Voice clone sample not set by your caregiver'; //String declared for VoiceCloneNotSetByYourCaregiver
 
 const String strUseClonedVoiceDesc =
-    'Option to allow using the cloned voice for sheela conversation';//description for Usecloned Voice
+    'Option to allow using the cloned voice for sheela conversation'; //description for Usecloned Voice
 
 const String strStatus = 'Status : ';
 //Create common String for voice cloning text
 const String strVoiceTerms = 'Accept And Continue';
 const String strInActive = 'InActive';
 const String strSubmit = 'Submit';
+const String strFetchingList = 'Fetching List';
 const String strVoiceCloningExistingMembersHeader =
     'Your cloned voice is in use for the following members:';
 const String strVoiceCloningAddMembersHeader =
@@ -766,8 +769,10 @@ const String strApproved = 'Approved'; //status text for approved
 const String strDeclined = 'Declined'; //status text for declined
 const String strReason = 'Reason : '; //status text for reason,include spacing
 
-const String strSubVoice = 'Submitted voice sample'; //String for voice submitted
-const String strProVoice = 'Processed voice sample'; //String for voice processed
+const String strSubVoice =
+    'Submitted voice sample'; //String for voice submitted
+const String strProVoice =
+    'Processed voice sample'; //String for voice processed
 const String strChangeVoice = 'Change voice sample'; //String for voice print
 
 const String strStart = 'Start';
@@ -833,8 +838,6 @@ const String strOK = 'OK';
 const String strCANCEL = 'CANCEL';
 const String strOKAY = 'OKAY';
 const String strValidPhoneNumber = 'Enter a valid mobile number';
-const String strGetAppVersion = 'getAppVersion';
-const String strSecure = 'secureMe';
 const String strpop = 'SystemNavigator.pop';
 const String strDiscard = 'Discard';
 
@@ -915,12 +918,9 @@ const String str_far = 'Fahrenheit';
 //Reminders
 //
 const reminderMethodChannel = MethodChannel('flutter.native/reminder');
-const addReminderMethod = 'addReminder';
-const snoozeReminderMethod = 'snoozeReminder';
 const navigateToSheelaReminderMethod = 'navigateToSheelaReminderMethod';
 const notificationReceivedMethod = "notificationReceived";
 const removeReminderMethod = 'removeReminder';
-const removeAllReminderMethod = 'removeAllReminder';
 const navigateToRegimentMethod = 'navigateToRegiment';
 const reponseToRemoteNotificationMethodChannel =
     MethodChannel('flutter.native.QurBook/notificationResponse');
@@ -940,7 +940,6 @@ const listenToCallStatusMethod = 'listenToCallStatus';
 const String strNoTicketsRaised = 'Tap on + icon to create Tickets';
 const String strNoTicketTypesAvaliable = 'No Ticket Types Found !!';
 
-var reminderMethodChannelAndroid = const MethodChannel('android/notification');
 
 // regimen appointment
 const String strAppointmentRegimen = 'Appointment';
@@ -986,6 +985,7 @@ const String appointmentHospitalAddress = "Hospital Address";
 const String strTransportation = "transportation";
 const String strDoctorAppointment = "doctor appointment";
 const String strLabAppointment = "lab appointment";
+const String strHomeHealthVisit = "home health visit";
 const String strHomecareService = "homecare service";
 const String strGeneralHealth = "general health";
 const String strOrderPrescription = "order prescription";
@@ -993,10 +993,12 @@ const String strCareDietPlan = "care/diet plan";
 const String strHomecareServices = "homecare services";
 const String strFoodDelivery = "food delivery";
 
-const String strHealthPlan = "health plan";        // Define a constant string for health plan
-const String strAmbulanceService = "ambulance service";  // Define a constant string for ambulance service
-const String strOrderMedicine = "order medicine";  // Define a constant string for ordering medicine
-
+const String strHealthPlan =
+    "health plan"; // Define a constant string for health plan
+const String strAmbulanceService =
+    "ambulance service"; // Define a constant string for ambulance service
+const String strOrderMedicine =
+    "order medicine"; // Define a constant string for ordering medicine
 
 const String strGetCityList = 'Getting City List';
 const String strSelValidMsg = 'Please select a valid';
@@ -1004,14 +1006,22 @@ const String strLocationLink = "Location link";
 const String strCentreVisit = 'Centre Visit';
 const String strOnsite = 'Onsite';
 
+const String strCompleted='Completed';
+
 //for regimen
-const String strRecorded = 'Recorded at';
+const String strRecordedAt = 'Recorded at';
+const String strHasBeenRecordedBy = 'This has been recorded by ';
+const String strHasBeenRecordedByAt = ' at';
 const String strUndo = 'Undo';
 const String strEdit = 'Edit';
 const String strView = 'View';
 const String strConfirms = 'Are you sure?';
 const String strUpdateMsg = 'Do you want to update the changes';
 const String strDecline = 'Declined';
+const String strActivityYourHealthcareProvider =
+    'This activity will be performed by your healthcare provider.';
+
+const String strNotifiedonceItIsDone = 'You\'ll be notified once it is done.';
 
 //For Alert
 const String strEscalate = 'Escalate';

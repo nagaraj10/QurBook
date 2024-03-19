@@ -1142,7 +1142,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           }
         } else {
           pr.hide();
-          toast.getToast(noUrl, Colors.red);
+          // Checking if the value.message is not null and not empty, otherwise  "Something went wrong" will show.
+          toast.getToast(value.message?.isNotEmpty ?? false ? value.message! : noUrl, Colors.red);
         }
         PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
       }
@@ -1649,7 +1650,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               checkedValue =false;
               INR_Price = originalPrice;
             }
-            applyMembershipDiscountedAmount =  updateThaMembershipBenefit();
+            applyMembershipDiscountedAmount =  updateTheMembershipBenefit();
           }else{
            INR_Price= originalPrice;
            applyMembershipDiscountedAmount ='';
@@ -1666,25 +1667,34 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     );
 
 
-   updateThaMembershipBenefit() {
-     INR_Price = CommonUtil().replaceSeparator(value:INR_Price!, separator: ',');
+  updateTheMembershipBenefit() {
+    INR_Price = CommonUtil().replaceSeparator(value: INR_Price!, separator: ',');
     double currentAmount = double.parse(INR_Price!);
     num deductedAmount = 0.0;
-    if (widget.doctorAppoinmentTransLimit != null && widget.doctorAppoinmentTransLimit! > 0) {
-      double remainingAmount = currentAmount - widget.doctorAppoinmentTransLimit!;
-      // Deducted amount is either the remaining amount (if positive) or the current amount (if negative)
-      deductedAmount = remainingAmount <= 0 ? currentAmount : widget.doctorAppoinmentTransLimit!;
-      // Update INR_Price based on the remaining amount
-      INR_Price = commonWidgets.getMoneyWithForamt((remainingAmount <= 0 ? 0 : remainingAmount).toStringAsFixed(2));
-    } else if (widget.noOfDoctorAppointments != null && widget.noOfDoctorAppointments! > 0) {
-      double remainingAmount = currentAmount - widget.noOfDoctorAppointments!;
-      // Deducted amount is either the remaining amount (if positive) or the current amount (if negative)
-      deductedAmount = remainingAmount <= 0 ? currentAmount : widget.noOfDoctorAppointments!;
-      // Update INR_Price based on the remaining amount
-      INR_Price = commonWidgets.getMoneyWithForamt((remainingAmount <= 0 ? 0 : remainingAmount).toStringAsFixed(2));
+
+    if (widget.noOfDoctorAppointments != null && widget.noOfDoctorAppointments! > 0) {
+      if (widget.doctorAppoinmentTransLimit != null && widget.doctorAppoinmentTransLimit! > 0) {
+        double remainingAmount = currentAmount - widget.doctorAppoinmentTransLimit!;
+        // Deducted amount is either the remaining amount (if positive) or the current amount (if negative)
+        deductedAmount = remainingAmount <= 0 ? currentAmount : widget.doctorAppoinmentTransLimit!;
+        // Update INR_Price based on the remaining amount
+        INR_Price = commonWidgets.getMoneyWithForamt((remainingAmount <= 0 ? 0 : remainingAmount).toStringAsFixed(2));
+      } else {
+        // Deduct from noOfDoctorAppointments if transaction limit is not present or zero
+        double remainingAmount = currentAmount - widget.noOfDoctorAppointments!;
+        // Deducted amount is either the remaining amount (if positive) or the current amount (if negative)
+        deductedAmount = remainingAmount <= 0 ? currentAmount : widget.noOfDoctorAppointments!;
+        // Update INR_Price based on the remaining amount
+        INR_Price = commonWidgets.getMoneyWithForamt((remainingAmount <= 0 ? 0 : remainingAmount).toStringAsFixed(2));
+      }
+    } else {
+      // If noOfDoctorAppointments is not present or zero, do not deduct anything
+      deductedAmount = currentAmount;
+      INR_Price = commonWidgets.getMoneyWithForamt(currentAmount.toStringAsFixed(2));
     }
     return deductedAmount.toStringAsFixed(2);
   }
+
 
 
 
@@ -2308,11 +2318,12 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 )
               : const SizedBox.shrink(),
           Visibility(
-              visible: isActiveMember==true,
+              visible: isActiveMember == true &&
+                  (widget.noOfDoctorAppointments != null && widget.noOfDoctorAppointments! > 0),
               child: Container(
                 margin: EdgeInsets.only(bottom: 10),
                 child:applyMemberShipBenefitsWidget(),
-              )),
+              )),//visible only if  no of doctor appoinment amount is greater than 0
           Container(
             child: Center(
               child: Text(

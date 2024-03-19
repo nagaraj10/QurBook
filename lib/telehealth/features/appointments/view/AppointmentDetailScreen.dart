@@ -584,7 +584,29 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           ],
         );
         break;
-
+      case strHomeHealthVisit:
+        return Column(
+          children: [
+            if (appointmentDetailsController.testName.value.isNotEmpty)
+              commonWidgetForTitleValue(
+                  strPurpose, appointmentDetailsController.testName.value)
+            else
+              const SizedBox.shrink(),
+            SizedBox(height: 5.h),
+            if (appointmentDetailsController
+                .visitingCareCoordinator.value.isNotEmpty)
+              commonWidgetForTitleValue(parameters.strVisitingCareCoordinator,
+                  appointmentDetailsController.visitingCareCoordinator.value)
+            else
+              const SizedBox.shrink(),
+            SizedBox(height: 5.h),
+            if (appointmentDetailsController.providerAddress.value.isNotEmpty)
+              commonWidgetForTitleValue(appointmentAddress,
+                  appointmentDetailsController.providerAddress.value)
+            else
+              const SizedBox.shrink(),
+          ],
+        );
       default:
         if (isCustomAppointment)
           return Column(

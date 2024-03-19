@@ -874,6 +874,14 @@ const String strExit = 'Exit';
 
 const String strRedirectRedo = 'redirectToRedo';
 
+const String strFailureRetry = 'Turn off your device and Turn it on again to reconnect';
+
+// for reconnect button title
+const String strReconnect = 'Reconnect';
+
+// for device connection flow in sheela
+const String strDeviceConnection = 'device';
+
 //fetchProfilePic
 const String FETCH_PROFILE_PIC = 'file-guard/fileData/profilePicture/';
 
@@ -1071,6 +1079,9 @@ const String strPleaseFill = 'Please fill';
 const String strPleaseSelect = 'Please select';
 const String strAddressLine = 'address_line_1';
 
+// isLast activity continue means call this isSkipReminderCount to api in payload
+const String isSkipRemiderCount = 'isSkipReminderCount';
+
 // Define a constant string for storing the current notification ID.
 const String strCurrentNotificationId = 'currentNotificationId';
 
@@ -1207,8 +1218,12 @@ const String strString = 'string';
 
 const String strTurnOnGPS = 'Please turn on your GPS location services and try again'; // String message for prompting the user to turn on GPS
 
-
-
+// Declaring a constant string variable named 'strRefershStatusText' and assigning it the value 'refershStatusText'
+const String strRefershStatusText = 'refershStatusText';
+const strAppointmentStartTimeShouldBeSetLaterToTheCurrentTime =
+    'Appointment start time should be set later to the current time.';
+const String strProviderBasedPatientsHaveViewOnlyAccess =
+    'This activity is provider-based. Patients have view-only access.';
 
 class DoctorFilterConstants {
   static List<String> yearOfExperienceList = [

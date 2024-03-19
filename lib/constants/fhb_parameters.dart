@@ -158,6 +158,7 @@ const String strLocalDateTime = 'localDateTime';
 const String strQURHOME_LEX = 'QURHOME_LEX';
 
 const String qr_sheela_lex = 'sheela/wrapper';
+const String qr_sheela_synonyms = 'sheela/sheela-validate-synonyms';
 
 //for category
 const String strCategoryName = 'categoryName';
@@ -362,6 +363,7 @@ const String self = 'Self';
 const String theAppointmentIsFor = 'The Appointment is for';
 const String thePlanIsFor = 'The Plan is for';
 
+const String strVisitingCareCoordinator = 'Visiting Care Coordinator';
 const String dateAndTime = 'Date & Time';
 const String strNotes = 'Notes';
 const String confirmDetails = 'Confirmation Details';
@@ -892,3 +894,10 @@ const String stringExperience = 'experience';
 const String stringDoctorExperience = 'doctorExperience'; // Represents a key or identifier for doctor experience data
 
 
+//Define constants for media
+const String showImageHelp = 'Show Image Help';
+const String showAudioHelp = 'Show Audio Help';
+const String showVideoHelp = 'Show Video Help';
+
+// Assigning the string 'true' to the constant variable strTrue
+const String strTrue = 'true';
