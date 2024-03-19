@@ -344,13 +344,14 @@ class Otherinfo {
         needFile: (json['NeedFile'] ?? 0).toString(),
         snoozeText: json.containsKey('snoozeText') ? (json['snoozeText']) : '',
         isAllDayActivity: json.containsKey('isAllDayActivity')
-            ? (json['isAllDayActivity'] ?? false)
-            : false,
+        ? ((json['isAllDayActivity'] == null ||
+        json['isAllDayActivity'] is String) ?? false)
+        : false,
         isSkipAcknowledgement: json.containsKey('isSkipAcknowledgement')
             ? (json['isSkipAcknowledgement'] ?? 0).toString()
             : "0",
         introText: json.containsKey('introtext') ? (json['introtext']) : '',
-        roles: json['roles'] == null
+        roles: (json['roles'] == null || json['roles'] is String)
             ? []
             : List<PatientRole>.from(
                 json['roles']!.map(
