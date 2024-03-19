@@ -344,13 +344,19 @@ class Otherinfo {
         needFile: (json['NeedFile'] ?? 0).toString(),
         snoozeText: json.containsKey('snoozeText') ? (json['snoozeText']) : '',
         isAllDayActivity: json.containsKey('isAllDayActivity')
-        ? ((json['isAllDayActivity'] == null ||
-        json['isAllDayActivity'] is String) ?? false)
-        : false,
+            // If 'isAllDayActivity' key exists, check its value
+            ? (json['isAllDayActivity'] is String
+                // If the value is a string, set it to false
+                ? false
+                // If the value is not a string, consider its truthiness
+                : json['isAllDayActivity'] ?? false)
+            // If the key doesn't exist, set 'isAllDayActivity' to false
+            : false,
         isSkipAcknowledgement: json.containsKey('isSkipAcknowledgement')
             ? (json['isSkipAcknowledgement'] ?? 0).toString()
             : "0",
         introText: json.containsKey('introtext') ? (json['introtext']) : '',
+       // Check if the 'roles' key in the JSON object is either null or a String
         roles: (json['roles'] == null || json['roles'] is String)
             ? []
             : List<PatientRole>.from(
