@@ -3287,6 +3287,8 @@ makeApiRequest is used to update the data with latest data
 
     // Check if the notification with the given ID is already scheduled
     final isScheduled = pendingNotifications.any((notification) =>
+        notification.payload != null &&
+        jsonDecode(notification.payload!).containsKey('eid') &&
         jsonDecode(notification.payload!)['eid'] == notificationId);
 
     // If already scheduled, cancel the existing notification with the same ID
