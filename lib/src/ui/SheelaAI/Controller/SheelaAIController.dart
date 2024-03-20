@@ -3279,15 +3279,16 @@ makeApiRequest is used to update the data with latest data
 
   // Method called when the timer expires, triggers the reminder-related logic.
   scheduledMethod(Reminder reminder) async {
-    final notificationId = int.tryParse('${reminder?.notificationListId}') ?? 0;
+    final notificationId = reminder.eid ?? '';
     // Get the list of pending notifications
     List<PendingNotificationRequest> pendingNotifications =
         await localNotificationsPlugin.pendingNotificationRequests();
 
     // Check if the notification with the given ID is already scheduled
-    bool isScheduled = pendingNotifications.any(
-      (notification) => notification.id == notificationId,
-    );
+    final isScheduled = pendingNotifications.any((notification) =>
+        notification.payload != null &&
+        jsonDecode(notification.payload!).containsKey('eid') &&
+        jsonDecode(notification.payload!)['eid'] == notificationId);
 
     // If already scheduled, cancel the existing notification with the same ID
     if (isScheduled) {
