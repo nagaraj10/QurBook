@@ -427,6 +427,8 @@ class UformData {
       vitalsDataList.add(VitalsData.fromJson(vitalsMap));
     });
 
+    /// Sorts the vitals data list by sequence number.
+    /// Catches any errors sorting and logs them.
     try {
       vitalsDataList?.sort((a, b) => a?.seq.compareTo(b?.seq));
     } catch (e, stackTrace) {
@@ -493,6 +495,9 @@ class VitalsData {
       audio: json['AUDIO'] != null ? OtherData.fromMap(json['AUDIO']) : null,
       video: json['VIDEO'] != null ? OtherData.fromMap(json['VIDEO']) : null,
       file: json['FILE'] != null ? OtherData.fromMap(json['FILE']) : null,
+
+      /// Sets the sequence number for the vital sign data from the JSON if present,
+      /// otherwise sets it to an empty string.
       seq: json.containsKey('seq') ? json['seq'] : '',
     );
   }
@@ -505,7 +510,7 @@ class VitalsData {
         'alarm': alarm,
         'amin': amin,
         'amax': amax,
-        'seq':seq
+        'seq': seq
       };
 }
 
