@@ -356,7 +356,7 @@ class Otherinfo {
             ? (json['isSkipAcknowledgement'] ?? 0).toString()
             : "0",
         introText: json.containsKey('introtext') ? (json['introtext']) : '',
-       // Check if the 'roles' key in the JSON object is either null or a String
+        // Check if the 'roles' key in the JSON object is either null or a String
         roles: (json['roles'] == null || json['roles'] is String)
             ? []
             : List<PatientRole>.from(
@@ -426,6 +426,12 @@ class UformData {
       vitalsMap.putIfAbsent('vitalName', () => key);
       vitalsDataList.add(VitalsData.fromJson(vitalsMap));
     });
+
+    try {
+      vitalsDataList?.sort((a, b) => a?.seq.compareTo(b?.seq));
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
     return UformData(
       vitalsData: vitalsDataList,
     );
@@ -454,7 +460,8 @@ class VitalsData {
       this.photo,
       this.audio,
       this.video,
-      this.file});
+      this.file,
+      this.seq});
 
   dynamic vitalName;
   dynamic value;
@@ -469,6 +476,7 @@ class VitalsData {
   OtherData? audio;
   OtherData? file;
   OtherData? video;
+  dynamic seq;
 
   factory VitalsData.fromJson(Map<String, dynamic> json) {
     return VitalsData(
@@ -485,6 +493,7 @@ class VitalsData {
       audio: json['AUDIO'] != null ? OtherData.fromMap(json['AUDIO']) : null,
       video: json['VIDEO'] != null ? OtherData.fromMap(json['VIDEO']) : null,
       file: json['FILE'] != null ? OtherData.fromMap(json['FILE']) : null,
+      seq: json.containsKey('seq') ? json['seq'] : '',
     );
   }
 
@@ -496,6 +505,7 @@ class VitalsData {
         'alarm': alarm,
         'amin': amin,
         'amax': amax,
+        'seq':seq
       };
 }
 
