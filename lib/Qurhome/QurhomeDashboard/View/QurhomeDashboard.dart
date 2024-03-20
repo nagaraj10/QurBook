@@ -153,11 +153,13 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       );
 
       WidgetsBinding.instance?.addPostFrameCallback((_) {
-        // getSheelaBadgeCount();
+        getSheelaBadgeCount();
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
         //Initilaize the screen idle timer
-        controller.isScreenIdle.value=true;
-        controller.checkScreenIdle();
+        if(sheelBadgeController.sheelaIconBadgeCount.value == 0){
+          controller.isScreenIdle.value=true;
+          controller.checkScreenIdle();
+        }
       });
 
       if (Platform.isAndroid) {
@@ -262,6 +264,14 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
             child: Scaffold(
               drawerEnableOpenDragGesture: false,
               key: _scaffoldKey,
+              onDrawerChanged: (isOpen) {
+                //check drawer is open or close
+                // if closed and qurhome active restart the timer for ideal
+                if(!isOpen){
+                  controller.isScreenIdle.value=true;
+                  controller.checkScreenIdle();
+                }
+              },
               appBar: AppBar(
                 backgroundColor: Colors.white,
                 toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
@@ -434,8 +444,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                             qurHomeRegimenController
                                                 .dateHeader.value,
                                             style: TextStyle(
-                                              fontSize: 12.h,
-                                              color: Colors.grey,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 11.h,
+                                              color: Colors.black,
                                             ),
                                           ),
                                   },
@@ -477,6 +488,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                       ? 34.0.sp
                                       : 24.0.sp,
                                   onPressed: () {
+                                    //remove the ideal timer when drawer is open
+                                    controller.getIdleTimer!.cancel();
+                                    controller.isScreenIdle.value=false;
                                     _scaffoldKey.currentState?.openDrawer();
                                   },
                                 ),
@@ -577,6 +591,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                 if (sheelBadgeController
                                         .sheelaIconBadgeCount.value >
                                     0) {
+                                  controller.isScreenIdle.value = false;
                                   Get.toNamed(
                                     rt_Sheela,
                                     arguments: SheelaArgument(

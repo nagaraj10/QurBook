@@ -344,13 +344,20 @@ class Otherinfo {
         needFile: (json['NeedFile'] ?? 0).toString(),
         snoozeText: json.containsKey('snoozeText') ? (json['snoozeText']) : '',
         isAllDayActivity: json.containsKey('isAllDayActivity')
-            ? (json['isAllDayActivity'] ?? false)
+            // If 'isAllDayActivity' key exists, check its value
+            ? (json['isAllDayActivity'] is String
+                // If the value is a string, set it to false
+                ? false
+                // If the value is not a string, consider its truthiness
+                : json['isAllDayActivity'] ?? false)
+            // If the key doesn't exist, set 'isAllDayActivity' to false
             : false,
         isSkipAcknowledgement: json.containsKey('isSkipAcknowledgement')
             ? (json['isSkipAcknowledgement'] ?? 0).toString()
             : "0",
         introText: json.containsKey('introtext') ? (json['introtext']) : '',
-        roles: json['roles'] == null
+        // Check if the 'roles' key in the JSON object is either null or a String
+        roles: (json['roles'] == null || json['roles'] is String)
             ? []
             : List<PatientRole>.from(
                 json['roles']!.map(
@@ -419,6 +426,14 @@ class UformData {
       vitalsMap.putIfAbsent('vitalName', () => key);
       vitalsDataList.add(VitalsData.fromJson(vitalsMap));
     });
+
+    /// Sorts the vitals data list by sequence number.
+    /// Catches any errors sorting and logs them.
+    try {
+      vitalsDataList?.sort((a, b) => a?.seq.compareTo(b?.seq));
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
     return UformData(
       vitalsData: vitalsDataList,
     );
@@ -447,7 +462,8 @@ class VitalsData {
       this.photo,
       this.audio,
       this.video,
-      this.file});
+      this.file,
+      this.seq});
 
   dynamic vitalName;
   dynamic value;
@@ -462,6 +478,7 @@ class VitalsData {
   OtherData? audio;
   OtherData? file;
   OtherData? video;
+  dynamic seq;
 
   factory VitalsData.fromJson(Map<String, dynamic> json) {
     return VitalsData(
@@ -478,6 +495,10 @@ class VitalsData {
       audio: json['AUDIO'] != null ? OtherData.fromMap(json['AUDIO']) : null,
       video: json['VIDEO'] != null ? OtherData.fromMap(json['VIDEO']) : null,
       file: json['FILE'] != null ? OtherData.fromMap(json['FILE']) : null,
+
+      /// Sets the sequence number for the vital sign data from the JSON if present,
+      /// otherwise sets it to an empty string.
+      seq: json.containsKey('seq') ? json['seq'] : '',
     );
   }
 
@@ -489,6 +510,7 @@ class VitalsData {
         'alarm': alarm,
         'amin': amin,
         'amax': amax,
+        'seq': seq
       };
 }
 
