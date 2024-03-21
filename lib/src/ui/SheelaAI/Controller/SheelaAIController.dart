@@ -1372,6 +1372,9 @@ makeApiRequest is used to update the data with latest data
       isCallStartFromSheela = true;
       updateTimer(enable: false);
       regController.callSOSEmergencyServices(1);
+      Future.delayed(const Duration(seconds: 5), () {
+        isCallStartFromSheela = false;
+      });
     }
   }
 
@@ -2278,6 +2281,9 @@ makeApiRequest is used to update the data with latest data
   showListeningCountdownDialog() {
     // Set the flag indicating that the countdown dialog is currently showing
     isCountDownDialogShowing.value = true;
+    if (isCallStartFromSheela) {
+      return;
+    }
 
     return showDialog<void>(
       context: Get.context!,
