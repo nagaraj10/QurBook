@@ -1225,6 +1225,9 @@ const strAppointmentStartTimeShouldBeSetLaterToTheCurrentTime =
 const String strProviderBasedPatientsHaveViewOnlyAccess =
     'This activity is provider-based. Patients have view-only access.';
 
+// Default language set to English (India)
+const String strDefaultLanguage = 'en-IN';
+
 class DoctorFilterConstants {
   static List<String> yearOfExperienceList = [
     "0 to 5 years",

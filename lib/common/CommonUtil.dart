@@ -3084,7 +3084,7 @@ class CommonUtil {
   };
 
   static const Map<String, String> langaugeCodes = {
-    'en': 'en-IN',
+    'en': strDefaultLanguage,
     'ta': 'ta-IN',
     'te': 'te-IN',
     'hi': 'hi-IN',
@@ -6273,14 +6273,14 @@ class CommonUtil {
                         .forEach((language, languageCode) {
                       if (currentLanguage == languageCode) {
                         PreferenceUtil.saveString(SHEELA_LANG,
-                            CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
+                            CommonUtil.langaugeCodes[languageCode] ?? strDefaultLanguage);
                       }
                     });
                   }
                 }
               });
             } else {
-              PreferenceUtil.saveString(SHEELA_LANG, 'en-IN');
+              PreferenceUtil.saveString(SHEELA_LANG, strDefaultLanguage);
             }
             if (profileSetting?.preferredMeasurement != null) {
               PreferredMeasurement preferredMeasurement =
@@ -7669,7 +7669,7 @@ class CommonUtil {
     // Check if the preferredLanguage is not null and matches one of the English language codes
     try {
       if (preferredLanguage != null &&
-          (preferredLanguage == 'en-IN' || // English - India
+          (preferredLanguage == strDefaultLanguage || // English - India
               preferredLanguage == 'en' || // English
               preferredLanguage == 'undef')) {
         // Undefined language (assuming 'undef' represents a special case)

@@ -132,7 +132,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         currentLanguage = langCode;
       } else {
         currentLanguage = 'en';
-        PreferenceUtil.saveString(SHEELA_LANG, 'en-IN');
+        PreferenceUtil.saveString(SHEELA_LANG, strDefaultLanguage);
       }
       if (currentLanguage.isNotEmpty) {
         CommonUtil.supportedLanguages.forEach((language, languageCode) {
@@ -161,7 +161,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 if (currentLanguage == languageCode) {
                   languagePreferred = toBeginningOfSentenceCase(language);
                   PreferenceUtil.saveString(SHEELA_LANG,
-                      CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
+                      CommonUtil.langaugeCodes[languageCode] ?? strDefaultLanguage);
                 }
               });
             }
@@ -169,7 +169,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         });
       } else {
         languagePreferred = "English";
-        PreferenceUtil.saveString(SHEELA_LANG, 'en-IN');
+        PreferenceUtil.saveString(SHEELA_LANG, strDefaultLanguage);
       }
 
       return languagePreferred;
