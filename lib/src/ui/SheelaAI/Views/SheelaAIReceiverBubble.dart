@@ -766,6 +766,9 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         // Set loading state to false
                         controller.isLoading.value = false;
 
+                        // disable the mic button while tap reconnect
+                        controller.micDisableReconnect.value = true;
+
                         // Introduce a delay before resetting the button selection (3 seconds in this case)
                         Future.delayed(const Duration(seconds: 3), () {
                           buttonData?.isSelected = false;

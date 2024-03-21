@@ -1,21 +1,15 @@
 package com.ventechsolutions.myFHB
 
-/*import com.ventechsolutions.myFHB.bloodpressure.controller.SessionController*/
-/*import jp.co.ohq.ble.OHQDeviceManager
-import jp.co.ohq.ble.OHQDeviceManager.CompletionBlock
-import jp.co.ohq.ble.OHQDeviceManager.ScanObserverBlock*/
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.*
 import android.bluetooth.*
 import android.content.*
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.location.LocationManager
-import android.media.AudioAttributes
 import android.media.AudioManager
 import android.net.*
 import android.net.wifi.WifiConfiguration
@@ -41,11 +35,9 @@ import android.widget.*
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.multidex.BuildConfig
 import com.facebook.FacebookSdk
 import com.facebook.FacebookSdk.fullyInitialize
 import com.facebook.FacebookSdk.setAutoInitEnabled
@@ -57,8 +49,6 @@ import com.github.ybq.android.spinkit.SpinKitView
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.gsh.api.BluetoothStatus
 import com.gsh.spo2.api.GoldenBLEDeviceManager
 import com.gsh.spo2.api.GoldenBLEDeviceManagerCallback
@@ -90,9 +80,6 @@ import com.ventechsolutions.myFHB.bluetooth.callback.BleScanCallback
 import com.ventechsolutions.myFHB.bluetooth.data.BleDevice
 import com.ventechsolutions.myFHB.bluetooth.exception.BleException
 import com.ventechsolutions.myFHB.constants.Constants
-import com.ventechsolutions.myFHB.constants.Constants.eidSheela
-import com.ventechsolutions.myFHB.constants.Constants.idSheela
-import com.ventechsolutions.myFHB.constants.Constants.sayTextSheela
 import com.ventechsolutions.myFHB.services.*
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -106,13 +93,11 @@ import jp.co.ohq.ble.OHQConfig
 import jp.co.ohq.ble.enumerate.*
 import jp.co.ohq.utility.Bundler
 import jp.co.ohq.utility.Types
-import java.security.SecureRandom
 import java.util.*
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.experimental.and
 import kotlin.system.exitProcess
 
-class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
+class MainActivity : FlutterFragmentActivity(),
     BluetoothPowerController.Listener {
     private var wowGoDeviceList: ArrayList<String>?=null
     private var wowGoFunctionIndex=0
@@ -128,15 +113,10 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     private var enableBackgroundNotification = false
 
     //    private lateinit var bluetoothFlutterResult: MethodChannel.Result
-    private val VERSION_CODES_CHANNEL = Constants.CN_VC
     private val LISTEN4SMS = Constants.CN_LISTEN4SMS
     private val VOICE_CHANNEL = Constants.CN_VOICE_INTENT
     private val TTS_CHANNEL = Constants.CN_TTS
-    private val SECURITY_CHANNEL = Constants.CN_SECURE
-    private val ROUTE_CHANNEL = Constants.CN_ROUTE
-    private val SHEELA_CHANNEL = Constants.SHEELA_CHANNEL
     private val ONGOING_NS_CHANNEL = Constants.CN_ONG_NS
-    private val STREAM = Constants.CN_EVE_STREAM
     private val SPEECH_TO_TEXT_STREAM = Constants.SPEECH_TO_TEXT_STREAM
     private val WIFICONNECT = Constants.WIFI_WORKS
     private val BLECONNECT = Constants.BLE_CONNECT
@@ -151,22 +131,11 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     private val DISABLE_BACKGROUND_NOTIFICATION = Constants.DISABLE_BACKGROUND_NOTIFICATION
     private val GET_CURRENT_LOCATION = Constants.GET_CURRENT_LOCATION
     private val CLOSE_SHEELA_DIALOG = Constants.CLOSE_SHEELA_DIALOG
-    private var sharedValue: String? = null
     private var username: String? = null
-    private var templateName: String? = null
-    private var bookingId: String? = null
-    private var appDate: String? = null
-    private var docSessionId: String? = null
-    private var healthOrgId: String? = null
-    private var docId: String? = null
-    private var docPic: String? = null
-    private lateinit var mEventChannel: EventSink
-    private lateinit var scheduleAppointmentChannel: EventSink
     private lateinit var mSpeechToTextEventChannel: EventSink
     private lateinit var BLEEventChannel: EventSink
     private val REQ_CODE = 112
     private val INTENT_AUTHENTICATE = 155
-    private var voiceText = ""
     private var langSource: String? = null
     private var langDest: String? = null
     private var FromLang = Constants.FROM_LANG
@@ -177,12 +146,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     var lang_ref = arrayOf("en_US", "ta_IN", "te_IN", "hi_IN")
     var tts: TextToSpeech? = null
     private var finalWords: String? = ""
-
-    private val STATE_START = 0
-    private val STATE_READY = 1
-    private val STATE_DONE = 2
-    private val STATE_FILE = 3
-    private val STATE_MIC = 4
 
 
     private var _result: MethodChannel.Result? = null
@@ -225,13 +188,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     internal lateinit var spin_kit: SpinKitView
     internal lateinit var close: ImageView
     internal lateinit var micOn: ImageView
-
-    private val REMINDER_CHANNEL = "android/notification"
-    private val REMINDER_METHOD_NAME = "addReminder"
-    private val CANCEL_REMINDER_METHOD_NAME = "removeReminder"
-    var alarmManager: AlarmManager? = null
-
-    var elapsedTime = 3000
 
     private val REQUEST_CODE_OPEN_GPS = 1
     private val REQUEST_CODE_PERMISSION_LOCATION = 2
@@ -293,10 +249,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     private var gManagerFat: com.gsh.weightscale.api.GoldenBLEDeviceManager? = null
     private var selectedBle = ""
 
-    private var appointmentId = ""
-    private var eid = ""
-    private var sayText = ""
-
     private val handlerBle = Handler(Looper.getMainLooper())
     private val handlerBleWowGo = Handler(Looper.getMainLooper())
     private var isExecuting = false
@@ -312,16 +264,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         super.onCreate(savedInstanceState)
         setAutoInitEnabled(true)
         //OHQDeviceManager.init(applicationContext, this)
-        registerReceiver(broadcastReceiver, IntentFilter("INTERNET_LOST"));
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-//            val alarmManager = ContextCompat.getSystemService(context, AlarmManager::class.java)
-//            if (alarmManager?.canScheduleExactAlarms() == false) {
-//                Intent().also { intent ->
-//                    intent.action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
-//                    context.startActivity(intent)
-//                }
-//            }
-//        }
         fullyInitialize()
         FacebookSdk.setIsDebugEnabled(true)
         FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
@@ -331,24 +273,12 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         val target: Uri? = getIntent().getData()
         Log.e("deeplink", "onCreate: " + target)
         if (target != null) {
-            mEventChannel.success("facebookdeeplink&" + target.toString());
+
         } else {
             // activity was created in a normal fashion
         }
         AppLinkData.fetchDeferredAppLinkData(this) { it ->
             Log.e("deeplinks", "onCreate: " + it?.appLinkData)
-            if (::mEventChannel.isInitialized) {
-                mEventChannel.success("facebookdeeplink&" + it?.appLinkData);
-            }
-        }
-
-        val action = intent.action
-        val type = intent.type
-        // Check if the action is one of the specified actions (ACTION_SEND, ACTION_CHOOSER, ACTION_DELETE)
-        if ((Intent.ACTION_SEND == action || Intent.ACTION_CHOOSER == action || Intent.ACTION_DELETE == action) && type != null) {
-            if ((Constants.TXT_PLAIN == type) && (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0) {
-                handleSendText(intent) // Handle text being sent
-            }
         }
         //registerReceiver(smsBroadcastReceiver,
         //IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION))
@@ -370,16 +300,12 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         tryAgain = customLayout.findViewById(R.id.tryAgain)
         close = customLayout.findViewById(R.id.close)
         micOn = customLayout.findViewById(R.id.micOn)
-        //builder.setView(customLayout)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(customLayout)
         dialog.setCancelable(false)
         countDownTimerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         countDownTimerDialog.setContentView(countDownTimerLayout)
         countDownTimerDialog.setCancelable(false)
-        //dialog = builder.create()
-        //dialog.setInverseBackgroundForced(true)
-        //dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         countDownTimerDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         countDownTimerDialog.window?.setDimAmount(0.0f)
@@ -470,14 +396,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     }
 
 
-    var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            Log.e("mainActivitycalled", "mainActivitycalled")
-            if (::scheduleAppointmentChannel.isInitialized) {
-                scheduleAppointmentChannel.success("scheduleAppointment|${appointmentId}|${eid}|${sayText}")
-            }
-        }
-    }
 
 
     var gCallbackFat: com.gsh.weightscale.api.GoldenBLEDeviceManagerCallback =
@@ -2098,22 +2016,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             }
         }
 
-        MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            ROUTE_CHANNEL
-        ).setMethodCallHandler { call, result ->
-            try {
-                if (call.method!!.contentEquals(Constants.FUN_GET_MY_ROUTE)) {
-                    result.success(sharedValue)
-                    sharedValue = null
-                } else {
-                    result.notImplemented()
-                }
-            } catch (e: Exception) {
-                print(e.printStackTrace())
-            }
-
-        }
 
 
         MethodChannel(
@@ -2140,17 +2042,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventSink?) {
                     mSpeechToTextEventChannel = events!!
-                }
-
-                override fun onCancel(arguments: Any?) {
-                }
-            }
-        )
-
-        EventChannel(flutterEngine.dartExecutor.binaryMessenger, STREAM).setStreamHandler(
-            object : EventChannel.StreamHandler {
-                override fun onListen(arguments: Any?, events: EventSink?) {
-                    mEventChannel = events!!
                 }
 
                 override fun onCancel(arguments: Any?) {
@@ -2215,37 +2106,13 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                     selectedBle = ""
                     //Initialize Scan for all BLE devices
                     scanAllBleDevices()
+
+                    // resolved reconneting issues
+                    startScanWowGoDevices()
                 }
             }
         )
 
-        EventChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            Constants.Appointment_EVE_STREAM
-        ).setStreamHandler(
-            object : EventChannel.StreamHandler {
-                override fun onListen(arguments: Any?, events: EventSink?) {
-                    scheduleAppointmentChannel = events!!
-                }
-
-                override fun onCancel(arguments: Any?) {
-                }
-            }
-        )
-
-
-        MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            VERSION_CODES_CHANNEL
-        ).setMethodCallHandler { call, result ->
-            if (call.method == Constants.FUN_APP_VERSION) {
-                //logics to get version code
-                val appVersion = getAppVersion()
-                result.success(appVersion)
-            } else {
-                result.notImplemented()
-            }
-        }
 
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
@@ -2258,19 +2125,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             }
         }
 
-
-        MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            SECURITY_CHANNEL
-        ).setMethodCallHandler { call, result ->
-            if (call.method == Constants.FUN_KEY_GAURD) {
-                //logics to show security methods
-                _securityResult = result
-                secureMe()
-            } else {
-                result.notImplemented()
-            }
-        }
 
 
 
@@ -2315,50 +2169,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
             }
         }
 
-        MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            REMINDER_CHANNEL
-        ).setMethodCallHandler { call, result ->
-            try {
-                if (call.method == REMINDER_METHOD_NAME) {
-                    val data = call.argument<String>("data")
-                    val retMap: Map<String, Any> = Gson().fromJson(
-                        data, object : TypeToken<HashMap<String?, Any?>?>() {}.type
-                    )
-
-                    heyKindlyRemindMe(retMap)
-                    result.success("success")
-                } else if (call.method == CANCEL_REMINDER_METHOD_NAME) {
-                    val data = call.argument<String>("data")
-                    data?.let { heyCancelMyReminder(it) }
-                    result.success("success")
-                } else {
-                    result.notImplemented()
-                }
-            } catch (e: Exception) {
-                print("exception" + e.message)
-            }
-        }
-
-        /*MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            SNOOZE_REMINDER_STREAM
-        ).setMethodCallHandler { call, result ->
-            try {
-                // beolow method is for snooze reminder via sheela from sheela conversation
-                if (call.method == SNOOZE_SHEELA) {
-                    val data = call.argument<String>("data")
-                    val retMap: Map<String, Any> = Gson().fromJson(
-                        data, object : TypeToken<HashMap<String?, Any?>?>() {}.type
-                    )
-
-                    snoozeSheela(retMap)
-                    result.success("success")
-                }
-            } catch (e: Exception) {
-                print("exception" + e.message)
-            }
-        }*/
 
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
@@ -2870,6 +2680,23 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         gManagerFat?.scanLeDevice(true)
     }
 
+    // scan only for wow go for reconnecting flow
+    fun startScanWowGoDevices(){
+        gManager = GoldenBLEDeviceManager(applicationContext, gCallback)
+        gManager?.scanLeDevice(true)
+        gManagerBP = com.gsh.bloodpressure.api.GoldenBLEDeviceManager(
+            applicationContext,
+            gCallBackBP
+        )
+        gManagerBP?.scanLeDevice(true)
+        gManagerFat = com.gsh.weightscale.api.GoldenBLEDeviceManager(
+            applicationContext,
+            gCallbackFat
+        )
+        gManagerFat?.scanLeDevice(true)
+        startTransteckWowGoDevice()
+    }
+
     @SuppressLint("MissingPermission")
     private fun getLastKnownLocation(): Location? {
         mLocationManager = applicationContext.getSystemService(LOCATION_SERVICE) as LocationManager
@@ -3067,283 +2894,15 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         }
     }
 
-    fun handleSendText(intent: Intent) {
-        var  manager = this.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        manager.cancel(intent.getIntExtra(getString(R.string.nsid), 0))
-        sharedValue = intent.getStringExtra(Intent.EXTRA_TEXT)
-        username = intent.getStringExtra(getString(R.string.username))
-        docId = intent.getStringExtra(Constants.PROP_docId)
-        docPic = intent.getStringExtra(getString(R.string.docPic))
-        bookingId = intent.getStringExtra(Constants.PROP_BookingId)
-        appDate = intent.getStringExtra(Constants.PROP_PlannedStartTime)
-        docSessionId = intent.getStringExtra(Constants.PROP_docSessionId)
-        healthOrgId = intent.getStringExtra(Constants.PROP_healthOrgId)
-        templateName = intent.getStringExtra(Constants.PROP_TEMP_NAME)
-        val providerReqId = intent.getStringExtra(Constants.PROP_PROVIDER_REQID)
-        var redirect_to = intent.getStringExtra(Constants.PROP_REDIRECT_TO)
-        val claimId = intent.getStringExtra(Constants.PROP_CLAIM_ID)
-        val patientPhoneNumber = intent.getStringExtra(Constants.PATIENT_PHONE_NUMBER)
-        val verificationCode = intent.getStringExtra(Constants.VERIFICATION_CODE)
-        val caregiverRequestor = intent.getStringExtra(Constants.CAREGIVER_REQUESTER)
-        val caregiverReceiver = intent.getStringExtra(Constants.CAREGIVER_RECEIVER)
-        val uid = intent.getStringExtra(Constants.UID)
-        val type = intent.getStringExtra("type")
-
-        val data = intent.getStringExtra(Constants.PROP_DATA)
-        val prescriptionId = intent.getStringExtra(Constants.PROP_PRESCRIPTION_ID)
-        val HRMId = intent.getStringExtra(Constants.PROP_HRMID)
-        val EVEId = intent.getStringExtra(Constants.PROP_EVEID)
-        val patientName = intent.getStringExtra(Constants.PROB_PATIENT_NAME)
-        val careGiverMemberId = intent.getStringExtra(Constants.PROP_CAREGIVER_REQUESTOR)
-        val careCoordinatorUserId = intent.getStringExtra(Constants.CARE_COORDINATOR_USER_ID)
-        val isCareGiver = intent.getStringExtra(Constants.IS_CARE_GIVER)
-        val deliveredDateTime = intent.getStringExtra(Constants.DELIVERED_DATE_TIME)
-        val isFromCareCoordinator = intent.getStringExtra(Constants.IS_FROM_CARE_COORDINATOR)
-        val careGiverName = intent.getStringExtra(Constants.CARE_GIVER_NAME)
-        val activityTime = intent.getStringExtra(Constants.ACTIVITY_TIME)
-        val activityName = intent.getStringExtra(Constants.ACTIVITY_NAME)
-        val doctorID = intent.getStringExtra(getString(R.string.docId))
-        val docName = intent.getStringExtra(getString(R.string.docName))
-        val senderId = intent.getStringExtra(getString(R.string.senderId))
-        val senderName = intent.getStringExtra(getString(R.string.senderName))
-        val senderProfile = intent.getStringExtra(getString(R.string.senderProfilePic))
-        val notificationListId = intent.getStringExtra(getString(R.string.notificationListId))
-        val groupId = intent.getStringExtra(getString(R.string.chatListId))
-        val rawTitle = intent.getStringExtra(Constants.PROP_RAWTITLE)
-        val rawBody = intent.getStringExtra(Constants.PROP_RAWBODY)
-        patId = intent.getStringExtra(getString(R.string.pat_id))
-        patName = intent.getStringExtra(getString(R.string.pat_name))
-        patPic = intent.getStringExtra(getString(R.string.pat_pic))
-        val message = intent.getStringExtra(getString(R.string.message))
-        var externalLink = intent.getStringExtra(Constants.PROB_EXTERNAL_LINK)
-        var planId = intent.getStringExtra(Constants.PROP_PLANID)
-        var callType = intent.getStringExtra(getString(R.string.callType))
-        var userId = intent.getStringExtra(Constants.PROB_USER_ID)
-        var patientId = intent.getStringExtra(Constants.PATIENT_ID)
-        var isWeb = intent.getStringExtra(getString(R.string.web))
-        var appLog = intent.getStringExtra(getString(R.string.ns_type_applog))
-        val appointmentID = intent.getStringExtra(Constants.APPOINTMENTID)
-        val createdBy = intent.getStringExtra(Constants.CREATEDBY)
-        val cartId = intent.getStringExtra(Constants.BOOKINGID)
-        val senderProfilePic = intent.getStringExtra(Constants.SENDER_PROFILE_PIC)
-        val audioURL = intent.getStringExtra(Constants.PROP_sheelaAudioMsgUrl)
-
-        val paymentLinkViaPush = intent.getBooleanExtra(Constants.PAYMENTLINKVIAPUSH, false)
-        val eid = intent.getStringExtra("eid")
-        val task = intent.getStringExtra("task")
-        val action = intent.getStringExtra("action")
-        val isSheela = intent.getStringExtra("isSheela")
-        var uuid = intent.getStringExtra(Constants.PROP_UUID)
-        val eventType = intent.getStringExtra(Constants.EVENT_TYPE)
-        val others = intent.getStringExtra(Constants.OTHERS)
-        val estart = intent.getStringExtra(Constants.PROP_ESTART)
-        val dosemeal = intent.getStringExtra(Constants.PROP_DOSEMEAL)
-        // Extract the voice clone ID from the Intent's extra using the provided key
-        val voiceCloneId = intent.getStringExtra(Constants.VOICECLONEID)
-        // Determine the status based on the Intent action
-        val status = when (intent.action) {
-            Intent.ACTION_CHOOSER -> Constants.PROP_ACCEPT
-            Intent.ACTION_DELETE -> Constants.PROP_DECLINE
-            else -> null
-        }
-
-
-
-
-        if (sharedValue != null && sharedValue == "chat") {
-            sharedValue =
-                "${Constants.PROP_ACK}&$sharedValue&${senderId}&${senderName}&${senderProfile}&${groupId}"
-        } else if (templateName == getString(R.string.voice_clone_patient_assignment)) {
-            // Check if the templateName is related to voice clone patient assignment
-            if (status != null) {
-                // If true, construct a sharedValue string with templateName, voiceCloneId, and status
-                sharedValue = "${templateName}&${voiceCloneId}&$status"
-            }
-        }else if (redirect_to == "claimList") {
-            sharedValue = "${redirect_to}&${message}&$rawBody"
-        }
-        // templateName condition is for appointment reminder in 5 mins from api
-        else if ((templateName != null) && (templateName.equals("NonTeleconsultationAppointmentPreReminder5")) || (templateName.equals(
-                "AppointmentReminder5"
-            ))
-        ) {
-            // this sheela&Appointments is for receving in flutter with appointmentID & eid
-            sharedValue = "sheela&Appointments&$appointmentID&$eid"
-        } else if ((templateName != null) && (templateName.equals("vcApproveByProvider")) || (templateName.equals(
-                "vcDeclineByProvider"
-            ))){
-            sharedValue = "$templateName"
-        }
-
-        else if (redirect_to == "sheela|pushMessage") {
-            sharedValue = "isSheelaFollowup&${message}&$rawBody&$audioURL&$EVEId"
-        } else if (redirect_to == "isSheelaFollowup") {
-            sharedValue = "${redirect_to}&${message}&$rawBody"
-
-        } else if (redirect_to?.contains("myRecords") == true) {
-
-            sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
-        } else if (redirect_to?.contains("notifyCaregiverForMedicalRecord") == true) {
-
-            sharedValue =
-                "ack&${redirect_to}&${userId}&${patientName}&${careCoordinatorUserId}&${isCareGiver}&${deliveredDateTime}&${isFromCareCoordinator}&${senderProfilePic}"
-        } else if (redirect_to?.contains("escalateToCareCoordinatorToRegimen") == true) {
-
-            sharedValue =
-                "ack&${redirect_to}&${careCoordinatorUserId}&${patientName}&${careGiverName}&${activityTime}&${activityName}&${userId}&${uid}&${patientPhoneNumber}"
-        } else if (redirect_to?.contains("appointmentPayment") == true) {
-
-            sharedValue = "ack&${redirect_to}&${appointmentID}&${cartId}"
-        } else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
-        } else if (redirect_to?.contains("mycart") == true) {
-
-            sharedValue =
-                "ack&${redirect_to}&${userId}&${createdBy}&${bookingId}&${cartId}&${patName}&${paymentLinkViaPush}"
-        } else if (redirect_to?.contains("familyProfile") == true) {
-
-            sharedValue =
-                "ack&${redirect_to}&${userId}"
-        } else if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true || redirect_to?.contains(
-                "notifyPatientServiceTicketByCC"
-            ) == true
-        ) {
-
-            if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true) {
-                sharedValue =
-                    "ack&${redirect_to}&${uuid}"
-            }
-            if (redirect_to?.contains("notifyPatientServiceTicketByCC") == true) {
-                sharedValue =
-                    "ack&${redirect_to}&${EVEId}"
-            }
-        } else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
-
-            sharedValue =
-                "ack&${redirect_to}&${type}&${patientPhoneNumber}&${verificationCode}&${caregiverReceiver}&${caregiverRequestor}"
-        } else if (redirect_to?.contains("communicationSetting") == true) {
-
-            sharedValue = "ack&${redirect_to}"
-        } else if (redirect_to?.contains("careGiverMemberProfile") == true) {
-
-            sharedValue = "ack&${redirect_to}&${careGiverMemberId}"
-        } else if (redirect_to?.contains("communicationSetting") == true) {
-
-            sharedValue = "ack&${redirect_to}"
-        } else if (redirect_to?.contains(Constants.APPOINTMENT_DETAIL) == true) {
-            if(status!=null){
-                sharedValue = "ack&${redirect_to}&${appointmentID}&${patientId}&${status}"
-            }else{
-                sharedValue = "ack&${redirect_to}&${appointmentID}"
-            }
-        } else if (redirect_to == "regiment_screen") {
-            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${EVEId}&${estart}&${dosemeal}"
-        } else if (externalLink != null && externalLink != "") {
-            if (!externalLink.startsWith("http://") && !externalLink.startsWith("https://"))
-                externalLink = "http://" + externalLink
-            sharedValue = "openurl&$externalLink"
-        } else if (sharedValue != null && username != null && docId != null && docPic != null && callType != null && isWeb != null) {
-            MyApp.isMissedNSShown=false
-            MyApp().updateStatus(true)
-            MyApp.recordId = ""
-            sharedValue =
-                "$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}&${patId}&${patName}&${patPic}&${callType}&${isWeb}"
-        } else if (sharedValue == Constants.PROP_DOC_RESCHDULE) {
-            //todo redirect to telehealth page
-            sharedValue =
-                "${Constants.PROP_DOC_RESCHDULE}&${docId!!}&${bookingId}&${docSessionId}&${healthOrgId}&${templateName}"
-        } else if (sharedValue == Constants.PROP_DOC_CANCELLATION) {
-            //todo redirect to telehealth page
-            sharedValue =
-                "${Constants.PROP_DOC_CANCELLATION}&${bookingId!!}&${appDate}&${templateName}"
-        } else if (providerReqId != null && providerReqId != "") {
-            if (sharedValue == Constants.PROP_ACCEPT) {
-                sharedValue = "$sharedValue&${providerReqId}&${"accepted"}"
-            } else {
-                sharedValue = "$sharedValue&${providerReqId}&${"rejected"}"
-            }
-        } else if (data != null && ((data == "DoctorPatientAssociation") || (data == "QurplanCargiverPatientAssociation"))) {
-            sharedValue =
-                "${Constants.PROP_ACK}&${redirect_to!!}&${"$doctorID|$docName|$docPic|$patId|$patName|$patPic|$message"}"
-        } else if (data != null && data == "MissingActivitiesReminder") {
-            sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${EVEId}"
-        } else if ((planId != null && planId != "") && (templateName != null && templateName != "") && (userId != null && userId != "") && (patName != null && patName != "")) {
-            if ((sharedValue == Constants.PROP_RENEW) || (sharedValue == Constants.PROP_CALLBACK)) {
-                sharedValue = "$sharedValue&${planId}&${"$templateName"}&${userId}&${patName}"
-            } else if (redirect_to == Constants.MY_PLAN_DETAILS) {
-                sharedValue = "myplandetails&${planId}&${"$templateName"}&${userId}&${patName}"
-            }
-        }else if(templateName == Constants.PATIENT_REFERRAL_ACCEPT){
-            sharedValue = "${Constants.PROP_ACK}&${templateName!!}"
-
-        }
-        else if (appLog != null && appLog == "FETCH_LOG") {
-            sharedValue = appLog
-        } else {
-            if (HRMId != null && HRMId != "") {
-                sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${HRMId}"
-            } else if (data != null) {
-                sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${data}"
-            } else {
-                if (redirect_to != null) {
-                    if (redirect_to.contains("sheela")) {
-                        var redirectArray = redirect_to.split("|")
-                        if (redirectArray.size > 1 && redirectArray[1] == "pushMessage") {
-                            sharedValue =
-                                "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}&${notificationListId}"
-
-                        } else if (eventType != null && eventType == Constants.WRAPPERCALL) {
-                            sharedValue =
-                                "${Constants.PROP_ACK}&${redirect_to}&${eventType}&${"$others|$rawTitle|$rawBody"}&${notificationListId}"
-                        } else {
-                            if (rawBody != null && rawBody != "")
-                                sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawBody}"
-                            else if (rawTitle != null && rawTitle != "")
-                                sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawTitle}"
-                            else
-                                sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${message}"
-
-
-                        }
-                    } else {
-                        if (rawTitle != null && rawTitle != "")
-                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawTitle}"
-                        else if (rawBody != null && rawBody != "")
-                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawBody}"
-                        else
-                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${message}"
-
-
-                    }
-                }
-
-
-            }
-
-        }
-        Log.e("MainActivity", "dataIntent: " + sharedValue)
-        if (::mEventChannel.isInitialized) {
-            mEventChannel.success(sharedValue)
-        }
-    }
-
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        val action = intent.action
-        val type = intent.type
-        // Check if the action is one of the specified actions (ACTION_SEND, ACTION_CHOOSER, ACTION_DELETE)
-        if ((Intent.ACTION_SEND == action || Intent.ACTION_CHOOSER == action || Intent.ACTION_DELETE == action) && type != null) {
-            if (Constants.TXT_PLAIN == type) {
-                handleSendText(intent) // Handle text being sent
-            }
-        }
     }
 
     override fun onPause() {
         try {
             Constants.foregroundActivityRef = false;
             stopCriticalAlertServices()
-            lbm.unregisterReceiver(badgeListener)
             super.onPause()
         } catch (e: Exception) {
             Log.d("Catch", "" + e.toString())
@@ -3356,7 +2915,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         Constants.foregroundActivityRef = true
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         nsManager.cancel(2022)
-        registerReceiver(badgeListener, IntentFilter("remainderSheelaInvokeEvent"))
         super.onResume()
     }
 
@@ -3370,54 +2928,14 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
                 startService(serviceIntent)
             }
             super.onDestroy()
-            unregisterReceiver(broadcastReceiver)
-            unregisterReceiver(badgeListener)
             val serviceIntent = Intent(this, AVServices::class.java)
             stopService(serviceIntent)
             speechRecognizer?.destroy()
-            MyApp.snoozeTapCountTime = 0
-            MyApp.snoozeSheelaTapCount = 0
         } catch (e: Exception) {
             Log.d("Catch", "" + e.toString())
         }
     }
 
-    private val badgeListener = object : BroadcastReceiver() {
-        override fun onReceive(ctx: Context, data: Intent) {
-            val redirectTo = data.getStringExtra(Constants.PROP_REDIRECT_TO)
-
-            // templateName is for appointment 5 mins before from api
-            val templateName = data.getStringExtra(Constants.PROP_TEMP_NAME)
-            // templateName condition is for appointment reminder in 5 mins
-             if ((templateName != null) && (templateName.equals("NonTeleconsultationAppointmentPreReminder5")) || (templateName.equals(
-                    "AppointmentReminder5"
-                ))) {
-                 val message = data.getStringExtra("message")
-                 val rawMessage = data.getStringExtra("rawMessage")
-                 val appointmentId = data.getStringExtra("appointmentId")
-                 val eid = data.getStringExtra("eid")
-                 mEventChannel.success("sheela&Appointments&$appointmentId&$eid")
-            }
-            else if (redirectTo != null && redirectTo.equals("isSheelaFollowup")) {
-                val message = data.getStringExtra("message")
-                val rawMessage = data.getStringExtra("rawMessage")
-                val sheelaAudioMsgUrl = data.getStringExtra("sheelaAudioMsgUrl")
-                val eventId = data.getStringExtra("eventId")
-                mEventChannel.success("isSheelaFollowup&${message}&${rawMessage}&${sheelaAudioMsgUrl}&${eventId}")
-            } else if (redirectTo != null && redirectTo.equals("sheela")) {
-                val redirect_to = data.getStringExtra(Constants.PROP_REDIRECT_TO)
-                val eventType = data.getStringExtra(Constants.EVENT_TYPE)
-                val others = data.getStringExtra(Constants.OTHERS)
-                val rawTitle = data.getStringExtra(Constants.PROP_RAWTITLE)
-                val rawBody = data.getStringExtra(Constants.PROP_RAWBODY)
-                val notificationListId = data.getStringExtra(Constants.NOTIFICATIONLISTID)
-                mEventChannel.success("${Constants.PROP_ACK}&${redirect_to}&${eventType}&${"$others|$rawTitle|$rawBody"}&${notificationListId}")
-            } else {
-                val eid = data.getStringExtra("eid")
-                mEventChannel.success("activityRemainderInvokeSheela&${eid}")
-            }
-        }
-    }
 
     val handler: Handler = Handler()
     val runnable = Runnable {
@@ -3523,29 +3041,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
 
     }
 
-    private fun secureMe() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            val km: KeyguardManager =
-                getSystemService(android.content.Context.KEYGUARD_SERVICE) as KeyguardManager
-            if (km.isKeyguardSecure) {
-                //user has set pin/password/pattern
-                val authIntent: Intent = km.createConfirmDeviceCredentialIntent(
-                    Constants.KEY_GAURD_TITLE,
-                    Constants.KEY_GAURD_TITLE_DESC
-                )
-                startActivityForResult(authIntent, INTENT_AUTHENTICATE)
-            } else {
-                //user has not enabled any password/pin/pattern
-                _securityResult.success(1004)
-                return
-            }
-        } else {
-            //there is no key guard feature below Android 5.0
-            _securityResult.success(1000)
-            return
-        }
-    }
-
 
     private fun textToSpeech(msg: String, isClose: Boolean) {
         tts!!.setSpeechRate(1.0f)
@@ -3571,12 +3066,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
 
     }
 
-    private fun getAppVersion(): String {
-        val versionCode: Int = BuildConfig.VERSION_CODE
-        val versionName: String = BuildConfig.VERSION_NAME
-
-        return "v$versionName b$versionCode"
-    }
 
     private fun requestPermissionFromUSer() {
         ActivityCompat.requestPermissions(
@@ -3639,361 +3128,7 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
-    private fun heyKindlyRemindMe(data: Map<String, Any>) {
-        val title: String = data["title"] as String
-        val body: String = data["description"] as String
-        val nsId = data["eid"] as String
-        val eDateTime: String = data["estart"] as String  //2021-04-20 06:10:00
-        val remindin: String = data["remindin"] as String
-        val remindBefore: String = data["remindbefore"] as String
-        val eventId = data["eid"] as String
-        val strEStart: String = data["estart"] as String  //2021-04-20 06:10:00
-        val importance: String = data["importance"] as String
-        val date: String = eDateTime.split(" ")[0]
-        val time: String = eDateTime.split(" ")[1]
-        val alarmHour = time.split(":")[0].toInt()
-        val alarmMin = time.split(":")[1].toInt()
-        val alarmDate = date.split("-")[2].toInt()
-        val alarmMonth = date.split("-")[1].toInt()
-        val alarmYear = date.split("-")[0].toInt()
-        val strDosemeal: String = data["dosemeal"] as String
-        val reminderBroadcaster = Intent(this, ReminderBroadcaster::class.java)
-        reminderBroadcaster.putExtra("title", title)
-        reminderBroadcaster.putExtra("body", body)
-        /*reminderBroadcaster.putExtra("nsid", nsId.toInt())*/
-        reminderBroadcaster.putExtra("isCancel", false)
-        createNotificationChannel(importance)
-        var channelId = ""
-        if (importance == "2") {
-            channelId = "schedule_v3"
-        } else {
-            channelId = "schedule"
-        }
-        if (remindBefore.toInt() > 0) {
-            // Set the alarm to start for specific time
-            val calendar: Calendar = Calendar.getInstance().apply {
-                timeInMillis = System.currentTimeMillis()
-                set(Calendar.YEAR, alarmYear)
-                set(Calendar.MONTH, alarmMonth - 1)
-                set(Calendar.DAY_OF_MONTH, alarmDate)
-                set(Calendar.HOUR_OF_DAY, alarmHour)
-                set(Calendar.MINUTE, alarmMin)
-                set(Calendar.SECOND, 0)
-            }
 
-            calendar.add(Calendar.MINUTE, -remindBefore.toInt())
-
-            //check the reminder time with current time if its true allow user to create alaram
-            if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
-                val eIdAppend = "${nsId}${"000"}"
-                val notificationAndAlarmId = NotificationID.currentMillis
-                SharedPrefUtils().saveAlarmId(this, eIdAppend, notificationAndAlarmId)
-                createNotifiationBuilder(
-                    title,
-                    body,
-                    nsId,
-                    notificationAndAlarmId,
-                    calendar.timeInMillis,
-                    false,
-                    false,
-                    channelId,
-                    eventId.toString(),
-                    strEStart,strDosemeal
-                )
-            }
-        }
-
-        // Set the alarm to start for specific time
-        val calendar: Calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            set(Calendar.YEAR, alarmYear)
-            set(Calendar.MONTH, alarmMonth - 1)
-            set(Calendar.DAY_OF_MONTH, alarmDate)
-            set(Calendar.HOUR_OF_DAY, alarmHour)
-            set(Calendar.MINUTE, alarmMin)
-            set(Calendar.SECOND, 0)
-        }
-
-        //check the reminder time with current time if its true allow user to create alaram
-        if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
-            val notificationAndAlarmId = NotificationID.currentMillis
-            SharedPrefUtils().saveAlarmId(this, nsId, notificationAndAlarmId)
-            createNotifiationBuilder(
-                title,
-                body,
-                nsId,
-                notificationAndAlarmId,
-                calendar.timeInMillis,
-                false,
-                true,
-                channelId,
-                eventId.toString(),
-                strEStart,strDosemeal
-            )
-        }
-
-        if (remindin.toInt() > 0) {
-            // Set the alarm to start for specific time
-            val calendar: Calendar = Calendar.getInstance().apply {
-                timeInMillis = System.currentTimeMillis()
-                set(Calendar.YEAR, alarmYear)
-                set(Calendar.MONTH, alarmMonth - 1)
-                set(Calendar.DAY_OF_MONTH, alarmDate)
-                set(Calendar.HOUR_OF_DAY, alarmHour)
-                set(Calendar.MINUTE, alarmMin)
-                set(Calendar.SECOND, 0)
-            }
-
-            calendar.add(Calendar.MINUTE, remindin.toInt())
-
-            //check the reminder time with current time if its true allow user to create alaram
-            if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
-                val eIdAppend = "${nsId}${"111"}"
-                val notificationAndAlarmId = NotificationID.currentMillis
-                SharedPrefUtils().saveAlarmId(this, eIdAppend, notificationAndAlarmId)
-                createNotifiationBuilder(
-                    title,
-                    body,
-                    nsId,
-                    notificationAndAlarmId,
-                    calendar.timeInMillis,
-                    false,
-                    false,
-                    channelId,
-                    eventId.toString(),
-                    strEStart,strDosemeal
-                )
-            }
-        }
-
-    }
-
-    @SuppressLint("LaunchActivityFromNotification")
-    private fun createNotifiationBuilder(
-        title: String,
-        body: String,
-        eId: String,
-        nsId: Int,
-        currentMillis: Long,
-        isCancel: Boolean,
-        isButtonShown: Boolean,
-        channelId: String,
-        eventId: String,
-        eStart: String,
-        dosemeal: String
-    ) {
-        try {
-            val _sound: Uri =
-                Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + this.packageName + "/" + R.raw.msg_tone)
-
-            val dismissIntent = Intent(this, DismissReceiver::class.java)
-            dismissIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
-            val dismissPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.getBroadcast(
-                    this,
-                    nsId,
-                    dismissIntent,
-                    PendingIntent.FLAG_IMMUTABLE
-                )
-            } else {
-                PendingIntent.getBroadcast(
-                    this,
-                    nsId,
-                    dismissIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT
-                )
-            }
-
-
-            val snoozeIntent = Intent(this, SnoozeReceiver::class.java)
-            snoozeIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
-            snoozeIntent.putExtra(this.getString(R.string.currentMillis), currentMillis)
-            snoozeIntent.putExtra(this.getString(R.string.title), title)
-            snoozeIntent.putExtra(this.getString(R.string.body), body)
-            snoozeIntent.putExtra(Constants.PROP_EVEID, eventId)
-            snoozeIntent.putExtra(Constants.PROP_ESTART, eStart)
-            snoozeIntent.putExtra(Constants.PROP_DOSEMEAL, dosemeal)
-            snoozeIntent.putExtra(Constants.CHANNEL_ID, channelId)
-            snoozeIntent.putExtra(Constants.EID_SNOOZE, eId)
-            val snoozePendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.getBroadcast(
-                    this,
-                    nsId,
-                    snoozeIntent,
-                    PendingIntent.FLAG_IMMUTABLE
-                )
-            } else {
-                PendingIntent.getBroadcast(
-                    this,
-                    nsId,
-                    snoozeIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT
-                )
-            }
-
-
-            val onTapNS = Intent(this, OnTapNotification::class.java)
-            onTapNS.putExtra("nsid", nsId)
-            onTapNS.putExtra("meeting_id", "")
-            onTapNS.putExtra("username", "")
-            //onTapNS.putExtra(getString(R.string.username), "$USER_NAME")
-            onTapNS.putExtra(Constants.PROP_DATA, "")
-            onTapNS.putExtra(Constants.PROP_REDIRECT_TO, "regiment_screen")
-            onTapNS.putExtra(Constants.PROP_HRMID, "")
-            onTapNS.putExtra(Constants.PROP_EVEID, eventId)
-            onTapNS.putExtra(Constants.PROP_ESTART, eStart)
-            onTapNS.putExtra(Constants.PROP_DOSEMEAL, dosemeal)
-            val onTapPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.getBroadcast(this, nsId, onTapNS, PendingIntent.FLAG_IMMUTABLE)
-
-            } else {
-                PendingIntent.getBroadcast(this, nsId, onTapNS, PendingIntent.FLAG_CANCEL_CURRENT)
-
-            }
-            val builder: NotificationCompat.Builder
-            if (isButtonShown) {
-                builder = NotificationCompat.Builder(applicationContext, channelId)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setLargeIcon(
-                        BitmapFactory.decodeResource(
-                            applicationContext.resources,
-                            R.mipmap.ic_launcher
-                        )
-                    )
-                    .setContentTitle(title)
-                    .setContentText(body)
-                    .setContentIntent(onTapPendingIntent)
-                    .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setCategory(NotificationCompat.CATEGORY_ALARM)
-                    .addAction(R.drawable.ic_close, "Dismiss", dismissPendingIntent)
-                    .addAction(R.drawable.ic_snooze, "Snooze", snoozePendingIntent)
-                    .setAutoCancel(true)
-                    .setOnlyAlertOnce(false)
-            } else {
-                builder = NotificationCompat.Builder(applicationContext, channelId)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setLargeIcon(
-                        BitmapFactory.decodeResource(
-                            applicationContext.resources,
-                            R.mipmap.ic_launcher
-                        )
-                    )
-                    .setContentTitle(title)
-                    .setContentText(body)
-                    .setContentIntent(onTapPendingIntent)
-                    .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setCategory(NotificationCompat.CATEGORY_ALARM)
-                    .setAutoCancel(true)
-                    .setOnlyAlertOnce(false)
-            }
-            val notification: Notification = builder.build()
-            val notificationIntent = Intent(this, ReminderBroadcaster::class.java)
-            notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
-            notificationIntent.putExtra(ReminderBroadcaster.EID, eId)
-            notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION, notification)
-            notificationIntent.putExtra(Constants.PROP_EVEID, eventId)
-            notificationIntent.putExtra(Constants.PROP_ESTART, eStart)
-            notificationIntent.putExtra(Constants.PROP_DOSEMEAL, dosemeal)
-            val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.getBroadcast(
-                    this,
-                    nsId,
-                    notificationIntent,
-                    PendingIntent.FLAG_IMMUTABLE
-                )
-            } else {
-                PendingIntent.getBroadcast(
-                    this,
-                    nsId,
-                    notificationIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT
-                )
-            }
-
-            Log.e("title------------------", title)
-            Log.e("mills------------------", currentMillis.toString())
-            Log.e("alramId------------------", nsId.toString())
-            val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    currentMillis,
-                    pendingIntent
-                )
-            } else {
-                alarmManager.set(AlarmManager.RTC_WAKEUP, currentMillis, pendingIntent)
-            }
-
-        } catch (e: Exception) {
-            Log.e("crash", e.message.toString())
-        }
-    }
-
-    private fun createNotificationChannel(importanceChannel: String) {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Reminder Channel"
-            val descriptionText = "Scheduled Notification"
-            val importance = NotificationManager.IMPORTANCE_HIGH
-            var channelId = ""
-            var ack_sound: Uri? = null
-            if (importanceChannel == "2") {
-                channelId = "schedule_v3"
-                ack_sound =
-                    Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/raw/beep_beep")
-            } else {
-                channelId = "schedule"
-                ack_sound =
-                    Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
-            }
-            var channel = NotificationChannel(channelId, name, importance)
-            channel.description = descriptionText
-
-            val attributes = AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
-            channel.setSound(ack_sound, attributes)
-            // Register the channel with the system
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
-    private fun heyCancelMyReminder(nsId: String) {
-        val notificationAndAlarmId = SharedPrefUtils().getNotificationIdSnooze(this, nsId)
-        for (notificationId in notificationAndAlarmId) {
-            val reminderBroadcaster = Intent(this, ReminderBroadcaster::class.java)
-            reminderBroadcaster.putExtra("nsid", notificationId)
-            reminderBroadcaster.putExtra("isCancel", true)
-            val alarmManager =
-                applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.getBroadcast(
-                    this,
-                    notificationId,
-                    reminderBroadcaster,
-                    PendingIntent.FLAG_IMMUTABLE
-                )
-            } else {
-                PendingIntent.getBroadcast(
-                    this,
-                    notificationId,
-                    reminderBroadcaster,
-                    PendingIntent.FLAG_UPDATE_CURRENT
-                )
-            }
-
-
-            Log.e("ok------------Cancel", notificationId.toString())
-            alarmManager.cancel(pendingIntent)
-            SharedPrefUtils().deleteNotificationObject(this, notificationId)
-        }
-
-    }
 
     private fun validateMicAvailability(): Boolean {
         var available = true
@@ -4006,22 +3141,6 @@ class MainActivity : FlutterFragmentActivity(), /*SessionController.Listener,*/
     }
 
 
-    object NotificationID {
-        private val atomic = AtomicInteger(0)
-        val currentMillis: Int get() = System.currentTimeMillis().toInt()
-//        val currentMillis : Int get() = createRandomCode(5)
-
-        fun createRandomCode(codeLength: Int): Int {
-            val chars = "1234567890".toCharArray()
-            val sb = StringBuilder()
-            val random: Random = SecureRandom()
-            for (i in 0 until codeLength) {
-                val c = chars[random.nextInt(chars.size)]
-                sb.append(c)
-            }
-            return sb.toString().toInt()
-        }
-    }
 
     private fun getConfig(context: Context): Bundle {
         val pref: SharedPreferences =

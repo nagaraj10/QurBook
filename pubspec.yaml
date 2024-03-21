@@ -60,7 +60,7 @@ dependencies:
   flutter_local_notifications: ^15.1.1
   image_gallery_saver: ^1.5.0
   permission_handler: ^11.0.0
-  connectivity: ^3.0.6
+  connectivity_plus: ^5.0.2
   launch_review: ^3.0.1
   photo_view: ^0.14.0
   file_picker: ^6.1.1

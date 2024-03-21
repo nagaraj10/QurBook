@@ -68,9 +68,28 @@ class SheelaBLEController extends GetxController {
           if ((playConversations).isNotEmpty) {
             await playTTS();
           } else if (isCompleted) {
-            await Future.delayed(const Duration(seconds: 4));
-            stopTTS();
-            if (SheelaController.isSheelaScreenActive) Get.back();
+            // Check if isDeviceConnectSheelaScreen's value is true and isLastActivityDevice is false or null.
+            if ((SheelaController.isDeviceConnectSheelaScreen.value) && (!(SheelaController.isLastActivityDevice ?? true))) {
+              // If isDeviceConnectSheelaScreen is true and isLastActivityDevice is false or null:
+
+              // Delay execution of the subsequent code block by 2 seconds.
+              Future.delayed(const Duration(seconds: 2)).then((value) {
+                // After 2 seconds, call getAIAPIResponseFor with sheelaQueueShowRemind as the parameter.
+                SheelaController.getAIAPIResponseFor(sheelaQueueShowRemind, null);
+              });
+            } else {
+              // If isDeviceConnectSheelaScreen is false or isLastActivityDevice is true:
+
+              // Delay execution of the subsequent code block by 4 seconds.
+              await Future.delayed(const Duration(seconds: 4));
+
+              // Stop Text-to-Speech functionality.
+              stopTTS();
+
+              // Check if Sheela screen is active and if true, navigate back.
+              if (SheelaController.isSheelaScreenActive) Get.back();
+            }
+
           }
         }
       },
@@ -204,10 +223,13 @@ class SheelaBLEController extends GetxController {
                   }
                   // Check if Sheela screen is active and there is a retry for scan failure
                   if (SheelaController.isSheelaScreenActive &&
-                      (SheelaController.isRetryScanFailure ?? false)) {
+                      (SheelaController.isRetryScanFailure.value)) {
                     // Set device type in SheelaController arguments based on bleDeviceType from hublistController
                     SheelaController.arguments?.deviceType =
                         hublistController.bleDeviceType;
+
+                    // this is for enable the takeActiveDeviceReadings flow
+                    SheelaController.arguments?.takeActiveDeviceReadings = true;
 
                     // Clear the reconnect timer in SheelaController
                     SheelaController.clearReconnectTimer();
@@ -216,33 +238,77 @@ class SheelaBLEController extends GetxController {
                     startSheelaBLEDeviceReadings();
 
                     // Reset the retry scan failure flag
-                    SheelaController.isRetryScanFailure = false;
+                    SheelaController.isRetryScanFailure.value = false;
 
                     // Set loading state to true in SheelaController
                     SheelaController.isLoading(true);
-                  } else {
-                    Get.to(
-                      () => SheelaAIMainScreen(
-                        arguments: SheelaArgument(
-                          deviceType: hublistController.bleDeviceType,
-                          takeActiveDeviceReadings: true,
-                        ),
-                      ),
-                    )?.then((_) {
-                      Future.delayed(const Duration(seconds: 1)).then((_) {
-                        if (Get.isRegistered<VitalDetailController>())
-                          Get.find<VitalDetailController>().getData();
-                      });
+                  } // Check if Sheela screen is active and if isDeviceConnectSheelaScreen's value is true.
+                  else if (SheelaController.isSheelaScreenActive &&
+                      (SheelaController.isDeviceConnectSheelaScreen.value)) {
+                    // If Sheela screen is active and isDeviceConnectSheelaScreen is true:
 
-                      Future.delayed(const Duration(seconds: 1)).then((_) {
-                        if (Get.isRegistered<QurhomeRegimenController>()) {
-                          Get.find<QurhomeRegimenController>()
-                              .currLoggedEID
-                              .value = hublistController.eid ?? '';
-                          Get.find<QurhomeRegimenController>().getRegimenList();
-                        }
+                    // Set the device type in SheelaController arguments based on bleDeviceType from hublistController.
+                    SheelaController.arguments?.deviceType = hublistController.bleDeviceType;
+
+                    // Check if the shortName of the last conversation's deviceData in SheelaController matches the deviceType.
+                    if (SheelaController
+                        .conversations
+                        .last
+                        ?.additionalInfoSheelaResponse
+                        ?.deviceData
+                        ?.shortName
+                        ?.toString()
+                        .toLowerCase() ==
+                        deviceType) {
+                      // If the shortName matches the deviceType:
+
+                      // Set isSameVitalDevice to true in SheelaController.
+                      SheelaController.isSameVitalDevice = true;
+
+                      // Set takeActiveDeviceReadings to true in SheelaController arguments.
+                      SheelaController.arguments?.takeActiveDeviceReadings = true;
+
+                      // Start reading Sheela BLE device readings.
+                      startSheelaBLEDeviceReadings();
+
+                      // Clear the clearDeviceConnectionTimer timer in SheelaController
+                      SheelaController.clearDeviceConnectionTimer();
+
+                      // Set loading state to true in SheelaController.
+                      SheelaController.isLoading(true);
+                    } else {
+                      // If shortName doesn't match deviceType, exit the loop (not shown in provided code).
+                      break;
+                    }
+                  } else {
+                    // Check if internet connection is available
+                    if (SheelaController.isInternetConnection.value) {
+                      Get.to(
+                        () => SheelaAIMainScreen(
+                          arguments: SheelaArgument(
+                            deviceType: hublistController.bleDeviceType,
+                            takeActiveDeviceReadings: true,
+                          ),
+                        ),
+                      )?.then((_) {
+                        Future.delayed(const Duration(seconds: 1)).then((_) {
+                          if (Get.isRegistered<VitalDetailController>())
+                            Get.find<VitalDetailController>().getData();
+                        });
+
+                        Future.delayed(const Duration(seconds: 1)).then((_) {
+                          if (Get.isRegistered<QurhomeRegimenController>()) {
+                            Get.find<QurhomeRegimenController>()
+                                .currLoggedEID
+                                .value = hublistController.eid ?? '';
+                            Get.find<QurhomeRegimenController>()
+                                .getRegimenList();
+                          }
+                        });
                       });
-                    });
+                      // this is for disable the isSameVitalDevice for other device try to connect
+                      SheelaController.isSameVitalDevice = false;
+                    }
                   }
                 }
               }
@@ -296,6 +362,14 @@ class SheelaBLEController extends GetxController {
               showFailure();
               break;
             case "connectionfailed":
+              if (SheelaController.isSheelaScreenActive &&
+                  (SheelaController.isDeviceConnectSheelaScreen.value) &&
+                  (!(SheelaController.isSameVitalDevice ?? false))) {
+                Future.delayed(const Duration(seconds: 2)).then((value) {
+                  SheelaController.resetBLE();
+                });
+                break;
+              }
               _disableTimer();
               showFailure();
               await Future.delayed(const Duration(seconds: 2));
@@ -495,7 +569,10 @@ class SheelaBLEController extends GetxController {
       SheelaController.isLoading.value = true;
 
       // Set retry scan failure flag to true in SheelaController
-      SheelaController.isRetryScanFailure = true;
+      SheelaController.isRetryScanFailure.value = true;
+
+      // Set the value of micDisableReconnect to false in the controller.
+      SheelaController.micDisableReconnect.value = false;
 
       // Display failure message with options for retry
       addToConversationAndPlay(
@@ -604,7 +681,8 @@ class SheelaBLEController extends GetxController {
               ),
             );
             String? strTextMsgTwo = await SheelaController.getTextTranslate(
-                "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded. Bye.");
+              // isLastActivityDevice if false means remove the bye in string
+                "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded.${(!(SheelaController.isLastActivityDevice ?? true)) ? '' : " Bye."}");
             playConversations.add(
               SheelaResponse(
                 recipientId: conversationType,
@@ -636,9 +714,10 @@ class SheelaBLEController extends GetxController {
               (model.data!.diastolic ?? '').isNotEmpty &&
               (model.data!.pulse ?? '').isNotEmpty) {
             String? strTextMsg = await SheelaController.getTextTranslate(
+              // isLastActivityDevice if false means remove the bye in string
                 "Thank you. Your BP ${model.data!.systolic} "
                 "over ${model.data!.diastolic} "
-                "and pulse ${model.data!.pulse} are successfully recorded. Bye.");
+                "and pulse ${model.data!.pulse} are successfully recorded.${(!(SheelaController.isLastActivityDevice ?? true)) ? '' : " Bye."}");
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
@@ -653,7 +732,8 @@ class SheelaBLEController extends GetxController {
         } else if (model.deviceType?.toLowerCase() == "weight") {
           if ((model.data!.weight ?? '').isNotEmpty) {
             String? strTextMsg = await SheelaController.getTextTranslate(
-                "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded. Bye.");
+              // isLastActivityDevice if false means remove the bye in string
+                "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded.${(!(SheelaController.isLastActivityDevice ?? true)) ? '' : " Bye."}");
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
@@ -667,7 +747,9 @@ class SheelaBLEController extends GetxController {
           }
         }
         isCompleted = true;
-        SheelaController.isRetryScanFailure = false;
+        SheelaController.isRetryScanFailure.value = false;
+        // this is for disable the isSameVitalDevice for other device try to connect
+        SheelaController.isSameVitalDevice = false;
       } catch (e, stackTrace) {
         CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -104,7 +104,8 @@ class _SplashScreenState extends State<SplashScreen>
     PreferenceUtil.init();
     WidgetsBinding.instance.addObserver(this);
     CommonUtil().ListenForTokenUpdate();
-    Provider.of<ChatSocketViewModel>(Get.context!).initSocket();
+    // Retrieve the ChatSocketViewModel instance using Provider
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false).initSocket();
     CommonUtil().OnInitAction();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
