@@ -593,6 +593,23 @@ class PreferenceUtil {
         false;
   }
 
+  static String getCurrentAppTheme() {
+    return _prefsInstance?.getString(
+          Constants.KEY_APP_THEME_TYPE,
+        ) ??
+        'Classic';
+  }
+
+  static Future<bool> saveCurrentAppTheme(
+    String appThemetype,
+  ) async {
+    final instance = await _prefs!;
+    return instance.setString(
+      Constants.KEY_APP_THEME_TYPE,
+      appThemetype,
+    );
+  }
+
   static Future<bool> saveIfQurhomeDashboardActiveChat({
     bool qurhomeStatus = false,
   }) async {
