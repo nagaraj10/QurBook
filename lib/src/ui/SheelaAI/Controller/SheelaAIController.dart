@@ -1790,20 +1790,18 @@ makeApiRequest is used to update the data with latest data
   // Function to generate a list of button configurations for image preview
   Future<List<Buttons>> sheelaImagePreviewButtons(
       String? btnTitle, String? requestFileType) async {
-
     // Translate button titles
     List<String?> translatedTexts = await Future.wait([
-      getTextTranslate(strCamelYes),
-      getTextTranslate(getButtonTitle(requestFileType)),
-      getTextTranslate(strExit),
+      getTextTranslate(strCamelYes), // Translate "Yes" button title
+      getTextTranslate(getButtonTitle(requestFileType)), // Translate button title based on file type
+      getTextTranslate(strExit), // Translate "Exit" button title
     ]);
 
     return [
       Buttons(
         title: translatedTexts[0], // Button title
         payload: btnTitle, // Payload data (optional)
-        btnRedirectTo:
-        getRedirectTo(requestFileType), // Redirection information
+        btnRedirectTo: getRedirectTo(requestFileType), // Redirection information
       ),
       Buttons(
         title: translatedTexts[1], // Button title
@@ -1816,6 +1814,7 @@ makeApiRequest is used to update the data with latest data
       ),
     ];
   }
+
 
   // Get the redirect action based on the request file type
   String? getRedirectTo(requestFileType) {
