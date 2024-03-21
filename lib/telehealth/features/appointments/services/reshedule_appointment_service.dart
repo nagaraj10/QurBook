@@ -4,12 +4,12 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/authentication/view/login_screen.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/src/resources/network/AppException.dart';
-import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/telehealth/features/appointments/model/resheduleAppointments/resheduleModel.dart';
@@ -121,9 +121,14 @@ class ResheduleAppointmentsService {
 
   void SnackbarToLogout(
       {String msg = 'something went wrong, please try again later.'}) {
-    PreferenceUtil.clearAllData().then((value) {
-      Get.offAll(PatientSignInScreen());
-      Get.snackbar(parameters.strMessage, msg);
-    });
+    // Initialize SheelaAIController using onInitSheelaAIController method from CommonUtil
+    var sheelaAIController = CommonUtil().onInitSheelaAIController();
+    // Check if internet connection is available
+    if (sheelaAIController.isInternetConnection.value) {
+      PreferenceUtil.clearAllData().then((value) {
+        Get.offAll(PatientSignInScreen());
+        Get.snackbar(parameters.strMessage, msg);
+      });
+    }
   }
 }

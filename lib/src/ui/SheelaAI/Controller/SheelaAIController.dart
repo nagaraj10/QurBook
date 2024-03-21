@@ -183,6 +183,10 @@ class SheelaAIController extends GetxController {
   bool isDialogOpen =false;
   int timerCountFromRegimenController=0;
 
+  // Define a reactive boolean variable to track internet connection status
+  Rx<bool> isInternetConnection = true.obs;
+
+
   // this is for get the onInitHubListViewController
   final hubListViewController = CommonUtil().onInitHubListViewController();
 
