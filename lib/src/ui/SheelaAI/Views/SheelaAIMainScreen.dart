@@ -50,6 +50,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.btnTextLocal = '';
     controller.isRetakeCapture = false;
     controller.isRetryScanFailure.value = false;
+    // Set the value of micDisableReconnect to false in the controller.
+    controller.micDisableReconnect.value = false;
     // Set the value of isDeviceConnectSheelaScreen to false in the controller.
     controller.isDeviceConnectSheelaScreen.value = false;
 
@@ -270,10 +272,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
             floatingActionButton: animationController == null
                 ? null
                 : Visibility(
-                    // isDeviceConnectSheelaScreen if false only visible the icon
-                    // isRetryScanFailure if true only visible the icon
-                    visible: (!controller.isDeviceConnectSheelaScreen.value) ||
-                        (controller.isRetryScanFailure.value),
+                    // micDisableReconnect if false only visible the icon
+                    visible: (!controller.micDisableReconnect.value),
                     child: AnimatedBuilder(
                       animation: animationController!,
                       builder: (context, child) {

@@ -186,6 +186,9 @@ class SheelaAIController extends GetxController {
   // this is for get the onInitHubListViewController
   final hubListViewController = CommonUtil().onInitHubListViewController();
 
+  //mic button enable or disable flag while reconnect
+  Rx<bool> micDisableReconnect = false.obs;
+
   @override
   void onInit() {
     try {
@@ -465,6 +468,9 @@ class SheelaAIController extends GetxController {
         // Reset isDeviceConnectSheelaScreen value to false after processing.
         isDeviceConnectSheelaScreen.value = false;
 
+        // disable the mic button while say reconnect
+        micDisableReconnect.value = false;
+
         // Reset isLastActivityDevice to true.
         isLastActivityDevice = true;
       } else {
@@ -628,6 +634,9 @@ class SheelaAIController extends GetxController {
 
             // Set the value of isDeviceConnectSheelaScreen to true, indicating a device connection.
             isDeviceConnectSheelaScreen.value = true;
+
+            // disable the mic button while say reconnect
+            micDisableReconnect.value = true;
 
             // for getting the eid from payload api
             hubListViewController.eid = (conversations.last?.additionalInfoSheelaResponse?.eid ?? '').toString();
@@ -3178,6 +3187,9 @@ makeApiRequest is used to update the data with latest data
                   // Set loading state to false
                   isLoading.value = false;
 
+                  // disable the mic button while say reconnect
+                  micDisableReconnect.value = true;
+
                   // Introduce a delay before resetting the button selection (3 seconds in this case)
                   Future.delayed(const Duration(seconds: 3), () {
                     button?.isSelected = false;
@@ -3274,15 +3286,16 @@ makeApiRequest is used to update the data with latest data
 
   // Method called when the timer expires, triggers the reminder-related logic.
   scheduledMethod(Reminder reminder) async {
-    final notificationId = int.tryParse('${reminder?.notificationListId}') ?? 0;
+    final notificationId = reminder.eid ?? '';
     // Get the list of pending notifications
     List<PendingNotificationRequest> pendingNotifications =
         await localNotificationsPlugin.pendingNotificationRequests();
 
     // Check if the notification with the given ID is already scheduled
-    bool isScheduled = pendingNotifications.any(
-      (notification) => notification.id == notificationId,
-    );
+    final isScheduled = pendingNotifications.any((notification) =>
+        notification.payload != null &&
+        jsonDecode(notification.payload!).containsKey('eid') &&
+        jsonDecode(notification.payload!)['eid'] == notificationId);
 
     // If already scheduled, cancel the existing notification with the same ID
     if (isScheduled) {
