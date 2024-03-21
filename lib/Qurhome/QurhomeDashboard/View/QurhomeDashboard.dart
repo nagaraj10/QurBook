@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -11,7 +10,6 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/view/SymptomListScreen.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/view/VitalsList.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/SheelaRemainderPopup.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomePatientDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
@@ -26,13 +24,11 @@ import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BLEBlinkingIcon.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/common_bluetooth_widget.dart';
-import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/CommonUtil.dart';
-import '../../../common/PreferenceUtil.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/router_variable.dart';
 import '../../../constants/variable_constant.dart';
@@ -89,6 +85,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       WidgetsBinding.instance!.addPostFrameCallback((_) {
         controller.forPatientList.value = false;
         sheelBadgeController.isQueueDialogShowing.value = false;
+        // Check if the language preference is not set or empty
+        if (PreferenceUtil.getStringValue(SHEELA_LANG) == null ||
+            PreferenceUtil.getStringValue(SHEELA_LANG) == '') {
+          // If language preference is not set or empty, set it to the default language
+          PreferenceUtil.saveString(SHEELA_LANG, strDefaultLanguage);
+        }
         onInit();
       });
       super.initState();
@@ -122,8 +124,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         }
         moveToPateintAlert();
 
-        controller.enableModuleAccess();
-        controller.getModuleAccess();
+        controller..enableModuleAccess()
+        ..getModuleAccess();
         qurHomeRegimenController.getSOSButtonStatus();
 
         await CommonUtil().getUserProfileData();
@@ -143,12 +145,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       //Method To show remainder in qurbook tablet
       // await SheelaRemainderPopup.checkConditionToShowPopUp();
 
-      controller.updateTabIndex(0);
-      controller.setActiveQurhomeTo(
+      controller..updateTabIndex(0)
+      ..setActiveQurhomeTo(
         status: true,
-      );
+      )
 
-      controller.setActiveQurhomeDashboardToChat(
+      ..setActiveQurhomeDashboardToChat(
         status: true,
       );
 

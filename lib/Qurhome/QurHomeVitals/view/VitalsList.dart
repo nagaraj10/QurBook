@@ -203,7 +203,7 @@ class _VitalsListState extends State<VitalsList> {
                 currentLanguage = 'en';
               }
               PreferenceUtil.saveString(Constants.SHEELA_LANG,
-                  CommonUtil.langaugeCodes[currentLanguage] ?? 'en-IN');
+                  CommonUtil.langaugeCodes[currentLanguage] ?? strDefaultLanguage);
             }
             if (selectionResult!.result![0].profileSetting!.preColor != null &&
                 selectionResult!.result![0].profileSetting!.greColor != null) {

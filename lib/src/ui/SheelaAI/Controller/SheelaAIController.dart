@@ -1084,7 +1084,7 @@ class SheelaAIController extends GetxController {
 
     if (savePrefLang) {
       PreferenceUtil.saveString(
-          SHEELA_LANG, prof.preferred_language ?? 'en-IN');
+          SHEELA_LANG, prof.preferred_language ?? strDefaultLanguage);
     }
   }
 

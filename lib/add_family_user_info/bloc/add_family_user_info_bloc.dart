@@ -271,7 +271,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     try {
       preferredLanguage =
           preferredLanguage == null || preferredLanguage == 'undef'
-              ? 'en-IN'
+              ? strDefaultLanguage
               : preferredLanguage;
 
       var currentLanguage = '';
@@ -281,7 +281,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
         currentLanguage = 'en';
       }
       await PreferenceUtil.saveString(
-          SHEELA_LANG, CommonUtil.langaugeCodes[currentLanguage] ?? 'en-IN');
+          SHEELA_LANG, CommonUtil.langaugeCodes[currentLanguage] ?? strDefaultLanguage);
       preferred_language = currentLanguage;
 
       updateAddFamilyInfo = await addFamilyUserInfoRepository.updateUserInfoNew(
