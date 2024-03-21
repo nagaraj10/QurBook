@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -18,7 +18,6 @@ import '../../../constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart' as query;
 import '../../../constants/variable_constant.dart' as variable;
 import 'models/available_devices/TroubleShootingModel.dart';
-import 'package:myfhb/more_menu/models/available_devices/TroubleShootingModel.dart';
 
 class TroubleShootController extends GetxController {
   var isFirstTym = true.obs;

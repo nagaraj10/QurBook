@@ -183,6 +183,10 @@ class SheelaAIController extends GetxController {
   bool isDialogOpen =false;
   int timerCountFromRegimenController=0;
 
+  // Define a reactive boolean variable to track internet connection status
+  Rx<bool> isInternetConnection = true.obs;
+
+
   // this is for get the onInitHubListViewController
   final hubListViewController = CommonUtil().onInitHubListViewController();
 
@@ -1371,6 +1375,9 @@ makeApiRequest is used to update the data with latest data
       isCallStartFromSheela = true;
       updateTimer(enable: false);
       regController.callSOSEmergencyServices(1);
+      Future.delayed(const Duration(seconds: 5), () {
+        isCallStartFromSheela = false;
+      });
     }
   }
 
@@ -2277,6 +2284,9 @@ makeApiRequest is used to update the data with latest data
   showListeningCountdownDialog() {
     // Set the flag indicating that the countdown dialog is currently showing
     isCountDownDialogShowing.value = true;
+    if (isCallStartFromSheela) {
+      return;
+    }
 
     return showDialog<void>(
       context: Get.context!,

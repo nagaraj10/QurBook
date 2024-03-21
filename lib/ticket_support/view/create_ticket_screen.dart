@@ -3572,6 +3572,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     // Show date picker dialog and wait for user input
     final DateTime? pickedDate = await showDatePicker(
       context: context,
+      builder: (context, child) => Theme(
+        data: ThemeData.light().copyWith(
+          colorScheme: ColorScheme.light().copyWith(
+            primary: Color(CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+        child: child!,
+      ),
       initialDate: controller.labBookAppointment.value
           ? DateTime.now()
           : DateTime.now()
@@ -3581,11 +3589,20 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           : DateTime.now().add(Duration(days: 1)),
       // Allow selecting dates from tomorrow onwards
       lastDate: DateTime(2100), // Limit selection up to year 2100
+
     );
 
     if (pickedDate != null) {
       // Show time picker dialog and wait for user input
       final TimeOfDay? pickedTime = await showTimePicker(
+        builder: (context, child) => Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light().copyWith(
+              primary: Color(CommonUtil().getMyPrimaryColor()),
+            ),
+          ),
+          child: child!,
+        ),
         context: context,
         initialTime: TimeOfDay.now(), // Set initial time to current time
       );
