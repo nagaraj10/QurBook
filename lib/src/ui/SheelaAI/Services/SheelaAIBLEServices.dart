@@ -223,7 +223,7 @@ class SheelaBLEController extends GetxController {
                   }
                   // Check if Sheela screen is active and there is a retry for scan failure
                   if (SheelaController.isSheelaScreenActive &&
-                      (SheelaController.isRetryScanFailure ?? false)) {
+                      (SheelaController.isRetryScanFailure.value)) {
                     // Set device type in SheelaController arguments based on bleDeviceType from hublistController
                     SheelaController.arguments?.deviceType =
                         hublistController.bleDeviceType;
@@ -238,7 +238,7 @@ class SheelaBLEController extends GetxController {
                     startSheelaBLEDeviceReadings();
 
                     // Reset the retry scan failure flag
-                    SheelaController.isRetryScanFailure = false;
+                    SheelaController.isRetryScanFailure.value = false;
 
                     // Set loading state to true in SheelaController
                     SheelaController.isLoading(true);
@@ -569,7 +569,10 @@ class SheelaBLEController extends GetxController {
       SheelaController.isLoading.value = true;
 
       // Set retry scan failure flag to true in SheelaController
-      SheelaController.isRetryScanFailure = true;
+      SheelaController.isRetryScanFailure.value = true;
+
+      // Set the value of micDisableReconnect to false in the controller.
+      SheelaController.micDisableReconnect.value = false;
 
       // Display failure message with options for retry
       addToConversationAndPlay(
@@ -678,7 +681,8 @@ class SheelaBLEController extends GetxController {
               ),
             );
             String? strTextMsgTwo = await SheelaController.getTextTranslate(
-                "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded. Bye.");
+              // isLastActivityDevice if false means remove the bye in string
+                "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded.${(!(SheelaController.isLastActivityDevice ?? true)) ? '' : " Bye."}");
             playConversations.add(
               SheelaResponse(
                 recipientId: conversationType,
@@ -710,9 +714,10 @@ class SheelaBLEController extends GetxController {
               (model.data!.diastolic ?? '').isNotEmpty &&
               (model.data!.pulse ?? '').isNotEmpty) {
             String? strTextMsg = await SheelaController.getTextTranslate(
+              // isLastActivityDevice if false means remove the bye in string
                 "Thank you. Your BP ${model.data!.systolic} "
                 "over ${model.data!.diastolic} "
-                "and pulse ${model.data!.pulse} are successfully recorded. Bye.");
+                "and pulse ${model.data!.pulse} are successfully recorded.${(!(SheelaController.isLastActivityDevice ?? true)) ? '' : " Bye."}");
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
@@ -727,7 +732,8 @@ class SheelaBLEController extends GetxController {
         } else if (model.deviceType?.toLowerCase() == "weight") {
           if ((model.data!.weight ?? '').isNotEmpty) {
             String? strTextMsg = await SheelaController.getTextTranslate(
-                "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded. Bye.");
+              // isLastActivityDevice if false means remove the bye in string
+                "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded.${(!(SheelaController.isLastActivityDevice ?? true)) ? '' : " Bye."}");
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
@@ -741,7 +747,7 @@ class SheelaBLEController extends GetxController {
           }
         }
         isCompleted = true;
-        SheelaController.isRetryScanFailure = false;
+        SheelaController.isRetryScanFailure.value = false;
         // this is for disable the isSameVitalDevice for other device try to connect
         SheelaController.isSameVitalDevice = false;
       } catch (e, stackTrace) {

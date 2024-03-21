@@ -161,7 +161,7 @@ class SheelaAIController extends GetxController {
   String? btnTextLocal = '';
   bool? isRetakeCapture = false;
   //reconnect feature enable flag
-  bool? isRetryScanFailure = false;
+  Rx<bool> isRetryScanFailure = false.obs;
   // Declaration of a Reactive variable `isDeviceConnectSheelaScreen` of type Rx<bool>
 // Initialized with a boolean value `false` and converted into an observable using `.obs`.
   Rx<bool> isDeviceConnectSheelaScreen = false.obs;
@@ -186,6 +186,12 @@ class SheelaAIController extends GetxController {
   // Define a reactive boolean variable to track internet connection status
   Rx<bool> isInternetConnection = true.obs;
 
+
+  // this is for get the onInitHubListViewController
+  final hubListViewController = CommonUtil().onInitHubListViewController();
+
+  //mic button enable or disable flag while reconnect
+  Rx<bool> micDisableReconnect = false.obs;
 
   @override
   void onInit() {
@@ -466,6 +472,9 @@ class SheelaAIController extends GetxController {
         // Reset isDeviceConnectSheelaScreen value to false after processing.
         isDeviceConnectSheelaScreen.value = false;
 
+        // disable the mic button while say reconnect
+        micDisableReconnect.value = false;
+
         // Reset isLastActivityDevice to true.
         isLastActivityDevice = true;
       } else {
@@ -629,6 +638,14 @@ class SheelaAIController extends GetxController {
 
             // Set the value of isDeviceConnectSheelaScreen to true, indicating a device connection.
             isDeviceConnectSheelaScreen.value = true;
+
+            // disable the mic button while say reconnect
+            micDisableReconnect.value = true;
+
+            // for getting the eid from payload api
+            hubListViewController.eid = (conversations.last?.additionalInfoSheelaResponse?.eid ?? '').toString();
+            // for getting the uid from payload api
+            hubListViewController.uid = (conversations.last?.additionalInfoSheelaResponse?.uid ?? '');
 
             // Disable the timer by calling the updateTimer function with enable set to false.
             updateTimer(enable: false);
@@ -1359,6 +1376,9 @@ makeApiRequest is used to update the data with latest data
       isCallStartFromSheela = true;
       updateTimer(enable: false);
       regController.callSOSEmergencyServices(1);
+      Future.delayed(const Duration(seconds: 5), () {
+        isCallStartFromSheela = false;
+      });
     }
   }
 
@@ -2265,6 +2285,9 @@ makeApiRequest is used to update the data with latest data
   showListeningCountdownDialog() {
     // Set the flag indicating that the countdown dialog is currently showing
     isCountDownDialogShowing.value = true;
+    if (isCallStartFromSheela) {
+      return;
+    }
 
     return showDialog<void>(
       context: Get.context!,
@@ -3168,6 +3191,9 @@ makeApiRequest is used to update the data with latest data
                   // Set loading state to false
                   isLoading.value = false;
 
+                  // disable the mic button while say reconnect
+                  micDisableReconnect.value = true;
+
                   // Introduce a delay before resetting the button selection (3 seconds in this case)
                   Future.delayed(const Duration(seconds: 3), () {
                     button?.isSelected = false;
@@ -3264,15 +3290,16 @@ makeApiRequest is used to update the data with latest data
 
   // Method called when the timer expires, triggers the reminder-related logic.
   scheduledMethod(Reminder reminder) async {
-    final notificationId = int.tryParse('${reminder?.notificationListId}') ?? 0;
+    final notificationId = reminder.eid ?? '';
     // Get the list of pending notifications
     List<PendingNotificationRequest> pendingNotifications =
         await localNotificationsPlugin.pendingNotificationRequests();
 
     // Check if the notification with the given ID is already scheduled
-    bool isScheduled = pendingNotifications.any(
-      (notification) => notification.id == notificationId,
-    );
+    final isScheduled = pendingNotifications.any((notification) =>
+        notification.payload != null &&
+        jsonDecode(notification.payload!).containsKey('eid') &&
+        jsonDecode(notification.payload!)['eid'] == notificationId);
 
     // If already scheduled, cancel the existing notification with the same ID
     if (isScheduled) {
