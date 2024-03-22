@@ -47,6 +47,9 @@ import '../../../common/CommonConstants.dart';
 import '../../../constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as fhbParameters;
 
+import '../../../more_menu/app_theme_provider.dart';
+import '../../../more_menu/models/app_theme_type.dart';
+
 class QurHomeRegimenScreen extends StatefulWidget {
   bool addAppBar;
 
@@ -196,7 +199,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 strEventId) {
               currRegimen = regimentDataModel;
               if (regimentDataModel.activityOrgin != strAppointmentRegimen) {
-                showRegimenDialog(regimentDataModel, i);
+                // showRegimenDialog(regimentDataModel, i
+                //           );
                 await Future.delayed(Duration(milliseconds: 2000));
                 qurhomeDashboardController.eventId.value = "";
                 qurhomeDashboardController.estart.value = "";
@@ -312,257 +316,482 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 ),
               )
             : null,
-        body: Listener(
-          behavior: HitTestBehavior.opaque,
-          onPointerDown: (event) {
-            //check whether the any interaction is happen and close the timer
-            qurhomeDashboardController.getIdleTimer?.cancel();
-            if(qurhomeDashboardController.isShowScreenIdleDialog.value){
-              //Sheela inactive dialog exist close the dialog
-              Get.back();
-              qurhomeDashboardController.isShowScreenIdleDialog.value=false;
-              qurhomeDashboardController.isScreenIdle.value=false;
-            }
-            //restart the timer for check the ideal flow
-            qurhomeDashboardController.isScreenIdle.value=true;
-            qurhomeDashboardController.checkScreenIdle();
-          },
-          child: Stack(
-            children: [
-              Container(
-                height: 60,
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Row(
+        body: Consumer<AppThemeProvider>(
+          builder: (context, AppThemeProvider themeNotifier, child) {
+            switch (themeNotifier.currentEnumAppThemeType) {
+              case EnumAppThemeType.Classic:
+                return Listener(
+                  behavior: HitTestBehavior.opaque,
+                  onPointerDown: (event) {
+                    //check whether the any interaction is happen and close the timer
+                    qurhomeDashboardController.getIdleTimer?.cancel();
+                    if (qurhomeDashboardController
+                        .isShowScreenIdleDialog.value) {
+                      //Sheela inactive dialog exist close the dialog
+                      Get.back();
+                      qurhomeDashboardController.isShowScreenIdleDialog.value =
+                          false;
+                      qurhomeDashboardController.isScreenIdle.value = false;
+                    }
+                    //restart the timer for check the ideal flow
+                    qurhomeDashboardController.isScreenIdle.value = true;
+                    qurhomeDashboardController.checkScreenIdle();
+                  },
+                  child: Stack(
                     children: [
-                      CommonUtil.isUSRegion()
-                          ? Align(
-                              alignment: Alignment.topLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
-                                child: InkWell(
-                                    onTap: () {
-                                      Get.to(CalendarMonth())!.then((value) {
-                                        controller.getRegimenList(
-                                            isLoading: true, date: value);
-                                      });
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Image.asset(
-                                        icon_calendar,
-                                        //Set width and height to maintain UI similar in tablet and mobile
-                                        height: (CommonUtil().isTablet ?? false)
-                                            ? 40
-                                            : 26,
-                                        width: (CommonUtil().isTablet ?? false)
-                                            ? 40
-                                            : 26,
-                                      ),
-                                    )),
-                              ),
-                            )
-                          : Container(),
                       Container(
-                          child: Expanded(
-                        child: CommonUtil.isUSRegion()
-                            ? GetBuilder<QurhomeRegimenController>(
-                                id: strRefershStatusText,
-                                builder: (val) {
-                                  return Visibility(
-                                      visible: !controller.isTodaySelected.value,
-                                      maintainAnimation: true,
-                                      maintainState: true,
-                                      child: AnimatedOpacity(
-                                        duration:
-                                            const Duration(milliseconds: 2000),
-                                        curve: Curves.fastOutSlowIn,
-                                        opacity: !controller.isTodaySelected.value
-                                            ? 1
-                                            : 0,
-                                        child: Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Padding(
-                                            padding: EdgeInsets.only(top: 5),
-                                            child: Card(
-                                              color: Color(
-                                                CommonUtil()
-                                                    .getQurhomePrimaryColor(),
+                        height: 60,
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Row(
+                            children: [
+                              CommonUtil.isUSRegion()
+                                  ? Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 16.0),
+                                        child: InkWell(
+                                            onTap: () {
+                                              Get.to(CalendarMonth())!
+                                                  .then((value) {
+                                                controller.getRegimenList(
+                                                    isLoading: true,
+                                                    date: value);
+                                              });
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Image.asset(
+                                                icon_calendar,
+                                                //Set width and height to maintain UI similar in tablet and mobile
+                                                height:
+                                                    (CommonUtil().isTablet ??
+                                                            false)
+                                                        ? 40
+                                                        : 26,
+                                                width: (CommonUtil().isTablet ??
+                                                        false)
+                                                    ? 40
+                                                    : 26,
                                               ),
-                                              child: Padding(
-                                                padding: EdgeInsets.all(5),
+                                            )),
+                                      ),
+                                    )
+                                  : Container(),
+                              Container(
+                                  child: Expanded(
+                                child: CommonUtil.isUSRegion()
+                                    ? GetBuilder<QurhomeRegimenController>(
+                                        id: strRefershStatusText,
+                                        builder: (val) {
+                                          return Visibility(
+                                              visible: !controller
+                                                  .isTodaySelected.value,
+                                              maintainAnimation: true,
+                                              maintainState: true,
+                                              child: AnimatedOpacity(
+                                                duration: const Duration(
+                                                    milliseconds: 2000),
+                                                curve: Curves.fastOutSlowIn,
+                                                opacity: !controller
+                                                        .isTodaySelected.value
+                                                    ? 1
+                                                    : 0,
+                                                child: Align(
+                                                  alignment: Alignment.topLeft,
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsets.only(top: 5),
+                                                    child: Card(
+                                                      color: Color(
+                                                        CommonUtil()
+                                                            .getQurhomePrimaryColor(),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.all(5),
+                                                        child: Text(
+                                                          controller
+                                                              .statusText.value,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: (CommonUtil()
+                                                                          .isTablet ??
+                                                                      false)
+                                                                  ? tabHeader3
+                                                                  : mobileHeader3),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ));
+                                        })
+                                    : Container(),
+                              )),
+                              if (!widget.addAppBar)
+                                Obx(() => controller.isShowSOSButton.value
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          try {
+                                            FHBUtils()
+                                                .check()
+                                                .then((intenet) async {
+                                              if (intenet != null && intenet) {
+                                                if (CommonUtil().isTablet! &&
+                                                    controller
+                                                        .careCoordinatorId.value
+                                                        .trim()
+                                                        .isEmpty) {
+                                                  await controller
+                                                      .getCareCoordinatorId();
+                                                }
+                                                initSOSCall();
+                                              } else {
+                                                FlutterToast().getToast(
+                                                  STR_NO_CONNECTIVITY,
+                                                  Colors.red,
+                                                );
+                                              }
+                                            });
+                                          } catch (e, stackTrace) {
+                                            print(e);
+                                          }
+                                        },
+                                        child: Align(
+                                          alignment: Alignment.topRight,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 16.0),
+                                            child: Container(
+                                              height: 40.h,
+                                              width: 80.h,
+                                              decoration: const BoxDecoration(
+                                                color: Color(0xFFFB5422),
+                                                borderRadius: BorderRadius.only(
+                                                  bottomLeft:
+                                                      Radius.circular(100),
+                                                  bottomRight:
+                                                      Radius.circular(100),
+                                                ),
+                                              ),
+                                              child: Center(
                                                 child: Text(
-                                                  controller.statusText.value,
+                                                  'SOS',
                                                   style: TextStyle(
+                                                      fontSize: 14.0.h,
                                                       color: Colors.white,
-                                                      fontSize: (CommonUtil()
-                                                                  .isTablet ??
-                                                              false)
-                                                          ? tabHeader3
-                                                          : mobileHeader3),
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ));
-                                })
-                            : Container(),
-                      )),
-                      if (!widget.addAppBar)
-                        Obx(() => controller.isShowSOSButton.value
-                            ? GestureDetector(
-                                onTap: () {
-                                  try {
-                                    FHBUtils().check().then((intenet) async {
-                                      if (intenet != null && intenet) {
-                                        if (CommonUtil().isTablet! &&
-                                            controller.careCoordinatorId.value
-                                                .trim()
-                                                .isEmpty) {
-                                          await controller.getCareCoordinatorId();
-                                        }
-                                        initSOSCall();
-                                      } else {
-                                        FlutterToast().getToast(
-                                          STR_NO_CONNECTIVITY,
-                                          Colors.red,
-                                        );
-                                      }
-                                    });
-                                  } catch (e, stackTrace) {
-                                    print(e);
-                                  }
+                                      )
+                                    : SizedBox.shrink()),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Obx(
+                        () => controller.loadingData.isTrue
+                            ? controller.loadingDataWithoutProgress.isTrue
+                                ? getDataFromAPI(controller, isPortrait, themeNotifier,)
+                                : Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                            : GetBuilder<QurhomeRegimenController>(
+                                id: "newUpdate",
+                                builder: (val) {
+                                  print("working builder");
+                                  return getDataFromAPI(val, isPortrait, themeNotifier,);
                                 },
-                                child: Align(
-                                  alignment: Alignment.topRight,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(right: 16.0),
-                                    child: Container(
-                                      height: 40.h,
-                                      width: 80.h,
-                                      decoration: const BoxDecoration(
-                                        color: Color(0xFFFB5422),
-                                        borderRadius: BorderRadius.only(
-                                          bottomLeft: Radius.circular(100),
-                                          bottomRight: Radius.circular(100),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          'SOS',
-                                          style: TextStyle(
-                                              fontSize: 14.0.h,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : SizedBox.shrink()),
+                              ),
+                      ),
                     ],
                   ),
-                ),
-              ),
-              Obx(
-                () => controller.loadingData.isTrue
-                    ? controller.loadingDataWithoutProgress.isTrue
-                        ? getDataFromAPI(controller, isPortrait)
-                        : Center(
-                            child: CircularProgressIndicator(),
-                          )
-                    : GetBuilder<QurhomeRegimenController>(
-                        id: "newUpdate",
-                        builder: (val) {
-                          print("working builder");
-                          return getDataFromAPI(val, isPortrait);
-                        },
+                );
+              case EnumAppThemeType.Modern:
+                return Stack(
+                  children: [
+                    Container(
+                      height: 60,
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Row(
+                          children: [
+                            CommonUtil.isUSRegion()
+                                ? Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 16.0),
+                                      child: InkWell(
+                                          onTap: () {
+                                            Get.to(CalendarMonth())!
+                                                .then((value) {
+                                              controller.getRegimenList(
+                                                  isLoading: true, date: value);
+                                            });
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Image.asset(
+                                              icon_calendar,
+                                              //Set width and height to maintain UI similar in tablet and mobile
+                                              height: (CommonUtil().isTablet ??
+                                                      false)
+                                                  ? 40
+                                                  : 26,
+                                              width: (CommonUtil().isTablet ??
+                                                      false)
+                                                  ? 40
+                                                  : 26,
+                                            ),
+                                          )),
+                                    ),
+                                  )
+                                : Container(),
+                            Container(
+                                child: Expanded(
+                              child: CommonUtil.isUSRegion()
+                                  ? GetBuilder<QurhomeRegimenController>(
+                                      id: strRefershStatusText,
+                                      builder: (val) {
+                                        return Visibility(
+                                            visible: !controller
+                                                .isTodaySelected.value,
+                                            maintainAnimation: true,
+                                            maintainState: true,
+                                            child: AnimatedOpacity(
+                                              duration: const Duration(
+                                                  milliseconds: 2000),
+                                              curve: Curves.fastOutSlowIn,
+                                              opacity: !controller
+                                                      .isTodaySelected.value
+                                                  ? 1
+                                                  : 0,
+                                              child: Align(
+                                                alignment: Alignment.topLeft,
+                                                child: Padding(
+                                                  padding:
+                                                      EdgeInsets.only(top: 5),
+                                                  child: Card(
+                                                    color: Color(
+                                                      CommonUtil()
+                                                          .getQurhomePrimaryColor(),
+                                                    ),
+                                                    child: Padding(
+                                                      padding:
+                                                          EdgeInsets.all(5),
+                                                      child: Text(
+                                                        controller
+                                                            .statusText.value,
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: (CommonUtil()
+                                                                        .isTablet ??
+                                                                    false)
+                                                                ? tabHeader3
+                                                                : mobileHeader3),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ));
+                                      })
+                                  : Container(),
+                            )),
+                            if (!widget.addAppBar)
+                              Obx(() => controller.isShowSOSButton.value
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        try {
+                                          FHBUtils()
+                                              .check()
+                                              .then((intenet) async {
+                                            if (intenet != null && intenet) {
+                                              if (CommonUtil().isTablet! &&
+                                                  controller
+                                                      .careCoordinatorId.value
+                                                      .trim()
+                                                      .isEmpty) {
+                                                await controller
+                                                    .getCareCoordinatorId();
+                                              }
+                                              initSOSCall();
+                                            } else {
+                                              FlutterToast().getToast(
+                                                STR_NO_CONNECTIVITY,
+                                                Colors.red,
+                                              );
+                                            }
+                                          });
+                                        } catch (e, stackTrace) {
+                                          print(e);
+                                        }
+                                      },
+                                      child: Align(
+                                        alignment: Alignment.topRight,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 16.0),
+                                          child: Container(
+                                            height: 40.h,
+                                            width: 80.h,
+                                            decoration: const BoxDecoration(
+                                              color: Color(0xFFFB5422),
+                                              borderRadius: BorderRadius.only(
+                                                bottomLeft:
+                                                    Radius.circular(100),
+                                                bottomRight:
+                                                    Radius.circular(100),
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                'SOS',
+                                                style: TextStyle(
+                                                    fontSize: 14.0.h,
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox.shrink()),
+                          ],
+                        ),
                       ),
-              ),
-            ],
-          ),
+                    ),
+                    Obx(
+                      () => controller.loadingData.isTrue
+                          ? controller.loadingDataWithoutProgress.isTrue
+                              ? getDataFromAPI(controller, isPortrait,themeNotifier)
+                              : Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                          : GetBuilder<QurhomeRegimenController>(
+                              id: "newUpdate",
+                              builder: (val) {
+                                print("working builder");
+                                return getDataFromAPI(val, isPortrait, themeNotifier);
+                              },
+                            ),
+                    ),
+                  ],
+                );
+            }
+          },
         ),
       ),
     );
   }
 
-  getDataFromAPI(QurhomeRegimenController val, var isPortrait) {
-    return val.qurHomeRegimenResponseModel == null
+  getDataFromAPI(
+    QurhomeRegimenController val,
+    var isPortrait,
+    AppThemeProvider themeNotifier,
+  ) => val.qurHomeRegimenResponseModel == null
         ? const Center(
             child: Text(
               'Please re-try after some time',
             ),
           )
-        : val.qurHomeRegimenResponseModel!.regimentsList!.length != 0
-            ? Padding(
-                padding: const EdgeInsets.symmetric(vertical: 50.0),
-                child: Container(
-                    child: RawScrollbar(
-                  thumbVisibility: true,
-                  thumbColor: Color(
-                    CommonUtil().getQurhomePrimaryColor(),
+        : (val.qurHomeRegimenResponseModel?.regimentsList?.isNotEmpty ?? false)
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 50.0),
+                  child: Container(
+                      child: switch (themeNotifier.currentEnumAppThemeType) {
+                    EnumAppThemeType.Classic => RawScrollbar(
+                        thumbVisibility: true,
+                        thumbColor: Color(
+                          CommonUtil().getQurhomePrimaryColor(),
+                        ),
+                        radius: const Radius.circular(20),
+                        thickness: 5,
+                        child: getDataFromAPIPageViewBuilder(
+                          val,
+                          isPortrait,
+                          themeNotifier,
+                        ),
+                      ),
+                    EnumAppThemeType.Modern => getDataFromAPIPageViewBuilder(
+                        val,
+                        isPortrait,
+                        themeNotifier,
+                      )
+                  }),
+                )
+              : const Center(
+                  child: Text(
+                    'No activities scheduled today',
                   ),
-                  radius: Radius.circular(20),
-                  thickness: 5,
-                  child: PageView.builder(
-                    itemCount:
-                        val.qurHomeRegimenResponseModel!.regimentsList!.length +
-                            1,
-                    scrollDirection: Axis.vertical,
-                    onPageChanged: (int index) {
-                      setState(() {
-                        controller.currentIndex = index;
-                      });
-                    },
-                    controller: PageController(
-                        initialPage: val.nextRegimenPosition,
-                        viewportFraction: 1 / (isPortrait == true ? 5 : 3)),
-                    itemBuilder: (BuildContext context, int itemIndex) {
-                      if (itemIndex ==
-                          (val.qurHomeRegimenResponseModel!.regimentsList!
-                              .length)) {
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 22.0),
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                noMoreActivity,
-                                height: 50,
-                                width: 50,
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                noMoreActivites,
-                                style: TextStyle(
-                                    color: Color(
-                                  CommonUtil().getQurhomePrimaryColor(),
-                                )),
-                              )
-                            ],
-                          ),
-                        );
-                      } else {
-                        return _buildCarouselItem(
-                            context,
-                            itemIndex,
-                            val.qurHomeRegimenResponseModel!
-                                .regimentsList![itemIndex],
-                            val.nextRegimenPosition,
-                            isPortrait);
-                      }
-                    },
-                  ),
-                )),
-              )
-            : const Center(
-                child: Text(
-                  'No activities scheduled today',
+                );
+
+  getDataFromAPIPageViewBuilder(
+    QurhomeRegimenController val,
+    var isPortrait,
+    AppThemeProvider themeNotifier,
+  ) {
+    return PageView.builder(
+      itemCount:
+          val.qurHomeRegimenResponseModel!.regimentsList!.length +
+              1,
+      scrollDirection: Axis.vertical,
+      onPageChanged: (int index) {
+        setState(() {
+          controller.currentIndex = index;
+        });
+      },
+      controller: PageController(
+          initialPage: val.nextRegimenPosition,
+          viewportFraction: 1 / (isPortrait == true ? 5 : 3)),
+      itemBuilder: (BuildContext context, int itemIndex) {
+        if (itemIndex ==
+            (val.qurHomeRegimenResponseModel!.regimentsList!
+                .length)) {
+          return Padding(
+            padding: const EdgeInsets.only(top: 22.0),
+            child: Column(
+              children: [
+                Image.asset(
+                  noMoreActivity,
+                  height: 50,
+                  width: 50,
                 ),
-              );
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  noMoreActivites,
+                  style: TextStyle(
+                      color: Color(
+                    CommonUtil().getQurhomePrimaryColor(),
+                  )),
+                )
+              ],
+            ),
+          );
+        } else {
+          return _buildCarouselItem(
+              context,
+              itemIndex,
+              val.qurHomeRegimenResponseModel!
+                  .regimentsList![itemIndex],
+              val.nextRegimenPosition,
+              isPortrait, themeNotifier,);
+        }
+      },
+    );
   }
 
   getCurrentRatio(int itemIndex) {
@@ -595,7 +824,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   Color getCardBackgroundColor(
       int itemIndex, int nextRegimenPosition, RegimentDataModel regimen) {
     if (regimen.ack != null) {
-      return Color(0xff511e);
+      return const Color(0x00ff511e);
     } else if (controller.currentIndex == itemIndex) {
       return Colors.white;
     } else if (nextRegimenPosition == itemIndex) {
@@ -607,18 +836,39 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
   }
 
-  Color getTextAndIconColor(int itemIndex, int nextRegimenPosition) {
+  Color getTextAndIconColor(
+    int itemIndex,
+    int nextRegimenPosition,
+    AppThemeProvider themeNotifier,
+  ) {
     if (controller.currentIndex == itemIndex) {
-      return Colors.black;
+      switch (themeNotifier.currentEnumAppThemeType) {
+        case EnumAppThemeType.Classic:
+          return Colors.black;
+        case EnumAppThemeType.Modern:
+          return Color(
+            CommonUtil().getQurhomePrimaryColor(),
+          );
+      }
     } else if (nextRegimenPosition == itemIndex) {
-      return Colors.black;
+      switch (themeNotifier.currentEnumAppThemeType) {
+        case EnumAppThemeType.Classic:
+          return Colors.black;
+        case EnumAppThemeType.Modern:
+          return Colors.white;
+      }
     } else {
-      return Colors.black;
+      switch (themeNotifier.currentEnumAppThemeType) {
+        case EnumAppThemeType.Classic:
+          return Colors.black;
+        case EnumAppThemeType.Modern:
+          return Colors.grey;
+      }
     }
   }
 
   Widget _buildCarouselItem(BuildContext context, int itemIndex,
-      RegimentDataModel regimen, int nextRegimenPosition, bool isPortrait) {
+      RegimentDataModel regimen, int nextRegimenPosition, bool isPortrait, AppThemeProvider themeNotifier) {
     String strTitle = "";
     try {
       if (regimen.activityOrgin == strAppointmentRegimen) {
@@ -680,7 +930,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                         '';
                 isGetUserActivitiesHistoryCalled = null;
               }
-              showRegimenDialog(regimen, itemIndex,onTapHideDialog: (value) {
+              showRegimenDialog(regimen, itemIndex,themeNotifier,onTapHideDialog: (value) {
                 if(value){
                   qurhomeDashboardController.isScreenIdle.value=true;
                   qurhomeDashboardController.checkScreenIdle();
@@ -695,20 +945,28 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         scale: getCurrentRatio(itemIndex),
         child: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal:
-                  isPortrait ? 12.0 : MediaQuery.of(context).size.width / 5,
-              vertical: 8.0),
+            horizontal: isPortrait
+                ? switch (themeNotifier.currentEnumAppThemeType) {
+                    EnumAppThemeType.Classic => 12.0,
+                    EnumAppThemeType.Modern => 25.0,
+                  }
+                : MediaQuery.of(context).size.width / 5,
+            vertical: 8,
+          ),
           child: Container(
             decoration: BoxDecoration(
               color: getCardBackgroundColor(
-                  itemIndex, nextRegimenPosition, regimen),
+                itemIndex, nextRegimenPosition, regimen),
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.2),
                   spreadRadius: 5,
-                  blurRadius: 2,
-                  offset: Offset(0, 3), // changes position of shadow
+                  blurRadius: switch (themeNotifier.currentEnumAppThemeType) {
+                    EnumAppThemeType.Classic => 2,
+                    EnumAppThemeType.Modern => 7,
+                  },
+                  offset: const Offset(0, 3), // changes position of shadow
                 ),
               ],
             ),
@@ -717,110 +975,115 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 horizontal: 16,
                 vertical: 8,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    regimen.estart != null
-                        ? DateFormat('hh:mm a').format(regimen.estart!)
-                        : '',
-                    style: TextStyle(
-                      color: getTextAndIconColor(
-                        itemIndex,
-                        nextRegimenPosition,
-                      ),
-                      fontSize: 15.h,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
+              child: switch (themeNotifier.currentEnumAppThemeType) {
+                  EnumAppThemeType.Classic => Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Center(
-                          child: Text(
-                            strTitle.trim().isNotEmpty
-                                ? strTitle
-                                : regimen.title.toString().trim(),
-                            maxLines: 2,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: getTextAndIconColor(
-                                    itemIndex, nextRegimenPosition),
-                                fontSize: 16.h,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                        Visibility(
-                          /// Controls the visibility of the child text widget based on whether the
-                          /// regimen's activity name matches Activityname.VITALS. Only shows the child text
-                          /// if the activity name matches.
-                          visible: regimen.activityname == Activityname.VITALS,
-                          child: Text(
-                            getValuesOfVital(regimen),
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16.h,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Visibility(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            /* Image.asset(
-                                  'assets/Qurhome/seen.png',
-                                  height: 12.0,
-                                  width: 12.0,
-                                  color: getTextAndIconColor(
-                                      itemIndex, nextRegimenPosition),
-                                ),*/
-                            getIcon(
-                                regimen,
-                                regimen.activityname,
-                                regimen.uformname,
-                                regimen.metadata,
-                                itemIndex,
-                                nextRegimenPosition),
-                            const SizedBox(
-                              height: 10,
+                        Text(
+                          regimen.estart != null
+                              ? DateFormat('hh:mm a').format(regimen.estart!)
+                              : '',
+                          style: TextStyle(
+                            color: getTextAndIconColor(
+                              itemIndex,
+                              nextRegimenPosition,
+                              themeNotifier,
                             ),
-                            if (regimen.ack != null)
-                              Text(
-                                strCompleted,
-                                style: TextStyle(
-                                  fontSize: CommonUtil().isTablet!
-                                      ? tabHeader1
-                                      : mobileHeader1,
-                                  fontWeight: FontWeight.bold,
-                                  color: getTextAndIconColor(
-                                      itemIndex, nextRegimenPosition),
+                            fontSize: 15.h,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Text(
+                                  strTitle.trim().isNotEmpty
+                                      ? strTitle
+                                      : regimen.title.toString().trim(),
+                                  maxLines: 2,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: getTextAndIconColor(
+                                        itemIndex,
+                                        nextRegimenPosition,
+                                        themeNotifier,
+                                      ),
+                                      fontSize: 16.h,
+                                      fontWeight: FontWeight.w600),
                                 ),
-                              )
-                            else
-                              const SizedBox()
-                          ],
+                              ),
+                              Visibility(
+                                /// Controls the visibility of the child text
+                                /// widget based on whether the
+                                /// regimen's activity name matches Activityname
+                                /// VITALS. Only shows the child text
+                                /// if the activity name matches.
+                                visible:
+                                    regimen.activityname == Activityname.VITALS,
+                                child: Text(
+                                  getValuesOfVital(regimen),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16.h,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(
-                          width: 2,
+                          width: 20,
                         ),
-                        if (regimen.ack != null)
-                          CommonUtil.isUSRegion()
-                              ? const SizedBox()
-                              : const SizedBox() /*Text(
+                        Visibility(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  getIcon(
+                                    regimen,
+                                    regimen.activityname,
+                                    regimen.uformname,
+                                    regimen.metadata,
+                                    itemIndex,
+                                    nextRegimenPosition,
+                                    themeNotifier,
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  if (regimen.ack != null)
+                                    Text(
+                                      strCompleted,
+                                      style: TextStyle(
+                                        fontSize: CommonUtil().isTablet!
+                                            ? tabHeader1
+                                            : mobileHeader1,
+                                        fontWeight: FontWeight.bold,
+                                        color: getTextAndIconColor(
+                                          itemIndex,
+                                          nextRegimenPosition,
+                                          themeNotifier,
+                                        ),
+                                      ),
+                                    )
+                                  else
+                                    const SizedBox()
+                                ],
+                              ),
+                              const SizedBox(
+                                width: 2,
+                              ),
+                              if (regimen.ack != null)
+                                CommonUtil.isUSRegion()
+                                    ? const SizedBox()
+                                    : const SizedBox() /*Text(
                                   '${CommonUtil().regimentDateFormatV2(
                                     regimen.asNeeded
                                         ? regimen.ack ?? DateTime.now()
@@ -833,14 +1096,116 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                         itemIndex, nextRegimenPosition),
                                   ),
                                 )*/
-                        else
-                          const SizedBox()
+                              else
+                                const SizedBox()
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-            ),
+                  EnumAppThemeType.Modern => Stack(
+                      children: [
+                        if (regimen.ack != null) ...{
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Visibility(
+                              visible: regimen.ack != null,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Image.asset(
+                                    'assets/Qurhome/seen.png',
+                                    height: 12,
+                                    width: 12,
+                                    color: getTextAndIconColor(
+                                      itemIndex,
+                                      nextRegimenPosition,
+                                      themeNotifier,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+                                  if (CommonUtil.isUSRegion())
+                                    const SizedBox()
+                                  else
+                                    Text(
+                                      '${CommonUtil().regimentDateFormatV2(
+                                        regimen.asNeeded
+                                            ? regimen.ack ?? DateTime.now()
+                                            : regimen.ack ?? DateTime.now(),
+                                        isAck: true,
+                                      )}',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: getTextAndIconColor(
+                                          itemIndex,
+                                          nextRegimenPosition,
+                                          themeNotifier,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          )
+                        },
+                        Align(
+                          child: Row(
+                            children: [
+                              Text(
+                                regimen.estart != null
+                                    ? DateFormat('hh:mm a')
+                                        .format(regimen.estart!)
+                                    : '',
+                                style: TextStyle(
+                                  color: getTextAndIconColor(
+                                    itemIndex,
+                                    nextRegimenPosition,
+                                    themeNotifier,
+                                  ),
+                                  fontSize: 15.h,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              getIcon(
+                                regimen,
+                                regimen.activityname,
+                                regimen.uformname,
+                                regimen.metadata,
+                                itemIndex,
+                                nextRegimenPosition,
+                                themeNotifier,
+                              ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  strTitle.trim().isNotEmpty
+                                      ? strTitle
+                                      : regimen.title.toString().trim(),
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                    color: getTextAndIconColor(
+                                      itemIndex,
+                                      nextRegimenPosition,
+                                      themeNotifier,
+                                    ),
+                                    fontSize: 16.h,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                }),
           ),
         ),
       ),
@@ -854,6 +1219,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       Metadata? metadata,
       int itemIndex,
       int nextRegimenPosition,
+      AppThemeProvider themeNotifier,
       {double? sizeOfIcon}) {
     final iconSize = sizeOfIcon ?? 40.0.h;
     try {
@@ -863,29 +1229,50 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             metadata!.icon!,
             height: iconSize,
             width: iconSize,
-            color: getTextAndIconColor(itemIndex, nextRegimenPosition),
+            color: getTextAndIconColor(
+              itemIndex,
+              nextRegimenPosition,
+              themeNotifier,
+            ),
           );
         } else {
           return CachedNetworkImage(
             imageUrl: metadata!.icon!,
             height: iconSize,
             width: iconSize,
-            color: getTextAndIconColor(itemIndex, nextRegimenPosition),
-            errorWidget: (context, url, error) {
-              return getDefaultIcon(regimen, activityname, uformName, iconSize,
-                  itemIndex, nextRegimenPosition);
-            },
+            color: getTextAndIconColor(
+              itemIndex,
+              nextRegimenPosition,
+              themeNotifier,
+            ),
+            errorWidget: (context, url, error) => getDefaultIcon(
+              regimen,
+              activityname,
+              uformName,
+              iconSize,
+              itemIndex,
+              nextRegimenPosition,
+              themeNotifier,
+            ),
           );
         }
       } else {
         return getDefaultIcon(regimen, activityname, uformName, iconSize,
-            itemIndex, nextRegimenPosition);
+            itemIndex, nextRegimenPosition,
+                          themeNotifier,);
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
-      return getDefaultIcon(regimen, activityname, uformName, iconSize,
-          itemIndex, nextRegimenPosition);
+      return getDefaultIcon(
+        regimen,
+        activityname,
+        uformName,
+        iconSize,
+        itemIndex,
+        nextRegimenPosition,
+        themeNotifier,
+      );
     }
   }
 
@@ -896,6 +1283,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     double iconSize,
     int itemIndex,
     int nextRegimenPosition,
+    AppThemeProvider themeNotifier,
   ) {
     var isDefault = true;
     dynamic cardIcon = 'assets/launcher/myfhb.png';
@@ -936,13 +1324,21 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             height: isDefault ? iconSize : iconSize - 5.0,
             width: isDefault ? iconSize : iconSize - 5.0,
             color: (CommonUtil().checkIfSkipAcknowledgemnt(regimen))
-                ? getTextAndIconColor(itemIndex, nextRegimenPosition)
+                ? getTextAndIconColor(
+                    itemIndex,
+                    nextRegimenPosition,
+                    themeNotifier,
+                  )
                 : null,
           )
         : Icon(
             cardIcon,
             size: iconSize - 5.0,
-            color: getTextAndIconColor(itemIndex, nextRegimenPosition),
+            color: getTextAndIconColor(
+              itemIndex,
+              nextRegimenPosition,
+              themeNotifier,
+            ),
           );
     return cardIconWidget;
   }
@@ -980,7 +1376,12 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     return first + second;
   }
 
-  showRegimenDialog(RegimentDataModel regimen, int index,{Function(bool)? onTapHideDialog}) {
+  showRegimenDialog(
+    RegimentDataModel regimen,
+    int index,
+    AppThemeProvider themeNotifier, {
+    Function(bool)? onTapHideDialog,
+  }) {
     if (regimen.ack == null &&
         (regimen.otherinfo?.isReadOnlyAccess() ?? false) == false)
       showDialog(
@@ -1027,8 +1428,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                           ),
                           child: Row(
                             children: [
-                              getIcon(regimen, regimen.activityname,
-                                  regimen.uformname, regimen.metadata, index, 0,
+                              getIcon(
+                                  regimen,
+                                  regimen.activityname,
+                                  regimen.uformname,
+                                  regimen.metadata,
+                                  index,
+                                  0,
+                                  themeNotifier,
                                   sizeOfIcon: CommonUtil().isTablet!
                                       ? dialogIconTab
                                       : dialogIconMobile),
@@ -1335,11 +1742,18 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                         ),
                         child: Row(
                           children: [
-                            getIcon(regimen, regimen.activityname,
-                                regimen.uformname, regimen.metadata, index, 0,
-                                sizeOfIcon: CommonUtil().isTablet!
-                                    ? dialogIconTab
-                                    : dialogIconMobile),
+                            getIcon(
+                              regimen,
+                              regimen.activityname,
+                              regimen.uformname,
+                              regimen.metadata,
+                              index,
+                              0,
+                              themeNotifier,
+                              sizeOfIcon: CommonUtil().isTablet!
+                                  ? dialogIconTab
+                                  : dialogIconMobile,
+                            ),
                             const SizedBox(
                               width: 10,
                             ),
@@ -1504,11 +1918,18 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                       ),
                       child: Row(
                         children: [
-                          getIcon(regimen, regimen.activityname,
-                              regimen.uformname, regimen.metadata, index, 0,
-                              sizeOfIcon: CommonUtil().isTablet!
-                                  ? dialogIconTab
-                                  : dialogIconMobile),
+                          getIcon(
+                            regimen,
+                            regimen.activityname,
+                            regimen.uformname,
+                            regimen.metadata,
+                            index,
+                            0,
+                            themeNotifier,
+                            sizeOfIcon: CommonUtil().isTablet!
+                                ? dialogIconTab
+                                : dialogIconMobile,
+                          ),
                           const SizedBox(
                             width: 10,
                           ),
@@ -1736,16 +2157,18 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             child: Row(
                               children: [
                                 getIcon(
-                                    regimen,
-                                    regimen.activityname,
-                                    regimen.uformname,
-                                    regimen.metadata,
-                                    index,
-                                    0,
-                                    sizeOfIcon: CommonUtil().isTablet!
-                                        ? dialogIconTab
-                                        : dialogIconMobile),
-                                SizedBox(
+                                  regimen,
+                                  regimen.activityname,
+                                  regimen.uformname,
+                                  regimen.metadata,
+                                  index,
+                                  0,
+                                  themeNotifier,
+                                  sizeOfIcon: CommonUtil().isTablet!
+                                      ? dialogIconTab
+                                      : dialogIconMobile,
+                                ),
+                                const SizedBox(
                                   width: 10,
                                 ),
                                 Expanded(
