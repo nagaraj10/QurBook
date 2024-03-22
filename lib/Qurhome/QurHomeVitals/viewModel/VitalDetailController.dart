@@ -31,6 +31,11 @@ class VitalDetailController extends GetxController {
   var timerProgress = 1.0.obs;
   var isShowTimerDialog = true.obs;
 
+  var qurhomeDashboardController =
+  CommonUtil().onInitQurhomeDashboardController();
+
+  final vitalListController = CommonUtil().onInitVitalListController();
+
   String getFilterData(int selectedIndex) {
     String filterData;
 
@@ -106,58 +111,62 @@ class VitalDetailController extends GetxController {
   }
 
   checkForBleDevices() async {
-    var device = "";
-    String filterKey = '';
-    if (deviceName == strOxgenSaturation) {
-      device = strConnectPulseMeter;
-      filterKey = 'spo2';
-    } else if (deviceName == strDataTypeBP) {
-      device = strConnectBpMeter;
-      filterKey = 'bp';
-    } else if (deviceName == strWeight) {
-      device = strConnectWeighingScale;
-      filterKey = 'weight';
-    } else if (deviceName == 'Blood Glucose') {
-      device = strConnectBGL;
-      filterKey = 'bgl';
-    }
-    if (device.isEmpty) {
-      return;
-    }
-    if (!Get.isRegistered<SheelaAIController>()) {
-      Get.put(SheelaAIController());
-    }
-    if (!Get.isRegistered<SheelaBLEController>()) {
-      Get.put(SheelaBLEController());
-    }
-    if (!Get.isRegistered<HubListViewController>()) {
-      Get.put(HubListViewController());
-    }
-    _hubController = Get.find();
-    _sheelaBLEController = Get.find();
-    await _hubController.getHubList();
-    if ((_hubController.hubListResponse?.result ?? [])
-            .length >
-        0) {
-      _sheelaBLEController.isFromVitals = true;
-      _sheelaBLEController.filteredDeviceType = filterKey;
-      _sheelaBLEController.setupListenerForReadings();
-      CommonUtil().dialogForScanDevices(
-        Get.context!,
-        onPressManual: () {
-          Get.back();
-          _sheelaBLEController.stopTTS();
-          _sheelaBLEController.stopScanning();
-        },
-        onPressCancel: () async {
-          Get.back();
-          _sheelaBLEController.stopTTS();
-          _sheelaBLEController.stopScanning();
-        },
-        title: device,
-        // Set 'isVitalsManualRecordingRestricted' to true
-        isVitalsManualRecordingRestricted: true,
-      );
+    try {
+      var device = "";
+      String filterKey = '';
+      if (deviceName == strOxgenSaturation) {
+        device = strConnectPulseMeter;
+        filterKey = 'spo2';
+      } else if (deviceName == strDataTypeBP) {
+        device = strConnectBpMeter;
+        filterKey = 'bp';
+      } else if (deviceName == strWeight) {
+        device = strConnectWeighingScale;
+        filterKey = 'weight';
+      } else if (deviceName == 'Blood Glucose') {
+        device = strConnectBGL;
+        filterKey = 'bgl';
+      }
+      if (device.isEmpty) {
+        return;
+      }
+      if (!qurhomeDashboardController.forPatientList.value) {
+        if (!Get.isRegistered<SheelaAIController>()) {
+          Get.put(SheelaAIController());
+        }
+        if (!Get.isRegistered<SheelaBLEController>()) {
+          Get.put(SheelaBLEController());
+        }
+        if (!Get.isRegistered<HubListViewController>()) {
+          Get.put(HubListViewController());
+        }
+        _hubController = Get.find();
+        _sheelaBLEController = Get.find();
+        await _hubController.getHubList();
+        if ((_hubController.hubListResponse?.result ?? []).length > 0) {
+          _sheelaBLEController.isFromVitals = true;
+          _sheelaBLEController.filteredDeviceType = filterKey;
+          _sheelaBLEController.setupListenerForReadings();
+          CommonUtil().dialogForScanDevices(
+            Get.context!,
+            onPressManual: () {
+              Get.back();
+              _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
+            },
+            onPressCancel: () async {
+              Get.back();
+              _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
+            },
+            title: device,
+            // Set 'isVitalsManualRecordingRestricted' to true
+            isVitalsManualRecordingRestricted: true,
+          );
+        }
+      }
+    } catch (e,stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
@@ -167,7 +176,7 @@ class VitalDetailController extends GetxController {
       if (isLoading) {
         loadingData.value = true;
       }
-      var resp = await _helper.getBPData(filter: filter);
+      var resp = await _helper.getBPData(filter: filter,userId: vitalListController.userId.value);
       if (resp == null) {
         loadingData.value = false;
         return bpList.value = [];
@@ -238,7 +247,7 @@ class VitalDetailController extends GetxController {
       if (isLoading) {
         loadingData.value = true;
       }
-      var resp = await _helper.getBloodGlucoseData(filter: filter);
+      var resp = await _helper.getBloodGlucoseData(filter: filter,userId: vitalListController.userId.value);
       if (resp == null) {
         loadingData.value = false;
         return gulList.value = [];
@@ -305,7 +314,7 @@ class VitalDetailController extends GetxController {
       if (isLoading) {
         loadingData.value = true;
       }
-      var resp = await _helper.getOxygenSaturationData(filter: filter);
+      var resp = await _helper.getOxygenSaturationData(filter: filter,userId: vitalListController.userId.value);
       if (resp == null) {
         loadingData.value = false;
         return oxyList.value = [];
@@ -378,7 +387,7 @@ class VitalDetailController extends GetxController {
       if (isLoading) {
         loadingData.value = true;
       }
-      var resp = await _helper.getBodyTemperatureData(filter: filter);
+      var resp = await _helper.getBodyTemperatureData(filter: filter,userId: vitalListController.userId.value);
       if (resp == null) {
         loadingData.value = false;
         return tempList.value = [];
@@ -440,7 +449,7 @@ class VitalDetailController extends GetxController {
       if (isLoading) {
         loadingData.value = true;
       }
-      var resp = await _helper.getWeightData(filter: filter);
+      var resp = await _helper.getWeightData(filter: filter,userId: vitalListController.userId.value);
       if (resp == null) {
         loadingData.value = false;
         return weightList.value = [];
@@ -495,16 +504,6 @@ class VitalDetailController extends GetxController {
 
       weightList.value = [];
       loadingData.value = false;
-    }
-  }
-
-  updateTimerValue(double value) async {
-    try {
-      timerProgress.value = value;
-    } catch (e,stackTrace) {
-      print(e);
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
-
     }
   }
 }

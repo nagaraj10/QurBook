@@ -26,7 +26,6 @@ import '../../../src/model/GetDeviceSelectionModel.dart';
 import '../../../src/model/user/MyProfileModel.dart';
 import '../../../src/resources/repository/health/HealthReportListForUserRepository.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
-import '../viewModel/VitalListController.dart';
 import 'VitalsDetails.dart';
 
 class VitalsList extends StatefulWidget {
@@ -37,7 +36,7 @@ class VitalsList extends StatefulWidget {
 }
 
 class _VitalsListState extends State<VitalsList> {
-  final controller = Get.put(VitalListController());
+  final controller = CommonUtil().onInitVitalListController();
 
   LastMeasureSyncValues? deviceValues;
   DeviceData? finalList;
@@ -126,9 +125,20 @@ class _VitalsListState extends State<VitalsList> {
       deviceValues = null;
       FocusManager.instance.primaryFocus!.unfocus();
 
-      if (Platform.isAndroid) {
+      if (Platform.isAndroid &&
+          !qurhomeDashboardController.forPatientList.value) {
         CommonUtil().askPermssionLocationBleScan();
       }
+
+      if (qurhomeDashboardController.forPatientList.value ?? false) {
+        controller.userId.value =
+            qurhomeDashboardController.careGiverPatientListResult?.childId ??
+                '';
+      } else {
+        controller.userId.value =
+            PreferenceUtil.getStringValue(Constants.KEY_USERID) ?? '';
+      }
+
       super.initState();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);

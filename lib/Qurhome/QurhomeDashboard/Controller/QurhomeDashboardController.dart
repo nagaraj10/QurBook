@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_data.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_list_model.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 
 import '../../../QurHub/Controller/HubListViewController.dart';
@@ -16,14 +13,11 @@ import '../../../common/CommonUtil.dart';
 import '../../../common/PreferenceUtil.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
-import '../../../constants/router_variable.dart';
 import '../../../src/model/user/MyProfileModel.dart';
 import '../../../src/ui/SheelaAI/Controller/SheelaAIController.dart';
-import '../../../src/ui/SheelaAI/Models/sheela_arguments.dart';
 import '../../../src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 
-import '../View/QurhomeDashboard.dart';
 
 class QurhomeDashboardController extends GetxController {
   var currentSelectedIndex = 0.obs;
@@ -71,6 +65,8 @@ class QurhomeDashboardController extends GetxController {
   var isShowScreenIdleDialog = false.obs;
   // Observable variable to track the current notification id
   var currentNotificationId = ' '.obs;
+
+  var patientDashboardCurSelectedIndex = 0.obs;
 
   @override
   void onInit() {
@@ -305,6 +301,7 @@ class QurhomeDashboardController extends GetxController {
 
     nextAlertPosition = 0;
     currentIndex = 0;
+    patientDashboardCurSelectedIndex.value = 0;
   }
 
   Future<bool> careGiverOkAction(
