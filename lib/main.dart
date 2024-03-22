@@ -35,6 +35,7 @@ import 'constants/fhb_router.dart' as router;
 import 'constants/variable_constant.dart' as variable;
 import 'device_integration/viewModel/Device_model.dart';
 import 'landing/view_model/landing_view_model.dart';
+import 'more_menu/app_theme_provider.dart';
 import 'my_family/viewmodel/my_family_view_model.dart';
 import 'plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'regiment/view_model/regiment_view_model.dart';
@@ -148,6 +149,9 @@ Future<void> main() async {
     runApp(
       MultiProvider(
         providers: [
+          ChangeNotifierProvider(
+            create: (_) => AppThemeProvider(),
+          ),
           ChangeNotifierProvider<RegimentViewModel>(
             create: (_) => RegimentViewModel(),
           ),
