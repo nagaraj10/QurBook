@@ -495,6 +495,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                               strVoiceClonePatientAssignment) {
                             // Skip further processing when the payload templateName is 'voiceClonePatientAssignment'.
                             // This block is intentionally left empty ('do nothing') as no additional actions are required.
+                          } else if (payload?.templateName ==
+                              parameters
+                                  .stringAssignOrUpdatePersonalPlanActivities) {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.templateName,
+                            );
                           } else {
                             readUnreadAction(notification);
                           }
@@ -1025,6 +1032,20 @@ class _NotificationScreen extends State<NotificationScreen> {
         Provider.of<RegimentViewModel>(context, listen: false).regimentFilter =
             RegimentFilter.Missed;
         Get.toNamed(router.rt_Regimen, arguments: RegimentArguments())
+            ?.then((value) {
+          readUnreadAction(result, isRead: true);
+        });
+        break;
+      case parameters.stringAssignOrUpdatePersonalPlanActivities:
+        Provider.of<RegimentViewModel>(
+          context,
+          listen: false,
+        ).regimentMode = RegimentMode.Schedule;
+        Provider.of<RegimentViewModel>(context, listen: false).regimentFilter =
+            RegimentFilter.Scheduled;
+        Get.toNamed(router.rt_Regimen,
+                arguments: RegimentArguments(
+                    eventId: result?.messageDetails?.payload?.eventId ?? ""))
             ?.then((value) {
           readUnreadAction(result, isRead: true);
         });
