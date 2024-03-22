@@ -80,6 +80,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
   final hubListViewController = CommonUtil().onInitHubListViewController();
 
+  // Define the size of the top curve based on whether the device is a tablet or not
+  double topCurveSize = (CommonUtil().isTablet ?? false) ? 20.0 : 15.0;
+
   @override
   void initState() {
     try {
@@ -687,12 +690,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                       topLeft: controller
                                                   .patientDashboardCurSelectedIndex ==
                                               0
-                                          ? Radius.circular(15.0)
+                                          ? Radius.circular(topCurveSize)
                                           : Radius.circular(0.0),
                                       topRight: controller
                                                   .patientDashboardCurSelectedIndex ==
                                               0
-                                          ? Radius.circular(15.0)
+                                          ? Radius.circular(topCurveSize)
                                           : Radius.circular(0.0),
                                     ),
                                   ),
@@ -753,12 +756,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                       topLeft: controller
                                                   .patientDashboardCurSelectedIndex ==
                                               1
-                                          ? Radius.circular(15.0)
+                                          ? Radius.circular(topCurveSize)
                                           : Radius.circular(0.0),
                                       topRight: controller
                                                   .patientDashboardCurSelectedIndex ==
                                               1
-                                          ? Radius.circular(15.0)
+                                          ? Radius.circular(topCurveSize)
                                           : Radius.circular(0.0),
                                     ),
                                   ),
@@ -819,12 +822,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                       topLeft: controller
                                                   .patientDashboardCurSelectedIndex ==
                                               2
-                                          ? Radius.circular(15.0)
+                                          ? Radius.circular(topCurveSize)
                                           : Radius.circular(0.0),
                                       topRight: controller
                                                   .patientDashboardCurSelectedIndex ==
                                               2
-                                          ? Radius.circular(15.0)
+                                          ? Radius.circular(topCurveSize)
                                           : Radius.circular(0.0),
                                     ),
                                   ),

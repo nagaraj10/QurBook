@@ -188,8 +188,13 @@ class _QurHomePatientRegimenListScreenState
                                   padding: const EdgeInsets.all(8.0),
                                   child: Image.asset(
                                     icon_calendar,
-                                    height: 26,
-                                    width: 26,
+                                    //Set width and height to maintain UI similar in tablet and mobile
+                                    height: (CommonUtil().isTablet ?? false)
+                                        ? 40
+                                        : 26,
+                                    width: (CommonUtil().isTablet ?? false)
+                                        ? 40
+                                        : 26,
                                   ),
                                 )),
                           ),
@@ -224,7 +229,11 @@ class _QurHomePatientRegimenListScreenState
                                               controller.statusText.value,
                                               style: TextStyle(
                                                   color: Colors.white,
-                                                  fontSize: 11),
+                                                  fontSize:
+                                                      (CommonUtil().isTablet ??
+                                                              false)
+                                                          ? tabHeader3
+                                                          : mobileHeader3),
                                             ),
                                           ),
                                         ),
