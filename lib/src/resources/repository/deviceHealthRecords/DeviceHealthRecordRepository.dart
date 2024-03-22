@@ -40,8 +40,13 @@ class DeviceHealthRecord {
     return response;
   }
 
-  Future<dynamic> getlastMeasureSync() async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
+  Future<dynamic> getlastMeasureSync({String? userId}) async {
+    var userID;
+    if (userId != null) {
+      userID = userId;
+    } else {
+      userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
+    }
 
     var response = await _helper.getDeviceInfo(query.qr_DeviceInfo +
         query.qr_slash +
@@ -54,8 +59,14 @@ class DeviceHealthRecord {
     return response;
   }
 
-  Future<dynamic> queryBydeviceInterval(String jsonString,{String filter=''}) async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
+  Future<dynamic> queryBydeviceInterval(String jsonString,{String filter='',String? userId}) async {
+
+    var userID;
+    if (userId != null) {
+      userID = userId;
+    } else {
+      userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
+    }
 
     var response = await _helper.getByRecordDataType(
         query.qr_DeviceInfo +
