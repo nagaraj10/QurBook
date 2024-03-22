@@ -68,27 +68,15 @@ class SheelaBLEController extends GetxController {
           if ((playConversations).isNotEmpty) {
             await playTTS();
           } else if (isCompleted) {
-            // Check if isDeviceConnectSheelaScreen's value is true and isLastActivityDevice is false or null.
-            if ((SheelaController.isDeviceConnectSheelaScreen.value) && (!(SheelaController.isLastActivityDevice ?? true))) {
-              // If isDeviceConnectSheelaScreen is true and isLastActivityDevice is false or null:
 
-              // Delay execution of the subsequent code block by 2 seconds.
-              Future.delayed(const Duration(seconds: 2)).then((value) {
-                // After 2 seconds, call getAIAPIResponseFor with sheelaQueueShowRemind as the parameter.
-                SheelaController.getAIAPIResponseFor(sheelaQueueShowRemind, null);
-              });
-            } else {
-              // If isDeviceConnectSheelaScreen is false or isLastActivityDevice is true:
+            // Delay execution of the subsequent code block by 4 seconds.
+            await Future.delayed(const Duration(seconds: 4));
 
-              // Delay execution of the subsequent code block by 4 seconds.
-              await Future.delayed(const Duration(seconds: 4));
+            // Stop Text-to-Speech functionality.
+            stopTTS();
 
-              // Stop Text-to-Speech functionality.
-              stopTTS();
-
-              // Check if Sheela screen is active and if true, navigate back.
-              if (SheelaController.isSheelaScreenActive) Get.back();
-            }
+            // Check if Sheela screen is active and if true, navigate back.
+            if (SheelaController.isSheelaScreenActive) Get.back();
 
           }
         }
@@ -338,9 +326,9 @@ class SheelaBLEController extends GetxController {
                   (hublistController.bleDeviceType ?? '').isNotEmpty &&
                   (hublistController.manufacturer ?? '').isNotEmpty) {
                 receivedData = true;
-                updateUserData(
-                  data: receivedValues.last,
-                );
+                 updateUserData(
+                   data: receivedValues.last,
+                 );
               }
 
               break;
@@ -662,88 +650,98 @@ class SheelaBLEController extends GetxController {
         model.ackLocal = actualDateTime;
         hublistController.eid = null;
         hublistController.uid = null;
-        final bool response =
-            await BleConnectApiProvider().uploadBleDataReadings(
-          model,
-        );
-        if (!response) {
-          receivedData = false;
-          showFailure();
-        } else if (model.deviceType == "SPO2") {
-          if ((model.data!.sPO2 ?? '').isNotEmpty &&
-              (model.data!.pulse ?? '').isNotEmpty) {
-            String? strTextMsg = await SheelaController.getTextTranslate(
-                "Completed reading values. Please take your finger from the device");
-            addToConversationAndPlay(
-              SheelaResponse(
-                recipientId: conversationType,
-                text: strTextMsg,
-              ),
-            );
-            String? strTextMsgTwo = await SheelaController.getTextTranslate(
-              // isLastActivityDevice if false means remove the bye in string
-                "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded.${(!(SheelaController.isLastActivityDevice ?? true)) ? '' : " Bye."}");
-            playConversations.add(
-              SheelaResponse(
-                recipientId: conversationType,
-                text: strTextMsgTwo,
-              ),
-            );
-            await Future.delayed(const Duration(seconds: 2));
-          } else {
+        if (SheelaController.isSheelaScreenActive &&
+            (SheelaController.isDeviceConnectSheelaScreen.value)) {
+          // Delay execution of the subsequent code block by 2 seconds.
+          Future.delayed(const Duration(seconds: 1)).then((value) {
+            // After 1 seconds, call getAIAPIResponseFor for call dynamic response
+            SheelaController.getAIAPIResponseFor(STR_YES, null,
+                deviceReadingsRuleSheela: model.data ?? Data());
+          });
+        }else{
+          final bool response =
+          await BleConnectApiProvider().uploadBleDataReadings(
+            model,
+          );
+          if (!response) {
             receivedData = false;
             showFailure();
-          }
-        } else if (model.deviceType?.toLowerCase() == "bgl") {
-          if ((model.data?.bgl ?? '').isNotEmpty) {
-            String? strTextMsg = await SheelaController.getTextTranslate(
-                "Your Blood Glucose value ${model.data!.bgl} is recorded successfully.");
-            addToConversationAndPlay(
-              SheelaResponse(
-                recipientId: conversationType,
-                text: strTextMsg,
-              ),
-            );
-            await Future.delayed(const Duration(seconds: 2));
-          } else {
-            receivedData = false;
-            showFailure();
-          }
-        } else if (model.deviceType == "BP") {
-          if ((model.data!.systolic ?? '').isNotEmpty &&
-              (model.data!.diastolic ?? '').isNotEmpty &&
-              (model.data!.pulse ?? '').isNotEmpty) {
-            String? strTextMsg = await SheelaController.getTextTranslate(
-              // isLastActivityDevice if false means remove the bye in string
-                "Thank you. Your BP ${model.data!.systolic} "
-                "over ${model.data!.diastolic} "
-                "and pulse ${model.data!.pulse} are successfully recorded.${(!(SheelaController.isLastActivityDevice ?? true)) ? '' : " Bye."}");
-            addToConversationAndPlay(
-              SheelaResponse(
-                recipientId: conversationType,
-                text: strTextMsg,
-              ),
-            );
-            await Future.delayed(const Duration(seconds: 2));
-          } else {
-            receivedData = false;
-            showFailure();
-          }
-        } else if (model.deviceType?.toLowerCase() == "weight") {
-          if ((model.data!.weight ?? '').isNotEmpty) {
-            String? strTextMsg = await SheelaController.getTextTranslate(
-              // isLastActivityDevice if false means remove the bye in string
-                "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded.${(!(SheelaController.isLastActivityDevice ?? true)) ? '' : " Bye."}");
-            addToConversationAndPlay(
-              SheelaResponse(
-                recipientId: conversationType,
-                text: strTextMsg,
-              ),
-            );
-            await Future.delayed(const Duration(seconds: 2));
-          } else {
-            receivedData = false;
-            showFailure();
+          } else if (model.deviceType == "SPO2") {
+            if ((model.data!.sPO2 ?? '').isNotEmpty &&
+                (model.data!.pulse ?? '').isNotEmpty) {
+              String? strTextMsg = await SheelaController.getTextTranslate(
+                  "Completed reading values. Please take your finger from the device");
+              addToConversationAndPlay(
+                SheelaResponse(
+                  recipientId: conversationType,
+                  text: strTextMsg,
+                ),
+              );
+              String? strTextMsgTwo = await SheelaController.getTextTranslate(
+                // isLastActivityDevice if false means remove the bye in string
+                  "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded. Bye.");
+              playConversations.add(
+                SheelaResponse(
+                  recipientId: conversationType,
+                  text: strTextMsgTwo,
+                ),
+              );
+              await Future.delayed(const Duration(seconds: 2));
+            } else {
+              receivedData = false;
+              showFailure();
+            }
+          } else if (model.deviceType?.toLowerCase() == "bgl") {
+            if ((model.data?.bgl ?? '').isNotEmpty) {
+              String? strTextMsg = await SheelaController.getTextTranslate(
+                  "Your Blood Glucose value ${model.data!.bgl} is recorded successfully.");
+              addToConversationAndPlay(
+                SheelaResponse(
+                  recipientId: conversationType,
+                  text: strTextMsg,
+                ),
+              );
+              await Future.delayed(const Duration(seconds: 2));
+            } else {
+              receivedData = false;
+              showFailure();
+            }
+          } else if (model.deviceType == "BP") {
+            if ((model.data!.systolic ?? '').isNotEmpty &&
+                (model.data!.diastolic ?? '').isNotEmpty &&
+                (model.data!.pulse ?? '').isNotEmpty) {
+              String? strTextMsg = await SheelaController.getTextTranslate(
+                // isLastActivityDevice if false means remove the bye in string
+                  "Thank you. Your BP ${model.data!.systolic} "
+                      "over ${model.data!.diastolic} "
+                      "and pulse ${model.data!.pulse} are successfully recorded. Bye.");
+              addToConversationAndPlay(
+                SheelaResponse(
+                  recipientId: conversationType,
+                  text: strTextMsg,
+                ),
+              );
+              await Future.delayed(const Duration(seconds: 2));
+            } else {
+              receivedData = false;
+              showFailure();
+            }
+          } else if (model.deviceType?.toLowerCase() == "weight") {
+            if ((model.data!.weight ?? '').isNotEmpty) {
+              String? strTextMsg = await SheelaController.getTextTranslate(
+                // isLastActivityDevice if false means remove the bye in string
+                  "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded. Bye.");
+              addToConversationAndPlay(
+                SheelaResponse(
+                  recipientId: conversationType,
+                  text: strTextMsg,
+                ),
+              );
+              await Future.delayed(const Duration(seconds: 2));
+            } else {
+              receivedData = false;
+              showFailure();
+            }
           }
         }
         isCompleted = true;

@@ -2073,7 +2073,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           }
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
-          CommonUtil().dialogForScanDevices(
+          redirectToSheelaScreen(regimen);
+          /*CommonUtil().dialogForScanDevices(
             Get.context!,
             onPressManual: () {
               Get.back();
@@ -2097,7 +2098,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           );
           _sheelaBLEController.isFromRegiment = true;
           _sheelaBLEController.filteredDeviceType = 'spo2';
-          _sheelaBLEController.setupListenerForReadings();
+          _sheelaBLEController.setupListenerForReadings();*/
         } else {
           onErrorMessage(regimen);
         }
@@ -2128,7 +2129,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           }
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
-          CommonUtil().dialogForScanDevices(
+          redirectToSheelaScreen(regimen);
+          /*CommonUtil().dialogForScanDevices(
             Get.context!,
             onPressManual: () {
               Get.back();
@@ -2152,7 +2154,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           );
           _sheelaBLEController.isFromRegiment = true;
           _sheelaBLEController.filteredDeviceType = 'bp';
-          _sheelaBLEController.setupListenerForReadings();
+          _sheelaBLEController.setupListenerForReadings();*/
         } else {
           onErrorMessage(regimen);
         }
@@ -2180,7 +2182,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           }
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
-          CommonUtil().dialogForScanDevices(
+          redirectToSheelaScreen(regimen);
+          /*CommonUtil().dialogForScanDevices(
             Get.context!,
             onPressManual: () {
               Get.back();
@@ -2204,7 +2207,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           );
           _sheelaBLEController.isFromRegiment = true;
           _sheelaBLEController.filteredDeviceType = 'weight';
-          _sheelaBLEController.setupListenerForReadings();
+          _sheelaBLEController.setupListenerForReadings();*/
         } else {
           onErrorMessage(regimen);
         }
@@ -2235,7 +2238,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           }
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
-          CommonUtil().dialogForScanDevices(
+          redirectToSheelaScreen(regimen);
+          /*CommonUtil().dialogForScanDevices(
             Get.context!,
             onPressManual: () {
               Get.back();
@@ -2259,7 +2263,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           );
           _sheelaBLEController.isFromRegiment = true;
           _sheelaBLEController.filteredDeviceType = 'bgl';
-          _sheelaBLEController.setupListenerForReadings();
+          _sheelaBLEController.setupListenerForReadings();*/
         } else {
           onErrorMessage(regimen);
         }
