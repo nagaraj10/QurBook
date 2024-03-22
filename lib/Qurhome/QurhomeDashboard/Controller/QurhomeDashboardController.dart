@@ -22,7 +22,6 @@ import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRep
 class QurhomeDashboardController extends GetxController {
   var currentSelectedIndex = 0.obs;
   var appBarTitle = ' '.obs;
-  StreamSubscription? _appointmentSubscription;
   late HubListViewController hubController;
   late SheelaBLEController _sheelaBLEController;
   Timer? _bleTimer = null;
@@ -66,6 +65,7 @@ class QurhomeDashboardController extends GetxController {
   // Observable variable to track the current notification id
   var currentNotificationId = ' '.obs;
 
+  //Define a variable to hold the current selected index for the patient dashboard
   var patientDashboardCurSelectedIndex = 0.obs;
 
   @override

@@ -36,7 +36,7 @@ class VitalsList extends StatefulWidget {
 }
 
 class _VitalsListState extends State<VitalsList> {
-  final controller = CommonUtil().onInitVitalListController();
+  final controller = CommonUtil().onInitVitalListController(); // Initializing the controller for managing vital lists
 
   LastMeasureSyncValues? deviceValues;
   DeviceData? finalList;
@@ -130,11 +130,14 @@ class _VitalsListState extends State<VitalsList> {
         CommonUtil().askPermssionLocationBleScan();
       }
 
+      // Check if the dashboard controller is focused on patient list
       if (qurhomeDashboardController.forPatientList.value ?? false) {
+        // If focused on patient list, set the user ID to the child ID from the caregiver's patient list result
         controller.userId.value =
             qurhomeDashboardController.careGiverPatientListResult?.childId ??
                 '';
       } else {
+        // If not focused on patient list, set the user ID to the user's own ID retrieved from preferences
         controller.userId.value =
             PreferenceUtil.getStringValue(Constants.KEY_USERID) ?? '';
       }

@@ -136,7 +136,7 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
                   physics: const NeverScrollableScrollPhysics(),
                   controller: tabController,
                   children: [
-                    Center(child: QurhomePatientALert()),
+                    Center(child: QurhomePatientAlert()),
                     Center(
                         child: QurHomePatientRegimenListScreen(
                             careGiverPatientListResult:

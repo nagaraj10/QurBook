@@ -31,9 +31,11 @@ class VitalDetailController extends GetxController {
   var timerProgress = 1.0.obs;
   var isShowTimerDialog = true.obs;
 
+  // Initialize the qurhomeDashboardController using CommonUtil class method onInitQurhomeDashboardController()
   var qurhomeDashboardController =
-  CommonUtil().onInitQurhomeDashboardController();
+      CommonUtil().onInitQurhomeDashboardController();
 
+  // Initialize the vitalListController using CommonUtil class method onInitVitalListController()
   final vitalListController = CommonUtil().onInitVitalListController();
 
   String getFilterData(int selectedIndex) {
@@ -166,6 +168,7 @@ class VitalDetailController extends GetxController {
         }
       }
     } catch (e,stackTrace) {
+      // This method is used for logging errors or messages along with their stack trace
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }

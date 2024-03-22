@@ -1206,23 +1206,36 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     controller.isLoading.value = false;
   }
 
+  // Function to get the current tab widget for the patient dashboard
   Widget getPatientDashboardCurrentTab() {
+    // Variable to store the selected landing tab widget
     Widget landingTab;
+
+    // Switch statement to determine the landing tab based on the selected index
     switch (controller.patientDashboardCurSelectedIndex.value) {
+    // Case 0: Patient Alert tab
       case 0:
-        landingTab = QurhomePatientALert();
+        landingTab = QurhomePatientAlert(); // Setting the landing tab to Patient Alert widget
         break;
+    // Case 1: Patient Regimen List tab
       case 1:
         landingTab = QurHomePatientRegimenListScreen(
-            careGiverPatientListResult: controller.careGiverPatientListResult);
+          // Passing necessary parameters to the Patient Regimen List widget
+          careGiverPatientListResult: controller.careGiverPatientListResult,
+        );
         break;
+    // Case 2: Vitals List tab
       case 2:
-        landingTab = VitalsList();
+        landingTab = VitalsList(); // Setting the landing tab to Vitals List widget
         break;
+    // Default case: In case of an invalid index, default to Patient Alert tab
       default:
-        landingTab = QurhomePatientALert();
+        landingTab = QurhomePatientAlert(); // Setting the landing tab to Patient Alert widget
         break;
     }
+
+    // Returning the determined landing tab widget
     return landingTab;
   }
+
 }
