@@ -10,7 +10,8 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/view/SymptomListScreen.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/view/VitalsList.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomePatientDashboard.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomePatientAlert.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomePatientRegimenList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
@@ -78,6 +79,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final hubListViewController = CommonUtil().onInitHubListViewController();
+
+  // Define the size of the top curve based on whether the device is a tablet or not
+  double topCurveSize = (CommonUtil().isTablet ?? false) ? 20.0 : 15.0;
 
   @override
   void initState() {
@@ -265,8 +269,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
               key: _scaffoldKey,
               onDrawerChanged: (isOpen) {
                 //check drawer is open or close
-                // if closed and qurhome active restart the timer for ideal
-                if(!isOpen){
+                // if closed and qurhome is active restart the timer for ideal
+                if(!isOpen && CommonUtil.isUSRegion() &&
+                    controller.currentSelectedIndex == 0){
                   getSheelaBadgeCount();
                   //Initilaize the screen idle timer
                   if(sheelBadgeController.sheelaIconBadgeCount.value == 0 ){
@@ -570,10 +575,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 // ],
               ),
               body: controller.forPatientList.value
-                  ? QurhomePatientDashboard(
-                      careGiverPatientListResult:
-                          controller.careGiverPatientListResult,
-                    )
+                  ? getPatientDashboardCurrentTab()
                   : getCurrentTab(),
               floatingActionButton: controller.forPatientList.value
                   ? SizedBox()
@@ -663,7 +665,219 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
               bottomNavigationBar: controller.forPatientList.value
-                  ? SizedBox()
+                  ? SizedBox(
+                      height: 45.h,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            top: getBorder(),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Flexible(
+                              child: InkWell(
+                                onTap: () {
+                                  controller.patientDashboardCurSelectedIndex
+                                      .value = 0;
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: controller
+                                                .patientDashboardCurSelectedIndex ==
+                                            0
+                                        ? Color(
+                                            CommonUtil()
+                                                .getQurhomeGredientColor(),
+                                          )
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: controller
+                                                  .patientDashboardCurSelectedIndex ==
+                                              0
+                                          ? Radius.circular(topCurveSize)
+                                          : Radius.circular(0.0),
+                                      topRight: controller
+                                                  .patientDashboardCurSelectedIndex ==
+                                              0
+                                          ? Radius.circular(topCurveSize)
+                                          : Radius.circular(0.0),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Spacer(
+                                            flex: 1,
+                                          ),
+                                          Text(
+                                            strAlerts,
+                                            style: TextStyle(
+                                              color: controller
+                                                          .patientDashboardCurSelectedIndex ==
+                                                      0
+                                                  ? Colors.white
+                                                  : Color(
+                                                      CommonUtil()
+                                                          .getQurhomeGredientColor(),
+                                                    ),
+                                              fontSize: textFontSize,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Spacer(
+                                            flex: 1,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              child: InkWell(
+                                onTap: () {
+                                  controller.patientDashboardCurSelectedIndex
+                                      .value = 1;
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: controller
+                                                .patientDashboardCurSelectedIndex ==
+                                            1
+                                        ? Color(
+                                            CommonUtil()
+                                                .getQurhomeGredientColor(),
+                                          )
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: controller
+                                                  .patientDashboardCurSelectedIndex ==
+                                              1
+                                          ? Radius.circular(topCurveSize)
+                                          : Radius.circular(0.0),
+                                      topRight: controller
+                                                  .patientDashboardCurSelectedIndex ==
+                                              1
+                                          ? Radius.circular(topCurveSize)
+                                          : Radius.circular(0.0),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Spacer(
+                                            flex: 1,
+                                          ),
+                                          Text(
+                                            strRegimen,
+                                            style: TextStyle(
+                                              color: controller
+                                                          .patientDashboardCurSelectedIndex ==
+                                                      1
+                                                  ? Colors.white
+                                                  : Color(
+                                                      CommonUtil()
+                                                          .getQurhomeGredientColor(),
+                                                    ),
+                                              fontSize: textFontSize,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Spacer(
+                                            flex: 1,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              child: InkWell(
+                                onTap: () {
+                                  controller.patientDashboardCurSelectedIndex
+                                      .value = 2;
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: controller
+                                                .patientDashboardCurSelectedIndex ==
+                                            2
+                                        ? Color(
+                                            CommonUtil()
+                                                .getQurhomeGredientColor(),
+                                          )
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: controller
+                                                  .patientDashboardCurSelectedIndex ==
+                                              2
+                                          ? Radius.circular(topCurveSize)
+                                          : Radius.circular(0.0),
+                                      topRight: controller
+                                                  .patientDashboardCurSelectedIndex ==
+                                              2
+                                          ? Radius.circular(topCurveSize)
+                                          : Radius.circular(0.0),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Spacer(
+                                            flex: 1,
+                                          ),
+                                          Text(
+                                            strVitals,
+                                            style: TextStyle(
+                                              color: controller
+                                                          .patientDashboardCurSelectedIndex ==
+                                                      2
+                                                  ? Colors.white
+                                                  : Color(
+                                                      CommonUtil()
+                                                          .getQurhomeGredientColor(),
+                                                    ),
+                                              fontSize: textFontSize,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Spacer(
+                                            flex: 1,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
                   : SizedBox(
                       height: 45.h,
                       child: Container(
@@ -707,7 +921,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                             flex: 1,
                                           ),
                                           Text(
-                                            "Vitals",
+                                            strVitals,
                                             style: TextStyle(
                                               color: (CommonUtil.isUSRegion() &&
                                                       controller
@@ -804,7 +1018,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 moveToLoginPage: moveToLoginPage,
                 userChangedbool: false,
                 refresh: ((userChanged) {
-                  controller.currentSelectedTab.value = 0;
+                  controller.patientDashboardCurSelectedIndex.value = 0;
 
                   controller.forPatientList.value = false;
                   controller.isPatientClicked.value = false;
@@ -821,7 +1035,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                         userChanged: true,
                       );
                       Navigator.pop(context);
-                      controller.currentSelectedTab.value = 0;
+                      controller.patientDashboardCurSelectedIndex.value = 0;
 
                       controller.forPatientList.value = false;
                       controller.isPatientClicked.value = false;
@@ -836,7 +1050,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
                         controller.careGiverPatientListResult = null;
                         controller.careGiverPatientListResult = result;
-                        controller.currentSelectedTab.value = 0;
+                        controller.patientDashboardCurSelectedIndex.value = 0;
 
                         controller.isPatientClicked.value = true;
 
@@ -876,9 +1090,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         break;
       case 3:
         landingTab = SymptomListScreen();
-        break;
-      case 4:
-        landingTab = QurhomePatientDashboard();
         break;
       default:
         controller.isRegimenScreen.value=true;
@@ -996,7 +1207,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
           if (response != null) {
             controller.careGiverPatientListResult = null;
             controller.careGiverPatientListResult = response;
-            controller.currentSelectedTab.value = 0;
+            controller.patientDashboardCurSelectedIndex.value = 0;
 
             controller.isPatientClicked.value = true;
 
@@ -1007,4 +1218,37 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     }
     controller.isLoading.value = false;
   }
+
+  // Function to get the current tab widget for the patient dashboard
+  Widget getPatientDashboardCurrentTab() {
+    // Variable to store the selected landing tab widget
+    Widget landingTab;
+
+    // Switch statement to determine the landing tab based on the selected index
+    switch (controller.patientDashboardCurSelectedIndex.value) {
+    // Case 0: Patient Alert tab
+      case 0:
+        landingTab = QurhomePatientAlert(); // Setting the landing tab to Patient Alert widget
+        break;
+    // Case 1: Patient Regimen List tab
+      case 1:
+        landingTab = QurHomePatientRegimenListScreen(
+          // Passing necessary parameters to the Patient Regimen List widget
+          careGiverPatientListResult: controller.careGiverPatientListResult,
+        );
+        break;
+    // Case 2: Vitals List tab
+      case 2:
+        landingTab = VitalsList(); // Setting the landing tab to Vitals List widget
+        break;
+    // Default case: In case of an invalid index, default to Patient Alert tab
+      default:
+        landingTab = QurhomePatientAlert(); // Setting the landing tab to Patient Alert widget
+        break;
+    }
+
+    // Returning the determined landing tab widget
+    return landingTab;
+  }
+
 }

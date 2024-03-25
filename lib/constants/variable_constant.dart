@@ -465,6 +465,9 @@ const String strDisplayPreferences = 'Display Preferences';
 const String strSheelaNotificationPref = 'Sheela Notification Preference';
 
 const String strSkillsIntegration = 'Skills/Integration';
+const String strAppThemes = 'App Themes';
+const String strAppThemeClassic = 'Classic';
+const String strAppThemeModern = 'Modern';
 const String strIntegration = 'Integration';
 const String strPrivacyAndSecurity = 'Privacy and Security';
 

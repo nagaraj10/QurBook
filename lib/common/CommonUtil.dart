@@ -33,6 +33,7 @@ import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/QurHub/View/HubListView.dart';
+import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalListController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/SheelaRemainderConfig.dart';
@@ -6379,6 +6380,7 @@ class CommonUtil {
           //close sheela inactive dialog if already exist
           if (qurhomeDashboardController.isShowScreenIdleDialog.value) {
             Get.back();
+            qurhomeDashboardController.isScreenNotIdle.value = true;
             qurhomeDashboardController.isShowScreenIdleDialog.value = false;
           }
           SheelaReminderResponse chatList =
@@ -7730,6 +7732,18 @@ class CommonUtil {
   /// @return The formatted string representing the amount.
   static String formatAmount(num amount) =>
       '${amount % 1 == 0 ? amount : amount.toStringAsFixed(2)}';
+
+
+  VitalListController onInitVitalListController() {
+    // Check if the controller is already registered
+    if (!Get.isRegistered<VitalListController>()) {
+      // If not registered, create and register a new instance
+      Get.put<VitalListController>(VitalListController());
+    }
+
+    // Retrieve the instance of VitalListController
+    return Get.find<VitalListController>();
+  }
 }
 
 extension CapExtension on String {
