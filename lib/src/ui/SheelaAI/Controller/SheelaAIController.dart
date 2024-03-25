@@ -525,12 +525,17 @@ class SheelaAIController extends GetxController {
             KIOSK_task: (arguments?.isRetakeSurvey ?? false)
                 ? KIOSK_retakeSurvey
                 : KIOSK_survey,
-            KIOSK_eid: arguments!.eId
+            KIOSK_eid: arguments!.eId,
+            KIOSK_ISTAP_REGIMEN: (arguments?.fromRegimenByTap ?? false),
           };
           sheelaRequest.message = KIOSK_SHEELA;
           arguments!.eId = null;
         } else {
-          reqJson = {KIOSK_task: KIOSK_remind, KIOSK_eid: arguments!.eId};
+          reqJson = {
+            KIOSK_task: KIOSK_remind,
+            KIOSK_eid: arguments!.eId,
+            KIOSK_ISTAP_REGIMEN: (arguments?.fromRegimenByTap ?? false)
+          };
           sheelaRequest.message = KIOSK_SHEELA;
           arguments!.eId = null;
         }
@@ -548,7 +553,8 @@ class SheelaAIController extends GetxController {
       } else if (arguments?.sheelReminder ?? false) {
         reqJson = {
           KIOSK_task: KIOSK_messages,
-          KIOSK_chatId: arguments!.chatMessageIdSocket
+          KIOSK_chatId: arguments!.chatMessageIdSocket,
+          KIOSK_ISTAP_REGIMEN: (arguments?.fromRegimenByTap ?? false),
         };
         sheelaRequest.message = KIOSK_SHEELA;
         arguments!.sheelReminder = false;

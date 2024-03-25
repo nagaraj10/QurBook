@@ -3349,6 +3349,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       arguments: SheelaArgument(
           eId: regimen.eid ?? "",
           isSurvey: isSurvey,
+          fromRegimenByTap: true,
           isRetakeSurvey: isRetakeSurvey),
     )?.then((value) => {controller.showCurrLoggedRegimen(regimen)});
   }

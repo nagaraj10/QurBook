@@ -1324,6 +1324,7 @@ class FormDataDialogState extends State<FormDataDialog> {
         arguments: SheelaArgument(
             eId: regimen?.eid ?? "",
             isSurvey: isSurvey,
+            fromRegimenByTap: true,
             isRetakeSurvey: isRetakeSurvey),
       )?.then((value) {
         Get.back(result: true);
