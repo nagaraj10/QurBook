@@ -652,15 +652,36 @@ class SheelaBLEController extends GetxController {
         hublistController.uid = null;
         if (SheelaController.isSheelaScreenActive &&
             (SheelaController.isDeviceConnectSheelaScreen.value)) {
-          // Delay execution of the subsequent code block by 2 seconds.
-          Future.delayed(const Duration(seconds: 1)).then((value) {
-            // After 1 seconds, call getAIAPIResponseFor for call dynamic response
-            SheelaController.getAIAPIResponseFor(STR_YES, null,
-                deviceReadingsRuleSheela: model.data ?? Data());
-          });
-        }else{
+          if (model.deviceType == "SPO2") {
+            if ((model.data!.sPO2 ?? '').isNotEmpty &&
+                (model.data!.pulse ?? '').isNotEmpty) {
+              String? strTextMsg = await SheelaController.getTextTranslate(
+                  "Completed reading values. Please take your finger from the device");
+              addToConversationAndPlay(
+                SheelaResponse(
+                  recipientId: conversationType,
+                  text: strTextMsg,
+                ),
+              );
+
+              // Delay execution of the subsequent code block by 2 seconds.
+              Future.delayed(const Duration(seconds: 1)).then((value) {
+                // After 1 seconds, call getAIAPIResponseFor for call dynamic response
+                SheelaController.getAIAPIResponseFor(STR_YES, null,
+                    deviceReadingsRuleSheela: model.data ?? Data());
+              });
+            }
+          } else {
+            // Delay execution of the subsequent code block by 2 seconds.
+            Future.delayed(const Duration(seconds: 1)).then((value) {
+              // After 1 seconds, call getAIAPIResponseFor for call dynamic response
+              SheelaController.getAIAPIResponseFor(STR_YES, null,
+                  deviceReadingsRuleSheela: model.data ?? Data());
+            });
+          }
+        } else {
           final bool response =
-          await BleConnectApiProvider().uploadBleDataReadings(
+              await BleConnectApiProvider().uploadBleDataReadings(
             model,
           );
           if (!response) {
@@ -678,7 +699,6 @@ class SheelaBLEController extends GetxController {
                 ),
               );
               String? strTextMsgTwo = await SheelaController.getTextTranslate(
-                // isLastActivityDevice if false means remove the bye in string
                   "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded. Bye.");
               playConversations.add(
                 SheelaResponse(
@@ -711,10 +731,9 @@ class SheelaBLEController extends GetxController {
                 (model.data!.diastolic ?? '').isNotEmpty &&
                 (model.data!.pulse ?? '').isNotEmpty) {
               String? strTextMsg = await SheelaController.getTextTranslate(
-                // isLastActivityDevice if false means remove the bye in string
                   "Thank you. Your BP ${model.data!.systolic} "
-                      "over ${model.data!.diastolic} "
-                      "and pulse ${model.data!.pulse} are successfully recorded. Bye.");
+                  "over ${model.data!.diastolic} "
+                  "and pulse ${model.data!.pulse} are successfully recorded. Bye.");
               addToConversationAndPlay(
                 SheelaResponse(
                   recipientId: conversationType,
@@ -729,7 +748,6 @@ class SheelaBLEController extends GetxController {
           } else if (model.deviceType?.toLowerCase() == "weight") {
             if ((model.data!.weight ?? '').isNotEmpty) {
               String? strTextMsg = await SheelaController.getTextTranslate(
-                // isLastActivityDevice if false means remove the bye in string
                   "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded. Bye.");
               addToConversationAndPlay(
                 SheelaResponse(
