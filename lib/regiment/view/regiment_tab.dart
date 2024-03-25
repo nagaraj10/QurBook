@@ -157,11 +157,16 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   }
 
   getProfile() async {
+    /// Checks if the key KEY_SHOWCASE_Regimen is valid in the preferences.
+    /// Used to determine if the regimen showcase should be shown.
     isFirst = PreferenceUtil.isKeyValid(KEY_SHOWCASE_Regimen);
     profileResponseModel =
         await Provider.of<RegimentViewModel>(context, listen: false)
             .getProfile();
     if (profileResponseModel?.result?.profileData?.isDefault ?? false) {
+      /// Checks if the showcase for regiments has been shown before using
+      /// the isFirst variable. If it hasn't been shown before, opens the
+      /// schedule dialog to show the showcase.
       if (!isFirst) {
         await openScheduleDialog();
       }

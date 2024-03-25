@@ -378,7 +378,7 @@ class IosNotificationHandler {
       if (qurhomeDashboardController.isShowScreenIdleDialog.value) {
         Get.back();
         qurhomeDashboardController.isShowScreenIdleDialog.value = false;
-        qurhomeDashboardController.isScreenIdle.value = false;
+        qurhomeDashboardController.isScreenNotIdle.value = false;
       }
       if (CommonUtil().isAllowSheelaLiveReminders()) {
         if (model.eventType != null && model.eventType == strWrapperCall) {
@@ -394,8 +394,7 @@ class IosNotificationHandler {
             //Restart the timer for check the ideal flow when the qurhome is active
             final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
             if (isQurhomeActive) {
-              qurhomeDashboardController.isScreenIdle.value = true;
-              qurhomeDashboardController.checkScreenIdle(isIdeal: true);
+              qurhomeDashboardController.resetScreenIdleTimer();
             }
           });
         } else if ((model.rawBody ?? '').isNotEmpty) {
