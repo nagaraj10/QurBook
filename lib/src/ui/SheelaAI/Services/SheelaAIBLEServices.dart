@@ -665,7 +665,7 @@ class SheelaBLEController extends GetxController {
               );
 
               // Delay execution of the subsequent code block by 2 seconds.
-              Future.delayed(const Duration(seconds: 1)).then((value) {
+              Future.delayed(const Duration(seconds: 4)).then((value) {
                 // After 1 seconds, call getAIAPIResponseFor for call dynamic response
                 SheelaController.getAIAPIResponseFor(STR_YES, null,
                     deviceReadingsRuleSheela: model.data ?? Data());
