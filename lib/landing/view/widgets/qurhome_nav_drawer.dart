@@ -403,6 +403,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                           await Navigator.pushNamed(
                             context,
                             router.rt_Regimen,
+                            /// Arguments passed to the Regiment screen to indicate it was opened from the settings.
                             arguments: RegimentArguments(
                               isFromSettings: true,
                             ),

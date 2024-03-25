@@ -30,6 +30,7 @@ import 'widgets/regiment_data_card.dart';
 
 class RegimentTab extends StatefulWidget {
   final String? eventId;
+  /// Whether this RegimentArguments was created from Settings.
   final bool? isFromSettings;
 
   const RegimentTab({
@@ -173,6 +174,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   }
 
   openScheduleDialog() async {
+    /// If the patient is being rendered from the Settings screen,
+    /// return early to avoid unnecessary logic.
+    /// The Daily Schedule Dialog does not need to be shown in this case.
     if (widget.isFromSettings ?? false) {
       return;
     }
