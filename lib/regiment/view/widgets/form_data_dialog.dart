@@ -14,7 +14,6 @@ import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/service/regiment_service.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'package:myfhb/src/utils/ImageViewer.dart';
@@ -122,6 +121,8 @@ class FormDataDialogState extends State<FormDataDialog> {
   VitalsData? vitalData;
   VitalsData? vitalDataClone;
 
+  bool isFirstTimeUpdate = true;
+
   @override
   void initState() {
     super.initState();
@@ -183,9 +184,12 @@ class FormDataDialogState extends State<FormDataDialog> {
 
   @override
   Widget build(BuildContext context) {
-    initDate =
-        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-    setCurrentTime();
+    if (isFirstTimeUpdate) {
+      isFirstTimeUpdate = false;
+      initDate = DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day);
+      setCurrentTime();
+    }
     return widget.isFromQurHomeRegimen
         ? WillPopScope(
             onWillPop: () async {
@@ -684,7 +688,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                           },
                         ),
                         Text(
-                          '${timeText}',
+                          timeText,
                           style: TextStyle(fontSize: 15.sp),
                         ),
                       ],
