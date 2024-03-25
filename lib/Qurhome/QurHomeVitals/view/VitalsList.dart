@@ -26,7 +26,6 @@ import '../../../src/model/GetDeviceSelectionModel.dart';
 import '../../../src/model/user/MyProfileModel.dart';
 import '../../../src/resources/repository/health/HealthReportListForUserRepository.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
-import '../viewModel/VitalListController.dart';
 import 'VitalsDetails.dart';
 
 class VitalsList extends StatefulWidget {
@@ -37,7 +36,7 @@ class VitalsList extends StatefulWidget {
 }
 
 class _VitalsListState extends State<VitalsList> {
-  final controller = Get.put(VitalListController());
+  final controller = CommonUtil().onInitVitalListController(); // Initializing the controller for managing vital lists
 
   LastMeasureSyncValues? deviceValues;
   DeviceData? finalList;
@@ -126,9 +125,23 @@ class _VitalsListState extends State<VitalsList> {
       deviceValues = null;
       FocusManager.instance.primaryFocus!.unfocus();
 
-      if (Platform.isAndroid) {
+      if (Platform.isAndroid &&
+          !qurhomeDashboardController.forPatientList.value) {
         CommonUtil().askPermssionLocationBleScan();
       }
+
+      // Check if the dashboard controller is focused on patient list
+      if (qurhomeDashboardController.forPatientList.value ?? false) {
+        // If focused on patient list, set the user ID to the child ID from the caregiver's patient list result
+        controller.userId.value =
+            qurhomeDashboardController.careGiverPatientListResult?.childId ??
+                '';
+      } else {
+        // If not focused on patient list, set the user ID to the user's own ID retrieved from preferences
+        controller.userId.value =
+            PreferenceUtil.getStringValue(Constants.KEY_USERID) ?? '';
+      }
+
       super.initState();
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -203,7 +216,7 @@ class _VitalsListState extends State<VitalsList> {
                 currentLanguage = 'en';
               }
               PreferenceUtil.saveString(Constants.SHEELA_LANG,
-                  CommonUtil.langaugeCodes[currentLanguage] ?? 'en-IN');
+                  CommonUtil.langaugeCodes[currentLanguage] ?? strDefaultLanguage);
             }
             if (selectionResult!.result![0].profileSetting!.preColor != null &&
                 selectionResult!.result![0].profileSetting!.greColor != null) {

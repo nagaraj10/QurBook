@@ -8,6 +8,7 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:package_info/package_info.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../QurHub/Controller/HubListViewController.dart';
@@ -42,11 +43,9 @@ import '../../src/model/UpdatedDeviceModel.dart';
 import '../../src/model/user/MyProfileModel.dart';
 import '../../src/model/user/Tags.dart';
 import '../../src/model/user/user_accounts_arguments.dart';
-import '../../src/resources/network/ApiBaseHelper.dart';
 import '../../src/resources/repository/health/HealthReportListForUserRepository.dart';
 import '../../src/ui/HomeScreen.dart';
 import '../../src/ui/SheelaAI/Controller/SheelaAIController.dart';
-import '../../src/ui/SheelaAI/Services/SheelaAIAPIServices.dart';
 import '../../src/ui/settings/CaregiverSettng.dart';
 import '../../src/ui/settings/MySettings.dart';
 import '../../src/ui/settings/NonAdheranceSettingsScreen.dart';
@@ -55,6 +54,8 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import '../../unit/choose_unit.dart';
 import '../../voice_cloning/model/voice_clone_status_arguments.dart';
 import '../../widgets/GradientAppBar.dart';
+import '../app_theme_provider.dart';
+import '../models/app_theme_type.dart';
 import 'terms_and_conditon.dart';
 import 'trouble_shooting.dart';
 
@@ -137,6 +138,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   bool isDeleteAccount = false;
 
   bool isDisplayPreference = false;
+  bool isAppThemePreference = false;
   bool isSheelaNotificationPref = false;
   bool isIntegration = false;
   bool isColorPallete = false;
@@ -1089,6 +1091,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             isVitalPreferences = false;
                             isDisplayPreference = false;
                             isSheelaNotificationPref = false;
+                            isAppThemePreference = false;
                             isTouched = true;
                             isVoiceCloningChanged =
                                 null; // to restrict navigation to terms page
@@ -1128,6 +1131,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             isCareGiverCommunication = false;
                             isVitalPreferences = false;
                             isDisplayPreference = false;
+                            isAppThemePreference = false;
                             isSheelaNotificationPref = false;
                             isTouched = true;
                             _isdeviceRecognition = newValue;
@@ -1294,7 +1298,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                         ],
                       )),
               ],
-            )),
+            ),),
         Divider(),
         isCareGiver
             ? Theme(
@@ -1540,6 +1544,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                                       isDisplayDevices = true;
                                                       isDisplayPreference =
                                                           false;
+                                                      isAppThemePreference = false;
                                                       isSheelaNotificationPref =
                                                           false;
 
@@ -1686,7 +1691,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                       setState(() {});
                                     },
                                     child: Padding(
-                                        padding: EdgeInsets.all(5),
+                                        padding:  EdgeInsets.all(5),
                                         child: Container(
                                           decoration: BoxDecoration(
                                               shape: BoxShape.circle,
@@ -1713,7 +1718,74 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               ],
             ),
           ),
-        if (!CommonUtil.isUSRegion()) Divider(),
+        if (!CommonUtil.isUSRegion()) const Divider(),
+        Consumer<AppThemeProvider>(
+          builder: (
+            context,
+            AppThemeProvider themeNotifier,
+            child,
+          ) =>
+              Theme(
+            data: theme,
+            child: ExpansionTile(
+              backgroundColor: const Color(fhbColors.bgColorContainer),
+              iconColor: Colors.black,
+              initiallyExpanded: isAppThemePreference,
+              onExpansionChanged: (value) {
+                isAppThemePreference = value;
+              },
+              title: Text(variable.strAppThemes,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                      fontSize: title)),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: arrowIcon,
+              ),
+              children: EnumAppThemeType.values
+                  .map(
+                    (themeType) => RadioListTile(
+                      value: themeType,
+                      groupValue: themeNotifier.currentEnumAppThemeType,
+                      activeColor: Color(
+                        CommonUtil().getMyPrimaryColor(),
+                      ),
+                      title: Text(
+                        themeType.toShortString(),
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      controlAffinity: ListTileControlAffinity.trailing,
+                      onChanged: (value) {
+                        setState(() {
+                          isSkillIntegration = false;
+                          isCareGiverCommunication = false;
+                          isVitalPreferences = false;
+                          isDisplayPreference = false;
+                          isSheelaNotificationPref = false;
+                          isAppThemePreference = true;
+                          isTouched = true;
+                          isVoiceCloningChanged = null;
+
+                          themeNotifier.appThemeType =
+                              value ?? EnumAppThemeType.Classic;
+                          PreferenceUtil.saveCurrentAppTheme(
+                            themeNotifier.currentEnumAppThemeType
+                                .toShortString(),
+                          );
+                          createAppColorSelection(
+                            preColor,
+                            greColor,
+                          );
+                        });
+                      },
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ),
+        const Divider(),
         (CommonUtil.isUSRegion() &&
                 qurhomeDashboardController.isVitalModuleDisable.value)
             ? Theme(

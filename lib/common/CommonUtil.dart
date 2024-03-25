@@ -33,6 +33,7 @@ import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/QurHub/View/HubListView.dart';
+import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalListController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/SheelaRemainderConfig.dart';
@@ -3084,7 +3085,7 @@ class CommonUtil {
   };
 
   static const Map<String, String> langaugeCodes = {
-    'en': 'en-IN',
+    'en': strDefaultLanguage,
     'ta': 'ta-IN',
     'te': 'te-IN',
     'hi': 'hi-IN',
@@ -5369,7 +5370,7 @@ class CommonUtil {
     );
   }
 
-  void callQueueNotificationPostApi(var json,{bool isNeedDialog = true}) {
+  void callQueueNotificationPostApi(var json, {bool isNeedDialog = true}) {
     //if (avoidExtraNotification) {
     //avoidExtraNotification = false;
     queueServices
@@ -5383,7 +5384,7 @@ class CommonUtil {
             sheelaAIController.sheelaIconBadgeCount.value =
                 (value.result?.queueCount ?? 0);
             // isNeedDialog condition for showing the dialog or not
-            if(isNeedDialog){
+            if (isNeedDialog) {
               CommonUtil().dialogForSheelaQueue(Get.context!);
             }
           }
@@ -6272,15 +6273,17 @@ class CommonUtil {
                     CommonUtil.supportedLanguages
                         .forEach((language, languageCode) {
                       if (currentLanguage == languageCode) {
-                        PreferenceUtil.saveString(SHEELA_LANG,
-                            CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
+                        PreferenceUtil.saveString(
+                            SHEELA_LANG,
+                            CommonUtil.langaugeCodes[languageCode] ??
+                                strDefaultLanguage);
                       }
                     });
                   }
                 }
               });
             } else {
-              PreferenceUtil.saveString(SHEELA_LANG, 'en-IN');
+              PreferenceUtil.saveString(SHEELA_LANG, strDefaultLanguage);
             }
             if (profileSetting?.preferredMeasurement != null) {
               PreferredMeasurement preferredMeasurement =
@@ -6372,12 +6375,13 @@ class CommonUtil {
           isAllowSheelaLiveReminders()) {
         if (chatListresponse != null) {
           //Check whether the sheela inactive dialog is there
-          var qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
+          var qurhomeDashboardController =
+              CommonUtil().onInitQurhomeDashboardController();
           //close sheela inactive dialog if already exist
-          if(qurhomeDashboardController.isShowScreenIdleDialog.value){
+          if (qurhomeDashboardController.isShowScreenIdleDialog.value) {
             Get.back();
-            qurhomeDashboardController.isShowScreenIdleDialog.value=false;
-            qurhomeDashboardController.isScreenIdle.value=false;
+            qurhomeDashboardController.isScreenNotIdle.value = true;
+            qurhomeDashboardController.isShowScreenIdleDialog.value = false;
           }
           SheelaReminderResponse chatList =
               SheelaReminderResponse.fromJson(chatListresponse);
@@ -6391,9 +6395,8 @@ class CommonUtil {
               )?.then((value) {
                 //Start the timer if qurhome is true
                 final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
-                if(isQurhomeActive) {
-                  qurhomeDashboardController.isScreenIdle.value = true;
-                  qurhomeDashboardController.checkScreenIdle(isIdeal: true);
+                if (isQurhomeActive) {
+                  qurhomeDashboardController.resetScreenIdleTimer();
                 }
               });
             }
@@ -6508,7 +6511,10 @@ class CommonUtil {
     return sheelaAIController;
   }
 
-  void goToAppointmentDetailScreen(String appointmentId,{Function(bool)? backFromAppointmentScreen,}) {
+  void goToAppointmentDetailScreen(
+    String appointmentId, {
+    Function(bool)? backFromAppointmentScreen,
+  }) {
     if (!Get.isRegistered<AppointmentDetailsController>())
       Get.lazyPut(() => AppointmentDetailsController());
     AppointmentDetailsController appointmentDetailsController =
@@ -7547,7 +7553,7 @@ class CommonUtil {
 
   // This function is responsible for handling the Sheela activity remainder invocation.
   getActivityRemainderInvokeSheela(
-      var passedValArr, SheelaAIController sheelaAIController) {
+      var passedValArr, SheelaAIController sheelaAIController) async {
     var reqJson = {
       KIOSK_task: KIOSK_remind,
       KIOSK_eid: passedValArr[1].toString(),
@@ -7560,14 +7566,22 @@ class CommonUtil {
         CommonUtil().callQueueNotificationPostApi(reqJson);
       } else {
         // If Sheela screen is not active and queue dialog is showing, dismiss it
+        var qurhomeDashboardController =
+            CommonUtil().onInitQurhomeDashboardController();
+
         if (sheelaAIController.isQueueDialogShowing.value) {
           Get.back();
           sheelaAIController.isQueueDialogShowing.value = false;
+        } else if (qurhomeDashboardController.isShowScreenIdleDialog.value) {
+          qurhomeDashboardController.isScreenNotIdle.value = true;
+          Get.back();
+          qurhomeDashboardController.isShowScreenIdleDialog.value = false;
         }
         // Delayed navigation to Sheela screen
-        Future.delayed(Duration(milliseconds: 500), () async {
+        await Future.delayed(Duration(milliseconds: 500), () async {
           // call queue insert api for adding the queue before navigate
-          CommonUtil().callQueueNotificationPostApi(reqJson,isNeedDialog: false);
+          CommonUtil()
+              .callQueueNotificationPostApi(reqJson, isNeedDialog: false);
           CommonUtil().getToSheelaNavigate(passedValArr, sheelaAIController,
               isFromActivityRemainderInvokeSheela: true);
         });
@@ -7594,14 +7608,19 @@ class CommonUtil {
       )!
           .then((value) {
         try {
-          final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
-          var qurhomeDashboardController = CommonUtil()
-              .onInitQurhomeDashboardController();
-          sheelaAIController.getSheelaBadgeCount(isNeedSheelaDialog:isQurhomeActive?false: true);
-          if(isQurhomeActive) {
-            //Initialize the timer when the qurhome is ideal
-            qurhomeDashboardController.isScreenIdle.value = true;
-            qurhomeDashboardController.checkScreenIdle();
+
+          var qurhomeDashboardController =
+              CommonUtil().onInitQurhomeDashboardController();
+          //Sheela badge count 0 means restart the timer for ideal
+          if (sheelaAIController.sheelaIconBadgeCount.value == 0 &&
+              qurhomeDashboardController.isRegimenScreen.value) {
+            qurhomeDashboardController.resetScreenIdleTimer();
+          } else {
+            //Update the Sheela badge count
+            sheelaAIController.getSheelaBadgeCount(
+                isNeedSheelaDialog: true,
+                isFromQurHomeRegimen:
+                    qurhomeDashboardController.isRegimenScreen.value);
           }
         } catch (e, stackTrace) {
           CommonUtil().appLogs(message: e, stackTrace: stackTrace);
@@ -7669,7 +7688,7 @@ class CommonUtil {
     // Check if the preferredLanguage is not null and matches one of the English language codes
     try {
       if (preferredLanguage != null &&
-          (preferredLanguage == 'en-IN' || // English - India
+          (preferredLanguage == strDefaultLanguage || // English - India
               preferredLanguage == 'en' || // English
               preferredLanguage == 'undef')) {
         // Undefined language (assuming 'undef' represents a special case)
@@ -7713,6 +7732,18 @@ class CommonUtil {
   /// @return The formatted string representing the amount.
   static String formatAmount(num amount) =>
       '${amount % 1 == 0 ? amount : amount.toStringAsFixed(2)}';
+
+
+  VitalListController onInitVitalListController() {
+    // Check if the controller is already registered
+    if (!Get.isRegistered<VitalListController>()) {
+      // If not registered, create and register a new instance
+      Get.put<VitalListController>(VitalListController());
+    }
+
+    // Retrieve the instance of VitalListController
+    return Get.find<VitalListController>();
+  }
 }
 
 extension CapExtension on String {

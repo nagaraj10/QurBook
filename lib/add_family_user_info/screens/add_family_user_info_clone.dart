@@ -657,7 +657,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       selectedLanguage = langCode;
     } else {
       selectedLanguage = "en";
-      PreferenceUtil.saveString(SHEELA_LANG, 'en-IN');
+      PreferenceUtil.saveString(SHEELA_LANG, strDefaultLanguage);
     }
     sheelaAIcontroller!.langaugeDropdownList.forEach((language, languageCode) {
       languagesList.add(
@@ -3069,7 +3069,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     }
 
     PreferenceUtil.saveString(
-        SHEELA_LANG, CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
+        SHEELA_LANG, CommonUtil.langaugeCodes[languageCode] ?? strDefaultLanguage);
   }
 
   void setUserId() {

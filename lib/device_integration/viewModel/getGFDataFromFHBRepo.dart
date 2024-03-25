@@ -9,19 +9,19 @@ class GetGFDataFromFHBRepo {
   Map<String, dynamic> body = {};
 
   Future<dynamic> _getDataByDataType(String params,
-      {String filter = ''}) async {
+      {String filter = '',String? userId}) async {
     try {
       _deviceHealthRecord = DeviceHealthRecord();
       print(params);
       var response = await _deviceHealthRecord!
-          .queryBydeviceInterval(params, filter: filter);
+          .queryBydeviceInterval(params, filter: filter,userId: userId);
       return response;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
   }
 
-  Future<dynamic> getBPData({String filter = ''}) async {
+  Future<dynamic> getBPData({String filter = '',String? userId}) async {
     body.clear();
     var now = DateTime.now();
     final currentdate = DateTime(now.year, now.month, now.day + 1);
@@ -33,7 +33,7 @@ class GetGFDataFromFHBRepo {
     body[strdeviceDataType] = strDataTypeBP;
     final params = json.encode(body);
     try {
-      final response = await _getDataByDataType(params, filter: filter);
+      final response = await _getDataByDataType(params, filter: filter,userId: userId);
       final res = json.encode(response);
       return res;
     } catch (e,stackTrace) {
@@ -61,7 +61,7 @@ class GetGFDataFromFHBRepo {
     }
   }
 
-  Future<dynamic> getOxygenSaturationData({String filter = ''}) async {
+  Future<dynamic> getOxygenSaturationData({String filter = '',String? userId}) async {
     body.clear();
     var now = DateTime.now();
     final currentdate = DateTime(now.year, now.month, now.day + 1);
@@ -73,7 +73,7 @@ class GetGFDataFromFHBRepo {
     body[strdeviceDataType] = strOxgenSaturation;
     final params = json.encode(body);
     try {
-      final response = await _getDataByDataType(params, filter: filter);
+      final response = await _getDataByDataType(params, filter: filter,userId: userId);
       var res = json.encode(response);
       return res;
     } catch (e,stackTrace) {
@@ -81,7 +81,7 @@ class GetGFDataFromFHBRepo {
     }
   }
 
-  Future<dynamic> getWeightData({String filter = ''}) async {
+  Future<dynamic> getWeightData({String filter = '',String? userId}) async {
     body.clear();
     var now = DateTime.now();
     final currentdate = DateTime(now.year, now.month, now.day + 1);
@@ -93,7 +93,7 @@ class GetGFDataFromFHBRepo {
     body[strdeviceDataType] = strWeight;
     var params = json.encode(body);
     try {
-      final response = await _getDataByDataType(params, filter: filter);
+      final response = await _getDataByDataType(params, filter: filter,userId: userId);
       var res = json.encode(response);
       return res;
     } catch (e,stackTrace) {
@@ -101,7 +101,7 @@ class GetGFDataFromFHBRepo {
     }
   }
 
-  Future<dynamic> getBloodGlucoseData({String filter = ''}) async {
+  Future<dynamic> getBloodGlucoseData({String filter = '',String? userId}) async {
     body.clear();
     var now = DateTime.now();
     final currentdate = DateTime(now.year, now.month, now.day + 1);
@@ -113,7 +113,7 @@ class GetGFDataFromFHBRepo {
     body[strdeviceDataType] = strGlusoceLevel;
     var params = json.encode(body);
     try {
-      final response = await _getDataByDataType(params, filter: filter);
+      final response = await _getDataByDataType(params, filter: filter,userId: userId);
       final res = json.encode(response);
       return res;
     } catch (e,stackTrace) {
@@ -121,7 +121,7 @@ class GetGFDataFromFHBRepo {
     }
   }
 
-  Future<dynamic> getBodyTemperatureData({String filter = ''}) async {
+  Future<dynamic> getBodyTemperatureData({String filter = '',String? userId}) async {
     body.clear();
     var now = DateTime.now();
     final currentdate = DateTime(now.year, now.month, now.day + 1);
@@ -133,7 +133,7 @@ class GetGFDataFromFHBRepo {
     body[strdeviceDataType] = strTemperature;
     final params = json.encode(body);
     try {
-      final response = await _getDataByDataType(params, filter: filter);
+      final response = await _getDataByDataType(params, filter: filter,userId: userId);
       final res = json.encode(response);
       return res;
     } catch (e,stackTrace) {
@@ -141,12 +141,12 @@ class GetGFDataFromFHBRepo {
     }
   }
 
-  Future<dynamic> getLatestDeviceHealthRecord() async {
+  Future<dynamic> getLatestDeviceHealthRecord({String? userId}) async {
     try {
       if (_deviceHealthRecord == null) {
         _deviceHealthRecord = DeviceHealthRecord();
       }
-      final response = await _deviceHealthRecord!.getlastMeasureSync();
+      final response = await _deviceHealthRecord!.getlastMeasureSync(userId:userId);
       return response;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);

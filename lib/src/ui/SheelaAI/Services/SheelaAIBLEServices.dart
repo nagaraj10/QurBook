@@ -281,30 +281,34 @@ class SheelaBLEController extends GetxController {
                       break;
                     }
                   } else {
-                    Get.to(
-                      () => SheelaAIMainScreen(
-                        arguments: SheelaArgument(
-                          deviceType: hublistController.bleDeviceType,
-                          takeActiveDeviceReadings: true,
+                    // Check if internet connection is available
+                    if (SheelaController.isInternetConnection.value) {
+                      Get.to(
+                        () => SheelaAIMainScreen(
+                          arguments: SheelaArgument(
+                            deviceType: hublistController.bleDeviceType,
+                            takeActiveDeviceReadings: true,
+                          ),
                         ),
-                      ),
-                    )?.then((_) {
-                      Future.delayed(const Duration(seconds: 1)).then((_) {
-                        if (Get.isRegistered<VitalDetailController>())
-                          Get.find<VitalDetailController>().getData();
-                      });
+                      )?.then((_) {
+                        Future.delayed(const Duration(seconds: 1)).then((_) {
+                          if (Get.isRegistered<VitalDetailController>())
+                            Get.find<VitalDetailController>().getData();
+                        });
 
-                      Future.delayed(const Duration(seconds: 1)).then((_) {
-                        if (Get.isRegistered<QurhomeRegimenController>()) {
-                          Get.find<QurhomeRegimenController>()
-                              .currLoggedEID
-                              .value = hublistController.eid ?? '';
-                          Get.find<QurhomeRegimenController>().getRegimenList();
-                        }
+                        Future.delayed(const Duration(seconds: 1)).then((_) {
+                          if (Get.isRegistered<QurhomeRegimenController>()) {
+                            Get.find<QurhomeRegimenController>()
+                                .currLoggedEID
+                                .value = hublistController.eid ?? '';
+                            Get.find<QurhomeRegimenController>()
+                                .getRegimenList();
+                          }
+                        });
                       });
-                    });
-                    // this is for disable the isSameVitalDevice for other device try to connect
-                    SheelaController.isSameVitalDevice = false;
+                      // this is for disable the isSameVitalDevice for other device try to connect
+                      SheelaController.isSameVitalDevice = false;
+                    }
                   }
                 }
               }

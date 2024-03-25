@@ -53,6 +53,7 @@ const String KEY_UN_SUBCRIBE_BTN = 'unSubscribeBtn';
 const String KEY_IS_Active_Membership_SELECTED = 'isactivemembershipSelected';
 const String KEY_IS_Active_Qurhome = 'isactiveQurhome';
 const String KEY_IS_Active_Chat_Qurhome = 'isactiveQurhomeChat';
+const String KEY_APP_THEME_TYPE = 'keyAppThemeType';
 const String KEY_IS_Active_Sheela_Preview = 'isactiveSheelaAttachmentChat';
 const String QurhomeDefaultUI = 'QurhomeDefaultUI';
 const String IsAppLockChecked = "IsAppLockChecked";
@@ -1224,6 +1225,9 @@ const strAppointmentStartTimeShouldBeSetLaterToTheCurrentTime =
     'Appointment start time should be set later to the current time.';
 const String strProviderBasedPatientsHaveViewOnlyAccess =
     'This activity is provider-based. Patients have view-only access.';
+
+// Default language set to English (India)
+const String strDefaultLanguage = 'en-IN';
 
 class DoctorFilterConstants {
   static List<String> yearOfExperienceList = [
