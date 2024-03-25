@@ -71,7 +71,6 @@ class RegimentScreen extends StatelessWidget {
         },
         child: RegimentTab(
           eventId: aruguments?.eventId,
-          isFromSettings: aruguments?.isFromSettings,
         ),
       ),
     );

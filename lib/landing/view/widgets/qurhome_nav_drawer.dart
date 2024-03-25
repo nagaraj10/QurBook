@@ -20,7 +20,6 @@ import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../common/FHBBasicWidget.dart';
 import '../../../more_menu/screens/more_menu_screen.dart';
-import '../../../regiment/models/regiment_arguments.dart';
 import '../../../src/model/user/MyProfileModel.dart';
 import '../../../src/model/user/user_accounts_arguments.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
@@ -400,14 +399,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                             Get.find<QurhomeDashboardController>()
                                 .updateBLETimer(Enable: false);
 
-                          await Navigator.pushNamed(
-                            context,
-                            router.rt_Regimen,
-                            /// Arguments passed to the Regiment screen to indicate it was opened from the settings.
-                            arguments: RegimentArguments(
-                              isFromSettings: true,
-                            ),
-                          );
+                          await Navigator.pushNamed(context, router.rt_Regimen);
                         },
                       ),
                       Visibility(

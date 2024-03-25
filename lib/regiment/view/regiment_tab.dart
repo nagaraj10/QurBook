@@ -30,13 +30,8 @@ import 'widgets/regiment_data_card.dart';
 
 class RegimentTab extends StatefulWidget {
   final String? eventId;
-  /// Whether this RegimentArguments was created from Settings.
-  final bool? isFromSettings;
 
-  const RegimentTab({
-    this.eventId,
-    this.isFromSettings,
-  });
+  const RegimentTab({this.eventId});
 
   @override
   _RegimentTabState createState() => _RegimentTabState();
@@ -162,11 +157,14 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   }
 
   getProfile() async {
+    isFirst = PreferenceUtil.isKeyValid(KEY_SHOWCASE_Regimen);
     profileResponseModel =
         await Provider.of<RegimentViewModel>(context, listen: false)
             .getProfile();
     if (profileResponseModel?.result?.profileData?.isDefault ?? false) {
-      await openScheduleDialog();
+      if (!isFirst) {
+        await openScheduleDialog();
+      }
       showShowcase();
     } else {
       showShowcase();
@@ -174,12 +172,6 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   }
 
   openScheduleDialog() async {
-    /// If the patient is being rendered from the Settings screen,
-    /// return early to avoid unnecessary logic.
-    /// The Daily Schedule Dialog does not need to be shown in this case.
-    if (widget.isFromSettings ?? false) {
-      return;
-    }
     if (profileResponseModel!.isSuccess! &&
         profileResponseModel?.result?.profileData != null &&
         _regimentViewModel.regimentStatus != RegimentStatus.DialogOpened) {
