@@ -115,7 +115,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       });
       controller.currLoggedEID.value = "";
       controller.isFirstTime.value = true;
-
       getUnitValue();
       Future.delayed(Duration.zero, () async {
         onInit();
@@ -315,17 +314,15 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         body: Listener(
           behavior: HitTestBehavior.opaque,
           onPointerDown: (event) {
-            //check whether the any interaction is happen and close the timer
-            qurhomeDashboardController.getIdleTimer?.cancel();
+            //check whether the any interaction is happen
             if(qurhomeDashboardController.isShowScreenIdleDialog.value){
               //Sheela inactive dialog exist close the dialog
               Get.back();
+              qurhomeDashboardController.isScreenNotIdle.value=true;
               qurhomeDashboardController.isShowScreenIdleDialog.value=false;
-              qurhomeDashboardController.isScreenIdle.value=false;
             }
             //restart the timer for check the ideal flow
-            qurhomeDashboardController.isScreenIdle.value=true;
-            qurhomeDashboardController.checkScreenIdle();
+             qurhomeDashboardController.resetScreenIdleTimer();
           },
           child: Stack(
             children: [
@@ -643,14 +640,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
     return InkWell(
       onTap: () async {
-        qurhomeDashboardController.getIdleTimer!.cancel();
-        qurhomeDashboardController.isScreenIdle.value=false;
+        qurhomeDashboardController.isScreenNotIdle.value =true;
         if (regimen.activityOrgin == strAppointmentRegimen) {
           if ((regimen.eid != null) && (regimen.eid != '')) {
             CommonUtil().goToAppointmentDetailScreen(regimen.eid,backFromAppointmentScreen: (value){
               //Initialize the timer when the qurhome is ideal
-              qurhomeDashboardController.isScreenIdle.value=true;
-              qurhomeDashboardController.checkScreenIdle();
+              // qurhomeDashboardController.isScreenIdle.value=true;
+              qurhomeDashboardController.resetScreenIdleTimer();
             });
           }
         } else {
@@ -682,8 +678,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               }
               showRegimenDialog(regimen, itemIndex,onTapHideDialog: (value) {
                 if(value){
-                  qurhomeDashboardController.isScreenIdle.value=true;
-                  qurhomeDashboardController.checkScreenIdle();
+                  qurhomeDashboardController.resetScreenIdleTimer();
                 }
               },);            } catch (error, stackTrace) {
               CommonUtil().appLogs(message: error, stackTrace: stackTrace);
@@ -1125,6 +1120,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                 child: InkWell(
                                   onTap: () {
                                     Navigator.pop(context);
+                                    onTapHideDialog?.call(true);
                                   },
                                   child: Image.asset(
                                     'assets/Qurhome/remove.png',
@@ -1245,6 +1241,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             }
                             QurPlanReminders.updateReminderswithLocal(data);
                             Navigator.pop(context);
+                            onTapHideDialog?.call(true);
                           },
                           child: Text('Snooze'),
                           style: ElevatedButton.styleFrom(

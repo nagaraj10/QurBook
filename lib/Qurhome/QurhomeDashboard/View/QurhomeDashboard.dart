@@ -159,7 +159,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
         //Initilaize the screen idle timer
         if(sheelBadgeController.sheelaIconBadgeCount.value == 0){
-          controller.isScreenIdle.value=true;
           controller.checkScreenIdle();
         }
       });
@@ -198,8 +197,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       controller.updateBLETimer(Enable: false);
       MyFHB.routeObserver.unsubscribe(this);
       controller.clear();
-      controller.getIdleTimer!.cancel();
-      controller.isScreenIdle.value=false;
       super.dispose();
 
     } catch (e, stackTrace) {
@@ -270,8 +267,11 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 //check drawer is open or close
                 // if closed and qurhome active restart the timer for ideal
                 if(!isOpen){
-                  controller.isScreenIdle.value=true;
-                  controller.checkScreenIdle();
+                  getSheelaBadgeCount();
+                  //Initilaize the screen idle timer
+                  if(sheelBadgeController.sheelaIconBadgeCount.value == 0 ){
+                    controller.resetScreenIdleTimer();
+                  }
                 }
               },
               appBar: AppBar(
@@ -491,8 +491,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                       : 24.0.sp,
                                   onPressed: () {
                                     //remove the ideal timer when drawer is open
-                                    controller.getIdleTimer!.cancel();
-                                    controller.isScreenIdle.value=false;
+                                     controller.isScreenNotIdle.value=true;
                                     _scaffoldKey.currentState?.openDrawer();
                                   },
                                 ),
@@ -516,6 +515,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                             colors: Colors.black,
                             size: CommonUtil().isTablet! ? 38.0 : 24.0,
                             onTap: () {
+                              controller.isScreenNotIdle.value=true;
                               Get.back();
                             },
                           )
@@ -590,25 +590,27 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                               backgroundColor: Colors.transparent,
                               elevation: 0,
                               onPressed: () {
+                                controller.isScreenNotIdle.value=true;
                                 if (sheelBadgeController
                                         .sheelaIconBadgeCount.value >
                                     0) {
-                                  controller.isScreenIdle.value = false;
                                   Get.toNamed(
                                     rt_Sheela,
                                     arguments: SheelaArgument(
                                       rawMessage: sheelaQueueShowRemind,
                                     ),
                                   )?.then((value) {
-                                    getSheelaBadgeCount();
-                                    controller.isScreenIdle.value=true;
-                                    controller.checkScreenIdle();
+                                    if(sheelBadgeController.sheelaIconBadgeCount.value == 0 &&
+                                     controller.isRegimenScreen.value){
+                                      controller.resetScreenIdleTimer();
+                                    }else{
+                                      getSheelaBadgeCount();
+                                    }
                                   });
                                 } else {
                                   String sheela_lang =
                                       PreferenceUtil.getStringValue(
                                           SHEELA_LANG)!;
-                                  controller.isScreenIdle.value = false;
                                   Get.toNamed(
                                     rt_Sheela,
                                     arguments: SheelaArgument(
@@ -617,9 +619,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                       langCode: (sheela_lang),
                                     ),
                                   )?.then((value) {
-                                    getSheelaBadgeCount();
-                                    controller.isScreenIdle.value=true;
-                                    controller.checkScreenIdle();
+                                    if(sheelBadgeController.sheelaIconBadgeCount.value == 0 &&
+                                        controller.isRegimenScreen.value){
+                                      controller.resetScreenIdleTimer();
+                                    }else{
+                                      getSheelaBadgeCount();
+                                    }
                                   });
                                 }
                               },
@@ -673,6 +678,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                             Flexible(
                               child: InkWell(
                                 onTap: () {
+                                  controller.isScreenNotIdle.value=true;
                                   if (CommonUtil.isUSRegion() &&
                                       controller.isVitalModuleDisable.value) {
                                     FlutterToast().getToast(
@@ -732,6 +738,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                             Flexible(
                               child: InkWell(
                                 onTap: () {
+                                  controller.isScreenNotIdle.value=true;
                                   if (CommonUtil.isUSRegion() &&
                                       controller.isSymptomModuleDisable.value) {
                                     FlutterToast().getToast(
@@ -861,6 +868,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     Widget landingTab;
     switch (controller.currentSelectedIndex.value) {
       case 1:
+        controller.isRegimenScreen.value=true;
         landingTab = QurHomeRegimenScreen();
         break;
       case 2:
@@ -873,6 +881,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         landingTab = QurhomePatientDashboard();
         break;
       default:
+        controller.isRegimenScreen.value=true;
         landingTab = QurHomeRegimenScreen();
         break;
     }
