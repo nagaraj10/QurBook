@@ -30,8 +30,12 @@ import 'widgets/regiment_data_card.dart';
 
 class RegimentTab extends StatefulWidget {
   final String? eventId;
+  final bool? isFromSettings;
 
-  const RegimentTab({this.eventId});
+  const RegimentTab({
+    this.eventId,
+    this.isFromSettings,
+  });
 
   @override
   _RegimentTabState createState() => _RegimentTabState();
@@ -169,6 +173,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
   }
 
   openScheduleDialog() async {
+    if (widget.isFromSettings ?? false) {
+      return;
+    }
     if (profileResponseModel!.isSuccess! &&
         profileResponseModel?.result?.profileData != null &&
         _regimentViewModel.regimentStatus != RegimentStatus.DialogOpened) {
