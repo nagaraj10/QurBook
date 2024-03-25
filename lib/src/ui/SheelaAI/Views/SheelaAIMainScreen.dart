@@ -508,7 +508,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.stopTTS();
     controller.canSpeak = false;
     controller.isSheelaScreenActive = false;
-    // controller.getSheelaBadgeCount();
+    controller.getSheelaBadgeCount();
     controller.updateTimer(enable: false);
     controller.clearTimer();
     controller.clearReconnectTimer();
