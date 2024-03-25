@@ -55,7 +55,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     // Set the value of isDeviceConnectSheelaScreen to false in the controller.
     controller.isDeviceConnectSheelaScreen.value = false;
 
-// Set the value of isSameVitalDevice to false in the controller.
+    // Set the value of isSameVitalDevice to false in the controller.
     controller.isSameVitalDevice = false;
 
 

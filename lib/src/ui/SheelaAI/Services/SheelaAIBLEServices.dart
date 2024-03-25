@@ -650,13 +650,22 @@ class SheelaBLEController extends GetxController {
         model.ackLocal = actualDateTime;
         hublistController.eid = null;
         hublistController.uid = null;
+        // Check if Sheela screen is active and device is connected to Sheela screen
         if (SheelaController.isSheelaScreenActive &&
             (SheelaController.isDeviceConnectSheelaScreen.value)) {
+
+          // Check if device type is SPO2
           if (model.deviceType == "SPO2") {
+
+            // Check if SPO2 and pulse data are not empty
             if ((model.data!.sPO2 ?? '').isNotEmpty &&
                 (model.data!.pulse ?? '').isNotEmpty) {
+
+              // Get translated text message
               String? strTextMsg = await SheelaController.getTextTranslate(
                   "Completed reading values. Please take your finger from the device");
+
+              // Add translated text message to conversation and play
               addToConversationAndPlay(
                 SheelaResponse(
                   recipientId: conversationType,
@@ -664,17 +673,17 @@ class SheelaBLEController extends GetxController {
                 ),
               );
 
-              // Delay execution of the subsequent code block by 2 seconds.
+              // Delay execution of the subsequent code block by 4 seconds.
               Future.delayed(const Duration(seconds: 4)).then((value) {
-                // After 1 seconds, call getAIAPIResponseFor for call dynamic response
+                // After 4 seconds, call getAIAPIResponseFor to process dynamic response
                 SheelaController.getAIAPIResponseFor(STR_YES, null,
                     deviceReadingsRuleSheela: model.data ?? Data());
               });
             }
           } else {
-            // Delay execution of the subsequent code block by 2 seconds.
+            // Delay execution of the subsequent code block by 1 second.
             Future.delayed(const Duration(seconds: 1)).then((value) {
-              // After 1 seconds, call getAIAPIResponseFor for call dynamic response
+              // After 1 second, call getAIAPIResponseFor to process dynamic response
               SheelaController.getAIAPIResponseFor(STR_YES, null,
                   deviceReadingsRuleSheela: model.data ?? Data());
             });

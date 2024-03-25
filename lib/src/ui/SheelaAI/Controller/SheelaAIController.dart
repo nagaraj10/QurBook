@@ -463,7 +463,9 @@ class SheelaAIController extends GetxController {
         // Update additionalInfo with the file URL and request type by setting isSkipReminderCount to true.
         additionalInfo?[isSaveDeviceReading] = true;
 
-        additionalInfo?[deviceReadingValues] = deviceReadingsRuleSheela??Data();
+        // for deviceReadingsRuleSheela after racodring the values from devices
+        additionalInfo?[deviceReadingValues] =
+            deviceReadingsRuleSheela ?? Data();
 
         // Reset isDeviceConnectSheelaScreen value to false after processing.
         isDeviceConnectSheelaScreen.value = false;
@@ -522,7 +524,7 @@ class SheelaAIController extends GetxController {
                 ? KIOSK_retakeSurvey
                 : KIOSK_survey,
             KIOSK_eid: arguments!.eId,
-            KIOSK_ISTAP_REGIMEN: (arguments?.fromRegimenByTap ?? false),
+            KIOSK_ISTAP_REGIMEN: (arguments?.fromRegimenByTap ?? false), // for new flag reg flow only from regimen on tap sheela
           };
           sheelaRequest.message = KIOSK_SHEELA;
           arguments!.eId = null;
@@ -530,7 +532,7 @@ class SheelaAIController extends GetxController {
           reqJson = {
             KIOSK_task: KIOSK_remind,
             KIOSK_eid: arguments!.eId,
-            KIOSK_ISTAP_REGIMEN: (arguments?.fromRegimenByTap ?? false)
+            KIOSK_ISTAP_REGIMEN: (arguments?.fromRegimenByTap ?? false) // for new flag reg flow only from regimen on tap sheela
           };
           sheelaRequest.message = KIOSK_SHEELA;
           arguments!.eId = null;
@@ -550,7 +552,7 @@ class SheelaAIController extends GetxController {
         reqJson = {
           KIOSK_task: KIOSK_messages,
           KIOSK_chatId: arguments!.chatMessageIdSocket,
-          KIOSK_ISTAP_REGIMEN: (arguments?.fromRegimenByTap ?? false),
+          KIOSK_ISTAP_REGIMEN: (arguments?.fromRegimenByTap ?? false), // for new flag reg flow only from regimen on tap sheela
         };
         sheelaRequest.message = KIOSK_SHEELA;
         arguments!.sheelReminder = false;

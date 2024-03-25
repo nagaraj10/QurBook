@@ -1083,6 +1083,7 @@ const String strAddressLine = 'address_line_1';
 // isLast activity continue means call this isSaveDeviceReading to api in payload
 const String isSaveDeviceReading = 'isSaveDeviceReading';
 
+// for device reading flow
 const String deviceReadingValues = 'deviceReading';
 
 // Define a constant string for storing the current notification ID.
