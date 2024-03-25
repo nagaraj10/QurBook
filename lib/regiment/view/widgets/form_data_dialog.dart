@@ -121,7 +121,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   VitalsData? vitalData;
   VitalsData? vitalDataClone;
 
-  bool isFirstTimeUpdate = true;
+  bool isFirstTimeUpdate = true; // Flag to indicate if this is the first time update is being performed
 
   @override
   void initState() {
@@ -184,6 +184,7 @@ class FormDataDialogState extends State<FormDataDialog> {
 
   @override
   Widget build(BuildContext context) {
+    // Check if this is the first time update is being performed
     if (isFirstTimeUpdate) {
       isFirstTimeUpdate = false;
       initDate = DateTime(
