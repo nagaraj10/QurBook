@@ -22,9 +22,18 @@ class AppThemeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  getPreferences() async {
-    final currentAppTheme = await PreferenceUtil.getCurrentAppTheme();
-    _currentEnumAppThemeType = EnumAppThemeType.fromName(currentAppTheme);
+  EnumAppThemeType getEnumAppThemeType() {
+    final currentAppTheme = PreferenceUtil.getCurrentAppTheme();
+    return EnumAppThemeType.fromName(currentAppTheme);
+  }
+
+
+  void resetEnumAppThemeType() {
+    appThemeType = EnumAppThemeType.Classic;
+  }
+
+  getPreferences() {
+    _currentEnumAppThemeType = getEnumAppThemeType();
     notifyListeners();
   }
 }
