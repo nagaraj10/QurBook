@@ -5373,7 +5373,6 @@ class CommonUtil {
   void callQueueNotificationPostApi(var json, {bool isNeedDialog = true}) {
     //if (avoidExtraNotification) {
     //avoidExtraNotification = false;
-    var sheelaRemindJson = json;
     queueServices
         .postNotificationQueue(PreferenceUtil.getStringValue(KEY_USERID)!, json)
         .then((value) {
@@ -5381,18 +5380,18 @@ class CommonUtil {
         if (value.result != null) {
           if (value.result!.queueCount != null &&
               value.result!.queueCount! > 0) {
-            var sheelaAIController = Get.find<SheelaAIController>();
+            var sheelaAIController =
+            CommonUtil().onInitSheelaAIController();
             sheelaAIController.sheelaIconBadgeCount.value =
                 (value.result?.queueCount ?? 0);
             // isNeedDialog condition for showing the dialog or not
             if (isNeedDialog) {
               CommonUtil().dialogForSheelaQueue(Get.context!);
             }
-            if (sheelaAIController.isSheelaScreenActive) {
-              // Accessing fields from the JSON object
-              var kioskTask = sheelaRemindJson["KIOSK_task"];
-              var kioskEid = sheelaRemindJson["KIOSK_eid"];
 
+            if (sheelaAIController.isSheelaScreenActive) {
+              //var kioskTask = json[KIOSK_task];
+              var kioskEid = json[KIOSK_eid];
               sheelaAIController.latestRemindEid = kioskEid;
             }
           }
