@@ -749,7 +749,7 @@ class SheelaBLEController extends GetxController {
 
             //Added the success message for weight with current time and values
             final currentTime = DateFormat('hh:mm a').format(DateTime.now());
-            final weightSuccessMsg = 'Your Weight has been recorded as '
+            final weightSuccessMsg = 'Your weight has been recorded as '
                 '${bleDataModel.data!.weight} $weightUnit at $currentTime.${getFinalResultMsg(bleDataModel)}';
 
             final strTextMsg = await SheelaController.getTextTranslate(weightSuccessMsg);
