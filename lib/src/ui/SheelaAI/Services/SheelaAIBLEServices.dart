@@ -666,7 +666,7 @@ class SheelaBLEController extends GetxController {
             await BleConnectApiProvider().uploadBleDataReadings(
           model,
         );
-        final bleDataModel = BleDataModel.fromJson(response["result"]);
+        final bleDataModel = BleDataModel.fromJson(response['result']);
         if (!response['isSuccess']) {
           receivedData = false;
           showFailure();
@@ -682,7 +682,7 @@ class SheelaBLEController extends GetxController {
               ),
             );
             final currentTime = DateFormat('hh:mm a').format(DateTime.now());
-            final spo2SuccessMsg = 'Your oxygen level ${bleDataModel.data!.sPO2}} and '
+            final spo2SuccessMsg = 'Your oxygen level ${bleDataModel.data!.sPO2} and '
                 'heart rate ${bleDataModel.data!.pulse} has been recorded at '
                 '$currentTime.${getFinalResultMsg(bleDataModel)}';
             final strTextMsgTwo = await SheelaController.getTextTranslate(spo2SuccessMsg);
