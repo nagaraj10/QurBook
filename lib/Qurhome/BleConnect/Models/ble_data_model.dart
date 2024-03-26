@@ -9,9 +9,11 @@ class BleDataModel {
   String? eid;
   String? uid;
   String? ackLocal;
+  EidInfo? eidInfo;
+
 
   BleDataModel(
-      {this.status, this.hubId, this.deviceId, this.deviceType, this.data});
+      {this.status, this.hubId, this.deviceId, this.deviceType, this.data, this.eidInfo});
 
   BleDataModel.fromJson(Map<String, dynamic> json) {
     try {
@@ -23,6 +25,7 @@ class BleDataModel {
       uid = json['uid'];
       ackLocal = json['ackLocal'];
       data = json['Data'] != null ? Data.fromJson(json['Data']) : null;
+      eidInfo= json["eidInfo"] == null ? null : EidInfo.fromJson(json["eidInfo"]);
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }
@@ -38,6 +41,7 @@ class BleDataModel {
       data['eid'] = this.eid;
       data['uid'] = this.uid;
       data['ackLocal'] = this.ackLocal;
+      data['eidInfo'] = this.eidInfo;
       if (this.data != null) {
         data['Data'] = this.data!.toJson();
       }
@@ -49,6 +53,42 @@ class BleDataModel {
     return data;
   }
 }
+class EidInfo {
+  int? eid;
+  DateTime? estart;
+  String? uformname;
+  String? activity;
+  int? uid;
+  String? estartTime;
+
+  EidInfo({
+    this.eid,
+    this.estart,
+    this.uformname,
+    this.activity,
+    this.uid,
+    this.estartTime,
+  });
+
+  factory EidInfo.fromJson(Map<String, dynamic> json) => EidInfo(
+    eid: json["eid"]??0,
+    estart: json["estart"] == null ? null : DateTime.parse(json["estart"]),
+    uformname: json["uformname"]??"",
+    activity: json["activity"]??"",
+    uid: json["uid"]??0,
+    estartTime: json["estartTime"]??"",
+  );
+
+  Map<String, dynamic> toJson() => {
+    "eid": eid,
+    "estart": estart?.toIso8601String(),
+    "uformname": uformname,
+    "activity": activity,
+    "uid": uid,
+    "estartTime": estartTime,
+  };
+}
+
 
 class Data {
   String? sPO2;

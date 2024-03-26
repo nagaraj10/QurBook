@@ -680,9 +680,12 @@ class SheelaBLEController extends GetxController {
                 text: strTextMsg,
               ),
             );
-            String? strTextMsgTwo = await SheelaController.getTextTranslate(
-              // isLastActivityDevice if false means remove the bye in string
-                "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded.${(!(SheelaController.isLastActivityDevice ?? true)) ? '' : " Bye."}");
+            final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+            final spo2SuccessMsg = 'Your oxygen level ${model.data!.sPO2}} and '
+                'heart rate ${{model.data!.pulse}} has been recorded at '
+                '$currentTime.${getFinalResultMsg(model)}';
+            final strTextMsgTwo = await SheelaController.getTextTranslate(spo2SuccessMsg);
+
             playConversations.add(
               SheelaResponse(
                 recipientId: conversationType,
@@ -696,8 +699,13 @@ class SheelaBLEController extends GetxController {
           }
         } else if (model.deviceType?.toLowerCase() == "bgl") {
           if ((model.data?.bgl ?? '').isNotEmpty) {
-            String? strTextMsg = await SheelaController.getTextTranslate(
-                "Your Blood Glucose value ${model.data!.bgl} is recorded successfully.");
+
+            final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+            final bglSuccessMsg = 'Your blood glucose when taken randomly is '
+                '${model.data!.bgl} has been recorded at $currentTime.${getFinalResultMsg(model)}';
+
+            final strTextMsg = await SheelaController.getTextTranslate(bglSuccessMsg);
+
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
@@ -713,11 +721,13 @@ class SheelaBLEController extends GetxController {
           if ((model.data!.systolic ?? '').isNotEmpty &&
               (model.data!.diastolic ?? '').isNotEmpty &&
               (model.data!.pulse ?? '').isNotEmpty) {
-            String? strTextMsg = await SheelaController.getTextTranslate(
-              // isLastActivityDevice if false means remove the bye in string
-                "Thank you. Your BP ${model.data!.systolic} "
-                "over ${model.data!.diastolic} "
-                "and pulse ${model.data!.pulse} are successfully recorded.${(!(SheelaController.isLastActivityDevice ?? true)) ? '' : " Bye."}");
+            final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+            final bpSuccessMsg = 'Your blood pressure ${model.data!.systolic} '
+                'over ${model.data!.diastolic} and heart rate '
+                '${model.data!.pulse} has been recorded at $currentTime.${getFinalResultMsg(model)}';
+
+            final strTextMsg = await SheelaController.getTextTranslate(bpSuccessMsg);
+
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
@@ -731,9 +741,12 @@ class SheelaBLEController extends GetxController {
           }
         } else if (model.deviceType?.toLowerCase() == "weight") {
           if ((model.data!.weight ?? '').isNotEmpty) {
-            String? strTextMsg = await SheelaController.getTextTranslate(
-              // isLastActivityDevice if false means remove the bye in string
-                "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded.${(!(SheelaController.isLastActivityDevice ?? true)) ? '' : " Bye."}");
+            final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+            final weightSuccessMsg = 'Your Weight has been recorded as '
+                '${model.data!.weight} $weightUnit at $currentTime.${getFinalResultMsg(model)}';
+
+            final strTextMsg = await SheelaController.getTextTranslate(weightSuccessMsg);
+
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
@@ -756,6 +769,14 @@ class SheelaBLEController extends GetxController {
         receivedData = false;
         showFailure();
       }
+    }
+  }
+
+  String getFinalResultMsg(BleDataModel model) {
+    if (model.eidInfo != null) {
+      return 'The same has been updated to your ${model.eidInfo!.uformname} activity at ${model.eidInfo!.estartTime}.';
+    } else {
+      return '';
     }
   }
 
