@@ -194,22 +194,11 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
           child: Row(
             children: <Widget>[
               ClipOval(
-                  child:
-                      /* data.metadata.hospital != null
-                      ? data.metadata.hospital.l != null
-                          ? Image.network(
-                              Constants.BASE_URL +
-                                  data.metadata.hospital.logoThumbnail,
-                              height: 50,
-                              width: 50,
-                            )
-                          :*/
-                      CircleAvatar(
+                  child: CircleAvatar(
                 radius: CommonUtil().isTablet! ? 35 : 25,
                 backgroundColor: const Color(fhbColors.bgColorContainer),
                 child: Image.network(
-                  /*Constants.BASE_URL + */ data
-                      .metadata!.healthRecordCategory!.logo!,
+                  data.metadata!.healthRecordCategory!.logo!,
                   height: 30,
                   width: 30,
                   color: Color(
@@ -231,20 +220,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    data.metadata!.hospital != null
-                        ? Text(
-                            data.metadata!.hospital!.healthOrganizationName !=
-                                    null
-                                ? toBeginningOfSentenceCase(data.metadata!
-                                    .hospital!.healthOrganizationName)!
-                                : '',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: CommonUtil().isTablet!
-                                    ? tabHeader1
-                                    : mobileHeader1),
-                          )
-                        : Text(''),
+                    Text(data.metadata?.fileName ?? ''),
                     Text(
                       data.metadata!.doctor != null
                           ? toBeginningOfSentenceCase(
@@ -254,7 +230,16 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                                   : data.metadata!.doctor!.firstName! +
                                       ' ' +
                                       data.metadata!.doctor!.lastName!)!
-                          : '',
+                          : data.metadata?.hospital != null
+                              ? data.metadata!.hospital != null
+                                  ? data.metadata!.hospital!
+                                              .healthOrganizationName !=
+                                          null
+                                      ? toBeginningOfSentenceCase(data.metadata!
+                                          .hospital!.healthOrganizationName)!
+                                      : ''
+                                  : ''
+                              : '',
                       style: TextStyle(
                           color: Colors.grey,
                           fontSize: CommonUtil().isTablet!

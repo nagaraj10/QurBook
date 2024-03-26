@@ -218,10 +218,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    mediaMetaInfo.metadata!.laboratory != null
-                        ? toBeginningOfSentenceCase(mediaMetaInfo
-                            .metadata!.laboratory!.healthOrganizationName)!
-                        : '',
+                    mediaMetaInfo.metadata!.fileName ?? '',
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -239,7 +236,14 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                             : mediaMetaInfo.metadata!.doctor!.firstName! +
                                 ' ' +
                                 mediaMetaInfo.metadata!.doctor!.lastName!
-                        : '',
+                        : mediaMetaInfo.metadata!.laboratory != null
+                            ? mediaMetaInfo.metadata!.laboratory != null
+                                ? toBeginningOfSentenceCase(mediaMetaInfo
+                                    .metadata!
+                                    .laboratory!
+                                    .healthOrganizationName)!
+                                : ''
+                            : '',
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(

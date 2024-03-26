@@ -1,30 +1,28 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/ClipImage/ClipOvalImage.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:shimmer/shimmer.dart';
+
+import '../../colors/fhb_colors.dart' as fhbColors;
+import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_parameters.dart';
+import '../../constants/variable_constant.dart' as variable;
 import '../../src/blocs/health/HealthReportListForUserBlock.dart';
 import '../../src/model/Health/MetaInfo.dart';
-import '../../src/model/Health/UserHealthResponseList.dart';
-import '../../constants/fhb_constants.dart' as Constants;
 import '../../src/model/Health/asgard/health_record_list.dart';
-import 'package:shimmer/shimmer.dart';
-import '../../src/utils/FHBUtils.dart';
 import '../../src/utils/DashSeparator.dart';
-import '../../colors/fhb_colors.dart' as fhbColors;
-import '../../src/model/Health/CompleteData.dart';
-import '../../src/model/Health/MediaMetaInfo.dart';
-import '../../constants/variable_constant.dart' as variable;
-import '../../constants/fhb_parameters.dart' as parameters;
+import '../../src/utils/FHBUtils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 
-import '../../common/CommonConstants.dart';
-import '../../constants/fhb_parameters.dart';
-
 class RecordInfoCard {
-  Widget getCardForPrescription(Metadata metaInfo, String? createdDate) {
+  Widget getCardForPrescription(
+      Metadata metaInfo, String? createdDate, String? authToken) {
     return Container(
         padding: EdgeInsets.all(20),
         color: Colors.white,
@@ -46,19 +44,35 @@ class RecordInfoCard {
             Row(
               children: <Widget>[
                 ClipOval(
-                    child: metaInfo.doctor != null
-                        ? CommonUtil().getDoctorProfileImageWidget(
-                            metaInfo.doctor!.profilePicThumbnailUrl,
-                            metaInfo
-                                .doctor) //getDoctorProfileImageWidget(metaInfo)
+                    child: metaInfo?.doctor != null
+                        ? getProfilePicWidget(
+                            metaInfo?.doctor?.profilePicThumbnailUrl ?? "",
+                            metaInfo?.doctor?.firstName ?? "",
+                            metaInfo?.doctor?.lastName ?? "",
+                            Color(CommonUtil().getMyPrimaryColor()),
+                            CommonUtil().isTablet!
+                                ? imageTabHeader
+                                : Constants.imageMobileHeader,
+                            CommonUtil().isTablet!
+                                ? tabHeader1
+                                : Constants.mobileHeader1,
+                            authtoken: authToken ?? "")
                         : Container(
+                            child: Center(
+                                child: Image.network(
+                                    metaInfo?.healthRecordCategory?.logo ?? '',
+                                    height: 30,
+                                    width: 30,
+                                    color: Color(
+                                      CommonUtil().getMyPrimaryColor(),
+                                    ))),
                             width: CommonUtil().isTablet!
                                 ? imageTabHeader
-                                : imageMobileHeader,
+                                : Constants.imageMobileHeader,
                             height: CommonUtil().isTablet!
                                 ? imageTabHeader
-                                : imageMobileHeader,
-                            color: Color(fhbColors.bgColorContainer))),
+                                : Constants.imageMobileHeader,
+                            color: const Color(fhbColors.bgColorContainer))),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(10),
@@ -173,6 +187,15 @@ class RecordInfoCard {
                 CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.grey[200],
+                  child: Image.network(
+                    metaInfo.healthRecordCategory!.logo!,
+                    height: 30,
+                    width: 30,
+                    color: Color(
+                      CommonUtil().getMyPrimaryColor(),
+                    ),
+                    errorBuilder: (context, error, stackTrace) => SizedBox(),
+                  ),
                 ),
                 Expanded(
                   child: Padding(
@@ -294,10 +317,21 @@ class RecordInfoCard {
             ),
             Row(
               children: <Widget>[
-                CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.grey[200],
-                ),
+                ClipOval(
+                    child: CircleAvatar(
+                  radius: CommonUtil().isTablet! ? 35 : 25,
+                  backgroundColor: const Color(fhbColors.bgColorContainer),
+                  child: Image.network(
+                    metaInfo?.healthRecordCategory?.logo ?? '',
+                    height: 30.0.h,
+                    width: 30.0.h,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const SizedBox(),
+                    color: Color(
+                      CommonUtil().getMyPrimaryColor(),
+                    ),
+                  ),
+                )),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(10),
