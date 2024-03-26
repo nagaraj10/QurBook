@@ -650,125 +650,108 @@ class SheelaBLEController extends GetxController {
         model.ackLocal = actualDateTime;
         hublistController.eid = null;
         hublistController.uid = null;
-        // Check if Sheela screen is active and device is connected to Sheela screen
-        if (SheelaController.isSheelaScreenActive &&
-            (SheelaController.isDeviceConnectSheelaScreen.value)) {
+        final response =
+            await BleConnectApiProvider().uploadBleDataReadings(
+          model,
+        );
+        final bleDataModel = BleDataModel.fromJson(response['result']);
+        if (!response['isSuccess']) {
+          receivedData = false;
+          showFailure();
+        } else if (bleDataModel.deviceType == "SPO2") {
+          if ((bleDataModel.data!.sPO2 ?? '').isNotEmpty &&
+              (bleDataModel.data!.pulse ?? '').isNotEmpty) {
+            String? strTextMsg = await SheelaController.getTextTranslate(
+                "Completed reading values. Please take your finger from the device");
+            addToConversationAndPlay(
+              SheelaResponse(
+                recipientId: conversationType,
+                text: strTextMsg,
+              ),
+            );
+           // Added the success message for spo2 with current time and values
+            final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+            final spo2SuccessMsg = 'Your oxygen level ${bleDataModel.data!.sPO2} and '
+                'heart rate ${bleDataModel.data!.pulse} has been recorded at '
+                '$currentTime.${getFinalResultMsg(bleDataModel)}';
+            final strTextMsgTwo = await SheelaController.getTextTranslate(spo2SuccessMsg);
 
-          // Check if device type is SPO2
-          if (model.deviceType == "SPO2") {
-
-            // Check if SPO2 and pulse data are not empty
-            if ((model.data!.sPO2 ?? '').isNotEmpty &&
-                (model.data!.pulse ?? '').isNotEmpty) {
-
-              // Get translated text message
-              String? strTextMsg = await SheelaController.getTextTranslate(
-                  "Completed reading values. Please take your finger from the device");
-
-              // Add translated text message to conversation and play
-              addToConversationAndPlay(
-                SheelaResponse(
-                  recipientId: conversationType,
-                  text: strTextMsg,
-                ),
-              );
-
-              // Delay execution of the subsequent code block by 4 seconds.
-              Future.delayed(const Duration(seconds: 4)).then((value) {
-                // After 4 seconds, call getAIAPIResponseFor to process dynamic response
-                SheelaController.getAIAPIResponseFor(STR_YES, null,
-                    deviceReadingsRuleSheela: model.data ?? Data());
-              });
-            }
+            playConversations.add(
+              SheelaResponse(
+                recipientId: conversationType,
+                text: strTextMsgTwo,
+              ),
+            );
+            await Future.delayed(const Duration(seconds: 2));
           } else {
-            // Delay execution of the subsequent code block by 1 second.
-            Future.delayed(const Duration(seconds: 1)).then((value) {
-              // After 1 second, call getAIAPIResponseFor to process dynamic response
-              SheelaController.getAIAPIResponseFor(STR_YES, null,
-                  deviceReadingsRuleSheela: model.data ?? Data());
-            });
-          }
-        } else {
-          final bool response =
-              await BleConnectApiProvider().uploadBleDataReadings(
-            model,
-          );
-          if (!response) {
             receivedData = false;
             showFailure();
-          } else if (model.deviceType == "SPO2") {
-            if ((model.data!.sPO2 ?? '').isNotEmpty &&
-                (model.data!.pulse ?? '').isNotEmpty) {
-              String? strTextMsg = await SheelaController.getTextTranslate(
-                  "Completed reading values. Please take your finger from the device");
-              addToConversationAndPlay(
-                SheelaResponse(
-                  recipientId: conversationType,
-                  text: strTextMsg,
-                ),
-              );
-              String? strTextMsgTwo = await SheelaController.getTextTranslate(
-                  "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded. Bye.");
-              playConversations.add(
-                SheelaResponse(
-                  recipientId: conversationType,
-                  text: strTextMsgTwo,
-                ),
-              );
-              await Future.delayed(const Duration(seconds: 2));
-            } else {
-              receivedData = false;
-              showFailure();
-            }
-          } else if (model.deviceType?.toLowerCase() == "bgl") {
-            if ((model.data?.bgl ?? '').isNotEmpty) {
-              String? strTextMsg = await SheelaController.getTextTranslate(
-                  "Your Blood Glucose value ${model.data!.bgl} is recorded successfully.");
-              addToConversationAndPlay(
-                SheelaResponse(
-                  recipientId: conversationType,
-                  text: strTextMsg,
-                ),
-              );
-              await Future.delayed(const Duration(seconds: 2));
-            } else {
-              receivedData = false;
-              showFailure();
-            }
-          } else if (model.deviceType == "BP") {
-            if ((model.data!.systolic ?? '').isNotEmpty &&
-                (model.data!.diastolic ?? '').isNotEmpty &&
-                (model.data!.pulse ?? '').isNotEmpty) {
-              String? strTextMsg = await SheelaController.getTextTranslate(
-                  "Thank you. Your BP ${model.data!.systolic} "
-                  "over ${model.data!.diastolic} "
-                  "and pulse ${model.data!.pulse} are successfully recorded. Bye.");
-              addToConversationAndPlay(
-                SheelaResponse(
-                  recipientId: conversationType,
-                  text: strTextMsg,
-                ),
-              );
-              await Future.delayed(const Duration(seconds: 2));
-            } else {
-              receivedData = false;
-              showFailure();
-            }
-          } else if (model.deviceType?.toLowerCase() == "weight") {
-            if ((model.data!.weight ?? '').isNotEmpty) {
-              String? strTextMsg = await SheelaController.getTextTranslate(
-                  "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded. Bye.");
-              addToConversationAndPlay(
-                SheelaResponse(
-                  recipientId: conversationType,
-                  text: strTextMsg,
-                ),
-              );
-              await Future.delayed(const Duration(seconds: 2));
-            } else {
-              receivedData = false;
-              showFailure();
-            }
+          }
+        } else if (bleDataModel.deviceType?.toLowerCase() == "bgl") {
+          if ((bleDataModel.data?.bgl ?? '').isNotEmpty) {
+            //Added the success message for bgl with current time and values
+            final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+            final bglSuccessMsg = 'Your blood glucose when taken randomly is '
+                '${bleDataModel.data!.bgl} has been recorded at $currentTime.${getFinalResultMsg(bleDataModel)}';
+
+            final strTextMsg = await SheelaController.getTextTranslate(bglSuccessMsg);
+
+            addToConversationAndPlay(
+              SheelaResponse(
+                recipientId: conversationType,
+                text: strTextMsg,
+              ),
+            );
+            await Future.delayed(const Duration(seconds: 2));
+          } else {
+            receivedData = false;
+            showFailure();
+          }
+        } else if (bleDataModel.deviceType == "BP") {
+          if ((bleDataModel.data!.systolic ?? '').isNotEmpty &&
+              (bleDataModel.data!.diastolic ?? '').isNotEmpty &&
+              (bleDataModel.data!.pulse ?? '').isNotEmpty) {
+
+            //Added the success message for BP with current time and values
+
+            final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+            final bpSuccessMsg = 'Your blood pressure ${bleDataModel.data!.systolic} '
+                'over ${bleDataModel.data!.diastolic} and heart rate '
+                '${bleDataModel.data!.pulse} has been recorded at $currentTime.${getFinalResultMsg(bleDataModel)}';
+
+            final strTextMsg = await SheelaController.getTextTranslate(bpSuccessMsg);
+
+            addToConversationAndPlay(
+              SheelaResponse(
+                recipientId: conversationType,
+                text: strTextMsg,
+              ),
+            );
+            await Future.delayed(const Duration(seconds: 2));
+          } else {
+            receivedData = false;
+            showFailure();
+          }
+        } else if (bleDataModel.deviceType?.toLowerCase() == "weight") {
+          if ((bleDataModel.data!.weight ?? '').isNotEmpty) {
+
+            //Added the success message for weight with current time and values
+            final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+            final weightSuccessMsg = 'Your weight has been recorded as '
+                '${bleDataModel.data!.weight} $weightUnit at $currentTime.${getFinalResultMsg(bleDataModel)}';
+
+            final strTextMsg = await SheelaController.getTextTranslate(weightSuccessMsg);
+
+            addToConversationAndPlay(
+              SheelaResponse(
+                recipientId: conversationType,
+                text: strTextMsg,
+              ),
+            );
+            await Future.delayed(const Duration(seconds: 2));
+          } else {
+            receivedData = false;
+            showFailure();
           }
         }
         isCompleted = true;
@@ -781,6 +764,14 @@ class SheelaBLEController extends GetxController {
         receivedData = false;
         showFailure();
       }
+    }
+  }
+
+  String getFinalResultMsg(BleDataModel model) {
+    if (model.eidInfo != null) {
+      return ' The same has been updated to your ${model.eidInfo!.uformname} activity at ${model.eidInfo!.estartTime}.';
+    } else {
+      return '';
     }
   }
 
