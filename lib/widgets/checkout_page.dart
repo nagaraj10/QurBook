@@ -461,6 +461,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           },
                                         ),
                                         // Add Checkbox for Membership discount apply
+                                        
+                                        /// Checks if the user is eligible for a membership discount.
+                                        /// If so, displays a checkbox allowing the user to apply the
+                                        /// discount. Updates the cart total when the checkbox is toggled.
+
+                                        /// The discount will not be shown if the final transactionLimit
+                                        /// for care plans is 0. This prevents the discount from being
+                                        /// applied to care plans that are not eligible.
                                         Visibility(
                                           visible: value
                                                   .getFinalMembershipAmountLimit() >
