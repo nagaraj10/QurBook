@@ -106,7 +106,7 @@ class BleConnectApiProvider {
         body: body,
       ))!;
       if (responseJson.statusCode == 200) {
-        return jsonDecode(responseJson.body);
+        return jsonDecode(responseJson.body); //Decode the response
       } else {
         return null;
       }

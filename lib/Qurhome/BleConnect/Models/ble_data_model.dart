@@ -9,7 +9,7 @@ class BleDataModel {
   String? eid;
   String? uid;
   String? ackLocal;
-  EidInfo? eidInfo;
+  EidInfo? eidInfo;// Get the infromation of eid
 
 
   BleDataModel(

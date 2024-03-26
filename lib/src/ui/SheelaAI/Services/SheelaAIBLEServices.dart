@@ -681,6 +681,7 @@ class SheelaBLEController extends GetxController {
                 text: strTextMsg,
               ),
             );
+           // Added the success message for spo2 with current time and values
             final currentTime = DateFormat('hh:mm a').format(DateTime.now());
             final spo2SuccessMsg = 'Your oxygen level ${bleDataModel.data!.sPO2} and '
                 'heart rate ${bleDataModel.data!.pulse} has been recorded at '
@@ -700,7 +701,7 @@ class SheelaBLEController extends GetxController {
           }
         } else if (bleDataModel.deviceType?.toLowerCase() == "bgl") {
           if ((bleDataModel.data?.bgl ?? '').isNotEmpty) {
-
+            //Added the success message for bgl with current time and values
             final currentTime = DateFormat('hh:mm a').format(DateTime.now());
             final bglSuccessMsg = 'Your blood glucose when taken randomly is '
                 '${bleDataModel.data!.bgl} has been recorded at $currentTime.${getFinalResultMsg(bleDataModel)}';
@@ -722,6 +723,9 @@ class SheelaBLEController extends GetxController {
           if ((bleDataModel.data!.systolic ?? '').isNotEmpty &&
               (bleDataModel.data!.diastolic ?? '').isNotEmpty &&
               (bleDataModel.data!.pulse ?? '').isNotEmpty) {
+
+            //Added the success message for BP with current time and values
+
             final currentTime = DateFormat('hh:mm a').format(DateTime.now());
             final bpSuccessMsg = 'Your blood pressure ${bleDataModel.data!.systolic} '
                 'over ${bleDataModel.data!.diastolic} and heart rate '
@@ -742,8 +746,10 @@ class SheelaBLEController extends GetxController {
           }
         } else if (bleDataModel.deviceType?.toLowerCase() == "weight") {
           if ((bleDataModel.data!.weight ?? '').isNotEmpty) {
+
+            //Added the success message for weight with current time and values
             final currentTime = DateFormat('hh:mm a').format(DateTime.now());
-            final weightSuccessMsg = 'Your Weight has been recorded as '
+            final weightSuccessMsg = 'Your weight has been recorded as '
                 '${bleDataModel.data!.weight} $weightUnit at $currentTime.${getFinalResultMsg(bleDataModel)}';
 
             final strTextMsg = await SheelaController.getTextTranslate(weightSuccessMsg);
@@ -775,7 +781,7 @@ class SheelaBLEController extends GetxController {
 
   String getFinalResultMsg(BleDataModel model) {
     if (model.eidInfo != null) {
-      return 'The same has been updated to your ${model.eidInfo!.uformname} activity at ${model.eidInfo!.estartTime}.';
+      return ' The same has been updated to your ${model.eidInfo!.uformname} activity at ${model.eidInfo!.estartTime}.';
     } else {
       return '';
     }
