@@ -95,7 +95,7 @@ class BleConnectApiProvider {
     }
   }
 
-  Future<bool> uploadBleDataReadings(BleDataModel bleDataModel) async {
+  Future<dynamic> uploadBleDataReadings(BleDataModel bleDataModel) async {
     http.Response responseJson;
     try {
       var header = await HeaderRequest().getRequestHeadersTimeSlotWithUserId();
@@ -106,9 +106,9 @@ class BleConnectApiProvider {
         body: body,
       ))!;
       if (responseJson.statusCode == 200) {
-        return true;
+        return jsonDecode(responseJson.body); //Decode the response
       } else {
-        return false;
+        return null;
       }
     } on SocketException {
       throw FetchDataException(strNoInternet);
