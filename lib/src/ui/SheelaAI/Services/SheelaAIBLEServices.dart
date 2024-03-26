@@ -662,16 +662,17 @@ class SheelaBLEController extends GetxController {
         model.ackLocal = actualDateTime;
         hublistController.eid = null;
         hublistController.uid = null;
-        final bool response =
+        final response =
             await BleConnectApiProvider().uploadBleDataReadings(
           model,
         );
-        if (!response) {
+        final bleDataModel = BleDataModel.fromJson(response["result"]);
+        if (!response['isSuccess']) {
           receivedData = false;
           showFailure();
-        } else if (model.deviceType == "SPO2") {
-          if ((model.data!.sPO2 ?? '').isNotEmpty &&
-              (model.data!.pulse ?? '').isNotEmpty) {
+        } else if (bleDataModel.deviceType == "SPO2") {
+          if ((bleDataModel.data!.sPO2 ?? '').isNotEmpty &&
+              (bleDataModel.data!.pulse ?? '').isNotEmpty) {
             String? strTextMsg = await SheelaController.getTextTranslate(
                 "Completed reading values. Please take your finger from the device");
             addToConversationAndPlay(
@@ -681,9 +682,9 @@ class SheelaBLEController extends GetxController {
               ),
             );
             final currentTime = DateFormat('hh:mm a').format(DateTime.now());
-            final spo2SuccessMsg = 'Your oxygen level ${model.data!.sPO2}} and '
-                'heart rate ${{model.data!.pulse}} has been recorded at '
-                '$currentTime.${getFinalResultMsg(model)}';
+            final spo2SuccessMsg = 'Your oxygen level ${bleDataModel.data!.sPO2}} and '
+                'heart rate ${bleDataModel.data!.pulse} has been recorded at '
+                '$currentTime.${getFinalResultMsg(bleDataModel)}';
             final strTextMsgTwo = await SheelaController.getTextTranslate(spo2SuccessMsg);
 
             playConversations.add(
@@ -697,12 +698,12 @@ class SheelaBLEController extends GetxController {
             receivedData = false;
             showFailure();
           }
-        } else if (model.deviceType?.toLowerCase() == "bgl") {
-          if ((model.data?.bgl ?? '').isNotEmpty) {
+        } else if (bleDataModel.deviceType?.toLowerCase() == "bgl") {
+          if ((bleDataModel.data?.bgl ?? '').isNotEmpty) {
 
             final currentTime = DateFormat('hh:mm a').format(DateTime.now());
             final bglSuccessMsg = 'Your blood glucose when taken randomly is '
-                '${model.data!.bgl} has been recorded at $currentTime.${getFinalResultMsg(model)}';
+                '${bleDataModel.data!.bgl} has been recorded at $currentTime.${getFinalResultMsg(bleDataModel)}';
 
             final strTextMsg = await SheelaController.getTextTranslate(bglSuccessMsg);
 
@@ -717,14 +718,14 @@ class SheelaBLEController extends GetxController {
             receivedData = false;
             showFailure();
           }
-        } else if (model.deviceType == "BP") {
-          if ((model.data!.systolic ?? '').isNotEmpty &&
-              (model.data!.diastolic ?? '').isNotEmpty &&
-              (model.data!.pulse ?? '').isNotEmpty) {
+        } else if (bleDataModel.deviceType == "BP") {
+          if ((bleDataModel.data!.systolic ?? '').isNotEmpty &&
+              (bleDataModel.data!.diastolic ?? '').isNotEmpty &&
+              (bleDataModel.data!.pulse ?? '').isNotEmpty) {
             final currentTime = DateFormat('hh:mm a').format(DateTime.now());
-            final bpSuccessMsg = 'Your blood pressure ${model.data!.systolic} '
-                'over ${model.data!.diastolic} and heart rate '
-                '${model.data!.pulse} has been recorded at $currentTime.${getFinalResultMsg(model)}';
+            final bpSuccessMsg = 'Your blood pressure ${bleDataModel.data!.systolic} '
+                'over ${bleDataModel.data!.diastolic} and heart rate '
+                '${bleDataModel.data!.pulse} has been recorded at $currentTime.${getFinalResultMsg(bleDataModel)}';
 
             final strTextMsg = await SheelaController.getTextTranslate(bpSuccessMsg);
 
@@ -739,11 +740,11 @@ class SheelaBLEController extends GetxController {
             receivedData = false;
             showFailure();
           }
-        } else if (model.deviceType?.toLowerCase() == "weight") {
-          if ((model.data!.weight ?? '').isNotEmpty) {
+        } else if (bleDataModel.deviceType?.toLowerCase() == "weight") {
+          if ((bleDataModel.data!.weight ?? '').isNotEmpty) {
             final currentTime = DateFormat('hh:mm a').format(DateTime.now());
             final weightSuccessMsg = 'Your Weight has been recorded as '
-                '${model.data!.weight} $weightUnit at $currentTime.${getFinalResultMsg(model)}';
+                '${bleDataModel.data!.weight} $weightUnit at $currentTime.${getFinalResultMsg(bleDataModel)}';
 
             final strTextMsg = await SheelaController.getTextTranslate(weightSuccessMsg);
 
