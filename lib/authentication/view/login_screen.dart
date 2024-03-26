@@ -100,7 +100,6 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                           TextFormField(
                             textCapitalization: TextCapitalization.sentences,
                             readOnly: isSignInScreen ? false : true,
-                            enableInteractiveSelection: false,
                             style: TextStyle(
                               fontSize: 16.0.sp,
                             ),
