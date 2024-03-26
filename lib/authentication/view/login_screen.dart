@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:provider/provider.dart';
 
 import '../../common/CommonUtil.dart';
 import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart';
+import '../../more_menu/app_theme_provider.dart';
 import '../../src/ui/loader_class.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../constants/constants.dart';
@@ -38,6 +40,22 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
     super.initState();
     FABService.trackCurrentScreen(FBALoginScreen);
     authViewModel = AuthViewModel();
+    /// Gets the user's theme preferences from local storage
+    /// and sets the default theme to Classic.
+    ///
+    /// This method is called on app startup to initialize the theme.
+    /// It handles the theme setup for first time login flow and login/logout flows.
+    ///
+    /// Specifically:
+    /// - Reads the user's preferred theme from local storage.
+    /// - Sets the default theme to Classic if no preference is found.
+    /// - Updates the AppThemeProvider with the theme.
+    ///
+    /// This ensures the user's preferred theme is applied on app start,
+    /// while providing a default in case no preference is set yet.
+    Future.delayed(Duration.zero, () {
+      context.read<AppThemeProvider>().resetEnumAppThemeType();
+    });
   }
 
   @override
