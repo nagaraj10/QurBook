@@ -461,59 +461,56 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           },
                                         ),
                                         // Add Checkbox for Membership discount apply
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 35.0.w,
-                                              height: 25.0.w,
-                                              child: Container(
-                                                margin: const EdgeInsets.only(
-                                                  right: 10,
-                                                ),
-                                                child: Checkbox(
-                                                  activeColor: Color(
-                                                    CommonUtil()
-                                                        .getMyPrimaryColor(),
+                                        Visibility(
+                                          visible: value
+                                                  .getFinalMembershipAmountLimit() >
+                                              0,
+                                          child: Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 35.0.w,
+                                                height: 25.0.w,
+                                                child: Container(
+                                                  margin: const EdgeInsets.only(
+                                                    right: 10,
                                                   ),
-                                                  checkColor: Colors.white,
-                                                  value: value
-                                                      .checkedMembershipBenefits,
-                                                  onChanged:
-                                                      (value.getFinalMembershipAmountLimit() ??
-                                                                  0) >
-                                                              0
-                                                          ? (newValue) {
-                                                              setState(() {
-                                                                value.checkedMembershipBenefits =
-                                                                    newValue ??
-                                                                        false;
-                                                              });
-                                                              value.updateProductCountBasedOnCondiiton(
-                                                                  isNeedRelod:
-                                                                      true,
-                                                                  firstTym:
-                                                                      false);
-                                                            }
-                                                          : null,
-                                                ),
-                                              ),
-                                            ),
-                                            Flexible(
-                                              child: Wrap(
-                                                children: [
-                                                  Text(
-                                                    getMembershipDiscount(
-                                                        value),
-                                                    style: TextStyle(
-                                                      color: (value.getFinalMembershipAmountLimit() ??
-                                                                  0) >
-                                                              0? Colors.black : Colors.grey,
+                                                  child: Checkbox(
+                                                    activeColor: Color(
+                                                      CommonUtil()
+                                                          .getMyPrimaryColor(),
                                                     ),
+                                                    checkColor: Colors.white,
+                                                    value: value
+                                                        .checkedMembershipBenefits,
+                                                    onChanged: (newValue) {
+                                                      setState(() {
+                                                        value.checkedMembershipBenefits =
+                                                            newValue ?? false;
+                                                      });
+                                                      value
+                                                          .updateProductCountBasedOnCondiiton(
+                                                        isNeedRelod: true,
+                                                        firstTym: false,
+                                                      );
+                                                    },
                                                   ),
-                                                ],
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                              Flexible(
+                                                child: Wrap(
+                                                  children: [
+                                                    Text(
+                                                      getMembershipDiscount(
+                                                          value),
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
