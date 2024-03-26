@@ -61,6 +61,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
 // Set the value of isSameVitalDevice to false in the controller.
     controller.isSameVitalDevice = false;
 
+    controller.latestRemindEid = '';
+
 
     ///Surrendered with addPostFrameCallback for widget building issue///
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {

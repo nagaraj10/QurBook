@@ -5373,6 +5373,7 @@ class CommonUtil {
   void callQueueNotificationPostApi(var json, {bool isNeedDialog = true}) {
     //if (avoidExtraNotification) {
     //avoidExtraNotification = false;
+    var sheelaRemindJson = json;
     queueServices
         .postNotificationQueue(PreferenceUtil.getStringValue(KEY_USERID)!, json)
         .then((value) {
@@ -5386,6 +5387,13 @@ class CommonUtil {
             // isNeedDialog condition for showing the dialog or not
             if (isNeedDialog) {
               CommonUtil().dialogForSheelaQueue(Get.context!);
+            }
+            if (sheelaAIController.isSheelaScreenActive) {
+              // Accessing fields from the JSON object
+              var kioskTask = sheelaRemindJson["KIOSK_task"];
+              var kioskEid = sheelaRemindJson["KIOSK_eid"];
+
+              sheelaAIController.latestRemindEid = kioskEid;
             }
           }
         }

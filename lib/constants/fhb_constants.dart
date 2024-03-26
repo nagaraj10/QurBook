@@ -1086,6 +1086,8 @@ const String isSkipRemiderCount = 'isSkipReminderCount';
 // Define a constant string for storing the current notification ID.
 const String strCurrentNotificationId = 'currentNotificationId';
 
+const String strLatestRemindEid = 'latestRemindEid';
+
 // Define constant strings for various actions
 const String strAction = 'action'; // General action string
 const String strCallback = 'Callback'; // Callback action string
