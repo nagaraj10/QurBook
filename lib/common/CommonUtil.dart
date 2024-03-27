@@ -5389,15 +5389,15 @@ class CommonUtil {
               CommonUtil().dialogForSheelaQueue(Get.context!);
             }
 
-            if (sheelaAIController.isSheelaScreenActive) {
-              var kioskTask = json[KIOSK_task];
-              var kioskEid = json[KIOSK_eid];
-              print('step1');
-              if (kioskTask != KIOSK_appointment_avail) {
-                print('step2-activity');
-                sheelaAIController.latestRemindEid = kioskEid;
+            if (sheelaAIController.isSheelaScreenActive) { // Check if Sheela screen is active
+              var kioskTask = json[KIOSK_task]; // Retrieve kiosk task from JSON object
+              var kioskEid = json[KIOSK_eid]; // Retrieve kiosk EID from JSON object
+
+              if (kioskTask != KIOSK_appointment_avail) { // Check if kiosk task is not appointment availability
+                sheelaAIController.latestRemindEid = kioskEid; // Update latest reminder EID in Sheela AI Controller
               }
             }
+
           }
         }
       }
