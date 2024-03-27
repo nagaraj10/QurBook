@@ -2380,9 +2380,6 @@ class CommonDialogBox {
       if (fileName.text == '') {
         validationConditon = false;
         validationMsg = CommonConstants.strFileEmpty;
-      } else if (memoController.text == '') {
-        validationConditon = false;
-        validationMsg = CommonConstants.strMemoEmpty;
       } else {
         validationConditon = true;
       }

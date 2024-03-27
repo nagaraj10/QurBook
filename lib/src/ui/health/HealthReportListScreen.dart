@@ -250,7 +250,10 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      (mediaMetaInfoObj.metadata?.fileName ?? '')!,
+                      (mediaMetaInfoObj.metadata?.doctor != null &&
+                              mediaMetaInfoObj.metadata?.hospital != null)
+                          ? getDoctorName(mediaMetaInfoObj)!
+                          : (mediaMetaInfoObj.metadata?.fileName ?? '')!,
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -273,24 +276,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                                       ?.healthOrganizationName ??
                                   '')!
                               : mediaMetaInfoObj.metadata?.doctor != null
-                                  ? toBeginningOfSentenceCase(
-                                      mediaMetaInfoObj.metadata!.doctor != null
-                                          ? (mediaMetaInfoObj.metadata?.doctor
-                                                          ?.name !=
-                                                      null &&
-                                                  mediaMetaInfoObj.metadata
-                                                          ?.doctor?.name !=
-                                                      '')
-                                              ? mediaMetaInfoObj
-                                                  .metadata?.doctor?.name
-                                              : (mediaMetaInfoObj.metadata
-                                                          ?.doctor?.firstName ??
-                                                      '') +
-                                                  ' ' +
-                                                  (mediaMetaInfoObj.metadata
-                                                          ?.doctor?.lastName ??
-                                                      '')
-                                          : '')!
+                                  ? getDoctorName(mediaMetaInfoObj)!
                                   : '',
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
@@ -509,5 +495,17 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
 
   void setAuthToken() async {
     authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+  }
+
+  /// Returns the doctor name for the given mediaMetaInfoObj HealthResult object.
+  getDoctorName(HealthResult mediaMetaInfoObj) {
+    return toBeginningOfSentenceCase(mediaMetaInfoObj.metadata!.doctor != null
+        ? (mediaMetaInfoObj.metadata?.doctor?.name != null &&
+                mediaMetaInfoObj.metadata?.doctor?.name != '')
+            ? mediaMetaInfoObj.metadata?.doctor?.name
+            : (mediaMetaInfoObj.metadata?.doctor?.firstName ?? '') +
+                ' ' +
+                (mediaMetaInfoObj.metadata?.doctor?.lastName ?? '')
+        : '');
   }
 }

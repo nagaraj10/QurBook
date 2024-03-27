@@ -218,7 +218,15 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    mediaMetaInfo.metadata!.fileName ?? '',
+                    /// Returns the laboratory name if available, otherwise returns the file name.
+                    /// Used to display the title of a lab report list item.
+                    (mediaMetaInfo.metadata!.laboratory != null &&
+                            mediaMetaInfo.metadata!.doctor != null)
+                        ? mediaMetaInfo.metadata!.laboratory != null
+                            ? toBeginningOfSentenceCase(mediaMetaInfo
+                                .metadata!.laboratory!.healthOrganizationName)!
+                            : ''
+                        : mediaMetaInfo.metadata!.fileName ?? '',
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -227,31 +235,38 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                             ? tabHeader1
                             : mobileHeader1),
                   ),
-                  Text(
-                    mediaMetaInfo.metadata!.doctor != null
-                        ? (mediaMetaInfo.metadata!.doctor!.name != null &&
-                                mediaMetaInfo.metadata!.doctor!.name != '')
-                            ? toBeginningOfSentenceCase(
-                                mediaMetaInfo.metadata!.doctor!.name)!
-                            : mediaMetaInfo.metadata!.doctor!.firstName! +
-                                ' ' +
-                                mediaMetaInfo.metadata!.doctor!.lastName!
+                  Visibility(
+                    visible: mediaMetaInfo.metadata!.doctor != null
+                        ? true
                         : mediaMetaInfo.metadata!.laboratory != null
-                            ? mediaMetaInfo.metadata!.laboratory != null
-                                ? toBeginningOfSentenceCase(mediaMetaInfo
-                                    .metadata!
-                                    .laboratory!
-                                    .healthOrganizationName)!
-                                : ''
-                            : '',
-                    softWrap: false,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500,
-                        fontSize: CommonUtil().isTablet!
-                            ? tabHeader2
-                            : mobileHeader2),
+                            ? true
+                            : false,
+                    child: Text(
+                      mediaMetaInfo.metadata!.doctor != null
+                          ? (mediaMetaInfo.metadata!.doctor!.name != null &&
+                                  mediaMetaInfo.metadata!.doctor!.name != '')
+                              ? toBeginningOfSentenceCase(
+                                  mediaMetaInfo.metadata!.doctor!.name)!
+                              : mediaMetaInfo.metadata!.doctor!.firstName! +
+                                  ' ' +
+                                  mediaMetaInfo.metadata!.doctor!.lastName!
+                          : mediaMetaInfo.metadata!.laboratory != null
+                              ? mediaMetaInfo.metadata!.laboratory != null
+                                  ? toBeginningOfSentenceCase(mediaMetaInfo
+                                      .metadata!
+                                      .laboratory!
+                                      .healthOrganizationName)!
+                                  : ''
+                              : '',
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader2
+                              : mobileHeader2),
+                    ),
                   ),
                   Text(
                     FHBUtils().getFormattedDateString(mediaMetaInfo.createdOn),

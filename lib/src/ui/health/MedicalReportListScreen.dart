@@ -220,31 +220,56 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(data.metadata?.fileName ?? ''),
-                    Text(
-                      data.metadata!.doctor != null
-                          ? toBeginningOfSentenceCase(
-                              (data.metadata!.doctor!.name != null &&
-                                      data.metadata!.doctor!.name != '')
-                                  ? data.metadata!.doctor!.name
-                                  : data.metadata!.doctor!.firstName! +
-                                      ' ' +
-                                      data.metadata!.doctor!.lastName!)!
+                    /// Displays the hospital name if available, otherwise displays the file name.
+                    /// Uses the metadata from the medical report data to check for hospital name.
+                    /// Falls back to file name if hospital name is not available.
+                    Text((data.metadata?.hospital != null &&
+                            data.metadata!.doctor != null)
+                        ? data.metadata!.hospital != null
+                            ? data.metadata!.hospital!.healthOrganizationName !=
+                                    null
+                                ? toBeginningOfSentenceCase(data.metadata!
+                                    .hospital!.healthOrganizationName)!
+                                : ''
+                            : ''
+                        : data.metadata?.fileName ?? ''),
+                    Visibility(
+                      /// Determines visibility of doctor name based on metadata.
+                      /// Shows doctor name if available in metadata.
+                      /// Otherwise shows hospital name if available.
+                      /// Falls back to hiding doctor name if neither are available.
+                      visible: data.metadata!.doctor != null
+                          ? true
                           : data.metadata?.hospital != null
-                              ? data.metadata!.hospital != null
-                                  ? data.metadata!.hospital!
-                                              .healthOrganizationName !=
-                                          null
-                                      ? toBeginningOfSentenceCase(data.metadata!
-                                          .hospital!.healthOrganizationName)!
-                                      : ''
-                                  : ''
-                              : '',
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: CommonUtil().isTablet!
-                              ? tabHeader2
-                              : mobileHeader2),
+                              ? true
+                              : false,
+                      child: Text(
+                        data.metadata!.doctor != null
+                            ? toBeginningOfSentenceCase(
+                                (data.metadata!.doctor!.name != null &&
+                                        data.metadata!.doctor!.name != '')
+                                    ? data.metadata!.doctor!.name
+                                    : data.metadata!.doctor!.firstName! +
+                                        ' ' +
+                                        data.metadata!.doctor!.lastName!)!
+                            : data.metadata?.hospital != null
+                                ? data.metadata!.hospital != null
+                                    ? data.metadata!.hospital!
+                                                .healthOrganizationName !=
+                                            null
+                                        ? toBeginningOfSentenceCase(data
+                                            .metadata!
+                                            .hospital!
+                                            .healthOrganizationName)!
+                                        : ''
+                                    : ''
+                                : '',
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: CommonUtil().isTablet!
+                                ? tabHeader2
+                                : mobileHeader2),
+                      ),
                     ),
                     Text(
                       FHBUtils().getFormattedDateString(data.createdOn),

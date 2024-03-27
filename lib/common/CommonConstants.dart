@@ -223,7 +223,7 @@ class CommonConstants {
 
   static String middleNameWithStar = 'MiddleName*';
   static String lastNameWithStar = 'LastName*';
-  static String exprityDate = 'Expiry Date*';
+  static String exprityDate = 'Expiry Date';
   static String heightName = 'Height(cm)';
   static String weightName = 'Weight(kg)';
 
