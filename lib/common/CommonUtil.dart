@@ -5390,9 +5390,13 @@ class CommonUtil {
             }
 
             if (sheelaAIController.isSheelaScreenActive) {
-              //var kioskTask = json[KIOSK_task];
+              var kioskTask = json[KIOSK_task];
               var kioskEid = json[KIOSK_eid];
-              sheelaAIController.latestRemindEid = kioskEid;
+              print('step1');
+              if (kioskTask != KIOSK_appointment_avail) {
+                print('step2-activity');
+                sheelaAIController.latestRemindEid = kioskEid;
+              }
             }
           }
         }
