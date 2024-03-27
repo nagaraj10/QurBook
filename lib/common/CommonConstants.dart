@@ -57,12 +57,12 @@ class CommonConstants {
   /// box that appears when a card is saved
   //static String strMessage = 'Message';
   static String strDateOfVisit = 'Date of visit *';
-  static String strHospitalName = 'Hospital Name *';
+  static String strHospitalName = 'Hospital Name ';
   static String strHospitalNameWithoutStar = 'Hospital Name ';
   static String strFileName = 'File Name *';
-  static String strDoctorsName = 'Doctor Name *';
+  static String strDoctorsName = 'Doctor Name ';
   static String strSave = 'Save';
-  static String strLabName = 'Lab Name *';
+  static String strLabName = 'Lab Name ';
 
   /// STring for Signin the app
   static String strTrident = 'tridentApp';
@@ -223,7 +223,7 @@ class CommonConstants {
 
   static String middleNameWithStar = 'MiddleName*';
   static String lastNameWithStar = 'LastName*';
-  static String exprityDate = 'Expiry Date*';
+  static String exprityDate = 'Expiry Date';
   static String heightName = 'Height(cm)';
   static String weightName = 'Weight(kg)';
 
@@ -400,7 +400,8 @@ class ImageUrlUtils {
   static String locationImg = 'assets/providers/location.png';
   static String otpVerifyImg = 'assets/icons/otp_icon.png';
   static String photoImg = 'assets/user/avatar.png';
-  static String sheelaActivityNoFormdataImage = 'assets/Qurhome/sheela-activity-no-formdata.png';
+  static String sheelaActivityNoFormdataImage =
+      'assets/Qurhome/sheela-activity-no-formdata.png';
 }
 
 class GoogleApiKey {

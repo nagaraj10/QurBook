@@ -1,30 +1,28 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/ClipImage/ClipOvalImage.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:shimmer/shimmer.dart';
+
+import '../../colors/fhb_colors.dart' as fhbColors;
+import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_parameters.dart';
+import '../../constants/variable_constant.dart' as variable;
 import '../../src/blocs/health/HealthReportListForUserBlock.dart';
 import '../../src/model/Health/MetaInfo.dart';
-import '../../src/model/Health/UserHealthResponseList.dart';
-import '../../constants/fhb_constants.dart' as Constants;
 import '../../src/model/Health/asgard/health_record_list.dart';
-import 'package:shimmer/shimmer.dart';
-import '../../src/utils/FHBUtils.dart';
 import '../../src/utils/DashSeparator.dart';
-import '../../colors/fhb_colors.dart' as fhbColors;
-import '../../src/model/Health/CompleteData.dart';
-import '../../src/model/Health/MediaMetaInfo.dart';
-import '../../constants/variable_constant.dart' as variable;
-import '../../constants/fhb_parameters.dart' as parameters;
+import '../../src/utils/FHBUtils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 
-import '../../common/CommonConstants.dart';
-import '../../constants/fhb_parameters.dart';
-
 class RecordInfoCard {
-  Widget getCardForPrescription(Metadata metaInfo, String? createdDate) {
+  Widget getCardForPrescription(
+      Metadata metaInfo, String? createdDate, String? authToken) {
     return Container(
         padding: EdgeInsets.all(20),
         color: Colors.white,
@@ -36,7 +34,8 @@ class RecordInfoCard {
                   child: Container(),
                 ),
                 Text(
-                  FHBUtils().getMonthDateYear(createdDate),
+                  variable.strCreatedDate +
+                      FHBUtils().getMonthDateYear(createdDate),
                   textAlign: TextAlign.end,
                   style:
                       TextStyle(fontSize: 13.0.sp, fontWeight: FontWeight.w500),
@@ -46,19 +45,35 @@ class RecordInfoCard {
             Row(
               children: <Widget>[
                 ClipOval(
-                    child: metaInfo.doctor != null
-                        ? CommonUtil().getDoctorProfileImageWidget(
-                            metaInfo.doctor!.profilePicThumbnailUrl,
-                            metaInfo
-                                .doctor) //getDoctorProfileImageWidget(metaInfo)
+                    child: metaInfo?.doctor != null
+                        ? getProfilePicWidget(
+                            metaInfo?.doctor?.profilePicThumbnailUrl ?? "",
+                            metaInfo?.doctor?.firstName ?? "",
+                            metaInfo?.doctor?.lastName ?? "",
+                            Color(CommonUtil().getMyPrimaryColor()),
+                            CommonUtil().isTablet!
+                                ? imageTabHeader
+                                : Constants.imageMobileHeader,
+                            CommonUtil().isTablet!
+                                ? tabHeader1
+                                : Constants.mobileHeader1,
+                            authtoken: authToken ?? "")
                         : Container(
+                            child: Center(
+                                child: Image.network(
+                                    metaInfo?.healthRecordCategory?.logo ?? '',
+                                    height: 30,
+                                    width: 30,
+                                    color: Color(
+                                      CommonUtil().getMyPrimaryColor(),
+                                    ))),
                             width: CommonUtil().isTablet!
                                 ? imageTabHeader
-                                : imageMobileHeader,
+                                : Constants.imageMobileHeader,
                             height: CommonUtil().isTablet!
                                 ? imageTabHeader
-                                : imageMobileHeader,
-                            color: Color(fhbColors.bgColorContainer))),
+                                : Constants.imageMobileHeader,
+                            color: const Color(fhbColors.bgColorContainer))),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(10),
@@ -161,7 +176,8 @@ class RecordInfoCard {
                   child: Container(),
                 ),
                 Text(
-                  FHBUtils().getMonthDateYear(createdDate),
+                  variable.strCreatedDate +
+                      FHBUtils().getMonthDateYear(createdDate),
                   textAlign: TextAlign.end,
                   style:
                       TextStyle(fontSize: 13.0.sp, fontWeight: FontWeight.w500),
@@ -170,10 +186,7 @@ class RecordInfoCard {
             ),
             Row(
               children: <Widget>[
-                CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.grey[200],
-                ),
+                getCardImage(metaInfo),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(10),
@@ -285,7 +298,8 @@ class RecordInfoCard {
                   child: Container(),
                 ),
                 Text(
-                  FHBUtils().getMonthDateYear(createdDate),
+                  variable.strCreatedDate +
+                      FHBUtils().getMonthDateYear(createdDate),
                   textAlign: TextAlign.end,
                   style:
                       TextStyle(fontSize: 13.0.sp, fontWeight: FontWeight.w500),
@@ -294,10 +308,7 @@ class RecordInfoCard {
             ),
             Row(
               children: <Widget>[
-                CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.grey[200],
-                ),
+                getCardImage(metaInfo),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(10),
@@ -410,7 +421,8 @@ class RecordInfoCard {
                   child: Container(),
                 ),
                 Text(
-                  FHBUtils().getMonthDateYear(createdOn),
+                  variable.strCreatedDate +
+                      FHBUtils().getMonthDateYear(createdOn),
                   textAlign: TextAlign.end,
                   style:
                       TextStyle(fontSize: 13.0.sp, fontWeight: FontWeight.w500),
@@ -463,7 +475,8 @@ class RecordInfoCard {
               ),
               Text(
                 createdDate != null
-                    ? FHBUtils().getMonthDateYear(createdDate)
+                    ? variable.strCreatedDate +
+                        FHBUtils().getMonthDateYear(createdDate)
                     : '',
                 textAlign: TextAlign.end,
                 style:
@@ -528,7 +541,8 @@ class RecordInfoCard {
               ),
               Text(
                 createdDate != null
-                    ? FHBUtils().getMonthDateYear(createdDate)
+                    ? variable.strCreatedDate +
+                        FHBUtils().getMonthDateYear(createdDate)
                     : '',
                 textAlign: TextAlign.end,
                 style:
@@ -536,36 +550,46 @@ class RecordInfoCard {
               )
             ],
           ),
-          Text(
-            metaInfo.fileName ?? '',
-            style: TextStyle(
-                fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
-                fontWeight: FontWeight.w500),
-          ),
-          /*metaInfo.memoText != null
-              ? Text(toBeginningOfSentenceCase(metaInfo.memoText))
-              : Text(''),*/
           SizedBox(
-            height: 10.0.h,
+            height: 10,
           ),
-          if (metaInfo.doctor != null)
-            Text(
-              metaInfo.doctor!.name!,
-              style: TextStyle(
-                fontSize: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
-              ),
-            )
-          else
-            SizedBox(height: 0.0.h),
-          if (metaInfo.memoText != null)
-            Text(
-              metaInfo.memoText!,
-              style: TextStyle(
-                  fontSize:
-                      CommonUtil().isTablet! ? tabHeader3 : mobileHeader3),
-            )
-          else
-            SizedBox(height: 0.0.h),
+          Row(
+            children: [
+              getCardImage(metaInfo),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    metaInfo.fileName ?? '',
+                    style: TextStyle(
+                        fontSize:
+                            CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  if (metaInfo.doctor != null)
+                    Text(
+                      metaInfo.doctor!.name!,
+                      style: TextStyle(
+                        fontSize:
+                            CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
+                      ),
+                    )
+                  else
+                    SizedBox(height: 0.0.h),
+                  if (metaInfo.memoText != null)
+                    Text(
+                      metaInfo.memoText!,
+                      style: TextStyle(
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader3
+                              : mobileHeader3),
+                    )
+                  else
+                    SizedBox(height: 0.0.h),
+                ],
+              )
+            ],
+          )
         ],
       ),
     );
@@ -584,37 +608,57 @@ class RecordInfoCard {
                   child: Container(),
                 ),
                 Text(
-                  FHBUtils().getMonthDateYear(createdDate),
+                  variable.strCreatedDate +
+                      FHBUtils().getMonthDateYear(createdDate),
                   textAlign: TextAlign.end,
                   style:
                       TextStyle(fontSize: 13.0.sp, fontWeight: FontWeight.w500),
                 )
               ],
             ),
-            Text(
-              metaInfo.fileName!,
-              style: TextStyle(
-                  fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
-                  fontWeight: FontWeight.w500),
+            SizedBox(
+              height: 10,
             ),
-            if (metaInfo.dateOfVisit != null)
-              Text(
-                variable.strValidThru + metaInfo.dateOfVisit!,
-                style: TextStyle(
-                  fontSize: CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
-                ),
-              )
-            else
-              SizedBox(height: 0.0.h),
-            if (metaInfo.memoText != null)
-              Text(
-                metaInfo.memoText!,
-                style: TextStyle(
-                    fontSize:
-                        CommonUtil().isTablet! ? tabHeader3 : mobileHeader3),
-              )
-            else
-              SizedBox(height: 0.0.h),
+            Row(
+              children: [
+                getCardImage(metaInfo),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      metaInfo.fileName!,
+                      style: TextStyle(
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader1
+                              : mobileHeader1,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    if (metaInfo.dateOfVisit != null &&
+                        metaInfo!.dateOfVisit != "")
+                      Text(
+                        variable.strValidThru + metaInfo.dateOfVisit!,
+                        style: TextStyle(
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader2
+                              : mobileHeader2,
+                        ),
+                      )
+                    else
+                      SizedBox(height: 0.0.h),
+                    if (metaInfo.memoText != null)
+                      Text(
+                        metaInfo.memoText!,
+                        style: TextStyle(
+                            fontSize: CommonUtil().isTablet!
+                                ? tabHeader3
+                                : mobileHeader3),
+                      )
+                    else
+                      SizedBox(height: 0.0.h),
+                  ],
+                )
+              ],
+            ),
             SizedBox(
               height: 20.0.h,
             ),
@@ -634,7 +678,8 @@ class RecordInfoCard {
                   child: Container(),
                 ),
                 Text(
-                  FHBUtils().getMonthDateYear(createdDate),
+                  variable.strCreatedDate +
+                      FHBUtils().getMonthDateYear(createdDate),
                   textAlign: TextAlign.end,
                   style:
                       TextStyle(fontSize: 13.0.sp, fontWeight: FontWeight.w500),
@@ -644,9 +689,15 @@ class RecordInfoCard {
             Row(
               children: <Widget>[
                 CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.grey[200],
-                ),
+                    radius: 30,
+                    backgroundColor: Colors.grey[200],
+                    child: Image.network(
+                      metaInfo.healthRecordCategory!.logo!,
+                      height: 25.0.h,
+                      width: 25.0.h,
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      errorBuilder: (context, error, stackTrace) => SizedBox(),
+                    )),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(10),
@@ -726,191 +777,142 @@ class RecordInfoCard {
           ],
         ));
   }
-}
 
-Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
-  final list = <Widget>[];
-  for (var i = 0; i < deviceReadings.length; i++) {
-    list.add(
-      Padding(
-          padding: EdgeInsets.all(5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                flex: 6,
-                child: Text(deviceReadings[i].parameter != null
-                    ? toBeginningOfSentenceCase(
-                        deviceReadings[i].parameter!.toLowerCase() ==
-                                CommonConstants.strOxygenParams.toLowerCase()
-                            ? CommonConstants.strOxygenParamsName.toLowerCase()
-                            : deviceReadings[i].parameter!.toLowerCase())!
-                    : ''),
-              ),
-              Expanded(
-                flex: 2,
-                child: FittedBox(
-                    child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Text(
-                      deviceReadings[i].value.toString(),
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                        fontSize:
-                            CommonUtil().isTablet! ? tabHeader1 : mobileHeader1,
-                      ),
-                    ),
-                    Text(
-                        deviceReadings[i].unit.toLowerCase() ==
-                                CommonConstants.strOxygenUnits.toLowerCase()
-                            ? CommonConstants.strOxygenUnitsName
-                            : getUnitForTemperature(
-                                " " + deviceReadings[i].unit),
+  /// Returns an Image widget to display for the given Metadata.
+  ///
+  /// This handles finding the appropriate image based on the metadata,
+  /// loading it, and constructing the Image widget to display.
+  getCardImage(Metadata metaInfo) {
+    return ClipOval(
+        child: CircleAvatar(
+      radius: CommonUtil().isTablet! ? 35 : 25,
+      backgroundColor: const Color(fhbColors.bgColorContainer),
+      child: Image.network(
+        metaInfo?.healthRecordCategory?.logo ?? '',
+        height: 30.0.h,
+        width: 30.0.h,
+        errorBuilder: (context, error, stackTrace) => const SizedBox(),
+        color: Color(
+          CommonUtil().getMyPrimaryColor(),
+        ),
+      ),
+    ));
+  }
+
+  Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
+    final list = <Widget>[];
+    for (var i = 0; i < deviceReadings.length; i++) {
+      list.add(
+        Padding(
+            padding: EdgeInsets.all(5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Expanded(
+                  flex: 6,
+                  child: Text(deviceReadings[i].parameter != null
+                      ? toBeginningOfSentenceCase(deviceReadings[i]
+                                  .parameter!
+                                  .toLowerCase() ==
+                              CommonConstants.strOxygenParams.toLowerCase()
+                          ? CommonConstants.strOxygenParamsName.toLowerCase()
+                          : deviceReadings[i].parameter!.toLowerCase())!
+                      : ''),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Text(
+                        deviceReadings[i].value.toString(),
                         style: TextStyle(
-                          color: Colors.black54,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
                           fontSize: CommonUtil().isTablet!
-                              ? tabHeader2
-                              : mobileHeader2,
-                        )),
-                  ],
-                )),
-              )
-            ],
-          )),
+                              ? tabHeader1
+                              : mobileHeader1,
+                        ),
+                      ),
+                      Text(
+                          deviceReadings[i].unit.toLowerCase() ==
+                                  CommonConstants.strOxygenUnits.toLowerCase()
+                              ? CommonConstants.strOxygenUnitsName
+                              : getUnitForTemperature(
+                                  " " + deviceReadings[i].unit),
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: CommonUtil().isTablet!
+                                ? tabHeader2
+                                : mobileHeader2,
+                          )),
+                    ],
+                  ),
+                )
+              ],
+            )),
+      );
+    }
+
+    return Column(children: <Widget>[
+      Padding(
+        padding: EdgeInsets.only(top: 10, bottom: 10),
+        child: DashSeparator(
+          color: Colors.grey.withOpacity(0.5),
+        ),
+      ),
+      Column(
+        children: list,
+      ),
+      Padding(
+        padding: EdgeInsets.only(top: 10, bottom: 10),
+        child: DashSeparator(
+          color: Colors.grey.withOpacity(0.5),
+        ),
+      ),
+    ]);
+    //return Row(children: list);
+  }
+
+  getDoctorProfileImageWidget(MetaInfo data) {
+    var _healthReportListForUserBlock = HealthReportListForUserBlock();
+    return FutureBuilder(
+      future: _healthReportListForUserBlock.getProfilePic(data.doctor!.id!),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Image.memory(
+            snapshot.data as Uint8List,
+            height: 50.0.h,
+            width: 50.0.h,
+            fit: BoxFit.cover,
+          );
+        } else {
+          return SizedBox(
+            width: 50.0.h,
+            height: 50.0.h,
+            child: Shimmer.fromColors(
+                baseColor: Colors.grey[200]!,
+                highlightColor: Colors.grey[550]!,
+                child: Container(
+                    width: 50.0.h, height: 50.0.h, color: Colors.grey[200])),
+          );
+        }
+
+        ///load until snapshot.hasData resolves to true
+      },
     );
   }
 
-  return Column(children: <Widget>[
-    Padding(
-      padding: EdgeInsets.only(top: 10, bottom: 10),
-      child: DashSeparator(
-        color: Colors.grey.withOpacity(0.5),
-      ),
-    ),
-    Column(
-      children: list,
-    ),
-    Padding(
-      padding: EdgeInsets.only(top: 10, bottom: 10),
-      child: DashSeparator(
-        color: Colors.grey.withOpacity(0.5),
-      ),
-    ),
-  ]);
-  //return Row(children: list);
-}
-
-getDoctorProfileImageWidget(MetaInfo data) {
-  var _healthReportListForUserBlock = HealthReportListForUserBlock();
-  return FutureBuilder(
-    future: _healthReportListForUserBlock.getProfilePic(data.doctor!.id!),
-    builder: (context, snapshot) {
-      if (snapshot.hasData) {
-        return Image.memory(
-          snapshot.data as Uint8List,
-          height: 50.0.h,
-          width: 50.0.h,
-          fit: BoxFit.cover,
-        );
-      } else {
-        return SizedBox(
-          width: 50.0.h,
-          height: 50.0.h,
-          child: Shimmer.fromColors(
-              baseColor: Colors.grey[200]!,
-              highlightColor: Colors.grey[550]!,
-              child: Container(
-                  width: 50.0.h, height: 50.0.h, color: Colors.grey[200])),
-        );
-      }
-
-      ///load until snapshot.hasData resolves to true
-    },
-  );
-}
-
-getCardForBillsAndOthers(MetaInfo metaInfo, String createdDate) {
-  return Container(
-      padding: EdgeInsets.all(20),
-      color: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            metaInfo.fileName!,
-            style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500),
-          ),
-          SizedBox(
-            height: 10.0.h,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              if (metaInfo.doctor != null)
-                Text(
-                  metaInfo.doctor!.name!,
-                )
-              else
-                SizedBox(height: 0.0.h),
-              Text(FHBUtils().getFormattedDateString(createdDate))
-            ],
-          ),
-          Text(metaInfo.memoText!,
-              style: TextStyle(
-                  fontSize:
-                      CommonUtil().isTablet! ? tabHeader3 : mobileHeader3)),
-          SizedBox(
-            height: 60.0.h,
-          ),
-        ],
-      ));
-}
-
-getCardForIDDocs(MetaInfo metaInfo, String createdDate) {
-  return Container(
-      padding: EdgeInsets.all(20),
-      color: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            metaInfo.fileName!,
-            style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500),
-          ),
-          SizedBox(
-            height: 10.0.h,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              if (metaInfo.doctor != null)
-                Text(
-                  metaInfo.doctor!.name!,
-                )
-              else
-                SizedBox(height: 0.0.h),
-              Text(FHBUtils().getFormattedDateString(createdDate))
-            ],
-          ),
-          Text(metaInfo.memoText!),
-          SizedBox(
-            height: 60.0.h,
-          ),
-        ],
-      ));
-}
-
-getUnitForTemperature(String unit) {
-  if (unit.toLowerCase() == strParamUnitFarenheit.toLowerCase()) {
-    return strParamUnitFarenheit;
-  } else if (unit.toLowerCase() ==
-      CommonConstants.strTemperatureValue.toLowerCase()) {
-    return strParamUnitFarenheit;
-  } else if (unit.toLowerCase() == "c".toLowerCase()) {
-    return strParamUnitCelsius;
-  } else {
-    return unit;
+  getUnitForTemperature(String unit) {
+    if (unit.toLowerCase() == strParamUnitFarenheit.toLowerCase()) {
+      return strParamUnitFarenheit;
+    } else if (unit.toLowerCase() ==
+        CommonConstants.strTemperatureValue.toLowerCase()) {
+      return strParamUnitFarenheit;
+    } else if (unit.toLowerCase() == "c".toLowerCase()) {
+      return strParamUnitCelsius;
+    } else {
+      return unit;
+    }
   }
 }

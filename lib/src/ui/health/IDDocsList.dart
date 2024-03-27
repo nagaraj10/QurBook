@@ -236,18 +236,29 @@ class _IDDocsListState extends State<IDDocsList> {
                         visible: mediaMetaInfoObj.metadata!.dateOfVisit != null
                             ? true
                             : false,
-                        child: Text(
-                          mediaMetaInfoObj.metadata!.dateOfVisit != null
-                              ? variable.strValidThru +
-                                  mediaMetaInfoObj.metadata!.dateOfVisit!
-                              : '',
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: false,
-                          style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: CommonUtil().isTablet!
-                                  ? tabHeader2
-                                  : mobileHeader2),
+                        child: Visibility(
+                          /// Checks if the dateOfVisit field on the metadata object is not null and not empty
+                          /// to determine if the dateOfVisit should be visible.
+                          visible: (mediaMetaInfoObj.metadata!.dateOfVisit !=
+                                      null &&
+                                  mediaMetaInfoObj.metadata!.dateOfVisit != "")
+                              ? true
+                              : false,
+                          child: Text(
+                            (mediaMetaInfoObj.metadata!.dateOfVisit != null &&
+                                    mediaMetaInfoObj.metadata!.dateOfVisit !=
+                                        "")
+                                ? variable.strValidThru +
+                                    mediaMetaInfoObj.metadata!.dateOfVisit!
+                                : '',
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: false,
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: CommonUtil().isTablet!
+                                    ? tabHeader2
+                                    : mobileHeader2),
+                          ),
                         )),
                     Text(
                       FHBUtils()
