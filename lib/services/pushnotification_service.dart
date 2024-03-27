@@ -647,22 +647,22 @@ zonedScheduleNotification(
     int notificationId,
     tz.TZDateTime scheduledDateTime,
     bool isButtonShown,
-    bool isSnoozePress,
-    ) async {
+    bool isSnoozePress) async {
+  late Reminder reminderTemp;
+  late NotificationDetails notificationDetails;
+  var payLoadData = '';
+  // Initialize SheelaAIController
+  final sheelaAIController = CommonUtil().onInitSheelaAIController();
+
   try {
-
-    // Initialize SheelaAIController
-    final sheelaAIController = CommonUtil().onInitSheelaAIController();
-
     // Get the list of pending notifications
     List<PendingNotificationRequest> pendingNotifications =
-    await localNotificationsPlugin.pendingNotificationRequests();
+        await localNotificationsPlugin.pendingNotificationRequests();
 
     // Check if the notification with the given ID is already scheduled
     bool isScheduled = pendingNotifications.any(
-          (notification) => notification.id == notificationId,
+      (notification) => notification.id == notificationId,
     );
-
 
     var isDismissButtonOnlyShown = false;
     var channelId = remainderScheduleChannel.id;
@@ -691,14 +691,14 @@ zonedScheduleNotification(
     }
 
     // Create a copy of the reminder and update the notificationListId property
-    Reminder reminderTemp = Reminder.fromJson(reminder!.toJson());
-    reminderTemp.notificationListId = notificationId.toString();
+    reminderTemp = Reminder.fromJson(reminder!.toJson())
+      ..notificationListId = notificationId.toString();
 
     // Encode the reminder data to JSON
-    var payLoadData = jsonEncode(reminderTemp?.toMap());
+    payLoadData = jsonEncode(reminderTemp?.toMap());
 
     // Create notification details based on platform
-    final notificationDetails = NotificationDetails(
+    notificationDetails = NotificationDetails(
       android: AndroidNotificationDetails(
         channelId,
         channelName,
@@ -707,31 +707,36 @@ zonedScheduleNotification(
         icon: getIconBasedOnRegion(),
         actions: isButtonShown
             ? isDismissButtonOnlyShown
-            ? [dismissAction]
-            : [dismissAction, snoozeAction]
+                ? [dismissAction]
+                : [dismissAction, snoozeAction]
             : null,
       ),
       iOS: isButtonShown
           ? isDismissButtonOnlyShown
-          ? const DarwinNotificationDetails(categoryIdentifier: strShowSingleButtonCat)
-          : const DarwinNotificationDetails(categoryIdentifier: strShowBothButtonsCat)
-          : const DarwinNotificationDetails(sound: strRingtoneIOS, categoryIdentifier: strShowSingleButtonCat),
+              ? const DarwinNotificationDetails(
+                  categoryIdentifier: strShowSingleButtonCat)
+              : const DarwinNotificationDetails(
+                  categoryIdentifier: strShowBothButtonsCat)
+          : const DarwinNotificationDetails(
+              sound: strRingtoneIOS,
+              categoryIdentifier: strShowSingleButtonCat),
     );
 
     // Resolve Android specific implementation to create the notification channel
     await localNotificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(
-      reminderTemp?.importance == '2' ? remainderScheduleV3Channel : remainderScheduleChannel,
-    );
-
+          reminderTemp?.importance == '2'
+              ? remainderScheduleV3Channel
+              : remainderScheduleChannel,
+        );
 
     if (isScheduled) {
       // If the reminder is scheduled, add the scheduled time using SheelaAIController
       await sheelaAIController.addScheduledTime(reminderTemp!, scheduledDateTime);
       return;
     }
-
 
     // List to hold asynchronous function calls
     var functionCalls = <Future<dynamic>>[
@@ -753,13 +758,37 @@ zonedScheduleNotification(
 
     // Wait for all functions to complete
     await Future.wait(functionCalls);
-
   } catch (e, stackTrace) {
+
+    // Retry with isSetInExact set to true on failure
+    var functionCalls = <Future<dynamic>>[
+      // Schedule a local notification
+      localNotificationsPlugin.zonedSchedule(
+        notificationId,
+        reminderTemp?.title ?? strScheduledtitle,
+        reminderTemp?.description ?? strScheduledbody,
+        scheduledDateTime,
+        notificationDetails,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        payload: payLoadData,
+      ),
+      // Add scheduled time using SheelaAIController
+      sheelaAIController.addScheduledTime(reminderTemp!, scheduledDateTime,
+          isSetInExact: true,
+          notificationId: notificationId,
+          notificationDetails: notificationDetails,
+          payLoadData: payLoadData),
+    ];
+
+    // Wait for all functions to complete
+    await Future.wait(functionCalls);
+
     // Handle exceptions and log errors
     CommonUtil().appLogs(message: e, stackTrace: stackTrace);
   }
 }
-
 
 // Convert an integer to a signed 32-bit integer.
 int toSigned32BitInt(int value) {
@@ -811,5 +840,25 @@ void onInitNotification(RemoteMessage message) {
   }
 }
 
-
-
+Future<void> showScheduleNotification({
+  Reminder? reminder,
+  int? notificationId,
+  NotificationDetails? notificationDetails,
+  String? payLoadData,
+}) async {
+  try {
+    // Show the notification using FlutterLocalNotificationsPlugin
+    await localNotificationsPlugin.show(
+      notificationId ?? 0, // Use provided notificationId or default to 0
+      reminder?.title ?? strScheduledtitle,
+      // Use reminder title or default title
+      reminder?.description ?? strScheduledbody,
+      // Use reminder description or default body
+      notificationDetails, // Use provided notification details
+      payload: payLoadData, // Use provided payload data
+    );
+  } catch (e, stackTrace) {
+    // Handle any exceptions and log errors
+    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+  }
+}

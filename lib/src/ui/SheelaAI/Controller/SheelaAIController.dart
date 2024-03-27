@@ -24,6 +24,7 @@ import 'package:myfhb/language/repository/LanguageRepository.dart';
 import 'package:myfhb/main.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
+import 'package:myfhb/services/pushnotification_service.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_synonyms_request.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_synonyms_response.dart';
@@ -3329,7 +3330,9 @@ makeApiRequest is used to update the data with latest data
   }
 
   // Create a timer based on the scheduled time for a reminder.
-  Timer createTimer(Reminder reminder, tz.TZDateTime scheduledDateTime) {
+  Timer createTimer(Reminder reminder, tz.TZDateTime scheduledDateTime,{bool isSetInExact = false,int? notificationId,
+    NotificationDetails? notificationDetails,
+    String? payLoadData}) {
     // Convert the scheduledDateTime to UTC
     final utcScheduledDateTime = scheduledDateTime.toUtc();
 
@@ -3340,13 +3343,20 @@ makeApiRequest is used to update the data with latest data
     // Schedule the method to be called after the calculated duration
     return Timer(durationUntilScheduledTime, () {
       // Call the scheduled method passing the reminder
-      scheduledMethod(reminder);
+      scheduledMethod(reminder,
+          isSetInExact: isSetInExact,
+          notificationIdTemp: notificationId??0,
+          notificationDetails: notificationDetails,
+          payLoadData: payLoadData);
       // Optional: Reschedule the method for the next occurrence
     });
   }
 
   // Method called when the timer expires, triggers the reminder-related logic.
-  scheduledMethod(Reminder reminder) async {
+  scheduledMethod(Reminder reminder,{bool isSetInExact = false,int? notificationIdTemp,
+    NotificationDetails? notificationDetails,
+    String? payLoadData}) async {
+
     final notificationId = reminder.eid ?? '';
     // Get the list of pending notifications
     List<PendingNotificationRequest> pendingNotifications =
@@ -3362,6 +3372,19 @@ makeApiRequest is used to update the data with latest data
     if (isScheduled) {
       //Sheela inactive dialog exist close the dialog
 
+      if (isSetInExact) {
+        // If isSetInExact is true, cancel the previous notification, wait for a brief delay, then reschedule it
+        await localNotificationsPlugin.cancel(notificationIdTemp ?? 0); // Cancel previous notification
+        await Future.delayed(const Duration(milliseconds: 50)); // Wait for a brief delay
+        await showScheduleNotification( // Reschedule notification with updated details
+          reminder: reminder,
+          notificationId: notificationIdTemp ?? 0,
+          notificationDetails: notificationDetails,
+          payLoadData: payLoadData,
+        );
+      }
+
+
       await Future.delayed(const Duration(milliseconds: 100));
       final sheelaAIController = CommonUtil().onInitSheelaAIController();
       // Construct an array of values for the reminder invocation
@@ -3376,11 +3399,17 @@ makeApiRequest is used to update the data with latest data
   }
 
   // Add or update the timer associated with a reminder based on its scheduled time.
-  addScheduledTime(Reminder reminder, tz.TZDateTime scheduledDateTime) async {
+  addScheduledTime(Reminder reminder, tz.TZDateTime scheduledDateTime,{bool isSetInExact = false,int? notificationId,
+    NotificationDetails? notificationDetails,
+    String? payLoadData}) async {
     await clearScheduledTime(reminder.notificationListId!);
     try {
       // Create a new timer for the new scheduled time and add it to the map
-      final newTimer = createTimer(reminder, scheduledDateTime);
+      final newTimer = createTimer(reminder, scheduledDateTime,
+          isSetInExact: isSetInExact,
+          notificationId: notificationId??0,
+          notificationDetails: notificationDetails,
+          payLoadData: payLoadData);
       reminderTimers[reminder.notificationListId!] = newTimer;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(
