@@ -616,10 +616,14 @@ class RecordInfoCard {
                 )
               ],
             ),
+            SizedBox(
+              height: 10,
+            ),
             Row(
               children: [
                 getCardImage(metaInfo),
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       metaInfo.fileName!,
