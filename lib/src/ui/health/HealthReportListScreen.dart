@@ -132,223 +132,221 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
 
   Widget getCardWidgetForPrescription(
       HealthResult mediaMetaInfoObj, int position) {
-    if (mediaMetaInfoObj.metadata!.doctor != null)
-      return InkWell(
-          onLongPress: () {
-            if (widget.allowSelect!) {
-              mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected!;
+    return InkWell(
+        onLongPress: () {
+          if (widget.allowSelect!) {
+            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected!;
 
-              setState(() {});
-              widget.mediaSelected(
-                  mediaMetaInfoObj.id, mediaMetaInfoObj.isSelected);
-            }
-          },
-          onTap: () {
-            if (widget.allowSelect! && widget.showDetails == false) {
-              if (widget.allowAttach!) {
-                bool condition;
-                if (widget.mediaMeta!.contains(mediaMetaInfoObj.id)) {
-                  condition = false;
-                } else {
-                  condition = true;
-                }
-                mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected!;
-                if (mediaMetaInfoObj != null &&
-                    (mediaMetaInfoObj.healthRecordCollection?.length ?? 0) >
-                        0) {
-                  mediMasterId =
-                      CommonUtil().getMetaMasterIdListNew(mediaMetaInfoObj);
-                  if (mediMasterId.length > 0) {
-                    widget.healthRecordSelected(
-                        mediaMetaInfoObj.id, mediMasterId, condition);
-                  } else {
-                    toast.getToast('No Image Attached ', Colors.red);
-                  }
+            setState(() {});
+            widget.mediaSelected(
+                mediaMetaInfoObj.id, mediaMetaInfoObj.isSelected);
+          }
+        },
+        onTap: () {
+          if (widget.allowSelect! && widget.showDetails == false) {
+            if (widget.allowAttach!) {
+              bool condition;
+              if (widget.mediaMeta!.contains(mediaMetaInfoObj.id)) {
+                condition = false;
+              } else {
+                condition = true;
+              }
+              mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected!;
+              if (mediaMetaInfoObj != null &&
+                  (mediaMetaInfoObj.healthRecordCollection?.length ?? 0) > 0) {
+                mediMasterId =
+                    CommonUtil().getMetaMasterIdListNew(mediaMetaInfoObj);
+                if (mediMasterId.length > 0) {
+                  widget.healthRecordSelected(
+                      mediaMetaInfoObj.id, mediMasterId, condition);
                 } else {
                   toast.getToast('No Image Attached ', Colors.red);
                 }
               } else {
-                bool condition;
-                if (widget.mediaMeta!.contains(mediaMetaInfoObj.id)) {
-                  condition = false;
-                } else {
-                  condition = true;
-                }
-                mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected!;
-
-                widget.mediaSelected(mediaMetaInfoObj.id, condition);
+                toast.getToast('No Image Attached ', Colors.red);
               }
             } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => RecordDetailScreen(
-                    data: mediaMetaInfoObj,
-                  ),
-                ),
-              ).then((value) async {
-                if (value ?? false) {
-                  await Future.delayed(const Duration(milliseconds: 100));
-                  widget.callBackToRefresh();
-                }
-              });
+              bool condition;
+              if (widget.mediaMeta!.contains(mediaMetaInfoObj.id)) {
+                condition = false;
+              } else {
+                condition = true;
+              }
+              mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected!;
+
+              widget.mediaSelected(mediaMetaInfoObj.id, condition);
             }
-          },
-          child: Container(
-            padding: const EdgeInsets.all(10.0),
-            margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                const BoxShadow(
-                  color: Color(fhbColors.cardShadowColor),
-                  blurRadius: 16, // has the effect of softening the shadow
-                  spreadRadius: 0, // has the effect of extending the shadow
-                )
-              ],
-            ),
-            child: Row(
-              children: <Widget>[
-                ClipOval(
-                    child: mediaMetaInfoObj?.metadata?.doctor != null
-                        ? getProfilePicWidget(
-                            mediaMetaInfoObj?.metadata?.doctor
-                                    ?.profilePicThumbnailUrl ??
-                                "",
-                            mediaMetaInfoObj?.metadata?.doctor?.firstName ?? "",
-                            mediaMetaInfoObj?.metadata?.doctor?.lastName ?? "",
-                            Color(CommonUtil().getMyPrimaryColor()),
-                            CommonUtil().isTablet!
-                                ? imageTabHeader
-                                : Constants.imageMobileHeader,
-                            CommonUtil().isTablet!
-                                ? tabHeader1
-                                : Constants.mobileHeader1,
-                            authtoken: authToken ?? "")
-                        : Container(
-                            width: CommonUtil().isTablet!
-                                ? imageTabHeader
-                                : Constants.imageMobileHeader,
-                            height: CommonUtil().isTablet!
-                                ? imageTabHeader
-                                : Constants.imageMobileHeader,
-                            color: const Color(fhbColors.bgColorContainer))),
-                const SizedBox(width: 20),
-                Expanded(
-                  flex: 6,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        toBeginningOfSentenceCase(mediaMetaInfoObj
-                                    .metadata!.doctor !=
-                                null
-                            ? (mediaMetaInfoObj.metadata!.doctor!.name !=
-                                        null &&
-                                    mediaMetaInfoObj.metadata!.doctor!.name !=
-                                        '')
-                                ? mediaMetaInfoObj.metadata!.doctor!.name
-                                : mediaMetaInfoObj
-                                        .metadata!.doctor!.firstName! +
-                                    ' ' +
-                                    mediaMetaInfoObj.metadata!.doctor!.lastName!
-                            : mediaMetaInfoObj.metadata!.doctor!.firstName! +
-                                ' ' +
-                                mediaMetaInfoObj.metadata!.doctor!.lastName!)!,
-                        softWrap: false,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: CommonUtil().isTablet!
-                                ? tabHeader1
-                                : mobileHeader1),
-                      ),
-                      Visibility(
-                          visible: mediaMetaInfoObj?.metadata?.hospital != null
-                              ? true
-                              : false,
-                          child: Text(
-                            mediaMetaInfoObj?.metadata?.hospital != null
-                                ? toBeginningOfSentenceCase(mediaMetaInfoObj
-                                        ?.metadata
-                                        ?.hospital
-                                        ?.healthOrganizationName ??
-                                    '')!
-                                : '',
-                            softWrap: false,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w500,
-                                fontSize: CommonUtil().isTablet!
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RecordDetailScreen(
+                  data: mediaMetaInfoObj,
+                ),
+              ),
+            ).then((value) async {
+              if (value ?? false) {
+                await Future.delayed(const Duration(milliseconds: 100));
+                widget.callBackToRefresh();
+              }
+            });
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.all(10.0),
+          margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              const BoxShadow(
+                color: Color(fhbColors.cardShadowColor),
+                blurRadius: 16, // has the effect of softening the shadow
+                spreadRadius: 0, // has the effect of extending the shadow
+              )
+            ],
+          ),
+          child: Row(
+            children: <Widget>[
+              ClipOval(
+                  child: mediaMetaInfoObj?.metadata?.doctor != null
+                      ? getProfilePicWidget(
+                          mediaMetaInfoObj
+                                  ?.metadata?.doctor?.profilePicThumbnailUrl ??
+                              "",
+                          mediaMetaInfoObj?.metadata?.doctor?.firstName ?? "",
+                          mediaMetaInfoObj?.metadata?.doctor?.lastName ?? "",
+                          Color(CommonUtil().getMyPrimaryColor()),
+                          CommonUtil().isTablet!
+                              ? imageTabHeader
+                              : Constants.imageMobileHeader,
+                          CommonUtil().isTablet!
+                              ? tabHeader1
+                              : Constants.mobileHeader1,
+                          authtoken: authToken ?? "")
+                      : Container(
+                          child: Center(
+                              child: Image.network(
+                                  mediaMetaInfoObj?.metadata
+                                          ?.healthRecordCategory?.logo ??
+                                      '',
+                                  height: 30,
+                                  width: 30,
+                                  color: Color(
+                                    CommonUtil().getMyPrimaryColor(),
+                                  ))),
+                          width: CommonUtil().isTablet!
+                              ? imageTabHeader
+                              : Constants.imageMobileHeader,
+                          height: CommonUtil().isTablet!
+                              ? imageTabHeader
+                              : Constants.imageMobileHeader,
+                          color: const Color(fhbColors.bgColorContainer))),
+              const SizedBox(width: 20),
+              Expanded(
+                flex: 6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      (mediaMetaInfoObj.metadata?.doctor != null &&
+                              mediaMetaInfoObj.metadata?.hospital != null)
+                          ? getDoctorName(mediaMetaInfoObj)!
+                          : (mediaMetaInfoObj.metadata?.fileName ?? '')!,
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader1
+                              : mobileHeader1),
+                    ),
+                    Visibility(
+                        visible: mediaMetaInfoObj?.metadata?.hospital != null
+                            ? true
+                            : mediaMetaInfoObj.metadata?.doctor != null
+                                ? true
+                                : false,
+                        child: Text(
+                          mediaMetaInfoObj?.metadata?.hospital != null
+                              ? toBeginningOfSentenceCase(mediaMetaInfoObj
+                                      ?.metadata
+                                      ?.hospital
+                                      ?.healthOrganizationName ??
+                                  '')!
+                              : mediaMetaInfoObj.metadata?.doctor != null
+                                  ? getDoctorName(mediaMetaInfoObj)!
+                                  : '',
+                          softWrap: false,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w500,
+                              fontSize: CommonUtil().isTablet!
+                                  ? tabHeader2
+                                  : mobileHeader2),
+                        )),
+                    Text(
+                      FHBUtils()
+                          .getFormattedDateString(mediaMetaInfoObj.createdOn),
+                      style: TextStyle(
+                          color: Colors.grey[400],
+                          fontWeight: FontWeight.w200,
+                          fontSize: CommonUtil().isTablet!
+                              ? tabHeader3
+                              : mobileHeader3),
+                    )
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    IconButton(
+                        icon: mediaMetaInfoObj?.isBookmarked ?? false
+                            ? ImageIcon(
+                                const AssetImage(
+                                    variable.icon_record_fav_active),
+                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                size: CommonUtil().isTablet!
                                     ? tabHeader2
-                                    : mobileHeader2),
-                          )),
-                      Text(
-                        FHBUtils()
-                            .getFormattedDateString(mediaMetaInfoObj.createdOn),
-                        style: TextStyle(
-                            color: Colors.grey[400],
-                            fontWeight: FontWeight.w200,
-                            fontSize: CommonUtil().isTablet!
-                                ? tabHeader3
-                                : mobileHeader3),
-                      )
-                    ],
-                  ),
+                                    : mobileHeader2,
+                              )
+                            : ImageIcon(
+                                const AssetImage(variable.icon_record_fav),
+                                color: Colors.black,
+                                size: CommonUtil().isTablet!
+                                    ? tabHeader2
+                                    : mobileHeader2,
+                              ),
+                        onPressed: () {
+                          CommonUtil()
+                              .bookMarkRecord(mediaMetaInfoObj, _refresh);
+                        }),
+                    (mediaMetaInfoObj?.metadata?.hasVoiceNotes != null &&
+                            (mediaMetaInfoObj?.metadata?.hasVoiceNotes ??
+                                false))
+                        ? const Icon(
+                            Icons.mic,
+                            color: Colors.black54,
+                          )
+                        : Container(),
+                    widget.mediaMeta!.contains(mediaMetaInfoObj.id)
+                        ? Icon(
+                            Icons.done,
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                          )
+                        : const SizedBox(),
+                  ],
                 ),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      IconButton(
-                          icon: mediaMetaInfoObj?.isBookmarked ?? false
-                              ? ImageIcon(
-                                  const AssetImage(
-                                      variable.icon_record_fav_active),
-                                  color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
-                                  size: CommonUtil().isTablet!
-                                      ? tabHeader2
-                                      : mobileHeader2,
-                                )
-                              : ImageIcon(
-                                  const AssetImage(variable.icon_record_fav),
-                                  color: Colors.black,
-                                  size: CommonUtil().isTablet!
-                                      ? tabHeader2
-                                      : mobileHeader2,
-                                ),
-                          onPressed: () {
-                            CommonUtil()
-                                .bookMarkRecord(mediaMetaInfoObj, _refresh);
-                          }),
-                      (mediaMetaInfoObj?.metadata?.hasVoiceNotes != null &&
-                              (mediaMetaInfoObj?.metadata?.hasVoiceNotes ??
-                                  false))
-                          ? const Icon(
-                              Icons.mic,
-                              color: Colors.black54,
-                            )
-                          : Container(),
-                      widget.mediaMeta!.contains(mediaMetaInfoObj.id)
-                          ? Icon(
-                              Icons.done,
-                              color: Color(CommonUtil().getMyPrimaryColor()),
-                            )
-                          : const SizedBox(),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ));
-    else
-      return const SizedBox();
+              ),
+            ],
+          ),
+        ));
   }
 
   getDoctorProfileImageWidget(MediaMetaInfo data) {
@@ -497,5 +495,17 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
 
   void setAuthToken() async {
     authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+  }
+
+  /// Returns the doctor name for the given mediaMetaInfoObj HealthResult object.
+  getDoctorName(HealthResult mediaMetaInfoObj) {
+    return toBeginningOfSentenceCase(mediaMetaInfoObj.metadata!.doctor != null
+        ? (mediaMetaInfoObj.metadata?.doctor?.name != null &&
+                mediaMetaInfoObj.metadata?.doctor?.name != '')
+            ? mediaMetaInfoObj.metadata?.doctor?.name
+            : (mediaMetaInfoObj.metadata?.doctor?.firstName ?? '') +
+                ' ' +
+                (mediaMetaInfoObj.metadata?.doctor?.lastName ?? '')
+        : '');
   }
 }

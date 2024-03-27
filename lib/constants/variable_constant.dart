@@ -526,6 +526,7 @@ const String strUSDateFormatDay = 'MM/dd/yyyy';
 
 const String stAudioPath = 'myFHB/Audio';
 const String strDateOfVisit = 'Date of visit: ';
+const String strCreatedDate = 'Created Date : ';
 
 //for Add remainder
 List<String?> selectedInterval = ['Day', 'Week', 'Month'];
@@ -943,7 +944,6 @@ const listenToCallStatusMethod = 'listenToCallStatus';
 const String strNoTicketsRaised = 'Tap on + icon to create Tickets';
 const String strNoTicketTypesAvaliable = 'No Ticket Types Found !!';
 
-
 // regimen appointment
 const String strAppointmentRegimen = 'Appointment';
 const String strSelfRegimen = 'Self';
@@ -1009,7 +1009,7 @@ const String strLocationLink = "Location link";
 const String strCentreVisit = 'Centre Visit';
 const String strOnsite = 'Onsite';
 
-const String strCompleted='Completed';
+const String strCompleted = 'Completed';
 
 //for regimen
 const String strRecordedAt = 'Recorded at';

@@ -1,17 +1,15 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:async';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
+import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/unit/choose_unit.dart';
-import 'CommonConstants.dart';
-import 'CommonUtil.dart';
-import 'FHBBasicWidget.dart';
-import 'PreferenceUtil.dart';
+
 import '../constants/fhb_constants.dart' as Constants;
 import '../constants/fhb_parameters.dart' as parameters;
 import '../constants/variable_constant.dart' as variable;
@@ -40,7 +38,9 @@ import '../src/utils/FHBUtils.dart';
 import '../src/utils/colors_utils.dart';
 import '../src/utils/screenutils/size_extensions.dart';
 import '../telehealth/features/MyProvider/view/CommonWidgets.dart';
-import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
+import 'CommonConstants.dart';
+import 'FHBBasicWidget.dart';
+import 'PreferenceUtil.dart';
 
 class CommonDialogBox {
   String? categoryName, deviceName;
@@ -164,8 +164,8 @@ class CommonDialogBox {
           metaInfoId = mediaMetaInfo.id;
         }
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
 
     dateOfVisit.text = dateOfVisitClone.text;
@@ -435,8 +435,8 @@ class CommonDialogBox {
           metaInfoId = mediaMetaInfo.id;
         }
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     dateOfVisit.text = dateOfVisitClone.text;
 
@@ -1266,8 +1266,8 @@ class CommonDialogBox {
       categoryName = healthResult!.metadata!.healthRecordCategory!.categoryName;
       deviceName = healthResult.metadata!.healthRecordType!.name;
       categoryID = healthResult.metadata!.healthRecordCategory!.id;
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
       deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
       categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
@@ -1787,18 +1787,19 @@ class CommonDialogBox {
     var dateTime = DateTime.now();
 
     final picked = await showDatePicker(
-        context: context,
-        initialDate: dateTime,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime.now(),
-      builder: (context,child) => Theme(
+      context: context,
+      initialDate: dateTime,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime.now(),
+      builder: (context, child) => Theme(
         data: ThemeData.light().copyWith(
           colorScheme: ColorScheme.light().copyWith(
-            primary:Color(CommonUtil().getMyPrimaryColor()),
+            primary: Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
         child: child!,
-      ),);
+      ),
+    );
 
     if (picked != null) {
       dateTime = picked;
@@ -1811,18 +1812,19 @@ class CommonDialogBox {
     var dateTime = DateTime.now();
 
     final picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now(),
-        lastDate: DateTime(2100),
-      builder: (context,child) => Theme(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+      builder: (context, child) => Theme(
         data: ThemeData.light().copyWith(
           colorScheme: ColorScheme.light().copyWith(
-            primary:Color(CommonUtil().getMyPrimaryColor()),
+            primary: Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
         child: child!,
-      ),);
+      ),
+    );
 
     if (picked != null) {
       dateTime = picked;
@@ -1856,8 +1858,8 @@ class CommonDialogBox {
           doctorsData = json.decode(results[Constants.keyDoctor]);
           try {
             setValueToDoctorDropdown(doctorsData, setState);
-          } catch (e,stackTrace) {
-            CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+          } catch (e, stackTrace) {
+            CommonUtil().appLogs(message: e, stackTrace: stackTrace);
           }
 
           print(doctorsData[parameters.strFirstName]);
@@ -2334,26 +2336,14 @@ class CommonDialogBox {
     var validationConditon = false;
     if (categoryName == AppConstants.prescription ||
         categoryName == Constants.STR_MEDICALREPORT) {
-      if (doctor.text == '') {
-        validationConditon = false;
-        validationMsg = CommonConstants.strDoctorsEmpty;
-      } else if (fileName.text == '') {
+      if (fileName.text == '') {
         validationConditon = false;
         validationMsg = CommonConstants.strFileEmpty;
-      } else if (memoController.text.length > 500) {
-        validationConditon = false;
-        validationMsg = CommonConstants.strMemoCrossedLimit;
       } else {
         validationConditon = true;
       }
     } else if (categoryName == Constants.STR_LABREPORT) {
-      if (lab.text == '') {
-        validationConditon = false;
-        validationMsg = CommonConstants.strLabEmpty;
-      } else if (doctor.text == '') {
-        validationConditon = false;
-        validationMsg = CommonConstants.strDoctorsEmpty;
-      } else if (fileName.text == '') {
+      if (fileName.text == '') {
         validationConditon = false;
         validationMsg = CommonConstants.strFileEmpty;
       } else {
@@ -2380,9 +2370,6 @@ class CommonDialogBox {
       if (fileName.text == '') {
         validationConditon = false;
         validationMsg = CommonConstants.strFileEmpty;
-      } else if (dateOfVisit.text == '') {
-        validationConditon = false;
-        validationMsg = CommonConstants.strExpDateEmpty;
       } else if (selectedMediaData == null) {
         validationConditon = false;
         validationMsg = CommonConstants.strIDEmpty;
@@ -2393,9 +2380,6 @@ class CommonDialogBox {
       if (fileName.text == '') {
         validationConditon = false;
         validationMsg = CommonConstants.strFileEmpty;
-      } else if (memoController.text == '') {
-        validationConditon = false;
-        validationMsg = CommonConstants.strMemoEmpty;
       } else {
         validationConditon = true;
       }
@@ -2590,8 +2574,8 @@ class CommonDialogBox {
           doctor.text = preferedDoctorData.name!;
         }
       });
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       doctor.text = doctorsText;
     }
 
@@ -2623,8 +2607,8 @@ class CommonDialogBox {
           hospital.text = preferredHospitalData.name!;
         }
       });
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       hospital.text = hospitalText;
     }
 
@@ -2656,8 +2640,8 @@ class CommonDialogBox {
           lab.text = preferredlabData.name!;
         }
       });
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       lab.text = labtext;
     }
@@ -3034,8 +3018,7 @@ class CommonDialogBox {
                               padding: EdgeInsets.symmetric(vertical: 10),
                               width: 0.5.sw,
                               child: Text(element!.user != null
-                                  ? CommonUtil()
-                                      .getDoctorName(element.user!)!
+                                  ? CommonUtil().getDoctorName(element.user!)!
                                   : ''),
                             ),
                             SizedBox(height: 10),
