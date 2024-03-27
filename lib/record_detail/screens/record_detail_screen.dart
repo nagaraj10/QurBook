@@ -621,7 +621,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     switch (metaInfo.metadata!.healthRecordCategory!.categoryDescription) {
       case CommonConstants.categoryDescriptionPrescription:
         return RecordInfoCard().getCardForPrescription(
-            widget.data.metadata!, widget.data.createdOn);
+            widget.data.metadata!, widget.data.createdOn, authToken);
         break;
       case CommonConstants.categoryDescriptionDevice:
         return RecordInfoCard()
@@ -666,7 +666,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
       default:
         return RecordInfoCard().getCardForPrescription(
-            widget.data.metadata!, widget.data.createdOn);
+            widget.data.metadata!, widget.data.createdOn, authToken);
     }
   }
 
