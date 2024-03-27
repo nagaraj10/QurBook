@@ -651,8 +651,10 @@ class SheelaBLEController extends GetxController {
         hublistController.eid = null;
         hublistController.uid = null;
         // Check if Sheela screen is active and device is connected to Sheela screen
+        print('kkkkkkkkkkEid'+SheelaController.deviceResponseEid);
         if (SheelaController.isSheelaScreenActive &&
-            (SheelaController.isDeviceConnectSheelaScreen.value)) {
+            (SheelaController.isDeviceConnectSheelaScreen.value) &&
+            (SheelaController.deviceResponseEid != '')) {
           // Check if device type is SPO2
           if (model.deviceType == "SPO2") {
             // Check if SPO2 and pulse data are not empty

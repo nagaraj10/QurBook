@@ -188,6 +188,9 @@ class SheelaAIController extends GetxController {
   //mic button enable or disable flag while reconnect
   Rx<bool> micDisableReconnect = false.obs;
 
+
+  var deviceResponseEid = '';
+
   @override
   void onInit() {
     try {
@@ -640,6 +643,9 @@ class SheelaAIController extends GetxController {
 
             // disable the mic button while say reconnect
             micDisableReconnect.value = true;
+
+            // for getting the eid from payload api
+            deviceResponseEid = (conversations.last?.additionalInfoSheelaResponse?.eid ?? '').toString();
 
             // for getting the eid from payload api
             hubListViewController.eid = (conversations.last?.additionalInfoSheelaResponse?.eid ?? '').toString();
