@@ -127,8 +127,10 @@ class QurPlanReminders {
     var localReminders = await getLocalReminder();
 
     try {
-      for (var i = 0; i < data.length; i++) {
-        var apiReminder = data[i];
+      var viewAccessList =
+          data.where((element) => element.isPatientViewAccess == true).toList();
+      for (var i = 0; i < viewAccessList.length; i++) {
+        var apiReminder = viewAccessList[i];
         var found = false;
         for (var j = 0; j < localReminders.length; j++) {
           var localReminder = localReminders[j];

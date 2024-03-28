@@ -35,6 +35,9 @@ class Reminder {
   Otherinfo? otherinfo;
 
 
+  bool? isPatientViewAccess = false;
+
+
 
 
   Reminder(
@@ -56,7 +59,7 @@ class Reminder {
         this.importance = "0",
         this.ack = "",
         this.snoozeTime = '',
-        this.ack_local = "",this.dosemeal,this.notificationListId,this.redirectTo,this.snoozeTapCountTime,this.otherinfo});
+        this.ack_local = "",this.dosemeal,this.notificationListId,this.redirectTo,this.snoozeTapCountTime,this.otherinfo,this.isPatientViewAccess});
 
   Reminder copyWith(
       {String? eid,
@@ -77,7 +80,7 @@ class Reminder {
         int? importance,
         String? ack,
         String? snoozeTime,
-        String? ack_local,String? dosemeal,String? notificationListId,String? redirectTo,int? snoozeTapCountTime,tz.TZDateTime? scheduledDateTime,Otherinfo? otherinfo}) {
+        String? ack_local,String? dosemeal,String? notificationListId,String? redirectTo,int? snoozeTapCountTime,tz.TZDateTime? scheduledDateTime,Otherinfo? otherinfo,bool? isPatientViewAccess}) {
     return Reminder(
       eid: eid ?? this.eid,
       title: title ?? this.title,
@@ -103,6 +106,7 @@ class Reminder {
       redirectTo: redirectTo ?? this.redirectTo,
       snoozeTapCountTime: snoozeTapCountTime ?? this.snoozeTapCountTime,
       otherinfo: otherinfo ?? this.otherinfo,
+      isPatientViewAccess: isPatientViewAccess ?? this.isPatientViewAccess,
     );
   }
 
@@ -133,6 +137,7 @@ class Reminder {
       'redirectTo': redirectTo,
       'snoozeTapCountTime': snoozeTapCountTime,
       'otherinfo': otherinfo,
+      'isPatientViewAccess': isPatientViewAccess,
     };
   }
 
@@ -164,6 +169,7 @@ class Reminder {
       otherinfo:map['otherinfo'] != null && map['otherinfo'] is String
           ? Otherinfo.fromJson(jsonDecode(map['otherinfo']))
           :  Otherinfo.fromJson(map['otherinfo']??'{}'),
+        isPatientViewAccess: (map['isPatientViewAccess']??false)
     );
   }
 
@@ -174,7 +180,7 @@ class Reminder {
 
   @override
   String toString() {
-    return 'Reminder(eid: $eid, title: $title, description: $description, estart: $estart, tplanid: $tplanid, teid_user: $teid_user, activityname: $activityname, uformname: $uformname, remindin: $remindin, remindin_type: $remindin_type, providerid: $providerid, providername: $providername, evDisabled: $evDisabled,ack: $ack,ack_local: $ack_local,dosemeal: $dosemeal,snoozeTime: $snoozeTime,notificationListId: $notificationListId,redirectTo: $redirectTo,snoozeTapCountTime: $snoozeTapCountTime,otherinfo:$otherinfo)';
+    return 'Reminder(eid: $eid, title: $title, description: $description, estart: $estart, tplanid: $tplanid, teid_user: $teid_user, activityname: $activityname, uformname: $uformname, remindin: $remindin, remindin_type: $remindin_type, providerid: $providerid, providername: $providername, evDisabled: $evDisabled,ack: $ack,ack_local: $ack_local,dosemeal: $dosemeal,snoozeTime: $snoozeTime,notificationListId: $notificationListId,redirectTo: $redirectTo,snoozeTapCountTime: $snoozeTapCountTime,otherinfo:$otherinfo,isPatientViewAccess:$isPatientViewAccess)';
   }
 
   @override
