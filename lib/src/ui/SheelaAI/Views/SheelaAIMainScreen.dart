@@ -61,6 +61,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
 // Set the value of isSameVitalDevice to false in the controller.
     controller.isSameVitalDevice = false;
 
+    // latest eid store and pass to sheela payload
     controller.latestRemindEid = '';
 
 
