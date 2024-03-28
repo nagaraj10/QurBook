@@ -127,25 +127,25 @@ class QurPlanReminders {
     var localReminders = await getLocalReminder();
 
     try {
-      var viewAccessList =
-          data.where((element) => element.isPatientViewAccess == true).toList();
-      for (var i = 0; i < viewAccessList.length; i++) {
-        var apiReminder = viewAccessList[i];
-        var found = false;
-        for (var j = 0; j < localReminders.length; j++) {
-          var localReminder = localReminders[j];
-          if (apiReminder.eid == localReminder.eid) {
-            found = true;
-            if (apiReminder == localReminder) {
-              break;
-            } else {
-              await cancelLocalReminders(localReminder);
-              await onInitScheduleNotification(apiReminder);
+      for (var i = 0; i < data.length; i++) {
+        if ((data[i].isPatientViewAccess??false)) {
+          var apiReminder = data[i];
+          var found = false;
+          for (var j = 0; j < localReminders.length; j++) {
+            var localReminder = localReminders[j];
+            if (apiReminder.eid == localReminder.eid) {
+              found = true;
+              if (apiReminder == localReminder) {
+                break;
+              } else {
+                await cancelLocalReminders(localReminder);
+                await onInitScheduleNotification(apiReminder);
+              }
             }
           }
-        }
-        if (!found) {
-          await onInitScheduleNotification(apiReminder);
+          if (!found) {
+            await onInitScheduleNotification(apiReminder);
+          }
         }
       }
 
