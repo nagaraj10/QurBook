@@ -201,9 +201,6 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     myProfileSink.add(ApiResponse.loading(variable.strFetchRoles));
     MyProfileModel? myProfile;
 
-    // Retrieve the user ID from preferences
-    var userId = PreferenceUtil.getStringValue(KEY_USERID);
-
     try {
       myProfile =
           await addFamilyUserInfoRepository.getMyProfileInfoNew(userId!);
@@ -281,8 +278,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       } else {
         currentLanguage = 'en';
       }
-      await PreferenceUtil.saveString(
-          SHEELA_LANG, CommonUtil.langaugeCodes[currentLanguage] ?? strDefaultLanguage);
+      await PreferenceUtil.saveString(SHEELA_LANG,
+          CommonUtil.langaugeCodes[currentLanguage] ?? strDefaultLanguage);
       preferred_language = currentLanguage;
 
       updateAddFamilyInfo = await addFamilyUserInfoRepository.updateUserInfoNew(
@@ -646,8 +643,9 @@ class AddFamilyUserInfoBloc extends BaseBloc {
             allowVitalNotification,
             allowSymptomsNotification,
             preferredMeasurement,
-            voiceCloning,null,
-           useClonedVoice)
+            voiceCloning,
+            null,
+            useClonedVoice)
         .then(
       (value) {
         if (value.isSuccess ?? false) {
@@ -676,8 +674,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                   allowVitalNotification,
                   allowSymptomsNotification,
                   voiceCloning,
-            useClonedVoice
-          )
+                  useClonedVoice)
               .then((value) {
             createDeviceSelectionModel = value;
             if (createDeviceSelectionModel!.isSuccess!) {
