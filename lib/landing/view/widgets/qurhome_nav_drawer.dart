@@ -584,6 +584,8 @@ class QurHomeNavigationDrawer extends StatelessWidget {
   }
 
   void setQurhomeDashboardFalse() {
+    // set the isRegimenScreen bool value as false while navigate the other
+    // screen
     controller.isRegimenScreen.value=false;
     CommonUtil()
         .onInitQurhomeDashboardController()

@@ -213,6 +213,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   @override
   void didPopNext() {
     controller.updateBLETimer(Enable: false);
+    //Set value as true while Coming back from any other screen
     controller.isRegimenScreen.value = true;
     if (controller.currentSelectedIndex.value == 0) {
       controller.updateBLETimer();
@@ -278,7 +279,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
               drawerEnableOpenDragGesture: false,
               key: _scaffoldKey,
               onDrawerChanged: (isOpen){
-                // if closed and qurhome is active restart the timer for ideal
+                //check drawer is open or close
+                // if closed and regimen is active restart the timer for ideal
                 if(!isOpen && CommonUtil.isUSRegion() &&
                     controller.currentSelectedIndex == 0&&  controller.isRegimenScreen.value){
                   getSheelaBadgeCount();
@@ -1058,8 +1060,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                         controller.forPatientList.value = true;
                         controller.careGiverPatientListResult = null;
                         controller.careGiverPatientListResult = result;
-                        controller.patientDashboardCurSelectedIndex.value =
-                            0;
+                        controller.patientDashboardCurSelectedIndex.value = 0;
                         controller.isPatientClicked.value = true;
                         controller.getPatientAlertList();
                         PreferenceUtil.saveString(
