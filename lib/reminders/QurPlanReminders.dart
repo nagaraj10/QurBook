@@ -128,6 +128,7 @@ class QurPlanReminders {
 
     try {
       for (var i = 0; i < data.length; i++) {
+        // for restrict the reminders based on patient view access flag
         if ((data[i].isPatientViewAccess??false)) {
           var apiReminder = data[i];
           var found = false;
