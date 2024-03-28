@@ -51,7 +51,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
     return Container(
       width: CommonUtil().isTablet!
           ? MediaQuery.of(context).size.width * 0.75
-          : MediaQuery.of(context).size.width * 0.8,
+          : null,
       child: Drawer(
         child: Container(
           color: Colors.white,

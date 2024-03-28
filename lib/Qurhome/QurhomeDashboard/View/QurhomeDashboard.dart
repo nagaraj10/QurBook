@@ -277,6 +277,17 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
             child: Scaffold(
               drawerEnableOpenDragGesture: false,
               key: _scaffoldKey,
+              onDrawerChanged: (isOpen){
+                // if closed and qurhome is active restart the timer for ideal
+                if(!isOpen && CommonUtil.isUSRegion() &&
+                    controller.currentSelectedIndex == 0&&  controller.isRegimenScreen.value){
+                  getSheelaBadgeCount();
+                  //Initilaize the screen idle timer
+                  if(sheelBadgeController.sheelaIconBadgeCount.value == 0 ){
+                    controller.resetScreenIdleTimer();
+                  }
+                }
+              },
               appBar: AppBar(
                 backgroundColor: Colors.white,
                 toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
@@ -1011,83 +1022,60 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                         ),
                       ),
                     ),
-              drawer: Row(
-                children: [
-                  QurHomeNavigationDrawer(
-                    myProfile: myProfile,
-                    controller: controller,
-                    moveToLoginPage: moveToLoginPage,
-                    userChangedbool: false,
-                    refresh: ((userChanged) {
+              drawer: QurHomeNavigationDrawer(
+                myProfile: myProfile,
+                controller: controller,
+                moveToLoginPage: moveToLoginPage,
+                userChangedbool: false,
+                refresh: ((userChanged) {
+                  controller.patientDashboardCurSelectedIndex.value = 0;
+                  controller.forPatientList.value = false;
+                  controller.isPatientClicked.value = false;
+                  controller.careGiverPatientListResult = null;
+                  refresh(
+                    userChanged: userChanged,
+                  );
+                }),
+                showPatientList: () {
+                  CommonUtil().showPatientListOfCaregiver(context,
+                      (user, result) {
+                    if (user == "You") {
+                      refresh(
+                        userChanged: true,
+                      );
+                      Navigator.pop(context);
                       controller.patientDashboardCurSelectedIndex.value = 0;
                       controller.forPatientList.value = false;
                       controller.isPatientClicked.value = false;
                       controller.careGiverPatientListResult = null;
-                      refresh(
-                        userChanged: userChanged,
-                      );
-                    }),
-                    showPatientList: () {
-                      CommonUtil().showPatientListOfCaregiver(context,
-                          (user, result) {
-                        if (user == "You") {
-                          refresh(
-                            userChanged: true,
-                          );
-                          Navigator.pop(context);
-                          controller.patientDashboardCurSelectedIndex.value = 0;
-                          controller.forPatientList.value = false;
-                          controller.isPatientClicked.value = false;
-                          controller.careGiverPatientListResult = null;
-                          PreferenceUtil.saveString(
-                              strKeyFamilyAlert, strNoValue);
-                          PreferenceUtil.saveString(strKeyAlertChildID, '');
-                          PreferenceUtil.saveCareGiver(strKeyCareGiver, null);
-                        } else {
-                          if (controller.careGiverPatientListResult?.childId !=
-                              result?.childId) {
-                            controller.forPatientList.value = true;
-                            controller.careGiverPatientListResult = null;
-                            controller.careGiverPatientListResult = result;
-                            controller.patientDashboardCurSelectedIndex.value =
-                                0;
-                            controller.isPatientClicked.value = true;
-                            controller.getPatientAlertList();
-                            PreferenceUtil.saveString(
-                                strKeyFamilyAlert, strYesValue);
-                            PreferenceUtil.saveString(
-                                strKeyAlertChildID, result?.childId ?? '');
-                            PreferenceUtil.saveCareGiver(strKeyCareGiver,
-                                controller.careGiverPatientListResult);
-                          }
-
-                          Navigator.pop(context);
-
-                          setState(() {});
-                        }
-                      });
-                    },
-                  ),
-                  InkWell(
-                    onTap: () {
-                      _scaffoldKey.currentState?.closeDrawer();
-                      if (CommonUtil.isUSRegion() && controller.currentSelectedIndex == 0) {
-                        if (sheelBadgeController.sheelaIconBadgeCount.value == 0) {
-                          controller.resetScreenIdleTimer();
-                        } else {
-                          getSheelaBadgeCount();
-                        }
+                      PreferenceUtil.saveString(
+                          strKeyFamilyAlert, strNoValue);
+                      PreferenceUtil.saveString(strKeyAlertChildID, '');
+                      PreferenceUtil.saveCareGiver(strKeyCareGiver, null);
+                    } else {
+                      if (controller.careGiverPatientListResult?.childId !=
+                          result?.childId) {
+                        controller.forPatientList.value = true;
+                        controller.careGiverPatientListResult = null;
+                        controller.careGiverPatientListResult = result;
+                        controller.patientDashboardCurSelectedIndex.value =
+                            0;
+                        controller.isPatientClicked.value = true;
+                        controller.getPatientAlertList();
+                        PreferenceUtil.saveString(
+                            strKeyFamilyAlert, strYesValue);
+                        PreferenceUtil.saveString(
+                            strKeyAlertChildID, result?.childId ?? '');
+                        PreferenceUtil.saveCareGiver(strKeyCareGiver,
+                            controller.careGiverPatientListResult);
                       }
-                    },
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width -
-                          (CommonUtil().isTablet!
-                              ? MediaQuery.of(context).size.width * 0.75
-                              : MediaQuery.of(context).size.width * 0.8),
-                    ),
-                  )
-                ],
+
+                      Navigator.pop(context);
+
+                      setState(() {});
+                    }
+                  });
+                },
               ),
             ),
             onWillPop: () async {
