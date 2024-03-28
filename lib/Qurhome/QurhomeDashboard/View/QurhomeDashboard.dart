@@ -38,7 +38,6 @@ import '../Controller/QurhomeDashboardController.dart';
 import 'QurHomeRegimen.dart';
 import 'package:myfhb/main.dart';
 
-
 class QurhomeDashboard extends StatefulWidget {
   bool forPatientList;
   CareGiverPatientListResult? careGiverPatientListResult;
@@ -89,6 +88,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       WidgetsBinding.instance!.addPostFrameCallback((_) {
         controller.forPatientList.value = false;
         sheelBadgeController.isQueueDialogShowing.value = false;
+        controller.isRegimenScreen.value=true;
         // Check if the language preference is not set or empty
         if (PreferenceUtil.getStringValue(SHEELA_LANG) == null ||
             PreferenceUtil.getStringValue(SHEELA_LANG) == '') {
@@ -162,8 +162,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         getSheelaBadgeCount();
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
         //Initilaize the screen idle timer
-        if(sheelBadgeController.sheelaIconBadgeCount.value == 0){
-          controller.checkScreenIdle();
+        if (sheelBadgeController.sheelaIconBadgeCount.value == 0) {
+          controller.resetScreenIdleTimer();
         }
       });
 
@@ -201,6 +201,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       controller.updateBLETimer(Enable: false);
       MyFHB.routeObserver.unsubscribe(this);
       controller.clear();
+      controller.isRegimenScreen.value = false;
       super.dispose();
 
     } catch (e, stackTrace) {
@@ -212,12 +213,22 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   @override
   void didPopNext() {
     controller.updateBLETimer(Enable: false);
+    //Set value as true while Coming back from any other screen
+    controller.isRegimenScreen.value = true;
     if (controller.currentSelectedIndex.value == 0) {
       controller.updateBLETimer();
     }
     controller.setActiveQurhomeDashboardToChat(
       status: true,
     );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      //Coming back from any other screen check the count and
+      // Initilaize the screen idle timer
+      getSheelaBadgeCount();
+      if (sheelBadgeController.sheelaIconBadgeCount.value == 0) {
+        controller.resetScreenIdleTimer();
+      }
+    });
   }
 
   Widget badge(int count) => Positioned(
@@ -267,11 +278,11 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
             child: Scaffold(
               drawerEnableOpenDragGesture: false,
               key: _scaffoldKey,
-              onDrawerChanged: (isOpen) {
+              onDrawerChanged: (isOpen){
                 //check drawer is open or close
-                // if closed and qurhome is active restart the timer for ideal
+                // if closed and regimen is active restart the timer for ideal
                 if(!isOpen && CommonUtil.isUSRegion() &&
-                    controller.currentSelectedIndex == 0){
+                    controller.currentSelectedIndex == 0&&  controller.isRegimenScreen.value){
                   getSheelaBadgeCount();
                   //Initilaize the screen idle timer
                   if(sheelBadgeController.sheelaIconBadgeCount.value == 0 ){
@@ -1015,11 +1026,11 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                     ),
               drawer: QurHomeNavigationDrawer(
                 myProfile: myProfile,
+                controller: controller,
                 moveToLoginPage: moveToLoginPage,
                 userChangedbool: false,
                 refresh: ((userChanged) {
                   controller.patientDashboardCurSelectedIndex.value = 0;
-
                   controller.forPatientList.value = false;
                   controller.isPatientClicked.value = false;
                   controller.careGiverPatientListResult = null;
@@ -1036,24 +1047,21 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                       );
                       Navigator.pop(context);
                       controller.patientDashboardCurSelectedIndex.value = 0;
-
                       controller.forPatientList.value = false;
                       controller.isPatientClicked.value = false;
                       controller.careGiverPatientListResult = null;
-                      PreferenceUtil.saveString(strKeyFamilyAlert, strNoValue);
+                      PreferenceUtil.saveString(
+                          strKeyFamilyAlert, strNoValue);
                       PreferenceUtil.saveString(strKeyAlertChildID, '');
                       PreferenceUtil.saveCareGiver(strKeyCareGiver, null);
                     } else {
                       if (controller.careGiverPatientListResult?.childId !=
                           result?.childId) {
                         controller.forPatientList.value = true;
-
                         controller.careGiverPatientListResult = null;
                         controller.careGiverPatientListResult = result;
                         controller.patientDashboardCurSelectedIndex.value = 0;
-
                         controller.isPatientClicked.value = true;
-
                         controller.getPatientAlertList();
                         PreferenceUtil.saveString(
                             strKeyFamilyAlert, strYesValue);
@@ -1082,7 +1090,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     Widget landingTab;
     switch (controller.currentSelectedIndex.value) {
       case 1:
-        controller.isRegimenScreen.value=true;
         landingTab = QurHomeRegimenScreen();
         break;
       case 2:
@@ -1092,7 +1099,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         landingTab = SymptomListScreen();
         break;
       default:
-        controller.isRegimenScreen.value=true;
         landingTab = QurHomeRegimenScreen();
         break;
     }

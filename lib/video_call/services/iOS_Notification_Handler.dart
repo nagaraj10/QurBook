@@ -392,10 +392,7 @@ class IosNotificationHandler {
             ),
           )?.then((value) {
             //Restart the timer for check the ideal flow when the qurhome is active
-            final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
-            if (isQurhomeActive) {
-              qurhomeDashboardController.resetScreenIdleTimer();
-            }
+            qurhomeDashboardController.resetScreenIdleTimer();
           });
         } else if ((model.rawBody ?? '').isNotEmpty) {
           await Get.toNamed(
@@ -405,7 +402,10 @@ class IosNotificationHandler {
                 textSpeechSheela: model.rawBody,
                 isNeedPreferredLangauge: true,
                 eventIdViaSheela: model.eventId),
-          );
+          )?.then((value) {
+            //Restart the timer for check the ideal flow when the qurhome is active
+            qurhomeDashboardController.resetScreenIdleTimer();
+          });
         } else if ((model.message ?? '').isNotEmpty) {
           await Get.toNamed(
             rt_Sheela,
@@ -413,7 +413,10 @@ class IosNotificationHandler {
                 isSheelaFollowup: true,
                 message: model.message,
                 eventIdViaSheela: model.eventId),
-          );
+          )?.then((value) {
+            //Restart the timer for check the ideal flow when the qurhome is active
+            qurhomeDashboardController.resetScreenIdleTimer();
+          });
         } else if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
           await Future.delayed(const Duration(seconds: 5));
           await Get.toNamed(
@@ -422,7 +425,10 @@ class IosNotificationHandler {
                 allowBackBtnPress: true,
                 audioMessage: model.sheelaAudioMsgUrl,
                 eventIdViaSheela: model.eventId),
-          );
+          )?.then((value) {
+            //Restart the timer for check the ideal flow when the qurhome is active
+            qurhomeDashboardController.resetScreenIdleTimer();
+          });
         }
       }
 // Check if templateName is not empty and matches specific templates
@@ -452,7 +458,10 @@ class IosNotificationHandler {
               arguments: SheelaArgument(
                 scheduleAppointment: true,
               ),
-            );
+            )?.then((value) {
+              //Restart the timer for check the ideal flow when the qurhome is active
+              qurhomeDashboardController.resetScreenIdleTimer();
+            });
           }
         } else {
           //Adding the notificaiton to sheela reminder Queue
