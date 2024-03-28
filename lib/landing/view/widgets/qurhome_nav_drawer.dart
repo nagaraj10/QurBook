@@ -32,6 +32,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
   const QurHomeNavigationDrawer(
       {required this.myProfile,
       required this.moveToLoginPage,
+      required this.controller,
       required this.refresh,
       required this.userChangedbool,
       required this.showPatientList});
@@ -41,6 +42,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
   final Function(bool userChanged)? refresh;
   final bool? userChangedbool;
   final Function() showPatientList;
+  final QurhomeDashboardController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -582,6 +584,9 @@ class QurHomeNavigationDrawer extends StatelessWidget {
   }
 
   void setQurhomeDashboardFalse() {
+    // set the isRegimenScreen bool value as false while navigate the other
+    // screen
+    controller.isRegimenScreen.value=false;
     CommonUtil()
         .onInitQurhomeDashboardController()
         .setActiveQurhomeDashboardToChat(status: false);
