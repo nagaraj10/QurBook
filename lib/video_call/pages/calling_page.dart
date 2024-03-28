@@ -153,10 +153,10 @@ class _CallingPageState extends State<CallingPage> {
                       style: TextStyle(
                         fontSize: 30.0.sp,
                         fontWeight: FontWeight.w600,
-                        /*color: Color(CommonUtil().getMyPrimaryColor()),*/
+                        /*color: mAppThemeProvider.primaryColor,*/
                         color: regController.isFromSOS.value
                             ? Colors.red
-                            : Color(CommonUtil().getMyPrimaryColor()),
+                            : mAppThemeProvider.primaryColor,
                       ),
                       textAlign: TextAlign.center,
                     ),

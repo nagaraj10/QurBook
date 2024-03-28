@@ -22,6 +22,7 @@ import '../constants/fhb_parameters.dart' as fhb_parameters;
 import '../constants/router_variable.dart' as router;
 import '../constants/variable_constant.dart' as variable;
 import '../landing/view/landing_arguments.dart';
+import '../main.dart';
 import '../plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../src/resources/network/ApiBaseHelper.dart';
 import '../src/utils/alert.dart';
@@ -119,7 +120,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ? tabFontTitle
                     : mobileFontTitle),
           ),
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          backgroundColor: mAppThemeProvider.primaryColor,
           actions: [
             Center(
               child: Container(
@@ -322,9 +323,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                   height: CommonUtil().isTablet! ? 50 : 40,
                                                                                   child: ElevatedButton(
                                                                                     style: ElevatedButton.styleFrom(
-                                                                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
+                                                                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: mAppThemeProvider.primaryColor)),
                                                                                       backgroundColor: Colors.transparent,
-                                                                                      foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                                                                                      foregroundColor: mAppThemeProvider.primaryColor,
                                                                                       padding: EdgeInsets.all(8.0),
                                                                                     ),
                                                                                     onPressed: () {
@@ -346,9 +347,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                   height: CommonUtil().isTablet! ? 50 : 40,
                                                                                   child: ElevatedButton(
                                                                                     style: ElevatedButton.styleFrom(
-                                                                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
+                                                                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: mAppThemeProvider.primaryColor)),
                                                                                       backgroundColor: Colors.transparent,
-                                                                                      foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                                                                                      foregroundColor: mAppThemeProvider.primaryColor,
                                                                                       padding: EdgeInsets.all(8.0),
                                                                                     ),
                                                                                     onPressed: () {
@@ -941,11 +942,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     Container(
                       decoration: BoxDecoration(
                           border: Border.all(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(5))),
                       child: Container(
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        color: mAppThemeProvider.primaryColor,
                         padding: EdgeInsets.all(5.0),
                         child: Text("Membership Applied",
                             style: TextStyle(

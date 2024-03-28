@@ -243,7 +243,7 @@ class _MyControllersState extends State<MyControllers> {
         decoration: BoxDecoration(
           color: audioCallStatus.isAudioCall
               ? Colors.white.withOpacity(0.5)
-              : Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.3),
+              : mAppThemeProvider.primaryColor.withOpacity(0.3),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         //color:Colors.red,
@@ -522,7 +522,7 @@ class _MyControllersState extends State<MyControllers> {
                 child: LinearProgressIndicator(
                   backgroundColor: Color(CommonUtil.secondaryGrey),
                   valueColor: AlwaysStoppedAnimation<Color>(
-                      Color(CommonUtil().getMyPrimaryColor())),
+                      mAppThemeProvider.primaryColor),
                   //value: progressValue[currentProgressValue],
                 ),
               ),

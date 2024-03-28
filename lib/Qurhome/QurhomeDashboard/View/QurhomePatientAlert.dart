@@ -12,6 +12,8 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
+import '../../../main.dart';
+
 class QurhomePatientAlert extends StatefulWidget {
   @override
   _QurhomePatientAlertState createState() => _QurhomePatientAlertState();
@@ -465,7 +467,7 @@ class _QurhomePatientAlertState extends State<QurhomePatientAlert> {
                           ),
                         ),
                         Switch(
-                          activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                          activeColor: mAppThemeProvider.primaryColor,
                           inactiveThumbColor: Colors.grey[200],
                           inactiveTrackColor: Colors.grey[400],
                           value: isEmergencyToggleEnabled,

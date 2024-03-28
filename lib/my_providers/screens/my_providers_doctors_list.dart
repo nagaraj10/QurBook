@@ -140,7 +140,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                             "",
                                         eachDoctorModel?.user?.firstName ?? "",
                                         eachDoctorModel?.user?.lastName ?? "",
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        mAppThemeProvider.primaryColor,
                                         CommonUtil().isTablet!
                                             ? imageTabHeader
                                             : Constants.imageMobileHeader,

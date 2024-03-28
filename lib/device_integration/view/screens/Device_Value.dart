@@ -25,6 +25,7 @@ import '../../../constants/fhb_parameters.dart' as parameters;
 import '../../../constants/router_variable.dart';
 import '../../../constants/variable_constant.dart';
 import '../../../constants/variable_constant.dart' as variable;
+import '../../../main.dart';
 import '../../../regiment/models/field_response_model.dart';
 import '../../../regiment/models/regiment_data_model.dart';
 import '../../../regiment/view_model/regiment_view_model.dart';
@@ -322,10 +323,10 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     }*/
                   ,
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                    foregroundColor: mAppThemeProvider.primaryColor,
                     backgroundColor: Colors.transparent,
                     side: BorderSide(
-                        color: Color(CommonUtil().getMyPrimaryColor())),
+                        color: mAppThemeProvider.primaryColor),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),
@@ -999,7 +1000,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
-                            color: Color(CommonUtil().getMyPrimaryColor())),
+                            color: mAppThemeProvider.primaryColor),
                         softWrap: true,
                       ),
                       Container(
@@ -1249,7 +1250,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
-                            color: Color(CommonUtil().getMyPrimaryColor())),
+                            color: mAppThemeProvider.primaryColor),
                         softWrap: true,
                       ),
                       Container(
@@ -2197,7 +2198,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           Text(
                             value1 == '' ? '' : value1,
                             style: TextStyle(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                                 fontSize: 15.0.sp,
                                 fontWeight: FontWeight.w500),
                           ),
@@ -2207,7 +2208,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           Text(
                             value1 == '' ? '' : unit!,
                             style: TextStyle(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                                 fontSize: 11.0.sp),
                           ),
                         ],
@@ -2241,7 +2242,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     Text(
                       value2,
                       style: TextStyle(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          color: mAppThemeProvider.primaryColor,
                           fontSize: 14.0.sp),
                     ),
                   ],
@@ -2263,7 +2264,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     Text(
                       value3,
                       style: TextStyle(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          color: mAppThemeProvider.primaryColor,
                           fontSize: 14.0.sp),
                     ),
                   ],
@@ -2330,7 +2331,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: <Color>[
-                              Color(CommonUtil().getMyPrimaryColor()),
+                              mAppThemeProvider.primaryColor,
                               Color(CommonUtil().getMyGredientColor())
                             ],
                             stops: [
@@ -2446,7 +2447,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: <Color>[
-                              Color(CommonUtil().getMyPrimaryColor()),
+                              mAppThemeProvider.primaryColor,
                               Color(CommonUtil().getMyGredientColor())
                             ],
                             stops: [
@@ -2592,7 +2593,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         'assets/devices/caregiver_source.png',
         height: 32.0.h,
         width: 32.0.h,
-        color: Color(CommonUtil().getMyPrimaryColor()),
+        color: mAppThemeProvider.primaryColor,
       );
     } else if (type.toLowerCase().contains("dexcom")) {
       return Image.network(
@@ -2605,7 +2606,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
             'assets/icons/myfhb_source.png',
             height: 32.0.h,
             width: 32.0.h,
-            color: Color(CommonUtil().getMyPrimaryColor()),
+            color: mAppThemeProvider.primaryColor,
           );
         },
       );
@@ -2621,7 +2622,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         'assets/icons/myfhb_source.png',
         height: 32.0.h,
         width: 32.0.h,
-        color: Color(CommonUtil().getMyPrimaryColor()),
+        color: mAppThemeProvider.primaryColor,
       );
     }
   }

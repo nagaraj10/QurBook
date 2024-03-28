@@ -65,10 +65,10 @@ class _DropdownWithCategoriesState extends State<DropdownWithCategories> {
     return widget.mediaData!
         .map((e) => CheckboxListTile(
               value: e.isChecked,
-              checkColor: Color(CommonUtil().getMyPrimaryColor()),
+              checkColor: mAppThemeProvider.primaryColor,
               title: Text(e.name!,
                   style: TextStyle(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                     fontSize:
                         CommonUtil().isTablet! ? tabHeader2 : mobileHeader2,
                   )),

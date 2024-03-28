@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../chat_socket/view/ChatDetail.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../../constants/fhb_constants.dart' as ConstantKey;
+import '../../../../main.dart';
 import '../../../../src/blocs/Category/CategoryListBlock.dart';
 import '../../../../src/model/Category/catergory_result.dart';
 import '../../../../src/ui/MyRecord.dart';
@@ -292,7 +293,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                             doc.doctorFollowUpFee),
                                 fontWeight: FontWeight.w600,
                                 overflow: TextOverflow.visible,
-                                colors: Color(CommonUtil().getMyPrimaryColor()),
+                                colors: mAppThemeProvider.primaryColor,
                               ),
                             ],
                           ),

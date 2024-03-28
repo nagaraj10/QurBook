@@ -13,6 +13,7 @@ import '../../../common/FHBBasicWidget.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
 import '../../../constants/variable_constant.dart';
+import '../../../main.dart';
 import '../../../plan_dashboard/model/PlanListModel.dart';
 import '../../../plan_dashboard/view/planDetailsView.dart';
 import '../../../src/utils/colors_utils.dart';
@@ -171,7 +172,7 @@ class CarePlanCard extends StatelessWidget {
                               onTap: () => onCardTapped(context),
                               child: Icon(
                                 Icons.remove_red_eye_sharp,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                                 size: 30.0.sp,
                               ),
                             ),
@@ -569,7 +570,7 @@ class CarePlanCard extends StatelessWidget {
                       children: <Widget>[
                         TextWidget(
                           text: "Price",
-                          colors: Color(CommonUtil().getMyPrimaryColor()),
+                          colors: mAppThemeProvider.primaryColor,
                         ),
                         SizedBox(
                           height: 10.0.h,
@@ -587,7 +588,7 @@ class CarePlanCard extends StatelessWidget {
                           ),
                           child: TextWidget(
                             text: priceSet,
-                            colors: Color(CommonUtil().getMyPrimaryColor()),
+                            colors: mAppThemeProvider.primaryColor,
                           ),
                         ),
                         SizedBox(
@@ -598,7 +599,7 @@ class CarePlanCard extends StatelessWidget {
                                 children: [
                                   Checkbox(
                                     checkColor:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        mAppThemeProvider.primaryColor,
                                     activeColor:
                                         Color(CommonUtil().getThemeColor()),
                                     value: isCheckbox,

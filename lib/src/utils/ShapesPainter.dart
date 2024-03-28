@@ -31,7 +31,7 @@ class ShapesPainter extends CustomPainter {
 
     final Gradient gradient = LinearGradient(colors: <Color>[
       //Colors.deepPurple[600],
-      Color(CommonUtil().getMyPrimaryColor()),
+      mAppThemeProvider.primaryColor,
       Color(CommonUtil().getMyGredientColor()),
     ], stops: [
       0.5,

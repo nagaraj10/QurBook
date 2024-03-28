@@ -768,7 +768,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                                 'cancel'.toUpperCase(),
                                 style: TextStyle(
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
+                                      mAppThemeProvider.primaryColor,
                                   fontSize: 13.sp,
                                 ),
                               ),
@@ -927,7 +927,7 @@ class PlanDetail extends State<MyPlanDetailView> {
       return Colors.grey;
     } else {*/
     if (isSubscribe == '0') {
-      return Color(CommonUtil().getMyPrimaryColor());
+      return mAppThemeProvider.primaryColor;
     } else {
       return Colors.grey;
     }

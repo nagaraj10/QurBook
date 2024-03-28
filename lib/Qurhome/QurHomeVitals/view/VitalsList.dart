@@ -2594,7 +2594,7 @@ class _VitalsListState extends State<VitalsList> {
                   onPressed: () {
                     toast.getToast('More devices coming soon!', Colors.red);
                   },
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  color: mAppThemeProvider.primaryColor,
                   textColor: Colors.white,
                   padding: EdgeInsets.all(
                     2.0.sp,

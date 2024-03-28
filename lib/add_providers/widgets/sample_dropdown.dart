@@ -64,10 +64,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return widget.mediaData!
         .map((e) => CheckboxListTile(
               value: e.isChecked,
-              checkColor: Color(CommonUtil().getMyPrimaryColor()),
+              checkColor: mAppThemeProvider.primaryColor,
               title: Text(e.name!,
                   style: TextStyle(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                   )),
               onChanged: (val) {
                 print(val);

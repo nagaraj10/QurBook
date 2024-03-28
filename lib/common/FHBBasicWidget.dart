@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
+import '../main.dart';
 import 'errors_widget.dart';
 import '../my_providers/models/Doctors.dart';
 import '../src/model/user/MyProfileModel.dart';
@@ -82,7 +83,7 @@ class FHBBasicWidget {
       borderRadius: 30,
       gradient: LinearGradient(
         colors: <Color>[
-          Color(CommonUtil().getMyPrimaryColor()),
+          mAppThemeProvider.primaryColor,
           Color(CommonUtil().getMyGredientColor())
         ],
       ),
@@ -237,7 +238,7 @@ class FHBBasicWidget {
       builder: (context, child) => Theme(
         data: ThemeData.light().copyWith(
           colorScheme: ColorScheme.light().copyWith(
-            primary: Color(CommonUtil().getMyPrimaryColor()),
+            primary: mAppThemeProvider.primaryColor,
           ),
         ),
         child: child!,
@@ -270,7 +271,7 @@ class FHBBasicWidget {
     return Text(textTitle,
         textAlign: TextAlign.center,
         style: TextStyle(
-            color: Color(CommonUtil().getMyPrimaryColor()),
+            color: mAppThemeProvider.primaryColor,
             fontSize: fontSize ?? 20.0));
   }
 
@@ -340,9 +341,9 @@ class FHBBasicWidget {
                   ? Colors.white
                   : PreferenceUtil.getIfQurhomeisAcive()
                       ? CommonUtil.isUSRegion()
-                          ? Color(CommonUtil().getMyPrimaryColor())
+                          ? mAppThemeProvider.primaryColor
                           : Color(CommonUtil().getQurhomeGredientColor())
-                      : Color(CommonUtil().getMyPrimaryColor()),
+                      : mAppThemeProvider.primaryColor,
               child: Center(
                 child: getFirstLastNameText(myProfile,
                     changeWhiteBg: changeWhiteBg),
@@ -354,7 +355,7 @@ class FHBBasicWidget {
         return Container(
           child: Center(
             child: getFirstLastNameTextForProfile(myProfile!,
-                textColor: Color(CommonUtil().getMyPrimaryColor())),
+                textColor: mAppThemeProvider.primaryColor),
           ),
           color: Color(fhbColors.bgColorContainer),
           height: CommonUtil().isTablet!
@@ -601,7 +602,7 @@ class FHBBasicWidget {
           variable.strLogout,
           style: TextStyle(
               fontSize: 16.0.sp,
-              color: Color(CommonUtil().getMyPrimaryColor())),
+              color: mAppThemeProvider.primaryColor),
         ),
         content: Text(
           variable.strLogoutMsg,
@@ -615,7 +616,7 @@ class FHBBasicWidget {
               Navigator.of(context).pop(false);
             },
             title: variable.Cancel,
-            titleColor: Color(CommonUtil().getMyPrimaryColor()),
+            titleColor: mAppThemeProvider.primaryColor,
           ),
           FlatButtonWidget(
             bgColor: Colors.transparent,
@@ -624,7 +625,7 @@ class FHBBasicWidget {
               logout();
             },
             title: variable.strYes,
-            titleColor: Color(CommonUtil().getMyPrimaryColor()),
+            titleColor: mAppThemeProvider.primaryColor,
           ),
         ],
       ),
@@ -659,7 +660,7 @@ class FHBBasicWidget {
                   margin: EdgeInsets.only(left: 40),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(colors: [
-                      Color(CommonUtil().getMyPrimaryColor()),
+                      mAppThemeProvider.primaryColor,
                       Color(CommonUtil().getMyGredientColor())
                     ]),
                     borderRadius: BorderRadius.circular(8),
@@ -738,7 +739,7 @@ class FHBBasicWidget {
                   margin: EdgeInsets.only(left: 40),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(colors: [
-                      Color(CommonUtil().getMyPrimaryColor()),
+                      mAppThemeProvider.primaryColor,
                       Color(CommonUtil().getMyGredientColor())
                     ]),
                     borderRadius: BorderRadius.circular(8),
@@ -819,7 +820,7 @@ class FHBBasicWidget {
           title,
           style: TextStyle(
               fontSize: 16.0.sp,
-              color: Color(CommonUtil().getMyPrimaryColor())),
+              color: mAppThemeProvider.primaryColor),
         ),
         content: Text(
           msg,
@@ -833,7 +834,7 @@ class FHBBasicWidget {
               Navigator.of(context).pop(false);
             },
             title: variable.Cancel,
-            titleColor: Color(CommonUtil().getMyPrimaryColor()),
+            titleColor: mAppThemeProvider.primaryColor,
           ),
           FlatButtonWidget(
             bgColor: Colors.transparent,
@@ -842,7 +843,7 @@ class FHBBasicWidget {
               logout();
             },
             title: variable.strYes,
-            titleColor: Color(CommonUtil().getMyPrimaryColor()),
+            titleColor: mAppThemeProvider.primaryColor,
           ),
         ],
       ),
@@ -1258,7 +1259,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile, {bool? changeWhiteBg}) {
               : ''),
       style: TextStyle(
         color: changeWhiteBg == true
-            ? Color(CommonUtil().getMyPrimaryColor())
+            ? mAppThemeProvider.primaryColor
             : Colors.white,
         fontSize: nameTextSize,
         fontWeight: FontWeight.w400,
@@ -1269,7 +1270,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile, {bool? changeWhiteBg}) {
       myProfile.result!.firstName![0].toUpperCase(),
       style: TextStyle(
         color: changeWhiteBg == true
-            ? Color(CommonUtil().getMyPrimaryColor())
+            ? mAppThemeProvider.primaryColor
             : Colors.white,
         fontSize: nameTextSize,
         fontWeight: FontWeight.w400,
@@ -1280,7 +1281,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile, {bool? changeWhiteBg}) {
       '',
       style: TextStyle(
         color: changeWhiteBg == true
-            ? Color(CommonUtil().getMyPrimaryColor())
+            ? mAppThemeProvider.primaryColor
             : Colors.white,
         fontSize: nameTextSize,
         fontWeight: FontWeight.w200,
@@ -1319,7 +1320,7 @@ Widget getFirstLastNameTextForProfile(MyProfileModel myProfile,
     return Text(
       '',
       style: TextStyle(
-        color: Color(CommonUtil().getMyPrimaryColor()),
+        color: mAppThemeProvider.primaryColor,
         fontSize: ((forNavdrawer ?? false) ? nameTextSizeForNav : nameTextSize),
         fontWeight: FontWeight.w200,
       ),

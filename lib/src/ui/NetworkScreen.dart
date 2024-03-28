@@ -29,7 +29,7 @@ class NetworkScreen extends StatelessWidget {
                   variable.strNoInternet,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                     fontSize: 20.0.sp,
                   ),
                 ),

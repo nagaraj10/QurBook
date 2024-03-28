@@ -10,6 +10,7 @@ import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BLEBlinkingIcon.dart';
 import '../../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../../../main.dart';
 import '../Widgets/common_bluetooth_widget.dart';
 
 import '../../../../common/CommonUtil.dart';
@@ -319,7 +320,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                             ? Colors.black45
                             : PreferenceUtil.getIfQurhomeisAcive()
                                 ? Color(CommonUtil().getQurhomeGredientColor())
-                                : Color(CommonUtil().getMyPrimaryColor()),
+                                : mAppThemeProvider.primaryColor,
                         child: Icon(
                           (controller.currentPlayingConversation != null &&
                                   controller.currentPlayingConversation!
@@ -570,7 +571,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                   Radio(
                     value: languageCode,
                     groupValue: currentLanguage,
-                    activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                    activeColor: mAppThemeProvider.primaryColor,
                     onChanged: (dynamic value) {
                       Get.back();
                       getupdateDeviceSelection(value);

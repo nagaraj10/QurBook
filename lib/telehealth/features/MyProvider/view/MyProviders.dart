@@ -120,7 +120,7 @@ class _MyProvidersState extends State<MyProviders> {
           },
           child: Icon(
             Icons.add,
-            color: Color(CommonUtil().getMyPrimaryColor()),
+            color: mAppThemeProvider.primaryColor,
             size: 24.0.sp,
           ),
         ));

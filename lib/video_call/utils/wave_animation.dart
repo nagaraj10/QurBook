@@ -82,7 +82,7 @@ class _WaveAnimationState extends State<WaveAnimation>
         shape: BoxShape.circle,
         color: regController.isFromSOS.value
             ? Colors.red.withOpacity(1 - _controller.value)
-            : Color(CommonUtil().getMyPrimaryColor())
+            : mAppThemeProvider.primaryColor
                 .withOpacity(1 - _controller.value),
       ),
     );

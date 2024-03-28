@@ -19,6 +19,7 @@ import 'package:myfhb/user_plans/view/user_profile_image.dart';
 import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../common/FHBBasicWidget.dart';
+import '../../../main.dart';
 import '../../../more_menu/screens/more_menu_screen.dart';
 import '../../../src/model/user/MyProfileModel.dart';
 import '../../../src/model/user/user_accounts_arguments.dart';
@@ -94,7 +95,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                                   child: UserProfileImage(
                                     PreferenceUtil.getProfileData(KEY_PROFILE),
                                     textColor:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        mAppThemeProvider.primaryColor,
                                     circleColor: Color(bgColorContainer),
                                   ),
                                 ),

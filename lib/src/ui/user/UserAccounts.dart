@@ -113,15 +113,15 @@ class _UserAccountsState extends State<UserAccounts>
     return WillPopScope(
         onWillPop: () => onBackPressed(context)!,
         child: Scaffold(
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          backgroundColor: mAppThemeProvider.primaryColor,
           appBar: AppBar(
             elevation: 0.0,
-            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            backgroundColor: mAppThemeProvider.primaryColor,
             flexibleSpace: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Color(CommonUtil().getMyPrimaryColor()),
+                    mAppThemeProvider.primaryColor,
                     Color(CommonUtil().getMyGredientColor()),
                   ],
                   stops: [0.5, 1.0],

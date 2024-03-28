@@ -595,7 +595,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   height: 30,
                   decoration: BoxDecoration(
                     color:
-                        Color(CommonUtil().getMyPrimaryColor()), // border color
+                        mAppThemeProvider.primaryColor, // border color
                     shape: BoxShape.circle,
                   ),
                   child: Padding(
@@ -1641,7 +1641,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         ),
       ),
       value: isApplyMemberShipBenefits,
-      activeColor:Color(CommonUtil().getMyPrimaryColor()),
+      activeColor:mAppThemeProvider.primaryColor,
       onChanged:(value){
         setState(() {
           isApplyMemberShipBenefits = value!;
@@ -1794,7 +1794,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                     result: true,
                   ),
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Color(CommonUtil().getMyPrimaryColor())),// Set background color here
+                    backgroundColor: MaterialStateProperty.all<Color>(mAppThemeProvider.primaryColor),// Set background color here
                     // You can also customize other properties such as padding, shape, etc.
                   ),
                   child: const Text(
@@ -2024,7 +2024,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     _scaffoldKey.currentState!.showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        backgroundColor: mAppThemeProvider.primaryColor,
         elevation: 5,
         action: SnackBarAction(
             label: actionName,
@@ -2332,7 +2332,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 style: TextStyle(
                     fontSize: 22.0.sp,
                     fontWeight: FontWeight.w500,
-                    color: Color(CommonUtil().getMyPrimaryColor())),
+                    color: mAppThemeProvider.primaryColor),
               ),
             ),
           ),
@@ -2352,9 +2352,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                           side: BorderSide(
-                              color: Color(CommonUtil().getMyPrimaryColor()))),
+                              color: mAppThemeProvider.primaryColor)),
                       backgroundColor: Colors.transparent,
-                      foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                      foregroundColor: mAppThemeProvider.primaryColor,
                       padding: const EdgeInsets.all(8),
                     ),
                     onPressed: () {
@@ -2376,9 +2376,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                           side: BorderSide(
-                              color: Color(CommonUtil().getMyPrimaryColor()))),
+                              color: mAppThemeProvider.primaryColor)),
                       backgroundColor: Colors.transparent,
-                      foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                      foregroundColor: mAppThemeProvider.primaryColor,
                       padding: const EdgeInsets.all(8),
                     ),
                     onPressed: () {

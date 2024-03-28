@@ -14,6 +14,7 @@ import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:myfhb/ticket_support/view/create_ticket_screen.dart';
 
 import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../main.dart';
 import '../widgets/dropdown_with_categories.dart';
 import '../../src/blocs/Media/MediaTypeBlock.dart';
 import '../../src/model/Media/media_data_list.dart';
@@ -208,7 +209,7 @@ class AddProvidersState extends State<AddProviders> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        backgroundColor: mAppThemeProvider.primaryColor,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Icon(
@@ -288,7 +289,7 @@ class AddProvidersState extends State<AddProviders> {
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
                                     fontWeight: FontWeight.w400,
-                                    //color: Color(CommonUtil().getMyPrimaryColor())
+                                    //color: mAppThemeProvider.primaryColor
                                   ),
                                 ),
                               ),
@@ -713,7 +714,7 @@ class AddProvidersState extends State<AddProviders> {
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: TextField(
         textCapitalization: TextCapitalization.sentences,
-        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        cursorColor: mAppThemeProvider.primaryColor,
         controller: doctorController,
         keyboardType: TextInputType.emailAddress,
         //focusNode: _doctorFocus,
@@ -727,11 +728,11 @@ class AddProvidersState extends State<AddProviders> {
         style: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 16.0.sp,
-            color: Color(CommonUtil().getMyPrimaryColor())),
+            color: mAppThemeProvider.primaryColor),
         decoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
               borderSide:
-                  BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+                  BorderSide(color: mAppThemeProvider.primaryColor),
             ),
             labelText: widget.arguments!.searchKeyWord,
             labelStyle: TextStyle(
@@ -753,7 +754,7 @@ class AddProvidersState extends State<AddProviders> {
         width: 100.0.w,
         height: 40.0.h,
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           borderRadius: BorderRadius.all(Radius.circular(25)),
           boxShadow: <BoxShadow>[
             BoxShadow(
@@ -832,7 +833,7 @@ class AddProvidersState extends State<AddProviders> {
         //width: 100.0.w,
         height: 45.0.h,
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           borderRadius: BorderRadius.all(Radius.circular(10)),
           boxShadow: <BoxShadow>[
             BoxShadow(

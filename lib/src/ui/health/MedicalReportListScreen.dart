@@ -294,7 +294,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                             ? ImageIcon(
                                 AssetImage(variable.icon_record_fav_active),
                                 //TODO chnage theme
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                                 size: CommonUtil().isTablet!
                                     ? tabHeader2
                                     : mobileHeader2,
@@ -319,7 +319,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                     widget.mediaMeta!.contains(data.id)
                         ? Icon(
                             Icons.done,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                           )
                         : SizedBox(),
                   ],

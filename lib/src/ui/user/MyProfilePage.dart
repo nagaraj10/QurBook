@@ -386,7 +386,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                         child: data.profilePicThumbnailUrl != null
                             ? UserProfileImage(myProfile,
                                 textColor:
-                                    Color(CommonUtil().getMyPrimaryColor()))
+                                    mAppThemeProvider.primaryColor)
                             : Container(),
                       ),
                     ),

@@ -20,6 +20,7 @@ import '../../../../common/PreferenceUtil.dart';
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/fhb_constants.dart' as Constants;
 import '../../../../constants/variable_constant.dart';
+import '../../../../main.dart';
 import '../../../utils/screenutils/size_extensions.dart';
 import '../../audio/AudioRecorder.dart';
 import '../../audio/AudioScreenArguments.dart';
@@ -78,7 +79,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: PreferenceUtil.getIfQurhomeisAcive()
                         ? Colors.white
-                        : Color(CommonUtil().getMyPrimaryColor()),
+                        : mAppThemeProvider.primaryColor,
                     borderRadius: chatBubbleBorderRadiusFor(false),
                   ),
                   child: (chat.loading ?? false)
@@ -289,7 +290,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                   icon: const Icon(
                                       Icons.play_circle_fill_rounded),
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
+                                      mAppThemeProvider.primaryColor,
                                   iconSize: 75,
                                   onPressed: () {
                                     playYoutube(currentVideoLink.url);
@@ -1162,7 +1163,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
               size: 28,
               color: PreferenceUtil.getIfQurhomeisAcive()
                   ? Color(CommonUtil().getQurhomeGredientColor()) // Qurhome gradient color when Qurhome is active
-                  : Color(CommonUtil().getMyPrimaryColor()),
+                  : mAppThemeProvider.primaryColor,
             ),
           ],
         ),

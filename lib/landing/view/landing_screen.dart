@@ -36,6 +36,7 @@ import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_parameters.dart';
 import '../../constants/variable_constant.dart' as variable;
 import '../../constants/variable_constant.dart';
+import '../../main.dart';
 import '../../src/blocs/Category/CategoryListBlock.dart';
 import '../../src/model/GetDeviceSelectionModel.dart';
 import '../../src/model/user/MyProfileModel.dart';
@@ -312,7 +313,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
                                 colors: <Color>[
-                                  Color(CommonUtil().getMyPrimaryColor()),
+                                  mAppThemeProvider.primaryColor,
                                   Color(CommonUtil().getMyGredientColor()),
                                 ],
                                 stops: [0.3, 1.0],
@@ -450,12 +451,12 @@ class _LandingScreenState extends State<LandingScreen> {
                     selectedFontSize: 12.sp,
                     unselectedFontSize: 10.sp,
                     selectedLabelStyle: TextStyle(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      color: mAppThemeProvider.primaryColor,
                     ),
                     unselectedLabelStyle: const TextStyle(
                       color: Colors.black54,
                     ),
-                    selectedItemColor: Color(CommonUtil().getMyPrimaryColor()),
+                    selectedItemColor: mAppThemeProvider.primaryColor,
                     unselectedItemColor: Colors.black54,
                     items: [
                       BottomNavigationBarItem(
@@ -544,7 +545,7 @@ class _LandingScreenState extends State<LandingScreen> {
               child: ImageIcon(
                 const AssetImage(variable.icon_chat),
                 color: landingScreenController!.currentTabIndex.value == 1
-                    ? Color(CommonUtil().getMyPrimaryColor())
+                    ? mAppThemeProvider.primaryColor
                     : Colors.black54,
               ),
             ),
@@ -557,7 +558,7 @@ class _LandingScreenState extends State<LandingScreen> {
               child: ImageIcon(
                 const AssetImage(variable.icon_chat),
                 color: landingScreenController!.currentTabIndex.value == 1
-                    ? Color(CommonUtil().getMyPrimaryColor())
+                    ? mAppThemeProvider.primaryColor
                     : Colors.black54,
               ),
             ),
@@ -673,7 +674,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   ? selOption
                   : unSelOption,
           color: landingScreenController!.currentTabIndex.value == 1
-              ? Color(CommonUtil().getMyPrimaryColor())
+              ? mAppThemeProvider.primaryColor
               : Colors.black54,
         ),
       ),

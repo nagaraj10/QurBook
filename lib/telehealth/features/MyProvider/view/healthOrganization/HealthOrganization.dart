@@ -96,7 +96,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: <Color>[
-                Color(CommonUtil().getMyPrimaryColor()),
+                mAppThemeProvider.primaryColor,
                 Color(CommonUtil().getMyGredientColor())
               ],
                   stops: [
@@ -319,7 +319,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                                   : '',
                               style: TextStyle(
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor())),
+                                      mAppThemeProvider.primaryColor),
                             ),
                           ))
                       : Container(
@@ -418,7 +418,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                                   getFees(eachHospitalModel[i], false)),
                           fontsize: 16.0.sp,
                           fontWeight: FontWeight.w400,
-                          colors: Color(CommonUtil().getMyPrimaryColor())),
+                          colors: mAppThemeProvider.primaryColor),
                     ),
                   ),
                   SizedBox(height: 5),

@@ -10,6 +10,7 @@ import '../../add_providers/models/add_providers_arguments.dart';
 import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/router_variable.dart';
+import '../../main.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../models/confirm_location_arguments.dart';
@@ -132,7 +133,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
       padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
       child: TextField(
         textCapitalization: TextCapitalization.sentences,
-        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        cursorColor: mAppThemeProvider.primaryColor,
         controller: searchController,
         keyboardType: TextInputType.text,
         focusNode: searchFocus,
@@ -171,7 +172,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
         width: 200.0.w,
         height: 40.0.h,
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           borderRadius: BorderRadius.all(Radius.circular(25)),
           boxShadow: <BoxShadow>[
             BoxShadow(

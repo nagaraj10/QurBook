@@ -693,7 +693,7 @@ class ChatScreenState extends State<ChatScreen> {
           fontSize: 16.0.sp,
         ),
       ),
-      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+      backgroundColor: mAppThemeProvider.primaryColor,
     ));
 
     if (isPdfPresent) {
@@ -707,7 +707,7 @@ class ChatScreenState extends State<ChatScreen> {
                 fontSize: 16.0.sp,
               ),
             ),
-            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            backgroundColor: mAppThemeProvider.primaryColor,
             action: SnackBarAction(
               label: 'Open',
               onPressed: () async {
@@ -733,7 +733,7 @@ class ChatScreenState extends State<ChatScreen> {
           content: const Text(
             variable.strFileDownloaded,
           ),
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          backgroundColor: mAppThemeProvider.primaryColor,
           action: SnackBarAction(
             label: 'Open',
             onPressed: () async {
@@ -758,7 +758,7 @@ class ChatScreenState extends State<ChatScreen> {
                 fontSize: 16.0.sp,
               ),
             ),
-            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            backgroundColor: mAppThemeProvider.primaryColor,
             action: SnackBarAction(
               label: 'Open',
               onPressed: () async {
@@ -856,12 +856,12 @@ class ChatScreenState extends State<ChatScreen> {
                     /*child: Text(
                       document[STR_CONTENT],
                       style: TextStyle(
-                          color: Color(CommonUtil().getMyPrimaryColor())),
+                          color: mAppThemeProvider.primaryColor),
                     ),*/
                     child: RichText(
                       text: TextSpan(
                           style: TextStyle(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                             fontSize: 16.0.sp,
                           ),
                           children: textSpanList),
@@ -1086,7 +1086,7 @@ class ChatScreenState extends State<ChatScreen> {
                           ),
                           padding: const EdgeInsets.all(15.0),
                           decoration: BoxDecoration(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                             borderRadius: const BorderRadius.only(
                               topRight: Radius.circular(25),
                               bottomLeft: Radius.circular(25),
@@ -1299,7 +1299,7 @@ class ChatScreenState extends State<ChatScreen> {
       return Text(
         'File ' + dateTimeFromServerTimeStamp.millisecondsSinceEpoch.toString(),
         style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           fontSize: 16.0.sp,
         ),
       );
@@ -1307,7 +1307,7 @@ class ChatScreenState extends State<ChatScreen> {
       return Text(
         'Click to View Pdf',
         style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           fontSize: 16.0.sp,
         ),
       );
@@ -1389,7 +1389,7 @@ class ChatScreenState extends State<ChatScreen> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: <Color>[
-              Color(CommonUtil().getMyPrimaryColor()),
+              mAppThemeProvider.primaryColor,
               Color(CommonUtil().getMyGredientColor())
             ],
                 stops: [
@@ -1651,7 +1651,7 @@ class ChatScreenState extends State<ChatScreen> {
                           ? widget.peerName![0].toString().toUpperCase()
                           : '',
                       style: TextStyle(
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        color: mAppThemeProvider.primaryColor,
                         fontSize: 16.0.sp,
                         fontWeight: FontWeight.w400,
                       ),
@@ -1815,7 +1815,7 @@ class ChatScreenState extends State<ChatScreen> {
       body: isLoading
           ? Center(
               child: CircularProgressIndicator(
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
             ))
           : Stack(
               children: <Widget>[
@@ -1961,14 +1961,14 @@ class ChatScreenState extends State<ChatScreen> {
     return Positioned(
       child: isLoading
           ? CircularProgressIndicator(
-              color: Color(CommonUtil().getMyPrimaryColor()))
+              color: mAppThemeProvider.primaryColor)
           : Container(),
     );
   }
 
   Widget buildInput() {
     return IconTheme(
-      data: IconThemeData(color: Color(CommonUtil().getMyPrimaryColor())),
+      data: IconThemeData(color: mAppThemeProvider.primaryColor),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
@@ -2037,7 +2037,7 @@ class ChatScreenState extends State<ChatScreen> {
                                   child: Icon(
                                     Icons.attach_file,
                                     color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        mAppThemeProvider.primaryColor,
                                     size: 22,
                                   ))
                           /*: FlatButton(
@@ -2047,7 +2047,7 @@ class ChatScreenState extends State<ChatScreen> {
                                 child: new Icon(
                                   Icons.calendar_today,
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
+                                      mAppThemeProvider.primaryColor,
                                   size: 22,
                                 )),*/
                           ),
@@ -2068,7 +2068,7 @@ class ChatScreenState extends State<ChatScreen> {
                   fillColor: Colors.white,
                   child: Icon(Icons.send,
                       size: 24.0,
-                      color: Color(CommonUtil().getMyPrimaryColor())),
+                      color: mAppThemeProvider.primaryColor),
                   padding: const EdgeInsets.all(12.0),
                   shape: const CircleBorder(),
                 ),
@@ -2104,7 +2104,7 @@ class ChatScreenState extends State<ChatScreen> {
                         fillColor: Colors.white,
                         child: Icon(Icons.mic,
                             size: 24.0,
-                            color: Color(CommonUtil().getMyPrimaryColor())),
+                            color: mAppThemeProvider.primaryColor),
                         padding: const EdgeInsets.all(12.0),
                         shape: const CircleBorder(),
                       ),
@@ -2122,7 +2122,7 @@ class ChatScreenState extends State<ChatScreen> {
       child: groupChatId == ''
           ? Center(
               child: CircularProgressIndicator(
-                  color: Color(CommonUtil().getMyPrimaryColor())))
+                  color: mAppThemeProvider.primaryColor))
           : StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance
                   .collection(STR_MESSAGES)
@@ -2136,7 +2136,7 @@ class ChatScreenState extends State<ChatScreen> {
                 if (!snapshot.hasData) {
                   return Center(
                       child: CircularProgressIndicator(
-                          color: Color(CommonUtil().getMyPrimaryColor())));
+                          color: mAppThemeProvider.primaryColor));
                 } else {
                   listMessage = snapshot.data!.docs;
                   for (var data in snapshot.data!.docs) {

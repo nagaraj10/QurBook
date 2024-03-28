@@ -208,7 +208,7 @@ class _BillsListState extends State<BillsList> {
                 mediaMetaInfoObj.metadata!.healthRecordCategory!.logo!,
                 height: 25.0.h,
                 width: 25.0.h,
-                color: Color(CommonUtil().getMyPrimaryColor()),
+                color: mAppThemeProvider.primaryColor,
                 errorBuilder: (context, error, stackTrace) => SizedBox(),
               ),
             ),
@@ -258,7 +258,7 @@ class _BillsListState extends State<BillsList> {
                           ? ImageIcon(
                               AssetImage(variable.icon_record_fav_active),
                               //TODO chnage theme
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              color: mAppThemeProvider.primaryColor,
                               size: CommonUtil().isTablet!
                                   ? tabHeader2
                                   : mobileHeader2,
@@ -283,7 +283,7 @@ class _BillsListState extends State<BillsList> {
                   widget.mediaMeta!.contains(mediaMetaInfoObj.id)
                       ? Icon(
                           Icons.done,
-                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          color: mAppThemeProvider.primaryColor,
                         )
                       : SizedBox(),
                 ],

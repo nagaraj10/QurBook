@@ -7,6 +7,7 @@ import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart'
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../landing/view/landing_arguments.dart';
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
 import 'ticket_types_screen.dart';
@@ -27,7 +28,7 @@ class _MyTicketsListScreenState extends State<MyTicketsListScreen> {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           gradient: LinearGradient(colors: [
-            Color(CommonUtil().getMyPrimaryColor()),
+            mAppThemeProvider.primaryColor,
             Color(CommonUtil().getMyGredientColor())
           ]),
           boxShadow: [
@@ -48,13 +49,13 @@ class _MyTicketsListScreenState extends State<MyTicketsListScreen> {
               setState(() {});
             });
           },
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          backgroundColor: mAppThemeProvider.primaryColor,
           child: Image.asset('assets/icons/09.png', height: 40, width: 40),
         ),
       ),
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        backgroundColor: mAppThemeProvider.primaryColor,
         elevation: 0,
         leading: IconWidget(
           icon: Icons.arrow_back_ios,

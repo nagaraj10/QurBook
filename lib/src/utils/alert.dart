@@ -86,7 +86,7 @@ class Alert {
             ),
             FlatButtonWidget(
               isSelected: true,
-              bgColor: Color(CommonUtil().getMyPrimaryColor()),
+              bgColor: mAppThemeProvider.primaryColor,
               titleColor: Colors.white,
               title: confirm,
               width: confirm == variable.stringUpdateCart ? 150 : 100,
@@ -119,7 +119,7 @@ class Alert {
           actions: <Widget>[
             FlatButtonWidget(
               isSelected: true,
-              bgColor: Color(CommonUtil().getMyPrimaryColor()),
+              bgColor: mAppThemeProvider.primaryColor,
               title: confirm,
               onPress: onPressedConfirm as void Function()? ??
                   () {
@@ -164,7 +164,7 @@ class Alert {
         actions: <Widget>[
           FlatButtonWidget(
             isSelected: true,
-            bgColor: Color(CommonUtil().getMyPrimaryColor()),
+            bgColor: mAppThemeProvider.primaryColor,
             title: confirm,
             onPress: onPressedConfirm as void Function()? ??
                 () {

@@ -216,7 +216,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                               "",
                           mediaMetaInfoObj?.metadata?.doctor?.firstName ?? "",
                           mediaMetaInfoObj?.metadata?.doctor?.lastName ?? "",
-                          Color(CommonUtil().getMyPrimaryColor()),
+                          mAppThemeProvider.primaryColor,
                           CommonUtil().isTablet!
                               ? imageTabHeader
                               : Constants.imageMobileHeader,
@@ -311,7 +311,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                             ? ImageIcon(
                                 const AssetImage(
                                     variable.icon_record_fav_active),
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                                 size: CommonUtil().isTablet!
                                     ? tabHeader2
                                     : mobileHeader2,
@@ -338,7 +338,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                     widget.mediaMeta!.contains(mediaMetaInfoObj.id)
                         ? Icon(
                             Icons.done,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                           )
                         : const SizedBox(),
                   ],

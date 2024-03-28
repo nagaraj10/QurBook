@@ -114,7 +114,7 @@ class _MyPlanState extends State<MyPlanList> {
                     await Get.toNamed(rt_PlanWizard)!.then((value) =>
                         FocusManager.instance.primaryFocus!.unfocus());
                   },
-                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                  backgroundColor: mAppThemeProvider.primaryColor,
                   icon: const Icon(
                     Icons.add,
                     color: Colors.white,
@@ -197,7 +197,7 @@ class _MyPlanState extends State<MyPlanList> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18),
                   ),
-                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                  backgroundColor: mAppThemeProvider.primaryColor,
                   foregroundColor: Colors.white,
                   padding: EdgeInsets.all(
                     10.0.sp,

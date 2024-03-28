@@ -793,7 +793,7 @@ class CommonUtil {
                             gradient: LinearGradient(
                                 end: Alignment.centerRight,
                                 colors: [
-                                  Color(CommonUtil().getMyPrimaryColor()),
+                                  mAppThemeProvider.primaryColor,
                                   Color(CommonUtil().getMyGredientColor())
                                 ])),
                         child: Text(
@@ -1261,7 +1261,7 @@ class CommonUtil {
                     desc,
                     style: TextStyle(
                         fontSize: 20.0.sp,
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        color: mAppThemeProvider.primaryColor,
                         fontFamily: variable.font_poppins),
                     maxLines: 2,
                     softWrap: true,
@@ -1274,7 +1274,7 @@ class CommonUtil {
                   desc,
                   style: TextStyle(
                       fontSize: 14.0.sp,
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      color: mAppThemeProvider.primaryColor,
                       fontFamily: variable.font_poppins),
                   softWrap: true,
                 ),
@@ -1302,13 +1302,13 @@ class CommonUtil {
             children: <Widget>[
               ImageIcon(
                 AssetImage(variable.icon_wifi),
-                color: Color(CommonUtil().getMyPrimaryColor()),
+                color: mAppThemeProvider.primaryColor,
                 size: 50,
               ),
               Text(
                 variable.strNoInternet,
                 style: TextStyle(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  color: mAppThemeProvider.primaryColor,
                   fontSize: 16.0.sp,
                 ),
               ),
@@ -1537,7 +1537,7 @@ class CommonUtil {
           value1: 'OS',
           value2: '',
           color: [
-            Color(CommonUtil().getMyPrimaryColor()),
+            mAppThemeProvider.primaryColor,
             Color(CommonUtil().getMyGredientColor())
           ]);
     }
@@ -1925,7 +1925,7 @@ class CommonUtil {
           return Container(
             height: 50.0.h,
             width: 50.0.h,
-            color: Color(CommonUtil().getMyPrimaryColor()),
+            color: mAppThemeProvider.primaryColor,
             child: Center(
               child: getFirstLastNameText(doctor),
             ),
@@ -2207,7 +2207,7 @@ class CommonUtil {
 */
         // Scaffold.of(context).showSnackBar(SnackBar(
         //   content: const Text(variable.strFilesDownloaded),
-        //   backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        //   backgroundColor: mAppThemeProvider.primaryColor,
         // ));
       } catch (error) {
         print('$error exception thrown');
@@ -2245,7 +2245,7 @@ class CommonUtil {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        backgroundColor: mAppThemeProvider.primaryColor,
         elevation: 5,
         action: SnackBarAction(
             label: actionName,
@@ -2747,12 +2747,12 @@ class CommonUtil {
           Get.back();
         },
         style: OutlinedButton.styleFrom(
-          side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+          side: BorderSide(color: mAppThemeProvider.primaryColor),
         ),
         child: Text(
           variable.strOK,
           style: TextStyle(
-            color: Color(CommonUtil().getMyPrimaryColor()),
+            color: mAppThemeProvider.primaryColor,
           ),
         ),
       ),
@@ -3799,7 +3799,7 @@ class CommonUtil {
                   child: Text(
                     'accept'.toUpperCase(),
                     style: TextStyle(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      color: mAppThemeProvider.primaryColor,
                       fontSize: 13,
                     ),
                   ),
@@ -3860,7 +3860,7 @@ class CommonUtil {
       builder: (context, child) => Theme(
         data: ThemeData.light().copyWith(
           colorScheme: ColorScheme.light().copyWith(
-            primary: Color(CommonUtil().getMyPrimaryColor()),
+            primary: mAppThemeProvider.primaryColor,
           ),
         ),
         child: child!,
@@ -4223,7 +4223,7 @@ class CommonUtil {
               defaultInitial.toUpperCase(),
               style: TextStyle(
                 fontSize: 25.0.sp,
-                color: Color(CommonUtil().getMyPrimaryColor()),
+                color: mAppThemeProvider.primaryColor,
               ),
             ),
           ),
@@ -5206,12 +5206,12 @@ class CommonUtil {
           Get.back();
         },
         style: OutlinedButton.styleFrom(
-          side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+          side: BorderSide(color: mAppThemeProvider.primaryColor),
         ),
         child: Text(
           variable.strOK,
           style: TextStyle(
-            color: Color(CommonUtil().getMyPrimaryColor()),
+            color: mAppThemeProvider.primaryColor,
           ),
         ),
       ),
@@ -5279,7 +5279,7 @@ class CommonUtil {
                   fontSize: CommonUtil().isTablet! ? 22.0.sp : null,
                   color: isQurhome
                       ? Color(CommonUtil().getQurhomePrimaryColor())
-                      : Color(CommonUtil().getMyPrimaryColor())),
+                      : mAppThemeProvider.primaryColor),
             ),
             // To display the title it is optional
             content: CommonUtil().isTablet!
@@ -5297,7 +5297,7 @@ class CommonUtil {
                   style: ElevatedButton.styleFrom(
                     foregroundColor: isQurhome
                         ? Color(CommonUtil().getQurhomePrimaryColor())
-                        : Color(CommonUtil().getMyPrimaryColor()),
+                        : mAppThemeProvider.primaryColor,
                   ),
                   onPressed: () {
                     Navigator.pop(context);
@@ -5312,7 +5312,7 @@ class CommonUtil {
                     // FlatButton widget is used to make a text to work like a button
                     foregroundColor: isQurhome
                         ? Color(CommonUtil().getQurhomePrimaryColor())
-                        : Color(CommonUtil().getMyPrimaryColor()),
+                        : mAppThemeProvider.primaryColor,
                   ),
                   onPressed: onPressedYes,
                   // function used to perform after pressing the button
@@ -6604,7 +6604,7 @@ class CommonUtil {
           padding: EdgeInsets.only(bottom: 10),
           child: Text(primary_provider,
               style: TextStyle(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  color: mAppThemeProvider.primaryColor,
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w600)),
         ),
@@ -6819,7 +6819,7 @@ class CommonUtil {
                   style: TextStyle(
                       color: isQurhome
                           ? Color(CommonUtil().getQurhomePrimaryColor())
-                          : Color(CommonUtil().getMyPrimaryColor()))),
+                          : mAppThemeProvider.primaryColor)),
               onPressed: () {
                 pressNo!();
               },
@@ -6829,7 +6829,7 @@ class CommonUtil {
                   style: TextStyle(
                       color: isQurhome
                           ? Color(CommonUtil().getQurhomePrimaryColor())
-                          : Color(CommonUtil().getMyPrimaryColor()))),
+                          : mAppThemeProvider.primaryColor)),
               onPressed: () {
                 pressYes!();
               },
@@ -6926,7 +6926,7 @@ class CommonUtil {
           title: Container(
             color: (PreferenceUtil.getIfQurhomeisDefaultUI())
                 ? Color(CommonUtil().getQurhomePrimaryColor())
-                : Color(CommonUtil().getMyPrimaryColor()),
+                : mAppThemeProvider.primaryColor,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -7144,7 +7144,7 @@ class CommonUtil {
               onPressed();
             },
             child: Container(
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
               padding: const EdgeInsets.all(14),
               child: Text(buttonText, style: TextStyle(color: Colors.white)),
             ),
@@ -8542,7 +8542,7 @@ class VideoCallCommonUtils {
               child: Text(
                 'Ok',
                 style: TextStyle(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  color: mAppThemeProvider.primaryColor,
                   fontSize: 18.0.sp,
                 ),
               ),

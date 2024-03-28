@@ -16,6 +16,7 @@ import '../../../device_integration/view/screens/Device_Data.dart';
 import '../../../device_integration/viewModel/Device_model.dart';
 import '../../../device_integration/viewModel/deviceDataHelper.dart';
 import '../../../landing/view_model/landing_view_model.dart';
+import '../../../main.dart';
 import '../../../widgets/GradientAppBar.dart';
 import '../../model/CreateDeviceSelectionModel.dart';
 import '../../model/GetDeviceSelectionModel.dart';
@@ -505,7 +506,7 @@ class _MySettingsState extends State<MySettings> {
                               child: Switch(
                                 value: _isdigitRecognition!,
                                 activeColor:
-                                    Color(CommonUtil().getMyPrimaryColor()),
+                                    mAppThemeProvider.primaryColor,
                                 onChanged: (bool newValue) {
                                   setState(() {
                                     isTouched = true;
@@ -538,7 +539,7 @@ class _MySettingsState extends State<MySettings> {
                               child: Switch(
                                 value: _isdeviceRecognition!,
                                 activeColor:
-                                    Color(CommonUtil().getMyPrimaryColor()),
+                                    mAppThemeProvider.primaryColor,
                                 onChanged: (bool newValue) {
                                   setState(() {
                                     isTouched = true;
@@ -620,7 +621,7 @@ class _MySettingsState extends State<MySettings> {
                             child: Switch(
                               value: PreferenceUtil.getIfQurhomeisDefaultUI(),
                               activeColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
+                                  mAppThemeProvider.primaryColor,
                               onChanged: (bool newValue) {
                                 setState(
                                   () {

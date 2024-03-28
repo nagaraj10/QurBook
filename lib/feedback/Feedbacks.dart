@@ -11,6 +11,7 @@ import '../common/CommonUtil.dart';
 // TODO: multi_image_picker deprecated so need to FIX
 // import 'package:multi_image_picker/multi_image_picker.dart';
 import 'dart:typed_data';
+import '../main.dart';
 import '../src/utils/screenutils/size_extensions.dart';
 import '../common/FHBBasicWidget.dart';
 import '../common/PreferenceUtil.dart';
@@ -560,7 +561,7 @@ class _FeedbacksState extends State<Feedbacks> {
       ),
       child: TextFormField(
         textCapitalization: TextCapitalization.sentences,
-        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        cursorColor: mAppThemeProvider.primaryColor,
         controller: feedbackController,
         keyboardType: TextInputType.text,
         focusNode: feedbackFocus,

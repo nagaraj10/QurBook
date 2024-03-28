@@ -274,7 +274,7 @@ class _OTPRemoveAccountState extends State<OTPRemoveAccount>
                               children: [
                                 RaisedGradientButton(
                                   gradient: LinearGradient(colors: [
-                                    Color(CommonUtil().getMyPrimaryColor()),
+                                    mAppThemeProvider.primaryColor,
                                     Color(CommonUtil().getMyGredientColor()),
                                   ]),
                                   width: 280.0.w,
@@ -343,7 +343,7 @@ class _OTPRemoveAccountState extends State<OTPRemoveAccount>
   //             child: Text(
   //               strresendOtp,
   //               style: TextStyle(
-  //                   color: Color(CommonUtil().getMyPrimaryColor()),
+  //                   color: mAppThemeProvider.primaryColor,
   //                   fontSize: 15.0.sp,
   //                   fontWeight: FontWeight.w600),
   //             ),
@@ -436,7 +436,7 @@ class _OTPRemoveAccountState extends State<OTPRemoveAccount>
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                   )),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -478,7 +478,7 @@ class _OTPRemoveAccountState extends State<OTPRemoveAccount>
             gradient: LinearGradient(begin: Alignment.centerLeft, colors: [
 //                  Color(0xff138fcf),
 //                  Color(0xff138fcf),
-              Color(CommonUtil().getMyPrimaryColor()),
+              mAppThemeProvider.primaryColor,
               Color(CommonUtil().getMyGredientColor())
             ])),
         child: Text(

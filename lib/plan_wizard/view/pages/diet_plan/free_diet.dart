@@ -95,7 +95,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   onChanged: toggleSwitch,
                   value: isSwitched,
-                  activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                  activeColor: mAppThemeProvider.primaryColor,
                 ),
                 SizedBox(width: 2.w),
                 Text(
@@ -311,7 +311,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
                       });
                       Get.back();
                     },
-                    activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                    activeColor: mAppThemeProvider.primaryColor,
                   );
                 },
               ),

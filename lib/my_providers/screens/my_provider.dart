@@ -85,7 +85,7 @@ class MyProviderState extends State<MyProvider>
     return Scaffold(
       appBar: MyProvidersAppBar(tabController: _tabController),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        backgroundColor: mAppThemeProvider.primaryColor,
         onPressed: () {
           switch (_activeTabIndex) {
             case 0:

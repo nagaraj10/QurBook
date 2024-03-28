@@ -267,7 +267,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
           TextField(
             textCapitalization: TextCapitalization.sentences,
             enabled: true,
-            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+            cursorColor: mAppThemeProvider.primaryColor,
             controller: claimAmount,
             enableInteractiveSelection: false,
             keyboardType: TextInputType.number,
@@ -469,7 +469,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       builder: (context,child) => Theme(
         data: ThemeData.light().copyWith(
           colorScheme: ColorScheme.light().copyWith(
-            primary:Color(CommonUtil().getMyPrimaryColor()),
+            primary:mAppThemeProvider.primaryColor,
           ),
         ),
         child: child!,
@@ -492,7 +492,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
         width: 130.0.w,
         height: 40.0.h,
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           borderRadius: BorderRadius.all(Radius.circular(2)),
           boxShadow: <BoxShadow>[
             BoxShadow(
@@ -617,7 +617,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
           child: TextField(
         textCapitalization: TextCapitalization.sentences,
         style: fhbBasicWidget.getTextStyleForValue(),
-        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        cursorColor: mAppThemeProvider.primaryColor,
         controller: dateOfVisit,
         readOnly: true,
         keyboardType: TextInputType.text,
@@ -709,7 +709,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                                 Navigator.of(context).pop();
                               },
                             )),
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                           ),
                         ])
                   ]));

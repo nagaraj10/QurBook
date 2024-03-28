@@ -1216,7 +1216,7 @@ class SymptomItemCard extends StatelessWidget {
       icon_appointment_regimen,
       height: iconSize,
       width: iconSize,
-      color: Color(CommonUtil().getMyPrimaryColor()),
+      color: mAppThemeProvider.primaryColor,
     );
   }
 
@@ -1251,7 +1251,7 @@ class SymptomItemCard extends StatelessWidget {
             strAppointmentRegimen,
             style: TextStyle(
               fontSize: 11.sp,
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
             ),
           )),
     );

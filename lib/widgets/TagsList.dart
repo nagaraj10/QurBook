@@ -5,6 +5,8 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
+import '../main.dart';
+
 class Taglist extends StatefulWidget {
   const Taglist(
       {Key? key, this.title, this.tags, this.onChecked, this.forMyProfile})
@@ -63,10 +65,10 @@ class _TaglistState extends State<Taglist> {
     return widget.tags!
         .map((e) => CheckboxListTile(
               value: e.isChecked,
-              checkColor: Color(CommonUtil().getMyPrimaryColor()),
+              checkColor: mAppThemeProvider.primaryColor,
               title: Text(e.name!,
                   style: TextStyle(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                   )),
               onChanged: (val) {
                 print(val);
@@ -93,7 +95,7 @@ class _TaglistState extends State<Taglist> {
           bottom: 5), //set margin to adjust for both mobile and tablet
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: Color(CommonUtil().getMyPrimaryColor())),
+        border: Border.all(color: mAppThemeProvider.primaryColor),
         borderRadius: BorderRadius.circular(
           5,
         ),
@@ -108,7 +110,7 @@ class _TaglistState extends State<Taglist> {
       child: Text(
         label,
         style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
         ),
       ),
     );

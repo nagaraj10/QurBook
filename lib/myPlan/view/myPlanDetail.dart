@@ -356,7 +356,7 @@ class PlanDetail extends State<MyPlanDetail> {
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(
                         color: isExpired == '1'
-                            ? Color(CommonUtil().getMyPrimaryColor())
+                            ? mAppThemeProvider.primaryColor
                             : Colors.red,
                       ),
                     ),
@@ -368,7 +368,7 @@ class PlanDetail extends State<MyPlanDetail> {
                           : strUnSubscribe.toUpperCase(),
                       style: TextStyle(
                         color: isExpired == '1'
-                            ? Color(CommonUtil().getMyPrimaryColor())
+                            ? mAppThemeProvider.primaryColor
                             : Colors.red,
                         fontSize: 13.sp,
                       ),
@@ -408,7 +408,7 @@ class PlanDetail extends State<MyPlanDetail> {
                           ? 'cancel'.toUpperCase()
                           : 'renew'.toUpperCase(),
                       style: TextStyle(
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        color: mAppThemeProvider.primaryColor,
                         fontSize: 13.sp,
                       ),
                     ),
@@ -438,7 +438,7 @@ class PlanDetail extends State<MyPlanDetail> {
                   child: CircularProgressIndicator(
                       strokeWidth: 1.0,
                       backgroundColor:
-                      Color(CommonUtil().getMyPrimaryColor())),
+                      mAppThemeProvider.primaryColor),
                 ),
               ),
             ),

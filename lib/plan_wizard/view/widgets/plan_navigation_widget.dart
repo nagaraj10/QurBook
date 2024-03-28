@@ -8,6 +8,7 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/CartIconWithBadge.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
+import '../../../main.dart';
 import 'page_number_widget.dart';
 
 class PlanNavigationWidget extends StatelessWidget {
@@ -45,7 +46,7 @@ class PlanNavigationWidget extends StatelessWidget {
                 Get.to(CheckoutPage())!.then((value) => FocusManager.instance.primaryFocus!.unfocus());
               },
               child: CartIconWithBadge(
-                  color: Color(CommonUtil().getMyPrimaryColor()), size: 38.sp),
+                  color: mAppThemeProvider.primaryColor, size: 38.sp),
             ),
           ),
         ],

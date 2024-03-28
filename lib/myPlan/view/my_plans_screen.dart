@@ -34,7 +34,7 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          backgroundColor: mAppThemeProvider.primaryColor,
           elevation: 0,
           title: const Text(strMyPlans),
           leading: IconWidget(

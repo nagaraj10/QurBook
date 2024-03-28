@@ -205,7 +205,7 @@ class _MyPlanState extends State<PlanList> {
                   height: 30.0.h,
                   child: CircularProgressIndicator(
                       backgroundColor:
-                          Color(CommonUtil().getMyPrimaryColor())),
+                          mAppThemeProvider.primaryColor),
                 ),
               ),
             ),
@@ -622,7 +622,7 @@ class _MyPlanState extends State<PlanList> {
       return Colors.grey;
     } else {
       if (planList[i].isSubscribed == '0') {
-        return Color(CommonUtil().getMyPrimaryColor());
+        return mAppThemeProvider.primaryColor;
       } else {
         return Colors.grey;
       }

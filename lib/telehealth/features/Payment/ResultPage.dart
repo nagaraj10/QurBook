@@ -102,13 +102,13 @@ class _ResultPage extends State<ResultPage> {
                         width: 120.0.h,
                         height: 120.0.h,
                         color: status
-                            ? Color(CommonUtil().getMyPrimaryColor())
+                            ? mAppThemeProvider.primaryColor
                             : Colors.red),
                     SizedBox(height: 15.0.h),
                     Text(status ? PAYMENT_SUCCESS_MSG : PAYMENT_FAILURE_MSG,
                         style: TextStyle(
                             fontSize: 22.0.sp,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                             fontWeight: FontWeight.bold)),
                     SizedBox(height: 10.0.h),
                     Padding(
@@ -121,7 +121,7 @@ class _ResultPage extends State<ResultPage> {
                                 : PAYMENT_FAILURE_CONTENT,
                         style: TextStyle(
                             fontSize: 12.0.sp,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                             fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -133,7 +133,7 @@ class _ResultPage extends State<ResultPage> {
                                 : '',
                             style: TextStyle(
                                 fontSize: 16.0.sp,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                                 fontWeight: FontWeight.bold))
                         : SizedBox(),
                     SizedBox(height: 30.0.h),
@@ -146,7 +146,7 @@ class _ResultPage extends State<ResultPage> {
                                 borderRadius: BorderRadius.circular(8.0),
                                 side: BorderSide(color: Colors.white)),
                             backgroundColor:
-                                Color(CommonUtil().getMyPrimaryColor()),
+                                mAppThemeProvider.primaryColor,
                             foregroundColor: Colors.white,
                             padding: EdgeInsets.all(12.0),
                           ),
@@ -202,7 +202,7 @@ class _ResultPage extends State<ResultPage> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
               side: BorderSide(color: Colors.white)),
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          backgroundColor: mAppThemeProvider.primaryColor,
           foregroundColor: Colors.white,
           padding: EdgeInsets.all(12.0),
         ),

@@ -82,7 +82,7 @@ class _GridViewNew extends State<GridViewNew> {
       ),
       borderRadius: BorderRadius.all(Radius.circular(15.0)),
       color: _selectedIndex != null && _selectedIndex == index && widget.rowPosition == widget.selectedRow
-          ? Color(CommonUtil().getMyPrimaryColor())
+          ? mAppThemeProvider.primaryColor
           : Colors.white,
     );
   }

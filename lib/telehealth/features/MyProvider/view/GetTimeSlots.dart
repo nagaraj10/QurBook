@@ -112,9 +112,9 @@ class GetTimeSlots extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0),
                     side: BorderSide(
-                        color: Color(CommonUtil().getMyPrimaryColor()))),
+                        color: mAppThemeProvider.primaryColor)),
                 backgroundColor: Colors.transparent,
-                foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                foregroundColor: mAppThemeProvider.primaryColor,
                 padding: EdgeInsets.all(
                   8.0.sp,
                 ),

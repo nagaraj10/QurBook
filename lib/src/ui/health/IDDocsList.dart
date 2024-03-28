@@ -207,7 +207,7 @@ class _IDDocsListState extends State<IDDocsList> {
                   mediaMetaInfoObj.metadata!.healthRecordCategory!.logo!,
                   height: 25.0.h,
                   width: 25.0.h,
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  color: mAppThemeProvider.primaryColor,
                   errorBuilder: (context, error, stackTrace) => SizedBox(),
                 ),
               ),
@@ -284,7 +284,7 @@ class _IDDocsListState extends State<IDDocsList> {
                             ? ImageIcon(
                                 AssetImage(variable.icon_record_fav_active),
                                 //TODO chnage theme
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                                 size: 20,
                               )
                             : ImageIcon(
@@ -306,7 +306,7 @@ class _IDDocsListState extends State<IDDocsList> {
                     widget.mediaMeta!.contains(mediaMetaInfoObj.id)
                         ? Icon(
                             Icons.done,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                           )
                         : SizedBox(),
                   ],

@@ -249,7 +249,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                     borderRadius: BorderRadius.circular(10)),
                 child: FlatButtonWidget(
                   bgColor: Colors.transparent,

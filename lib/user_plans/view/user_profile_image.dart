@@ -96,7 +96,7 @@ class UserProfileImage extends StatelessWidget {
                 errorBuilder: (context, exception, stackTrace) => Container(
                   height: 50.0.h,
                   width: 50.0.h,
-                  color: circleColor ?? Color(CommonUtil().getMyPrimaryColor()),
+                  color: circleColor ?? mAppThemeProvider.primaryColor,
                   child: Center(
                     child: getFirstLastNameTextForProfile(myProfile!,
                         textColor: textColor,

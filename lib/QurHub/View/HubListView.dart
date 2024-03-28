@@ -8,6 +8,7 @@ import '../../common/CommonUtil.dart';
 import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/variable_constant.dart';
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/Notifications/constants/notification_constants.dart';
 import '../Controller/HubListViewController.dart';
@@ -21,9 +22,7 @@ class HubListView extends GetView<HubListViewController> {
       () {
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: Color(
-              CommonUtil().getMyPrimaryColor(),
-            ),
+            backgroundColor:mAppThemeProvider.primaryColor,
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back_ios,
@@ -339,7 +338,7 @@ class HubListView extends GetView<HubListViewController> {
                       );
                     },
                     child: Card(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      color: mAppThemeProvider.primaryColor,
                       child: Padding(
                         padding: EdgeInsets.all(5.0),
                         child: Text(

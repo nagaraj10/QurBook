@@ -242,7 +242,7 @@ class _CategoryState extends State<CategoryList> {
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                     width: 1.sw,
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                       child: Text(
@@ -413,7 +413,7 @@ class _CategoryState extends State<CategoryList> {
                           style: TextStyle(
                               fontSize: 15.0.sp,
                               fontWeight: FontWeight.w400,
-                              color: Color(CommonUtil().getMyPrimaryColor())),
+                              color: mAppThemeProvider.primaryColor),
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
@@ -638,7 +638,7 @@ class _CategoryState extends State<CategoryList> {
                                   foregroundColor: planListResult[inx.index]
                                               .isSubscribed ==
                                           '0'
-                                      ? Color(CommonUtil().getMyPrimaryColor())
+                                      ? mAppThemeProvider.primaryColor
                                       : Colors.grey,
                                   padding: EdgeInsets.all(
                                     8.0.sp,
@@ -795,7 +795,7 @@ class _CategoryState extends State<CategoryList> {
       return Colors.grey;
     } else {
       if (planList[i].isSubscribed == '0') {
-        return Color(CommonUtil().getMyPrimaryColor());
+        return mAppThemeProvider.primaryColor;
       } else {
         return Colors.grey;
       }

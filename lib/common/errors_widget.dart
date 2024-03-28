@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../main.dart';
 import '../src/utils/screenutils/size_extensions.dart';
 import '../constants/fhb_constants.dart';
 import '../constants/variable_constant.dart' as variable;
@@ -27,7 +28,7 @@ class ErrorsWidget extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 20.0.sp,
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
             ),
           ),
           SizedBox(

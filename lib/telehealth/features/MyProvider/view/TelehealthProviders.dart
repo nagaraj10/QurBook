@@ -120,7 +120,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
       //           icon: ImageIcon(
       //             AssetImage(variable.icon_th),
       //             color: _selectedIndex == 0
-      //                 ? Color(CommonUtil().getMyPrimaryColor())
+      //                 ? mAppThemeProvider.primaryColor
       //                 : Colors.black54,
       //           ),
       //           title: Text(
@@ -128,7 +128,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
       //             style: TextStyle(
       //               fontSize: 10.sp,
       //               color: _selectedIndex == 0
-      //                   ? Color(CommonUtil().getMyPrimaryColor())
+      //                   ? mAppThemeProvider.primaryColor
       //                   : Colors.black54,
       //             ),
       //           )),
@@ -136,7 +136,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
       //           icon: ImageIcon(
       //             AssetImage('assets/navicons/my_providers.png'),
       //             color: _selectedIndex == 1
-      //                 ? Color(CommonUtil().getMyPrimaryColor())
+      //                 ? mAppThemeProvider.primaryColor
       //                 : Colors.black54,
       //           ),
       //           title: Text(
@@ -144,7 +144,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
       //             style: TextStyle(
       //                 fontSize: 10.sp,
       //                 color: _selectedIndex == 1
-      //                     ? Color(CommonUtil().getMyPrimaryColor())
+      //                     ? mAppThemeProvider.primaryColor
       //                     : Colors.black54),
       //           )),
       //       BottomNavigationBarItem(
@@ -157,7 +157,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
       //               style: TextStyle(
       //                   fontSize: 10.sp,
       //                   color: _selectedIndex == 2
-      //                       ? Color(CommonUtil().getMyPrimaryColor())
+      //                       ? mAppThemeProvider.primaryColor
       //                       : Colors.black54))),
       //       BottomNavigationBarItem(
       //           icon: getChatIcon('assets/navicons/chat.png'),
@@ -165,20 +165,20 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
       //               style: TextStyle(
       //                   fontSize: 10.sp,
       //                   color: _selectedIndex == 3
-      //                       ? Color(CommonUtil().getMyPrimaryColor())
+      //                       ? mAppThemeProvider.primaryColor
       //                       : Colors.black54))),
       //       BottomNavigationBarItem(
       //           icon: ImageIcon(
       //             AssetImage('assets/navicons/records.png'),
       //             color: _selectedIndex == 4
-      //                 ? Color(CommonUtil().getMyPrimaryColor())
+      //                 ? mAppThemeProvider.primaryColor
       //                 : Colors.black54,
       //           ),
       //           title: Text('My Records',
       //               style: TextStyle(
       //                   fontSize: 10.sp,
       //                   color: _selectedIndex == 4
-      //                       ? Color(CommonUtil().getMyPrimaryColor())
+      //                       ? mAppThemeProvider.primaryColor
       //                       : Colors.black54))),
       //     ],
       //     //backgroundColor: Colors.grey[200],
@@ -220,7 +220,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                     AssetImage(icon),
                     //size: 20.0.sp,
                     color: _selectedIndex == 3
-                        ? Color(CommonUtil().getMyPrimaryColor())
+                        ? mAppThemeProvider.primaryColor
                         : Colors.black54,
                   ),
                 ),
@@ -233,7 +233,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                     AssetImage(icon),
                     //size: 20.0.sp,
                     color: _selectedIndex == 3
-                        ? Color(CommonUtil().getMyPrimaryColor())
+                        ? mAppThemeProvider.primaryColor
                         : Colors.black54,
                   ),
                 ),

@@ -19,6 +19,7 @@ import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart';
+import '../../main.dart';
 import '../../my_family/models/relationships.dart';
 import '../../src/model/Authentication/DeviceInfoSucess.dart';
 import '../../src/model/Authentication/UserModel.dart';
@@ -373,7 +374,7 @@ class _VerifyPatientState extends State<VerifyPatient>
   //             child: Text(
   //               strresendOtp,
   //               style: TextStyle(
-  //                   color: Color(CommonUtil().getMyPrimaryColor()),
+  //                   color: mAppThemeProvider.primaryColor,
   //                   fontSize: 15.0.sp,
   //                   fontWeight: FontWeight.w600),
   //             ),
@@ -466,7 +467,7 @@ class _VerifyPatientState extends State<VerifyPatient>
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                   )),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),

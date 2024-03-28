@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../main.dart';
 import 'IntroWidget.dart';
 import '../common/CommonUtil.dart';
 import '../common/PreferenceUtil.dart';
@@ -67,7 +68,7 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
             },
             title: (screens.length - 1) == currentScreen ? 'CLOSE' : 'SKIP',
             fontSize: 18,
-            titleColor: Color(CommonUtil().getMyPrimaryColor()),
+            titleColor: mAppThemeProvider.primaryColor,
           ),
           const SizedBox(
             height: 20,
@@ -85,7 +86,7 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: currentScreen == index
-            ? Color(CommonUtil().getMyPrimaryColor())
+            ? mAppThemeProvider.primaryColor
             : Colors.grey,
       ),
     );

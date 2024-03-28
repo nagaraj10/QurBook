@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
+import '../main.dart';
+
 class GradientAppBar extends StatefulWidget {
   @override
   _GradientAppBarState createState() => _GradientAppBarState();
@@ -15,7 +17,7 @@ class _GradientAppBarState extends State<GradientAppBar> {
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: <Color>[
-            Color(CommonUtil().getMyPrimaryColor()),
+            mAppThemeProvider.primaryColor,
             Color(CommonUtil().getMyGredientColor())
           ],
               stops: [

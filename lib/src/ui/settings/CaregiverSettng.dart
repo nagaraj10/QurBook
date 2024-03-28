@@ -493,7 +493,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
                               child: Switch(
                                 value: allowVitalNotification!,
                                 activeColor:
-                                    Color(CommonUtil().getMyPrimaryColor()),
+                                    mAppThemeProvider.primaryColor,
                                 onChanged: (bool newValue) {
                                   setState(() {
                                     isTouched = true;
@@ -517,7 +517,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
                               child: Switch(
                                 value: allowSymptomsNotification!,
                                 activeColor:
-                                    Color(CommonUtil().getMyPrimaryColor()),
+                                    mAppThemeProvider.primaryColor,
                                 onChanged: (bool newValue) {
                                   setState(() {
                                     isTouched = true;
@@ -537,7 +537,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
                               child: Switch(
                                 value: allowAppointmentNotification!,
                                 activeColor:
-                                    Color(CommonUtil().getMyPrimaryColor()),
+                                    mAppThemeProvider.primaryColor,
                                 onChanged: (bool newValue) {
                                   setState(() {
                                     isTouched = true;

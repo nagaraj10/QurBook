@@ -126,7 +126,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
           },
           child: Icon(
             Icons.add,
-            color: Color(CommonUtil().getMyPrimaryColor()),
+            color: mAppThemeProvider.primaryColor,
           ),
         ));
   }
@@ -228,7 +228,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                                       .toUpperCase(),
                                   style: TextStyle(
                                     color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        mAppThemeProvider.primaryColor,
                                     fontSize: 16.0.sp,
                                   ),
                                 ),

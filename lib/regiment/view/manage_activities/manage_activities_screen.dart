@@ -75,13 +75,13 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
             cardColor = Colors.teal;
             break;
           default:
-            cardColor = Color(CommonUtil().getMyPrimaryColor());
+            cardColor = mAppThemeProvider.primaryColor;
         }
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
-      cardColor = Color(CommonUtil().getMyPrimaryColor());
+      cardColor = mAppThemeProvider.primaryColor;
     }
     return cardColor;
   }
@@ -96,7 +96,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        backgroundColor: mAppThemeProvider.primaryColor,
         elevation: 0,
         title: const Text(strManageActivities),
         leading: IconWidget(
@@ -132,7 +132,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
             //               child: Icon(
             //                 Icons.chevron_left_rounded,
             //                 size: 24.0.sp,
-            //                 color: Color(CommonUtil().getMyPrimaryColor()),
+            //                 color: mAppThemeProvider.primaryColor,
             //               ),
             //             ),
             //           ),
@@ -160,7 +160,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
             //                 _regimentViewModel.activitiesDate,
             //                 style: TextStyle(
             //                   fontSize: 14.0.sp,
-            //                   color: Color(CommonUtil().getMyPrimaryColor()),
+            //                   color: mAppThemeProvider.primaryColor,
             //                 ),
             //               ),
             //             ),
@@ -177,7 +177,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
             //               child: Icon(
             //                 Icons.chevron_right_rounded,
             //                 size: 24.0.sp,
-            //                 color: Color(CommonUtil().getMyPrimaryColor()),
+            //                 color: mAppThemeProvider.primaryColor,
             //               ),
             //             ),
             //           ),

@@ -118,7 +118,7 @@ class _MyFamilyState extends State<MyFamily> {
           onPressed: () {
             saveMediaDialog(context);
           },
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          backgroundColor: mAppThemeProvider.primaryColor,
           child: Icon(
             Icons.add,
             color: Colors.white,
@@ -220,7 +220,7 @@ class _MyFamilyState extends State<MyFamily> {
                             child: SizedBox(
                           child: CircularProgressIndicator(
                             backgroundColor:
-                                Color(CommonUtil().getMyPrimaryColor()),
+                                mAppThemeProvider.primaryColor,
                           ),
                           width: 30.0.h,
                           height: 30.0.h,
@@ -414,7 +414,7 @@ class _MyFamilyState extends State<MyFamily> {
                               return Container(
                                 height: 60.0.h,
                                 width: 60.0.h,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                                 child: Center(
                                     child: Text(
                                   data.child?.firstName != null &&
@@ -572,7 +572,7 @@ class _MyFamilyState extends State<MyFamily> {
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 16.0.sp,
-                          color: Color(CommonUtil().getMyPrimaryColor())),
+                          color: mAppThemeProvider.primaryColor),
                     ),
                   ],
                 ),
@@ -963,7 +963,7 @@ class _MyFamilyState extends State<MyFamily> {
     return Expanded(
       child: TextField(
           textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: mobileNoController,
           enabled: isPrimaryNoSelected ? false : true,
           keyboardType: TextInputType.text,
@@ -997,7 +997,7 @@ class _MyFamilyState extends State<MyFamily> {
     return Expanded(
       child: TextField(
           textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: nameController,
           keyboardType: TextInputType.text,
           focusNode: nameFocus,
@@ -1030,7 +1030,7 @@ class _MyFamilyState extends State<MyFamily> {
     return Expanded(
         child: TextField(
       textCapitalization: TextCapitalization.sentences,
-      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      cursorColor: mAppThemeProvider.primaryColor,
       controller: firstNameController,
       keyboardType: TextInputType.text,
       focusNode: firstNameFocus,
@@ -1064,7 +1064,7 @@ class _MyFamilyState extends State<MyFamily> {
     return Expanded(
         child: TextField(
       textCapitalization: TextCapitalization.sentences,
-      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      cursorColor: mAppThemeProvider.primaryColor,
       controller: middleNameController,
       keyboardType: TextInputType.text,
       focusNode: middleNameFocus,
@@ -1098,7 +1098,7 @@ class _MyFamilyState extends State<MyFamily> {
     return Expanded(
         child: TextField(
       textCapitalization: TextCapitalization.sentences,
-      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      cursorColor: mAppThemeProvider.primaryColor,
       controller: lastNameController,
       keyboardType: TextInputType.text,
       focusNode: lastNameFocus,
@@ -1135,7 +1135,7 @@ class _MyFamilyState extends State<MyFamily> {
         width: 220.0.w,
         height: 40.0.h,
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           borderRadius: BorderRadius.all(Radius.circular(2)),
           boxShadow: <BoxShadow>[
             BoxShadow(

@@ -290,7 +290,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                       icon: mediaMetaInfo.isBookmarked!
                           ? ImageIcon(
                               const AssetImage(variable.icon_record_fav_active),
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              color: mAppThemeProvider.primaryColor,
                               size: CommonUtil().isTablet!
                                   ? tabHeader2
                                   : mobileHeader2,
@@ -315,7 +315,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                   widget.mediaMeta!.contains(mediaMetaInfo.id)
                       ? Icon(
                           Icons.done,
-                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          color: mAppThemeProvider.primaryColor,
                         )
                       : const SizedBox(),
                 ],

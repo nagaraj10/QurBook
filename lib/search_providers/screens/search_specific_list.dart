@@ -303,7 +303,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: <Color>[
-                    Color(CommonUtil().getMyPrimaryColor()),
+                    mAppThemeProvider.primaryColor,
                     Color(CommonUtil().getMyGredientColor())
                   ],
                   stops: [
@@ -389,7 +389,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               padding: const EdgeInsets.all(3.0),
               decoration: BoxDecoration(
                 border:
-                    Border.all(color: Color(CommonUtil().getMyPrimaryColor())),
+                    Border.all(color: mAppThemeProvider.primaryColor),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -407,7 +407,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         child: Text(
                           Constants.strSort,
                           style: TextStyle(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                             fontSize: 18,
                           ),
                         ),
@@ -416,7 +416,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   ),
                   // Spacer(),
                   Container(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                     width: 1,
                   ),
                   Flexible(
@@ -476,7 +476,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                             Text(
                               Constants.strFilter,
                               style: TextStyle(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                                 fontSize: 18,
                               ),
                             ),
@@ -490,7 +490,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                 height: 28,
                                 decoration: BoxDecoration(
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
+                                      mAppThemeProvider.primaryColor,
                                   // border color
                                   shape: BoxShape.circle,
                                 ),
@@ -624,7 +624,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       return Text(
         initials,
         style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -633,7 +633,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       return Text(
         '',
         style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w200,
         ),
@@ -1045,7 +1045,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                           children: [
                             SvgPicture.asset(
                               doctorSpecialization,
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              color: mAppThemeProvider.primaryColor,
                               height: 15,
                             ),
                             const SizedBox(width: 5),
@@ -1057,7 +1057,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                   fontWeight: FontWeight.w600,
                                   fontSize: 12.0.sp,
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
+                                      mAppThemeProvider.primaryColor,
                                 ),
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
@@ -1294,7 +1294,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         width: 100.0.w,
         height: 40.0.h,
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           borderRadius: const BorderRadius.all(Radius.circular(25)),
           boxShadow: <BoxShadow>[
             const BoxShadow(
@@ -1404,7 +1404,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       RefreshIndicator(
         key: _refreshIndicatorKey,
         onRefresh: _refresh,
-        color: Color(CommonUtil().getMyPrimaryColor()),
+        color: mAppThemeProvider.primaryColor,
         child: data != null
             ? Container(
                 color: const Color(fhbColors.bgColorContainer),
@@ -1517,7 +1517,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: _refresh,
-      color: Color(CommonUtil().getMyPrimaryColor()),
+      color: mAppThemeProvider.primaryColor,
       child: data != null
           ? Container(
               color: const Color(fhbColors.bgColorContainer),
@@ -1716,7 +1716,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             return ImageIcon(
               const AssetImage(variable.icon_stetho),
               size: 40.0.sp,
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
             );
           }
         },
@@ -1746,7 +1746,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 ? myProfile.lastName![0].toUpperCase()
                 : ''),
         style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -1755,7 +1755,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       return Text(
         myProfile.firstName![0].toUpperCase(),
         style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -1764,7 +1764,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       return Text(
         '',
         style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w200,
         ),
@@ -2090,7 +2090,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget _showFirstNameTextField() => Expanded(
           child: TextField(
         textCapitalization: TextCapitalization.sentences,
-        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        cursorColor: mAppThemeProvider.primaryColor,
         controller: firstNameController,
         keyboardType: TextInputType.text,
         focusNode: firstNameFocus,
@@ -2122,7 +2122,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget _showLastNameTextField() => Expanded(
           child: TextField(
         textCapitalization: TextCapitalization.sentences,
-        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        cursorColor: mAppThemeProvider.primaryColor,
         controller: lastNameController,
         keyboardType: TextInputType.text,
         focusNode: lastNameFocus,
@@ -2154,7 +2154,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget _ShowMobileNoTextField() => Expanded(
         child: TextField(
             textCapitalization: TextCapitalization.sentences,
-            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+            cursorColor: mAppThemeProvider.primaryColor,
             controller: mobileNoController,
             enabled: true,
             keyboardType: TextInputType.text,
@@ -2186,7 +2186,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget _showSpecializationTextField() => Expanded(
           child: TextField(
         textCapitalization: TextCapitalization.sentences,
-        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        cursorColor: mAppThemeProvider.primaryColor,
         controller: specializationController,
         keyboardType: TextInputType.text,
         focusNode: specializationFocus,
@@ -2218,7 +2218,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget _showHospitalNameTextField(bool condition) => Expanded(
           child: TextField(
         textCapitalization: TextCapitalization.sentences,
-        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        cursorColor: mAppThemeProvider.primaryColor,
         controller: hospitalNameController,
         keyboardType: TextInputType.text,
         focusNode: hospitalNameFocus,
@@ -2258,7 +2258,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         width: 130.0.w,
         height: 40.0.h,
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           borderRadius: const BorderRadius.all(Radius.circular(2)),
           boxShadow: <BoxShadow>[
             const BoxShadow(
@@ -2293,7 +2293,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         width: 130.0.w,
         height: 40.0.h,
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           borderRadius: const BorderRadius.all(Radius.circular(2)),
           boxShadow: <BoxShadow>[
             const BoxShadow(
@@ -2496,7 +2496,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                   fontSize: 16.0.sp,
                                   fontWeight: FontWeight.w400,
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor())),
+                                      mAppThemeProvider.primaryColor),
                             ),
                             const SizedBox(
                               height: 30,
@@ -2648,7 +2648,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         height: 40.0.h,
         padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           borderRadius: const BorderRadius.all(Radius.circular(25)),
           boxShadow: <BoxShadow>[
             const BoxShadow(
@@ -2680,7 +2680,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: TextField(
         textCapitalization: TextCapitalization.sentences,
-        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        cursorColor: mAppThemeProvider.primaryColor,
         controller: doctorController,
         keyboardType: TextInputType.emailAddress,
         //focusNode: _doctorFocus,
@@ -2694,11 +2694,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         style: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 16.0.sp,
-            color: Color(CommonUtil().getMyPrimaryColor())),
+            color: mAppThemeProvider.primaryColor),
         decoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
               borderSide:
-                  BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+                  BorderSide(color: mAppThemeProvider.primaryColor),
             ),
             labelText: widget.arguments!.searchWord,
             labelStyle: TextStyle(
@@ -2978,7 +2978,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       RefreshIndicator(
         key: _refreshIndicatorKey,
         onRefresh: _refresh,
-        color: Color(CommonUtil().getMyPrimaryColor()),
+        color: mAppThemeProvider.primaryColor,
         child: data != null
             ? Container(
                 color: const Color(fhbColors.bgColorContainer),
@@ -3224,7 +3224,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                             // Button to reset sorting options
                             buildButton(
                               text: DoctorFilterConstants.reset,
-                              textColor: Color(CommonUtil().getMyPrimaryColor()),
+                              textColor: mAppThemeProvider.primaryColor,
                               onTap: () async {
                                 // Reset sorting options and refresh data
                                 if (isDoctor) {
@@ -3277,7 +3277,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                 }
                                 Get.back();
                               },
-                              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                              backgroundColor: mAppThemeProvider.primaryColor,
                             ),
                           ],
                         ),
@@ -3304,7 +3304,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       value: value,
       groupValue: groupValue,
       onChanged: onChanged,
-      activeColor: Color(CommonUtil().getMyPrimaryColor()),
+      activeColor: mAppThemeProvider.primaryColor,
     );
   }
 
@@ -3323,7 +3323,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: backgroundColor,
-            border: Border.all(color: Color(CommonUtil().getMyPrimaryColor())),
+            border: Border.all(color: mAppThemeProvider.primaryColor),
             borderRadius: const BorderRadius.all(Radius.circular(50)),
           ),
           child: Center(

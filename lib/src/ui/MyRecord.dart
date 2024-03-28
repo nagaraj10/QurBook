@@ -770,7 +770,7 @@ class _CustomTabsState extends State<CustomTabView>
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: <Color>[
-                Color(CommonUtil().getMyPrimaryColor()),
+                mAppThemeProvider.primaryColor,
                 Color(CommonUtil().getMyGredientColor())
               ],
               stops: const [
@@ -815,7 +815,7 @@ class _CustomTabsState extends State<CustomTabView>
             margin: const EdgeInsets.only(right: 10, bottom: 10),
             constraints: BoxConstraints(maxHeight: 120.0.h),
             decoration: BoxDecoration(
-                color: Color(CommonUtil().getMyPrimaryColor()),
+                color: mAppThemeProvider.primaryColor,
                 borderRadius: BorderRadius.circular(30)),
             child: (widget.categoryData != null &&
                     widget.categoryData![controller!.index].categoryName ==
@@ -919,10 +919,10 @@ class _CustomTabsState extends State<CustomTabView>
                       }
                     },
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                      foregroundColor: mAppThemeProvider.primaryColor,
                       backgroundColor: Colors.white,
                       side: BorderSide(
-                          color: Color(CommonUtil().getMyPrimaryColor())),
+                          color: mAppThemeProvider.primaryColor),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30)),
                     ),

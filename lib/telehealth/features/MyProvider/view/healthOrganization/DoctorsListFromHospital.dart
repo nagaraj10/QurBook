@@ -95,7 +95,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: <Color>[
-                Color(CommonUtil().getMyPrimaryColor()),
+                mAppThemeProvider.primaryColor,
                 Color(CommonUtil().getMyGredientColor())
               ],
                   stops: [
@@ -376,7 +376,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                                 fontsize: 16.0.sp,
                                 fontWeight: FontWeight.w400,
                                 colors:
-                                    Color(CommonUtil().getMyPrimaryColor())),
+                                    mAppThemeProvider.primaryColor),
                           ),
                         ),
                       ],

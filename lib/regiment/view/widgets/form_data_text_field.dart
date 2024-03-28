@@ -35,7 +35,7 @@ class FormDataTextField extends StatelessWidget {
             fontWeight: FontWeight.w600,
             color: isFromQurHomeSymptom
                 ? Color(CommonUtil().getQurhomePrimaryColor())
-                : Color(CommonUtil().getMyPrimaryColor()),
+                : mAppThemeProvider.primaryColor,
           ),
         ),
         SizedBox(

@@ -183,7 +183,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
                                   .metadata!.healthRecordCategory!.logo!,
                               height: 25.0.h,
                               width: 25.0.h,
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              color: mAppThemeProvider.primaryColor,
                               errorBuilder: (context, error, stackTrace) =>
                                   SizedBox(),
                             )
@@ -234,7 +234,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
                               ? ImageIcon(
                                   AssetImage(variable.icon_record_fav_active),
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
+                                      mAppThemeProvider.primaryColor,
                                   size: CommonUtil().isTablet!
                                       ? tabHeader2
                                       : mobileHeader2,
@@ -260,7 +260,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
                       widget.mediaMeta!.contains(mediaMetaInfoObj.id)
                           ? Icon(
                               Icons.done,
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              color: mAppThemeProvider.primaryColor,
                             )
                           : SizedBox(),
                     ],

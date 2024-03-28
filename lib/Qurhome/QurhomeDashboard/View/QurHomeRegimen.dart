@@ -47,7 +47,8 @@ import '../../../common/CommonConstants.dart';
 import '../../../constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as fhbParameters;
 
-import '../../../more_menu/app_theme_provider.dart';
+import '../../../app_theme_provider.dart';
+import '../../../main.dart';
 import '../../../more_menu/models/app_theme_type.dart';
 
 class QurHomeRegimenScreen extends StatefulWidget {
@@ -2802,13 +2803,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             cardColor = Colors.teal;
             break;
           default:
-            cardColor = Color(CommonUtil().getMyPrimaryColor());
+            cardColor = mAppThemeProvider.primaryColor;
         }
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
-      cardColor = Color(CommonUtil().getMyPrimaryColor());
+      cardColor = mAppThemeProvider.primaryColor;
     }
     return cardColor;
   }

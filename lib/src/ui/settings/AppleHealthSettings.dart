@@ -57,7 +57,7 @@ class HealthApp extends StatelessWidget {
                 ),
                 gradient: LinearGradient(
                   colors: <Color>[
-                    Color(CommonUtil().getMyPrimaryColor()),
+                    mAppThemeProvider.primaryColor,
                     Color(CommonUtil().getMyGredientColor()),
                   ],
                 ),

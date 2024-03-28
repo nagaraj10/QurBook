@@ -19,6 +19,7 @@ import '../../../constants/fhb_constants.dart' as Constants;
 import '../../../constants/fhb_parameters.dart' as parameters;
 import '../../../constants/router_variable.dart' as router;
 import '../../../constants/variable_constant.dart' as variable;
+import '../../../main.dart';
 import '../../../search_providers/models/search_arguments.dart';
 import '../../../search_providers/screens/search_specific_list.dart';
 import '../../../widgets/GradientAppBar.dart';
@@ -159,7 +160,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     ),
                     gradient: LinearGradient(
                       colors: <Color>[
-                        Color(CommonUtil().getMyPrimaryColor()),
+                        mAppThemeProvider.primaryColor,
                         Color(CommonUtil().getMyGredientColor())
                       ],
                     ),
@@ -358,7 +359,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   readingDeviceDetails(String? device) {
     _scaffoldKey.currentState!.showSnackBar(SnackBar(
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        backgroundColor: mAppThemeProvider.primaryColor,
         content: Container(
             height: 50,
             child: Row(
@@ -387,7 +388,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         width: 100,
         height: 40.0,
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           borderRadius: BorderRadius.all(Radius.circular(25.0)),
           border: Border.all(color: Colors.white),
           boxShadow: <BoxShadow>[
@@ -720,8 +721,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       borderColor: Colors.black,
       fillColor: Colors.grey[100],
       borderWidth: 2,
-      selectedBorderColor: Color(CommonUtil().getMyPrimaryColor()),
-      selectedColor: Color(CommonUtil().getMyPrimaryColor()),
+      selectedBorderColor: mAppThemeProvider.primaryColor,
+      selectedColor: mAppThemeProvider.primaryColor,
       borderRadius: BorderRadius.circular(10),
       children: <Widget>[
         Padding(

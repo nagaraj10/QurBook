@@ -150,7 +150,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
             width: 40.0.w,
             height: 45.0.h,
             initialSelectedDate: initialDate(),
-            selectionColor: Color(CommonUtil().getMyPrimaryColor()),
+            selectionColor: mAppThemeProvider.primaryColor,
             selectedTextColor: Colors.white,
             dayTextStyle: TextStyle(
               fontSize: fhbStyles.fnt_day,

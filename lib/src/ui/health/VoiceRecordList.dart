@@ -178,7 +178,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                       mediaMetaInfoObj.metadata!.healthRecordCategory!.logo!,
                       height: 25.0.h,
                       width: 25.0.h,
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      color: mAppThemeProvider.primaryColor,
                       errorBuilder: (context, error, stackTrace) => SizedBox(),
                     )),
                 SizedBox(width: 20),
@@ -226,7 +226,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                               ? ImageIcon(
                                   AssetImage(variable.icon_record_fav_active),
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
+                                      mAppThemeProvider.primaryColor,
                                   size: CommonUtil().isTablet!
                                       ? tabHeader2
                                       : mobileHeader2,
@@ -286,12 +286,12 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
       CommonUtil.audioPage = false;
       return Icon(
         Icons.done,
-        color: Color(CommonUtil().getMyPrimaryColor()),
+        color: mAppThemeProvider.primaryColor,
       );
     } else if (widget.mediaMeta!.contains(mediaMetaInfoObj.id)) {
       return Icon(
         Icons.done,
-        color: Color(CommonUtil().getMyPrimaryColor()),
+        color: mAppThemeProvider.primaryColor,
       );
     } else {
       return SizedBox();

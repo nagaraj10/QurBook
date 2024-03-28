@@ -6,13 +6,14 @@ import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/landing/model/membership_detail_response.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as constants;
+import '../../main.dart';
 import '../model/qur_plan_dashboard_model.dart';
 import '../service/landing_service.dart';
 
 enum LandingScreenStatus { Loading, Loaded }
 
 class LandingViewModel extends ChangeNotifier {
-  Color primaryColor = Color(CommonUtil().getMyPrimaryColor());
+  Color primaryColor = mAppThemeProvider.primaryColor;
   /*int currentTabIndex = 0;
   var appBarTitle = constants.strMyDashboard;
   bool isSearchVisible = false;*/
@@ -55,7 +56,7 @@ class LandingViewModel extends ChangeNotifier {
   }*/
 
   void updatePrimaryColor() {
-    primaryColor = Color(CommonUtil().getMyPrimaryColor());
+    primaryColor = mAppThemeProvider.primaryColor;
     notifyListeners();
   }
 

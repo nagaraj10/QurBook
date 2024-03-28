@@ -515,7 +515,7 @@ class _ToolbarState extends State<Toolbar> {
                 child: LinearProgressIndicator(
                   backgroundColor: Color(CommonUtil.secondaryGrey),
                   valueColor: AlwaysStoppedAnimation<Color>(
-                      Color(CommonUtil().getMyPrimaryColor())),
+                      mAppThemeProvider.primaryColor),
                   //value: progressValue[currentProgressValue],
                 ),
               ),

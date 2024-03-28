@@ -69,7 +69,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
 
     return Scaffold(
         appBar: AppBar(
-            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            backgroundColor: mAppThemeProvider.primaryColor,
             leading: GestureDetector(
               onTap: () => Get.back(),
               child: Icon(
@@ -117,7 +117,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         width: 100.0.w,
         height: 40.0.h,
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           borderRadius: BorderRadius.all(Radius.circular(25)),
           boxShadow: <BoxShadow>[
             BoxShadow(
@@ -244,7 +244,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                     Text(
                       "Select All",
                       style: TextStyle(
-                          color: Color(CommonUtil().getMyPrimaryColor())),
+                          color: mAppThemeProvider.primaryColor),
                     ),
                     SizedBox(
                       width: 25,

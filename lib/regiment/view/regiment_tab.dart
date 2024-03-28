@@ -240,13 +240,13 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
             cardColor = Colors.teal;
             break;
           default:
-            cardColor = Color(CommonUtil().getMyPrimaryColor());
+            cardColor = mAppThemeProvider.primaryColor;
         }
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
-      cardColor = Color(CommonUtil().getMyPrimaryColor());
+      cardColor = mAppThemeProvider.primaryColor;
     }
     return cardColor;
   }
@@ -379,7 +379,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                         child: Icon(
                           Icons.chevron_left_rounded,
                           size: 24.0.sp,
-                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          color: mAppThemeProvider.primaryColor,
                         ),
                       ),
                     ),
@@ -399,7 +399,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                               data: ThemeData.light().copyWith(
                                 colorScheme: ColorScheme.light().copyWith(
                                   primary:
-                                      Color(CommonUtil().getMyPrimaryColor()),
+                                      mAppThemeProvider.primaryColor,
                                 ),
                               ),
                               child: child!,
@@ -415,7 +415,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                           _regimentViewModel.regimentDate,
                           style: TextStyle(
                             fontSize: 14.0.sp,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                           ),
                         ),
                       ),
@@ -434,7 +434,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                         child: Icon(
                           Icons.chevron_right_rounded,
                           size: 24.0.sp,
-                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          color: mAppThemeProvider.primaryColor,
                         ),
                       ),
                     ),
@@ -570,7 +570,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                         : planSymptoms,
                     style: TextStyle(
                       fontSize: 16.0.sp,
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      color: mAppThemeProvider.primaryColor,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -877,12 +877,12 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
           (qurhomeDashboardController.isSymptomModuleDisable.value)) {
         colors = Colors.grey;
       } else {
-        colors = Color(CommonUtil().getMyPrimaryColor());
+        colors = mAppThemeProvider.primaryColor;
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
-      return colors = Color(CommonUtil().getMyPrimaryColor());
+      return colors = mAppThemeProvider.primaryColor;
     }
     return colors;
   }

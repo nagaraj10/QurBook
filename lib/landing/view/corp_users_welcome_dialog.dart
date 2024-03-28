@@ -8,6 +8,7 @@ import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 
 import '../../claim/model/members/MembershipResult.dart';
+import '../../main.dart';
 
 class CorpUsersWelcomeDialog extends StatelessWidget {
   const CorpUsersWelcomeDialog(this.cpUser, this.result, {Key? key})
@@ -139,7 +140,7 @@ class CorpUsersWelcomeDialog extends StatelessWidget {
                 gradient: LinearGradient(end: Alignment.centerRight, colors: [
 //                  Color(0xff138fcf),
 //                  Color(0xff138fcf),
-                  Color(CommonUtil().getMyPrimaryColor()),
+                  mAppThemeProvider.primaryColor,
                   Color(CommonUtil().getMyGredientColor())
                 ])),
             child: Text(

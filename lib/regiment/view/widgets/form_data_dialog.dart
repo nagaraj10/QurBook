@@ -645,7 +645,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                             color: widget.isFromQurHomeSymptom ||
                                     widget.isFromQurHomeRegimen
                                 ? Color(CommonUtil().getQurhomePrimaryColor())
-                                : Color(CommonUtil().getMyPrimaryColor()),
+                                : mAppThemeProvider.primaryColor,
                           ),
                         ),
                         IconButton(
@@ -679,7 +679,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                               color: widget.isFromQurHomeSymptom ||
                                       widget.isFromQurHomeRegimen
                                   ? Color(CommonUtil().getQurhomePrimaryColor())
-                                  : Color(CommonUtil().getMyPrimaryColor())),
+                                  : mAppThemeProvider.primaryColor),
                         ),
                         IconButton(
                           icon: Icon(Icons.access_time, size: 16.sp),
@@ -762,7 +762,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                           : widget.isFromQurHomeSymptom ||
                                   widget.isFromQurHomeRegimen
                               ? Color(CommonUtil().getQurhomePrimaryColor())
-                              : Color(CommonUtil().getMyPrimaryColor()),
+                              : mAppThemeProvider.primaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(
@@ -802,7 +802,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                     ? Colors.grey
                     : widget.isFromQurHomeSymptom || widget.isFromQurHomeRegimen
                         ? Color(CommonUtil().getQurhomePrimaryColor())
-                        : Color(CommonUtil().getMyPrimaryColor()),
+                        : mAppThemeProvider.primaryColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(
                     Radius.circular(
@@ -993,7 +993,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                               backgroundColor: widget.isFromQurHomeSymptom ||
                                       widget.isFromQurHomeRegimen
                                   ? Color(CommonUtil().getQurhomePrimaryColor())
-                                  : Color(CommonUtil().getMyPrimaryColor()),
+                                  : mAppThemeProvider.primaryColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(
@@ -1052,7 +1052,7 @@ class FormDataDialogState extends State<FormDataDialog> {
               backgroundColor:
                   widget.isFromQurHomeSymptom || widget.isFromQurHomeRegimen
                       ? Color(CommonUtil().getQurhomePrimaryColor())
-                      : Color(CommonUtil().getMyPrimaryColor()),
+                      : mAppThemeProvider.primaryColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(

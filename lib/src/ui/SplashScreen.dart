@@ -344,7 +344,7 @@ class _SplashScreenState extends State<SplashScreen>
                       child: Text(
                         variable.strLogin,
                         style: TextStyle(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          color: mAppThemeProvider.primaryColor,
                         ),
                       ),
                       onPressed: () {

@@ -89,7 +89,7 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
                 fontWeight: FontWeight.w600,
                 color: widget.isFromQurHomeSymptom
                     ? Color(CommonUtil().getQurhomePrimaryColor())
-                    : Color(CommonUtil().getMyPrimaryColor()),
+                    : mAppThemeProvider.primaryColor,
               ),
             ),
           SizedBox(

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import '../../constants/fhb_parameters.dart';
+import '../../main.dart';
 import '../model/BPValues.dart';
 import '../model/GulcoseValues.dart';
 import '../model/OxySaturationValues.dart';
@@ -58,8 +59,8 @@ class DevicesViewModel with ChangeNotifier {
         value1: 'OS',
         value2: '',
         color: [
-          Color(CommonUtil().getMyPrimaryColor()),
-          Color(CommonUtil().getMyPrimaryColor())
+          mAppThemeProvider.primaryColor,
+          mAppThemeProvider.primaryColor
         ]));
     devicelist.add(DeviceData(
         title: Constants.STR_THERMOMETER,

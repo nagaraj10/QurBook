@@ -800,7 +800,7 @@ class _CallPageState extends State<CallPage> {
                         child: Text(
                           _infoStrings[index],
                           style: TextStyle(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                             fontSize: 16.0.sp,
                           ),
                         ),
@@ -1080,7 +1080,7 @@ class _CallPageState extends State<CallPage> {
                 },
                 child: Text('Ok',
                     style: TextStyle(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      color: mAppThemeProvider.primaryColor,
                       fontSize: 18.0.sp,
                     )),
               ),

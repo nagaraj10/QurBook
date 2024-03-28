@@ -74,7 +74,7 @@ class RegimentDataCard extends StatelessWidget {
           ),
           child: Material(
             color: regimentData.activityOrgin == strAppointmentRegimen
-                ? Color(CommonUtil().getMyPrimaryColor())
+                ? mAppThemeProvider.primaryColor
                 : Colors.white,
             child: InkWell(
               onTap: () {
@@ -827,7 +827,7 @@ class RegimentDataCard extends StatelessWidget {
       icon_appointment_regimen,
       height: iconSize,
       width: iconSize,
-      color: Color(CommonUtil().getMyPrimaryColor()),
+      color: mAppThemeProvider.primaryColor,
     );
   }
 
@@ -843,7 +843,7 @@ class RegimentDataCard extends StatelessWidget {
             strAppointmentRegimen,
             style: TextStyle(
               fontSize: 11.sp,
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
             ),
           )),
     );
@@ -947,7 +947,7 @@ class RegimentDataCard extends StatelessWidget {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              Color(CommonUtil().getMyPrimaryColor()),
+                              mAppThemeProvider.primaryColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(
@@ -983,7 +983,7 @@ class RegimentDataCard extends StatelessWidget {
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
+                                  mAppThemeProvider.primaryColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(

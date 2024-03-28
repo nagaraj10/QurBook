@@ -20,7 +20,7 @@ class UnreadMessagesIcon extends StatelessWidget {
         color: Colors.white,
         shape: BoxShape.circle,
         border: Border.all(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           width: 5.w,
         ),
       ),

@@ -13,6 +13,7 @@ import 'package:myfhb/unit/choose_unit.dart';
 import '../constants/fhb_constants.dart' as Constants;
 import '../constants/fhb_parameters.dart' as parameters;
 import '../constants/variable_constant.dart' as variable;
+import '../main.dart';
 import '../my_providers/bloc/providers_block.dart';
 import '../my_providers/models/Doctors.dart';
 import '../my_providers/models/MyProviderResponseNew.dart';
@@ -1009,8 +1010,8 @@ class CommonDialogBox {
                 borderColor: Colors.black,
                 fillColor: Colors.grey[100],
                 borderWidth: 2,
-                selectedBorderColor: Color(CommonUtil().getMyPrimaryColor()),
-                selectedColor: Color(CommonUtil().getMyPrimaryColor()),
+                selectedBorderColor: mAppThemeProvider.primaryColor,
+                selectedColor: mAppThemeProvider.primaryColor,
                 borderRadius: BorderRadius.circular(10),
                 children: <Widget>[
                   Padding(
@@ -1794,7 +1795,7 @@ class CommonDialogBox {
       builder: (context, child) => Theme(
         data: ThemeData.light().copyWith(
           colorScheme: ColorScheme.light().copyWith(
-            primary: Color(CommonUtil().getMyPrimaryColor()),
+            primary: mAppThemeProvider.primaryColor,
           ),
         ),
         child: child!,
@@ -1819,7 +1820,7 @@ class CommonDialogBox {
       builder: (context, child) => Theme(
         data: ThemeData.light().copyWith(
           colorScheme: ColorScheme.light().copyWith(
-            primary: Color(CommonUtil().getMyPrimaryColor()),
+            primary: mAppThemeProvider.primaryColor,
           ),
         ),
         child: child!,
@@ -2661,7 +2662,7 @@ class CommonDialogBox {
       child: Container(
           child: TextField(
         textCapitalization: TextCapitalization.sentences,
-        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        cursorColor: mAppThemeProvider.primaryColor,
         controller: dateOfVisit,
         readOnly: true,
         keyboardType: TextInputType.text,
@@ -3319,7 +3320,7 @@ class CommonDialogBox {
   Widget getIconButton() {
     return Icon(
       Icons.arrow_drop_down,
-      color: Color(CommonUtil().getMyPrimaryColor()),
+      color: mAppThemeProvider.primaryColor,
       size: 40,
     );
   }

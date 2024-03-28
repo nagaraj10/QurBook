@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../common/CommonUtil.dart';
 import '../common/PreferenceUtil.dart';
 import '../constants/variable_constant.dart' as variable;
+import '../main.dart';
 import '../src/utils/screenutils/size_extensions.dart';
 
 class FeedbackSuccess extends StatefulWidget {
@@ -31,7 +32,7 @@ class _FeedbackSuccessState extends State<FeedbackSuccess> {
             Center(
                 child: AvatarGlow(
               startDelay: Duration(milliseconds: 1000),
-              glowColor: Color(CommonUtil().getMyPrimaryColor()),
+              glowColor: mAppThemeProvider.primaryColor,
               endRadius: 80,
               duration: Duration(milliseconds: 1000),
               repeatPauseDuration: Duration(milliseconds: 10),
@@ -45,7 +46,7 @@ class _FeedbackSuccessState extends State<FeedbackSuccess> {
                   child: Icon(
                     Icons.check,
                     size: 60.0.sp,
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                   ),
                 ),
               ),
@@ -55,14 +56,14 @@ class _FeedbackSuccessState extends State<FeedbackSuccess> {
               variable.strSucess,
               style: TextStyle(
                   fontSize: 30.0.sp,
-                  color: Color(CommonUtil().getMyPrimaryColor())),
+                  color: mAppThemeProvider.primaryColor),
             ),
             Text(
               variable.strFeedThank,
               style: TextStyle(
                   fontSize: 18.0.sp,
                   color:
-                      Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.8)),
+                      mAppThemeProvider.primaryColor.withOpacity(0.8)),
             ),
           ],
         ));

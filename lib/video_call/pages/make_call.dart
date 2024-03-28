@@ -302,7 +302,7 @@ class _MakeCallPageState extends State<MakeCallPage> {
               width: 30,
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  Color(CommonUtil().getMyPrimaryColor()),
+                  mAppThemeProvider.primaryColor,
                 ),
                 backgroundColor: Colors.white.withOpacity(0.8),
               ),

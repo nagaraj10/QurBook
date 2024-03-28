@@ -42,7 +42,7 @@ class _CheckboxTileWidgetState extends State<CheckboxTileWidget> {
         children: [
           Checkbox(
             value: widget.checkBoxValue,
-            activeColor: Color(CommonUtil().getMyPrimaryColor()),
+            activeColor: mAppThemeProvider.primaryColor,
             onChanged: widget.canEdit
                 ? (value) {
                     setState(() {

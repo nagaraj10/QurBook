@@ -332,7 +332,7 @@ class CallMainMakeCall extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: regController.isFromSOS.value
               ? Colors.white
-              : Color(CommonUtil().getMyPrimaryColor()),
+              : mAppThemeProvider.primaryColor,
           toolbarHeight: (CommonUtil().isTablet ?? false) ? 100 : 50,
           automaticallyImplyLeading: false,
           title: Column(

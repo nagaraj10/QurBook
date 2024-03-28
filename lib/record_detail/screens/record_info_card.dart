@@ -13,6 +13,7 @@ import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_parameters.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../src/blocs/health/HealthReportListForUserBlock.dart';
 import '../../src/model/Health/MetaInfo.dart';
 import '../../src/model/Health/asgard/health_record_list.dart';
@@ -50,7 +51,7 @@ class RecordInfoCard {
                             metaInfo?.doctor?.profilePicThumbnailUrl ?? "",
                             metaInfo?.doctor?.firstName ?? "",
                             metaInfo?.doctor?.lastName ?? "",
-                            Color(CommonUtil().getMyPrimaryColor()),
+                            mAppThemeProvider.primaryColor,
                             CommonUtil().isTablet!
                                 ? imageTabHeader
                                 : Constants.imageMobileHeader,
@@ -695,7 +696,7 @@ class RecordInfoCard {
                       metaInfo.healthRecordCategory!.logo!,
                       height: 25.0.h,
                       width: 25.0.h,
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      color: mAppThemeProvider.primaryColor,
                       errorBuilder: (context, error, stackTrace) => SizedBox(),
                     )),
                 Expanded(

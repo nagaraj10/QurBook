@@ -1230,7 +1230,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: <Color>[
-                              Color(CommonUtil().getMyPrimaryColor()),
+                              mAppThemeProvider.primaryColor,
                               Color(CommonUtil().getMyGredientColor())
                             ],
                             stops: [
@@ -1345,7 +1345,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: <Color>[
-                              Color(CommonUtil().getMyPrimaryColor()),
+                              mAppThemeProvider.primaryColor,
                               Color(CommonUtil().getMyGredientColor())
                             ],
                             stops: [

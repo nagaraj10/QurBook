@@ -204,7 +204,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                         data.metadata!.healthRecordType!.logo!,
                         height: 25.0.h,
                         width: 25.0.h,
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        color: mAppThemeProvider.primaryColor,
                         errorBuilder: (context, error, stackTrace) =>
                             const SizedBox(),
                       ),
@@ -220,7 +220,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 12.0.sp,
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              color: mAppThemeProvider.primaryColor,
                             ),
                             maxLines: 2,
                             softWrap: true,
@@ -242,7 +242,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                           FHBUtils().getFormattedDateStringClone(
                               data.dateTimeValue!.toLocal()),
                           style: TextStyle(
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              color: mAppThemeProvider.primaryColor,
                               fontWeight: FontWeight.w200,
                               fontSize: 10.0.sp),
                         )
@@ -291,7 +291,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                             if (widget.mediaMeta!.contains(data.id))
                               Icon(
                                 Icons.done,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                               )
                             else
                               const SizedBox(),

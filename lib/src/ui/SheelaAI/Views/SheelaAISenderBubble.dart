@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/FHBBasicWidget.dart';
 import '../../../../common/PreferenceUtil.dart';
+import '../../../../main.dart';
 import '../../../utils/screenutils/size_extensions.dart';
 import '../Controller/SheelaAIController.dart';
 import '../Models/SheelaResponse.dart';
@@ -52,7 +53,7 @@ class SheelaAISenderBubble extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: PreferenceUtil.getIfQurhomeisAcive()
                         ? Colors.white
-                        : Color(CommonUtil().getMyPrimaryColor()),
+                        : mAppThemeProvider.primaryColor,
                     borderRadius: chatBubbleBorderRadiusFor(true),
                   ),
                   child: Text(

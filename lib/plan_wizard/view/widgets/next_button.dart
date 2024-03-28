@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
+import '../../../main.dart';
+
 class NextButton extends StatelessWidget {
   final Function()? onPressed;
   const NextButton({this.onPressed});
@@ -11,7 +13,7 @@ class NextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        backgroundColor: mAppThemeProvider.primaryColor,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25.0.sp)),
       ),

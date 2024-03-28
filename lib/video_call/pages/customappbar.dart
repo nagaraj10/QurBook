@@ -29,7 +29,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           alignment: Alignment.topLeft,
           padding: const EdgeInsets.symmetric(vertical: 40),
           child: Container(
-            color: Color(CommonUtil().getMyPrimaryColor()),
+            color: mAppThemeProvider.primaryColor,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,

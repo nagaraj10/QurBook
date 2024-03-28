@@ -1270,13 +1270,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                 style: OutlinedButton.styleFrom(
                   side: !notification.isActionDone!
                       ? BorderSide(
-                          color: Color(CommonUtil().getMyPrimaryColor()))
+                          color: mAppThemeProvider.primaryColor)
                       : BorderSide(color: Colors.grey),
                 ),
                 child: TextWidget(
                   text: TranslationConstants.reschedule.t(),
                   colors: !notification.isActionDone!
-                      ? Color(CommonUtil().getMyPrimaryColor())
+                      ? mAppThemeProvider.primaryColor
                       : Colors.grey,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
@@ -1310,13 +1310,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                 style: OutlinedButton.styleFrom(
                   side: !notification.isActionDone!
                       ? BorderSide(
-                          color: Color(CommonUtil().getMyPrimaryColor()))
+                          color: mAppThemeProvider.primaryColor)
                       : BorderSide(color: Colors.grey),
                 ),
                 child: TextWidget(
                   text: TranslationConstants.cancel.t(),
                   colors: !notification.isActionDone!
-                      ? Color(CommonUtil().getMyPrimaryColor())
+                      ? mAppThemeProvider.primaryColor
                       : Colors.grey,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
@@ -1390,13 +1390,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                 style: OutlinedButton.styleFrom(
                   side: !notification.isActionDone!
                       ? BorderSide(
-                          color: Color(CommonUtil().getMyPrimaryColor()))
+                          color: mAppThemeProvider.primaryColor)
                       : BorderSide(color: Colors.grey),
                 ),
                 child: TextWidget(
                   text: TranslationConstants.renew.t(),
                   colors: !notification.isActionDone!
-                      ? Color(CommonUtil().getMyPrimaryColor())
+                      ? mAppThemeProvider.primaryColor
                       : Colors.grey,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
@@ -1442,13 +1442,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                 style: OutlinedButton.styleFrom(
                   side: !notification.isActionDone!
                       ? BorderSide(
-                          color: Color(CommonUtil().getMyPrimaryColor()))
+                          color: mAppThemeProvider.primaryColor)
                       : BorderSide(color: Colors.grey),
                 ),
                 child: TextWidget(
                   text: TranslationConstants.callback.t(),
                   colors: !notification.isActionDone!
-                      ? Color(CommonUtil().getMyPrimaryColor())
+                      ? mAppThemeProvider.primaryColor
                       : Colors.grey,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
@@ -1493,7 +1493,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                 ),
                 child: TextWidget(
                   text: parameters.accept,
-                  colors: Color(CommonUtil().getMyPrimaryColor()),
+                  colors: mAppThemeProvider.primaryColor,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
                   fontsize: 15.0.sp,
@@ -1574,7 +1574,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                 ),
                 child: TextWidget(
                   text: parameters.viewMember,
-                  colors: Color(CommonUtil().getMyPrimaryColor()),
+                  colors: mAppThemeProvider.primaryColor,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
                   fontsize: 14.0.sp,
@@ -1655,13 +1655,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                 style: OutlinedButton.styleFrom(
                   side: !notification.isActionDone!
                       ? BorderSide(
-                          color: Color(CommonUtil().getMyPrimaryColor()))
+                          color: mAppThemeProvider.primaryColor)
                       : BorderSide(color: Colors.grey),
                 ),
                 child: TextWidget(
                   text: 'Pay Now',
                   colors: !notification.isActionDone!
-                      ? Color(CommonUtil().getMyPrimaryColor())
+                      ? mAppThemeProvider.primaryColor
                       : Colors.grey,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
@@ -1712,13 +1712,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                 style: OutlinedButton.styleFrom(
                   side: !notification.isActionDone!
                       ? BorderSide(
-                          color: Color(CommonUtil().getMyPrimaryColor()))
+                          color: mAppThemeProvider.primaryColor)
                       : BorderSide(color: Colors.grey),
                 ),
                 child: TextWidget(
                   text: 'Pay Now',
                   colors: !notification.isActionDone!
-                      ? Color(CommonUtil().getMyPrimaryColor())
+                      ? mAppThemeProvider.primaryColor
                       : Colors.grey,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
@@ -1765,13 +1765,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                 style: OutlinedButton.styleFrom(
                   side: notification.isUnread!
                       ? BorderSide(
-                          color: Color(CommonUtil().getMyPrimaryColor()))
+                          color: mAppThemeProvider.primaryColor)
                       : BorderSide(color: Colors.grey),
                 ),
                 child: TextWidget(
                   text: TranslationConstants.chatwithcc,
                   colors: notification.isUnread!
-                      ? Color(CommonUtil().getMyPrimaryColor())
+                      ? mAppThemeProvider.primaryColor
                       : Colors.grey,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
@@ -1807,13 +1807,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                 style: OutlinedButton.styleFrom(
                   side: notification.isUnread!
                       ? BorderSide(
-                          color: Color(CommonUtil().getMyPrimaryColor()))
+                          color: mAppThemeProvider.primaryColor)
                       : BorderSide(color: Colors.grey),
                 ),
                 child: TextWidget(
                   text: TranslationConstants.viewrecord,
                   colors: notification.isUnread!
-                      ? Color(CommonUtil().getMyPrimaryColor())
+                      ? mAppThemeProvider.primaryColor
                       : Colors.grey,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
@@ -1839,13 +1839,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                 style: OutlinedButton.styleFrom(
                   side: !notification.isActionDone!
                       ? BorderSide(
-                          color: Color(CommonUtil().getMyPrimaryColor()))
+                          color: mAppThemeProvider.primaryColor)
                       : BorderSide(color: Colors.grey),
                 ),
                 child: TextWidget(
                   text: 'View Details',
                   colors: !notification.isActionDone!
-                      ? Color(CommonUtil().getMyPrimaryColor())
+                      ? mAppThemeProvider.primaryColor
                       : Colors.grey,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
@@ -1937,13 +1937,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                 : null,
             style: OutlinedButton.styleFrom(
               side: isEnablebutton
-                  ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                  ? BorderSide(color: mAppThemeProvider.primaryColor)
                   : BorderSide(color: Colors.grey),
             ),
             child: TextWidget(
               text: 'Accept',
               colors: isEnablebutton
-                  ? Color(CommonUtil().getMyPrimaryColor())
+                  ? mAppThemeProvider.primaryColor
                   : Colors.grey,
               overflow: TextOverflow.visible,
               fontWeight: FontWeight.w600,
@@ -1991,13 +1991,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                 : null,
             style: OutlinedButton.styleFrom(
               side: isEnablebutton
-                  ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                  ? BorderSide(color: mAppThemeProvider.primaryColor)
                   : BorderSide(color: Colors.grey),
             ),
             child: TextWidget(
               text: 'Decline',
               colors: isEnablebutton
-                  ? Color(CommonUtil().getMyPrimaryColor())
+                  ? mAppThemeProvider.primaryColor
                   : Colors.grey,
               overflow: TextOverflow.visible,
               fontWeight: FontWeight.w600,

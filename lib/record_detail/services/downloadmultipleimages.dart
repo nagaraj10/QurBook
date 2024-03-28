@@ -54,7 +54,7 @@ class DownloadMultipleImages {
               fontSize: 16.0.sp,
             ),
           ),
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          backgroundColor: mAppThemeProvider.primaryColor,
           action: SnackBarAction(
             label: 'Open',
             onPressed: () async {
@@ -74,7 +74,7 @@ class DownloadMultipleImages {
               fontSize: 16.0.sp,
             ),
           ),
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          backgroundColor: mAppThemeProvider.primaryColor,
           ));
 
     }

@@ -23,7 +23,7 @@ class RadioTileWidget extends StatelessWidget {
         Radio<dynamic>(
           groupValue: radioGroupValue,
           value: value,
-          activeColor: Color(CommonUtil().getMyPrimaryColor()),
+          activeColor: mAppThemeProvider.primaryColor,
           onChanged: onSelected,
         ),
         Padding(

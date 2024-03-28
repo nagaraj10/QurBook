@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../common/CommonUtil.dart';
+import '../../main.dart';
 import '../../src/ui/loader_class.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/app_primary_button.dart';
@@ -125,7 +126,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: BorderSide(
                                     color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        mAppThemeProvider.primaryColor,
                                   ),
                                 ),
                               ),
@@ -370,7 +371,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                       spreadRadius: 2)
                 ],
                 gradient: LinearGradient(end: Alignment.centerRight, colors: [
-                  Color(CommonUtil().getMyPrimaryColor()),
+                  mAppThemeProvider.primaryColor,
                   Color(CommonUtil().getMyGredientColor())
                 ])),
             child: Text(

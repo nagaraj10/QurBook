@@ -75,7 +75,7 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
             fontWeight: FontWeight.w600,
             color: widget.isFromQurHomeSymptom
                 ? Color(CommonUtil().getQurhomePrimaryColor())
-                : Color(CommonUtil().getMyPrimaryColor()),
+                : mAppThemeProvider.primaryColor,
           ),
         ),
         SizedBox(

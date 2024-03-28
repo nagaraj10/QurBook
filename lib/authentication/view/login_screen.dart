@@ -7,7 +7,8 @@ import 'package:provider/provider.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart';
-import '../../more_menu/app_theme_provider.dart';
+import '../../app_theme_provider.dart';
+import '../../main.dart';
 import '../../src/ui/loader_class.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../constants/constants.dart';
@@ -131,13 +132,13 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: BorderSide(
                                     color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        mAppThemeProvider.primaryColor,
                                   )),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: BorderSide(
                                     color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        mAppThemeProvider.primaryColor,
                                   )),
                             ),
                             validator: (value) {
@@ -207,7 +208,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                       spreadRadius: 2)
                 ],
                 gradient: LinearGradient(end: Alignment.centerRight, colors: [
-                  Color(CommonUtil().getMyPrimaryColor()),
+                  mAppThemeProvider.primaryColor,
                   Color(CommonUtil().getMyGredientColor())
                 ])),
             child: Text(
@@ -298,7 +299,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                 gradient: LinearGradient(end: Alignment.centerRight, colors: [
 //                  Color(0xff138fcf),
 //                  Color(0xff138fcf),
-                  Color(CommonUtil().getMyPrimaryColor()),
+                  mAppThemeProvider.primaryColor,
                   Color(CommonUtil().getMyGredientColor())
                 ])),
             child: Text(
@@ -329,12 +330,12 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(5)),
                 border:
-                    Border.all(color: Color(CommonUtil().getMyPrimaryColor()))),
+                    Border.all(color: mAppThemeProvider.primaryColor)),
             child: Text(
               strCreateAccount,
               style: TextStyle(
                   fontSize: 16.0.sp,
-                  color: Color(CommonUtil().getMyPrimaryColor())),
+                  color: mAppThemeProvider.primaryColor),
             ),
           ),
         ),
