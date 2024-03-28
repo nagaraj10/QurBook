@@ -845,7 +845,7 @@ class _MyFamilyState extends State<MyFamily> {
                             ),
                             Row(
                               children: <Widget>[
-                                if (data != null)
+                                if (data != null && data.length > 0)
                                   getRelationshipDetails(data)
                                 else
                                   getAllCustomRoles()

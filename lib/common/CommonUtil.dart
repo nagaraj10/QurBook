@@ -5380,13 +5380,24 @@ class CommonUtil {
         if (value.result != null) {
           if (value.result!.queueCount != null &&
               value.result!.queueCount! > 0) {
-            var sheelaAIController = Get.find<SheelaAIController>();
+            var sheelaAIController =
+            CommonUtil().onInitSheelaAIController();
             sheelaAIController.sheelaIconBadgeCount.value =
                 (value.result?.queueCount ?? 0);
             // isNeedDialog condition for showing the dialog or not
             if (isNeedDialog) {
               CommonUtil().dialogForSheelaQueue(Get.context!);
             }
+
+            if (sheelaAIController.isSheelaScreenActive) { // Check if Sheela screen is active
+              var kioskTask = json[KIOSK_task]; // Retrieve kiosk task from JSON object
+              var kioskEid = json[KIOSK_eid]; // Retrieve kiosk EID from JSON object
+
+              if (kioskTask != KIOSK_appointment_avail) { // Check if kiosk task is not appointment availability
+                sheelaAIController.latestRemindEid = kioskEid; // Update latest reminder EID in Sheela AI Controller
+              }
+            }
+
           }
         }
       }
