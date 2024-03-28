@@ -747,6 +747,8 @@ class SheelaBLEController extends GetxController {
         } else if (bleDataModel.deviceType?.toLowerCase() == "weight") {
           if ((bleDataModel.data!.weight ?? '').isNotEmpty) {
 
+            // If the weightUnit value is kg means set unit as kilograms
+            // If the weightUnit value is lb means set unit as pounds
             final weightUnitResult = weightUnit == STR_VAL_WEIGHT_IND? 'kilograms':
             weightUnit == STR_VAL_WEIGHT_US? 'pounds':'';
 
