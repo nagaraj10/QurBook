@@ -35,6 +35,7 @@ class Reminder {
   Otherinfo? otherinfo;
 
 
+  // for restrict the reminders based on patient view access flag
   bool? isPatientViewAccess = false;
 
 
