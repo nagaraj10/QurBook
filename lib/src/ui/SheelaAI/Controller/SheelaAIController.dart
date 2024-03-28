@@ -483,6 +483,7 @@ class SheelaAIController extends GetxController {
         additionalInfo?[isSkipRemiderCount] = false;
       }
 
+      // for latest eid to pass api
       additionalInfo?[strLatestRemindEid] = latestRemindEid??'';
 
       final sheelaRequest = SheelaRequestModel(
