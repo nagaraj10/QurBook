@@ -5531,9 +5531,6 @@ class CommonUtil {
   // This method is responsible for closing the Sheela dialog and performing related actions
   closeSheelaDialog() async {
     try {
-      /*const platform = MethodChannel(strCloseSheelaDialog);
-      platform.invokeMethod(strCloseSheelaDialog);*/
-
       // Initializing SheelaAIController for additional actions
       SheelaAIController? sheelaAIController =
           CommonUtil().onInitSheelaAIController();

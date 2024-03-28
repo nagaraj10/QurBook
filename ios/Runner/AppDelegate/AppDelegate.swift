@@ -20,25 +20,13 @@ import flutter_local_notifications
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate, SFSpeechRecognizerDelegate {
     
-    
-    var speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: Language.instance.setlanguage()))!
-    var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
-    var recognitionTask: SFSpeechRecognitionTask?
-    
-    var audioEngine = AVAudioEngine()
-    
-    var STT_Result : FlutterResult?
     var TTS_Result : FlutterResult?
     
     var STT_CHANNEL = Constants.STT_CHANNEL
     var TTS_CHANNEL = Constants.TTS_CHANNEL
     
-    var STT_METHOD = Constants.STT_METHOD
     var TTS_METHOD = Constants.TTS_METHOD
     var STT_MicavailablityMethod = "validateMicAvailability"
-    
-    var detectionTimer : Timer?
-    var message = ""
     
     let speechSynthesizer = AVSpeechSynthesizer()
     let reminderChannel = Constants.reminderMethodChannel
