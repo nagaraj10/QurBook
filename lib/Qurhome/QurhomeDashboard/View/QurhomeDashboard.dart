@@ -672,6 +672,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                     ),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
+              // SafeArea widget ensures that its child's content is visible and not obscured by system UI elements
               bottomNavigationBar: SafeArea(
                 top: false,
                 right: false,
