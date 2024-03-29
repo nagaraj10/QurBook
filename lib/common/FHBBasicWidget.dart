@@ -342,7 +342,7 @@ class FHBBasicWidget {
                   : PreferenceUtil.getIfQurhomeisAcive()
                       ? CommonUtil.isUSRegion()
                           ? mAppThemeProvider.primaryColor
-                          : mAppThemeProvider.qurhomeGredientColor
+                          : mAppThemeProvider.qurhomeGradientColor
                       : mAppThemeProvider.primaryColor,
               child: Center(
                 child: getFirstLastNameText(myProfile,

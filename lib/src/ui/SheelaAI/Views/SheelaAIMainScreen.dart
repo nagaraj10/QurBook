@@ -319,7 +319,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                         backgroundColor: controller.isLoading.value
                             ? Colors.black45
                             : PreferenceUtil.getIfQurhomeisAcive()
-                                ? mAppThemeProvider.qurhomeGredientColor
+                                ? mAppThemeProvider.qurhomeGradientColor
                                 : mAppThemeProvider.primaryColor,
                         child: Icon(
                           (controller.currentPlayingConversation != null &&
@@ -499,7 +499,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
           1.0,
         ),
         child: Container(
-          color: mAppThemeProvider.qurhomeGredientColor,
+          color: mAppThemeProvider.qurhomeGradientColor,
           height: 1.0,
         ),
       ),

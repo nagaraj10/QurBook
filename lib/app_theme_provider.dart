@@ -21,7 +21,7 @@ class AppThemeProvider extends ChangeNotifier {
         ? qurHomePrimaryColor
         : Color(PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? 0xff5f0cf9);
     _gradientColor= CommonUtil.isUSRegion()
-        ? qurhomeGredientColor
+        ? qurhomeGradientColor
         : Color(PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ?? 0xff9929ea);
     getPreferences();
   }
@@ -32,7 +32,7 @@ class AppThemeProvider extends ChangeNotifier {
 
   /// This primary and gradient color used for the QurHome application.
  Color get qurHomePrimaryColor => Color(0xFFFB5422);
- Color get qurhomeGredientColor => Color(0xFFFd7a2b);
+ Color get qurhomeGradientColor => Color(0xFFFd7a2b);
  Color get qurHomeCardColor => Color(0xFFF6000F);
 
  ///Gradients
@@ -41,7 +41,7 @@ class AppThemeProvider extends ChangeNotifier {
       end: Alignment.centerRight,
       colors: [
         qurHomeCardColor,
-        qurhomeGredientColor
+        qurhomeGradientColor
       ],
       stops: [
         0.1,

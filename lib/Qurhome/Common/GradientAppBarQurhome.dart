@@ -18,7 +18,7 @@ class _GradientAppBarState extends State<GradientAppBarQurhome> {
           end: Alignment.centerRight,
           colors: <Color>[
             mAppThemeProvider.qurHomePrimaryColor,
-            mAppThemeProvider.qurhomeGredientColor
+            mAppThemeProvider.qurhomeGradientColor
           ],
           stops: [0.3, 1.0],
         ),

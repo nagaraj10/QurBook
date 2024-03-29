@@ -306,7 +306,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 ),
                 bottom: PreferredSize(
                   child: Container(
-                    color: mAppThemeProvider.qurhomeGredientColor,
+                    color: mAppThemeProvider.qurhomeGradientColor,
                     height: 1.0,
                   ),
                   preferredSize: Size.fromHeight(
@@ -1429,7 +1429,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                     overflow: TextOverflow.fade,
                                     maxLines: 2,
                                     style: TextStyle(
-                                        color: mAppThemeProvider.qurhomeGredientColor,
+                                        color: mAppThemeProvider.qurhomeGradientColor,
                                         fontSize: CommonUtil().isTablet!
                                             ? tabHeader1
                                             : mobileHeader1,
@@ -1743,7 +1743,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                   overflow: TextOverflow.fade,
                                   maxLines: 2,
                                   style: TextStyle(
-                                      color: mAppThemeProvider.qurhomeGredientColor,
+                                      color: mAppThemeProvider.qurhomeGradientColor,
                                       fontSize: CommonUtil().isTablet!
                                           ? tabHeader1
                                           : mobileHeader1,
@@ -1918,7 +1918,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                     overflow: TextOverflow.fade,
                                     maxLines: 2,
                                     style: TextStyle(
-                                        color: mAppThemeProvider.qurhomeGredientColor,
+                                        color: mAppThemeProvider.qurhomeGradientColor,
                                         fontSize: CommonUtil().isTablet!
                                             ? tabHeader1
                                             : mobileHeader1,
@@ -2146,7 +2146,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                       overflow: TextOverflow.fade,
                                       maxLines: 2,
                                       style: TextStyle(
-                                          color: mAppThemeProvider.qurhomeGredientColor,
+                                          color: mAppThemeProvider.qurhomeGradientColor,
                                           fontSize: CommonUtil().isTablet!
                                               ? tabHeader1
                                               : mobileHeader1,
@@ -3014,7 +3014,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             borderType: BorderType.Oval,
             //radius: Radius.circular(20),
             dashPattern: [9, 5],
-            color: mAppThemeProvider.qurhomeGredientColor,
+            color: mAppThemeProvider.qurhomeGradientColor,
             strokeWidth: 3,
             child: Container(),
           ),
@@ -3036,7 +3036,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                   style: TextStyle(
                     fontSize: 45,
                     fontWeight: FontWeight.bold,
-                    color: mAppThemeProvider.qurhomeGredientColor,
+                    color: mAppThemeProvider.qurhomeGradientColor,
                   ),
                 ),
                 Text(
@@ -3044,7 +3044,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.normal,
-                    color: mAppThemeProvider.qurhomeGredientColor,
+                    color: mAppThemeProvider.qurhomeGradientColor,
                   ),
                 ),
               ],

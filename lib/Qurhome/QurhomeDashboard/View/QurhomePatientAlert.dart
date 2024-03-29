@@ -576,7 +576,7 @@ class _QurhomePatientAlertState extends State<QurhomePatientAlert> {
                                 size: CommonUtil().isTablet!
                                     ? dialogIconTab
                                     : dialogIconMobile,
-                                color: mAppThemeProvider.qurhomeGredientColor),
+                                color: mAppThemeProvider.qurhomeGradientColor),
                             SizedBox(
                               width: 10,
                             ),
@@ -593,7 +593,7 @@ class _QurhomePatientAlertState extends State<QurhomePatientAlert> {
                                     fontSize: CommonUtil().isTablet!
                                         ? tabHeader1
                                         : mobileHeader1,
-                                    color:mAppThemeProvider.qurhomeGredientColor,
+                                    color:mAppThemeProvider.qurhomeGradientColor,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
