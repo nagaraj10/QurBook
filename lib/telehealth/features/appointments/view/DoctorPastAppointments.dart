@@ -256,8 +256,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                                   doc.plannedStartDateTime!))
                                               .toString(),
                                       fontWeight: FontWeight.w600,
-                                      colors: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      colors: mAppThemeProvider.primaryColor,
                                     )
                                   : TextWidget(
                                       fontsize: 11.0.sp,

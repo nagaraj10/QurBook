@@ -181,7 +181,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
   BorderSide getBorder() {
     return BorderSide(
-      color: Color(CommonUtil().getQurhomeGredientColor()),
+      color: mAppThemeProvider.qurhomeGredientColor,
       width: 1.0,
     );
   }
@@ -377,8 +377,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                           text: patient,
                                           style: TextStyle(
                                               fontSize: textFontSize,
-                                              color: Color(CommonUtil()
-                                                  .getQurhomePrimaryColor()))),
+                                              color: mAppThemeProvider.qurHomePrimaryColor)),
                                       TextSpan(
                                           text: controller
                                               .careGiverPatientListResult
@@ -386,8 +385,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                           style: TextStyle(
                                               fontSize: textFontSize,
                                               fontWeight: FontWeight.bold,
-                                              color: Color(CommonUtil()
-                                                  .getQurhomePrimaryColor()))),
+                                              color: mAppThemeProvider.qurHomePrimaryColor)),
                                       TextSpan(text: " "),
                                       TextSpan(
                                         text: controller
@@ -396,8 +394,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                         style: TextStyle(
                                             fontSize: textFontSize,
                                             fontWeight: FontWeight.bold,
-                                            color: Color(CommonUtil()
-                                                .getQurhomePrimaryColor())),
+                                            color: mAppThemeProvider.qurHomePrimaryColor),
                                       ),
                                     ]))
                             : Column(
@@ -430,8 +427,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                               ? TextStyle(
                                                   fontSize: textFontSize,
                                                   fontWeight: FontWeight.bold,
-                                                  color: Color(CommonUtil()
-                                                      .getQurhomePrimaryColor()))
+                                                  color: mAppThemeProvider.qurHomePrimaryColor)
                                               : TextStyle(
                                                   fontSize: textFontSize,
                                                   fontWeight: FontWeight.bold,
@@ -470,8 +466,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                             getChatSocketIcon(),
                             SizedBox(width: 20.w),
                             CommonUtil().getNotificationIcon(context,
-                                color: Color(
-                                    CommonUtil().getQurhomePrimaryColor()),
+                                color: mAppThemeProvider.qurHomePrimaryColor,
                                 isFromQurday: true),
                           ],
                         ),
@@ -489,8 +484,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                   icon: Icon(
                                     Icons.menu_rounded,
                                   ),
-                                  color: Color(
-                                      CommonUtil().getQurhomePrimaryColor()),
+                                  color: mAppThemeProvider.qurHomePrimaryColor,
                                   iconSize: CommonUtil().isTablet!
                                       ? 34.0.sp
                                       : 24.0.sp,
@@ -542,16 +536,13 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                     child: Icon(
                                       Icons.home,
                                       size: 32.sp,
-                                      color: Color(CommonUtil()
-                                          .getQurhomePrimaryColor()),
+                                      color: mAppThemeProvider.qurHomePrimaryColor,
                                     ),
                                   )
                                 : CommonUtil().qurHomeMainIcon())),
                 bottom: PreferredSize(
                   child: Container(
-                    color: Color(
-                      CommonUtil().getQurhomeGredientColor(),
-                    ),
+                    color: mAppThemeProvider.qurhomeGredientColor,
                     height: 1.0,
                   ),
                   preferredSize: Size.fromHeight(
@@ -638,9 +629,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                 ),
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: Color(
-                                      CommonUtil().getQurhomeGredientColor(),
-                                    ),
+                                    color:mAppThemeProvider.qurhomeGredientColor,
                                     width: 1,
                                   ),
                                   shape: BoxShape.circle,
@@ -687,10 +676,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                     color: controller
                                                 .patientDashboardCurSelectedIndex ==
                                             0
-                                        ? Color(
-                                            CommonUtil()
-                                                .getQurhomeGredientColor(),
-                                          )
+                                        ? mAppThemeProvider.qurhomeGredientColor
                                         : Colors.white,
                                     borderRadius: BorderRadius.only(
                                       topLeft: controller
@@ -724,10 +710,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                                           .patientDashboardCurSelectedIndex ==
                                                       0
                                                   ? Colors.white
-                                                  : Color(
-                                                      CommonUtil()
-                                                          .getQurhomeGredientColor(),
-                                                    ),
+                                                  : mAppThemeProvider.qurhomeGredientColor,
                                               fontSize: textFontSize,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -753,10 +736,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                     color: controller
                                                 .patientDashboardCurSelectedIndex ==
                                             1
-                                        ? Color(
-                                            CommonUtil()
-                                                .getQurhomeGredientColor(),
-                                          )
+                                        ? mAppThemeProvider.qurhomeGredientColor
                                         : Colors.white,
                                     borderRadius: BorderRadius.only(
                                       topLeft: controller
@@ -790,10 +770,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                                           .patientDashboardCurSelectedIndex ==
                                                       1
                                                   ? Colors.white
-                                                  : Color(
-                                                      CommonUtil()
-                                                          .getQurhomeGredientColor(),
-                                                    ),
+                                                  : mAppThemeProvider.qurhomeGredientColor,
                                               fontSize: textFontSize,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -819,10 +796,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                     color: controller
                                                 .patientDashboardCurSelectedIndex ==
                                             2
-                                        ? Color(
-                                            CommonUtil()
-                                                .getQurhomeGredientColor(),
-                                          )
+                                        ? mAppThemeProvider.qurhomeGredientColor
                                         : Colors.white,
                                     borderRadius: BorderRadius.only(
                                       topLeft: controller
@@ -856,10 +830,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                                           .patientDashboardCurSelectedIndex ==
                                                       2
                                                   ? Colors.white
-                                                  : Color(
-                                                      CommonUtil()
-                                                          .getQurhomeGredientColor(),
-                                                    ),
+                                                  : mAppThemeProvider.qurhomeGredientColor,
                                               fontSize: textFontSize,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -903,10 +874,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                 },
                                 child: Container(
                                   color: controller.currentSelectedIndex == 2
-                                      ? Color(
-                                          CommonUtil()
-                                              .getQurhomeGredientColor(),
-                                        )
+                                      ? mAppThemeProvider.qurhomeGredientColor
                                       : Colors.white,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -931,10 +899,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                                   : controller.currentSelectedIndex ==
                                                           2
                                                       ? Colors.white
-                                                      : Color(
-                                                          CommonUtil()
-                                                              .getQurhomeGredientColor(),
-                                                        ),
+                                                      : mAppThemeProvider.qurhomeGredientColor,
                                               fontSize: textFontSize,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -963,10 +928,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                 },
                                 child: Container(
                                   color: controller.currentSelectedIndex == 3
-                                      ? Color(
-                                          CommonUtil()
-                                              .getQurhomeGredientColor(),
-                                        )
+                                      ? mAppThemeProvider.qurhomeGredientColor
                                       : Colors.white,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -991,10 +953,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                                   : controller.currentSelectedIndex ==
                                                           3
                                                       ? Colors.white
-                                                      : Color(
-                                                          CommonUtil()
-                                                              .getQurhomeGredientColor(),
-                                                        ),
+                                                      : mAppThemeProvider.qurhomeGredientColor,
                                               fontSize: textFontSize,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -1121,7 +1080,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         },
         child: ImageIcon(AssetImage(icon_chat),
             size: CommonUtil().isTablet! ? 33.0.sp : unSelOption,
-            color: Color(CommonUtil().getQurhomePrimaryColor())),
+            color: mAppThemeProvider.qurHomePrimaryColor),
       ),
       badgeColor: ColorUtils.countColor,
       badgeCount: Provider.of<ChatSocketViewModel>(Get.context!).chatTotalCount,

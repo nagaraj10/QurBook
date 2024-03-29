@@ -119,8 +119,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                     borderSide: BorderSide(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                     )),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
@@ -174,14 +173,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: BorderSide(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
+                                          color: mAppThemeProvider.primaryColor,
                                         )),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        color: mAppThemeProvider.primaryColor,
                                       ),
                                     ),
                                     errorMaxLines: 2,
@@ -225,14 +222,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: BorderSide(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
+                                          color: mAppThemeProvider.primaryColor,
                                         )),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        color: mAppThemeProvider.primaryColor,
                                       ),
                                     ),
                                   ),
@@ -279,8 +274,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                                     TextSpan(
                                       text: otpViewModel!.timeForResend,
                                       style: TextStyle(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        color: mAppThemeProvider.primaryColor,
                                         fontSize: 15.0.sp,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -372,7 +366,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                 ],
                 gradient: LinearGradient(end: Alignment.centerRight, colors: [
                   mAppThemeProvider.primaryColor,
-                  Color(CommonUtil().getMyGredientColor())
+                  mAppThemeProvider.gradientColor
                 ])),
             child: Text(
               textString,

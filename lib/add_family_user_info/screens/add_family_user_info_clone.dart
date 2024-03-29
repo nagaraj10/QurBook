@@ -585,8 +585,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                                       ),
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
+                                            color: mAppThemeProvider.primaryColor),
                                         borderRadius: BorderRadius.circular(
                                           10.0.sp,
                                         ),

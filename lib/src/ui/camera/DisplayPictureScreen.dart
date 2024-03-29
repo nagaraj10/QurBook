@@ -161,7 +161,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     gradient: LinearGradient(
                       colors: <Color>[
                         mAppThemeProvider.primaryColor,
-                        Color(CommonUtil().getMyGredientColor())
+                        mAppThemeProvider.gradientColor
                       ],
                     ),
                     onPressed: () {

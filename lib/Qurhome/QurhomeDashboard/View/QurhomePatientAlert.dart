@@ -309,9 +309,7 @@ class _QurhomePatientAlertState extends State<QurhomePatientAlert> {
 
   Color getTextAndIconColor(int itemIndex, int nextRegimenPosition) {
     if (controller.currentIndex == itemIndex) {
-      return Color(
-        CommonUtil().getQurhomePrimaryColor(),
-      );
+      return mAppThemeProvider.qurHomePrimaryColor;
     } else if (nextRegimenPosition == itemIndex) {
       if (itemIndex == 0) {
         return Colors.grey;
@@ -329,9 +327,7 @@ class _QurhomePatientAlertState extends State<QurhomePatientAlert> {
       if (itemIndex == 0) {
         return Colors.white;
       } else {
-        return Color(
-          CommonUtil().getQurhomePrimaryColor(),
-        );
+        return mAppThemeProvider.qurHomePrimaryColor;
       }
     } else {
       return Colors.white;
@@ -438,8 +434,7 @@ class _QurhomePatientAlertState extends State<QurhomePatientAlert> {
                           hintText: REASON_FOR_ESCALATION,
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                                color: Color(
-                                    CommonUtil().getQurhomePrimaryColor())),
+                                color: mAppThemeProvider.qurHomePrimaryColor),
                           ),
                           border: OutlineInputBorder(
                               // borderSide: BorderSide(color: Colors.teal)
@@ -483,7 +478,7 @@ class _QurhomePatientAlertState extends State<QurhomePatientAlert> {
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             primary:
-                                Color(CommonUtil().getQurhomePrimaryColor())),
+                                mAppThemeProvider.qurHomePrimaryColor),
                         onPressed: () {
                           if (controller.text.isNotEmpty) {
                             callEscalateApi(patientAlertData, activityName,
@@ -581,8 +576,7 @@ class _QurhomePatientAlertState extends State<QurhomePatientAlert> {
                                 size: CommonUtil().isTablet!
                                     ? dialogIconTab
                                     : dialogIconMobile,
-                                color: Color(
-                                    CommonUtil().getQurhomeGredientColor())),
+                                color: mAppThemeProvider.qurhomeGredientColor),
                             SizedBox(
                               width: 10,
                             ),
@@ -599,9 +593,7 @@ class _QurhomePatientAlertState extends State<QurhomePatientAlert> {
                                     fontSize: CommonUtil().isTablet!
                                         ? tabHeader1
                                         : mobileHeader1,
-                                    color: Color(
-                                      CommonUtil().getQurhomeGredientColor(),
-                                    ),
+                                    color:mAppThemeProvider.qurhomeGredientColor,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
@@ -716,8 +708,7 @@ class _QurhomePatientAlertState extends State<QurhomePatientAlert> {
                                 ),
                                 Text(strDiscard,
                                     style: TextStyle(
-                                        color: Color(CommonUtil()
-                                            .getQurhomePrimaryColor()))),
+                                        color: mAppThemeProvider.qurHomePrimaryColor)),
                               ],
                             ),
                           ),

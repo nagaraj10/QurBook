@@ -59,7 +59,7 @@ class AppPrimaryButton extends StatelessWidget {
               ]:null,
               gradient:!isSecondaryButton? LinearGradient(end: Alignment.centerRight, colors: [
                 mAppThemeProvider.primaryColor,
-                Color(CommonUtil().getMyGredientColor())
+                mAppThemeProvider.gradientColor
               ]):null),
           child:child?? Text(
             text??'',

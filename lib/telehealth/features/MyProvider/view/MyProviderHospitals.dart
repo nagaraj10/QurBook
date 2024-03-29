@@ -8,6 +8,7 @@ import '../../../../common/common_circular_indicator.dart';
 import '../../../../common/errors_widget.dart';
 import '../../../../constants/router_variable.dart' as router;
 import '../../../../constants/variable_constant.dart' as variable;
+import '../../../../main.dart';
 import '../../../../my_providers/bloc/providers_block.dart';
 import '../../../../my_providers/models/Hospitals.dart';
 import '../../../../my_providers/models/MyProviderResponseData.dart';

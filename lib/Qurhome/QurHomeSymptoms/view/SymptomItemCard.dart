@@ -12,6 +12,7 @@ import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/utils/ImageViewer.dart';
+import '../../../main.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../constants/fhb_constants.dart';
 import 'package:provider/provider.dart';
@@ -517,8 +518,7 @@ class SymptomItemCard extends StatelessWidget {
                                                       fontSize: 12.0.sp,
                                                       fontWeight:
                                                           FontWeight.w500,
-                                                      color: Color(CommonUtil()
-                                                          .getQurhomePrimaryColor()),
+                                                      color: mAppThemeProvider.qurHomePrimaryColor,
                                                     ),
                                                   ),
                                                 ),
@@ -724,8 +724,7 @@ class SymptomItemCard extends StatelessWidget {
                                                           FontWeight.w500,
                                                       decoration: TextDecoration
                                                           .underline,
-                                                      color: Color(CommonUtil()
-                                                          .getQurhomePrimaryColor()),
+                                                      color: mAppThemeProvider.qurHomePrimaryColor,
                                                     ),
                                                   ),
                                                 ),
@@ -1225,7 +1224,7 @@ class SymptomItemCard extends StatelessWidget {
 
     return ClipOval(
       child: Material(
-        color: Color(CommonUtil().getQurhomePrimaryColor()),
+        color: mAppThemeProvider.qurHomePrimaryColor,
         child: Padding(
           padding: EdgeInsets.all(5.0),
           child: Image.asset(

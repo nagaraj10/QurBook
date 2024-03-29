@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
+import '../../main.dart';
+
 class WaveAnimation extends StatefulWidget {
   final String? patName;
 

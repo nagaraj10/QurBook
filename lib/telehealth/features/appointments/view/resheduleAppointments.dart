@@ -103,7 +103,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                     end: Alignment.centerRight,
                     colors: <Color>[
                   mAppThemeProvider.primaryColor,
-                  Color(CommonUtil().getMyGredientColor())
+                  mAppThemeProvider.gradientColor
                 ],
                     stops: [
                   0.3,

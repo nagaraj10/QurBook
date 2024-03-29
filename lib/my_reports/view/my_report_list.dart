@@ -236,8 +236,7 @@ class _MyReportList extends State<MyReportList> {
                                     borderRadius: BorderRadius.circular(18),
                                     side: BorderSide(
                                         color: planList[i].isexpired == '1'
-                                            ? Color(CommonUtil()
-                                            .getMyPrimaryColor())
+                                            ? mAppThemeProvider.primaryColor
                                             : Colors.red)),
                                 color: Colors.transparent,
                                 textColor: planList[i].isexpired == '1'

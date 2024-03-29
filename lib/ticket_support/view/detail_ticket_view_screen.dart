@@ -497,7 +497,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                               end: Alignment.centerRight,
                               colors: [
                                 mAppThemeProvider.primaryColor,
-                                Color(CommonUtil().getMyGredientColor())
+                                mAppThemeProvider.gradientColor
                               ]).createShader(bounds);
                         },
                         blendMode: BlendMode.srcATop,
@@ -514,7 +514,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                 end: Alignment.centerRight,
                                 colors: [
                                   mAppThemeProvider.primaryColor,
-                                  Color(CommonUtil().getMyGredientColor())
+                                  mAppThemeProvider.gradientColor
                                 ]).createShader(bounds);
                           },
                           blendMode: BlendMode.srcATop,
@@ -533,7 +533,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                 end: Alignment.centerRight,
                                 colors: [
                                   mAppThemeProvider.primaryColor,
-                                  Color(CommonUtil().getMyGredientColor())
+                                  mAppThemeProvider.gradientColor
                                 ]).createShader(bounds);
                           },
                           blendMode: BlendMode.srcATop,
@@ -567,8 +567,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                     child: Container(
                                       height: 20,
                                       width: 1.0,
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                     ),
                                   ),
                                   Positioned(
@@ -580,8 +579,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                       width: 10.0,
                                       decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: Color(CommonUtil()
-                                              .getMyPrimaryColor())),
+                                          color: mAppThemeProvider.primaryColor),
                                     ),
                                   ),
                                   Padding(
@@ -725,8 +723,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                     },
                                                     child: Icon(
                                                       Icons.attach_file,
-                                                      color: Color(CommonUtil()
-                                                          .getMyPrimaryColor()),
+                                                      color: mAppThemeProvider.primaryColor,
                                                       size: 24,
                                                     )),
                                               ),
@@ -777,8 +774,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                             fillColor: Colors.white,
                                             child: Icon(Icons.send,
                                                 size: 25.0,
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor())),
+                                                color: mAppThemeProvider.primaryColor),
                                             padding: EdgeInsets.all(12.0),
                                             shape: CircleBorder(),
                                           ),

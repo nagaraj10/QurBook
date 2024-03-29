@@ -451,8 +451,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                                           Constants.poppins,
                                                       fontWeight:
                                                           FontWeight.w500,
-                                                      color: Color(CommonUtil()
-                                                          .getMyPrimaryColor())))
+                                                      color: mAppThemeProvider.primaryColor))
                                             ])),
                               SizedBoxWidget(
                                 height: 10,
@@ -470,11 +469,9 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                             side: BorderSide(
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor()))),
+                                                color: mAppThemeProvider.primaryColor)),
                                         backgroundColor: Colors.transparent,
-                                        foregroundColor: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        foregroundColor: mAppThemeProvider.primaryColor,
                                         padding: const EdgeInsets.all(8),
                                       ),
                                       onPressed: () {
@@ -494,11 +491,9 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                             side: BorderSide(
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor()))),
+                                                color: mAppThemeProvider.primaryColor)),
                                         backgroundColor: Colors.transparent,
-                                        foregroundColor: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        foregroundColor: mAppThemeProvider.primaryColor,
                                         padding: const EdgeInsets.all(8),
                                       ),
                                       onPressed: () {

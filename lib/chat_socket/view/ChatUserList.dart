@@ -429,8 +429,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                       : '',
                                   style: TextStyle(
                                       fontSize: 22.0.sp,
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor())),
+                                      color: mAppThemeProvider.primaryColor),
                                 ),
                               ),
                             )
@@ -527,8 +526,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 14.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                                 // softWrap: false,
                                 // overflow: TextOverflow.ellipsis,
                               )
@@ -542,8 +540,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 16.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                               )
                       ],
                     ),
@@ -710,8 +707,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                     : '',
                                 style: TextStyle(
                                     fontSize: 14.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
                               )
@@ -973,7 +969,7 @@ class _ChatUserListState extends State<ChatUserList> {
                           ? userChatList.firstName![0].toString().toUpperCase()
                           : '',
                       style: TextStyle(
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                        color: mAppThemeProvider.primaryColor,
                         fontSize: 16.0.sp,
                         fontWeight: FontWeight.w400,
                       ),

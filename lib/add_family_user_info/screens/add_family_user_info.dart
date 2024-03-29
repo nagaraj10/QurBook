@@ -1846,7 +1846,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       builder: (context,child) => Theme(
         data: ThemeData.light().copyWith(
           colorScheme: ColorScheme.light().copyWith(
-            primary:Color(CommonUtil().getQurhomePrimaryColor()),
+            primary:mAppThemeProvider.qurHomePrimaryColor,
           ),
         ),
         child: child!,

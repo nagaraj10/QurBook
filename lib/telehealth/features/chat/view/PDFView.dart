@@ -9,6 +9,8 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
+import '../../../../main.dart';
+
 class PDFView extends StatefulWidget {
   const PDFView(
       {Key? key,
@@ -78,9 +80,7 @@ class _PDFViewState extends State<PDFView> {
                 ? Container(
                     child: CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        Color(
-                          CommonUtil().getMyPrimaryColor(),
-                        ),
+                        mAppThemeProvider.primaryColor,
                       ),
                       backgroundColor: Colors.white.withOpacity(0.8),
                     ),

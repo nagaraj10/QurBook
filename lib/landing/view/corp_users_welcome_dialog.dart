@@ -141,7 +141,7 @@ class CorpUsersWelcomeDialog extends StatelessWidget {
 //                  Color(0xff138fcf),
 //                  Color(0xff138fcf),
                   mAppThemeProvider.primaryColor,
-                  Color(CommonUtil().getMyGredientColor())
+                  mAppThemeProvider.gradientColor
                 ])),
             child: Text(
               getStarted,

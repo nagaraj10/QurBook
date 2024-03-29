@@ -22,6 +22,7 @@ import 'package:myfhb/widgets/fetching_cart_items_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../claim/model/members/MembershipDetails.dart';
+import '../../main.dart';
 
 class PlanWizardViewModel extends ChangeNotifier {
   PlanWizardService planWizardService = PlanWizardService();

@@ -1289,7 +1289,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     end: Alignment.centerRight,
                     colors: [
                       mAppThemeProvider.primaryColor,
-                      Color(CommonUtil().getMyGredientColor()),
+                      mAppThemeProvider.gradientColor,
                     ])),
             child: Text(
               tckConstants.strSubmitNewTicket,
@@ -1328,7 +1328,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     end: Alignment.centerRight,
                     colors: [
                       mAppThemeProvider.primaryColor,
-                      Color(CommonUtil().getMyGredientColor())
+                      mAppThemeProvider.gradientColor
                     ]).createShader(bounds);
               },
               child: Image.asset(
@@ -1390,7 +1390,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     end: Alignment.centerRight,
                     colors: [
                       mAppThemeProvider.primaryColor,
-                      Color(CommonUtil().getMyGredientColor())
+                      mAppThemeProvider.gradientColor
                     ]).createShader(bounds);
               },
               child: Image.asset(

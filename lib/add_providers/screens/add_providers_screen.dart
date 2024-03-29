@@ -305,10 +305,8 @@ class AddProvidersState extends State<AddProviders> {
                                             isPreferred = value;
                                           });
                                         },
-                                        activeTrackColor: Color(
-                                            CommonUtil().getMyPrimaryColor()),
-                                        activeColor: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        activeTrackColor: mAppThemeProvider.primaryColor,
+                                        activeColor: mAppThemeProvider.primaryColor,
                                       )),
                                   Text(
                                     variable.Set_as_Preferred,
@@ -635,8 +633,7 @@ class AddProvidersState extends State<AddProviders> {
                                         .toUpperCase())!,
                                 style: TextStyle(
                                     fontSize: 16.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                               ),
                             )
                       : myProfile != null
@@ -655,8 +652,7 @@ class AddProvidersState extends State<AddProviders> {
                                                 .toUpperCase())!,
                                         style: TextStyle(
                                             fontSize: 16.0.sp,
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
+                                            color: mAppThemeProvider.primaryColor),
                                       ),
                                     )
                               : Center(
@@ -669,8 +665,7 @@ class AddProvidersState extends State<AddProviders> {
                                             .toUpperCase(),
                                     style: TextStyle(
                                         fontSize: 16.0.sp,
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor())),
+                                        color: mAppThemeProvider.primaryColor),
                                   ),
                                 )
                           : Center(
@@ -678,8 +673,7 @@ class AddProvidersState extends State<AddProviders> {
                                 '',
                                 style: TextStyle(
                                     fontSize: 16.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                               ),
                             ),
                 )),

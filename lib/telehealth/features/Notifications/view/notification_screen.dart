@@ -25,6 +25,7 @@ import '../../../../constants/router_variable.dart';
 import '../../../../constants/router_variable.dart' as routervariable;
 import '../../../../constants/router_variable.dart' as router;
 import '../../../../landing/view/landing_arguments.dart';
+import '../../../../main.dart';
 import '../../../../myPlan/view/myPlanDetail.dart';
 import '../../../../my_family_detail/models/my_family_detail_arguments.dart';
 import '../../../../regiment/models/regiment_arguments.dart';
@@ -140,9 +141,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               child: Text(
                 'Delete',
                 style: TextStyle(
-                  color: Color(
-                    CommonUtil().getMyPrimaryColor(),
-                  ),
+                  color: mAppThemeProvider.primaryColor,
                 ),
               ),
               onPressed: () {
@@ -545,8 +544,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                             (notification.isUnread == null ||
                                                     !notification.isUnread!)
                                                 ? Colors.black
-                                                : Color(CommonUtil()
-                                                    .getMyPrimaryColor()),
+                                                : mAppThemeProvider.primaryColor,
                                         overflow: TextOverflow.visible,
                                         fontWeight: FontWeight.w600,
                                         fontsize: 15.0.sp,
@@ -599,8 +597,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                             (notification.isUnread == null ||
                                                     !notification.isUnread!)
                                                 ? Colors.black
-                                                : Color(CommonUtil()
-                                                    .getMyPrimaryColor()),
+                                                : mAppThemeProvider.primaryColor,
                                         //colors: Color(CommonUtil.primaryColor),
                                         overflow: TextOverflow.visible,
                                         fontWeight: FontWeight.w600,
@@ -678,11 +675,9 @@ class _NotificationScreen extends State<NotificationScreen> {
                                             borderRadius:
                                                 BorderRadius.circular(12.0),
                                             side: BorderSide(
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor()))),
+                                                color: mAppThemeProvider.primaryColor)),
                                         backgroundColor: Colors.transparent,
-                                        foregroundColor: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        foregroundColor: mAppThemeProvider.primaryColor,
                                         padding: EdgeInsets.all(8.0),
                                       ),
                                       onPressed: () {
@@ -703,11 +698,9 @@ class _NotificationScreen extends State<NotificationScreen> {
                                             borderRadius:
                                                 BorderRadius.circular(12.0),
                                             side: BorderSide(
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor()))),
+                                                color: mAppThemeProvider.primaryColor)),
                                         backgroundColor: Colors.transparent,
-                                        foregroundColor: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        foregroundColor: mAppThemeProvider.primaryColor,
                                         padding: EdgeInsets.all(8.0),
                                       ),
                                       onPressed: () {
@@ -1486,9 +1479,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                 },
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(
-                    color: Color(
-                      CommonUtil().getMyPrimaryColor(),
-                    ),
+                    color: mAppThemeProvider.primaryColor,
                   ),
                 ),
                 child: TextWidget(
@@ -1525,16 +1516,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                 },
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(
-                    color: Color(
-                      CommonUtil().getMyPrimaryColor(),
-                    ),
+                    color: mAppThemeProvider.primaryColor,
                   ),
                 ),
                 child: TextWidget(
                   text: parameters.reject,
-                  colors: Color(
-                    CommonUtil().getMyPrimaryColor(),
-                  ),
+                  colors: mAppThemeProvider.primaryColor,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
                   fontsize: 15.0.sp,
@@ -1567,9 +1554,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                 },
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(
-                    color: Color(
-                      CommonUtil().getMyPrimaryColor(),
-                    ),
+                    color: mAppThemeProvider.primaryColor,
                   ),
                 ),
                 child: TextWidget(
@@ -1595,17 +1580,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(
-                      color: Color(
-                        CommonUtil().getMyPrimaryColor(),
-                      ),
+                      color: mAppThemeProvider.primaryColor,
                     ),
                   ),
                   child: SizedBox(
                     child: TextWidget(
                       text: parameters.communicationSetting,
-                      colors: Color(
-                        CommonUtil().getMyPrimaryColor(),
-                      ),
+                      colors: mAppThemeProvider.primaryColor,
                       overflow: TextOverflow.visible,
                       fontWeight: FontWeight.w600,
                       fontsize: 14.0.sp,

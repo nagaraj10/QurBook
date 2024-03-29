@@ -29,6 +29,7 @@ import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_parameters.dart'as Parameters;
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../my_family/bloc/FamilyListBloc.dart';
 import '../../my_family/models/FamilyMembersRes.dart';
 import '../../my_family/screens/FamilyListView.dart';
@@ -304,7 +305,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   end: Alignment.bottomRight,
                   colors: <Color>[
                     mAppThemeProvider.primaryColor,
-                    Color(CommonUtil().getMyGredientColor())
+                    mAppThemeProvider.gradientColor
                   ],
                   stops: [
                     0.3,
@@ -2780,8 +2781,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                         .toUpperCase())!,
                                 style: TextStyle(
                                     fontSize: 16.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                               ),
                             )
                       : myProfile != null
@@ -2800,8 +2800,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                                 .toUpperCase())!,
                                         style: TextStyle(
                                             fontSize: 16.0.sp,
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
+                                            color: mAppThemeProvider.primaryColor),
                                       ),
                                     )
                               : Center(
@@ -2814,8 +2813,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                             .toUpperCase(),
                                     style: TextStyle(
                                         fontSize: 16.0.sp,
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor())),
+                                        color: mAppThemeProvider.primaryColor),
                                   ),
                                 )
                           : Center(
@@ -2823,8 +2821,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                 '',
                                 style: TextStyle(
                                     fontSize: 16.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                               ),
                             ),
                 )),

@@ -110,9 +110,7 @@ class HubListView extends GetView<HubListViewController> {
                   15.0,
                 ),
               ),
-              color: Color(
-                CommonUtil().getMyPrimaryColor(),
-              ),
+              color: mAppThemeProvider.primaryColor,
               child: Padding(
                 padding: EdgeInsets.all(
                   10.0,
@@ -167,9 +165,7 @@ class HubListView extends GetView<HubListViewController> {
               width: CommonUtil().isTablet! ? 400.w : 260.0.w,
               height: CommonUtil().isTablet! ? 70.0.h : 48.0.h,
               decoration: BoxDecoration(
-                color: Color(
-                  CommonUtil().getMyPrimaryColor(),
-                ),
+                color: mAppThemeProvider.primaryColor,
                 borderRadius: const BorderRadius.all(
                   Radius.circular(
                     10,
@@ -244,9 +240,7 @@ class HubListView extends GetView<HubListViewController> {
             path,
             height: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
             width: CommonUtil().isTablet! ? imageTabHeader : imageMobileHeader,
-            color: Color(
-              CommonUtil().getMyPrimaryColor(),
-            ),
+            color: mAppThemeProvider.primaryColor,
           ),
         ),
       ),

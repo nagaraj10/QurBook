@@ -23,6 +23,7 @@ import '../../../../common/common_circular_indicator.dart';
 import '../../../../constants/fhb_constants.dart' as Constants;
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/variable_constant.dart' as variable;
+import '../../../../main.dart';
 import '../../../../src/model/Health/asgard/health_record_collection.dart';
 import '../../../../src/model/user/MyProfileModel.dart';
 import '../../../../src/resources/network/api_services.dart';
@@ -1059,8 +1060,7 @@ class ChatScreenState extends State<ChatScreen> {
                                         ? peerName![0].toString().toUpperCase()
                                         : '',
                                     style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                       fontSize: 16.0.sp,
                                       fontWeight: FontWeight.w400,
                                     ),
@@ -1182,8 +1182,7 @@ class ChatScreenState extends State<ChatScreen> {
                                     ),
                                     padding: const EdgeInsets.all(15.0),
                                     decoration: BoxDecoration(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                       borderRadius: const BorderRadius.only(
                                         topRight: Radius.circular(25),
                                         bottomLeft: Radius.circular(25),
@@ -1216,8 +1215,7 @@ class ChatScreenState extends State<ChatScreen> {
                                     padding: const EdgeInsets.all(4.0),
                                     child: Material(
                                       borderRadius: BorderRadius.circular(10.0),
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                       elevation: 2.0,
                                       child: Container(
                                         padding: const EdgeInsets.all(10.0),
@@ -1390,7 +1388,7 @@ class ChatScreenState extends State<ChatScreen> {
                 end: Alignment.centerRight,
                 colors: <Color>[
               mAppThemeProvider.primaryColor,
-              Color(CommonUtil().getMyGredientColor())
+              mAppThemeProvider.gradientColor
             ],
                 stops: [
               0.3,

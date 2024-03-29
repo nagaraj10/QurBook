@@ -124,8 +124,7 @@ class CarePlanCard extends StatelessWidget {
                                         style: TextStyle(
                                             fontSize: 12.0.sp,
                                             fontWeight: FontWeight.w600,
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
+                                            color: mAppThemeProvider.primaryColor),
                                       )
                                     : Container(),
                                 SizedBox(width: 20.w),
@@ -145,14 +144,12 @@ class CarePlanCard extends StatelessWidget {
                                                 planList!.price!,
                                             fontsize: 12.0.sp,
                                             fontWeight: FontWeight.w500,
-                                            colors: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
+                                            colors: mAppThemeProvider.primaryColor),
                                         replacement: TextWidget(
                                             text: FREE,
                                             fontsize: 12.0.sp,
                                             fontWeight: FontWeight.w500,
-                                            colors: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
+                                            colors: mAppThemeProvider.primaryColor),
                                       )
                                     : Container(),
                               ],
@@ -620,8 +617,7 @@ class CarePlanCard extends StatelessWidget {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       fontSize: fhbStyles.fnt_doc_name,
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                     ),
                                     softWrap: true,
                                     overflow: TextOverflow.ellipsis,

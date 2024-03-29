@@ -8,6 +8,7 @@ import '../../common/CommonUtil.dart';
 import '../../common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../plan_wizard/view/widgets/Rounded_CheckBox.dart';
 import '../../src/ui/loader_class.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -326,9 +327,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                       ? planList.name![0].toUpperCase()
                       : ''),
                   style: TextStyle(
-                    color: Color(
-                      CommonUtil().getMyPrimaryColor(),
-                    ),
+                    color: mAppThemeProvider.primaryColor,
                   ),
                 ),
               ),

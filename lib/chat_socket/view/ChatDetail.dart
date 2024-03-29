@@ -822,7 +822,7 @@ class ChatState extends State<ChatDetail> {
                 end: Alignment.centerRight,
                 colors: <Color>[
               mAppThemeProvider.primaryColor,
-              Color(CommonUtil().getMyGredientColor())
+              mAppThemeProvider.gradientColor
             ],
                 stops: [
               0.3,
@@ -1083,7 +1083,7 @@ class ChatState extends State<ChatDetail> {
                           ? widget.peerName![0].toString().toUpperCase()
                           : '',
                       style: TextStyle(
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                        color: mAppThemeProvider.primaryColor,
                         fontSize: fontSizeOne,
                         fontWeight: FontWeight.w400,
                       ),
@@ -1808,8 +1808,7 @@ class ChatState extends State<ChatDetail> {
                                                   .toUpperCase()
                                               : '',
                                           style: TextStyle(
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor()),
+                                            color: mAppThemeProvider.primaryColor,
                                             fontSize: fontSizeOne,
                                             fontWeight: FontWeight.w400,
                                           ),
@@ -1990,8 +1989,7 @@ class ChatState extends State<ChatDetail> {
                                           ),
                                           padding: const EdgeInsets.all(15.0),
                                           decoration: BoxDecoration(
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor()),
+                                            color: mAppThemeProvider.primaryColor,
                                             borderRadius: BorderRadius.only(
                                               topRight: Radius.circular(25),
                                               bottomLeft: Radius.circular(25),

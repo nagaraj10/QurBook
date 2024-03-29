@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 
 class MyProvidersAppBar extends StatelessWidget implements PreferredSizeWidget {

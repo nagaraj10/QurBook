@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../constants/variable_constant.dart';
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../CommonUtil.dart';
 
@@ -28,9 +29,7 @@ class UnreadMessagesIcon extends StatelessWidget {
         icon_unread_chat,
         height: 30.h,
         width: 30.w,
-        color: Color(
-          CommonUtil().getMyPrimaryColor(),
-        ),
+        color: mAppThemeProvider.primaryColor,
       ),
     );
   }

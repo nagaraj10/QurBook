@@ -314,7 +314,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                 end: Alignment.centerRight,
                                 colors: <Color>[
                                   mAppThemeProvider.primaryColor,
-                                  Color(CommonUtil().getMyGredientColor()),
+                                  mAppThemeProvider.gradientColor,
                                 ],
                                 stops: [0.3, 1.0],
                               ),

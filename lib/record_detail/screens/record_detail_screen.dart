@@ -272,8 +272,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                       AssetImage(
                                           variable.icon_record_fav_active),
                                       //TODO chnage theme
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                     )
                                   : ImageIcon(
                                       AssetImage(variable.icon_record_fav),
@@ -474,9 +473,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               variable.strAddVoiceNote,
               style: TextStyle(
                 fontSize: 16.0.sp,
-                color: Color(
-                  CommonUtil().getMyPrimaryColor(),
-                ),
+                color: mAppThemeProvider.primaryColor,
               ),
             )
           ],
@@ -511,9 +508,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         content: const Text(
           variable.strDownloadStart,
         ),
-        backgroundColor: Color(
-          CommonUtil().getMyPrimaryColor(),
-        ),
+        backgroundColor: mAppThemeProvider.primaryColor,
       ),
     );
     if (ispdfPresent) {

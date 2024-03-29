@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import '../../../main.dart';
 import '../../models/profile_response_model.dart';
 import 'event_time_tile.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';

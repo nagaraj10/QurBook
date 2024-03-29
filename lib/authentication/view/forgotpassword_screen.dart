@@ -45,9 +45,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         key: _ForgetPassKey,
         child: Theme(
           data: Theme.of(context).copyWith(
-            primaryColor: Color(
-              CommonUtil().getMyPrimaryColor(),
-            ),
+            primaryColor: mAppThemeProvider.primaryColor,
           ),
           child: Container(
             height: height,
@@ -237,7 +235,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ],
                 gradient: LinearGradient(end: Alignment.centerRight, colors: [
                   mAppThemeProvider.primaryColor,
-                  Color(CommonUtil().getMyGredientColor())
+                  mAppThemeProvider.gradientColor
                 ])),
             child: Text(
               textString,

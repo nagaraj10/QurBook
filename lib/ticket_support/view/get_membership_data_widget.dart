@@ -85,7 +85,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
               end: Alignment.bottomCenter,
               colors: [
                 mAppThemeProvider.primaryColor,
-                Color(CommonUtil().getMyGredientColor())
+                mAppThemeProvider.gradientColor
               ],
             ),
             borderRadius: const BorderRadius.all(
@@ -203,7 +203,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
                             colors: [
                               mAppThemeProvider.primaryColor
                                   .withOpacity(0.01),
-                              Color(CommonUtil().getMyGredientColor())
+                              mAppThemeProvider.gradientColor
                                   .withAlpha(80)//.withOpacity(0.37)
                             ],
                           ),
@@ -218,9 +218,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
                                   getTitle(currentMembershipType),
                                   overflow: TextOverflow.visible,
                                   style: _getmemberhipTitleTextStyle(
-                                    color: Color(
-                                      CommonUtil().getMyGredientColor(),
-                                    ),
+                                    color: mAppThemeProvider.gradientColor,
                                   ),
                                 ),
                               ],
@@ -287,7 +285,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
         height: 40,
         width: 40,
         placeholderBuilder: (context) => CommonCircularIndicator(),
-        color: Color(CommonUtil().getMyGredientColor()).withOpacity(0.3),
+        color: mAppThemeProvider.gradientColor.withOpacity(0.3),
       );
     } else if (iconsUrl?.isNotEmpty ?? false) {
       return SvgPicture.network(
@@ -295,14 +293,14 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
         height: 40,
         width: 40,
         placeholderBuilder: (context) => CommonCircularIndicator(),
-        color: Color(CommonUtil().getMyGredientColor()).withOpacity(0.3),
+        color: mAppThemeProvider.gradientColor.withOpacity(0.3),
       );
     } else {
       return Image.asset(
         'assets/icons/10.png',
         width: 40,
         height: 40,
-        color: Color(CommonUtil().getMyGredientColor()).withOpacity(0.3),
+        color: mAppThemeProvider.gradientColor.withOpacity(0.3),
       );
     }
   }

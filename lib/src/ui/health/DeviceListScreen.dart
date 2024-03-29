@@ -12,6 +12,7 @@ import '../../../constants/fhb_constants.dart';
 import '../../../constants/fhb_parameters.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
 import '../../../constants/variable_constant.dart' as variable;
+import '../../../main.dart';
 import '../../../record_detail/model/ImageDocumentResponse.dart';
 import '../../../record_detail/screens/record_detail_screen.dart';
 import '../../blocs/health/HealthReportListForUserBlock.dart';
@@ -263,8 +264,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                                     ? ImageIcon(
                                         const AssetImage(
                                             variable.icon_record_fav_active),
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        color: mAppThemeProvider.primaryColor,
                                         size: CommonUtil().isTablet!
                                             ? tabHeader2
                                             : mobileHeader2,

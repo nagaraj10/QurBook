@@ -1955,8 +1955,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 Text(
                                   value1 == '' ? '' : value1,
                                   style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                       fontSize: 15.0.sp,
                                       fontWeight: FontWeight.w500),
                                 ),
@@ -1966,8 +1965,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 Text(
                                   value1 == '' ? '' : 'mmHg',
                                   style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                       fontSize: 11.0.sp),
                                 ),
                               ],
@@ -1996,8 +1994,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 Text(
                                   value2,
                                   style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                       fontSize: 15.0.sp,
                                       fontWeight: FontWeight.w500),
                                 ),
@@ -2007,8 +2004,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 Text(
                                   value1 == '' ? '' : 'mmHg',
                                   style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                       fontSize: 11.0.sp),
                                 ),
                               ],
@@ -2037,8 +2033,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 Text(
                                   bpm != '' ? bpm : '',
                                   style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                       fontSize: 15.0.sp,
                                       fontWeight: FontWeight.w500),
                                 ),
@@ -2048,8 +2043,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 Text(
                                   bpm == '' ? '' : CommonConstants.strPulseUnit,
                                   style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                       fontSize: 11.0.sp),
                                 ),
                               ],
@@ -2332,7 +2326,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             end: Alignment.centerRight,
                             colors: <Color>[
                               mAppThemeProvider.primaryColor,
-                              Color(CommonUtil().getMyGredientColor())
+                              mAppThemeProvider.gradientColor
                             ],
                             stops: [
                               0.3,
@@ -2377,8 +2371,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                     Text(
                                       value1 == '' ? '' : value1!,
                                       style: TextStyle(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
+                                          color: mAppThemeProvider.primaryColor,
                                           fontSize: 15.0.sp,
                                           fontWeight: FontWeight.w500),
                                     ),
@@ -2388,8 +2381,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                     Text(
                                       unit != '' ? unit! : '',
                                       style: TextStyle(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
+                                          color: mAppThemeProvider.primaryColor,
                                           fontSize: 14.0.sp),
                                     ),
                                   ],
@@ -2448,7 +2440,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             end: Alignment.centerRight,
                             colors: <Color>[
                               mAppThemeProvider.primaryColor,
-                              Color(CommonUtil().getMyGredientColor())
+                              mAppThemeProvider.gradientColor
                             ],
                             stops: [
                               0.3,
@@ -2493,8 +2485,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                     Text(
                                       value1 == '' ? '' : value1,
                                       style: TextStyle(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
+                                          color: mAppThemeProvider.primaryColor,
                                           fontSize: 15.0.sp,
                                           fontWeight: FontWeight.w500),
                                     ),
@@ -2504,8 +2495,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                     Text(
                                       unit != '' ? unit : '',
                                       style: TextStyle(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
+                                          color: mAppThemeProvider.primaryColor,
                                           fontSize: 14.0.sp),
                                     ),
                                   ],
@@ -2536,8 +2526,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                     Text(
                                       bpm == '' ? '' : bpm!,
                                       style: TextStyle(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
+                                          color: mAppThemeProvider.primaryColor,
                                           fontSize: 15.0.sp,
                                           fontWeight: FontWeight.w500),
                                     ),
@@ -2547,8 +2536,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             Text(
                               unit != '' ? unit : '',
                               style: TextStyle(
-                                  color: Color(
-                                      CommonUtil().getMyPrimaryColor()),
+                                  color: mAppThemeProvider.primaryColor,
                                   fontSize: 14.0.sp),
                             ),*/
                                   ],

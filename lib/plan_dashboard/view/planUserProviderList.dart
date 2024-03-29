@@ -7,6 +7,7 @@ import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../model/SearchListModel.dart';
 import '../services/SearchListService.dart';
 import 'categoryList.dart';

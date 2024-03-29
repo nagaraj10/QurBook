@@ -29,7 +29,7 @@ class _MyTicketsListScreenState extends State<MyTicketsListScreen> {
           shape: BoxShape.circle,
           gradient: LinearGradient(colors: [
             mAppThemeProvider.primaryColor,
-            Color(CommonUtil().getMyGredientColor())
+            mAppThemeProvider.gradientColor
           ]),
           boxShadow: [
             BoxShadow(

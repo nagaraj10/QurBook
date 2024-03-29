@@ -794,7 +794,7 @@ class CommonUtil {
                                 end: Alignment.centerRight,
                                 colors: [
                                   mAppThemeProvider.primaryColor,
-                                  Color(CommonUtil().getMyGredientColor())
+                                  mAppThemeProvider.gradientColor
                                 ])),
                         child: Text(
                           strOK,
@@ -957,50 +957,6 @@ class CommonUtil {
     return PreferenceUtil.getSavedTheme(Constants.keyTheme) ?? 0xff0a72e8;
   }
 
-  int getMyPrimaryColor() => isUSRegion()
-      ? getQurhomePrimaryColor()
-      : PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? 0xff5f0cf9;
-
-  int getMyGredientColor() => isUSRegion()
-      ? getQurhomeGredientColor()
-      : PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ?? 0xff9929ea;
-
-  int getQurhomePrimaryColor() {
-    return 0xFFFB5422;
-  }
-
-  int getQurHomeCardColor() {
-    return 0xFFF6000F;
-  }
-
-  int getQurhomeGredientColor() {
-    return 0xFFFd7a2b;
-  }
-
-  int getCommonPrimaryColorQurHomeBook() {
-    return (PreferenceUtil.getIfQurhomeisAcive())
-        ? CommonUtil().getQurhomePrimaryColor()
-        : CommonUtil().getMyPrimaryColor();
-  }
-
-  LinearGradient getQurhomeLinearGradient() {
-    return LinearGradient(
-      begin: Alignment.centerLeft,
-      end: Alignment.centerRight,
-      colors: [
-        Color(
-          CommonUtil().getQurHomeCardColor(),
-        ),
-        Color(
-          CommonUtil().getQurhomeGredientColor(),
-        )
-      ],
-      stops: [
-        0.1,
-        1.0,
-      ],
-    );
-  }
 
   List<CategoryData> getAllCategoryList(List<Data> data) {
     final List<CategoryData> categoryDataList = [];
@@ -1538,7 +1494,7 @@ class CommonUtil {
           value2: '',
           color: [
             mAppThemeProvider.primaryColor,
-            Color(CommonUtil().getMyGredientColor())
+            mAppThemeProvider.gradientColor
           ]);
     }
 
@@ -2304,7 +2260,7 @@ class CommonUtil {
                 'OK',
                 style: TextStyle(
                     fontSize: 18,
-                    color: Color(CommonUtil().getQurhomePrimaryColor())),
+                    color: mAppThemeProvider.qurHomePrimaryColor),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -2580,7 +2536,7 @@ class CommonUtil {
                         child: IconWidget(
                           icon: Icons.notifications,
                           colors: isFromQurday
-                              ? Color(CommonUtil().getQurhomePrimaryColor())
+                              ? mAppThemeProvider.qurHomePrimaryColor
                               : Colors.white,
                           size: CommonUtil().isTablet! ? 33.0.sp : 27.0.sp,
                           onTap: () {
@@ -2595,7 +2551,7 @@ class CommonUtil {
                         icon: Icon(
                           Icons.notifications,
                           color: isFromQurday
-                              ? Color(CommonUtil().getQurhomePrimaryColor())
+                              ? mAppThemeProvider.qurHomePrimaryColor
                               : Colors.white,
                           size: 30.0.sp,
                         ),
@@ -2616,7 +2572,7 @@ class CommonUtil {
                     icon: Icon(
                       Icons.notifications,
                       color: isFromQurday
-                          ? Color(CommonUtil().getQurhomePrimaryColor())
+                          ? mAppThemeProvider.qurHomePrimaryColor
                           : Colors.white,
                       size: 30.0.sp,
                     ),
@@ -2641,7 +2597,7 @@ class CommonUtil {
             icon: Icon(
               Icons.notifications,
               color: isFromQurday
-                  ? Color(CommonUtil().getQurhomePrimaryColor())
+                  ? mAppThemeProvider.qurHomePrimaryColor
                   : Colors.white,
               size: 30.0.sp,
             ),
@@ -2776,7 +2732,7 @@ class CommonUtil {
       //       child: Text(
       //         "ok",
       //         // style: TextStyle(
-      //         //   color: Color(getMyPrimaryColor()),
+      //         //   color: mAppThemeProvider.primaryColor,
       //         // ),
       //       ),
       //     ),
@@ -2810,16 +2766,14 @@ class CommonUtil {
                     isSelected: true,
                     onPress: () => launchURL(APP_STORE_URL),
                     title: btnLabel,
-                    titleColor: Color(getMyPrimaryColor()),
+                    titleColor: mAppThemeProvider.primaryColor,
                   ),
                   if (!isForceUpdate)
                     FlatButtonWidget(
                       bgColor: Colors.transparent,
                       isSelected: true,
                       title: btnLabelCancel,
-                      titleColor: Color(
-                        getMyPrimaryColor(),
-                      ),
+                      titleColor: mAppThemeProvider.primaryColor,
                       onPress: () => Navigator.pop(context),
                     ),
                   /*else
@@ -2843,14 +2797,14 @@ class CommonUtil {
                       isSelected: true,
                       onPress: () => launchURL(PLAY_STORE_URL),
                       title: btnLabel,
-                      titleColor: Color(getMyPrimaryColor()),
+                      titleColor: mAppThemeProvider.primaryColor,
                     ),
                     if (!isForceUpdate)
                       FlatButtonWidget(
                         bgColor: Colors.transparent,
                         isSelected: true,
                         title: btnLabelCancel,
-                        titleColor: Color(getMyPrimaryColor()),
+                        titleColor: mAppThemeProvider.primaryColor,
                         onPress: () => Navigator.pop(context),
                       )
                     /*else
@@ -2899,15 +2853,13 @@ class CommonUtil {
                       }
                     },
                     title: btnLabel,
-                    titleColor: Color(getMyPrimaryColor()),
+                    titleColor: mAppThemeProvider.primaryColor,
                   ),
                   FlatButtonWidget(
                     bgColor: Colors.transparent,
                     isSelected: true,
                     title: btnLabelCancel,
-                    titleColor: Color(
-                      getMyPrimaryColor(),
-                    ),
+                    titleColor: mAppThemeProvider.primaryColor,
                     onPress: () => Get.back(),
                   ),
                   /*else
@@ -2932,13 +2884,13 @@ class CommonUtil {
                       }
                     },
                     title: btnLabel,
-                    titleColor: Color(getMyPrimaryColor()),
+                    titleColor: mAppThemeProvider.primaryColor,
                   ),
                   FlatButtonWidget(
                     bgColor: Colors.transparent,
                     isSelected: true,
                     title: btnLabelCancel,
-                    titleColor: Color(getMyPrimaryColor()),
+                    titleColor: mAppThemeProvider.primaryColor,
                     onPress: () => Get.back(),
                   ),
                 ],
@@ -3425,17 +3377,13 @@ class CommonUtil {
                           },
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(
-                              color: Color(
-                                getMyPrimaryColor(),
-                              ),
+                              color: mAppThemeProvider.primaryColor,
                             ),
                           ),
                           child: Text(
                             'cancel'.toUpperCase(),
                             style: TextStyle(
-                              color: Color(
-                                getMyPrimaryColor(),
-                              ),
+                              color: mAppThemeProvider.primaryColor,
                               fontSize: 10,
                             ),
                           ),
@@ -3444,7 +3392,7 @@ class CommonUtil {
                           width: 10.0.h,
                         ),
                         OutlinedButton(
-                          //hoverColor: Color(getMyPrimaryColor()),
+                          //hoverColor: mAppThemeProvider.primaryColor,
                           onPressed: () async {
                             // open profile page
                             Navigator.of(context).pop();
@@ -3466,16 +3414,14 @@ class CommonUtil {
                           },
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(
-                              color: Color(
-                                getMyPrimaryColor(),
-                              ),
+                              color: mAppThemeProvider.primaryColor,
                             ),
                           ),
-                          //hoverColor: Color(getMyPrimaryColor()),
+                          //hoverColor: mAppThemeProvider.primaryColor,
                           child: Text(
                             'complete profile'.toUpperCase(),
                             style: TextStyle(
-                              color: Color(getMyPrimaryColor()),
+                              color: mAppThemeProvider.primaryColor,
                               fontSize: 10,
                             ),
                           ),
@@ -3535,17 +3481,13 @@ class CommonUtil {
                           },
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(
-                              color: Color(
-                                getMyPrimaryColor(),
-                              ),
+                              color: mAppThemeProvider.primaryColor,
                             ),
                           ),
                           child: Text(
                             'no'.toUpperCase(),
                             style: TextStyle(
-                              color: Color(
-                                getMyPrimaryColor(),
-                              ),
+                              color: mAppThemeProvider.primaryColor,
                               fontSize: 10,
                             ),
                           ),
@@ -3554,7 +3496,7 @@ class CommonUtil {
                           width: 10.0.h,
                         ),
                         OutlinedButton(
-                          //hoverColor: Color(getMyPrimaryColor()),
+                          //hoverColor: mAppThemeProvider.primaryColor,
                           onPressed: () async {
                             CommonUtil.showLoadingDialog(
                                 context, _keyLoader, variable.Please_Wait);
@@ -3597,16 +3539,14 @@ class CommonUtil {
                           },
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(
-                              color: Color(
-                                getMyPrimaryColor(),
-                              ),
+                              color: mAppThemeProvider.primaryColor,
                             ),
                           ),
-                          //hoverColor: Color(getMyPrimaryColor()),
+                          //hoverColor: mAppThemeProvider.primaryColor,
                           child: Text(
                             'yes'.toUpperCase(),
                             style: TextStyle(
-                              color: Color(getMyPrimaryColor()),
+                              color: mAppThemeProvider.primaryColor,
                               fontSize: 10,
                             ),
                           ),
@@ -3677,7 +3617,7 @@ class CommonUtil {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 OutlinedButton(
-                  //hoverColor: Color(getMyPrimaryColor()),
+                  //hoverColor: mAppThemeProvider.primaryColor,
                   onPressed: () async {
                     // open profile page
                     if (feeZero!) {
@@ -3790,12 +3730,10 @@ class CommonUtil {
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(
-                      color: Color(
-                        CommonUtil().getMyPrimaryColor(),
-                      ),
+                      color: mAppThemeProvider.primaryColor,
                     ),
                   ),
-                  //hoverColor: Color(getMyPrimaryColor()),
+                  //hoverColor: mAppThemeProvider.primaryColor,
                   child: Text(
                     'accept'.toUpperCase(),
                     style: TextStyle(
@@ -3815,17 +3753,13 @@ class CommonUtil {
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(
-                      color: Color(
-                        CommonUtil().getMyPrimaryColor(),
-                      ),
+                      color: mAppThemeProvider.primaryColor,
                     ),
                   ),
                   child: Text(
                     'Reject'.toUpperCase(),
                     style: TextStyle(
-                      color: Color(
-                        CommonUtil().getMyPrimaryColor(),
-                      ),
+                      color: mAppThemeProvider.primaryColor,
                       fontSize: 13,
                     ),
                   ),
@@ -3970,17 +3904,13 @@ class CommonUtil {
                             },
                             style: OutlinedButton.styleFrom(
                               side: BorderSide(
-                                color: Color(
-                                  getMyPrimaryColor(),
-                                ),
+                                color: mAppThemeProvider.primaryColor,
                               ),
                             ),
                             child: Text(
                               'no'.toUpperCase(),
                               style: TextStyle(
-                                color: Color(
-                                  getMyPrimaryColor(),
-                                ),
+                                color: mAppThemeProvider.primaryColor,
                                 fontSize: 10,
                               ),
                             ),
@@ -3989,7 +3919,7 @@ class CommonUtil {
                             width: 10.0.h,
                           ),
                           OutlinedButton(
-                            //hoverColor: Color(getMyPrimaryColor()),
+                            //hoverColor: mAppThemeProvider.primaryColor,
                             onPressed: () async {
                               Navigator.pop(context);
                               /*_dialogForSubscribePayment(
@@ -4040,16 +3970,14 @@ class CommonUtil {
                             },
                             style: OutlinedButton.styleFrom(
                               side: BorderSide(
-                                color: Color(
-                                  getMyPrimaryColor(),
-                                ),
+                                color: mAppThemeProvider.primaryColor,
                               ),
                             ),
-                            //hoverColor: Color(getMyPrimaryColor()),
+                            //hoverColor: mAppThemeProvider.primaryColor,
                             child: Text(
                               'yes'.toUpperCase(),
                               style: TextStyle(
-                                color: Color(getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                                 fontSize: 10,
                               ),
                             ),
@@ -4110,17 +4038,13 @@ class CommonUtil {
                           },
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(
-                              color: Color(
-                                getMyPrimaryColor(),
-                              ),
+                              color: mAppThemeProvider.primaryColor,
                             ),
                           ),
                           child: Text(
                             'cancel'.toUpperCase(),
                             style: TextStyle(
-                              color: Color(
-                                getMyPrimaryColor(),
-                              ),
+                              color: mAppThemeProvider.primaryColor,
                               fontSize: 10,
                             ),
                           ),
@@ -4129,7 +4053,7 @@ class CommonUtil {
                           width: 10.0.h,
                         ),
                         OutlinedButton(
-                          //hoverColor: Color(getMyPrimaryColor()),
+                          //hoverColor: mAppThemeProvider.primaryColor,
                           onPressed: () async {
                             CommonUtil.showLoadingDialog(
                                 context, _keyLoader, variable.Please_Wait);
@@ -4173,16 +4097,14 @@ class CommonUtil {
                           },
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(
-                              color: Color(
-                                getMyPrimaryColor(),
-                              ),
+                              color: mAppThemeProvider.primaryColor,
                             ),
                           ),
-                          //hoverColor: Color(getMyPrimaryColor()),
+                          //hoverColor: mAppThemeProvider.primaryColor,
                           child: Text(
                             'confirm'.toUpperCase(),
                             style: TextStyle(
-                              color: Color(getMyPrimaryColor()),
+                              color: mAppThemeProvider.primaryColor,
                               fontSize: 10,
                             ),
                           ),
@@ -4646,11 +4568,9 @@ class CommonUtil {
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                             side: BorderSide(
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor()))),
+                                                color: mAppThemeProvider.primaryColor)),
                                         backgroundColor: Colors.transparent,
-                                        foregroundColor: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        foregroundColor: mAppThemeProvider.primaryColor,
                                         padding: EdgeInsets.all(8),
                                       ),
                                       onPressed: () {
@@ -4671,11 +4591,9 @@ class CommonUtil {
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                             side: BorderSide(
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor()))),
+                                                color: mAppThemeProvider.primaryColor)),
                                         backgroundColor: Colors.transparent,
-                                        foregroundColor: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        foregroundColor: mAppThemeProvider.primaryColor,
                                         padding: EdgeInsets.all(8),
                                       ),
                                       onPressed: () {
@@ -5235,7 +5153,7 @@ class CommonUtil {
       //       child: Text(
       //         "ok",
       //         // style: TextStyle(
-      //         //   color: Color(getMyPrimaryColor()),
+      //         //   color: mAppThemeProvider.primaryColor,
       //         // ),
       //       ),
       //     ),
@@ -5278,7 +5196,7 @@ class CommonUtil {
               style: TextStyle(
                   fontSize: CommonUtil().isTablet! ? 22.0.sp : null,
                   color: isQurhome
-                      ? Color(CommonUtil().getQurhomePrimaryColor())
+                      ? mAppThemeProvider.qurHomePrimaryColor
                       : mAppThemeProvider.primaryColor),
             ),
             // To display the title it is optional
@@ -5296,7 +5214,7 @@ class CommonUtil {
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     foregroundColor: isQurhome
-                        ? Color(CommonUtil().getQurhomePrimaryColor())
+                        ? mAppThemeProvider.qurHomePrimaryColor
                         : mAppThemeProvider.primaryColor,
                   ),
                   onPressed: () {
@@ -5311,7 +5229,7 @@ class CommonUtil {
                   style: ElevatedButton.styleFrom(
                     // FlatButton widget is used to make a text to work like a button
                     foregroundColor: isQurhome
-                        ? Color(CommonUtil().getQurhomePrimaryColor())
+                        ? mAppThemeProvider.qurHomePrimaryColor
                         : mAppThemeProvider.primaryColor,
                   ),
                   onPressed: onPressedYes,
@@ -5713,7 +5631,7 @@ class CommonUtil {
                           'Enter Manually',
                           style: TextStyle(
                               color:
-                                  Color(CommonUtil().getQurhomePrimaryColor()),
+                                  mAppThemeProvider.qurHomePrimaryColor,
                               fontSize: 16.sp),
                         ),
                         style: ButtonStyle(
@@ -5735,7 +5653,7 @@ class CommonUtil {
                       ),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
-                            Color(CommonUtil().getQurhomePrimaryColor())),
+                            mAppThemeProvider.qurHomePrimaryColor),
                       ),
                       onPressed: () {
                         onPressCancel!();
@@ -5872,7 +5790,7 @@ class CommonUtil {
                                   width: 0.2.sw,
                                   margin: EdgeInsets.only(top: 20.h),
                                   decoration: BoxDecoration(
-                                      color: Color(getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                       borderRadius: BorderRadius.circular(5)),
                                 ),
                                 SizedBox(
@@ -6818,7 +6736,7 @@ class CommonUtil {
               child: Text(strCamelNo,
                   style: TextStyle(
                       color: isQurhome
-                          ? Color(CommonUtil().getQurhomePrimaryColor())
+                          ? mAppThemeProvider.qurHomePrimaryColor
                           : mAppThemeProvider.primaryColor)),
               onPressed: () {
                 pressNo!();
@@ -6828,7 +6746,7 @@ class CommonUtil {
               child: Text(strCamelYes,
                   style: TextStyle(
                       color: isQurhome
-                          ? Color(CommonUtil().getQurhomePrimaryColor())
+                          ? mAppThemeProvider.qurHomePrimaryColor
                           : mAppThemeProvider.primaryColor)),
               onPressed: () {
                 pressYes!();
@@ -6925,7 +6843,7 @@ class CommonUtil {
           titlePadding: EdgeInsets.zero,
           title: Container(
             color: (PreferenceUtil.getIfQurhomeisDefaultUI())
-                ? Color(CommonUtil().getQurhomePrimaryColor())
+                ? mAppThemeProvider.qurHomePrimaryColor
                 : mAppThemeProvider.primaryColor,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

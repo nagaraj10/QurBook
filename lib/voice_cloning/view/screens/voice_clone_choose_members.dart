@@ -9,6 +9,7 @@ import '../../../../constants/fhb_constants.dart' as fhb_constants;
 import '../../../../constants/variable_constant.dart';
 import '../../../../src/utils/screenutils/size_extensions.dart';
 import '../../../constants/router_variable.dart';
+import '../../../main.dart';
 import '../../../more_menu/screens/terms_and_conditon.dart';
 import '../../../src/utils/colors_utils.dart';
 import '../../model/voice_clone_shared_by_users.dart';
@@ -183,9 +184,7 @@ class _VoiceCloningChooseMemberState extends State<VoiceCloningChooseMember> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color: isFamilyMembersSelected()
-                        ? Color(
-                            CommonUtil().getMyPrimaryColor(),
-                          )
+                        ? mAppThemeProvider.primaryColor
                         : ColorUtils.greycolor,
                   ),
                   child: Padding(

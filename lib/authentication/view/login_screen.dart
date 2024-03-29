@@ -67,9 +67,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
         key: _loginKey,
         child: Theme(
           data: Theme.of(context).copyWith(
-            primaryColor: Color(
-              CommonUtil().getMyPrimaryColor(),
-            ),
+            primaryColor: mAppThemeProvider.primaryColor,
           ),
           child: Container(
             height: height,
@@ -209,7 +207,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                 ],
                 gradient: LinearGradient(end: Alignment.centerRight, colors: [
                   mAppThemeProvider.primaryColor,
-                  Color(CommonUtil().getMyGredientColor())
+                  mAppThemeProvider.gradientColor
                 ])),
             child: Text(
               strNext,
@@ -300,7 +298,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
 //                  Color(0xff138fcf),
 //                  Color(0xff138fcf),
                   mAppThemeProvider.primaryColor,
-                  Color(CommonUtil().getMyGredientColor())
+                  mAppThemeProvider.gradientColor
                 ])),
             child: Text(
               strNext,

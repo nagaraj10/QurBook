@@ -319,7 +319,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                         backgroundColor: controller.isLoading.value
                             ? Colors.black45
                             : PreferenceUtil.getIfQurhomeisAcive()
-                                ? Color(CommonUtil().getQurhomeGredientColor())
+                                ? mAppThemeProvider.qurhomeGredientColor
                                 : mAppThemeProvider.primaryColor,
                         child: Icon(
                           (controller.currentPlayingConversation != null &&
@@ -477,7 +477,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                               Icons.home,
                               size: 32.sp,
                               color:
-                                  Color(CommonUtil().getQurhomePrimaryColor()),
+                                  mAppThemeProvider.qurHomePrimaryColor,
                             ),
                           ),
                           SizedBox(width: 12.w),
@@ -499,9 +499,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
           1.0,
         ),
         child: Container(
-          color: Color(
-            CommonUtil().getQurhomeGredientColor(),
-          ),
+          color: mAppThemeProvider.qurhomeGredientColor,
           height: 1.0,
         ),
       ),
@@ -540,7 +538,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
               size: 32.sp,
               color: controller.isMuted.value
                   ? Colors.grey
-                  : Color(CommonUtil().getQurhomePrimaryColor()),
+                  : mAppThemeProvider.qurHomePrimaryColor,
             ),
           )
         ],
@@ -620,7 +618,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
           width: 35.0.sp,
           height: 35.0.sp,
           color: PreferenceUtil.getIfQurhomeisAcive()
-              ? Color(CommonUtil().getQurhomePrimaryColor())
+              ? mAppThemeProvider.qurHomePrimaryColor
               : Colors.white,
         ),
       ),

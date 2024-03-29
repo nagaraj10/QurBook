@@ -10,6 +10,7 @@ import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../model/PlanListModel.dart';
 import 'planDetailsView.dart';
 import '../viewModel/planViewModel.dart';
@@ -399,14 +400,12 @@ class _MyPlanState extends State<PlanList> {
                                       CommonUtil.CURRENCY + planList[i].price!,
                                   fontsize: 16.0.sp,
                                   fontWeight: FontWeight.w500,
-                                  colors: Color(
-                                      CommonUtil().getMyPrimaryColor())),
+                                  colors: mAppThemeProvider.primaryColor),
                               replacement: TextWidget(
                                   text: FREE,
                                   fontsize: 16.0.sp,
                                   fontWeight: FontWeight.w500,
-                                  colors: Color(
-                                      CommonUtil().getMyPrimaryColor())),
+                                  colors: mAppThemeProvider.primaryColor),
                             )
                           else
                             Container(),
@@ -426,8 +425,7 @@ class _MyPlanState extends State<PlanList> {
                                         backgroundColor: Colors.transparent,
                                         foregroundColor:
                                             planList[i].isSubscribed == '0'
-                                                ? Color(CommonUtil()
-                                                    .getMyPrimaryColor())
+                                                ? mAppThemeProvider.primaryColor
                                                 : Colors.grey,
                                         padding: EdgeInsets.all(
                                           8.0.sp,
@@ -498,8 +496,7 @@ class _MyPlanState extends State<PlanList> {
                                           backgroundColor: Colors.transparent,
                                           foregroundColor:
                                               planList[i].isSubscribed == '0'
-                                                  ? Color(CommonUtil()
-                                                      .getMyPrimaryColor())
+                                                  ? mAppThemeProvider.primaryColor
                                                   : Colors.grey,
                                           padding: EdgeInsets.all(
                                             8.0.sp,

@@ -142,7 +142,7 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
               IconButton(
                 iconSize: 62.sp,
                 color: (PreferenceUtil.getIfQurhomeisAcive())
-                    ? Color(CommonUtil().getQurhomePrimaryColor())
+                    ? mAppThemeProvider.qurHomePrimaryColor
                     : mAppThemeProvider.primaryColor,
                 onPressed: () {
                   isPlaying ? onPausePlayerPressed() : onStartPlayerPressed();
@@ -165,7 +165,7 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
                         height: 30.0.h,
                         child: Slider(
                           activeColor: (PreferenceUtil.getIfQurhomeisAcive())
-                              ? Color(CommonUtil().getQurhomePrimaryColor())
+                              ? mAppThemeProvider.qurHomePrimaryColor
                               : mAppThemeProvider.primaryColor,
                           inactiveColor: Colors.grey,
                           value: sliderCurrentPosition,

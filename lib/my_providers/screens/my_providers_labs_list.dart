@@ -7,6 +7,7 @@ import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
+import '../../main.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/MyProvider/view/CommonWidgets.dart';
@@ -129,8 +130,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                                                       CommonUtil().isTablet!
                                                           ? tabHeader1
                                                           : mobileHeader1,
-                                                  color: Color(CommonUtil()
-                                                      .getMyPrimaryColor())),
+                                                  color: mAppThemeProvider.primaryColor),
                                             ),
                                           ))
                                       : Container(

@@ -2381,7 +2381,7 @@ makeApiRequest is used to update the data with latest data
                             // This sets the color using hexadecimal representation (0xFFd6c7f4)
                             color: Color(0xFFd6c7f4),
                             /*color: PreferenceUtil.getIfQurhomeisAcive()
-                                ? Color(CommonUtil().getQurhomeGredientColor()).withOpacity(0.2)
+                                ? mAppThemeProvider.qurhomeGredientColor.withOpacity(0.2)
                                 : mAppThemeProvider.primaryColor.withOpacity(0.2),*/
                           ),
                           // Text displaying 'Listening' and the countdown seconds
@@ -2614,7 +2614,7 @@ makeApiRequest is used to update the data with latest data
                           // This sets the color using hexadecimal representation (0xFFd6c7f4)
                           color: Color(0xFFd6c7f4),
                           /*color: PreferenceUtil.getIfQurhomeisAcive()
-                              ? Color(CommonUtil().getQurhomeGredientColor()).withOpacity(0.2)
+                              ? mAppThemeProvider.qurhomeGredientColor.withOpacity(0.2)
                               : mAppThemeProvider.primaryColor.withOpacity(0.2),*/
                         ),
                         Image.asset(

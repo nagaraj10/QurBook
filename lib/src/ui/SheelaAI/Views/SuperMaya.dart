@@ -142,7 +142,7 @@ class _SuperMayaState extends State<SuperMaya> {
                                   gradient: LinearGradient(
                                     colors: <Color>[
                                       mAppThemeProvider.primaryColor,
-                                      Color(CommonUtil().getMyGredientColor()),
+                                      mAppThemeProvider.gradientColor,
                                     ],
                                   ),
                                   onPressed: () {

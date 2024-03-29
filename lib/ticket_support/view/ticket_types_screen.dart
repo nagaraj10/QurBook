@@ -257,7 +257,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                 gradient: LinearGradient(
                   colors: [
                     mAppThemeProvider.primaryColor,
-                    Color(CommonUtil().getMyGredientColor())
+                    mAppThemeProvider.gradientColor
                   ],
                 ),
                 borderRadius: const BorderRadius.all(

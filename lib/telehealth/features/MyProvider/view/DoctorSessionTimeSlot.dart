@@ -9,6 +9,7 @@ import '../../../../common/errors_widget.dart';
 import '../../../../constants/fhb_parameters.dart';
 import '../../../../constants/variable_constant.dart';
 import '../../../../landing/service/landing_service.dart';
+import '../../../../main.dart';
 import '../../../../my_providers/models/Doctors.dart';
 import '../../../../my_providers/models/GetDoctorsByIdModel.dart';
 import '../../../../src/utils/screenutils/size_extensions.dart';

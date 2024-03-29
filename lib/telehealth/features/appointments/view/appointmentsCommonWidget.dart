@@ -435,7 +435,7 @@ class AppointmentsCommonWidget {
             gradient: LinearGradient(
               colors: <Color>[
                 mAppThemeProvider.primaryColor,
-                Color(CommonUtil().getMyGredientColor())
+                mAppThemeProvider.gradientColor
               ],
             )),
         height: 40.0.h,

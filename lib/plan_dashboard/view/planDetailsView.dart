@@ -9,6 +9,7 @@ import '../../common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart';
+import '../../main.dart';
 import '../../plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
@@ -349,8 +350,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                                                 ? '$packageDuration days'
                                                 : '-',
                                             style: TextStyle(
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor()),
+                                                color: mAppThemeProvider.primaryColor,
                                                 fontSize: 16.sp,
                                                 fontWeight: FontWeight.w600),
                                           ),
@@ -372,8 +372,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                                                 ? '${CommonUtil.CURRENCY}$price'
                                                 : '-',
                                             style: TextStyle(
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor()),
+                                                color: mAppThemeProvider.primaryColor,
                                                 fontSize: 16.sp,
                                                 fontWeight: FontWeight.w600),
                                           ),
@@ -438,7 +437,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             OutlinedButton(
-                              //hoverColor: Color(getMyPrimaryColor()),
+                              //hoverColor: mAppThemeProvider.primaryColor,
                               onPressed:
                                   */ /*isDisable
                           ? null
@@ -731,7 +730,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                                       )
                                     : Colors.grey,
                               ),
-                              //hoverColor: Color(getMyPrimaryColor()),
+                              //hoverColor: mAppThemeProvider.primaryColor,
                               child: Text(
                                 getText(),
                                 style: TextStyle(
@@ -752,18 +751,16 @@ class PlanDetail extends State<MyPlanDetailView> {
                               width: 10,
                             ),
                             OutlinedButton(
-                              //hoverColor: Color(getMyPrimaryColor()),
+                              //hoverColor: mAppThemeProvider.primaryColor,
                               onPressed: () async {
                                 // open profile page
                                 //Navigator.of(context).pop();
                                 Navigator.of(context).pop();
                               },
                               borderSide: BorderSide(
-                                color: Color(
-                                  CommonUtil().getMyPrimaryColor(),
-                                ),
+                                color: mAppThemeProvider.primaryColor,
                               ),
-                              //hoverColor: Color(getMyPrimaryColor()),
+                              //hoverColor: mAppThemeProvider.primaryColor,
                               child: Text(
                                 'cancel'.toUpperCase(),
                                 style: TextStyle(

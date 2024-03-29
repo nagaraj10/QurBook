@@ -167,7 +167,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
             decoration: BoxDecoration(
                 gradient: LinearGradient(colors: [
               mAppThemeProvider.primaryColor,
-              Color(CommonUtil().getMyGredientColor())
+              mAppThemeProvider.gradientColor
             ])),
             child: Padding(
               padding: EdgeInsets.all(5),

@@ -27,6 +27,7 @@ import '../../global_search/model/Data.dart';
 import '../../global_search/model/GlobalSearch.dart';
 import '../../landing/controller/landing_screen_controller.dart';
 import '../../landing/view_model/landing_view_model.dart';
+import '../../main.dart';
 import '../../my_family/bloc/FamilyListBloc.dart';
 import '../../widgets/GradientAppBar.dart';
 import '../blocs/Category/CategoryListBlock.dart';
@@ -771,7 +772,7 @@ class _CustomTabsState extends State<CustomTabView>
             gradient: LinearGradient(
               colors: <Color>[
                 mAppThemeProvider.primaryColor,
-                Color(CommonUtil().getMyGredientColor())
+                mAppThemeProvider.gradientColor
               ],
               stops: const [
                 0.3,

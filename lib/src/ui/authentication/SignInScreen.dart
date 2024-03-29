@@ -185,7 +185,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 colors: <Color>[
                   //TODO chnage theme
                   mAppThemeProvider.primaryColor,
-                  Color(CommonUtil().getMyGredientColor()),
+                  mAppThemeProvider.gradientColor,
                 ],
               ),
               onPressed: () {

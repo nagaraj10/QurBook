@@ -18,6 +18,8 @@ import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../main.dart';
+
 class ProviderDietPlans extends StatefulWidget {
   @override
   _ProviderDietPlans createState() => _ProviderDietPlans();

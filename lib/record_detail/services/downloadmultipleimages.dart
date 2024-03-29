@@ -9,6 +9,7 @@ import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/widgets/ShowImage.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../src/model/Health/asgard/health_record_collection.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../src/utils/screenutils/size_extensions.dart';

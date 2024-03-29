@@ -65,9 +65,7 @@ class RecordInfoCard {
                                     metaInfo?.healthRecordCategory?.logo ?? '',
                                     height: 30,
                                     width: 30,
-                                    color: Color(
-                                      CommonUtil().getMyPrimaryColor(),
-                                    ))),
+                                    color: mAppThemeProvider.primaryColor)),
                             width: CommonUtil().isTablet!
                                 ? imageTabHeader
                                 : Constants.imageMobileHeader,
@@ -793,9 +791,7 @@ class RecordInfoCard {
         height: 30.0.h,
         width: 30.0.h,
         errorBuilder: (context, error, stackTrace) => const SizedBox(),
-        color: Color(
-          CommonUtil().getMyPrimaryColor(),
-        ),
+        color: mAppThemeProvider.primaryColor,
       ),
     ));
   }

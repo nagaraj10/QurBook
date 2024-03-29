@@ -5,6 +5,8 @@ import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 
+import '../../../../main.dart';
+
 class GridViewNew extends StatefulWidget {
 
   List<Slots> dateTimingsSlot;

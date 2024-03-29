@@ -268,8 +268,7 @@ class _VerifyPatientState extends State<VerifyPatient>
                                     TextSpan(
                                       text: otpViewModel!.timeForResend,
                                       style: TextStyle(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        color: mAppThemeProvider.primaryColor,
                                         fontSize: 15.0.sp,
                                         fontWeight: FontWeight.w600,
                                       ),

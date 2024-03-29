@@ -9,6 +9,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
 import 'package:provider/provider.dart';
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 
 class UserProfileImage extends StatelessWidget {

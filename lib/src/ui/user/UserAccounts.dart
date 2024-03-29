@@ -15,6 +15,7 @@ import '../../../constants/router_variable.dart' as router;
 import '../../../constants/variable_constant.dart' as variable;
 import '../../../landing/view/landing_arguments.dart';
 import '../../../landing/view_model/landing_view_model.dart';
+import '../../../main.dart';
 import '../../../myPlan/view/myPlanList.dart';
 import '../../../my_family/screens/MyFamily.dart';
 import '../../../my_providers/screens/my_provider.dart';
@@ -122,7 +123,7 @@ class _UserAccountsState extends State<UserAccounts>
                 gradient: LinearGradient(
                   colors: [
                     mAppThemeProvider.primaryColor,
-                    Color(CommonUtil().getMyGredientColor()),
+                    mAppThemeProvider.gradientColor,
                   ],
                   stops: [0.5, 1.0],
                 ),

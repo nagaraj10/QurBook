@@ -33,6 +33,8 @@ import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsLis
 import 'package:myfhb/telehealth/features/appointments/viewModel/resheduleAppointmentViewModel.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../main.dart';
+
 class GetTimeSlots extends StatelessWidget {
   SlotsResultModel? dateSlotTimingsObj;
   final List<Doctors?>? docs;

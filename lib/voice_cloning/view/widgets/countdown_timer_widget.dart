@@ -90,9 +90,7 @@ class _VoiceCloningCountDownWidgetState
                         strokeWidth: 10,
                         value: mControllerWatch.progressValue,
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          Color(
-                            CommonUtil().getMyPrimaryColor(),
-                          ),
+                          mAppThemeProvider.primaryColor,
                         ),
                         backgroundColor: Colors.white,
                       ),

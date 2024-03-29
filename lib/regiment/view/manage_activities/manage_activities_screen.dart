@@ -7,6 +7,7 @@ import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/regiment/view/widgets/regiment_activities_card.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import '../../../common/CommonUtil.dart';
+import '../../../main.dart';
 import '../../../reminders/QurPlanReminders.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../models/regiment_data_model.dart';

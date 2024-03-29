@@ -7,6 +7,8 @@ import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
+import '../../../main.dart';
+
 class CalendarMonth extends StatefulWidget {
   String? patientId;
   CalendarMonth({this.patientId});
@@ -171,7 +173,7 @@ class _HomePageState extends State<CalendarMonth> {
                   margin: const EdgeInsets.all(9.0),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                      color: Color(CommonUtil().getQurhomePrimaryColor()),
+                      color: mAppThemeProvider.qurHomePrimaryColor,
                       borderRadius: BorderRadius.circular(20.0)),
                   child: Text(
                     date.day.toString(),
@@ -228,7 +230,7 @@ class _HomePageState extends State<CalendarMonth> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(CommonUtil().getQurhomePrimaryColor()),
+          backgroundColor: mAppThemeProvider.qurHomePrimaryColor,
           title: Text(
             CommonUtil().CHOOSE_DATE,
             style: TextStyle(

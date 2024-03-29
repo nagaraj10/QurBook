@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../common/CommonUtil.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../utils/screenutils/size_extensions.dart';
 
 class NetworkScreen extends StatelessWidget {

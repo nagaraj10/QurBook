@@ -139,7 +139,7 @@ class _ClaimListState extends State<ClaimList> {
                       end: Alignment.centerRight,
                       colors: <Color>[
                     mAppThemeProvider.primaryColor,
-                    Color(CommonUtil().getMyGredientColor())
+                    mAppThemeProvider.gradientColor
                   ],
                       stops: [
                     0.3,
@@ -764,9 +764,7 @@ class _ClaimListState extends State<ClaimList> {
         content: Text(
           msg,
         ),
-        backgroundColor: Color(
-          CommonUtil().getMyPrimaryColor(),
-        ),
+        backgroundColor: mAppThemeProvider.primaryColor,
         action: SnackBarAction(
           label: 'Dismiss',
           onPressed: () {

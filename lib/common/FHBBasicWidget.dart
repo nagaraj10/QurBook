@@ -84,7 +84,7 @@ class FHBBasicWidget {
       gradient: LinearGradient(
         colors: <Color>[
           mAppThemeProvider.primaryColor,
-          Color(CommonUtil().getMyGredientColor())
+          mAppThemeProvider.gradientColor
         ],
       ),
       onPressed: () {
@@ -342,7 +342,7 @@ class FHBBasicWidget {
                   : PreferenceUtil.getIfQurhomeisAcive()
                       ? CommonUtil.isUSRegion()
                           ? mAppThemeProvider.primaryColor
-                          : Color(CommonUtil().getQurhomeGredientColor())
+                          : mAppThemeProvider.qurhomeGredientColor
                       : mAppThemeProvider.primaryColor,
               child: Center(
                 child: getFirstLastNameText(myProfile,
@@ -494,9 +494,7 @@ class FHBBasicWidget {
             child: Icon(
               Icons.mic,
               size: 40.0.sp,
-              color: Color(
-                CommonUtil().getMyPrimaryColor(),
-              ),
+              color: mAppThemeProvider.primaryColor,
             ),
           ),
         ),
@@ -661,7 +659,7 @@ class FHBBasicWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(colors: [
                       mAppThemeProvider.primaryColor,
-                      Color(CommonUtil().getMyGredientColor())
+                      mAppThemeProvider.gradientColor
                     ]),
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: <BoxShadow>[
@@ -740,7 +738,7 @@ class FHBBasicWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(colors: [
                       mAppThemeProvider.primaryColor,
-                      Color(CommonUtil().getMyGredientColor())
+                      mAppThemeProvider.gradientColor
                     ]),
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: <BoxShadow>[

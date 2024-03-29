@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
+import '../../main.dart';
+
 class ShapesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -32,7 +34,7 @@ class ShapesPainter extends CustomPainter {
     final Gradient gradient = LinearGradient(colors: <Color>[
       //Colors.deepPurple[600],
       mAppThemeProvider.primaryColor,
-      Color(CommonUtil().getMyGredientColor()),
+      mAppThemeProvider.gradientColor,
     ], stops: [
       0.5,
       1.0

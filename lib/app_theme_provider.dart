@@ -10,9 +10,7 @@ class AppThemeProvider extends ChangeNotifier {
   static const THEME_STATUS = "THEME_STATUS";
   late  Color _primaryColor;
   late  Color _gradientColor;
-  /// This primary and gradient color used for the QurHome application.
-  static const Color qurHomePrimaryColor = Color(0xFFFB5422);
-  static const Color qurhomeGredientColor = Color(0xFFFd7a2b);
+
   late EnumAppThemeType _currentEnumAppThemeType;
 
   EnumAppThemeType get currentEnumAppThemeType => _currentEnumAppThemeType;
@@ -28,8 +26,33 @@ class AppThemeProvider extends ChangeNotifier {
     getPreferences();
   }
 
+/// primary and secondary color of the app.
   Color get primaryColor => _primaryColor;
   Color get gradientColor => _gradientColor;
+
+  /// This primary and gradient color used for the QurHome application.
+ Color get qurHomePrimaryColor => Color(0xFFFB5422);
+ Color get qurhomeGredientColor => Color(0xFFFd7a2b);
+ Color get qurHomeCardColor => Color(0xFFF6000F);
+
+ ///Gradients
+  LinearGradient getQurhomeLinearGradient() => LinearGradient(
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+      colors: [
+        qurHomeCardColor,
+        qurhomeGredientColor
+      ],
+      stops: [
+        0.1,
+        1.0,
+      ],
+    );
+
+  ///Common Primary color
+  Color getCommonPrimaryColorQurHomeBook() => (PreferenceUtil.getIfQurhomeisAcive())
+        ? qurHomePrimaryColor
+        : primaryColor;
 
   //Switching themes in the flutter apps
   set appThemeType(EnumAppThemeType themeType) {

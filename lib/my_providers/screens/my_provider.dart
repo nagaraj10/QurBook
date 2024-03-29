@@ -5,6 +5,7 @@ import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/common_circular_indicator.dart';
 import '../../constants/router_variable.dart' as router;
+import '../../main.dart';
 import '../../search_providers/models/search_arguments.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../bloc/providers_block.dart';

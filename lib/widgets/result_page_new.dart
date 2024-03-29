@@ -8,6 +8,7 @@ import '../constants/fhb_constants.dart';
 import '../constants/fhb_parameters.dart';
 import '../constants/router_variable.dart' as router;
 import '../landing/view/landing_arguments.dart';
+import '../main.dart';
 import '../regiment/view_model/regiment_view_model.dart';
 import '../src/utils/screenutils/size_extensions.dart';
 import 'checkout_page.dart';

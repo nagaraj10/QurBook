@@ -11,6 +11,7 @@ import '../../common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
 import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart';
+import '../../main.dart';
 import '../../plan_dashboard/view/plan_pdf_viewer.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
@@ -378,7 +379,7 @@ class PlanDetail extends State<MyPlanDetail> {
                     width: 10,
                   ),
                   OutlinedButton(
-                    //hoverColor: Color(getMyPrimaryColor()),
+                    //hoverColor: mAppThemeProvider.primaryColor,
                     onPressed: () async {
                       if (isExpired == '1') {
                         Navigator.of(context).pop();
@@ -397,12 +398,10 @@ class PlanDetail extends State<MyPlanDetail> {
                     },
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(
-                        color: Color(
-                          CommonUtil().getMyPrimaryColor(),
-                        ),
+                        color: mAppThemeProvider.primaryColor,
                       ),
                     ),
-                    //hoverColor: Color(getMyPrimaryColor()),
+                    //hoverColor: mAppThemeProvider.primaryColor,
                     child: Text(
                       isExpired == '1'
                           ? 'cancel'.toUpperCase()

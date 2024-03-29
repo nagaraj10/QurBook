@@ -4,6 +4,7 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import '../../claim/model/members/MembershipBenefitListModel.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as constants;
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
 import 'get_membership_data_widget.dart';
@@ -32,9 +33,7 @@ class _MembershipBenefitListScreenState
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
-          backgroundColor: Color(
-            CommonUtil().getMyPrimaryColor(),
-          ),
+          backgroundColor: mAppThemeProvider.primaryColor,
           elevation: 0,
           leading: IconWidget(
             icon: Icons.arrow_back_ios,

@@ -11,6 +11,7 @@ import '../../common/CommonUtil.dart';
 import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../model/PlanListModel.dart';
 import 'planDetailsView.dart';
 import 'planList.dart';
@@ -611,15 +612,13 @@ class _CategoryState extends State<CategoryList> {
                                         text: FREE,
                                         fontsize: 16.0.sp,
                                         fontWeight: FontWeight.w500,
-                                        colors: Color(
-                                            CommonUtil().getMyPrimaryColor())),
+                                        colors: mAppThemeProvider.primaryColor),
                                     child: TextWidget(
                                         text: CommonUtil.CURRENCY +
                                             planListResult[inx.index].price!,
                                         fontsize: 16.0.sp,
                                         fontWeight: FontWeight.w500,
-                                        colors: Color(CommonUtil()
-                                            .getMyPrimaryColor())),
+                                        colors: mAppThemeProvider.primaryColor),
                                   )
                                 : Container(),
                             SizedBox(height: 8.h),

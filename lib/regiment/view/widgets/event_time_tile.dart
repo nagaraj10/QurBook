@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import '../../../main.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
 
@@ -60,9 +61,7 @@ class _EventTimeTileState extends State<EventTimeTile> {
             children: [
               Icon(
                 getIcon(widget.title),
-                color: Color(
-                  CommonUtil().getMyPrimaryColor(),
-                ),
+                color: mAppThemeProvider.primaryColor,
               ),
               SizedBox(
                 width: 10.0.w,

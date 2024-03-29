@@ -10,6 +10,7 @@ import '../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.da
 import '../../../constants/fhb_constants.dart' as Constants;
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/variable_constant.dart' as variable;
+import '../../../main.dart';
 import '../../../record_detail/screens/record_detail_screen.dart';
 import '../../blocs/health/HealthReportListForUserBlock.dart';
 import '../../model/Health/MediaMetaInfo.dart';
@@ -201,9 +202,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                   data.metadata!.healthRecordCategory!.logo!,
                   height: 30,
                   width: 30,
-                  color: Color(
-                    CommonUtil().getMyPrimaryColor(),
-                  ),
+                  color: mAppThemeProvider.primaryColor,
                   errorBuilder: (context, error, stackTrace) => SizedBox(),
                 ),
               )

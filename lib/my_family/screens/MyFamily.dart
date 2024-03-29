@@ -22,6 +22,7 @@ import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../my_family_detail/models/my_family_detail_arguments.dart';
 import '../../src/model/user/MyProfileModel.dart';
 import '../../src/resources/network/ApiResponse.dart';
@@ -395,8 +396,7 @@ class _MyFamilyState extends State<MyFamily> {
                                     : '',
                                 style: TextStyle(
                                     fontSize: 22.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                               ),
                             ),
                           )
@@ -463,8 +463,7 @@ class _MyFamilyState extends State<MyFamily> {
                                             : '',
                                         style: TextStyle(
                                             fontSize: 22.0.sp,
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
+                                            color: mAppThemeProvider.primaryColor),
                                       ),
                                     ),
                                   )
@@ -479,8 +478,7 @@ class _MyFamilyState extends State<MyFamily> {
                                         : '',
                                     style: TextStyle(
                                         fontSize: 22.0.sp,
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor())),
+                                        color: mAppThemeProvider.primaryColor),
                                   ),
                                 ),
                               )
@@ -495,8 +493,7 @@ class _MyFamilyState extends State<MyFamily> {
                                     : '',
                                 style: TextStyle(
                                     fontSize: 22.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                               ),
                             ),
                           ),
@@ -632,15 +629,13 @@ class _MyFamilyState extends State<MyFamily> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(5),
                                   border: Border.all(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()))),
+                                      color: mAppThemeProvider.primaryColor)),
                               child: Text(
                                 variable.DeLink,
                                 style: TextStyle(
                                     fontSize: 16.0.sp,
                                     fontWeight: FontWeight.w500,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -802,8 +797,7 @@ class _MyFamilyState extends State<MyFamily> {
                                         ? Icons.radio_button_checked
                                         : Icons.radio_button_unchecked,
                                     color: isPrimaryNoSelected == true
-                                        ? Color(
-                                            CommonUtil().getMyPrimaryColor())
+                                        ? mAppThemeProvider.primaryColor
                                         : ColorUtils.myFamilyGreyColor,
                                     size: 24.0.sp,
                                   ),

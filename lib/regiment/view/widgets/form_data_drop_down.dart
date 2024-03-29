@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
+import '../../../main.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
 import '../../models/field_response_model.dart';
@@ -74,7 +75,7 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
             fontSize: 14.0.sp,
             fontWeight: FontWeight.w600,
             color: widget.isFromQurHomeSymptom
-                ? Color(CommonUtil().getQurhomePrimaryColor())
+                ? mAppThemeProvider.qurHomePrimaryColor
                 : mAppThemeProvider.primaryColor,
           ),
         ),

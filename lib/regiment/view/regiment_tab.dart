@@ -16,6 +16,7 @@ import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';

@@ -587,8 +587,7 @@ class _MySettingsState extends State<MySettings> {
                                           scale: 0.8,
                                           child: Switch(
                                             value: _isGFActive!,
-                                            activeColor: Color(new CommonUtil()
-                                                .getMyPrimaryColor()),
+                                            activeColor: mAppThemeProvider.primaryColor,
                                             onChanged: (bool newValue) {
                                               setState(() {
                                                 //isTouched = true;

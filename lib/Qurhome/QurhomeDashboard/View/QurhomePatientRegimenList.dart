@@ -29,6 +29,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constants/variable_constant.dart' as variable;
+import '../../../main.dart';
 
 class QurHomePatientRegimenListScreen extends StatefulWidget {
   bool addAppBar;
@@ -145,9 +146,7 @@ class _QurHomePatientRegimenListScreenState
               ),
               bottom: PreferredSize(
                 child: Container(
-                  color: Color(
-                    CommonUtil().getQurhomeGredientColor(),
-                  ),
+                  color: mAppThemeProvider.qurhomeGredientColor,
                   height: 1.0,
                 ),
                 preferredSize: Size.fromHeight(
@@ -307,9 +306,7 @@ class _QurHomePatientRegimenListScreenState
                               Text(
                                 noMoreActivites,
                                 style: TextStyle(
-                                    color: Color(
-                                  CommonUtil().getQurhomePrimaryColor(),
-                                )),
+                                    color: mAppThemeProvider.qurHomePrimaryColor),
                               )
                             ],
                           ),
@@ -365,9 +362,7 @@ class _QurHomePatientRegimenListScreenState
     if (controller.currentIndex == itemIndex) {
       return Colors.white;
     } else if (nextRegimenPosition == itemIndex) {
-      return Color(
-        CommonUtil().getQurhomePrimaryColor(),
-      );
+      return mAppThemeProvider.qurHomePrimaryColor;
     } else {
       return Colors.white;
     }
@@ -375,9 +370,7 @@ class _QurHomePatientRegimenListScreenState
 
   Color getTextAndIconColor(int itemIndex, int nextRegimenPosition) {
     if (controller.currentIndex == itemIndex) {
-      return Color(
-        CommonUtil().getQurhomePrimaryColor(),
-      );
+      return mAppThemeProvider.qurHomePrimaryColor;
     } else if (nextRegimenPosition == itemIndex) {
       return Colors.white;
     } else {
@@ -695,7 +688,7 @@ class _QurHomePatientRegimenListScreenState
                 'OK',
                 style: TextStyle(
                     fontSize: 18,
-                    color: Color(CommonUtil().getQurhomePrimaryColor())),
+                    color: mAppThemeProvider.qurHomePrimaryColor),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -732,9 +725,7 @@ class _QurHomePatientRegimenListScreenState
             borderType: BorderType.Oval,
             //radius: Radius.circular(20),
             dashPattern: [9, 5],
-            color: Color(
-              CommonUtil().getQurhomeGredientColor(),
-            ),
+            color: mAppThemeProvider.qurhomeGredientColor,
             strokeWidth: 3,
             child: Container(),
           ),
@@ -756,9 +747,7 @@ class _QurHomePatientRegimenListScreenState
                   style: TextStyle(
                     fontSize: 45,
                     fontWeight: FontWeight.bold,
-                    color: Color(
-                      CommonUtil().getQurhomeGredientColor(),
-                    ),
+                    color: mAppThemeProvider.qurhomeGredientColor,
                   ),
                 ),
                 Text(
@@ -766,9 +755,7 @@ class _QurHomePatientRegimenListScreenState
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.normal,
-                    color: Color(
-                      CommonUtil().getQurhomeGredientColor(),
-                    ),
+                    color: mAppThemeProvider.qurhomeGredientColor,
                   ),
                 ),
               ],
@@ -795,11 +782,11 @@ class _QurHomePatientRegimenListScreenState
         //height: 40.0.h,
         padding: EdgeInsets.all(5.0),
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getQurhomePrimaryColor()),
+          color: mAppThemeProvider.qurHomePrimaryColor,
           border: Border.all(
             //width: 1.0,
             // assign the color to the border color
-            color: Color(CommonUtil().getQurhomePrimaryColor()),
+            color: mAppThemeProvider.qurHomePrimaryColor,
           ),
           borderRadius: BorderRadius.all(Radius.circular(6)),
         ),
@@ -840,7 +827,7 @@ class _QurHomePatientRegimenListScreenState
           border: Border.all(
             //width: 1.0,
             // assign the color to the border color
-            color: Color(CommonUtil().getQurhomePrimaryColor()),
+            color: mAppThemeProvider.qurHomePrimaryColor,
           ),
           borderRadius: BorderRadius.all(Radius.circular(6)),
         ),
@@ -848,7 +835,7 @@ class _QurHomePatientRegimenListScreenState
           child: Text(
             variable.Cancel,
             style: TextStyle(
-              color: Color(CommonUtil().getQurhomePrimaryColor()),
+              color: mAppThemeProvider.qurHomePrimaryColor,
               fontSize: 18.0.sp,
               fontWeight: FontWeight.w600,
             ),

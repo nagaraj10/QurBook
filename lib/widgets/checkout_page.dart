@@ -217,9 +217,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                     fontSize: CommonUtil().isTablet!
                                         ? tabHeader2
                                         : mobileHeader2,
-                                    color: Color(
-                                      CommonUtil().getMyPrimaryColor(),
-                                    ),
+                                    color: mAppThemeProvider.primaryColor,
                                   ),
                                 ),
                               ),
@@ -484,10 +482,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     right: 10,
                                                   ),
                                                   child: Checkbox(
-                                                    activeColor: Color(
-                                                      CommonUtil()
-                                                          .getMyPrimaryColor(),
-                                                    ),
+                                                    activeColor: mAppThemeProvider.primaryColor,
                                                     checkColor: Colors.white,
                                                     value: value
                                                         .checkedMembershipBenefits,
@@ -735,10 +730,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 begin: Alignment.centerLeft,
                                                 end: Alignment.centerRight,
                                                 colors: [
-                                                  Color(CommonUtil()
-                                                      .getMyPrimaryColor()),
-                                                  Color(CommonUtil()
-                                                      .getMyGredientColor())
+                                                  mAppThemeProvider.primaryColor,
+                                                  mAppThemeProvider.gradientColor
                                                 ],
                                               ),
                                             ),
@@ -1144,14 +1137,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                         BorderRadius.circular(
                                                                             12.0),
                                                                     side: BorderSide(
-                                                                        color: Color(
-                                                                            CommonUtil().getMyPrimaryColor()))),
+                                                                        color: mAppThemeProvider.primaryColor)),
                                                                 backgroundColor:
                                                                     Colors
                                                                         .transparent,
                                                                 foregroundColor:
-                                                                    Color(CommonUtil()
-                                                                        .getMyPrimaryColor()),
+                                                                    mAppThemeProvider.primaryColor,
                                                                 padding:
                                                                     EdgeInsets
                                                                         .all(
@@ -1198,18 +1189,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                   side:
                                                                       BorderSide(
                                                                     color:
-                                                                        Color(
-                                                                      CommonUtil()
-                                                                          .getMyPrimaryColor(),
-                                                                    ),
+                                                                        mAppThemeProvider.primaryColor,
                                                                   ),
                                                                 ),
                                                                 backgroundColor:
                                                                     Colors
                                                                         .transparent,
                                                                 foregroundColor:
-                                                                    Color(CommonUtil()
-                                                                        .getMyPrimaryColor()),
+                                                                    mAppThemeProvider.primaryColor,
                                                                 padding:
                                                                     const EdgeInsets
                                                                         .all(

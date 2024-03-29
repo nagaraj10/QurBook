@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import '../../Qurhome/QurhomeDashboard/model/calldata.dart';
 import '../../common/CommonUtil.dart';
+import '../../main.dart';
 import '../../my_providers/models/User.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../utils/wave_animation.dart';

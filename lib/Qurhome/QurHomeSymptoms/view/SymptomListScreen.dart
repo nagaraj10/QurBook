@@ -14,6 +14,7 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../../common/CommonUtil.dart';
 import '../../../constants/fhb_constants.dart';
+import '../../../main.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import 'SymptomItemCard.dart';
 
@@ -317,38 +318,38 @@ class _SymptomListScreen extends State<SymptomListScreen> {
     Color cardColor;
     try {
       if ((metadata?.color?.length ?? 0) == 7) {
-        cardColor = Color(CommonUtil().getQurhomePrimaryColor());
+        cardColor = mAppThemeProvider.qurHomePrimaryColor;
       } else {
         switch (activityname) {
           case Activityname.DIET:
-            cardColor = Color(CommonUtil().getQurhomePrimaryColor());
+            cardColor = mAppThemeProvider.qurHomePrimaryColor;
             break;
           case Activityname.VITALS:
             if (uformName == Uformname.BLOODPRESSURE) {
-              cardColor = Color(CommonUtil().getQurhomePrimaryColor());
+              cardColor = mAppThemeProvider.qurHomePrimaryColor;
             } else if (uformName == Uformname.BLOODSUGAR) {
-              cardColor = Color(CommonUtil().getQurhomePrimaryColor());
+              cardColor = mAppThemeProvider.qurHomePrimaryColor;
             } else if (uformName == Uformname.PULSE) {
-              cardColor = Color(CommonUtil().getQurhomePrimaryColor());
+              cardColor = mAppThemeProvider.qurHomePrimaryColor;
             } else {
-              cardColor = Color(CommonUtil().getQurhomePrimaryColor());
+              cardColor = mAppThemeProvider.qurHomePrimaryColor;
             }
             break;
           case Activityname.MEDICATION:
-            cardColor = Color(CommonUtil().getQurhomePrimaryColor());
+            cardColor = mAppThemeProvider.qurHomePrimaryColor;
             break;
           case Activityname.SCREENING:
             cardColor =
-                cardColor = Color(CommonUtil().getQurhomePrimaryColor());
+                cardColor = mAppThemeProvider.qurHomePrimaryColor;
             break;
           default:
-            cardColor = Color(CommonUtil().getQurhomePrimaryColor());
+            cardColor = mAppThemeProvider.qurHomePrimaryColor;
         }
       }
     } catch (e,stackTrace) {
             CommonUtil().appLogs(message: e,stackTrace:stackTrace);
 
-      cardColor = Color(CommonUtil().getQurhomePrimaryColor());
+      cardColor = mAppThemeProvider.qurHomePrimaryColor;
     }
     return cardColor;
   }
