@@ -53,6 +53,7 @@ const String KEY_UN_SUBCRIBE_BTN = 'unSubscribeBtn';
 const String KEY_IS_Active_Membership_SELECTED = 'isactivemembershipSelected';
 const String KEY_IS_Active_Qurhome = 'isactiveQurhome';
 const String KEY_IS_Active_Chat_Qurhome = 'isactiveQurhomeChat';
+const String KEY_APP_THEME_TYPE = 'keyAppThemeType';
 const String KEY_IS_Active_Sheela_Preview = 'isactiveSheelaAttachmentChat';
 const String QurhomeDefaultUI = 'QurhomeDefaultUI';
 const String IsAppLockChecked = "IsAppLockChecked";
@@ -1085,6 +1086,9 @@ const String isSkipRemiderCount = 'isSkipReminderCount';
 // Define a constant string for storing the current notification ID.
 const String strCurrentNotificationId = 'currentNotificationId';
 
+// for latest eid sheela during conversation
+const String strLatestRemindEid = 'latestRemindEid';
+
 // Define constant strings for various actions
 const String strAction = 'action'; // General action string
 const String strCallback = 'Callback'; // Callback action string
@@ -1224,6 +1228,9 @@ const strAppointmentStartTimeShouldBeSetLaterToTheCurrentTime =
     'Appointment start time should be set later to the current time.';
 const String strProviderBasedPatientsHaveViewOnlyAccess =
     'This activity is provider-based. Patients have view-only access.';
+
+// Default language set to English (India)
+const String strDefaultLanguage = 'en-IN';
 
 class DoctorFilterConstants {
   static List<String> yearOfExperienceList = [

@@ -281,30 +281,34 @@ class SheelaBLEController extends GetxController {
                       break;
                     }
                   } else {
-                    Get.to(
-                      () => SheelaAIMainScreen(
-                        arguments: SheelaArgument(
-                          deviceType: hublistController.bleDeviceType,
-                          takeActiveDeviceReadings: true,
+                    // Check if internet connection is available
+                    if (SheelaController.isInternetConnection.value) {
+                      Get.to(
+                        () => SheelaAIMainScreen(
+                          arguments: SheelaArgument(
+                            deviceType: hublistController.bleDeviceType,
+                            takeActiveDeviceReadings: true,
+                          ),
                         ),
-                      ),
-                    )?.then((_) {
-                      Future.delayed(const Duration(seconds: 1)).then((_) {
-                        if (Get.isRegistered<VitalDetailController>())
-                          Get.find<VitalDetailController>().getData();
-                      });
+                      )?.then((_) {
+                        Future.delayed(const Duration(seconds: 1)).then((_) {
+                          if (Get.isRegistered<VitalDetailController>())
+                            Get.find<VitalDetailController>().getData();
+                        });
 
-                      Future.delayed(const Duration(seconds: 1)).then((_) {
-                        if (Get.isRegistered<QurhomeRegimenController>()) {
-                          Get.find<QurhomeRegimenController>()
-                              .currLoggedEID
-                              .value = hublistController.eid ?? '';
-                          Get.find<QurhomeRegimenController>().getRegimenList();
-                        }
+                        Future.delayed(const Duration(seconds: 1)).then((_) {
+                          if (Get.isRegistered<QurhomeRegimenController>()) {
+                            Get.find<QurhomeRegimenController>()
+                                .currLoggedEID
+                                .value = hublistController.eid ?? '';
+                            Get.find<QurhomeRegimenController>()
+                                .getRegimenList();
+                          }
+                        });
                       });
-                    });
-                    // this is for disable the isSameVitalDevice for other device try to connect
-                    SheelaController.isSameVitalDevice = false;
+                      // this is for disable the isSameVitalDevice for other device try to connect
+                      SheelaController.isSameVitalDevice = false;
+                    }
                   }
                 }
               }
@@ -658,16 +662,17 @@ class SheelaBLEController extends GetxController {
         model.ackLocal = actualDateTime;
         hublistController.eid = null;
         hublistController.uid = null;
-        final bool response =
+        final response =
             await BleConnectApiProvider().uploadBleDataReadings(
           model,
         );
-        if (!response) {
+        final bleDataModel = BleDataModel.fromJson(response['result']);
+        if (!response['isSuccess']) {
           receivedData = false;
           showFailure();
-        } else if (model.deviceType == "SPO2") {
-          if ((model.data!.sPO2 ?? '').isNotEmpty &&
-              (model.data!.pulse ?? '').isNotEmpty) {
+        } else if (bleDataModel.deviceType == "SPO2") {
+          if ((bleDataModel.data!.sPO2 ?? '').isNotEmpty &&
+              (bleDataModel.data!.pulse ?? '').isNotEmpty) {
             String? strTextMsg = await SheelaController.getTextTranslate(
                 "Completed reading values. Please take your finger from the device");
             addToConversationAndPlay(
@@ -676,9 +681,13 @@ class SheelaBLEController extends GetxController {
                 text: strTextMsg,
               ),
             );
-            String? strTextMsgTwo = await SheelaController.getTextTranslate(
-              // isLastActivityDevice if false means remove the bye in string
-                "Thank you. Your last reading for SPO2 ${model.data!.sPO2} and Pulse ${model.data!.pulse} are successfully recorded.${(!(SheelaController.isLastActivityDevice ?? true)) ? '' : " Bye."}");
+           // Added the success message for spo2 with current time and values
+            final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+            final spo2SuccessMsg = 'Your oxygen level ${bleDataModel.data!.sPO2} and '
+                'heart rate ${bleDataModel.data!.pulse} has been recorded at '
+                '$currentTime.${getFinalResultMsg(bleDataModel)}';
+            final strTextMsgTwo = await SheelaController.getTextTranslate(spo2SuccessMsg);
+
             playConversations.add(
               SheelaResponse(
                 recipientId: conversationType,
@@ -690,10 +699,15 @@ class SheelaBLEController extends GetxController {
             receivedData = false;
             showFailure();
           }
-        } else if (model.deviceType?.toLowerCase() == "bgl") {
-          if ((model.data?.bgl ?? '').isNotEmpty) {
-            String? strTextMsg = await SheelaController.getTextTranslate(
-                "Your Blood Glucose value ${model.data!.bgl} is recorded successfully.");
+        } else if (bleDataModel.deviceType?.toLowerCase() == "bgl") {
+          if ((bleDataModel.data?.bgl ?? '').isNotEmpty) {
+            //Added the success message for bgl with current time and values
+            final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+            final bglSuccessMsg = 'Your blood glucose when taken randomly is '
+                '${bleDataModel.data!.bgl} has been recorded at $currentTime.${getFinalResultMsg(bleDataModel)}';
+
+            final strTextMsg = await SheelaController.getTextTranslate(bglSuccessMsg);
+
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
@@ -705,15 +719,20 @@ class SheelaBLEController extends GetxController {
             receivedData = false;
             showFailure();
           }
-        } else if (model.deviceType == "BP") {
-          if ((model.data!.systolic ?? '').isNotEmpty &&
-              (model.data!.diastolic ?? '').isNotEmpty &&
-              (model.data!.pulse ?? '').isNotEmpty) {
-            String? strTextMsg = await SheelaController.getTextTranslate(
-              // isLastActivityDevice if false means remove the bye in string
-                "Thank you. Your BP ${model.data!.systolic} "
-                "over ${model.data!.diastolic} "
-                "and pulse ${model.data!.pulse} are successfully recorded.${(!(SheelaController.isLastActivityDevice ?? true)) ? '' : " Bye."}");
+        } else if (bleDataModel.deviceType == "BP") {
+          if ((bleDataModel.data!.systolic ?? '').isNotEmpty &&
+              (bleDataModel.data!.diastolic ?? '').isNotEmpty &&
+              (bleDataModel.data!.pulse ?? '').isNotEmpty) {
+
+            //Added the success message for BP with current time and values
+
+            final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+            final bpSuccessMsg = 'Your blood pressure ${bleDataModel.data!.systolic} '
+                'over ${bleDataModel.data!.diastolic} and heart rate '
+                '${bleDataModel.data!.pulse} has been recorded at $currentTime.${getFinalResultMsg(bleDataModel)}';
+
+            final strTextMsg = await SheelaController.getTextTranslate(bpSuccessMsg);
+
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
@@ -725,11 +744,21 @@ class SheelaBLEController extends GetxController {
             receivedData = false;
             showFailure();
           }
-        } else if (model.deviceType?.toLowerCase() == "weight") {
-          if ((model.data!.weight ?? '').isNotEmpty) {
-            String? strTextMsg = await SheelaController.getTextTranslate(
-              // isLastActivityDevice if false means remove the bye in string
-                "Thank you. Your Weight ${model.data!.weight} ${weightUnit} is successfully recorded.${(!(SheelaController.isLastActivityDevice ?? true)) ? '' : " Bye."}");
+        } else if (bleDataModel.deviceType?.toLowerCase() == "weight") {
+          if ((bleDataModel.data!.weight ?? '').isNotEmpty) {
+
+            // If the weightUnit value is kg means set unit as kilograms
+            // If the weightUnit value is lb means set unit as pounds
+            final weightUnitResult = weightUnit == STR_VAL_WEIGHT_IND? 'kilograms':
+            weightUnit == STR_VAL_WEIGHT_US? 'pounds':'';
+
+            //Added the success message for weight with current time and values
+            final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+            final weightSuccessMsg = 'Your weight has been recorded as '
+                '${bleDataModel.data!.weight} $weightUnitResult at $currentTime.${getFinalResultMsg(bleDataModel)}';
+
+            final strTextMsg = await SheelaController.getTextTranslate(weightSuccessMsg);
+
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
@@ -752,6 +781,14 @@ class SheelaBLEController extends GetxController {
         receivedData = false;
         showFailure();
       }
+    }
+  }
+
+  String getFinalResultMsg(BleDataModel model) {
+    if (model.eidInfo != null) {
+      return ' The same has been updated to your ${model.eidInfo!.uformname} activity at ${model.eidInfo!.estartTime}.';
+    } else {
+      return '';
     }
   }
 

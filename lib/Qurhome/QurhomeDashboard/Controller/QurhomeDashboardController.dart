@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_data.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/patientalertlist/patient_alert_list_model.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 
 import '../../../QurHub/Controller/HubListViewController.dart';
@@ -16,19 +13,15 @@ import '../../../common/CommonUtil.dart';
 import '../../../common/PreferenceUtil.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
-import '../../../constants/router_variable.dart';
 import '../../../src/model/user/MyProfileModel.dart';
 import '../../../src/ui/SheelaAI/Controller/SheelaAIController.dart';
-import '../../../src/ui/SheelaAI/Models/sheela_arguments.dart';
 import '../../../src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 
-import '../View/QurhomeDashboard.dart';
 
 class QurhomeDashboardController extends GetxController {
   var currentSelectedIndex = 0.obs;
   var appBarTitle = ' '.obs;
-  StreamSubscription? _appointmentSubscription;
   late HubListViewController hubController;
   late SheelaBLEController _sheelaBLEController;
   Timer? _bleTimer = null;
@@ -39,9 +32,9 @@ class QurhomeDashboardController extends GetxController {
     return _bleTimer;
   }
 //Adding this code to check if the screen is idle or not
-  Timer? get getIdleTimer {
-    return _idleTimer;
-  }
+//   Timer? get getIdleTimer {
+//     return _idleTimer;
+//   }
 
   SheelaAIController? sheelaAIController =
       CommonUtil().onInitSheelaAIController();
@@ -67,10 +60,14 @@ class QurhomeDashboardController extends GetxController {
   int nextAlertPosition = 0;
   int currentIndex = 0;
   var isOnceInAPlanActivity = false.obs;
-  var isScreenIdle = false.obs;
+  var isScreenNotIdle = false.obs;
+  var isRegimenScreen = false.obs;
   var isShowScreenIdleDialog = false.obs;
   // Observable variable to track the current notification id
   var currentNotificationId = ' '.obs;
+
+  //Define a variable to hold the current selected index for the patient dashboard
+  var patientDashboardCurSelectedIndex = 0.obs;
 
   @override
   void onInit() {
@@ -129,18 +126,29 @@ class QurhomeDashboardController extends GetxController {
       _bleTimer = null;
     }
   }
-//Function to check qur home is ideal for 5 minutes
-  Future<void> checkScreenIdle({bool isIdeal = false}) async {
-      _idleTimer = Timer.periodic(const Duration(minutes: 5), (timer) {
-        try {
-          _idleTimer?.cancel();
-          sheelaAIController?.getSheelaBadgeCount(
-            isFromQurHomeRegimen: true,
-            isScreenIdeal: isScreenIdle.value,
-            makeApiRequest: true,
+  void resetScreenIdleTimer() {
+    // isShowScreenIdleDialog.value=false;
+    isScreenNotIdle.value = false; // Reset the screen idle flag
+    _idleTimer?.cancel(); // Cancel existing idle timer
+    if(isRegimenScreen.value) {
+      checkScreenIdle(); // Restart the timer
+    }
+  }
 
-        );
-        _idleTimer?.cancel();
+
+//Function to check qur home is ideal for 5 minutes
+  Future<void> checkScreenIdle() async {
+    _idleTimer = Timer.periodic(const Duration(minutes: 5), (timer) {
+      try {
+        if (!isScreenNotIdle.value) {
+          isScreenNotIdle.value = true;
+          sheelaAIController?.getSheelaBadgeCountForIdeal(
+            isFromQurHomeRegimen: true,
+            makeApiRequest: true,
+            isNeedSheelaDialog: true,
+          );
+        }
+        timer.cancel(); // Cancel the timer after it triggers once
       } catch (e, stackTrace) {
         CommonUtil().appLogs(message: e, stackTrace: stackTrace);
         if (kDebugMode) {
@@ -179,10 +187,12 @@ class QurhomeDashboardController extends GetxController {
         break;
       case 2:
         appBarTitle = 'Vitals'.obs;
+        isRegimenScreen.value = false;
         updateBLETimer(Enable: false);
         break;
       case 3:
         appBarTitle = 'Symptoms'.obs;
+        isRegimenScreen.value = false;
         updateBLETimer(Enable: false);
         break;
     }
@@ -305,6 +315,7 @@ class QurhomeDashboardController extends GetxController {
 
     nextAlertPosition = 0;
     currentIndex = 0;
+    patientDashboardCurSelectedIndex.value = 0;
   }
 
   Future<bool> careGiverOkAction(

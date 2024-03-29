@@ -12,12 +12,12 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
-class QurhomePatientALert extends StatefulWidget {
+class QurhomePatientAlert extends StatefulWidget {
   @override
-  _QurhomePatientALertState createState() => _QurhomePatientALertState();
+  _QurhomePatientAlertState createState() => _QurhomePatientAlertState();
 }
 
-class _QurhomePatientALertState extends State<QurhomePatientALert> {
+class _QurhomePatientAlertState extends State<QurhomePatientAlert> {
   final controller = Get.put(QurhomeDashboardController());
   final qurhomeRegimenController =
       CommonUtil().onInitQurhomeRegimenController();

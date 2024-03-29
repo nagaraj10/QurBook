@@ -129,7 +129,8 @@ class IosNotificationHandler {
                 CommonUtil().callQueueNotificationPostApi(reqJson);
               } else {
                 // call queue insert api for adding the queue before navigate
-                CommonUtil().callQueueNotificationPostApi(reqJson,isNeedDialog: false);
+                CommonUtil()
+                    .callQueueNotificationPostApi(reqJson, isNeedDialog: false);
                 await Get.toNamed(
                   rt_Sheela,
                   arguments: SheelaArgument(
@@ -162,7 +163,6 @@ class IosNotificationHandler {
   }
 
   void handleNotificationResponse(Map<String, dynamic> jsonDecode) async {
-
     // Declare a variable named isSheelaCondition
     var isSheelaCondition =
         jsonDecode[parameters.KIOSK_isSheela] ?? variable.strFalse;
@@ -372,12 +372,13 @@ class IosNotificationHandler {
       await Get.to(CareGiverSettings());
     } else if (model.isSheela ?? false) {
       //// allow the user for auto redirect to sheela screen on time
-      var qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
+      var qurhomeDashboardController =
+          CommonUtil().onInitQurhomeDashboardController();
       //Sheela inactive dialog exist close the dialog
-      if(qurhomeDashboardController.isShowScreenIdleDialog.value){
+      if (qurhomeDashboardController.isShowScreenIdleDialog.value) {
         Get.back();
-        qurhomeDashboardController.isShowScreenIdleDialog.value=false;
-        qurhomeDashboardController.isScreenIdle.value=false;
+        qurhomeDashboardController.isShowScreenIdleDialog.value = false;
+        qurhomeDashboardController.isScreenNotIdle.value = false;
       }
       if (CommonUtil().isAllowSheelaLiveReminders()) {
         if (model.eventType != null && model.eventType == strWrapperCall) {
@@ -391,11 +392,7 @@ class IosNotificationHandler {
             ),
           )?.then((value) {
             //Restart the timer for check the ideal flow when the qurhome is active
-            final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
-            if(isQurhomeActive) {
-              qurhomeDashboardController.isScreenIdle.value = true;
-              qurhomeDashboardController.checkScreenIdle(isIdeal: true);
-            }
+            qurhomeDashboardController.resetScreenIdleTimer();
           });
         } else if ((model.rawBody ?? '').isNotEmpty) {
           await Get.toNamed(
@@ -405,7 +402,10 @@ class IosNotificationHandler {
                 textSpeechSheela: model.rawBody,
                 isNeedPreferredLangauge: true,
                 eventIdViaSheela: model.eventId),
-          );
+          )?.then((value) {
+            //Restart the timer for check the ideal flow when the qurhome is active
+            qurhomeDashboardController.resetScreenIdleTimer();
+          });
         } else if ((model.message ?? '').isNotEmpty) {
           await Get.toNamed(
             rt_Sheela,
@@ -413,7 +413,10 @@ class IosNotificationHandler {
                 isSheelaFollowup: true,
                 message: model.message,
                 eventIdViaSheela: model.eventId),
-          );
+          )?.then((value) {
+            //Restart the timer for check the ideal flow when the qurhome is active
+            qurhomeDashboardController.resetScreenIdleTimer();
+          });
         } else if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
           await Future.delayed(const Duration(seconds: 5));
           await Get.toNamed(
@@ -422,7 +425,10 @@ class IosNotificationHandler {
                 allowBackBtnPress: true,
                 audioMessage: model.sheelaAudioMsgUrl,
                 eventIdViaSheela: model.eventId),
-          );
+          )?.then((value) {
+            //Restart the timer for check the ideal flow when the qurhome is active
+            qurhomeDashboardController.resetScreenIdleTimer();
+          });
         }
       }
 // Check if templateName is not empty and matches specific templates
@@ -444,14 +450,18 @@ class IosNotificationHandler {
             CommonUtil().callQueueNotificationPostApi(reqJson);
           } else if (PreferenceUtil.getIfQurhomeisAcive()) {
             // call queue insert api for adding the queue before navigate
-            CommonUtil().callQueueNotificationPostApi(reqJson,isNeedDialog: false);
+            CommonUtil()
+                .callQueueNotificationPostApi(reqJson, isNeedDialog: false);
             // Navigate to Sheela screen with specific arguments
             await Get.toNamed(
               rt_Sheela,
               arguments: SheelaArgument(
                 scheduleAppointment: true,
               ),
-            );
+            )?.then((value) {
+              //Restart the timer for check the ideal flow when the qurhome is active
+              qurhomeDashboardController.resetScreenIdleTimer();
+            });
           }
         } else {
           //Adding the notificaiton to sheela reminder Queue
@@ -908,7 +918,14 @@ class IosNotificationHandler {
           model.patientPhoneNumber);
     } else if (model.templateName ==
         parameters.stringAssignOrUpdatePersonalPlanActivities) {
-      //No Navigation required
+      Provider.of<RegimentViewModel>(
+        Get.context!,
+        listen: false,
+      ).regimentMode = RegimentMode.Schedule;
+      Provider.of<RegimentViewModel>(Get.context!, listen: false)
+          .regimentFilter = RegimentFilter.Scheduled;
+      PageNavigator.goToPermanent(Get.context!, router.rt_Regimen,
+          arguments: RegimentArguments(eventId: model?.eventId ?? ""));
     } else if ((snoozeAction ?? false) &&
         (model.redirect == parameters.stringRegimentScreen)) {
       // Check if snoozeAction is true (or defaults to false if null) and the model redirect is to the regiment screen.
@@ -977,7 +994,7 @@ class IosNotificationHandler {
 
       // Initialize the QurhomeDashboardController and set its values.
       var qurhomeDashboardController =
-      CommonUtil().onInitQurhomeDashboardController();
+          CommonUtil().onInitQurhomeDashboardController();
 
       // Check if the region is US.
       if (CommonUtil.isUSRegion()) {

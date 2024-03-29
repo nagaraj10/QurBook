@@ -204,13 +204,17 @@ class ApiServices {
         // Calculate the difference in minutes between the backend timestamp and current time
         final differenceInMinutes =
             backendTimestamp.difference(currentDate).inMinutes;
-        // Check if the difference is less than or equal to 10 hours (600 minutes) and not negative
-        if (differenceInMinutes <= 600 && differenceInMinutes > 0) {
+        final differenceInDays =
+            backendTimestamp.difference(currentDate).inDays;
+        // Check if the difference is less than 29 days, not negative (meaning not expired yet),
+        // and if the difference in minutes is greater than 0
+        // (to ensure that if the user opening on the last day differnce in days will be 0 so checking the minutes>0)
+        if (differenceInDays<29 && differenceInDays >= 0 && differenceInMinutes>0) {
           callRefreshTokenApi();
         }
-        // The timestamp is either more than 10 hours ahead or negative (expired)
-      } catch (e) {
+      } catch (e, stackTrace) {
         // Handle exceptions if any
+        CommonUtil().appLogs(message: e, stackTrace: stackTrace);
       }
     }
   }

@@ -12,7 +12,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/model/SheelaBadgeModel.dart';
@@ -25,6 +24,7 @@ import 'package:myfhb/language/repository/LanguageRepository.dart';
 import 'package:myfhb/main.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
+import 'package:myfhb/services/pushnotification_service.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_synonyms_request.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_synonyms_response.dart';
@@ -180,14 +180,17 @@ class SheelaAIController extends GetxController {
   // Create a Map to store reminder timers. The keys are String identifiers (presumably related to reminders),
   // and the values are Timer objects that will be used for managing timing events associated with reminders.
   Map<String, Timer> reminderTimers = {};
-  bool isDialogOpen =false;
-  int timerCountFromRegimenController=0;
+
+  // Define a reactive boolean variable to track internet connection status
+  Rx<bool> isInternetConnection = true.obs;
 
   // this is for get the onInitHubListViewController
   final hubListViewController = CommonUtil().onInitHubListViewController();
 
   //mic button enable or disable flag while reconnect
   Rx<bool> micDisableReconnect = false.obs;
+
+  String? latestRemindEid = '';
 
   @override
   void onInit() {
@@ -479,6 +482,9 @@ class SheelaAIController extends GetxController {
         // Update additionalInfo with isSkipReminderCount set to false.
         additionalInfo?[isSkipRemiderCount] = false;
       }
+
+      // for latest eid to pass api
+      additionalInfo?[strLatestRemindEid] = latestRemindEid??'';
 
       final sheelaRequest = SheelaRequestModel(
         sender: userId,
@@ -1080,7 +1086,7 @@ class SheelaAIController extends GetxController {
 
     if (savePrefLang) {
       PreferenceUtil.saveString(
-          SHEELA_LANG, prof.preferred_language ?? 'en-IN');
+          SHEELA_LANG, prof.preferred_language ?? strDefaultLanguage);
     }
   }
 
@@ -1190,11 +1196,9 @@ makeApiRequest is used to update the data with latest data
     bool isNeedSheelaDialog = false,
     bool isFromQurHomeRegimen = false,
     bool makeApiRequest = false,
-    bool isScreenIdeal = false,
     bool isFromRegimenController = false,
   }) async {
     try {
-      var qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
       // Check if sheelaIconBadgeCount is not greater than 0
       if (!(sheelaIconBadgeCount.value > 0)) {
         // If not, set it to 0
@@ -1211,7 +1215,6 @@ makeApiRequest is used to update the data with latest data
           _sheelaBadgeModel?.result != null) {
         // Update sheelaIconBadgeCount with the queue count from the result
         sheelaIconBadgeCount.value = _sheelaBadgeModel?.result?.queueCount ?? 0;
-
         // Check conditions for showing the dialog
         if (isFromQurHomeRegimen && isQueueDialogShowing.value) {
           // Close existing dialog and update flags
@@ -1225,23 +1228,62 @@ makeApiRequest is used to update the data with latest data
         final isQurhomeActive = PreferenceUtil.getIfQurhomeisAcive();
         // final isTablet = CommonUtil().isTablet ?? false;
         final isQueueDialogShowen = !isQueueDialogShowing.value;
-        //check if screen is ideal
-          if (isScreenIdeal&&  !qurhomeDashboardController.isShowScreenIdleDialog.value) {
-            qurhomeDashboardController.isShowScreenIdleDialog.value=true;
-            showDialogForSheelaBox(
-              isFromQurHomeRegimen: isFromQurHomeRegimen,
-            );
-          }
         // Check if all conditions are met to show the dialog
-        else if (isNeedSheelaDialog &&
+        if (isNeedSheelaDialog &&
             hasQueueCount &&
-            isQurhomeActive && !isScreenIdeal &&
-            isQueueDialogShowen
-            ) {
-            showDialogForSheelaBox(
+            isQurhomeActive &&
+            isQueueDialogShowen) {
+          showDialogForSheelaBox(
             isFromQurHomeRegimen: isFromQurHomeRegimen,
             isNeedSheelaDialog: isNeedSheelaDialog,
           );
+        }
+      } else {
+        // If response is not successful or result is null,
+        // set sheelaIconBadgeCount to 0
+        sheelaIconBadgeCount.value = 0;
+        _sheelaBadgeModel = null;
+      }
+    } catch (e, stackTrace) {
+      // Handle exceptions, log the error, and set sheelaIconBadgeCount to 0
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+      sheelaIconBadgeCount.value = 0;
+      _sheelaBadgeModel = null;
+    }
+  }
+
+  //Function to check and Show Sheela dialog whether the regimen screen is ideal
+  // for 5 minutes
+  Future<void> getSheelaBadgeCountForIdeal({
+    bool isNeedSheelaDialog = false,
+    bool isFromQurHomeRegimen = false,
+    bool makeApiRequest = false,
+  }) async {
+    try {
+      final qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
+      // Check if sheelaIconBadgeCount is not greater than 0
+      if (!(sheelaIconBadgeCount.value > 0)) {
+        // If not, set it to 0
+        sheelaIconBadgeCount.value = 0;
+      }
+      if (makeApiRequest || _sheelaBadgeModel == null) {
+        // Retrieve sheela badge count asynchronously
+        _sheelaBadgeModel = await sheelaBadgeServices.getSheelaBadgeCount();
+      }
+      // Check if the response is successful and contains a valid result
+      if (_sheelaBadgeModel?.isSuccess == true &&
+          _sheelaBadgeModel?.result != null) {
+        // Update sheelaIconBadgeCount with the queue count from the result
+        sheelaIconBadgeCount.value = _sheelaBadgeModel?.result?.queueCount ?? 0;
+
+        if (isNeedSheelaDialog &&
+            !qurhomeDashboardController.isShowScreenIdleDialog.value) {
+          await playAudioPlayer().then((value) {
+            qurhomeDashboardController.isShowScreenIdleDialog.value = true;
+            showDialogForSheelaBox(
+                isFromQurHomeRegimen: isFromQurHomeRegimen,
+                isScreenIdealDialog: true);
+          });
         }
       } else {
         // If response is not successful or result is null,
@@ -1372,6 +1414,9 @@ makeApiRequest is used to update the data with latest data
       isCallStartFromSheela = true;
       updateTimer(enable: false);
       regController.callSOSEmergencyServices(1);
+      Future.delayed(const Duration(seconds: 5), () {
+        isCallStartFromSheela = false;
+      });
     }
   }
 
@@ -1569,9 +1614,12 @@ makeApiRequest is used to update the data with latest data
   }
 
   void showDialogForSheelaBox(
-      {bool isNeedSheelaDialog = false, bool isFromQurHomeRegimen = false}) {
-    final qurhomeDashboardController = CommonUtil().onInitQurhomeDashboardController();
-    if(!qurhomeDashboardController.isScreenIdle.value){
+      {bool isNeedSheelaDialog = false,
+      bool isFromQurHomeRegimen = false,
+      bool isScreenIdealDialog = false}) {
+    final qurhomeDashboardController =
+        CommonUtil().onInitQurhomeDashboardController();
+    if (!qurhomeDashboardController.isShowScreenIdleDialog.value) {
       isQueueDialogShowing.value = true;
     }
     CommonUtil().dialogForSheelaQueueStable(Get.context!,
@@ -1580,20 +1628,20 @@ makeApiRequest is used to update the data with latest data
                 .chatTotalCount,
         fromQurhomeRegimen: isFromQurHomeRegimen,
         onTapHideSheelaDialog: (value) {
-          if(value){
-            //Update qurhome idle timer
-            qurhomeDashboardController.isShowScreenIdleDialog.value=false;
-            qurhomeDashboardController.isScreenIdle.value=true;
-            qurhomeDashboardController.checkScreenIdle(isIdeal: true);
-          }
-        },
-        onTapSheelaRemainders: (value) {
-          if(!qurhomeDashboardController.isScreenIdle.value){
-            isQueueDialogShowing.value = false;
-          }else{
-            qurhomeDashboardController.isScreenIdle.value = false;
-          }
-          Get.back();
+      if (value) {
+        //Update qur home ideal timer
+        if (qurhomeDashboardController.isRegimenScreen.value) {
+          qurhomeDashboardController.isShowScreenIdleDialog.value = false;
+          qurhomeDashboardController.resetScreenIdleTimer();
+        }
+      }
+    }, onTapSheelaRemainders: (value) {
+      if (!qurhomeDashboardController.isScreenNotIdle.value) {
+        isQueueDialogShowing.value = false;
+      } else {
+        qurhomeDashboardController.isShowScreenIdleDialog.value = false;
+      }
+      Get.back();
       Get.toNamed(
         rt_Sheela,
         arguments: value
@@ -1603,9 +1651,15 @@ makeApiRequest is used to update the data with latest data
             : SheelaArgument(showUnreadMessage: true),
       )?.then((value) {
         ///Update Sheela remainder count
-        qurhomeDashboardController.isScreenIdle.value=true;
-        qurhomeDashboardController.isShowScreenIdleDialog.value=false;
-        qurhomeDashboardController.checkScreenIdle(isIdeal: true);
+        if (sheelaIconBadgeCount.value == 0 &&
+            qurhomeDashboardController.isRegimenScreen.value) {
+          qurhomeDashboardController.resetScreenIdleTimer();
+        } else {
+          getSheelaBadgeCount(
+              isNeedSheelaDialog: true,
+              isFromQurHomeRegimen:
+                  qurhomeDashboardController.isRegimenScreen.value);
+        }
       });
     });
   }
@@ -1781,26 +1835,33 @@ makeApiRequest is used to update the data with latest data
   }
 
   // Function to generate a list of button configurations for image preview
-  List<Buttons> sheelaImagePreviewButtons(
-      String? btnTitle, String? requestFileType) {
-    List<Buttons> buttons = [
+  Future<List<Buttons>> sheelaImagePreviewButtons(
+      String? btnTitle, String? requestFileType) async {
+    // Translate button titles
+    List<String?> translatedTexts = await Future.wait([
+      getTextTranslate(strCamelYes), // Translate "Yes" button title
+      getTextTranslate(getButtonTitle(
+          requestFileType)), // Translate button title based on file type
+      getTextTranslate(strExit), // Translate "Exit" button title
+    ]);
+
+    return [
       Buttons(
-        title: strCamelYes, // Button title
+        title: translatedTexts[0], // Button title
         payload: btnTitle, // Payload data (optional)
         btnRedirectTo:
             getRedirectTo(requestFileType), // Redirection information
       ),
       Buttons(
-        title: getButtonTitle(requestFileType), // Button title
+        title: translatedTexts[1], // Button title
         btnRedirectTo: getRetakeTo(requestFileType), // Redirection information
       ),
       Buttons(
-        title: strExit, // Button title
+        title: translatedTexts[2], // Button title
         payload: strExit, // Payload data
         mute: sheela_hdn_btn_yes, // Mute flag (optional)
       ),
     ];
-    return buttons;
   }
 
   // Get the redirect action based on the request file type
@@ -1874,7 +1935,8 @@ makeApiRequest is used to update the data with latest data
       SheelaResponse currentCon =
           SheelaResponse(); // Create a new SheelaResponse instance
       currentCon.recipientId = sheelaRecepId; // Set recipient ID
-      currentCon.text = getTitle(requestFileType); // Set title to that card
+      currentCon.text = await getTextTranslate(
+          getTitle(requestFileType)); // Set title to that card
       currentCon.endOfConv = false; // Set end of conversation flag to false
       currentCon.endOfConvDiscardDialog =
           false; // Set end of conversation discard dialog flag to false
@@ -1883,7 +1945,7 @@ makeApiRequest is used to update the data with latest data
       currentCon.isButtonNumber = false; // Set button number flag to false
       currentCon.recipientId =
           sheelaRecepId; // Set recipient ID again (duplicated line?)
-      currentCon.buttons = sheelaImagePreviewButtons(
+      currentCon.buttons = await sheelaImagePreviewButtons(
           btnTitle, requestFileType); // Generate buttons for the Sheela card
       if (requestFileType == strImage) {
         currentCon.imageThumbnailUrl =
@@ -2278,6 +2340,9 @@ makeApiRequest is used to update the data with latest data
   showListeningCountdownDialog() {
     // Set the flag indicating that the countdown dialog is currently showing
     isCountDownDialogShowing.value = true;
+    if (isCallStartFromSheela) {
+      return;
+    }
 
     return showDialog<void>(
       context: Get.context!,
@@ -2700,8 +2765,11 @@ makeApiRequest is used to update the data with latest data
                     break; // Exit the loop if a match is found
                   } else {
                     // Check if media is needed
-                    final needMedia =(btn.btnRedirectTo!=null && btn.btnRedirectTo!.isNotEmpty) ||
-                        btn.needPhoto || btn.needAudio || btn.needVideo;
+                    final needMedia = (btn.btnRedirectTo != null &&
+                            btn.btnRedirectTo!.isNotEmpty) ||
+                        btn.needPhoto ||
+                        btn.needAudio ||
+                        btn.needVideo;
                     if (needMedia) {
                       // If current language is not English, translate text to English
                       if (!(currentLanguageCode.value ?? '').contains('en')) {
@@ -2712,14 +2780,18 @@ makeApiRequest is used to update the data with latest data
                       final sheelaSynonymsRequestModel =
                           SheelaSynonymsRequestModel(
                         field: Field(
-                          fdata: conversations.last?.fields.fdata, //send button original data
+                          fdata: conversations
+                              .last?.fields.fdata, //send button original data
                           fdataA: conversations.last?.fields.fdataA,
                           ftype: conversations.last?.ftype,
                           description: conversations.last?.fields.description,
                         ),
-                        message: (!(currentLanguageCode.value ?? '').contains('en'))?
-                        translatedText.toLowerCase().replaceAll("'", ' '):
-                            responseRecived.toLowerCase().replaceAll("'", ' '),
+                        message: (!(currentLanguageCode.value ?? '')
+                                .contains('en'))
+                            ? translatedText.toLowerCase().replaceAll("'", ' ')
+                            : responseRecived
+                                .toLowerCase()
+                                .replaceAll("'", ' '),
                       );
                       // Call SheelaAISynonymsAPI
                       final response =
@@ -2738,8 +2810,10 @@ makeApiRequest is used to update the data with latest data
                           for (var synonymButton
                               in conversations.last?.buttons) {
                             if (sheelaSynonymsResponse.result != null &&
-                                sheelaSynonymsResponse.result!.payload!=null&&
-                                sheelaSynonymsResponse.result!.payload!.isNotEmpty &&
+                                sheelaSynonymsResponse.result!.payload !=
+                                    null &&
+                                sheelaSynonymsResponse
+                                    .result!.payload!.isNotEmpty &&
                                 sheelaSynonymsResponse.result!.payload ==
                                     synonymButton.payload) {
                               button = synonymButton;
@@ -2801,8 +2875,7 @@ makeApiRequest is used to update the data with latest data
                       playPauseTTSFromApi(); // based on toggle flag from qurplus auto read TTS
                     });
                   }
-                }
-                else if (button?.btnRedirectTo == strRedirectToHelpPreview) {
+                } else if (button?.btnRedirectTo == strRedirectToHelpPreview) {
                   if (button?.videoUrl != null && button?.videoUrl != '') {
                     playYoutube(button?.videoUrl);
                   } else if (button?.audioUrl != null &&
@@ -3262,7 +3335,9 @@ makeApiRequest is used to update the data with latest data
   }
 
   // Create a timer based on the scheduled time for a reminder.
-  Timer createTimer(Reminder reminder, tz.TZDateTime scheduledDateTime) {
+  Timer createTimer(Reminder reminder, tz.TZDateTime scheduledDateTime,{bool isSetInExact = false,int? notificationId,
+    NotificationDetails? notificationDetails,
+    String? payLoadData}) {
     // Convert the scheduledDateTime to UTC
     final utcScheduledDateTime = scheduledDateTime.toUtc();
 
@@ -3273,33 +3348,48 @@ makeApiRequest is used to update the data with latest data
     // Schedule the method to be called after the calculated duration
     return Timer(durationUntilScheduledTime, () {
       // Call the scheduled method passing the reminder
-      scheduledMethod(reminder);
+      scheduledMethod(reminder,
+          isSetInExact: isSetInExact,
+          notificationIdTemp: notificationId??0,
+          notificationDetails: notificationDetails,
+          payLoadData: payLoadData);
       // Optional: Reschedule the method for the next occurrence
     });
   }
 
   // Method called when the timer expires, triggers the reminder-related logic.
-  scheduledMethod(Reminder reminder) async {
-    final notificationId = int.tryParse('${reminder?.notificationListId}') ?? 0;
+  scheduledMethod(Reminder reminder,{bool isSetInExact = false,int? notificationIdTemp,
+    NotificationDetails? notificationDetails,
+    String? payLoadData}) async {
+
+    final notificationId = reminder.eid ?? '';
     // Get the list of pending notifications
     List<PendingNotificationRequest> pendingNotifications =
         await localNotificationsPlugin.pendingNotificationRequests();
 
     // Check if the notification with the given ID is already scheduled
-    bool isScheduled = pendingNotifications.any(
-      (notification) => notification.id == notificationId,
-    );
+    final isScheduled = pendingNotifications.any((notification) =>
+        notification.payload != null &&
+        jsonDecode(notification.payload!).containsKey('eid') &&
+        jsonDecode(notification.payload!)['eid'] == notificationId);
 
     // If already scheduled, cancel the existing notification with the same ID
     if (isScheduled) {
       //Sheela inactive dialog exist close the dialog
-      var qurhomeDashboardController = CommonUtil()
-          .onInitQurhomeDashboardController();
-      if(qurhomeDashboardController.isShowScreenIdleDialog.value){
-        Get.back();
-        qurhomeDashboardController.isShowScreenIdleDialog.value=false;
-        qurhomeDashboardController.isScreenIdle.value=false;
+
+      if (isSetInExact) {
+        // If isSetInExact is true, cancel the previous notification, wait for a brief delay, then reschedule it
+        await localNotificationsPlugin.cancel(notificationIdTemp ?? 0); // Cancel previous notification
+        await Future.delayed(const Duration(milliseconds: 50)); // Wait for a brief delay
+        await showScheduleNotification( // Reschedule notification with updated details
+          reminder: reminder,
+          notificationId: notificationIdTemp ?? 0,
+          notificationDetails: notificationDetails,
+          payLoadData: payLoadData,
+        );
       }
+
+
       await Future.delayed(const Duration(milliseconds: 100));
       final sheelaAIController = CommonUtil().onInitSheelaAIController();
       // Construct an array of values for the reminder invocation
@@ -3314,11 +3404,17 @@ makeApiRequest is used to update the data with latest data
   }
 
   // Add or update the timer associated with a reminder based on its scheduled time.
-  addScheduledTime(Reminder reminder, tz.TZDateTime scheduledDateTime) async {
+  addScheduledTime(Reminder reminder, tz.TZDateTime scheduledDateTime,{bool isSetInExact = false,int? notificationId,
+    NotificationDetails? notificationDetails,
+    String? payLoadData}) async {
     await clearScheduledTime(reminder.notificationListId!);
     try {
       // Create a new timer for the new scheduled time and add it to the map
-      final newTimer = createTimer(reminder, scheduledDateTime);
+      final newTimer = createTimer(reminder, scheduledDateTime,
+          isSetInExact: isSetInExact,
+          notificationId: notificationId??0,
+          notificationDetails: notificationDetails,
+          payLoadData: payLoadData);
       reminderTimers[reminder.notificationListId!] = newTimer;
     } catch (e, stackTrace) {
       CommonUtil().appLogs(

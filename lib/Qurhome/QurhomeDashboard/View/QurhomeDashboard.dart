@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -11,8 +10,8 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/view/SymptomListScreen.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/view/VitalsList.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/SheelaRemainderPopup.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomePatientDashboard.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomePatientAlert.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomePatientRegimenList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
@@ -26,13 +25,11 @@ import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BLEBlinkingIcon.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/common_bluetooth_widget.dart';
-import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/CommonUtil.dart';
-import '../../../common/PreferenceUtil.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/router_variable.dart';
 import '../../../constants/variable_constant.dart';
@@ -40,7 +37,6 @@ import '../../../src/utils/screenutils/size_extensions.dart';
 import '../Controller/QurhomeDashboardController.dart';
 import 'QurHomeRegimen.dart';
 import 'package:myfhb/main.dart';
-
 
 class QurhomeDashboard extends StatefulWidget {
   bool forPatientList;
@@ -83,12 +79,22 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
   final hubListViewController = CommonUtil().onInitHubListViewController();
 
+  // Define the size of the top curve based on whether the device is a tablet or not
+  double topCurveSize = (CommonUtil().isTablet ?? false) ? 20.0 : 15.0;
+
   @override
   void initState() {
     try {
       WidgetsBinding.instance!.addPostFrameCallback((_) {
         controller.forPatientList.value = false;
         sheelBadgeController.isQueueDialogShowing.value = false;
+        controller.isRegimenScreen.value=true;
+        // Check if the language preference is not set or empty
+        if (PreferenceUtil.getStringValue(SHEELA_LANG) == null ||
+            PreferenceUtil.getStringValue(SHEELA_LANG) == '') {
+          // If language preference is not set or empty, set it to the default language
+          PreferenceUtil.saveString(SHEELA_LANG, strDefaultLanguage);
+        }
         onInit();
       });
       super.initState();
@@ -122,8 +128,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         }
         moveToPateintAlert();
 
-        controller.enableModuleAccess();
-        controller.getModuleAccess();
+        controller..enableModuleAccess()
+        ..getModuleAccess();
         qurHomeRegimenController.getSOSButtonStatus();
 
         await CommonUtil().getUserProfileData();
@@ -143,21 +149,22 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       //Method To show remainder in qurbook tablet
       // await SheelaRemainderPopup.checkConditionToShowPopUp();
 
-      controller.updateTabIndex(0);
-      controller.setActiveQurhomeTo(
+      controller..updateTabIndex(0)
+      ..setActiveQurhomeTo(
         status: true,
-      );
+      )
 
-      controller.setActiveQurhomeDashboardToChat(
+      ..setActiveQurhomeDashboardToChat(
         status: true,
       );
 
       WidgetsBinding.instance?.addPostFrameCallback((_) {
-        // getSheelaBadgeCount();
+        getSheelaBadgeCount();
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
         //Initilaize the screen idle timer
-        controller.isScreenIdle.value=true;
-        controller.checkScreenIdle();
+        if (sheelBadgeController.sheelaIconBadgeCount.value == 0) {
+          controller.resetScreenIdleTimer();
+        }
       });
 
       if (Platform.isAndroid) {
@@ -194,8 +201,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       controller.updateBLETimer(Enable: false);
       MyFHB.routeObserver.unsubscribe(this);
       controller.clear();
-      controller.getIdleTimer!.cancel();
-      controller.isScreenIdle.value=false;
+      controller.isRegimenScreen.value = false;
       super.dispose();
 
     } catch (e, stackTrace) {
@@ -207,12 +213,22 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
   @override
   void didPopNext() {
     controller.updateBLETimer(Enable: false);
+    //Set value as true while Coming back from any other screen
+    controller.isRegimenScreen.value = true;
     if (controller.currentSelectedIndex.value == 0) {
       controller.updateBLETimer();
     }
     controller.setActiveQurhomeDashboardToChat(
       status: true,
     );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      //Coming back from any other screen check the count and
+      // Initilaize the screen idle timer
+      getSheelaBadgeCount();
+      if (sheelBadgeController.sheelaIconBadgeCount.value == 0) {
+        controller.resetScreenIdleTimer();
+      }
+    });
   }
 
   Widget badge(int count) => Positioned(
@@ -262,6 +278,18 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
             child: Scaffold(
               drawerEnableOpenDragGesture: false,
               key: _scaffoldKey,
+              onDrawerChanged: (isOpen){
+                //check drawer is open or close
+                // if closed and regimen is active restart the timer for ideal
+                if(!isOpen && CommonUtil.isUSRegion() &&
+                    controller.currentSelectedIndex == 0&&  controller.isRegimenScreen.value){
+                  getSheelaBadgeCount();
+                  //Initilaize the screen idle timer
+                  if(sheelBadgeController.sheelaIconBadgeCount.value == 0 ){
+                    controller.resetScreenIdleTimer();
+                  }
+                }
+              },
               appBar: AppBar(
                 backgroundColor: Colors.white,
                 toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
@@ -478,6 +506,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                       ? 34.0.sp
                                       : 24.0.sp,
                                   onPressed: () {
+                                    //remove the ideal timer when drawer is open
+                                     controller.isScreenNotIdle.value=true;
                                     _scaffoldKey.currentState?.openDrawer();
                                   },
                                 ),
@@ -501,6 +531,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                             colors: Colors.black,
                             size: CommonUtil().isTablet! ? 38.0 : 24.0,
                             onTap: () {
+                              controller.isScreenNotIdle.value=true;
                               Get.back();
                             },
                           )
@@ -555,10 +586,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                 // ],
               ),
               body: controller.forPatientList.value
-                  ? QurhomePatientDashboard(
-                      careGiverPatientListResult:
-                          controller.careGiverPatientListResult,
-                    )
+                  ? getPatientDashboardCurrentTab()
                   : getCurrentTab(),
               floatingActionButton: controller.forPatientList.value
                   ? SizedBox()
@@ -575,6 +603,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                               backgroundColor: Colors.transparent,
                               elevation: 0,
                               onPressed: () {
+                                controller.isScreenNotIdle.value=true;
                                 if (sheelBadgeController
                                         .sheelaIconBadgeCount.value >
                                     0) {
@@ -584,15 +613,17 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                       rawMessage: sheelaQueueShowRemind,
                                     ),
                                   )?.then((value) {
-                                    getSheelaBadgeCount();
-                                    controller.isScreenIdle.value=true;
-                                    controller.checkScreenIdle();
+                                    if(sheelBadgeController.sheelaIconBadgeCount.value == 0 &&
+                                     controller.isRegimenScreen.value){
+                                      controller.resetScreenIdleTimer();
+                                    }else{
+                                      getSheelaBadgeCount();
+                                    }
                                   });
                                 } else {
                                   String sheela_lang =
                                       PreferenceUtil.getStringValue(
                                           SHEELA_LANG)!;
-                                  controller.isScreenIdle.value = false;
                                   Get.toNamed(
                                     rt_Sheela,
                                     arguments: SheelaArgument(
@@ -601,9 +632,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                       langCode: (sheela_lang),
                                     ),
                                   )?.then((value) {
-                                    getSheelaBadgeCount();
-                                    controller.isScreenIdle.value=true;
-                                    controller.checkScreenIdle();
+                                    if(sheelBadgeController.sheelaIconBadgeCount.value == 0 &&
+                                        controller.isRegimenScreen.value){
+                                      controller.resetScreenIdleTimer();
+                                    }else{
+                                      getSheelaBadgeCount();
+                                    }
                                   });
                                 }
                               },
@@ -642,7 +676,219 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
               bottomNavigationBar: controller.forPatientList.value
-                  ? SizedBox()
+                  ? SizedBox(
+                      height: 45.h,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            top: getBorder(),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Flexible(
+                              child: InkWell(
+                                onTap: () {
+                                  controller.patientDashboardCurSelectedIndex
+                                      .value = 0;
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: controller
+                                                .patientDashboardCurSelectedIndex ==
+                                            0
+                                        ? Color(
+                                            CommonUtil()
+                                                .getQurhomeGredientColor(),
+                                          )
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: controller
+                                                  .patientDashboardCurSelectedIndex ==
+                                              0
+                                          ? Radius.circular(topCurveSize)
+                                          : Radius.circular(0.0),
+                                      topRight: controller
+                                                  .patientDashboardCurSelectedIndex ==
+                                              0
+                                          ? Radius.circular(topCurveSize)
+                                          : Radius.circular(0.0),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Spacer(
+                                            flex: 1,
+                                          ),
+                                          Text(
+                                            strAlerts,
+                                            style: TextStyle(
+                                              color: controller
+                                                          .patientDashboardCurSelectedIndex ==
+                                                      0
+                                                  ? Colors.white
+                                                  : Color(
+                                                      CommonUtil()
+                                                          .getQurhomeGredientColor(),
+                                                    ),
+                                              fontSize: textFontSize,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Spacer(
+                                            flex: 1,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              child: InkWell(
+                                onTap: () {
+                                  controller.patientDashboardCurSelectedIndex
+                                      .value = 1;
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: controller
+                                                .patientDashboardCurSelectedIndex ==
+                                            1
+                                        ? Color(
+                                            CommonUtil()
+                                                .getQurhomeGredientColor(),
+                                          )
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: controller
+                                                  .patientDashboardCurSelectedIndex ==
+                                              1
+                                          ? Radius.circular(topCurveSize)
+                                          : Radius.circular(0.0),
+                                      topRight: controller
+                                                  .patientDashboardCurSelectedIndex ==
+                                              1
+                                          ? Radius.circular(topCurveSize)
+                                          : Radius.circular(0.0),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Spacer(
+                                            flex: 1,
+                                          ),
+                                          Text(
+                                            strRegimen,
+                                            style: TextStyle(
+                                              color: controller
+                                                          .patientDashboardCurSelectedIndex ==
+                                                      1
+                                                  ? Colors.white
+                                                  : Color(
+                                                      CommonUtil()
+                                                          .getQurhomeGredientColor(),
+                                                    ),
+                                              fontSize: textFontSize,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Spacer(
+                                            flex: 1,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              child: InkWell(
+                                onTap: () {
+                                  controller.patientDashboardCurSelectedIndex
+                                      .value = 2;
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: controller
+                                                .patientDashboardCurSelectedIndex ==
+                                            2
+                                        ? Color(
+                                            CommonUtil()
+                                                .getQurhomeGredientColor(),
+                                          )
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: controller
+                                                  .patientDashboardCurSelectedIndex ==
+                                              2
+                                          ? Radius.circular(topCurveSize)
+                                          : Radius.circular(0.0),
+                                      topRight: controller
+                                                  .patientDashboardCurSelectedIndex ==
+                                              2
+                                          ? Radius.circular(topCurveSize)
+                                          : Radius.circular(0.0),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Spacer(
+                                            flex: 1,
+                                          ),
+                                          Text(
+                                            strVitals,
+                                            style: TextStyle(
+                                              color: controller
+                                                          .patientDashboardCurSelectedIndex ==
+                                                      2
+                                                  ? Colors.white
+                                                  : Color(
+                                                      CommonUtil()
+                                                          .getQurhomeGredientColor(),
+                                                    ),
+                                              fontSize: textFontSize,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Spacer(
+                                            flex: 1,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
                   : SizedBox(
                       height: 45.h,
                       child: Container(
@@ -657,6 +903,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                             Flexible(
                               child: InkWell(
                                 onTap: () {
+                                  controller.isScreenNotIdle.value=true;
                                   if (CommonUtil.isUSRegion() &&
                                       controller.isVitalModuleDisable.value) {
                                     FlutterToast().getToast(
@@ -685,7 +932,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                             flex: 1,
                                           ),
                                           Text(
-                                            "Vitals",
+                                            strVitals,
                                             style: TextStyle(
                                               color: (CommonUtil.isUSRegion() &&
                                                       controller
@@ -716,6 +963,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                             Flexible(
                               child: InkWell(
                                 onTap: () {
+                                  controller.isScreenNotIdle.value=true;
                                   if (CommonUtil.isUSRegion() &&
                                       controller.isSymptomModuleDisable.value) {
                                     FlutterToast().getToast(
@@ -778,11 +1026,11 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                     ),
               drawer: QurHomeNavigationDrawer(
                 myProfile: myProfile,
+                controller: controller,
                 moveToLoginPage: moveToLoginPage,
                 userChangedbool: false,
                 refresh: ((userChanged) {
-                  controller.currentSelectedTab.value = 0;
-
+                  controller.patientDashboardCurSelectedIndex.value = 0;
                   controller.forPatientList.value = false;
                   controller.isPatientClicked.value = false;
                   controller.careGiverPatientListResult = null;
@@ -798,25 +1046,22 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                         userChanged: true,
                       );
                       Navigator.pop(context);
-                      controller.currentSelectedTab.value = 0;
-
+                      controller.patientDashboardCurSelectedIndex.value = 0;
                       controller.forPatientList.value = false;
                       controller.isPatientClicked.value = false;
                       controller.careGiverPatientListResult = null;
-                      PreferenceUtil.saveString(strKeyFamilyAlert, strNoValue);
+                      PreferenceUtil.saveString(
+                          strKeyFamilyAlert, strNoValue);
                       PreferenceUtil.saveString(strKeyAlertChildID, '');
                       PreferenceUtil.saveCareGiver(strKeyCareGiver, null);
                     } else {
                       if (controller.careGiverPatientListResult?.childId !=
                           result?.childId) {
                         controller.forPatientList.value = true;
-
                         controller.careGiverPatientListResult = null;
                         controller.careGiverPatientListResult = result;
-                        controller.currentSelectedTab.value = 0;
-
+                        controller.patientDashboardCurSelectedIndex.value = 0;
                         controller.isPatientClicked.value = true;
-
                         controller.getPatientAlertList();
                         PreferenceUtil.saveString(
                             strKeyFamilyAlert, strYesValue);
@@ -852,9 +1097,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         break;
       case 3:
         landingTab = SymptomListScreen();
-        break;
-      case 4:
-        landingTab = QurhomePatientDashboard();
         break;
       default:
         landingTab = QurHomeRegimenScreen();
@@ -971,7 +1213,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
           if (response != null) {
             controller.careGiverPatientListResult = null;
             controller.careGiverPatientListResult = response;
-            controller.currentSelectedTab.value = 0;
+            controller.patientDashboardCurSelectedIndex.value = 0;
 
             controller.isPatientClicked.value = true;
 
@@ -982,4 +1224,37 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
     }
     controller.isLoading.value = false;
   }
+
+  // Function to get the current tab widget for the patient dashboard
+  Widget getPatientDashboardCurrentTab() {
+    // Variable to store the selected landing tab widget
+    Widget landingTab;
+
+    // Switch statement to determine the landing tab based on the selected index
+    switch (controller.patientDashboardCurSelectedIndex.value) {
+    // Case 0: Patient Alert tab
+      case 0:
+        landingTab = QurhomePatientAlert(); // Setting the landing tab to Patient Alert widget
+        break;
+    // Case 1: Patient Regimen List tab
+      case 1:
+        landingTab = QurHomePatientRegimenListScreen(
+          // Passing necessary parameters to the Patient Regimen List widget
+          careGiverPatientListResult: controller.careGiverPatientListResult,
+        );
+        break;
+    // Case 2: Vitals List tab
+      case 2:
+        landingTab = VitalsList(); // Setting the landing tab to Vitals List widget
+        break;
+    // Default case: In case of an invalid index, default to Patient Alert tab
+      default:
+        landingTab = QurhomePatientAlert(); // Setting the landing tab to Patient Alert widget
+        break;
+    }
+
+    // Returning the determined landing tab widget
+    return landingTab;
+  }
+
 }

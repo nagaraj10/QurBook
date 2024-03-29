@@ -207,9 +207,7 @@ Future<void> showNotification(RemoteMessage message) async {
         '${androidNormalchannel.name}', // title
         priority: Priority.high,
         channelDescription: '${androidNormalchannel.description}',
-        icon: getIconBasedOnRegion(isSmallIcon: true),
-        largeIcon: DrawableResourceAndroidBitmap(
-            getIconBasedOnRegion(isSmallIcon: false)),
+        icon: getIconBasedOnRegion(),
       ),
       iOS: const DarwinNotificationDetails(sound: strRingtoneIOS));
   await localNotificationsPlugin
@@ -231,9 +229,7 @@ void showCallNotification(RemoteMessage message) async {
     '${callChannel.id}',
     '${callChannel.description}',
     importance: Importance.max,
-    icon: getIconBasedOnRegion(isSmallIcon: true),
-    largeIcon:
-        DrawableResourceAndroidBitmap(getIconBasedOnRegion(isSmallIcon: false)),
+    icon: getIconBasedOnRegion(),
     priority: Priority.high,
     timeoutAfter: 30 * 1000,
     actions: [acceptAction, declineAction],
@@ -263,9 +259,7 @@ void showFamilyMemberNotifications(RemoteMessage message) async {
     importance: Importance.max,
     priority: Priority.high,
     actions: [acceptAction, rejectAction],
-    icon: getIconBasedOnRegion(isSmallIcon: true),
-    largeIcon:
-        DrawableResourceAndroidBitmap(getIconBasedOnRegion(isSmallIcon: false)),
+    icon: getIconBasedOnRegion(),
   );
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -289,9 +283,7 @@ void showViewMemberAndCommunication(RemoteMessage message) async {
           '${androidNormalchannel.id}', '${androidNormalchannel.description}',
           importance: Importance.max,
           priority: Priority.high,
-          icon: getIconBasedOnRegion(isSmallIcon: true),
-          largeIcon: DrawableResourceAndroidBitmap(
-              getIconBasedOnRegion(isSmallIcon: false)),
+          icon: getIconBasedOnRegion(),
           actions: [viewMemberAction, communicationSettingAction]);
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -317,9 +309,7 @@ void showNotificationCaregiverForMedicalRecord(RemoteMessage message) async {
           importance: Importance.max,
           priority: Priority.high,
           category: AndroidNotificationCategory.reminder,
-          icon: getIconBasedOnRegion(isSmallIcon: true),
-          largeIcon: DrawableResourceAndroidBitmap(
-              getIconBasedOnRegion(isSmallIcon: false)),
+          icon: getIconBasedOnRegion(),
           actions: [chatwithccAction, viewRecordAction]);
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -346,9 +336,7 @@ void showNotificationCareGiverTransportRequestReminder(
           importance: Importance.max,
           priority: Priority.high,
           category: AndroidNotificationCategory.reminder,
-          icon: getIconBasedOnRegion(isSmallIcon: true),
-          largeIcon: DrawableResourceAndroidBitmap(
-              getIconBasedOnRegion(isSmallIcon: false)),
+          icon: getIconBasedOnRegion(),
           actions: [acceptAction, declineAction]);
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -374,9 +362,7 @@ void showNotificationRenewNotification(RemoteMessage message) async {
           importance: Importance.max,
           priority: Priority.high,
           category: AndroidNotificationCategory.reminder,
-          icon: getIconBasedOnRegion(isSmallIcon: true),
-          largeIcon: DrawableResourceAndroidBitmap(
-              getIconBasedOnRegion(isSmallIcon: false)),
+          icon: getIconBasedOnRegion(),
           actions: [renewalAction, callBackAction]);
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -401,9 +387,7 @@ void showNotificationEscalate(RemoteMessage message) async {
           importance: Importance.max,
           priority: Priority.high,
           category: AndroidNotificationCategory.reminder,
-          icon: getIconBasedOnRegion(isSmallIcon: true),
-          largeIcon: DrawableResourceAndroidBitmap(
-              getIconBasedOnRegion(isSmallIcon: false)),
+          icon: getIconBasedOnRegion(),
           actions: [escalateAction]);
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -429,9 +413,7 @@ void showNotificationForFamilyAddition(RemoteMessage message) async {
           importance: Importance.max,
           priority: Priority.high,
           category: AndroidNotificationCategory.reminder,
-          icon: getIconBasedOnRegion(isSmallIcon: true),
-          largeIcon: DrawableResourceAndroidBitmap(
-              getIconBasedOnRegion(isSmallIcon: false)),
+          icon: getIconBasedOnRegion(),
           actions: [viewDetailsAction]);
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -456,9 +438,7 @@ void showNotificationForAppointmentPayment(RemoteMessage message) async {
           importance: Importance.max,
           priority: Priority.high,
           category: AndroidNotificationCategory.reminder,
-          icon: getIconBasedOnRegion(isSmallIcon: true),
-          largeIcon: DrawableResourceAndroidBitmap(
-              getIconBasedOnRegion(isSmallIcon: false)),
+          icon: getIconBasedOnRegion(),
           actions: [payNowAction]);
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -483,9 +463,7 @@ void showNotificationForMyCartPayment(RemoteMessage message) async {
           importance: Importance.max,
           priority: Priority.high,
           category: AndroidNotificationCategory.reminder,
-          icon: getIconBasedOnRegion(isSmallIcon: true),
-          largeIcon: DrawableResourceAndroidBitmap(
-              getIconBasedOnRegion(isSmallIcon: false)),
+          icon: getIconBasedOnRegion(),
           actions: [payNowAction]);
   final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -525,16 +503,7 @@ void listenEvent(String meetingId) {
   }, onError: (Object error) {});
 }
 
-getIconBasedOnRegion({required bool isSmallIcon}) {
-
-  if (isSmallIcon) {
-    if (CommonUtil.AppName.toLowerCase().trim().toString()==AppNameConstants.QURHOME) {
-      return strAppNsQurhomeIcon;
-    }else if(CommonUtil.AppName.toLowerCase().trim().toString()==AppNameConstants.QURDAY){
-      return strAppNsQurdayIcon;
-    }
-    return strAppNsQurbookIcon;
-  } else {
+getIconBasedOnRegion() {
     if (CommonUtil.AppName.toLowerCase().trim().toString()==AppNameConstants.QURHOME) {
       return strIcLauncherQurhome;
     }
@@ -542,7 +511,6 @@ getIconBasedOnRegion({required bool isSmallIcon}) {
       return strIcLauncherQurDay;
     }
     return strIcLauncherQurbook;
-  }
 }
 
 // Initialize the local time zone.
@@ -679,22 +647,22 @@ zonedScheduleNotification(
     int notificationId,
     tz.TZDateTime scheduledDateTime,
     bool isButtonShown,
-    bool isSnoozePress,
-    ) async {
+    bool isSnoozePress) async {
+  late Reminder reminderTemp;
+  late NotificationDetails notificationDetails;
+  var payLoadData = '';
+  // Initialize SheelaAIController
+  final sheelaAIController = CommonUtil().onInitSheelaAIController();
+
   try {
-
-    // Initialize SheelaAIController
-    final sheelaAIController = CommonUtil().onInitSheelaAIController();
-
     // Get the list of pending notifications
     List<PendingNotificationRequest> pendingNotifications =
-    await localNotificationsPlugin.pendingNotificationRequests();
+        await localNotificationsPlugin.pendingNotificationRequests();
 
     // Check if the notification with the given ID is already scheduled
     bool isScheduled = pendingNotifications.any(
-          (notification) => notification.id == notificationId,
+      (notification) => notification.id == notificationId,
     );
-
 
     var isDismissButtonOnlyShown = false;
     var channelId = remainderScheduleChannel.id;
@@ -723,48 +691,52 @@ zonedScheduleNotification(
     }
 
     // Create a copy of the reminder and update the notificationListId property
-    Reminder reminderTemp = Reminder.fromJson(reminder!.toJson());
-    reminderTemp.notificationListId = notificationId.toString();
+    reminderTemp = Reminder.fromJson(reminder!.toJson())
+      ..notificationListId = notificationId.toString();
 
     // Encode the reminder data to JSON
-    var payLoadData = jsonEncode(reminderTemp?.toMap());
+    payLoadData = jsonEncode(reminderTemp?.toMap());
 
     // Create notification details based on platform
-    final notificationDetails = NotificationDetails(
+    notificationDetails = NotificationDetails(
       android: AndroidNotificationDetails(
         channelId,
         channelName,
         priority: Priority.high,
         channelDescription: channelDescription,
-        icon: getIconBasedOnRegion(isSmallIcon: true),
-        largeIcon: DrawableResourceAndroidBitmap(getIconBasedOnRegion(isSmallIcon: false)),
+        icon: getIconBasedOnRegion(),
         actions: isButtonShown
             ? isDismissButtonOnlyShown
-            ? [dismissAction]
-            : [dismissAction, snoozeAction]
+                ? [dismissAction]
+                : [dismissAction, snoozeAction]
             : null,
       ),
       iOS: isButtonShown
           ? isDismissButtonOnlyShown
-          ? const DarwinNotificationDetails(categoryIdentifier: strShowSingleButtonCat)
-          : const DarwinNotificationDetails(categoryIdentifier: strShowBothButtonsCat)
-          : const DarwinNotificationDetails(sound: strRingtoneIOS, categoryIdentifier: strShowSingleButtonCat),
+              ? const DarwinNotificationDetails(
+                  categoryIdentifier: strShowSingleButtonCat)
+              : const DarwinNotificationDetails(
+                  categoryIdentifier: strShowBothButtonsCat)
+          : const DarwinNotificationDetails(
+              sound: strRingtoneIOS,
+              categoryIdentifier: strShowSingleButtonCat),
     );
 
     // Resolve Android specific implementation to create the notification channel
     await localNotificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(
-      reminderTemp?.importance == '2' ? remainderScheduleV3Channel : remainderScheduleChannel,
-    );
-
+          reminderTemp?.importance == '2'
+              ? remainderScheduleV3Channel
+              : remainderScheduleChannel,
+        );
 
     if (isScheduled) {
       // If the reminder is scheduled, add the scheduled time using SheelaAIController
       await sheelaAIController.addScheduledTime(reminderTemp!, scheduledDateTime);
       return;
     }
-
 
     // List to hold asynchronous function calls
     var functionCalls = <Future<dynamic>>[
@@ -786,13 +758,37 @@ zonedScheduleNotification(
 
     // Wait for all functions to complete
     await Future.wait(functionCalls);
-
   } catch (e, stackTrace) {
+
+    // Retry with isSetInExact set to true on failure
+    var functionCalls = <Future<dynamic>>[
+      // Schedule a local notification
+      localNotificationsPlugin.zonedSchedule(
+        notificationId,
+        reminderTemp?.title ?? strScheduledtitle,
+        reminderTemp?.description ?? strScheduledbody,
+        scheduledDateTime,
+        notificationDetails,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        payload: payLoadData,
+      ),
+      // Add scheduled time using SheelaAIController
+      sheelaAIController.addScheduledTime(reminderTemp!, scheduledDateTime,
+          isSetInExact: true,
+          notificationId: notificationId,
+          notificationDetails: notificationDetails,
+          payLoadData: payLoadData),
+    ];
+
+    // Wait for all functions to complete
+    await Future.wait(functionCalls);
+
     // Handle exceptions and log errors
     CommonUtil().appLogs(message: e, stackTrace: stackTrace);
   }
 }
-
 
 // Convert an integer to a signed 32-bit integer.
 int toSigned32BitInt(int value) {
@@ -844,5 +840,25 @@ void onInitNotification(RemoteMessage message) {
   }
 }
 
-
-
+Future<void> showScheduleNotification({
+  Reminder? reminder,
+  int? notificationId,
+  NotificationDetails? notificationDetails,
+  String? payLoadData,
+}) async {
+  try {
+    // Show the notification using FlutterLocalNotificationsPlugin
+    await localNotificationsPlugin.show(
+      notificationId ?? 0, // Use provided notificationId or default to 0
+      reminder?.title ?? strScheduledtitle,
+      // Use reminder title or default title
+      reminder?.description ?? strScheduledbody,
+      // Use reminder description or default body
+      notificationDetails, // Use provided notification details
+      payload: payLoadData, // Use provided payload data
+    );
+  } catch (e, stackTrace) {
+    // Handle any exceptions and log errors
+    CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+  }
+}

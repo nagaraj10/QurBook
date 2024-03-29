@@ -414,7 +414,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         userChanged: true,
                       );
                       Navigator.pop(context);
-                      qurhomeDashboardController.currentSelectedTab.value = 0;
+                      qurhomeDashboardController.patientDashboardCurSelectedIndex.value = 0;
 
                       qurhomeDashboardController.forPatientList.value = false;
                       qurhomeDashboardController.isPatientClicked.value = false;
@@ -425,7 +425,7 @@ class _LandingScreenState extends State<LandingScreen> {
                           null;
                       qurhomeDashboardController.careGiverPatientListResult =
                           result;
-                      qurhomeDashboardController.currentSelectedTab.value = 0;
+                      qurhomeDashboardController.patientDashboardCurSelectedIndex.value = 0;
                       qurhomeDashboardController.isPatientClicked.value = true;
                       CommonUtil().navigateToQurhomePatientDasboard(result);
                     }
@@ -948,7 +948,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 currentLanguage = 'en';
               }
               PreferenceUtil.saveString(Constants.SHEELA_LANG,
-                  CommonUtil.langaugeCodes[currentLanguage] ?? 'en-IN');
+                  CommonUtil.langaugeCodes[currentLanguage] ?? strDefaultLanguage);
             }
             if (selectionResult!.result![0].profileSetting!.preColor != null &&
                 selectionResult!.result![0].profileSetting!.greColor != null) {

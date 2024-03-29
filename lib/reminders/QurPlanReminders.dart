@@ -128,22 +128,25 @@ class QurPlanReminders {
 
     try {
       for (var i = 0; i < data.length; i++) {
-        var apiReminder = data[i];
-        var found = false;
-        for (var j = 0; j < localReminders.length; j++) {
-          var localReminder = localReminders[j];
-          if (apiReminder.eid == localReminder.eid) {
-            found = true;
-            if (apiReminder == localReminder) {
-              break;
-            } else {
-              await cancelLocalReminders(localReminder);
-              await onInitScheduleNotification(apiReminder);
+        // for restrict the reminders based on patient view access flag
+        if ((data[i].isPatientViewAccess??false)) {
+          var apiReminder = data[i];
+          var found = false;
+          for (var j = 0; j < localReminders.length; j++) {
+            var localReminder = localReminders[j];
+            if (apiReminder.eid == localReminder.eid) {
+              found = true;
+              if (apiReminder == localReminder) {
+                break;
+              } else {
+                await cancelLocalReminders(localReminder);
+                await onInitScheduleNotification(apiReminder);
+              }
             }
           }
-        }
-        if (!found) {
-          await onInitScheduleNotification(apiReminder);
+          if (!found) {
+            await onInitScheduleNotification(apiReminder);
+          }
         }
       }
 
