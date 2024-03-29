@@ -675,7 +675,11 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                     ),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
-              bottomNavigationBar: controller.forPatientList.value
+              bottomNavigationBar: SafeArea(
+                top: false,
+                right: false,
+                left: false,
+                child: controller.forPatientList.value
                   ? SizedBox(
                       height: 45.h,
                       child: Container(
@@ -1024,6 +1028,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                         ),
                       ),
                     ),
+              ),
               drawer: QurHomeNavigationDrawer(
                 myProfile: myProfile,
                 controller: controller,
