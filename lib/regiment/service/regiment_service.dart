@@ -12,20 +12,19 @@ import 'package:myfhb/regiment/models/ActivityStatusModel.dart';
 import 'package:myfhb/regiment/models/GetEventIdModel.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/resources/network/AppException.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
 
+import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/HeaderRequest.dart';
-import 'package:myfhb/src/resources/network/api_services.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_query.dart' as variable;
-import '../models/regiment_response_model.dart';
-import '../models/save_response_model.dart';
 import '../models/field_response_model.dart';
 import '../models/profile_response_model.dart';
-import '../../common/CommonUtil.dart';
-import 'package:myfhb/src/resources/network/api_services.dart';
+import '../models/regiment_response_model.dart';
+import '../models/save_response_model.dart';
 
 class RegimentService {
   static Future<RegimentResponseModel> getRegimentData(
@@ -201,6 +200,13 @@ class RegimentService {
         followEventParams =
             '&followevent=1&context=${followEventContext ?? ''}';
       }
+
+      /* Gets the application name from CommonUtil and converts it to uppercase.
+      This is used to identify the application name in a standardized way.
+      We will get the name of the application such as Qurbook,Qurhome and Qurday
+      */
+      var source =
+          (await CommonUtil().getSourceName()).toString().toUpperCase();
       var response = await ApiServices.post(
         urlForRegiment,
         headers: headerRequest,
@@ -208,7 +214,7 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-                "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${(isFollowEvent ?? false) ? Provider.of<RegimentViewModel>(Get.context!, listen: false).cachedEvents.reduce((value, element) => value + element) : events ?? ''}${variable.qr_patientEqaul}$userId$followEventParams&source=QURBOOK",
+                "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${(isFollowEvent ?? false) ? Provider.of<RegimentViewModel>(Get.context!, listen: false).cachedEvents.reduce((value, element) => value + element) : events ?? ''}${variable.qr_patientEqaul}$userId$followEventParams&source=${source}",
             'isVitalSave': isVitals
           },
         ),
