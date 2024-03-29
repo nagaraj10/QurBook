@@ -1089,6 +1089,9 @@ const String deviceReadingValues = 'deviceReading';
 // Define a constant string for storing the current notification ID.
 const String strCurrentNotificationId = 'currentNotificationId';
 
+// for latest eid sheela during conversation
+const String strLatestRemindEid = 'latestRemindEid';
+
 // Define constant strings for various actions
 const String strAction = 'action'; // General action string
 const String strCallback = 'Callback'; // Callback action string

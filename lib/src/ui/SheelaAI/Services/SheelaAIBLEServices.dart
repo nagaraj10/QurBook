@@ -775,13 +775,17 @@ class SheelaBLEController extends GetxController {
             }
           } else if (bleDataModel.deviceType?.toLowerCase() == "weight") {
             if ((bleDataModel.data!.weight ?? '').isNotEmpty) {
+              // If the weightUnit value is kg means set unit as kilograms
+              // If the weightUnit value is lb means set unit as pounds
+              final weightUnitResult = weightUnit == STR_VAL_WEIGHT_IND? 'kilograms':
+              weightUnit == STR_VAL_WEIGHT_US? 'pounds':'';
+
               //Added the success message for weight with current time and values
               final currentTime = DateFormat('hh:mm a').format(DateTime.now());
               final weightSuccessMsg = 'Your weight has been recorded as '
-                  '${bleDataModel.data!.weight} $weightUnit at $currentTime.${getFinalResultMsg(bleDataModel)}';
+                  '${bleDataModel.data!.weight} $weightUnitResult at $currentTime.${getFinalResultMsg(bleDataModel)}';
 
-              final strTextMsg =
-                  await SheelaController.getTextTranslate(weightSuccessMsg);
+              final strTextMsg = await SheelaController.getTextTranslate(weightSuccessMsg);
 
               addToConversationAndPlay(
                 SheelaResponse(

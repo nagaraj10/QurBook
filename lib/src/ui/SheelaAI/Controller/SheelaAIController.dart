@@ -188,6 +188,8 @@ class SheelaAIController extends GetxController {
   //mic button enable or disable flag while reconnect
   Rx<bool> micDisableReconnect = false.obs;
 
+  String? latestRemindEid = '';
+
 
   var deviceResponseEid = '';
 
@@ -483,6 +485,9 @@ class SheelaAIController extends GetxController {
         // Update additionalInfo with isSkipReminderCount set to false.
         additionalInfo?[isSaveDeviceReading] = false;
       }
+
+      // for latest eid to pass api
+      additionalInfo?[strLatestRemindEid] = latestRemindEid??'';
 
       final sheelaRequest = SheelaRequestModel(
         sender: userId,

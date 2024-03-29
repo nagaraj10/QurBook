@@ -60,6 +60,9 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
 
     controller.deviceResponseEid = '';
 
+    // latest eid store and pass to sheela payload
+    controller.latestRemindEid = '';
+
 
     ///Surrendered with addPostFrameCallback for widget building issue///
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
