@@ -651,7 +651,6 @@ class SheelaBLEController extends GetxController {
         hublistController.eid = null;
         hublistController.uid = null;
         // Check if Sheela screen is active and device is connected to Sheela screen
-        print('kkkkkkkkkkEid'+SheelaController.deviceResponseEid);
         if (SheelaController.isSheelaScreenActive &&
             (SheelaController.isDeviceConnectSheelaScreen.value) &&
             (SheelaController.deviceResponseEid != '')) {
