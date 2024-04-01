@@ -497,6 +497,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             onTap: () {
                               context.read<AppThemeProvider>().updatePrimaryColor(variable.myThemes[index]);
                               context.read<AppThemeProvider>().updateGradientColor(variable.myGradient[index]);
+                              preColor = variable.myThemes[index];
+                              greColor=variable.myGradient[index];
                               createAppColorSelection(variable.myThemes[index],
                                   variable.myGradient[index]);
                               if (widget.refresh != null) {
@@ -1652,6 +1654,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                     onTap: () {
                                       context.read<AppThemeProvider>().updatePrimaryColor(variable.myThemes[index]);
                                       context.read<AppThemeProvider>().updateGradientColor(variable.myGradient[index]);
+                                      preColor = variable.myThemes[index];
+                                      greColor=variable.myGradient[index];
                                       createAppColorSelection(
                                           variable.myThemes[index],
                                           variable.myGradient[index]);

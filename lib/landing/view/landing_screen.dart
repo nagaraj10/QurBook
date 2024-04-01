@@ -16,6 +16,7 @@ import '../../Qurhome/QurhomeDashboard/Controller/SheelaRemainderPopup.dart';
 import '../../Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import '../../add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
+import '../../app_theme_provider.dart';
 import '../../authentication/view/login_screen.dart';
 import '../../chat_socket/view/ChatDetail.dart';
 import '../../chat_socket/view/ChatUserList.dart';
@@ -119,6 +120,9 @@ class _LandingScreenState extends State<LandingScreen> {
       FABService.trackCurrentScreen(FBALandingScreen);
       Future.delayed(Duration.zero, () async {
         onInit();
+      });
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        profileData = getMyProfile();
       });
       SystemChannels.lifecycle.setMessageHandler((msg) async {
         if (msg != null) {
@@ -953,21 +957,15 @@ class _LandingScreenState extends State<LandingScreen> {
             }
             if (selectionResult!.result![0].profileSetting!.preColor != null &&
                 selectionResult!.result![0].profileSetting!.greColor != null) {
-              PreferenceUtil.saveTheme(Constants.keyPriColor,
-                  selectionResult!.result![0].profileSetting!.preColor!);
-              PreferenceUtil.saveTheme(Constants.keyGreyColor,
-                  selectionResult!.result![0].profileSetting!.greColor!);
+              context.read<AppThemeProvider>().updatePrimaryColor(selectionResult!.result![0].profileSetting!.preColor!);
+              context.read<AppThemeProvider>().updateGradientColor(selectionResult!.result![0].profileSetting!.greColor!);
               //HomeScreen.of(context).refresh();
               //setState(() {});
             } else {
-              PreferenceUtil.saveTheme(
-                  Constants.keyPriColor,
-                  PreferenceUtil.getSavedTheme(Constants.keyPriColor) ??
-                      0xff5f0cf9);
-              PreferenceUtil.saveTheme(
-                  Constants.keyGreyColor,
-                  PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??
-                      0xff9929ea);
+              context.read<AppThemeProvider>().updatePrimaryColor(PreferenceUtil.getSavedTheme(Constants.keyPriColor) ??
+                  0xff5f0cf9);
+              context.read<AppThemeProvider>().updateGradientColor(PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??
+                  0xff9929ea);
             }
             sheelBadgeController?.isAllowSheelaLiveReminders = (selectionResult!
                             .result![0].profileSetting!.sheelaLiveReminders !=
@@ -983,14 +981,10 @@ class _LandingScreenState extends State<LandingScreen> {
                 (sheelBadgeController?.isAllowSheelaLiveReminders ?? true)
                     .toString());
           } else {
-            PreferenceUtil.saveTheme(
-                Constants.keyPriColor,
-                PreferenceUtil.getSavedTheme(Constants.keyPriColor) ??
-                    0xff5f0cf9);
-            PreferenceUtil.saveTheme(
-                Constants.keyGreyColor,
-                PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??
-                    0xff9929ea);
+            context.read<AppThemeProvider>().updatePrimaryColor(PreferenceUtil.getSavedTheme(Constants.keyPriColor) ??
+                0xff5f0cf9);
+            context.read<AppThemeProvider>().updateGradientColor(PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??
+                0xff9929ea);
           }
         } else {
           bpMonitor = true;
@@ -1070,7 +1064,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   Widget getSwitchProfileWidget() {
     return FutureBuilder<MyProfileModel?>(
-        future: getMyProfile(),
+        future: profileData?.then((value) => value as MyProfileModel?),
         builder: (context, snapshot) {
           if (snapshot != null) if (snapshot.data != null && snapshot.hasData)
             PreferenceUtil.saveProfileData(

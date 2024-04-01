@@ -17,13 +17,10 @@ class AppThemeProvider extends ChangeNotifier {
 
   AppThemeProvider() {
     _currentEnumAppThemeType = EnumAppThemeType.Classic;
-    _primaryColor = CommonUtil.isUSRegion()
-        ? qurHomePrimaryColor
-        : Color(PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? 0xff5f0cf9);
-    _gradientColor= CommonUtil.isUSRegion()
-        ? qurhomeGradientColor
-        : Color(PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ?? 0xff9929ea);
-    getPreferences();
+    initThemeColors();
+  }
+  Future<void> initThemeColors() async {
+    await getPreferences(); // Adding 'await' here to properly wait for the preferences
   }
 
 /// primary and secondary color of the app.
@@ -95,6 +92,12 @@ class AppThemeProvider extends ChangeNotifier {
   /// Notifies listeners of the change.
   getPreferences() {
     _currentEnumAppThemeType = getEnumAppThemeType();
+    _primaryColor = CommonUtil.isUSRegion()
+        ? qurHomePrimaryColor
+        : Color(PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? 0xff5f0cf9);
+    _gradientColor= CommonUtil.isUSRegion()
+        ? qurhomeGradientColor
+        : Color(PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ?? 0xff9929ea);
     notifyListeners();
   }
 }
