@@ -39,7 +39,8 @@ class AddDeviceViewController extends GetxController {
     var source = '';
 
     try {
-      source = CommonUtil().getSourceName();
+      // Wait for the completion of the asynchronous operation and assign the result to `source`.
+      source = await CommonUtil().getSourceName();
       loadingData(true);
       final data = {
         DEVICE_ID: listController.bleMacId,
