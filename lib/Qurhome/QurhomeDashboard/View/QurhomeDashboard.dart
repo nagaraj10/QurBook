@@ -79,9 +79,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
 
   final hubListViewController = CommonUtil().onInitHubListViewController();
 
-  // Define the size of the top curve based on whether the device is a tablet or not
-  double topCurveSize = (CommonUtil().isTablet ?? false) ? 20.0 : 15.0;
-
   @override
   void initState() {
     try {
@@ -675,7 +672,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                     ),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
-              bottomNavigationBar: controller.forPatientList.value
+              // SafeArea widget ensures that its child's content is visible and not obscured by system UI elements
+              bottomNavigationBar: SafeArea(
+                top: false,
+                right: false,
+                left: false,
+                child: controller.forPatientList.value
                   ? SizedBox(
                       height: 45.h,
                       child: Container(
@@ -694,28 +696,14 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                       .value = 0;
                                 },
                                 child: Container(
-                                  decoration: BoxDecoration(
-                                    color: controller
-                                                .patientDashboardCurSelectedIndex ==
-                                            0
-                                        ? Color(
-                                            CommonUtil()
-                                                .getQurhomeGredientColor(),
-                                          )
-                                        : Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: controller
-                                                  .patientDashboardCurSelectedIndex ==
-                                              0
-                                          ? Radius.circular(topCurveSize)
-                                          : Radius.circular(0.0),
-                                      topRight: controller
-                                                  .patientDashboardCurSelectedIndex ==
-                                              0
-                                          ? Radius.circular(topCurveSize)
-                                          : Radius.circular(0.0),
-                                    ),
-                                  ),
+                                  color: controller
+                                      .patientDashboardCurSelectedIndex ==
+                                      0
+                                      ? Color(
+                                    CommonUtil()
+                                        .getQurhomeGredientColor(),
+                                  )
+                                      : Colors.white,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
@@ -760,8 +748,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                       .value = 1;
                                 },
                                 child: Container(
-                                  decoration: BoxDecoration(
-                                    color: controller
+                                  color: controller
                                                 .patientDashboardCurSelectedIndex ==
                                             1
                                         ? Color(
@@ -769,20 +756,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                                 .getQurhomeGredientColor(),
                                           )
                                         : Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: controller
-                                                  .patientDashboardCurSelectedIndex ==
-                                              1
-                                          ? Radius.circular(topCurveSize)
-                                          : Radius.circular(0.0),
-                                      topRight: controller
-                                                  .patientDashboardCurSelectedIndex ==
-                                              1
-                                          ? Radius.circular(topCurveSize)
-                                          : Radius.circular(0.0),
-                                    ),
-                                  ),
-                                  child: Column(
+                                    child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
@@ -826,8 +800,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                       .value = 2;
                                 },
                                 child: Container(
-                                  decoration: BoxDecoration(
-                                    color: controller
+                                  color: controller
                                                 .patientDashboardCurSelectedIndex ==
                                             2
                                         ? Color(
@@ -835,20 +808,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                                                 .getQurhomeGredientColor(),
                                           )
                                         : Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: controller
-                                                  .patientDashboardCurSelectedIndex ==
-                                              2
-                                          ? Radius.circular(topCurveSize)
-                                          : Radius.circular(0.0),
-                                      topRight: controller
-                                                  .patientDashboardCurSelectedIndex ==
-                                              2
-                                          ? Radius.circular(topCurveSize)
-                                          : Radius.circular(0.0),
-                                    ),
-                                  ),
-                                  child: Column(
+                                    child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
@@ -1024,6 +984,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                         ),
                       ),
                     ),
+              ),
               drawer: QurHomeNavigationDrawer(
                 myProfile: myProfile,
                 controller: controller,

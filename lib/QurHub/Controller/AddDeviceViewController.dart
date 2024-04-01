@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:package_info/package_info.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import '../../src/model/common_response_model.dart';
-import 'HubListViewController.dart';
-import '../ApiProvider/hub_api_provider.dart';
+
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart';
+import '../../src/model/common_response_model.dart';
+import '../ApiProvider/hub_api_provider.dart';
+import 'HubListViewController.dart';
 
 class AddDeviceViewController extends GetxController {
   final deviceIdController = TextEditingController();
@@ -37,16 +37,10 @@ class AddDeviceViewController extends GetxController {
 
   saveDevice() async {
     var source = '';
-    final packageInfo = await PackageInfo.fromPlatform();
-    if (packageInfo.packageName == appQurbookBundleId) {
-      source = strAppTypeQurbook;
-    } else if (packageInfo.packageName == appQurhomeBundleId) {
-      source = strAppTypeQurhome;
-    } else if (packageInfo.packageName == appQurdayBundleId) {
-      source = strAppTypeQurday;
-    }
 
     try {
+      // Wait for the completion of the asynchronous operation and assign the result to `source`.
+      source = await CommonUtil().getSourceName();
       loadingData(true);
       final data = {
         DEVICE_ID: listController.bleMacId,
@@ -82,8 +76,8 @@ class AddDeviceViewController extends GetxController {
           Colors.red,
         );
       }
-    } catch (e,stackTrace) {
-      CommonUtil().appLogs(message: e,stackTrace:stackTrace);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
       loadingData(false);
       printError(info: e.toString());

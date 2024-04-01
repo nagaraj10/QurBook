@@ -623,6 +623,8 @@ class SheelaAIController extends GetxController {
             //additionalInfo = {};
             sessionToken = const Uuid().v1();
             relationshipId = userId;
+            // latestRemindEid empty if end of conversation true
+            latestRemindEid = '';
           }
           if (currentResponse.additionalInfoSheelaResponse?.sessionTimeoutMin !=
                   null &&
