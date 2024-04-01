@@ -33,14 +33,6 @@ import flutter_local_notifications
     let removeReminderMethod = Constants.removeReminderMethod
     
     let notificationCenter = UNUserNotificationCenter.current()
-    let showVCAcceptRejectedButtons = "showVCAcceptRejectedButtons"
-    let planRenewButton = "planRenewButton"
-    let escalateToCareCoordinatorButtons = "escalateToCareCoordinatorButtons"
-    let showTransportationNotification = "transportationRequestAcceptDeclineButtons"
-    let acceptDeclineButtonsCaregiver = "showAcceptDeclineButtonsCaregiver"
-    let ChatCCAndViewrecordButtons = "showChatCCAndViewrecordButtons"
-    let viewDetailsButton = "memberviewDetailsButtons"
-    let showViewMemberAndCommunicationButtons = "showViewMemberAndCommunicationButtons"
     var navigationController: UINavigationController?
     var resultForMethodChannel : FlutterResult!
     var locationManager: CLLocationManager?
