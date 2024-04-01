@@ -5298,8 +5298,7 @@ class CommonUtil {
         if (value.result != null) {
           if (value.result!.queueCount != null &&
               value.result!.queueCount! > 0) {
-            var sheelaAIController =
-            CommonUtil().onInitSheelaAIController();
+            var sheelaAIController = CommonUtil().onInitSheelaAIController();
             sheelaAIController.sheelaIconBadgeCount.value =
                 (value.result?.queueCount ?? 0);
             // isNeedDialog condition for showing the dialog or not
@@ -5307,15 +5306,19 @@ class CommonUtil {
               CommonUtil().dialogForSheelaQueue(Get.context!);
             }
 
-            if (sheelaAIController.isSheelaScreenActive) { // Check if Sheela screen is active
-              var kioskTask = json[KIOSK_task]; // Retrieve kiosk task from JSON object
-              var kioskEid = json[KIOSK_eid]; // Retrieve kiosk EID from JSON object
+            if (sheelaAIController.isSheelaScreenActive) {
+              // Check if Sheela screen is active
+              var kioskTask =
+                  json[KIOSK_task]; // Retrieve kiosk task from JSON object
+              var kioskEid =
+                  json[KIOSK_eid]; // Retrieve kiosk EID from JSON object
 
-              if (kioskTask != KIOSK_appointment_avail) { // Check if kiosk task is not appointment availability
-                sheelaAIController.latestRemindEid = kioskEid; // Update latest reminder EID in Sheela AI Controller
+              if (kioskTask != KIOSK_appointment_avail) {
+                // Check if kiosk task is not appointment availability
+                sheelaAIController.latestRemindEid =
+                    kioskEid; // Update latest reminder EID in Sheela AI Controller
               }
             }
-
           }
         }
       }
@@ -7537,7 +7540,6 @@ class CommonUtil {
       )!
           .then((value) {
         try {
-
           var qurhomeDashboardController =
               CommonUtil().onInitQurhomeDashboardController();
           //Sheela badge count 0 means restart the timer for ideal
@@ -7661,7 +7663,26 @@ class CommonUtil {
   /// @return The formatted string representing the amount.
   static String formatAmount(num amount) =>
       '${amount % 1 == 0 ? amount : amount.toStringAsFixed(2)}';
+  /**
+    Gets the source name for the app based on the package name.
+    Checks the package name from PackageInfo against known bundle IDs
+    to determine the source name for the current app.
+    Returns a string containing the determined source name.
+   */
 
+  getSourceName() async {
+    var source = '';
+    final packageInfo = await PackageInfo.fromPlatform();
+    if (packageInfo.packageName == appQurbookBundleId) {
+      source = strAppTypeQurbook;
+    } else if (packageInfo.packageName == appQurhomeBundleId) {
+      source = strAppTypeQurhome;
+    } else if (packageInfo.packageName == appQurdayBundleId) {
+      source = strAppTypeQurday;
+    }
+
+    return source;
+  }
 
   VitalListController onInitVitalListController() {
     // Check if the controller is already registered
