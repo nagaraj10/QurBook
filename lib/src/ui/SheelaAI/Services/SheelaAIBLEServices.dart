@@ -654,6 +654,7 @@ class SheelaBLEController extends GetxController {
         if (SheelaController.isSheelaScreenActive &&
             (SheelaController.isDeviceConnectSheelaScreen.value) &&
             (SheelaController.deviceResponseEid != '')) {
+          model.data?.unit = weightUnit??'';
           // Check if device type is SPO2
           if (model.deviceType == "SPO2") {
             // Check if SPO2 and pulse data are not empty
