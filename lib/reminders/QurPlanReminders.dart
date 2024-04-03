@@ -350,7 +350,10 @@ class QurPlanReminders {
 
         // Iterate through each reminder and schedule notifications
         for (var reminder in reminders) {
-          await onInitScheduleNotification(reminder);
+          // for restrict the reminders based on patient view access flag
+          if ((reminder.isPatientViewAccess ?? false)) {
+            await onInitScheduleNotification(reminder);
+          }
         }
       }
     } catch (e, stackTrace) {
