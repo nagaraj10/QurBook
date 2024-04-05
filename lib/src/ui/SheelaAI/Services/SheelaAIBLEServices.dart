@@ -654,6 +654,7 @@ class SheelaBLEController extends GetxController {
         if (SheelaController.isSheelaScreenActive &&
             (SheelaController.isDeviceConnectSheelaScreen.value) &&
             (SheelaController.deviceResponseEid != '')) {
+          // change weight unit to kilograms and punds if unit is in kg and lb based on env
           final weightUnitResult = weightUnit == STR_VAL_WEIGHT_IND? 'kilograms':
           weightUnit == STR_VAL_WEIGHT_US? 'pounds':'';
           model.data?.unit = weightUnitResult??'';
