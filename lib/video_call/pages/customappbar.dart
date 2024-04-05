@@ -3,6 +3,8 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/video_call/widgets/custom_timer.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
+import '../../main.dart';
+
 class CustomAppBar extends StatefulWidget {
   final String userName;
   const CustomAppBar(this.userName);
@@ -29,7 +31,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           alignment: Alignment.topLeft,
           padding: const EdgeInsets.symmetric(vertical: 40),
           child: Container(
-            color: Color(CommonUtil().getMyPrimaryColor()),
+            color: mAppThemeProvider.primaryColor,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,

@@ -37,6 +37,7 @@ import '../../device_integration/view/screens/Device_Data.dart';
 import '../../device_integration/viewModel/Device_model.dart';
 import '../../device_integration/viewModel/deviceDataHelper.dart';
 import '../../landing/view/landing_screen.dart';
+import '../../main.dart';
 import '../../myfhb_weview/myfhb_webview.dart';
 import '../../src/blocs/User/MyProfileBloc.dart';
 import '../../src/model/CreateDeviceSelectionModel.dart';
@@ -56,7 +57,7 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import '../../unit/choose_unit.dart';
 import '../../voice_cloning/model/voice_clone_status_arguments.dart';
 import '../../widgets/GradientAppBar.dart';
-import '../app_theme_provider.dart';
+import '../../app_theme_provider.dart';
 import '../models/app_theme_type.dart';
 import 'terms_and_conditon.dart';
 import 'trouble_shooting.dart';
@@ -113,8 +114,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   String selectedMaya = PreferenceUtil.getStringValue(Constants.keyMayaAsset) ??
       variable.icon_mayaMain;
-
-  int? selectedPrimaryColor = 0xff5f0cf9;
 
   int selectedGradientColor =
       PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ?? 0xff753aec;
@@ -280,7 +279,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   height: CommonUtil().isTablet! ? 60 : 50,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50),
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                   ),
                   child: Center(
                     child: Text(strTroubleShoot,
@@ -498,22 +497,15 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                           itemCount: variable.myThemes.length,
                           itemBuilder: (context, index) => GestureDetector(
                             onTap: () {
-                              PreferenceUtil.saveTheme(Constants.keyPriColor,
-                                  variable.myThemes[index]);
-                              PreferenceUtil.saveTheme(Constants.keyGreyColor,
-                                  variable.myGradient[index]);
-                              selectedPrimaryColor = variable.myThemes[index];
-
+                              context.read<AppThemeProvider>().updatePrimaryColor(variable.myThemes[index]);
+                              context.read<AppThemeProvider>().updateGradientColor(variable.myGradient[index]);
+                              preColor = variable.myThemes[index];
+                              greColor=variable.myGradient[index];
                               createAppColorSelection(variable.myThemes[index],
                                   variable.myGradient[index]);
-
-                              HomeScreen.of(context)?.refresh();
-                              LandingScreen.of(context)?.refresh();
                               if (widget.refresh != null) {
                                 widget.refresh!(false);
                               }
-
-                              setState(() {});
                             },
                             child: Padding(
                                 padding: EdgeInsets.all(5),
@@ -526,8 +518,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                       ])),
                                   height: 50.0.h,
                                   width: 50.0.h,
-                                  child: variable.myThemes[index] ==
-                                          selectedPrimaryColor
+                                  child:mAppThemeProvider.primaryColor.value.isEqual(variable.myThemes[index])
                                       ? Icon(
                                           Icons.check,
                                           color: Colors.white,
@@ -665,8 +656,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
           _isTHActive = true;
           _isWSActive = true;
           _isHealthFirstTime = false;
-
-          selectedPrimaryColor = 0xff5f0cf9;
           allowAppointmentNotification = true;
           allowSymptomsNotification = true;
           allowVitalNotification = true;
@@ -676,7 +665,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         preColor = 0xff5e1fe0;
         greColor = 0xff753aec;
 
-        selectedPrimaryColor = 0xff5f0cf9;
         allowAppointmentNotification = true;
         allowSymptomsNotification = true;
         allowVitalNotification = true;
@@ -772,9 +760,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     ''
             ? getDeviceSelectionModel.result![0].profileSetting!.qa_subscription
             : 'Y';
-
-    selectedPrimaryColor =
-        PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? preColor;
 
     tagsList = getDeviceSelectionModel.result![0].tags != null &&
             getDeviceSelectionModel.result![0].tags!.length > 0
@@ -1085,7 +1070,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       scale: switchTrail,
                       child: Switch(
                         value: _isdigitRecognition!,
-                        activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                        activeColor: mAppThemeProvider.primaryColor,
                         onChanged: (bool newValue) {
                           setState(() {
                             isSkillIntegration = true;
@@ -1126,7 +1111,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       scale: switchTrail,
                       child: Switch(
                         value: _isdeviceRecognition!,
-                        activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                        activeColor: mAppThemeProvider.primaryColor,
                         onChanged: (bool newValue) {
                           setState(() {
                             isSkillIntegration = true;
@@ -1198,7 +1183,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             value: voiceCloning,
                             activeColor: (superAdminAllowedVoiceCloningModule &&
                                     providerAllowedVoiceCloningModule)
-                                ? Color(new CommonUtil().getMyPrimaryColor())
+                                ? mAppThemeProvider.primaryColor
                                 : (Colors.grey),
                             onChanged: handleVoiceCloneSwitch,
                           ),
@@ -1264,9 +1249,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                                 scale: switchTrail,
                                                 child: Switch(
                                                   value: _isGFActive!,
-                                                  activeColor: Color(
-                                                      new CommonUtil()
-                                                          .getMyPrimaryColor()),
+                                                  activeColor: mAppThemeProvider.primaryColor,
                                                   onChanged: (bool newValue) {
                                                     setState(() {
                                                       //isTouched = true;
@@ -1627,7 +1610,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     scale: switchTrail,
                     child: Switch(
                       value: PreferenceUtil.getIfQurhomeisDefaultUI(),
-                      activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                      activeColor: mAppThemeProvider.primaryColor,
                       onChanged: (bool newValue) {
                         setState(
                           () {
@@ -1668,29 +1651,19 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: variable.myThemes.length,
-                                  itemBuilder: (context, index) =>
-                                      GestureDetector(
+                                  itemBuilder: (context, index) {
+                                    return GestureDetector(
                                     onTap: () {
-                                      PreferenceUtil.saveTheme(
-                                          Constants.keyPriColor,
-                                          variable.myThemes[index]);
-                                      PreferenceUtil.saveTheme(
-                                          Constants.keyGreyColor,
-                                          variable.myGradient[index]);
-                                      selectedPrimaryColor =
-                                          variable.myThemes[index];
-
+                                      context.read<AppThemeProvider>().updatePrimaryColor(variable.myThemes[index]);
+                                      context.read<AppThemeProvider>().updateGradientColor(variable.myGradient[index]);
+                                      preColor = variable.myThemes[index];
+                                      greColor=variable.myGradient[index];
                                       createAppColorSelection(
                                           variable.myThemes[index],
                                           variable.myGradient[index]);
-
-                                      HomeScreen.of(context)?.refresh();
-                                      LandingScreen.of(context)?.refresh();
                                       if (widget.refresh != null) {
                                         widget.refresh!(false);
                                       }
-
-                                      setState(() {});
                                     },
                                     child: Padding(
                                         padding:  EdgeInsets.all(5),
@@ -1704,8 +1677,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                               ])),
                                           height: 50.0.h,
                                           width: 50.0.h,
-                                          child: variable.myThemes[index] ==
-                                                  selectedPrimaryColor
+                                          child:mAppThemeProvider.primaryColor.value.isEqual(variable.myThemes[index])
                                               ? Icon(
                                                   Icons.check,
                                                   color: Colors.white,
@@ -1713,7 +1685,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                                 )
                                               : SizedBox(),
                                         )),
-                                  ),
+                                  );
+                                  },
                                 ))),
                       ]),
                 ),
@@ -1750,9 +1723,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     (themeType) => RadioListTile(
                       value: themeType,
                       groupValue: themeNotifier.currentEnumAppThemeType,
-                      activeColor: Color(
-                        CommonUtil().getMyPrimaryColor(),
-                      ),
+                      activeColor: mAppThemeProvider.primaryColor,
                       title: Text(
                         themeType.toShortString(),
                         style: const TextStyle(fontSize: 16),
@@ -1876,7 +1847,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   scale: switchTrail,
                   child: Switch(
                     value: _isSheelaLiveReminders ?? false,
-                    activeColor: Color(new CommonUtil().getMyPrimaryColor()),
+                    activeColor: mAppThemeProvider.primaryColor,
                     onChanged: (bool newValue) {
                       _isSheelaLiveReminders = newValue;
                       isSkillIntegration = false;
@@ -1935,7 +1906,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       scale: switchTrail,
                       child: Switch(
                         value: PreferenceUtil.getEnableAppLock(),
-                        activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                        activeColor: mAppThemeProvider.primaryColor,
                         onChanged: (bool newValue) async {
                           if (newValue) {
                             String msg = 'You are not authorized.';
@@ -2250,9 +2221,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             child: Text(
               strConfirmation,
               style: TextStyle(
-                color: Color(
-                  CommonUtil().getMyPrimaryColor(),
-                ),
+                color: mAppThemeProvider.primaryColor,
                 fontSize: 18.0.sp,
               ),
             ),
@@ -2283,9 +2252,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               child: Text(
                 strConfirm,
                 style: TextStyle(
-                  color: Color(
-                    CommonUtil().getMyPrimaryColor(),
-                  ),
+                  color: mAppThemeProvider.primaryColor,
                   fontSize: tabHeader4,
                 ),
               ),
@@ -2320,7 +2287,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 scale: switchTrail,
                 child: Switch(
                   value: useClonedVoice,
-                  activeColor:Color(CommonUtil().getMyPrimaryColor()),
+                  activeColor:mAppThemeProvider.primaryColor,
                   onChanged: handleUseClonedVoiceSwitch,
                 ),
               ),),

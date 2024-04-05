@@ -10,6 +10,7 @@ import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart';
 import '../../constants/variable_constant.dart';
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/Notifications/constants/notification_constants.dart';
 import '../../voice_cloning/model/voice_clone_status_arguments.dart';
@@ -402,7 +403,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus>with WidgetsBindingObs
   getColors() {
     return (controller.voiceCloneStatusModel?.result?.status == strApproved)
         ? Colors.white
-        : Color(CommonUtil().getMyPrimaryColor());
+        : mAppThemeProvider.primaryColor;
   }
 
   /**
@@ -410,7 +411,7 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus>with WidgetsBindingObs
    */
   getBackGroundColor() {
     return (controller.voiceCloneStatusModel?.result?.status == strApproved)
-        ? Color(CommonUtil().getMyPrimaryColor())
+        ? mAppThemeProvider.primaryColor
         : Colors.white;
   }
 
@@ -466,12 +467,12 @@ class _MyFhbWebViewState extends State<VoiceCloningStatus>with WidgetsBindingObs
                     waveformData: controller.audioWaveVoiceStatusData,
                     playerWaveStyle: PlayerWaveStyle(
                       fixedWaveColor: Colors.white,
-                      liveWaveColor: Color(CommonUtil().getMyPrimaryColor()),
+                      liveWaveColor: mAppThemeProvider.primaryColor,
                       spacing: 6,
                     ),
                   ),
                   Slider(
-                    activeColor: Color(CommonUtil().getMyPrimaryColor())
+                    activeColor: mAppThemeProvider.primaryColor
                         .withOpacity(0.5),
                     inactiveColor: Colors.white,
                     value: controller.playVoiceStatusPosition.value,

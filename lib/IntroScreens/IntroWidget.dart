@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../common/CommonUtil.dart';
 import '../constants/variable_constant.dart';
+import '../main.dart';
 
 class IntroWidget extends StatelessWidget {
   String imageForScreen;
@@ -33,7 +34,7 @@ class IntroWidget extends StatelessWidget {
         Container(
           height: 1,
           width: 50,
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
         ),
         const SizedBox(
           height: 20,

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart';
+import '../../main.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../Controller/AddDeviceViewController.dart';
@@ -14,9 +15,7 @@ class AddDeviceView extends GetView<AddDeviceViewController> {
     FABService.trackCurrentScreen(FBAAddNewDeviceScreen);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(
-          CommonUtil().getMyPrimaryColor(),
-        ),
+        backgroundColor: mAppThemeProvider.primaryColor,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
@@ -74,9 +73,7 @@ class AddDeviceView extends GetView<AddDeviceViewController> {
   Widget getButton() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        primary: Color(
-          CommonUtil().getMyPrimaryColor(),
-        ),
+        primary: mAppThemeProvider.primaryColor,
         textStyle: TextStyle(
           fontWeight: FontWeight.bold,
         ),
@@ -113,9 +110,7 @@ class AddDeviceView extends GetView<AddDeviceViewController> {
   ) {
     return TextFormField(
       textCapitalization: TextCapitalization.sentences,
-      cursorColor: Color(
-        CommonUtil().getMyPrimaryColor(),
-      ),
+      cursorColor: mAppThemeProvider.primaryColor,
       controller: control,
       enabled: control == controller.nickNameController,
       keyboardType: TextInputType.text,

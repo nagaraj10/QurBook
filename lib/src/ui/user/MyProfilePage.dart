@@ -21,6 +21,7 @@ import '../../../constants/router_variable.dart' as router;
 import '../../../constants/variable_constant.dart' as variable;
 import '../../../language/model/Language.dart';
 import '../../../language/repository/LanguageRepository.dart';
+import '../../../main.dart';
 import '../../../user_plans/view/user_profile_image.dart';
 import '../../../user_plans/view_model/user_plans_view_model.dart';
 import '../../../widgets/TagsList.dart';
@@ -379,13 +380,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
                                               context)
                                           .isGoldMember)
                                       ? Colors.transparent
-                                      : Color(
-                                          CommonUtil().getMyPrimaryColor()))),
+                                      : mAppThemeProvider.primaryColor)),
                         ),
                         child: data.profilePicThumbnailUrl != null
                             ? UserProfileImage(myProfile,
                                 textColor:
-                                    Color(CommonUtil().getMyPrimaryColor()))
+                                    mAppThemeProvider.primaryColor)
                             : Container(),
                       ),
                     ),

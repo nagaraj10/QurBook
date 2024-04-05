@@ -13,6 +13,7 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import '../../constants/fhb_constants.dart' as Constants;
+import '../../main.dart';
 
 class TroubleShooting extends StatefulWidget {
   TroubleShooting();
@@ -140,8 +141,7 @@ class _TroubleShootingState extends State<TroubleShooting> {
                                                     strokeWidth: 15.0,
                                                     value: controller
                                                         .progressValue,
-                                                    color: Color(CommonUtil()
-                                                        .getMyPrimaryColor()), //<-- SEE HERE
+                                                    color: mAppThemeProvider.primaryColor, //<-- SEE HERE
                                                     backgroundColor:
                                                         Colors.grey[100])),
                                       ),
@@ -186,8 +186,7 @@ class _TroubleShootingState extends State<TroubleShooting> {
                                           fontSize: CommonUtil().isTablet!
                                               ? Constants.tabFontTitle
                                               : Constants.mobileFontTitle,
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
+                                          color: mAppThemeProvider.primaryColor,
                                           fontWeight: FontWeight.bold),
                                     )))
                             : SizedBox(),
@@ -269,7 +268,7 @@ class _TroubleShootingState extends State<TroubleShooting> {
         height: 50,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
         ),
         child: Center(
           child: Text(btnText,

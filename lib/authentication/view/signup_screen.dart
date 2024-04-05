@@ -9,6 +9,7 @@ import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/variable_constant.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../src/ui/loader_class.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/app_primary_button.dart';
@@ -90,9 +91,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
         key: _SignupKey,
         child: Theme(
           data: Theme.of(context).copyWith(
-            primaryColor: Color(
-              CommonUtil().getMyPrimaryColor(),
-            ),
+            primaryColor: mAppThemeProvider.primaryColor,
           ),
           child: Container(
             height: height,
@@ -129,7 +128,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                               fontSize: CommonUtil().isTablet!
                                   ? Constants.tabFontTitle
                                   : Constants.mobileFontTitle,
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              color: mAppThemeProvider.primaryColor,
                               fontWeight: FontWeight.bold,
                             ),
                             overflow: TextOverflow.ellipsis,
@@ -193,14 +192,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: BorderSide(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
+                                          color: mAppThemeProvider.primaryColor,
                                         )),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        color: mAppThemeProvider.primaryColor,
                                       ),
                                     ),
                                   ),
@@ -238,14 +235,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: BorderSide(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
+                                          color: mAppThemeProvider.primaryColor,
                                         )),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        color: mAppThemeProvider.primaryColor,
                                       ),
                                     ),
                                   ),
@@ -293,14 +288,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: BorderSide(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
+                                          color: mAppThemeProvider.primaryColor,
                                         )),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        color: mAppThemeProvider.primaryColor,
                                       ),
                                     ),
                                   ),
@@ -341,14 +334,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        color: mAppThemeProvider.primaryColor,
                                       )),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                     borderSide: BorderSide(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                     ),
                                   ),
                                 ),
@@ -390,15 +381,13 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        color: mAppThemeProvider.primaryColor,
                                       )),
                                   errorMaxLines: 2,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                     borderSide: BorderSide(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                     ),
                                   ),
                                 ),
@@ -439,15 +428,13 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        color: mAppThemeProvider.primaryColor,
                                       )),
                                   errorMaxLines: 2,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                     borderSide: BorderSide(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                     ),
                                   ),
                                 ),
@@ -601,7 +588,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
             child: Text(
               strLoginText,
               style: TextStyle(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  color: mAppThemeProvider.primaryColor,
                   fontSize: 15.0.sp,
                   fontWeight: FontWeight.w600),
             ),
@@ -620,7 +607,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
     return Row(
       children: [
         Checkbox(
-          activeColor: Color(CommonUtil().getMyPrimaryColor()),
+          activeColor: mAppThemeProvider.primaryColor,
           checkColor: Colors.white,
           value: checkedValue,
           onChanged: (newValue) {
@@ -646,7 +633,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                 child: Text(
                   'T&C',
                   style: TextStyle(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                   ),
                 ),
               ),
@@ -663,7 +650,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                 child: Text(
                   'Privacy Policy ',
                   style: TextStyle(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                   ),
                 ),
               ),

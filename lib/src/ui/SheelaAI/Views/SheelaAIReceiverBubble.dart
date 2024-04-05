@@ -20,6 +20,7 @@ import '../../../../common/PreferenceUtil.dart';
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/fhb_constants.dart' as Constants;
 import '../../../../constants/variable_constant.dart';
+import '../../../../main.dart';
 import '../../../utils/screenutils/size_extensions.dart';
 import '../../audio/AudioRecorder.dart';
 import '../../audio/AudioScreenArguments.dart';
@@ -78,7 +79,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: PreferenceUtil.getIfQurhomeisAcive()
                         ? Colors.white
-                        : Color(CommonUtil().getMyPrimaryColor()),
+                        : mAppThemeProvider.primaryColor,
                     borderRadius: chatBubbleBorderRadiusFor(false),
                   ),
                   child: (chat.loading ?? false)
@@ -87,9 +88,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                           child: SpinKitThreeBounce(
                               size: CommonUtil().isTablet! ? 25.0 : 18.0,
                               color: PreferenceUtil.getIfQurhomeisAcive()
-                                  ? Color(
-                                      CommonUtil().getQurhomeGredientColor(),
-                                    )
+                                  ?mAppThemeProvider.qurhomeGradientColor
                                   : Colors.white),
                         )
                       : (chat.audioFile ?? '').isNotEmpty
@@ -260,12 +259,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                 padding: const EdgeInsets.all(5.0),
                 decoration: BoxDecoration(
                   color: PreferenceUtil.getIfQurhomeisAcive()
-                      ? Color(
-                          CommonUtil().getQurhomeGredientColor(),
-                        )
-                      : Color(
-                          CommonUtil().getMyPrimaryColor(),
-                        ),
+                      ? mAppThemeProvider.qurhomeGradientColor
+                      : mAppThemeProvider.primaryColor,
                   borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
@@ -289,7 +284,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                   icon: const Icon(
                                       Icons.play_circle_fill_rounded),
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
+                                      mAppThemeProvider.primaryColor,
                                   iconSize: 75,
                                   onPressed: () {
                                     playYoutube(currentVideoLink.url);
@@ -798,11 +793,11 @@ class SheelaAIReceiverBubble extends StatelessWidget {
             child: Card(
               color: (buttonData?.isSelected ?? false)
                   ? PreferenceUtil.getIfQurhomeisAcive()
-                      ? Color(CommonUtil().getQurhomeGredientColor())
+                      ? mAppThemeProvider.qurhomeGradientColor
                       : Colors.green
                   : (buttonData?.isPlaying.isTrue ?? false)
                       ? PreferenceUtil.getIfQurhomeisAcive()
-                          ? Color(CommonUtil().getQurhomeGredientColor())
+                          ? mAppThemeProvider.qurhomeGradientColor
                           : Colors.lightBlueAccent
                       : Colors.white,
               margin: const EdgeInsets.only(top: 10),
@@ -868,12 +863,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         padding: const EdgeInsets.all(5.0),
         decoration: BoxDecoration(
           color: PreferenceUtil.getIfQurhomeisAcive()
-              ? Color(
-                  CommonUtil().getQurhomeGredientColor(),
-                )
-              : Color(
-                  CommonUtil().getMyPrimaryColor(),
-                ),
+              ? mAppThemeProvider.qurhomeGradientColor
+              : mAppThemeProvider.primaryColor,
           borderRadius: const BorderRadius.all(
             Radius.circular(10),
           ),
@@ -993,10 +984,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
   Widget getButtonTextWidget(Buttons? buttonData) {
     // Determine the color to use when the button is not playing or selected
     final playColor = PreferenceUtil.getIfQurhomeisAcive()
-        ? Color(CommonUtil()
-            .getQurhomeGredientColor()) // Qurhome gradient color when Qurhome is active
-        : Color(CommonUtil()
-            .getMyPrimaryColor()); // Default primary color otherwise
+        ? mAppThemeProvider.qurhomeGradientColor // Qurhome gradient color when Qurhome is active
+        : mAppThemeProvider.primaryColor; // Default primary color otherwise
 
     return Text(
       buttonData?.title ?? '',
@@ -1161,8 +1150,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
               Icons.play_circle,
               size: 28,
               color: PreferenceUtil.getIfQurhomeisAcive()
-                  ? Color(CommonUtil().getQurhomeGredientColor()) // Qurhome gradient color when Qurhome is active
-                  : Color(CommonUtil().getMyPrimaryColor()),
+                  ? mAppThemeProvider.qurhomeGradientColor // Qurhome gradient color when Qurhome is active
+                  : mAppThemeProvider.primaryColor,
             ),
           ],
         ),

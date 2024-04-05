@@ -10,6 +10,8 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../../../main.dart';
+
 class MyYoutubePlayer extends StatefulWidget {
   final String? videoId;
 
@@ -138,7 +140,7 @@ class _YoutubePlayerState extends State<MyYoutubePlayer> {
             player: YoutubePlayer(
               controller: _controller!,
               showVideoProgressIndicator: false,
-              progressIndicatorColor: Color(CommonUtil().getMyPrimaryColor()),
+              progressIndicatorColor: mAppThemeProvider.primaryColor,
               topActions: <Widget>[
                 SizedBox(width: 8.0.w),
 

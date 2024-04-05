@@ -3,6 +3,8 @@ import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 
+import '../../main.dart';
+
 class PrescriptionModule extends StatelessWidget {
   bool isPatientSwitched;
   String patientName;
@@ -56,8 +58,7 @@ class PrescriptionModule extends StatelessWidget {
                                     icon: ImageIcon(
                                       AssetImage('assets/icons/rx.png'),
                                       size: 30,
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                     ),
                                     onPressed: () {
                                       FetchRecords(

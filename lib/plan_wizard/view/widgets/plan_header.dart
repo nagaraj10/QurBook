@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
+import '../../../main.dart';
+
 class PlanHeader extends StatelessWidget {
   const PlanHeader({
     required this.title,
@@ -20,7 +22,7 @@ class PlanHeader extends StatelessWidget {
         top: 5.0.h,
         bottom: 5.0.h,
       ),
-      color: Color(CommonUtil().getMyPrimaryColor()),
+      color: mAppThemeProvider.primaryColor,
       child: Text(
         title!,
         style: TextStyle(

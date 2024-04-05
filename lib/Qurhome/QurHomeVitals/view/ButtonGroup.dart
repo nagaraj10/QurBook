@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
+import '../../../main.dart';
+
 class ButtonGroup extends StatelessWidget {
   static const double _radius = 18.0;
   static const double _outerPadding = 2.0;
@@ -96,7 +98,7 @@ class ButtonGroup extends StatelessWidget {
         child: Text(
           title,
           style: TextStyle(
-            color: Color(CommonUtil().getQurhomePrimaryColor()),
+            color: mAppThemeProvider.qurHomePrimaryColor,
           ),
         ),
       );

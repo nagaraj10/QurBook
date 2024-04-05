@@ -19,6 +19,7 @@ import '../../../constants/router_variable.dart' as router;
 import '../../../constants/variable_constant.dart' as variable;
 import '../../../devices_tensorflow/widgets/camera.dart';
 import '../../../exception/FetchException.dart';
+import '../../../main.dart';
 import '../../../widgets/GradientAppBar.dart';
 import '../../utils/alert.dart';
 import '../../utils/screenutils/size_extensions.dart';
@@ -146,7 +147,7 @@ class TakePictureScreenForDevicesState
                     alignment: Alignment.topCenter,
                     child: Container(
                         width: double.infinity,
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        color: mAppThemeProvider.primaryColor,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -208,7 +209,7 @@ class TakePictureScreenForDevicesState
                     ? _recognitions == null
                         ? Container(
                             height: 60.0.h,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                             child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
@@ -228,7 +229,7 @@ class TakePictureScreenForDevicesState
                                     variable.strOthers
                             ? Container(
                                 height: 80.0.h,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                                 child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -248,7 +249,7 @@ class TakePictureScreenForDevicesState
                                     ]))
                             : Container(
                                 height: 60.0.h,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                                 child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -400,7 +401,7 @@ class TakePictureScreenForDevicesState
                           )
                         : Container(
                             height: 60.0.h,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -578,7 +579,7 @@ class TakePictureScreenForDevicesState
         width: 100.0.w,
         height: 40.0.h,
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           borderRadius: BorderRadius.all(Radius.circular(25.0)),
           border: Border.all(color: Colors.white),
           boxShadow: <BoxShadow>[
@@ -622,7 +623,7 @@ class TakePictureScreenForDevicesState
         width: 100.0.w,
         height: 40.0.h,
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           borderRadius: BorderRadius.all(Radius.circular(25.0)),
           border: Border.all(color: Colors.white),
           boxShadow: <BoxShadow>[

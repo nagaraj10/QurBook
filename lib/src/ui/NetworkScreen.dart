@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../common/CommonUtil.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../utils/screenutils/size_extensions.dart';
 
 class NetworkScreen extends StatelessWidget {
@@ -29,7 +30,7 @@ class NetworkScreen extends StatelessWidget {
                   variable.strNoInternet,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                     fontSize: 20.0.sp,
                   ),
                 ),

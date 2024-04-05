@@ -12,6 +12,7 @@ import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
+import '../../main.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/MyProvider/view/CommonWidgets.dart';
@@ -140,7 +141,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                             "",
                                         eachDoctorModel?.user?.firstName ?? "",
                                         eachDoctorModel?.user?.lastName ?? "",
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        mAppThemeProvider.primaryColor,
                                         CommonUtil().isTablet!
                                             ? imageTabHeader
                                             : Constants.imageMobileHeader,

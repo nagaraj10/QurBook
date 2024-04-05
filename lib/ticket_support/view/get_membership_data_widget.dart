@@ -7,6 +7,7 @@ import '../../claim/model/members/MembershipResult.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/common_circular_indicator.dart';
 import '../../constants/variable_constant.dart';
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 
 /// This Commonly use on New Service Request And Membership Benefits
@@ -44,7 +45,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
   final _amountTextStyle = TextStyle(
     fontSize: 21.0.sp,
     fontWeight: FontWeight.bold,
-    color: Color(CommonUtil().getMyPrimaryColor()),
+    color: mAppThemeProvider.primaryColor,
   );
 
   TextStyle _getmemberhipTitleTextStyle({Color color = Colors.white}) {
@@ -83,15 +84,15 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Color(CommonUtil().getMyPrimaryColor()),
-                Color(CommonUtil().getMyGredientColor())
+                mAppThemeProvider.primaryColor,
+                mAppThemeProvider.gradientColor
               ],
             ),
             borderRadius: const BorderRadius.all(
               Radius.circular(12),
             ),
             border: Border.all(
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
             ),
           ),
           child: Column(
@@ -189,7 +190,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
                           Radius.circular(12),
                         ),
                         border: Border.all(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          color: mAppThemeProvider.primaryColor,
                         ),
                       ),
                       child: Container(
@@ -200,9 +201,9 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
                           ),
                           gradient: LinearGradient(
                             colors: [
-                              Color(CommonUtil().getMyPrimaryColor())
+                              mAppThemeProvider.primaryColor
                                   .withOpacity(0.01),
-                              Color(CommonUtil().getMyGredientColor())
+                              mAppThemeProvider.gradientColor
                                   .withAlpha(80)//.withOpacity(0.37)
                             ],
                           ),
@@ -217,9 +218,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
                                   getTitle(currentMembershipType),
                                   overflow: TextOverflow.visible,
                                   style: _getmemberhipTitleTextStyle(
-                                    color: Color(
-                                      CommonUtil().getMyGredientColor(),
-                                    ),
+                                    color: mAppThemeProvider.gradientColor,
                                   ),
                                 ),
                               ],
@@ -238,7 +237,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
                                     fontSize: 12.0.sp,
                                     fontWeight: FontWeight.w600,
                                     color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        mAppThemeProvider.primaryColor,
                                   ),
                                 ),
                                 getBalanceAmount(currentMembershipType)
@@ -286,7 +285,7 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
         height: 40,
         width: 40,
         placeholderBuilder: (context) => CommonCircularIndicator(),
-        color: Color(CommonUtil().getMyGredientColor()).withOpacity(0.3),
+        color: mAppThemeProvider.gradientColor.withOpacity(0.3),
       );
     } else if (iconsUrl?.isNotEmpty ?? false) {
       return SvgPicture.network(
@@ -294,14 +293,14 @@ class _GetMembershipDataWidgetState extends State<GetMembershipDataWidget> {
         height: 40,
         width: 40,
         placeholderBuilder: (context) => CommonCircularIndicator(),
-        color: Color(CommonUtil().getMyGredientColor()).withOpacity(0.3),
+        color: mAppThemeProvider.gradientColor.withOpacity(0.3),
       );
     } else {
       return Image.asset(
         'assets/icons/10.png',
         width: 40,
         height: 40,
-        color: Color(CommonUtil().getMyGredientColor()).withOpacity(0.3),
+        color: mAppThemeProvider.gradientColor.withOpacity(0.3),
       );
     }
   }

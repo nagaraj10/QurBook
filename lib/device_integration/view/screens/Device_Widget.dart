@@ -21,6 +21,7 @@ import '../../../constants/router_variable.dart' as router;
 import '../../../constants/variable_constant.dart';
 import '../../../constants/variable_constant.dart' as variable;
 import '../../../devices/device_dashboard_arguments.dart';
+import '../../../main.dart';
 import '../../../my_family/bloc/FamilyListBloc.dart';
 import '../../../regiment/view_model/regiment_view_model.dart';
 import '../../../src/model/GetDeviceSelectionModel.dart';
@@ -412,7 +413,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                         : ''
                     : '',
                 style: TextStyle(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  color: mAppThemeProvider.primaryColor,
                   fontSize: 16.0.sp,
                   fontWeight: FontWeight.w200,
                 ),
@@ -438,7 +439,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                       : ''
                   : '',
               style: TextStyle(
-                color: Color(CommonUtil().getMyPrimaryColor()),
+                color: mAppThemeProvider.primaryColor,
                 fontSize: 16.0.sp,
                 fontWeight: FontWeight.w200,
               ),
@@ -1033,7 +1034,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                     vitalsSummary,
                     style: TextStyle(
                       fontSize: 16.0.sp,
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      color: mAppThemeProvider.primaryColor,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -2858,7 +2859,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                   onPressed: () {
                     toast.getToast('More devices coming soon!', Colors.red);
                   },
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  color: mAppThemeProvider.primaryColor,
                   textColor: Colors.white,
                   padding: EdgeInsets.all(
                     2.0.sp,
@@ -2909,7 +2910,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         navigateToAddFamily();
       },
       color: Colors.white,
-      textColor: Color(CommonUtil().getMyPrimaryColor()),
+      textColor: mAppThemeProvider.primaryColor,
       padding: EdgeInsets.all(2),
       shape: CircleBorder(),
       child: Icon(

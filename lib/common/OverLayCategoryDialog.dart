@@ -1,6 +1,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import '../main.dart';
 import 'CommonUtil.dart';
 import 'PreferenceUtil.dart';
 import '../constants/fhb_constants.dart' as Constants;
@@ -58,7 +59,7 @@ class OverlayCategoryDialog extends ModalRoute<void> {
               backgroundColor: Colors.white54,
               child: Icon(
                 Icons.close,
-                color: Color(CommonUtil().getMyPrimaryColor()),
+                color: mAppThemeProvider.primaryColor,
               ),
               onPressed: () => Navigator.pop(context),
             ),

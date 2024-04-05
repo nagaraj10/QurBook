@@ -9,6 +9,7 @@ import '../../../../common/common_circular_indicator.dart';
 import '../../../../common/errors_widget.dart';
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/variable_constant.dart' as variable;
+import '../../../../main.dart';
 import '../../../../plan_dashboard/model/PlanListModel.dart';
 import '../../../../src/utils/screenutils/size_extensions.dart';
 import '../../../../telehealth/features/SearchWidget/view/SearchWidget.dart';
@@ -95,7 +96,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   onChanged: toggleSwitch,
                   value: isSwitched,
-                  activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                  activeColor: mAppThemeProvider.primaryColor,
                 ),
                 SizedBox(width: 2.w),
                 Text(
@@ -311,7 +312,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
                       });
                       Get.back();
                     },
-                    activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                    activeColor: mAppThemeProvider.primaryColor,
                   );
                 },
               ),

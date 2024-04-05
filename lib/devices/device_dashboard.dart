@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:myfhb/src/model/Category/catergory_data_list.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import '../constants/router_variable.dart';
+import '../main.dart';
 import '../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -156,10 +157,10 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                         ,
                         style: OutlinedButton.styleFrom(
                           foregroundColor:
-                              Color(CommonUtil().getMyPrimaryColor()),
+                              mAppThemeProvider.primaryColor,
                           backgroundColor: Colors.transparent,
                           side: BorderSide(
-                              color: Color(CommonUtil().getMyPrimaryColor())),
+                              color: mAppThemeProvider.primaryColor),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
                         ),
@@ -752,7 +753,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
-                            color: Color(CommonUtil().getMyPrimaryColor())),
+                            color: mAppThemeProvider.primaryColor),
                         softWrap: true,
                       ),
                       Container(

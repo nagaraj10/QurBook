@@ -35,7 +35,7 @@ import 'constants/fhb_router.dart' as router;
 import 'constants/variable_constant.dart' as variable;
 import 'device_integration/viewModel/Device_model.dart';
 import 'landing/view_model/landing_view_model.dart';
-import 'more_menu/app_theme_provider.dart';
+import 'app_theme_provider.dart';
 import 'my_family/viewmodel/my_family_view_model.dart';
 import 'plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'regiment/view_model/regiment_view_model.dart';
@@ -70,6 +70,7 @@ late List<CameraDescription> listOfCameras;
 
 //variable for all outer
 late var routes;
+late  AppThemeProvider mAppThemeProvider;
 final FlutterLocalNotificationsPlugin localNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
@@ -149,7 +150,7 @@ Future<void> main() async {
     runApp(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(
+          ChangeNotifierProvider<AppThemeProvider>(
             create: (_) => AppThemeProvider(),
           ),
           ChangeNotifierProvider<RegimentViewModel>(
@@ -414,6 +415,7 @@ class _MyFHBState extends State<MyFHB> {
                 ? Size(411.4, 822.9)
                 : Size(822.9, 411.4),
           );
+          mAppThemeProvider = context.watch<AppThemeProvider>();
           return GetMaterialApp(
             title: Constants.APP_NAME,
             themeMode: ThemeMode.light,

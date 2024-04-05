@@ -12,6 +12,7 @@ import '../../../../common/common_circular_indicator.dart';
 import '../../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../../../common/firestore_services.dart';
 import '../../../../constants/variable_constant.dart' as variable;
+import '../../../../main.dart';
 import '../../../../src/blocs/Category/CategoryListBlock.dart';
 import '../../../../src/blocs/Media/MediaTypeBlock.dart';
 import '../../../../src/utils/language/language_utils.dart';
@@ -365,7 +366,7 @@ class _AppointmentsState extends State<Appointments> {
         preferredSize: const Size.fromHeight(70),
         child: AppBar(
           flexibleSpace: GradientAppBar(),
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          backgroundColor: mAppThemeProvider.primaryColor,
           leading: IconWidget(
             icon: Icons.arrow_back_ios,
             colors: Colors.white,

@@ -85,7 +85,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
   // Widget build(BuildContext context) {
   //   return Scaffold(
   //       appBar: AppBar(
-  //         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+  //         backgroundColor: mAppThemeProvider.primaryColor,
   //         leading: IconWidget(
   //           icon: Icons.arrow_back_ios,
   //           colors: Colors.white,
@@ -287,7 +287,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
   //                         contact.initials(),
   //                         style: TextStyle(
   //                             fontSize: 16.0.sp,
-  //                             color: Color(CommonUtil().getMyPrimaryColor())),
+  //                             color: mAppThemeProvider.primaryColor),
   //                       ),
   //                     ),
   //               title: Text(
@@ -307,7 +307,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
   //                       ? Icon(
   //                           Icons.check,
   //                           size: 24.0.sp,
-  //                           color: Color(CommonUtil().getMyPrimaryColor()),
+  //                           color: mAppThemeProvider.primaryColor,
   //                         )
   //                       : Container(
   //                           height: 0.h,

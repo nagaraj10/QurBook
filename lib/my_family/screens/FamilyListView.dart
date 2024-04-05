@@ -10,6 +10,7 @@ import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../models/relationships.dart';
 
@@ -227,8 +228,7 @@ class FamilyListView {
                                                               : 'S'
                                                           : '',
                                                       style: TextStyle(
-                                                          color: Color(CommonUtil()
-                                                              .getMyPrimaryColor()),
+                                                          color: mAppThemeProvider.primaryColor,
                                                           fontSize: 22.0.sp))),
                                             )
                                       : sharedByMe[index]
@@ -247,8 +247,7 @@ class FamilyListView {
                                                 return Container(
                                                   height: 50.0.h,
                                                   width: 50.0.h,
-                                                  color: Color(CommonUtil()
-                                                      .getMyPrimaryColor()),
+                                                  color: mAppThemeProvider.primaryColor,
                                                   child: Center(
                                                       child: Text(
                                                     sharedByMe[index]
@@ -307,8 +306,7 @@ class FamilyListView {
                                                           .toUpperCase()
                                                       : '',
                                                   style: TextStyle(
-                                                      color: Color(CommonUtil()
-                                                          .getMyPrimaryColor()),
+                                                      color: mAppThemeProvider.primaryColor,
                                                       fontSize: 22.0.sp),
                                                 ),
                                               ),

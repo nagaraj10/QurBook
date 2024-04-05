@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/main.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -90,10 +91,10 @@ class _DropdownWithTagsState extends State<DropdownWithTags> {
     return _foundUsers!
         .map((e) => CheckboxListTile(
               value: e.isChecked,
-              checkColor: Color(CommonUtil().getMyPrimaryColor()),
+              checkColor: mAppThemeProvider.primaryColor,
               title: Text(e.name!,
                   style: TextStyle(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                   )),
               onChanged: (val) {
                 e.isChecked = val;
@@ -123,7 +124,7 @@ class _DropdownWithTagsState extends State<DropdownWithTags> {
       margin: EdgeInsets.all(5),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: Color(CommonUtil().getMyPrimaryColor())),
+        border: Border.all(color: mAppThemeProvider.primaryColor),
         borderRadius: BorderRadius.circular(
           5,
         ),
@@ -138,7 +139,7 @@ class _DropdownWithTagsState extends State<DropdownWithTags> {
       child: Text(
         label,
         style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
         ),
       ),
     );
@@ -148,7 +149,7 @@ class _DropdownWithTagsState extends State<DropdownWithTags> {
     return Expanded(
         child: TextField(
       textCapitalization: TextCapitalization.sentences,
-      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      cursorColor: mAppThemeProvider.primaryColor,
       controller: nameController,
       keyboardType: TextInputType.text,
       focusNode: nameFocus,

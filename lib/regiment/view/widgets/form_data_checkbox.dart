@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
+import '../../../main.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
 import '../../models/field_response_model.dart';
@@ -88,8 +89,8 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
                 fontSize: 14.0.sp,
                 fontWeight: FontWeight.w600,
                 color: widget.isFromQurHomeSymptom
-                    ? Color(CommonUtil().getQurhomePrimaryColor())
-                    : Color(CommonUtil().getMyPrimaryColor()),
+                    ? mAppThemeProvider.qurHomePrimaryColor
+                    : mAppThemeProvider.primaryColor,
               ),
             ),
           SizedBox(

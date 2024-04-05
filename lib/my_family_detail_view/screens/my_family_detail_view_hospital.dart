@@ -6,6 +6,7 @@ import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../record_detail/screens/record_detail_screen.dart';
 import '../../src/model/Health/asgard/health_record_list.dart';
 import '../../src/utils/FHBUtils.dart';
@@ -97,7 +98,7 @@ class MyFamilyDetailViewHospitalState
                         mediaMetaInfoObj.metadata!.healthRecordCategory!.logo!,
                     height: 20.0.h,
                     width: 20.0.h,
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                   ),
                 ),
                 SizedBox(
@@ -155,7 +156,7 @@ class MyFamilyDetailViewHospitalState
                       mediaMetaInfoObj.isBookmarked!
                           ? ImageIcon(
                               AssetImage(variable.icon_record_fav_active),
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              color: mAppThemeProvider.primaryColor,
                               size: 20.0.sp,
                             )
                           : ImageIcon(

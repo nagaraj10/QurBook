@@ -14,6 +14,7 @@ import 'package:myfhb/widgets/DropdownWithTags.dart';
 import '../../constants/fhb_constants.dart';
 import '../../language/model/Language.dart';
 import '../../language/repository/LanguageRepository.dart';
+import '../../main.dart';
 import '../../src/model/GetDeviceSelectionModel.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
@@ -316,7 +317,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       height: 100.0.h,
                       decoration: ShapeDecoration(
                           shape: CircleBorder(),
-                          color: Color(CommonUtil().getMyPrimaryColor())),
+                          color: mAppThemeProvider.primaryColor),
                       child: Padding(
                         padding: EdgeInsets.all(circleBorderWidth),
                         child: InkWell(
@@ -335,6 +336,53 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         ),
                       ),
                     )),
+//                Stack(
+//                  alignment: Alignment.bottomLeft,
+//                  children: <Widget>[
+//                    Padding(
+//                      padding: EdgeInsets.only(bottom: circleRadius / 2.0),
+//                      child: Container(
+//                        color: mAppThemeProvider.primaryColor,
+//                        height: 160.0.h,
+//                        child: Stack(
+//                            fit: StackFit.expand,
+//                            overflow: Overflow.visible,
+//                            children: [
+//                              Container(
+//                                color: Colors.black.withOpacity(0.2),
+//                              )
+//                            ]),
+//                      ),
+//                    ),
+//                    Padding(
+//                        padding: EdgeInsets.only(left: 10),
+//                        child: Container(
+//                          width: circleRadius,
+//                          height: circleRadius,
+//                          decoration: ShapeDecoration(
+//                              shape: CircleBorder(),
+//                              color:
+//                                  mAppThemeProvider.primaryColor),
+//                          child: Padding(
+//                            padding: EdgeInsets.all(circleBorderWidth),
+//                            child: InkWell(
+//                              child: ClipOval(
+//                                  child: (imageURI != null && imageURI != '')
+//                                      ? Image.file(
+//                                          imageURI,
+//                                          fit: BoxFit.cover,
+//                                          width: 60.0.h,
+//                                          height: 60.0.h,
+//                                        )
+//                                      : showProfileImageNew()),
+//                              onTap: () {
+//                                saveMediaDialog(context);
+//                              },
+//                            ),
+//                          ),
+//                        )),
+//                  ],
+//                ),
                 _showCommonEditText(
                   mobileNoController,
                   mobileNoFocus,
@@ -538,8 +586,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                                       ),
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
+                                            color: mAppThemeProvider.primaryColor),
                                         borderRadius: BorderRadius.circular(
                                           10.0.sp,
                                         ),
@@ -671,7 +718,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           padding: EdgeInsets.only(left: 20, right: 20, top: 5),
           child: TextField(
             textCapitalization: TextCapitalization.sentences,
-            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+            cursorColor: mAppThemeProvider.primaryColor,
             controller: dateOfBirthController,
             readOnly: true,
             onTap: dateOfBirthTapped,
@@ -768,7 +815,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
           enabled: isEnabled,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: textEditingController,
           onChanged: (value) {
             if (maxLength == 4) {
@@ -1060,7 +1107,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             width: 150.0.w,
             height: 40.0.h,
             decoration: BoxDecoration(
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
               borderRadius: BorderRadius.all(Radius.circular(10)),
               boxShadow: <BoxShadow>[
                 BoxShadow(
@@ -1108,7 +1155,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             width: 150.0.w,
             height: 40.0.h,
             decoration: BoxDecoration(
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
               borderRadius: BorderRadius.all(Radius.circular(10)),
               boxShadow: <BoxShadow>[
                 BoxShadow(
@@ -1245,7 +1292,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         ? Container()
                         : _showRelationShipTextField();
           },
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: relationShipController,
           enabled: (widget.arguments!.fromClass == CommonConstants.my_family ||
                   widget.arguments!.fromClass == CommonConstants.add_family ||
@@ -3172,7 +3219,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             padding: EdgeInsets.only(left: 20, right: 20, top: 5),
             child: IconButton(
               icon: Icon(Icons.add),
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
               onPressed: () {
                 showTagDialog(context);
               },

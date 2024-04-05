@@ -27,6 +27,7 @@ import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform
 
 import '../../../Qurhome/Common/GradientAppBarQurhome.dart';
 import '../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../../main.dart';
 
 class AudioRecorder extends StatefulWidget {
   AudioScreenArguments? arguments;
@@ -273,9 +274,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
                     width: 120.0.h,
                     child: AvatarGlow(
                       startDelay: Duration(milliseconds: 200),
-                      glowColor: Color(
-                        CommonUtil().getMyPrimaryColor(),
-                      ),
+                      glowColor: mAppThemeProvider.primaryColor,
                       endRadius: 100.0,
                       duration: Duration(milliseconds: 2000),
                       repeat: true,
