@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../chat_socket/view/ChatDetail.dart';
 import '../../../../constants/fhb_parameters.dart' as parameters;
+import '../../../../main.dart';
 import '../../../../src/blocs/Category/CategoryListBlock.dart';
 import '../../../../src/model/Category/catergory_result.dart';
 import '../../../../src/ui/MyRecord.dart';
@@ -278,7 +279,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                         widget.doc!.plannedStartDateTime!))
                                     .toString(),
                                 fontWeight: FontWeight.w600,
-                                colors: Color(CommonUtil().getMyPrimaryColor()),
+                                colors: mAppThemeProvider.primaryColor,
                               ),
                               TextWidget(
                                 fontsize: 12.0.sp,
@@ -450,8 +451,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                                           Constants.poppins,
                                                       fontWeight:
                                                           FontWeight.w500,
-                                                      color: Color(CommonUtil()
-                                                          .getMyPrimaryColor())))
+                                                      color: mAppThemeProvider.primaryColor))
                                             ])),
                               SizedBoxWidget(
                                 height: 10,
@@ -469,11 +469,9 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                             side: BorderSide(
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor()))),
+                                                color: mAppThemeProvider.primaryColor)),
                                         backgroundColor: Colors.transparent,
-                                        foregroundColor: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        foregroundColor: mAppThemeProvider.primaryColor,
                                         padding: const EdgeInsets.all(8),
                                       ),
                                       onPressed: () {
@@ -493,11 +491,9 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                             side: BorderSide(
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor()))),
+                                                color: mAppThemeProvider.primaryColor)),
                                         backgroundColor: Colors.transparent,
-                                        foregroundColor: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        foregroundColor: mAppThemeProvider.primaryColor,
                                         padding: const EdgeInsets.all(8),
                                       ),
                                       onPressed: () {

@@ -18,6 +18,7 @@ import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/router_variable.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../../regiment/view_model/regiment_view_model.dart';
 import '../../src/utils/colors_utils.dart';
@@ -114,7 +115,7 @@ class _MyPlanState extends State<MyPlanList> {
                     await Get.toNamed(rt_PlanWizard)!.then((value) =>
                         FocusManager.instance.primaryFocus!.unfocus());
                   },
-                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                  backgroundColor: mAppThemeProvider.primaryColor,
                   icon: const Icon(
                     Icons.add,
                     color: Colors.white,
@@ -197,7 +198,7 @@ class _MyPlanState extends State<MyPlanList> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18),
                   ),
-                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                  backgroundColor: mAppThemeProvider.primaryColor,
                   foregroundColor: Colors.white,
                   padding: EdgeInsets.all(
                     10.0.sp,
@@ -463,14 +464,12 @@ class _MyPlanState extends State<MyPlanList> {
                                                   color: planList[i]
                                                               .isexpired ==
                                                           '1'
-                                                      ? Color(CommonUtil()
-                                                          .getMyPrimaryColor())
+                                                      ? mAppThemeProvider.primaryColor
                                                       : Colors.red)),
                                           backgroundColor: Colors.transparent,
                                           foregroundColor:
                                               planList[i].isexpired == '1'
-                                                  ? Color(CommonUtil()
-                                                      .getMyPrimaryColor())
+                                                  ? mAppThemeProvider.primaryColor
                                                   : Colors.red,
                                           padding: EdgeInsets.all(
                                             8.0.sp,
@@ -553,14 +552,12 @@ class _MyPlanState extends State<MyPlanList> {
                                                               .isexpired ==
                                                           '1'
                                                       ? Colors.red
-                                                      : Color(CommonUtil()
-                                                          .getMyPrimaryColor()))),
+                                                      : mAppThemeProvider.primaryColor)),
                                           backgroundColor: Colors.transparent,
                                           foregroundColor:
                                               planList[i].isexpired == '1'
                                                   ? Colors.red
-                                                  : Color(CommonUtil()
-                                                      .getMyPrimaryColor()),
+                                                  : mAppThemeProvider.primaryColor,
                                           padding: EdgeInsets.all(
                                             8.0.sp,
                                           ),

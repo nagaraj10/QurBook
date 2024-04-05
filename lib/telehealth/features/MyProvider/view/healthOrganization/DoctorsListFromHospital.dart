@@ -10,6 +10,7 @@ import '../../../../../common/common_circular_indicator.dart';
 import '../../../../../common/errors_widget.dart';
 import '../../../../../constants/fhb_constants.dart';
 import '../../../../../constants/variable_constant.dart' as variable;
+import '../../../../../main.dart';
 import '../../../../../my_providers/bloc/providers_block.dart';
 import '../../../../../my_providers/models/Hospitals.dart';
 import '../../../../../my_providers/models/MyProviderResponseNew.dart';
@@ -95,8 +96,8 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: <Color>[
-                Color(CommonUtil().getMyPrimaryColor()),
-                Color(CommonUtil().getMyGredientColor())
+                mAppThemeProvider.primaryColor,
+                mAppThemeProvider.gradientColor
               ],
                   stops: [
                 0.3,
@@ -141,8 +142,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                                                 .toUpperCase()
                                             : '',
                                         style: TextStyle(
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
+                                            color: mAppThemeProvider.primaryColor),
                                       ),
                                     ))
                                 : Container(
@@ -376,7 +376,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                                 fontsize: 16.0.sp,
                                 fontWeight: FontWeight.w400,
                                 colors:
-                                    Color(CommonUtil().getMyPrimaryColor())),
+                                    mAppThemeProvider.primaryColor),
                           ),
                         ),
                       ],

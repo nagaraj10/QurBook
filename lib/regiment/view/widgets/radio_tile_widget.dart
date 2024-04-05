@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import '../../../main.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
 
@@ -23,7 +24,7 @@ class RadioTileWidget extends StatelessWidget {
         Radio<dynamic>(
           groupValue: radioGroupValue,
           value: value,
-          activeColor: Color(CommonUtil().getMyPrimaryColor()),
+          activeColor: mAppThemeProvider.primaryColor,
           onChanged: onSelected,
         ),
         Padding(

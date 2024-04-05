@@ -10,6 +10,7 @@ import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart'
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart';
 import '../../landing/view/landing_arguments.dart';
+import '../../main.dart';
 import '../../src/ui/MyRecord.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
@@ -72,7 +73,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
       child: Scaffold(
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          backgroundColor: mAppThemeProvider.primaryColor,
           elevation: 0,
           title: Text(
             _getAppBarText(planWizardViewModel.currentPage)!,
@@ -121,7 +122,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                             planWizardViewModel.isDietListEmpty &&
                             planWizardViewModel.currentPage == 2))
                     ? Container(
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        color: mAppThemeProvider.primaryColor,
                         margin: EdgeInsets.only(
                           top: 10.0.h,
                         ),

@@ -7,6 +7,7 @@ import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../model/SearchListModel.dart';
 import '../services/SearchListService.dart';
 import 'categoryList.dart';
@@ -125,7 +126,7 @@ class _SearchListState extends State<SearchListHome> {
             },
             child: Icon(
               Icons.add,
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
               size: 24.0.sp,
             ),
           ));
@@ -214,7 +215,7 @@ class _SearchListState extends State<SearchListHome> {
                   height: 30.0.h,
                   child: CircularProgressIndicator(
                       backgroundColor:
-                          Color(CommonUtil().getMyPrimaryColor())),
+                          mAppThemeProvider.primaryColor),
                 ),
               ),
             ),

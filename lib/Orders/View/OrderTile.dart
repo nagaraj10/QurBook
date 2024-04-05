@@ -4,6 +4,8 @@ import 'package:myfhb/Orders/Model/OrderModel.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 
+import '../../main.dart';
+
 class OrderTile extends StatelessWidget {
   final OrderModel order;
   const OrderTile({
@@ -80,9 +82,7 @@ class OrderTile extends StatelessWidget {
                             '${CommonUtil.CURRENCY}${double.parse(order.feePaid!)}',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color(
-                                  CommonUtil().getMyPrimaryColor(),
-                                ),
+                                color: mAppThemeProvider.primaryColor,
                                 fontSize: (CommonUtil().isTablet ?? false)
                                     ? tabHeader3
                                     : mobileHeader3),

@@ -18,6 +18,8 @@ import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../main.dart';
+
 class ProviderDietPlans extends StatefulWidget {
   @override
   _ProviderDietPlans createState() => _ProviderDietPlans();
@@ -97,7 +99,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   onChanged: toggleSwitch,
                   value: isSwitched,
-                  activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                  activeColor: mAppThemeProvider.primaryColor,
                 ),
                 SizedBox(width: 2.w),
                 Text(
@@ -321,7 +323,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
                       });
                       Get.back();
                     },
-                    activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                    activeColor: mAppThemeProvider.primaryColor,
                   );
                 },
               ),
@@ -367,7 +369,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
         color: Colors.grey,
         fontSize: CommonUtil().isTablet! ? tabHeader1 : mobileHeader1);
     TextStyle linkStyle = TextStyle(
-        color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.sp);
+        color: mAppThemeProvider.primaryColor, fontSize: 18.sp);
 
     if (Provider.of<PlanWizardViewModel>(context, listen: false)
                 .providerHosCount ==

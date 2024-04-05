@@ -15,6 +15,7 @@ import '../../../constants/router_variable.dart' as router;
 import '../../../constants/variable_constant.dart' as variable;
 import '../../../landing/view/landing_arguments.dart';
 import '../../../landing/view_model/landing_view_model.dart';
+import '../../../main.dart';
 import '../../../myPlan/view/myPlanList.dart';
 import '../../../my_family/screens/MyFamily.dart';
 import '../../../my_providers/screens/my_provider.dart';
@@ -113,16 +114,16 @@ class _UserAccountsState extends State<UserAccounts>
     return WillPopScope(
         onWillPop: () => onBackPressed(context)!,
         child: Scaffold(
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          backgroundColor: mAppThemeProvider.primaryColor,
           appBar: AppBar(
             elevation: 0.0,
-            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            backgroundColor: mAppThemeProvider.primaryColor,
             flexibleSpace: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Color(CommonUtil().getMyPrimaryColor()),
-                    Color(CommonUtil().getMyGredientColor()),
+                    mAppThemeProvider.primaryColor,
+                    mAppThemeProvider.gradientColor,
                   ],
                   stops: [0.5, 1.0],
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../main.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
 import 'custom_image_network.dart';
@@ -42,7 +43,7 @@ class _CheckboxTileWidgetState extends State<CheckboxTileWidget> {
         children: [
           Checkbox(
             value: widget.checkBoxValue,
-            activeColor: Color(CommonUtil().getMyPrimaryColor()),
+            activeColor: mAppThemeProvider.primaryColor,
             onChanged: widget.canEdit
                 ? (value) {
                     setState(() {

@@ -6,6 +6,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
+import '../../main.dart';
 import '../bloc/FamilyListBloc.dart';
 
 import '../../colors/fhb_colors.dart' as fhbColors;
@@ -249,7 +250,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                     borderRadius: BorderRadius.circular(10)),
                 child: FlatButtonWidget(
                   bgColor: Colors.transparent,

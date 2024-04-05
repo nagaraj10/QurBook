@@ -26,6 +26,7 @@ import '../../../device_integration/model/GulcoseValues.dart';
 import '../../../device_integration/model/OxySaturationValues.dart';
 import '../../../device_integration/model/TemperatureValues.dart';
 import '../../../device_integration/model/WeightValues.dart';
+import '../../../main.dart';
 import '../../../src/blocs/Category/CategoryListBlock.dart';
 import '../../../src/blocs/Media/MediaTypeBlock.dart';
 import '../../../src/blocs/health/HealthReportListForUserBlock.dart';
@@ -203,7 +204,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                       current: controllerGetx.filterBtnOnTap.value,
                       color: Colors.white,
                       secondaryColor:
-                          Color(CommonUtil().getQurhomePrimaryColor()),
+                          mAppThemeProvider.qurHomePrimaryColor,
                       onTab: (selected) {
                         controllerGetx.onTapFilterBtn(selected);
                       },
@@ -974,8 +975,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                 Text(
                                   value1 == '' ? '' : value1,
                                   style: TextStyle(
-                                      color: Color(CommonUtil()
-                                          .getQurhomePrimaryColor()),
+                                      color: mAppThemeProvider.qurHomePrimaryColor,
                                       fontSize: 15.0.sp,
                                       fontWeight: FontWeight.w500),
                                 ),
@@ -985,8 +985,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                 Text(
                                   value1 == '' ? '' : 'mmHg',
                                   style: TextStyle(
-                                      color: Color(CommonUtil()
-                                          .getQurhomePrimaryColor()),
+                                      color: mAppThemeProvider.qurHomePrimaryColor,
                                       fontSize: 11.0.sp),
                                 ),
                               ],
@@ -1015,8 +1014,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                 Text(
                                   value2,
                                   style: TextStyle(
-                                      color: Color(CommonUtil()
-                                          .getQurhomePrimaryColor()),
+                                      color: mAppThemeProvider.qurHomePrimaryColor,
                                       fontSize: 15.0.sp,
                                       fontWeight: FontWeight.w500),
                                 ),
@@ -1026,8 +1024,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                 Text(
                                   value1 == '' ? '' : 'mmHg',
                                   style: TextStyle(
-                                      color: Color(CommonUtil()
-                                          .getQurhomePrimaryColor()),
+                                      color: mAppThemeProvider.qurHomePrimaryColor,
                                       fontSize: 11.0.sp),
                                 ),
                               ],
@@ -1056,8 +1053,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                 Text(
                                   bpm != '' ? bpm : '',
                                   style: TextStyle(
-                                      color: Color(CommonUtil()
-                                          .getQurhomePrimaryColor()),
+                                      color: mAppThemeProvider.qurHomePrimaryColor,
                                       fontSize: 15.0.sp,
                                       fontWeight: FontWeight.w500),
                                 ),
@@ -1067,8 +1063,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                 Text(
                                   bpm == '' ? '' : CommonConstants.strPulseUnit,
                                   style: TextStyle(
-                                      color: Color(CommonUtil()
-                                          .getQurhomePrimaryColor()),
+                                      color: mAppThemeProvider.qurHomePrimaryColor,
                                       fontSize: 11.0.sp),
                                 ),
                               ],
@@ -1149,8 +1144,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                           Text(
                             value1 == '' ? '' : value1,
                             style: TextStyle(
-                                color: Color(
-                                    CommonUtil().getQurhomePrimaryColor()),
+                                color: mAppThemeProvider.qurHomePrimaryColor,
                                 fontSize: 15.0.sp,
                                 fontWeight: FontWeight.w500),
                           ),
@@ -1160,8 +1154,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                           Text(
                             value1 == '' ? '' : unit!,
                             style: TextStyle(
-                                color: Color(
-                                    CommonUtil().getQurhomePrimaryColor()),
+                                color: mAppThemeProvider.qurHomePrimaryColor,
                                 fontSize: 11.0.sp),
                           ),
                         ],
@@ -1230,8 +1223,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: <Color>[
-                              Color(CommonUtil().getMyPrimaryColor()),
-                              Color(CommonUtil().getMyGredientColor())
+                              mAppThemeProvider.primaryColor,
+                              mAppThemeProvider.gradientColor
                             ],
                             stops: [
                               0.3,
@@ -1276,8 +1269,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                     Text(
                                       value1 == '' ? '' : value1!,
                                       style: TextStyle(
-                                          color: Color(CommonUtil()
-                                              .getQurhomePrimaryColor()),
+                                          color: mAppThemeProvider.qurHomePrimaryColor,
                                           fontSize: 15.0.sp,
                                           fontWeight: FontWeight.w500),
                                     ),
@@ -1287,8 +1279,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                     Text(
                                       unit ?? '',
                                       style: TextStyle(
-                                          color: Color(CommonUtil()
-                                              .getQurhomePrimaryColor()),
+                                          color: mAppThemeProvider.qurHomePrimaryColor,
                                           fontSize: 14.0.sp),
                                     ),
                                   ],
@@ -1345,8 +1336,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: <Color>[
-                              Color(CommonUtil().getMyPrimaryColor()),
-                              Color(CommonUtil().getMyGredientColor())
+                              mAppThemeProvider.primaryColor,
+                              mAppThemeProvider.gradientColor
                             ],
                             stops: [
                               0.3,
@@ -1391,8 +1382,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                     Text(
                                       value1 == '' ? '' : value1,
                                       style: TextStyle(
-                                          color: Color(CommonUtil()
-                                              .getQurhomePrimaryColor()),
+                                          color: mAppThemeProvider.qurHomePrimaryColor,
                                           fontSize: 15.0.sp,
                                           fontWeight: FontWeight.w500),
                                     ),
@@ -1402,8 +1392,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                     Text(
                                       unit != '' ? unit : '',
                                       style: TextStyle(
-                                          color: Color(CommonUtil()
-                                              .getQurhomePrimaryColor()),
+                                          color: mAppThemeProvider.qurHomePrimaryColor,
                                           fontSize: 14.0.sp),
                                     ),
                                   ],
@@ -1434,8 +1423,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                     Text(
                                       bpm == '' ? '' : bpm!,
                                       style: TextStyle(
-                                          color: Color(CommonUtil()
-                                              .getQurhomePrimaryColor()),
+                                          color: mAppThemeProvider.qurHomePrimaryColor,
                                           fontSize: 15.0.sp,
                                           fontWeight: FontWeight.w500),
                                     ),
@@ -1445,8 +1433,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                             Text(
                               unit != '' ? unit : '',
                               style: TextStyle(
-                                  color: Color(
-                                      CommonUtil().getMyPrimaryColor()),
+                                  color: mAppThemeProvider.primaryColor,
                                   fontSize: 14.0.sp),
                             ),*/
                                   ],
@@ -1490,7 +1477,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
         'assets/devices/caregiver_source.png',
         height: 32.0.h,
         width: 32.0.h,
-        color: Color(CommonUtil().getQurhomePrimaryColor()),
+        color: mAppThemeProvider.qurHomePrimaryColor,
       );
     } else if ((type == strQurPlan && PreferenceUtil.getIfQurhomeisAcive()) ||
         (type == strDevice && PreferenceUtil.getIfQurhomeisAcive())) {
@@ -1504,7 +1491,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
         'assets/icons/myfhb_source.png',
         height: 32.0.h,
         width: 32.0.h,
-        color: Color(CommonUtil().getQurhomePrimaryColor()),
+        color: mAppThemeProvider.qurHomePrimaryColor,
       );
     }
   }

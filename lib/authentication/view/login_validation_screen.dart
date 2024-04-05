@@ -11,6 +11,7 @@ import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart'
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart';
+import '../../main.dart';
 import '../../src/model/Authentication/UserModel.dart';
 import '../../src/ui/loader_class.dart';
 import '../../src/utils/PageNavigator.dart';
@@ -85,9 +86,7 @@ class _PatientSignInValidationScreenState
         key: _loginKey,
         child: Theme(
           data: Theme.of(context).copyWith(
-            primaryColor: Color(
-              CommonUtil().getMyPrimaryColor(),
-            ),
+            primaryColor: mAppThemeProvider.primaryColor,
           ),
           child: Container(
             height: height,
@@ -122,7 +121,7 @@ class _PatientSignInValidationScreenState
                               fontSize: CommonUtil().isTablet!
                                   ? Constants.tabFontTitle
                                   : Constants.mobileFontTitle,
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              color: mAppThemeProvider.primaryColor,
                               fontWeight: FontWeight.bold,
                             ),
                             overflow: TextOverflow.ellipsis,
@@ -185,14 +184,12 @@ class _PatientSignInValidationScreenState
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: BorderSide(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
+                                          color: mAppThemeProvider.primaryColor,
                                         )),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        color: mAppThemeProvider.primaryColor,
                                       ),
                                     ),
                                   ),
@@ -221,7 +218,7 @@ class _PatientSignInValidationScreenState
                                       style: TextStyle(
                                           fontSize: 14.0.sp,
                                           /*decoration: TextDecoration.underline,
-                                          decorationColor: Color(CommonUtil().getMyPrimaryColor()),*/
+                                          decorationColor: mAppThemeProvider.primaryColor,*/
                                           fontWeight: FontWeight.w500)),
                                 ),
                               ),

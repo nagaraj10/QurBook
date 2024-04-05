@@ -8,6 +8,8 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
+import '../../../../main.dart';
+
 class ChooseDateSlot extends StatefulWidget {
   ChooseDateSlot({Key? key, this.messageContent = '', this.getRefNumber})
       : super(key: key);
@@ -52,8 +54,8 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
             Container(
                 child: SfDateRangePicker(
               controller: dateRangePickerController,
-              selectionColor: Color(CommonUtil().getMyPrimaryColor()),
-              todayHighlightColor: Color(CommonUtil().getMyPrimaryColor()),
+              selectionColor: mAppThemeProvider.primaryColor,
+              todayHighlightColor: mAppThemeProvider.primaryColor,
               onSelectionChanged: _onSelectionChanged,
               enablePastDates: false,
               selectionMode: DateRangePickerSelectionMode.multiple,
@@ -118,7 +120,7 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
                               removeDate(index);
                             },
                             child: Card(
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              color: mAppThemeProvider.primaryColor,
                               child: Row(
                                 children: [
                                   Padding(
@@ -188,7 +190,7 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     // Set the background color using the CommonUtil method to get the primary color
-                      backgroundColor: Color(CommonUtil().getMyPrimaryColor())),
+                      backgroundColor: mAppThemeProvider.primaryColor),
                   child: Text('Ok', style: TextStyle(fontSize: 20,color: Colors.white)),
                   onPressed: () {
                     try {
@@ -211,7 +213,7 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
 
                     }
                   },
-                  // color: Color(CommonUtil().getMyPrimaryColor()),
+                  // color: mAppThemeProvider.primaryColor,
                  // textColor: Colors.white,
                 ),
               ),

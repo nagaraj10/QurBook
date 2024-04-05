@@ -27,6 +27,8 @@ import 'package:myfhb/widgets/payment_gatway.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 
+import '../main.dart';
+
 class CheckoutPageWidgets {
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   MyProfileModel? myProfile;
@@ -87,11 +89,9 @@ class CheckoutPageWidgets {
                                             borderRadius:
                                                 BorderRadius.circular(12.0),
                                             side: BorderSide(
-                                                color: Color(commonUtil
-                                                    .getMyPrimaryColor()))),
+                                                color: mAppThemeProvider.primaryColor)),
                                         backgroundColor: Colors.transparent,
-                                        foregroundColor: Color(
-                                            commonUtil.getMyPrimaryColor()),
+                                        foregroundColor:mAppThemeProvider.primaryColor,
                                         padding: EdgeInsets.all(8.0),
                                       ),
                                       onPressed: () {
@@ -116,11 +116,9 @@ class CheckoutPageWidgets {
                                             borderRadius:
                                                 BorderRadius.circular(12.0),
                                             side: BorderSide(
-                                                color: Color(commonUtil
-                                                    .getMyPrimaryColor()))),
+                                                color: mAppThemeProvider.primaryColor)),
                                         backgroundColor: Colors.transparent,
-                                        foregroundColor: Color(
-                                            commonUtil.getMyPrimaryColor()),
+                                        foregroundColor:mAppThemeProvider.primaryColor,
                                         padding: EdgeInsets.all(8.0),
                                       ),
                                       onPressed: () {
@@ -573,9 +571,7 @@ class CheckoutPageWidgets {
                           child: Text(
                             'cancel'.toUpperCase(),
                             style: TextStyle(
-                              color: Color(
-                                commonUtil.getMyPrimaryColor(),
-                              ),
+                              color: mAppThemeProvider.primaryColor,
                               fontSize: 10,
                             ),
                           ),
@@ -586,9 +582,7 @@ class CheckoutPageWidgets {
                           },
                           style: OutlinedButton.styleFrom(
                           side: BorderSide(
-                            color: Color(
-                              commonUtil.getMyPrimaryColor(),
-                            ),
+                            color: mAppThemeProvider.primaryColor,
                             style: BorderStyle.solid,
                             width: 1,
                           ),),
@@ -597,11 +591,11 @@ class CheckoutPageWidgets {
                           width: 10.0.h,
                         ),
                         OutlinedButton(
-                          //hoverColor: Color(getMyPrimaryColor()),
+                          //hoverColor: mAppThemeProvider.primaryColor,
                           child: Text(
                             'complete profile'.toUpperCase(),
                             style: TextStyle(
-                              color: Color(commonUtil.getMyPrimaryColor()),
+                              color: mAppThemeProvider.primaryColor,
                               fontSize: 10,
                             ),
                           ),
@@ -628,9 +622,7 @@ class CheckoutPageWidgets {
                             isAccepted = true;
                           },style: OutlinedButton.styleFrom(
                           side: BorderSide(
-                            color: Color(
-                              commonUtil.getMyPrimaryColor(),
-                            ),
+                            color: mAppThemeProvider.primaryColor,
                             style: BorderStyle.solid,
                             width: 1,
                           ),),
@@ -706,11 +698,11 @@ class CheckoutPageWidgets {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 OutlinedButton(
-                  //hoverColor: Color(getMyPrimaryColor()),
+                  //hoverColor: mAppThemeProvider.primaryColor,
                   child: Text(
                     'accept'.toUpperCase(),
                     style: TextStyle(
-                      color: Color(commonUtil.getMyPrimaryColor()),
+                      color: mAppThemeProvider.primaryColor,
                       fontSize: 13,
                     ),
                   ),
@@ -732,9 +724,7 @@ class CheckoutPageWidgets {
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(
-                      color: Color(
-                        commonUtil.getMyPrimaryColor(),
-                      ),
+                      color: mAppThemeProvider.primaryColor,
                       style: BorderStyle.solid,
                       width: 1,
                     ),
@@ -747,9 +737,7 @@ class CheckoutPageWidgets {
                   child: Text(
                     'Reject'.toUpperCase(),
                     style: TextStyle(
-                      color: Color(
-                        commonUtil.getMyPrimaryColor(),
-                      ),
+                      color: mAppThemeProvider.primaryColor,
                       fontSize: 13,
                     ),
                   ),
@@ -758,9 +746,7 @@ class CheckoutPageWidgets {
                     isAccpted = false;
                   },style: OutlinedButton.styleFrom(
                   side: BorderSide(
-                    color: Color(
-                      commonUtil.getMyPrimaryColor(),
-                    ),
+                    color: mAppThemeProvider.primaryColor,
                     style: BorderStyle.solid,
                     width: 1,
                   ),),

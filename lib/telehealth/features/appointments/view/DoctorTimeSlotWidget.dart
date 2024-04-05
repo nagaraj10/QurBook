@@ -14,6 +14,8 @@ import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsLis
 import 'package:provider/provider.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
+import '../../../../main.dart';
+
 class DoctorTimeSlotWidget extends StatefulWidget {
   Past? doc;
   ValueChanged<String>? onChanged;
@@ -88,7 +90,7 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(
-                            color: Color(CommonUtil().getMyPrimaryColor())),
+                            color: mAppThemeProvider.primaryColor),
                       ),
                       height: 40.0.h,
                       width: 25.0.h,
@@ -107,7 +109,7 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
                             fontsize: 7.0.sp,
                             text: TranslationConstants.hours.t(),
                             fontWeight: FontWeight.w500,
-                            colors: Color(CommonUtil().getMyPrimaryColor()),
+                            colors: mAppThemeProvider.primaryColor,
                           ),
                         ],
                       ),
@@ -118,7 +120,7 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(
-                            color: Color(CommonUtil().getMyPrimaryColor())),
+                            color: mAppThemeProvider.primaryColor),
                       ),
                       height: 40.0.h,
                       width: 25.0.w,
@@ -139,7 +141,7 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
                             fontsize: 7.0.sp,
                             text: TranslationConstants.minutes.t(),
                             fontWeight: FontWeight.w500,
-                            colors: Color(CommonUtil().getMyPrimaryColor()),
+                            colors: mAppThemeProvider.primaryColor,
                           ),
                         ],
                       ),

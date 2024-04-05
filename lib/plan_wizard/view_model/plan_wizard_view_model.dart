@@ -22,6 +22,7 @@ import 'package:myfhb/widgets/fetching_cart_items_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../claim/model/members/MembershipDetails.dart';
+import '../../main.dart';
 
 class PlanWizardViewModel extends ChangeNotifier {
   PlanWizardService planWizardService = PlanWizardService();
@@ -634,7 +635,7 @@ class PlanWizardViewModel extends ChangeNotifier {
 
         Get.snackbar('', (addToCartModel.message ?? 'Adding Failed! Try again'),
             backgroundColor:
-                Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.9),
+                mAppThemeProvider.primaryColor.withOpacity(0.9),
             colorText: Colors.white);
       }
 

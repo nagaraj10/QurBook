@@ -47,7 +47,8 @@ import '../../../common/CommonConstants.dart';
 import '../../../constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as fhbParameters;
 
-import '../../../more_menu/app_theme_provider.dart';
+import '../../../app_theme_provider.dart';
+import '../../../main.dart';
 import '../../../more_menu/models/app_theme_type.dart';
 
 class QurHomeRegimenScreen extends StatefulWidget {
@@ -305,9 +306,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 ),
                 bottom: PreferredSize(
                   child: Container(
-                    color: Color(
-                      CommonUtil().getQurhomeGredientColor(),
-                    ),
+                    color: mAppThemeProvider.qurhomeGradientColor,
                     height: 1.0,
                   ),
                   preferredSize: Size.fromHeight(
@@ -401,10 +400,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                                     padding:
                                                         EdgeInsets.only(top: 5),
                                                     child: Card(
-                                                      color: Color(
-                                                        CommonUtil()
-                                                            .getQurhomePrimaryColor(),
-                                                      ),
+                                                      color: mAppThemeProvider.qurHomePrimaryColor,
                                                       child: Padding(
                                                         padding:
                                                             EdgeInsets.all(5),
@@ -577,10 +573,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                                   padding:
                                                       EdgeInsets.only(top: 5),
                                                   child: Card(
-                                                    color: Color(
-                                                      CommonUtil()
-                                                          .getQurhomePrimaryColor(),
-                                                    ),
+                                                    color: mAppThemeProvider.qurHomePrimaryColor,
                                                     child: Padding(
                                                       padding:
                                                           EdgeInsets.all(5),
@@ -709,9 +702,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                       child: switch (themeNotifier.currentEnumAppThemeType) {
                     EnumAppThemeType.Classic => RawScrollbar(
                         thumbVisibility: true,
-                        thumbColor: Color(
-                          CommonUtil().getQurhomePrimaryColor(),
-                        ),
+                        thumbColor: mAppThemeProvider.qurHomePrimaryColor,
                         radius: const Radius.circular(20),
                         thickness: 5,
                         child: getDataFromAPIPageViewBuilder(
@@ -770,9 +761,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 Text(
                   noMoreActivites,
                   style: TextStyle(
-                      color: Color(
-                    CommonUtil().getQurhomePrimaryColor(),
-                  )),
+                      color: mAppThemeProvider.qurHomePrimaryColor),
                 )
               ],
             ),
@@ -824,9 +813,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     } else if (controller.currentIndex == itemIndex) {
       return Colors.white;
     } else if (nextRegimenPosition == itemIndex) {
-      return Color(
-        CommonUtil().getQurhomePrimaryColor(),
-      );
+      return mAppThemeProvider.qurHomePrimaryColor;
     } else {
       return Colors.white;
     }
@@ -842,9 +829,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         case EnumAppThemeType.Classic:
           return Colors.black;
         case EnumAppThemeType.Modern:
-          return Color(
-            CommonUtil().getQurhomePrimaryColor(),
-          );
+          return mAppThemeProvider.qurHomePrimaryColor;
       }
     } else if (nextRegimenPosition == itemIndex) {
       switch (themeNotifier.currentEnumAppThemeType) {
@@ -1444,10 +1429,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                     overflow: TextOverflow.fade,
                                     maxLines: 2,
                                     style: TextStyle(
-                                        color: Color(
-                                          CommonUtil()
-                                              .getQurhomeGredientColor(),
-                                        ),
+                                        color: mAppThemeProvider.qurhomeGradientColor,
                                         fontSize: CommonUtil().isTablet!
                                             ? tabHeader1
                                             : mobileHeader1,
@@ -1652,7 +1634,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                           child: Text('Snooze'),
                           style: ElevatedButton.styleFrom(
                               primary:
-                                  Color(CommonUtil().getQurhomePrimaryColor())),
+                                  mAppThemeProvider.qurHomePrimaryColor),
                         ),
                         SizedBox(
                           height: 10,
@@ -1761,9 +1743,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                   overflow: TextOverflow.fade,
                                   maxLines: 2,
                                   style: TextStyle(
-                                      color: Color(
-                                        CommonUtil().getQurhomeGredientColor(),
-                                      ),
+                                      color: mAppThemeProvider.qurhomeGradientColor,
                                       fontSize: CommonUtil().isTablet!
                                           ? tabHeader1
                                           : mobileHeader1,
@@ -1938,10 +1918,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                     overflow: TextOverflow.fade,
                                     maxLines: 2,
                                     style: TextStyle(
-                                        color: Color(
-                                          CommonUtil()
-                                              .getQurhomeGredientColor(),
-                                        ),
+                                        color: mAppThemeProvider.qurhomeGradientColor,
                                         fontSize: CommonUtil().isTablet!
                                             ? tabHeader1
                                             : mobileHeader1,
@@ -2077,10 +2054,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                       width: 30,
                                       color: (regimen.hasform == false)
                                           ? Colors.grey
-                                          : Color(
-                                              CommonUtil()
-                                                  .getQurhomePrimaryColor(),
-                                            ),
+                                          : mAppThemeProvider.qurHomePrimaryColor,
                                     ),
                                   ),
                                   Text(
@@ -2089,10 +2063,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                       fontSize: 20.0.sp,
                                       color: (regimen.hasform == false)
                                           ? Colors.grey
-                                          : Color(
-                                              CommonUtil()
-                                                  .getQurhomePrimaryColor(),
-                                            ),
+                                          : mAppThemeProvider.qurHomePrimaryColor,
                                     ),
                                   ),
                                 ],
@@ -2175,10 +2146,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                       overflow: TextOverflow.fade,
                                       maxLines: 2,
                                       style: TextStyle(
-                                          color: Color(
-                                            CommonUtil()
-                                                .getQurhomeGredientColor(),
-                                          ),
+                                          color: mAppThemeProvider.qurhomeGradientColor,
                                           fontSize: CommonUtil().isTablet!
                                               ? tabHeader1
                                               : mobileHeader1,
@@ -2287,14 +2255,12 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                         child: Image.asset(icon_undo_reg,
                                             height: 30,
                                             width: 30,
-                                            color: Color(CommonUtil()
-                                                .getQurhomePrimaryColor())),
+                                            color: mAppThemeProvider.qurHomePrimaryColor),
                                       ),
                                       Text(strUndo,
                                           style: TextStyle(
                                               fontSize: 20.0.sp,
-                                              color: Color(CommonUtil()
-                                                  .getQurhomePrimaryColor()))),
+                                              color: mAppThemeProvider.qurHomePrimaryColor)),
                                     ],
                                   ),
                                 ),
@@ -2339,8 +2305,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                               width: 30,
                                               color: (regimen?.hasform == false)
                                                   ? Colors.grey
-                                                  : Color(CommonUtil()
-                                                      .getQurhomePrimaryColor())),
+                                                  : mAppThemeProvider.qurHomePrimaryColor),
                                         ),
                                         Text(strEdit,
                                             style: TextStyle(
@@ -2348,8 +2313,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                                 color: (regimen?.hasform ==
                                                         false)
                                                     ? Colors.grey
-                                                    : Color(CommonUtil()
-                                                        .getQurhomePrimaryColor()))),
+                                                    : mAppThemeProvider.qurHomePrimaryColor)),
                                       ],
                                     )),
                                 InkWell(
@@ -2381,8 +2345,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                           width: 30,
                                           color: (regimen?.hasform == false)
                                               ? Colors.grey
-                                              : Color(CommonUtil()
-                                                  .getQurhomePrimaryColor()),
+                                              : mAppThemeProvider.qurHomePrimaryColor,
                                         ),
                                       ),
                                       Text(strView,
@@ -2390,8 +2353,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                               fontSize: 20.0.sp,
                                               color: (regimen?.hasform == false)
                                                   ? Colors.grey
-                                                  : Color(CommonUtil()
-                                                      .getQurhomePrimaryColor()))),
+                                                  : mAppThemeProvider.qurHomePrimaryColor)),
                                     ],
                                   ),
                                 ),
@@ -2802,13 +2764,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             cardColor = Colors.teal;
             break;
           default:
-            cardColor = Color(CommonUtil().getMyPrimaryColor());
+            cardColor = mAppThemeProvider.primaryColor;
         }
       }
     } catch (e, stackTrace) {
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
 
-      cardColor = Color(CommonUtil().getMyPrimaryColor());
+      cardColor = mAppThemeProvider.primaryColor;
     }
     return cardColor;
   }
@@ -2865,7 +2827,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 'OK',
                 style: TextStyle(
                     fontSize: 18,
-                    color: Color(CommonUtil().getQurhomePrimaryColor())),
+                    color: mAppThemeProvider.qurHomePrimaryColor),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -3052,9 +3014,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             borderType: BorderType.Oval,
             //radius: Radius.circular(20),
             dashPattern: [9, 5],
-            color: Color(
-              CommonUtil().getQurhomeGredientColor(),
-            ),
+            color: mAppThemeProvider.qurhomeGradientColor,
             strokeWidth: 3,
             child: Container(),
           ),
@@ -3076,9 +3036,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                   style: TextStyle(
                     fontSize: 45,
                     fontWeight: FontWeight.bold,
-                    color: Color(
-                      CommonUtil().getQurhomeGredientColor(),
-                    ),
+                    color: mAppThemeProvider.qurhomeGradientColor,
                   ),
                 ),
                 Text(
@@ -3086,9 +3044,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.normal,
-                    color: Color(
-                      CommonUtil().getQurhomeGredientColor(),
-                    ),
+                    color: mAppThemeProvider.qurhomeGradientColor,
                   ),
                 ),
               ],
@@ -3231,11 +3187,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         //height: 40.0.h,
         padding: EdgeInsets.all(5.0),
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getQurhomePrimaryColor()),
+          color: mAppThemeProvider.qurHomePrimaryColor,
           border: Border.all(
             //width: 1.0,
             // assign the color to the border color
-            color: Color(CommonUtil().getQurhomePrimaryColor()),
+            color: mAppThemeProvider.qurHomePrimaryColor,
           ),
           borderRadius: BorderRadius.all(Radius.circular(6)),
         ),
@@ -3275,7 +3231,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           border: Border.all(
             //width: 1.0,
             // assign the color to the border color
-            color: Color(CommonUtil().getQurhomePrimaryColor()),
+            color: mAppThemeProvider.qurHomePrimaryColor,
           ),
           borderRadius: BorderRadius.all(Radius.circular(6)),
         ),
@@ -3283,7 +3239,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           child: Text(
             variable.Cancel,
             style: TextStyle(
-              color: Color(CommonUtil().getQurhomePrimaryColor()),
+              color: mAppThemeProvider.qurHomePrimaryColor,
               fontSize: 18.0.sp,
               fontWeight: FontWeight.w600,
             ),
@@ -3401,7 +3357,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                     size: CommonUtil().isTablet!
                         ? dialogIconTab
                         : dialogIconMobile,
-                    color: Color(CommonUtil().getQurhomePrimaryColor()),
+                    color: mAppThemeProvider.qurHomePrimaryColor,
                   );
                 }),
         ),
@@ -3446,7 +3402,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         introText: regimen?.otherinfo?.introText ?? '',
         fieldsData: fieldsResponseModel?.result!.fields,
         eid: eventId,
-        color: Color(CommonUtil().getQurhomePrimaryColor()),
+        color: mAppThemeProvider.qurHomePrimaryColor,
         mediaData: regimen?.otherinfo,
         formTitle: getDialogTitle(context, regimen!, activityName, true),
         showEditIcon: canEditMain,

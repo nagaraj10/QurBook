@@ -13,6 +13,7 @@ import '../../../../constants/fhb_constants.dart' as Constants;
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/router_variable.dart';
 import '../../../../constants/variable_constant.dart' as variable;
+import '../../../../main.dart';
 import '../../../../widgets/GradientAppBar.dart';
 import '../../../../widgets/RaisedGradientButton.dart';
 import '../../../utils/screenutils/size_extensions.dart';
@@ -140,8 +141,8 @@ class _SuperMayaState extends State<SuperMaya> {
                                   ),
                                   gradient: LinearGradient(
                                     colors: <Color>[
-                                      Color(CommonUtil().getMyPrimaryColor()),
-                                      Color(CommonUtil().getMyGredientColor()),
+                                      mAppThemeProvider.primaryColor,
+                                      mAppThemeProvider.gradientColor,
                                     ],
                                   ),
                                   onPressed: () {

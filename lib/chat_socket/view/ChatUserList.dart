@@ -23,6 +23,7 @@ import '../../constants/variable_constant.dart';
 import '../../constants/variable_constant.dart' as variable;
 import '../../landing/model/qur_plan_dashboard_model.dart';
 import '../../landing/view/landing_arguments.dart';
+import '../../main.dart';
 import '../../my_family/models/FamilyMembersRes.dart';
 import '../../src/model/user/MyProfileModel.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -223,7 +224,7 @@ class _ChatUserListState extends State<ChatUserList> {
         body: isLoading
             ? Center(
                 child: CircularProgressIndicator(
-                color: Color(CommonUtil().getMyPrimaryColor()),
+                color: mAppThemeProvider.primaryColor,
               ))
             : WillPopScope(
                 child: checkIfDoctorIdExist(),
@@ -234,7 +235,7 @@ class _ChatUserListState extends State<ChatUserList> {
             : Obx(() => controller.shownNewChatFloat.isTrue &&
                     controller.isSelfUser()
                 ? FloatingActionButton(
-                    backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                    backgroundColor: mAppThemeProvider.primaryColor,
                     child: Icon(
                       Icons.add,
                       color: Colors.white,
@@ -428,8 +429,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                       : '',
                                   style: TextStyle(
                                       fontSize: 22.0.sp,
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor())),
+                                      color: mAppThemeProvider.primaryColor),
                                 ),
                               ),
                             )
@@ -448,7 +448,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                   height: 45.0.h,
                                   width: 45.0.h,
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
+                                      mAppThemeProvider.primaryColor,
                                   child: Center(
                                       child: Text(
                                     data.firstName != null &&
@@ -526,8 +526,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 14.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                                 // softWrap: false,
                                 // overflow: TextOverflow.ellipsis,
                               )
@@ -541,8 +540,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 16.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                               )
                       ],
                     ),
@@ -709,8 +707,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                     : '',
                                 style: TextStyle(
                                     fontSize: 14.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
                               )
@@ -828,7 +825,7 @@ class _ChatUserListState extends State<ChatUserList> {
                           child: Text(primary_chat,
                               style: TextStyle(
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
+                                      mAppThemeProvider.primaryColor,
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.w600)),
                         ),
@@ -972,7 +969,7 @@ class _ChatUserListState extends State<ChatUserList> {
                           ? userChatList.firstName![0].toString().toUpperCase()
                           : '',
                       style: TextStyle(
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                        color: mAppThemeProvider.primaryColor,
                         fontSize: 16.0.sp,
                         fontWeight: FontWeight.w400,
                       ),
@@ -996,7 +993,7 @@ class _ChatUserListState extends State<ChatUserList> {
       return CircleAvatar(
         radius:
             CommonUtil().isTablet != null && CommonUtil().isTablet! ? 18 : 15,
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        backgroundColor: mAppThemeProvider.primaryColor,
         foregroundColor: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(4),

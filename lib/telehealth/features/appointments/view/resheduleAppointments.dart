@@ -23,6 +23,8 @@ import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWi
 
 import 'package:myfhb/common/errors_widget.dart';
 
+import '../../../../main.dart';
+
 class ResheduleAppointments extends StatefulWidget {
   Past? doc;
   bool? isFromNotification;
@@ -100,8 +102,8 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: <Color>[
-                  Color(CommonUtil().getMyPrimaryColor()),
-                  Color(CommonUtil().getMyGredientColor())
+                  mAppThemeProvider.primaryColor,
+                  mAppThemeProvider.gradientColor
                 ],
                     stops: [
                   0.3,
@@ -330,7 +332,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                                   : '',
                               style: TextStyle(
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor())),
+                                      mAppThemeProvider.primaryColor),
                             ),
                           ))
                       : Container(
@@ -433,7 +435,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
 //                                              : getFees(eachHospitalModel[i])),
                           fontsize: 16.0.sp,
                           fontWeight: FontWeight.w400,
-                          colors: Color(CommonUtil().getMyPrimaryColor())),
+                          colors: mAppThemeProvider.primaryColor),
                     ),
                   ),
                   SizedBox(height: 5),

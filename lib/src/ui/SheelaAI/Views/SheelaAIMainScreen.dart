@@ -10,6 +10,7 @@ import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BLEBlinkingIcon.dart';
 import '../../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
+import '../../../../main.dart';
 import '../Widgets/common_bluetooth_widget.dart';
 
 import '../../../../common/CommonUtil.dart';
@@ -318,8 +319,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                         backgroundColor: controller.isLoading.value
                             ? Colors.black45
                             : PreferenceUtil.getIfQurhomeisAcive()
-                                ? Color(CommonUtil().getQurhomeGredientColor())
-                                : Color(CommonUtil().getMyPrimaryColor()),
+                                ? mAppThemeProvider.qurhomeGradientColor
+                                : mAppThemeProvider.primaryColor,
                         child: Icon(
                           (controller.currentPlayingConversation != null &&
                                   controller.currentPlayingConversation!
@@ -476,7 +477,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                               Icons.home,
                               size: 32.sp,
                               color:
-                                  Color(CommonUtil().getQurhomePrimaryColor()),
+                                  mAppThemeProvider.qurHomePrimaryColor,
                             ),
                           ),
                           SizedBox(width: 12.w),
@@ -498,9 +499,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
           1.0,
         ),
         child: Container(
-          color: Color(
-            CommonUtil().getQurhomeGredientColor(),
-          ),
+          color: mAppThemeProvider.qurhomeGradientColor,
           height: 1.0,
         ),
       ),
@@ -539,7 +538,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
               size: 32.sp,
               color: controller.isMuted.value
                   ? Colors.grey
-                  : Color(CommonUtil().getQurhomePrimaryColor()),
+                  : mAppThemeProvider.qurHomePrimaryColor,
             ),
           )
         ],
@@ -570,7 +569,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                   Radio(
                     value: languageCode,
                     groupValue: currentLanguage,
-                    activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                    activeColor: mAppThemeProvider.primaryColor,
                     onChanged: (dynamic value) {
                       Get.back();
                       getupdateDeviceSelection(value);
@@ -619,7 +618,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
           width: 35.0.sp,
           height: 35.0.sp,
           color: PreferenceUtil.getIfQurhomeisAcive()
-              ? Color(CommonUtil().getQurhomePrimaryColor())
+              ? mAppThemeProvider.qurHomePrimaryColor
               : Colors.white,
         ),
       ),

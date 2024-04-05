@@ -29,6 +29,7 @@ import '../../constants/variable_constant.dart' as variable;
 import '../../constants/variable_constant.dart';
 import '../../landing/view/landing_arguments.dart';
 import '../../landing/view_model/landing_view_model.dart';
+import '../../main.dart';
 import '../../myPlan/view/myPlanDetail.dart';
 import '../../my_family_detail/models/my_family_detail_arguments.dart';
 import '../../regiment/models/regiment_arguments.dart';
@@ -344,7 +345,7 @@ class _SplashScreenState extends State<SplashScreen>
                       child: Text(
                         variable.strLogin,
                         style: TextStyle(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          color: mAppThemeProvider.primaryColor,
                         ),
                       ),
                       onPressed: () {

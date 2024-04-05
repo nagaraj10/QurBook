@@ -3,6 +3,7 @@ import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 
 import '../../common/CommonUtil.dart';
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../constants/constants.dart';
 import '../model/change_password_model.dart';
@@ -80,7 +81,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: BorderSide(
                                     color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        mAppThemeProvider.primaryColor,
                                   ),
                                 ),
                               ),
@@ -116,7 +117,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: BorderSide(
                                     color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        mAppThemeProvider.primaryColor,
                                   ),
                                 ),
                               ),
@@ -149,7 +150,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: BorderSide(
                                     color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        mAppThemeProvider.primaryColor,
                                   ),
                                 ),
                               ),
@@ -205,8 +206,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       spreadRadius: 2)
                 ],
                 gradient: LinearGradient(end: Alignment.centerRight, colors: [
-                  Color(CommonUtil().getMyPrimaryColor()),
-                  Color(CommonUtil().getMyPrimaryColor()),
+                  mAppThemeProvider.primaryColor,
+                  mAppThemeProvider.primaryColor,
                 ])),
             child: Text(
               strChangeButtonText,

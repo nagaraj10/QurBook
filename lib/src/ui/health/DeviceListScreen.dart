@@ -12,6 +12,7 @@ import '../../../constants/fhb_constants.dart';
 import '../../../constants/fhb_parameters.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
 import '../../../constants/variable_constant.dart' as variable;
+import '../../../main.dart';
 import '../../../record_detail/model/ImageDocumentResponse.dart';
 import '../../../record_detail/screens/record_detail_screen.dart';
 import '../../blocs/health/HealthReportListForUserBlock.dart';
@@ -204,7 +205,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                         data.metadata!.healthRecordType!.logo!,
                         height: 25.0.h,
                         width: 25.0.h,
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        color: mAppThemeProvider.primaryColor,
                         errorBuilder: (context, error, stackTrace) =>
                             const SizedBox(),
                       ),
@@ -220,7 +221,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 12.0.sp,
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              color: mAppThemeProvider.primaryColor,
                             ),
                             maxLines: 2,
                             softWrap: true,
@@ -242,7 +243,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                           FHBUtils().getFormattedDateStringClone(
                               data.dateTimeValue!.toLocal()),
                           style: TextStyle(
-                              color: Color(CommonUtil().getMyPrimaryColor()),
+                              color: mAppThemeProvider.primaryColor,
                               fontWeight: FontWeight.w200,
                               fontSize: 10.0.sp),
                         )
@@ -263,8 +264,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                                     ? ImageIcon(
                                         const AssetImage(
                                             variable.icon_record_fav_active),
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        color: mAppThemeProvider.primaryColor,
                                         size: CommonUtil().isTablet!
                                             ? tabHeader2
                                             : mobileHeader2,
@@ -291,7 +291,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                             if (widget.mediaMeta!.contains(data.id))
                               Icon(
                                 Icons.done,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                               )
                             else
                               const SizedBox(),

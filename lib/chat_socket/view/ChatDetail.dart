@@ -28,6 +28,7 @@ import '../../common/errors_widget.dart';
 import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/variable_constant.dart';
+import '../../main.dart';
 import '../../src/model/Health/asgard/health_record_collection.dart';
 import '../../src/model/user/MyProfileModel.dart';
 import '../../src/ui/MyRecord.dart';
@@ -773,7 +774,7 @@ class ChatState extends State<ChatDetail> {
       body: isLoading
           ? Center(
               child: CircularProgressIndicator(
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
             ))
           : WillPopScope(
               onWillPop: onBackPress,
@@ -820,8 +821,8 @@ class ChatState extends State<ChatDetail> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: <Color>[
-              Color(CommonUtil().getMyPrimaryColor()),
-              Color(CommonUtil().getMyGredientColor())
+              mAppThemeProvider.primaryColor,
+              mAppThemeProvider.gradientColor
             ],
                 stops: [
               0.3,
@@ -1042,7 +1043,7 @@ class ChatState extends State<ChatDetail> {
                     icon: Icon(
                       Icons.clear,
                       size: 20,
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      color: mAppThemeProvider.primaryColor,
                     ),
                   ),
                   border: OutlineInputBorder(
@@ -1082,7 +1083,7 @@ class ChatState extends State<ChatDetail> {
                           ? widget.peerName![0].toString().toUpperCase()
                           : '',
                       style: TextStyle(
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                        color: mAppThemeProvider.primaryColor,
                         fontSize: fontSizeOne,
                         fontWeight: FontWeight.w400,
                       ),
@@ -1237,7 +1238,7 @@ class ChatState extends State<ChatDetail> {
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return IconTheme(
-      data: IconThemeData(color: Color(CommonUtil().getMyPrimaryColor())),
+      data: IconThemeData(color: mAppThemeProvider.primaryColor),
       child: Container(
         width: (CommonUtil().isTablet ?? false)
             ? MediaQuery.of(context).size.width
@@ -1315,7 +1316,7 @@ class ChatState extends State<ChatDetail> {
                           },
                           child: Icon(
                             Icons.attach_file,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                             size: 22,
                           ),
                         ),
@@ -1326,7 +1327,7 @@ class ChatState extends State<ChatDetail> {
                                 child: new Icon(
                                   Icons.calendar_today,
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
+                                      mAppThemeProvider.primaryColor,
                                   size: 22,
                                 )),*/
                       ),
@@ -1346,7 +1347,7 @@ class ChatState extends State<ChatDetail> {
                   fillColor: Colors.white,
                   child: Icon(Icons.send,
                       size: 25.0,
-                      color: Color(CommonUtil().getMyPrimaryColor())),
+                      color: mAppThemeProvider.primaryColor),
                   padding: EdgeInsets.all(12.0),
                   shape: CircleBorder(),
                 ),
@@ -1384,7 +1385,7 @@ class ChatState extends State<ChatDetail> {
                         fillColor: Colors.white,
                         child: Icon(Icons.mic,
                             size: 25.0,
-                            color: Color(CommonUtil().getMyPrimaryColor())),
+                            color: mAppThemeProvider.primaryColor),
                         padding: EdgeInsets.all(12.0),
                         shape: CircleBorder(),
                       ),
@@ -1488,7 +1489,7 @@ class ChatState extends State<ChatDetail> {
                             RichText(
                               text: TextSpan(
                                   style: TextStyle(
-                                    color: Color(CommonUtil().getMyPrimaryColor()),
+                                    color: mAppThemeProvider.primaryColor,
                                     fontSize: fontSizeOne,
                                   ),
                                   children: textSpanList),
@@ -1515,7 +1516,7 @@ class ChatState extends State<ChatDetail> {
                         /*child: Text(
                       document[STR_CONTENT],
                       style: TextStyle(
-                          color: Color(CommonUtil().getMyPrimaryColor())),
+                          color: mAppThemeProvider.primaryColor),
                     ),*/
                       ),
                     )
@@ -1807,8 +1808,7 @@ class ChatState extends State<ChatDetail> {
                                                   .toUpperCase()
                                               : '',
                                           style: TextStyle(
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor()),
+                                            color: mAppThemeProvider.primaryColor,
                                             fontSize: fontSizeOne,
                                             fontWeight: FontWeight.w400,
                                           ),
@@ -1839,7 +1839,7 @@ class ChatState extends State<ChatDetail> {
                           ),
                           padding: const EdgeInsets.only(left: 15, right: 15,top: 10,bottom: 10),
                           decoration: BoxDecoration(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(25),
                               bottomLeft: Radius.circular(25),
@@ -1989,8 +1989,7 @@ class ChatState extends State<ChatDetail> {
                                           ),
                                           padding: const EdgeInsets.all(15.0),
                                           decoration: BoxDecoration(
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor()),
+                                            color: mAppThemeProvider.primaryColor,
                                             borderRadius: BorderRadius.only(
                                               topRight: Radius.circular(25),
                                               bottomLeft: Radius.circular(25),
@@ -2463,7 +2462,7 @@ class ChatState extends State<ChatDetail> {
       return Text(
         'File ' + dateTimeFromServerTimeStamp.millisecondsSinceEpoch.toString(),
         style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           fontSize: fontSizeOne,
         ),
       );
@@ -2471,7 +2470,7 @@ class ChatState extends State<ChatDetail> {
       return Text(
         'Click to View Pdf',
         style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           fontSize: fontSizeOne,
         ),
       );
@@ -2565,7 +2564,7 @@ class ChatState extends State<ChatDetail> {
           fontSize: fontSizeOne,
         ),
       ),
-      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+      backgroundColor: mAppThemeProvider.primaryColor,
     );
 
     //ScaffoldMessenger.of(contxt).showSnackBar();
@@ -2586,7 +2585,7 @@ class ChatState extends State<ChatDetail> {
               fontSize: fontSizeOne,
             ),
           ),
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          backgroundColor: mAppThemeProvider.primaryColor,
           action: SnackBarAction(
             label: 'Open',
             onPressed: () async {
@@ -2624,7 +2623,7 @@ class ChatState extends State<ChatDetail> {
                   fontSize: fontSizeOne,
                 ),
               ),
-              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+              backgroundColor: mAppThemeProvider.primaryColor,
               action: SnackBarAction(
                 label: 'Open',
                 onPressed: () async {

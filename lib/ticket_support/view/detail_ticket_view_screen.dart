@@ -27,6 +27,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as strConstants;
 import '../../constants/router_variable.dart';
+import '../../main.dart';
 import '../../widgets/GradientAppBar.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
@@ -108,7 +109,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        backgroundColor: mAppThemeProvider.primaryColor,
         elevation: 0,
         leading: IconWidget(
           icon: Icons.arrow_back_ios,
@@ -484,7 +485,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                   },
                   labelStyle: TextStyle(fontSize: 14),
                   isScrollable: false,
-                  labelColor: Color(CommonUtil().getMyPrimaryColor()),
+                  labelColor: mAppThemeProvider.primaryColor,
                   unselectedLabelColor: Colors.black,
                   indicatorColor: Colors.transparent,
                   tabs: [
@@ -495,8 +496,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                               begin: Alignment.centerLeft,
                               end: Alignment.centerRight,
                               colors: [
-                                Color(CommonUtil().getMyPrimaryColor()),
-                                Color(CommonUtil().getMyGredientColor())
+                                mAppThemeProvider.primaryColor,
+                                mAppThemeProvider.gradientColor
                               ]).createShader(bounds);
                         },
                         blendMode: BlendMode.srcATop,
@@ -512,8 +513,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
                                 colors: [
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                                  Color(CommonUtil().getMyGredientColor())
+                                  mAppThemeProvider.primaryColor,
+                                  mAppThemeProvider.gradientColor
                                 ]).createShader(bounds);
                           },
                           blendMode: BlendMode.srcATop,
@@ -531,8 +532,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
                                 colors: [
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                                  Color(CommonUtil().getMyGredientColor())
+                                  mAppThemeProvider.primaryColor,
+                                  mAppThemeProvider.gradientColor
                                 ]).createShader(bounds);
                           },
                           blendMode: BlendMode.srcATop,
@@ -566,8 +567,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                     child: Container(
                                       height: 20,
                                       width: 1.0,
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                     ),
                                   ),
                                   Positioned(
@@ -579,8 +579,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                       width: 10.0,
                                       decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: Color(CommonUtil()
-                                              .getMyPrimaryColor())),
+                                          color: mAppThemeProvider.primaryColor),
                                     ),
                                   ),
                                   Padding(
@@ -724,8 +723,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                     },
                                                     child: Icon(
                                                       Icons.attach_file,
-                                                      color: Color(CommonUtil()
-                                                          .getMyPrimaryColor()),
+                                                      color: mAppThemeProvider.primaryColor,
                                                       size: 24,
                                                     )),
                                               ),
@@ -776,8 +774,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                             fillColor: Colors.white,
                                             child: Icon(Icons.send,
                                                 size: 25.0,
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor())),
+                                                color: mAppThemeProvider.primaryColor),
                                             padding: EdgeInsets.all(12.0),
                                             shape: CircleBorder(),
                                           ),
@@ -954,7 +951,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Card(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      color: mAppThemeProvider.primaryColor,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                               topRight: Radius.circular(16),
@@ -967,7 +964,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                         ),
                         padding: const EdgeInsets.all(15.0),
                         decoration: BoxDecoration(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          color: mAppThemeProvider.primaryColor,
                           borderRadius: BorderRadius.only(
                             topRight: Radius.circular(16),
                             topLeft: Radius.circular(16),
@@ -978,7 +975,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                         /*child: Text(
                                 document[STR_CONTENT],
                                 style: TextStyle(
-                                    color: Color(CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                               ),*/
                         child: ticketList.comments![(ticketList.comments?.length??0) -
                             1 -
@@ -1000,7 +997,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                         },
                         elevation: 2.0,
                         fillColor:
-                        Color(CommonUtil().getMyPrimaryColor()),
+                        mAppThemeProvider.primaryColor,
                         child: CachedNetworkImage(
                           placeholder: (context, url) => Container(
                             child: CommonCircularIndicator(),
@@ -1009,7 +1006,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                             padding: EdgeInsets.all(10.0),
                             decoration: BoxDecoration(
                               color:
-                              Color(CommonUtil().getMyPrimaryColor()),
+                              mAppThemeProvider.primaryColor,
                               borderRadius: BorderRadius.all(
                                 Radius.circular(8.0),
                               ),
@@ -1060,7 +1057,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                         },
                         elevation: 2.0,
                         fillColor:
-                        Color(CommonUtil().getMyPrimaryColor()),
+                        mAppThemeProvider.primaryColor,
                         child: CachedNetworkImage(
                           placeholder: (context, url) => Container(
                             child: CommonCircularIndicator(),
@@ -1069,7 +1066,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                             padding: EdgeInsets.all(10.0),
                             decoration: BoxDecoration(
                               color:
-                              Color(CommonUtil().getMyPrimaryColor()),
+                              mAppThemeProvider.primaryColor,
                               borderRadius: BorderRadius.all(
                                 Radius.circular(8.0),
                               ),
@@ -1122,7 +1119,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                         /*child: Text(
                                 document[STR_CONTENT],
                                 style: TextStyle(
-                                    color: Color(CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                               ),*/
                         child: ticketList
                             .comments![(ticketList.comments?.length??0) -

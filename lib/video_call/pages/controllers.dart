@@ -26,6 +26,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
+import '../../main.dart';
+
 class MyControllers extends StatefulWidget {
   CallStatus callStatus;
   ClientRole? role;
@@ -243,7 +245,7 @@ class _MyControllersState extends State<MyControllers> {
         decoration: BoxDecoration(
           color: audioCallStatus.isAudioCall
               ? Colors.white.withOpacity(0.5)
-              : Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.3),
+              : mAppThemeProvider.primaryColor.withOpacity(0.3),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         //color:Colors.red,
@@ -522,7 +524,7 @@ class _MyControllersState extends State<MyControllers> {
                 child: LinearProgressIndicator(
                   backgroundColor: Color(CommonUtil.secondaryGrey),
                   valueColor: AlwaysStoppedAnimation<Color>(
-                      Color(CommonUtil().getMyPrimaryColor())),
+                      mAppThemeProvider.primaryColor),
                   //value: progressValue[currentProgressValue],
                 ),
               ),

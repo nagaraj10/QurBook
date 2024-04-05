@@ -14,6 +14,8 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
+import '../../../main.dart';
+
 class SignUpScreen extends StatefulWidget {
   final String enteredMobNumber;
   final String? selectedCountryCode;
@@ -164,7 +166,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       margin: EdgeInsets.all(20),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          color: mAppThemeProvider.primaryColor,
                           borderRadius: BorderRadius.circular(10)),
                       child: FlatButtonWidget(
                         bgColor: Colors.transparent,
@@ -185,7 +187,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Padding(
                   padding: EdgeInsets.only(bottom: circleRadius / 2.0),
                   child: Container(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                     height: 160.0.h,
                   ),
                 ),

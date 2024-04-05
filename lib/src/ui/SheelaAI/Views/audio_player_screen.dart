@@ -12,6 +12,8 @@ import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
+import '../../../../main.dart';
+
 class AudioPlayerScreen extends StatefulWidget {
   final String? audioUrl;
   final String? chatMessageId;
@@ -121,7 +123,7 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
             body: Obx(() => sheelaAIController.isAudioScreenLoading.value
                 ? Center(
                     child: CircularProgressIndicator(
-                        color: Color(CommonUtil().getMyPrimaryColor())))
+                        color: mAppThemeProvider.primaryColor))
                 : getAudioWidgetWithPlayer())));
   }
 
@@ -140,8 +142,8 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
               IconButton(
                 iconSize: 62.sp,
                 color: (PreferenceUtil.getIfQurhomeisAcive())
-                    ? Color(CommonUtil().getQurhomePrimaryColor())
-                    : Color(CommonUtil().getMyPrimaryColor()),
+                    ? mAppThemeProvider.qurHomePrimaryColor
+                    : mAppThemeProvider.primaryColor,
                 onPressed: () {
                   isPlaying ? onPausePlayerPressed() : onStartPlayerPressed();
                 },
@@ -163,8 +165,8 @@ class AudioPlayerScreenState extends State<AudioPlayerScreen> {
                         height: 30.0.h,
                         child: Slider(
                           activeColor: (PreferenceUtil.getIfQurhomeisAcive())
-                              ? Color(CommonUtil().getQurhomePrimaryColor())
-                              : Color(CommonUtil().getMyPrimaryColor()),
+                              ? mAppThemeProvider.qurHomePrimaryColor
+                              : mAppThemeProvider.primaryColor,
                           inactiveColor: Colors.grey,
                           value: sliderCurrentPosition,
                           min: 0,
