@@ -15,6 +15,8 @@ import 'package:myfhb/src/ui/camera/DisplayPictureScreen.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
+import '../../../main.dart';
+
 class CropAndRotateScreen extends StatefulWidget {
   final List<String?> imagePath;
 
@@ -164,8 +166,8 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
           Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(colors: [
-              Color(CommonUtil().getMyPrimaryColor()),
-              Color(CommonUtil().getMyGredientColor())
+              mAppThemeProvider.primaryColor,
+              mAppThemeProvider.gradientColor
             ])),
             child: Padding(
               padding: EdgeInsets.all(5),
@@ -235,7 +237,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
   Future<void> cropImage(String filePath) async {}
 
   Future showBusyingDialog() async {
-    var primaryColor = Color(CommonUtil().getMyPrimaryColor());
+    var primaryColor = mAppThemeProvider.primaryColor;
     return showDialog(
         context: context,
         barrierDismissible: false,

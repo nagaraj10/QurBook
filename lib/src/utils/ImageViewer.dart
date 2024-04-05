@@ -16,6 +16,7 @@ import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:get/get.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
@@ -236,9 +237,7 @@ class _ImageViewerState extends State<ImageViewer> {
                 height: 50,
                 width: MediaQuery.of(context).size.width / 4,
                 decoration: BoxDecoration(
-                  color: Color(
-                    CommonUtil().getMyPrimaryColor(),
-                  ),
+                  color: mAppThemeProvider.primaryColor,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -254,9 +253,7 @@ class _ImageViewerState extends State<ImageViewer> {
             getText(type),
             style: TextStyle(
               fontSize: 12,
-              color: Color(
-                CommonUtil().getMyPrimaryColor(),
-              ),
+              color: mAppThemeProvider.primaryColor,
             ),
           ),
         ],

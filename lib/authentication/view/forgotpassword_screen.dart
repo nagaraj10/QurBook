@@ -5,6 +5,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/variable_constant.dart';
+import '../../main.dart';
 import '../../src/ui/loader_class.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/app_primary_button.dart';
@@ -44,9 +45,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         key: _ForgetPassKey,
         child: Theme(
           data: Theme.of(context).copyWith(
-            primaryColor: Color(
-              CommonUtil().getMyPrimaryColor(),
-            ),
+            primaryColor: mAppThemeProvider.primaryColor,
           ),
           child: Container(
             height: height,
@@ -164,7 +163,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                   )),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -203,7 +202,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             Text(
               strLoginText,
               style: TextStyle(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  color: mAppThemeProvider.primaryColor,
                   fontSize: 15.0.sp,
                   fontWeight: FontWeight.w600),
             ),
@@ -235,8 +234,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       spreadRadius: 2)
                 ],
                 gradient: LinearGradient(end: Alignment.centerRight, colors: [
-                  Color(CommonUtil().getMyPrimaryColor()),
-                  Color(CommonUtil().getMyGredientColor())
+                  mAppThemeProvider.primaryColor,
+                  mAppThemeProvider.gradientColor
                 ])),
             child: Text(
               textString,

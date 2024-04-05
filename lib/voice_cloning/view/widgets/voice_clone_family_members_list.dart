@@ -9,6 +9,7 @@ import '../../../common/PreferenceUtil.dart';
 import '../../../constants/fhb_constants.dart' as fhb_constants;
 import '../../../constants/fhb_parameters.dart';
 import '../../../constants/variable_constant.dart' as variable;
+import '../../../main.dart';
 import '../../../my_family/models/FamilyMembersRes.dart';
 import '../../../src/utils/colors_utils.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
@@ -148,9 +149,7 @@ class _VoiceCloneFamilyMembersListState
                                 : '',
                             style: TextStyle(
                               fontSize: userProfileFontSize,
-                              color: Color(
-                                CommonUtil().getMyPrimaryColor(),
-                              ),
+                              color: mAppThemeProvider.primaryColor,
                             ),
                           ),
                         ),
@@ -169,9 +168,7 @@ class _VoiceCloneFamilyMembersListState
                             Container(
                           height: userProfileImageSize,
                           width: userProfileImageSize,
-                          color: Color(
-                            CommonUtil().getMyPrimaryColor(),
-                          ),
+                          color: mAppThemeProvider.primaryColor,
                           child: Center(
                             child: Text(
                               familyMember.child?.firstName != null &&
@@ -255,9 +252,7 @@ class _VoiceCloneFamilyMembersListState
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 16.0.sp,
-                    color: Color(
-                      CommonUtil().getMyPrimaryColor(),
-                    ),
+                    color: mAppThemeProvider.primaryColor,
                   ),
                 ),
               ],

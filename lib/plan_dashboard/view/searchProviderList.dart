@@ -215,7 +215,7 @@ class _SearchProviderList extends State<SearchProviderList> {
                   height: 30.0.h,
                   child: CircularProgressIndicator(
                       backgroundColor:
-                          Color(CommonUtil().getMyPrimaryColor())),
+                          mAppThemeProvider.primaryColor),
                 ),
               ),
             ),

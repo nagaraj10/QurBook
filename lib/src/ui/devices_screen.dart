@@ -8,6 +8,7 @@ import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart';
 import '../../constants/variable_constant.dart';
 import '../../landing/view/landing_arguments.dart';
+import '../../main.dart';
 import '../../widgets/GradientAppBar.dart';
 import '../utils/screenutils/size_extensions.dart';
 import 'Dashboard.dart';
@@ -21,7 +22,7 @@ class DevicesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        backgroundColor: mAppThemeProvider.primaryColor,
         elevation: 0,
         title: Text(
           strDevices,

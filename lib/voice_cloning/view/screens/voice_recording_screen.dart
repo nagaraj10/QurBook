@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/variable_constant.dart';
+import '../../../main.dart';
 import '../../../more_menu/screens/terms_and_conditon.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../widgets/app_primary_button.dart';
@@ -209,12 +210,12 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> with Widget
                     waveformData: _voiceCloningController.audioWaveData,
                     playerWaveStyle: PlayerWaveStyle(
                       fixedWaveColor: Colors.white,
-                      liveWaveColor: Color(CommonUtil().getMyPrimaryColor()),
+                      liveWaveColor: mAppThemeProvider.primaryColor,
                       spacing: 6,
                     ),
                   ),
                   Slider(
-                    activeColor: Color(CommonUtil().getMyPrimaryColor())
+                    activeColor: mAppThemeProvider.primaryColor
                         .withOpacity(0.5),
                     inactiveColor: Colors.white,
                     value: _voiceCloningController.playPosition,
@@ -283,7 +284,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> with Widget
                                   borderRadius: BorderRadius.circular(25),
                                   color: Colors.white),
                               textColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
+                                  mAppThemeProvider.primaryColor,
                               onTap: () {
                                 _voiceCloningController.reRecord();
                               }),
@@ -298,7 +299,7 @@ class _VoiceRecordingScreenState extends State<VoiceRecordingScreen> with Widget
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(25),
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor())),
+                                      mAppThemeProvider.primaryColor),
                               textColor: Colors.white,
                               onTap: () {
                                 _voiceCloningController.submitRecording();

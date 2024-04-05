@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../common/CommonUtil.dart';
 import '../../../constants/fhb_constants.dart';
+import '../../../main.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../controller/voice_cloning_controller.dart';
 
@@ -89,9 +90,7 @@ class _VoiceCloningCountDownWidgetState
                         strokeWidth: 10,
                         value: mControllerWatch.progressValue,
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          Color(
-                            CommonUtil().getMyPrimaryColor(),
-                          ),
+                          mAppThemeProvider.primaryColor,
                         ),
                         backgroundColor: Colors.white,
                       ),
@@ -101,7 +100,7 @@ class _VoiceCloningCountDownWidgetState
                       style: TextStyle(
                           fontSize: 50.h,
                           fontWeight: FontWeight.w500,
-                          color: Color(CommonUtil().getMyPrimaryColor())),
+                          color: mAppThemeProvider.primaryColor),
                     )
                   ],
                 )

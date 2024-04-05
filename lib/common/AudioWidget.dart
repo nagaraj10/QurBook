@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart';
+import '../main.dart';
 import 'CommonUtil.dart';
 import '../constants/variable_constant.dart' as variable;
 import '../src/utils/screenutils/size_extensions.dart';
@@ -168,7 +169,7 @@ class AudioWidgetState extends State<AudioWidget> {
             child: Container(
               height: 30.0.h,
               child: Slider(
-                activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                activeColor: mAppThemeProvider.primaryColor,
                 inactiveColor: Colors.grey,
                 value: sliderCurrentPosition,
                 min: 0,
@@ -234,7 +235,7 @@ class AudioWidgetState extends State<AudioWidget> {
               child: Container(
                 height: 30.0.h,
                 child: Slider(
-                  activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                  activeColor: mAppThemeProvider.primaryColor,
                   inactiveColor: Colors.grey,
                   value: sliderCurrentPosition,
                   min: 0,
@@ -328,7 +329,7 @@ class AudioWidgetState extends State<AudioWidget> {
             child: Container(
               height: 30.0.h,
               child: Slider(
-                activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                activeColor: mAppThemeProvider.primaryColor,
                 inactiveColor: Colors.grey,
                 value: sliderCurrentPosition,
                 min: 0,

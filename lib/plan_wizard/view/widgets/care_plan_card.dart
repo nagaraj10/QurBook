@@ -13,6 +13,7 @@ import '../../../common/FHBBasicWidget.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
 import '../../../constants/variable_constant.dart';
+import '../../../main.dart';
 import '../../../plan_dashboard/model/PlanListModel.dart';
 import '../../../plan_dashboard/view/planDetailsView.dart';
 import '../../../src/utils/colors_utils.dart';
@@ -123,8 +124,7 @@ class CarePlanCard extends StatelessWidget {
                                         style: TextStyle(
                                             fontSize: 12.0.sp,
                                             fontWeight: FontWeight.w600,
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
+                                            color: mAppThemeProvider.primaryColor),
                                       )
                                     : Container(),
                                 SizedBox(width: 20.w),
@@ -144,14 +144,12 @@ class CarePlanCard extends StatelessWidget {
                                                 planList!.price!,
                                             fontsize: 12.0.sp,
                                             fontWeight: FontWeight.w500,
-                                            colors: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
+                                            colors: mAppThemeProvider.primaryColor),
                                         replacement: TextWidget(
                                             text: FREE,
                                             fontsize: 12.0.sp,
                                             fontWeight: FontWeight.w500,
-                                            colors: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
+                                            colors: mAppThemeProvider.primaryColor),
                                       )
                                     : Container(),
                               ],
@@ -171,7 +169,7 @@ class CarePlanCard extends StatelessWidget {
                               onTap: () => onCardTapped(context),
                               child: Icon(
                                 Icons.remove_red_eye_sharp,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                                 size: 30.0.sp,
                               ),
                             ),
@@ -569,7 +567,7 @@ class CarePlanCard extends StatelessWidget {
                       children: <Widget>[
                         TextWidget(
                           text: "Price",
-                          colors: Color(CommonUtil().getMyPrimaryColor()),
+                          colors: mAppThemeProvider.primaryColor,
                         ),
                         SizedBox(
                           height: 10.0.h,
@@ -587,7 +585,7 @@ class CarePlanCard extends StatelessWidget {
                           ),
                           child: TextWidget(
                             text: priceSet,
-                            colors: Color(CommonUtil().getMyPrimaryColor()),
+                            colors: mAppThemeProvider.primaryColor,
                           ),
                         ),
                         SizedBox(
@@ -598,7 +596,7 @@ class CarePlanCard extends StatelessWidget {
                                 children: [
                                   Checkbox(
                                     checkColor:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        mAppThemeProvider.primaryColor,
                                     activeColor:
                                         Color(CommonUtil().getThemeColor()),
                                     value: isCheckbox,
@@ -619,8 +617,7 @@ class CarePlanCard extends StatelessWidget {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       fontSize: fhbStyles.fnt_doc_name,
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                     ),
                                     softWrap: true,
                                     overflow: TextOverflow.ellipsis,

@@ -18,6 +18,7 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/fetching_cart_items_model.dart';
 import 'package:provider/provider.dart';
+import '../../../main.dart';
 import 'Rounded_CheckBox.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
@@ -146,8 +147,7 @@ class DietPlanCard extends StatelessWidget {
                                         style: TextStyle(
                                             fontSize: 12.0.sp,
                                             fontWeight: FontWeight.w600,
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
+                                            color: mAppThemeProvider.primaryColor),
                                       )
                                     : Container(),
                                 SizedBox(width: 20.w),
@@ -167,14 +167,12 @@ class DietPlanCard extends StatelessWidget {
                                                 planList!.price!,
                                             fontsize: 12.0.sp,
                                             fontWeight: FontWeight.w500,
-                                            colors: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
+                                            colors: mAppThemeProvider.primaryColor),
                                         replacement: TextWidget(
                                             text: FREE,
                                             fontsize: 12.0.sp,
                                             fontWeight: FontWeight.w500,
-                                            colors: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
+                                            colors: mAppThemeProvider.primaryColor),
                                       )
                                     : Container(),
                               ],
@@ -524,7 +522,7 @@ class DietPlanCard extends StatelessWidget {
                       children: <Widget>[
                         TextWidget(
                           text: "Price",
-                          colors: Color(CommonUtil().getMyPrimaryColor()),
+                          colors: mAppThemeProvider.primaryColor,
                         ),
                         SizedBox(
                           height: 10.0.h,
@@ -542,7 +540,7 @@ class DietPlanCard extends StatelessWidget {
                           ),
                           child: TextWidget(
                             text: planList.price,
-                            colors: Color(CommonUtil().getMyPrimaryColor()),
+                            colors: mAppThemeProvider.primaryColor,
                           ),
                         ),
                         SizedBox(
@@ -553,7 +551,7 @@ class DietPlanCard extends StatelessWidget {
                                 children: [
                                   Checkbox(
                                     checkColor:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        mAppThemeProvider.primaryColor,
                                     activeColor:
                                         Color(CommonUtil().getThemeColor()),
                                     value: isCheckbox,
@@ -574,8 +572,7 @@ class DietPlanCard extends StatelessWidget {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       fontSize: fhbStyles.fnt_doc_name,
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                     ),
                                     softWrap: true,
                                     overflow: TextOverflow.ellipsis,

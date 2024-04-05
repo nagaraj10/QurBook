@@ -8,6 +8,7 @@ import '../../../../common/firebase_analytics_qurbook/firebase_analytics_qurbook
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/router_variable.dart' as router;
 import '../../../../constants/variable_constant.dart' as variable;
+import '../../../../main.dart';
 import '../../../../my_providers/bloc/providers_block.dart';
 import '../../../../my_providers/models/Doctors.dart';
 import '../../../../my_providers/models/MyProviderResponseData.dart';
@@ -120,7 +121,7 @@ class _MyProvidersState extends State<MyProviders> {
           },
           child: Icon(
             Icons.add,
-            color: Color(CommonUtil().getMyPrimaryColor()),
+            color: mAppThemeProvider.primaryColor,
             size: 24.0.sp,
           ),
         ));

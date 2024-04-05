@@ -20,6 +20,7 @@ import 'package:myfhb/video_call/utils/videoicon_provider.dart';
 import 'package:myfhb/video_call/utils/videorequest_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 
 // ignore: must_be_immutable
@@ -515,7 +516,7 @@ class _ToolbarState extends State<Toolbar> {
                 child: LinearProgressIndicator(
                   backgroundColor: Color(CommonUtil.secondaryGrey),
                   valueColor: AlwaysStoppedAnimation<Color>(
-                      Color(CommonUtil().getMyPrimaryColor())),
+                      mAppThemeProvider.primaryColor),
                   //value: progressValue[currentProgressValue],
                 ),
               ),

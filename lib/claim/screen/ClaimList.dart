@@ -9,6 +9,7 @@ import '../../common/firebase_analytics_qurbook/firebase_analytics_qurbook.dart'
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../src/blocs/Category/CategoryListBlock.dart';
 import '../../src/model/Category/catergory_data_list.dart';
 import '../../src/model/Category/catergory_result.dart';
@@ -98,7 +99,7 @@ class _ClaimListState extends State<ClaimList> {
             },
             child: Icon(
               Icons.add,
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
               size: 24.0.sp,
             ),
           ),
@@ -137,8 +138,8 @@ class _ClaimListState extends State<ClaimList> {
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                       colors: <Color>[
-                    Color(CommonUtil().getMyPrimaryColor()),
-                    Color(CommonUtil().getMyGredientColor())
+                    mAppThemeProvider.primaryColor,
+                    mAppThemeProvider.gradientColor
                   ],
                       stops: [
                     0.3,
@@ -245,7 +246,7 @@ class _ClaimListState extends State<ClaimList> {
           fontFamily: variable.font_poppins,
           fontSize:
               (CommonUtil().isTablet ?? false) ? tabHeader2 : mobileHeader2,
-          color: Color(CommonUtil().getMyPrimaryColor())),
+          color: mAppThemeProvider.primaryColor),
     );
   }
 
@@ -641,7 +642,7 @@ class _ClaimListState extends State<ClaimList> {
         case "CLAIM_ACCEPTED":
           return Colors.green;
         default:
-          return Color(CommonUtil().getMyPrimaryColor());
+          return mAppThemeProvider.primaryColor;
       }
     }
   }
@@ -763,9 +764,7 @@ class _ClaimListState extends State<ClaimList> {
         content: Text(
           msg,
         ),
-        backgroundColor: Color(
-          CommonUtil().getMyPrimaryColor(),
-        ),
+        backgroundColor: mAppThemeProvider.primaryColor,
         action: SnackBarAction(
           label: 'Dismiss',
           onPressed: () {

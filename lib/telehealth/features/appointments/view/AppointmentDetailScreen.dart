@@ -14,6 +14,7 @@ import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/fhb_parameters.dart' as parameters;
 import '../../../../constants/variable_constant.dart';
 import '../../../../constants/variable_constant.dart' as variableConstant;
+import '../../../../main.dart';
 import '../../../../src/utils/screenutils/size_extensions.dart';
 import '../../../../widgets/GradientAppBar.dart';
 
@@ -156,9 +157,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               10.0,
             ),
           ),
-          color: Color(
-            CommonUtil().getCommonPrimaryColorQurHomeBook(),
-          ),
+          color: mAppThemeProvider.getCommonPrimaryColorQurHomeBook(),
           child: const Padding(
             padding: EdgeInsets.only(
               top: 10.0,
@@ -188,9 +187,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               10.0,
             ),
           ),
-          color: Color(
-            CommonUtil().getCommonPrimaryColorQurHomeBook(),
-          ),
+          color: mAppThemeProvider.getCommonPrimaryColorQurHomeBook(),
           child: Padding(
             padding: const EdgeInsets.only(
               top: 10.0,
@@ -220,9 +217,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               10.0,
             ),
           ),
-          color: Color(
-            CommonUtil().getCommonPrimaryColorQurHomeBook(),
-          ),
+          color: mAppThemeProvider.getCommonPrimaryColorQurHomeBook(),
           child: const Padding(
             padding: EdgeInsets.only(
               top: 10.0,
@@ -303,14 +298,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 width: imgContainerSize,
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Color(
-                      CommonUtil().getCommonPrimaryColorQurHomeBook(),
-                    ),
+                    color:mAppThemeProvider.getCommonPrimaryColorQurHomeBook(),
                     border: Border.all(
                       width: 1,
-                      color: Color(
-                        CommonUtil().getCommonPrimaryColorQurHomeBook(),
-                      ),
+                      color: mAppThemeProvider.getCommonPrimaryColorQurHomeBook(),
                     )),
                 child: Center(
                   child: Padding(
@@ -429,9 +420,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                     10.0,
                   ),
                 ),
-                color: Color(
-                  CommonUtil().getCommonPrimaryColorQurHomeBook(),
-                ),
+                color: mAppThemeProvider.getCommonPrimaryColorQurHomeBook(),
                 child: Padding(
                   padding: const EdgeInsets.only(
                     top: 5.0,

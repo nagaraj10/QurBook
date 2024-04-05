@@ -8,6 +8,7 @@ import '../../../../common/common_circular_indicator.dart';
 import '../../../../common/errors_widget.dart';
 import '../../../../constants/router_variable.dart' as router;
 import '../../../../constants/variable_constant.dart' as variable;
+import '../../../../main.dart';
 import '../../../../my_providers/bloc/providers_block.dart';
 import '../../../../my_providers/models/Hospitals.dart';
 import '../../../../my_providers/models/MyProviderResponseData.dart';
@@ -126,7 +127,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
           },
           child: Icon(
             Icons.add,
-            color: Color(CommonUtil().getMyPrimaryColor()),
+            color: mAppThemeProvider.primaryColor,
           ),
         ));
   }
@@ -228,7 +229,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                                       .toUpperCase(),
                                   style: TextStyle(
                                     color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        mAppThemeProvider.primaryColor,
                                     fontSize: 16.0.sp,
                                   ),
                                 ),

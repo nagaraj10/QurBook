@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import '../../../main.dart';
 import '../../models/profile_response_model.dart';
 import 'event_time_tile.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
@@ -141,7 +142,7 @@ class EventListWidget extends StatelessWidget {
                 scheduleTitle,
                 style: TextStyle(
                   fontSize: 16.0.sp,
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  color: mAppThemeProvider.primaryColor,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -201,7 +202,7 @@ class EventListWidget extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: onSave as void Function()?,
                 style: ElevatedButton.styleFrom(
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                backgroundColor: mAppThemeProvider.primaryColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(
                     5.0.sp,

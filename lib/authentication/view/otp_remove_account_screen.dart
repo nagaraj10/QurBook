@@ -9,6 +9,7 @@ import 'package:sms_autofill/sms_autofill.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
+import '../../main.dart';
 import '../../my_family/models/relationships.dart';
 import '../../src/model/Authentication/UserModel.dart';
 import '../../src/resources/network/ApiBaseHelper.dart';
@@ -251,8 +252,7 @@ class _OTPRemoveAccountState extends State<OTPRemoveAccount>
                                     TextSpan(
                                       text: otpViewModel!.timeForResend,
                                       style: TextStyle(
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        color: mAppThemeProvider.primaryColor,
                                         fontSize: 15.0.sp,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -274,8 +274,8 @@ class _OTPRemoveAccountState extends State<OTPRemoveAccount>
                               children: [
                                 RaisedGradientButton(
                                   gradient: LinearGradient(colors: [
-                                    Color(CommonUtil().getMyPrimaryColor()),
-                                    Color(CommonUtil().getMyGredientColor()),
+                                    mAppThemeProvider.primaryColor,
+                                    mAppThemeProvider.gradientColor,
                                   ]),
                                   width: 280.0.w,
                                   onPressed: otpViewModel!.timerSeconds == 0
@@ -343,7 +343,7 @@ class _OTPRemoveAccountState extends State<OTPRemoveAccount>
   //             child: Text(
   //               strresendOtp,
   //               style: TextStyle(
-  //                   color: Color(CommonUtil().getMyPrimaryColor()),
+  //                   color: mAppThemeProvider.primaryColor,
   //                   fontSize: 15.0.sp,
   //                   fontWeight: FontWeight.w600),
   //             ),
@@ -436,7 +436,7 @@ class _OTPRemoveAccountState extends State<OTPRemoveAccount>
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                   )),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -478,8 +478,8 @@ class _OTPRemoveAccountState extends State<OTPRemoveAccount>
             gradient: LinearGradient(begin: Alignment.centerLeft, colors: [
 //                  Color(0xff138fcf),
 //                  Color(0xff138fcf),
-              Color(CommonUtil().getMyPrimaryColor()),
-              Color(CommonUtil().getMyGredientColor())
+              mAppThemeProvider.primaryColor,
+              mAppThemeProvider.gradientColor
             ])),
         child: Text(
           strVerify,

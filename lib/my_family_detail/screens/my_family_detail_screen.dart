@@ -13,6 +13,7 @@ import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../my_family/models/FamilyMembersRes.dart';
 import '../../my_family/models/relationship_response_list.dart';
 import '../../my_family/models/relationships.dart';
@@ -171,7 +172,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       child: Scaffold(
 //        extendBodyBehindAppBar: true,
         appBar: AppBar(
-            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            backgroundColor: mAppThemeProvider.primaryColor,
             elevation: 0,
             title: Text(
               CommonConstants.my_family_title,
@@ -512,7 +513,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                         : Container(
                             width: 100.0.h,
                             height: 100.0.h,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                             child: Center(
                               child: Text(
                                 sharedbyme.child!.firstName != null
@@ -529,7 +530,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                           ),
                   ))),
 //          Container(
-//              color: Color(CommonUtil().getMyPrimaryColor()),
+//              color: mAppThemeProvider.primaryColor,
 //              height: expandedHeight,
 //              child: Stack(
 //                fit: StackFit.expand,
@@ -681,7 +682,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       width: 8.0.h,
       decoration: BoxDecoration(
         color: isActive
-            ? Color(CommonUtil().getMyPrimaryColor())
+            ? mAppThemeProvider.primaryColor
             : ColorUtils.greycolor,
         borderRadius: BorderRadius.all(Radius.circular(4)),
       ),
@@ -743,7 +744,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
           enabled: false,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: mobileNoController,
           enableInteractiveSelection: false,
           keyboardType: TextInputType.text,
@@ -779,7 +780,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: nameController,
           enabled: false,
           keyboardType: TextInputType.text,
@@ -815,7 +816,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: firstNameController,
           enabled: false,
           keyboardType: TextInputType.text,
@@ -851,7 +852,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: middleNameController,
           enabled: false,
           keyboardType: TextInputType.text,
@@ -887,7 +888,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: lastNameController,
           enabled: false,
           keyboardType: TextInputType.text,
@@ -923,7 +924,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: relationShipController,
           enabled: false,
           keyboardType: TextInputType.text,
@@ -958,7 +959,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: emailController,
           enabled: false,
           keyboardType: TextInputType.text,
@@ -993,7 +994,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: genderController,
           enabled: false,
           keyboardType: TextInputType.text,
@@ -1031,7 +1032,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             width: 1.sw / 2 - 40,
             child: TextField(
               textCapitalization: TextCapitalization.sentences,
-              cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+              cursorColor: mAppThemeProvider.primaryColor,
               controller: bloodGroupController,
               enabled: false,
               keyboardType: TextInputType.text,
@@ -1070,7 +1071,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             width: 1.sw / 2 - 40,
             child: TextField(
               textCapitalization: TextCapitalization.sentences,
-              cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+              cursorColor: mAppThemeProvider.primaryColor,
               controller: bloodRangeController,
               enabled: false,
               keyboardType: TextInputType.text,
@@ -1109,7 +1110,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             width: 1.sw / 2 - 40,
             child: TextField(
               textCapitalization: TextCapitalization.sentences,
-              cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+              cursorColor: mAppThemeProvider.primaryColor,
               controller: heightConroller,
               enabled: false,
               keyboardType: TextInputType.text,
@@ -1148,7 +1149,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             width: 1.sw / 2 - 40,
             child: TextField(
               textCapitalization: TextCapitalization.sentences,
-              cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+              cursorColor: mAppThemeProvider.primaryColor,
               controller: weightController,
               enabled: false,
               keyboardType: TextInputType.text,
@@ -1190,7 +1191,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           padding: EdgeInsets.only(left: 20, right: 20, top: 5),
           child: TextField(
             textCapitalization: TextCapitalization.sentences,
-            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+            cursorColor: mAppThemeProvider.primaryColor,
             controller: dateOfBirthController,
             readOnly: true,
             enabled: false,
@@ -1247,7 +1248,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             width: 150.0.w,
             height: 40.0.h,
             decoration: BoxDecoration(
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
               borderRadius: BorderRadius.all(Radius.circular(10)),
               boxShadow: <BoxShadow>[
                 BoxShadow(
@@ -1290,7 +1291,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             width: 150.0.w,
             height: 40.0.h,
             decoration: BoxDecoration(
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
               borderRadius: BorderRadius.all(Radius.circular(10)),
               boxShadow: <BoxShadow>[
                 BoxShadow(
@@ -1452,7 +1453,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       builder: (context, child) => Theme(
         data: ThemeData.light().copyWith(
           colorScheme: ColorScheme.light().copyWith(
-            primary: Color(CommonUtil().getMyPrimaryColor()),
+            primary: mAppThemeProvider.primaryColor,
           ),
         ),
         child: child!,
@@ -1577,7 +1578,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 ? myProfile.lastName![0].toUpperCase()
                 : ''),
         style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           fontSize: 28.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -1586,7 +1587,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       return Text(
         myProfile.firstName![0].toUpperCase(),
         style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           fontSize: 28.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -1595,7 +1596,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       return Text(
         '',
         style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           fontSize: 28.0.sp,
           fontWeight: FontWeight.w200,
         ),

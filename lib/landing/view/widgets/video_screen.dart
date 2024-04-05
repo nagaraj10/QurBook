@@ -11,6 +11,7 @@ import '../../../constants/fhb_constants.dart';
 import '../../../constants/fhb_parameters.dart';
 import '../../../constants/fhb_query.dart';
 import '../../../constants/router_variable.dart';
+import '../../../main.dart';
 import '../../../src/ui/SheelaAI/Views/youtube_player.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../widgets/GradientAppBar.dart';
@@ -52,7 +53,7 @@ class _VideoScreenState extends State<VideoScreen> {
         child: Scaffold(
           appBar: AppBar(
             flexibleSpace: GradientAppBar(),
-            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            backgroundColor: mAppThemeProvider.primaryColor,
             elevation: 0,
             title: Text(strHowVideos),
             leading: IconWidget(

@@ -10,6 +10,7 @@ import 'package:gmiwidgetspackage/widgets/FlatButton.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/common/CommonUtil.dart';
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 
 class Alert {
@@ -86,7 +87,7 @@ class Alert {
             ),
             FlatButtonWidget(
               isSelected: true,
-              bgColor: Color(CommonUtil().getMyPrimaryColor()),
+              bgColor: mAppThemeProvider.primaryColor,
               titleColor: Colors.white,
               title: confirm,
               width: confirm == variable.stringUpdateCart ? 150 : 100,
@@ -119,7 +120,7 @@ class Alert {
           actions: <Widget>[
             FlatButtonWidget(
               isSelected: true,
-              bgColor: Color(CommonUtil().getMyPrimaryColor()),
+              bgColor: mAppThemeProvider.primaryColor,
               title: confirm,
               onPress: onPressedConfirm as void Function()? ??
                   () {
@@ -164,7 +165,7 @@ class Alert {
         actions: <Widget>[
           FlatButtonWidget(
             isSelected: true,
-            bgColor: Color(CommonUtil().getMyPrimaryColor()),
+            bgColor: mAppThemeProvider.primaryColor,
             title: confirm,
             onPress: onPressedConfirm as void Function()? ??
                 () {

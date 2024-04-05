@@ -27,6 +27,7 @@ import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_parameters.dart' as parameters;
 import '../../constants/fhb_parameters.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../my_family/bloc/FamilyListBloc.dart';
 import '../../my_family/models/FamilyMembersRes.dart';
 import '../../my_family/screens/FamilyListView.dart';
@@ -271,8 +272,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                       AssetImage(
                                           variable.icon_record_fav_active),
                                       //TODO chnage theme
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                     )
                                   : ImageIcon(
                                       AssetImage(variable.icon_record_fav),
@@ -465,7 +465,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           children: <Widget>[
             Icon(
               Icons.mic,
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
               size: 24.0.sp,
             ),
             SizedBox(width: 10.0.w),
@@ -473,9 +473,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               variable.strAddVoiceNote,
               style: TextStyle(
                 fontSize: 16.0.sp,
-                color: Color(
-                  CommonUtil().getMyPrimaryColor(),
-                ),
+                color: mAppThemeProvider.primaryColor,
               ),
             )
           ],
@@ -510,9 +508,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         content: const Text(
           variable.strDownloadStart,
         ),
-        backgroundColor: Color(
-          CommonUtil().getMyPrimaryColor(),
-        ),
+        backgroundColor: mAppThemeProvider.primaryColor,
       ),
     );
     if (ispdfPresent) {
@@ -523,7 +519,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         ScaffoldMessenger.of(contxt).showSnackBar(
           SnackBar(
             content: const Text(variable.strFileDownloaded),
-            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            backgroundColor: mAppThemeProvider.primaryColor,
             action: SnackBarAction(
               label: 'Open',
               onPressed: () async {
@@ -552,7 +548,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 content: const Text(
                   variable.strFileDownloaded,
                 ),
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                backgroundColor: mAppThemeProvider.primaryColor,
                 action: SnackBarAction(
                   label: 'Open',
                   onPressed: () async {
@@ -591,7 +587,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                       fontSize: 16.0.sp,
                     ),
                   ),
-                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                  backgroundColor: mAppThemeProvider.primaryColor,
                   action: SnackBarAction(
                     label: 'Open',
                     onPressed: () async {
@@ -1383,7 +1379,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                           : Container(
                               child: Icon(
                                 Icons.mic,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                                 size: 24.0.sp,
                               ),
                             )

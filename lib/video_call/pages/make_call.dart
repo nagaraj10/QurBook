@@ -14,6 +14,7 @@ import '../../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart'
 import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart';
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../utils/audiocall_provider.dart';
 import '../utils/rtc_engine.dart';
@@ -302,7 +303,7 @@ class _MakeCallPageState extends State<MakeCallPage> {
               width: 30,
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  Color(CommonUtil().getMyPrimaryColor()),
+                  mAppThemeProvider.primaryColor,
                 ),
                 backgroundColor: Colors.white.withOpacity(0.8),
               ),

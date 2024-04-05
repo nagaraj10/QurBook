@@ -13,6 +13,7 @@ import '../../../constants/fhb_constants.dart';
 import '../../../constants/fhb_constants.dart' as Constants;
 import '../../../constants/router_variable.dart' as router;
 import '../../../constants/variable_constant.dart' as variable;
+import '../../../main.dart';
 import '../../../myfhb_weview/myfhb_webview.dart';
 import '../../../widgets/GradientAppBar.dart';
 import '../../blocs/Authentication/OTPVerifyBloc.dart';
@@ -194,7 +195,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   child: ImageIcon(
                     AssetImage(variable.icon_otp),
                     size: 70.0.sp,
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                   ),
                 )
               : SizedBox(height: 0.0.h),
@@ -273,7 +274,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     });
                   },
                   title: variable.strResendCode,
-                  titleColor: Color(CommonUtil().getMyPrimaryColor()),
+                  titleColor: mAppThemeProvider.primaryColor,
                   fontWeight: FontWeight.w600,
                 ),
                 SizedBox(height: 20.0.h)
@@ -430,7 +431,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                 child: Icon(
                                   Icons.backspace,
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
+                                      mAppThemeProvider.primaryColor,
                                 )),
                             MaterialButton(
                               onPressed: () {
@@ -495,7 +496,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                               },
                               child: Icon(Icons.done,
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor())),
+                                      mAppThemeProvider.primaryColor),
                             ),
                           ],
                         ),
@@ -521,7 +522,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
           constraints: BoxConstraints(minWidth: 220, maxWidth: double.infinity),
           child: MaterialButton(
               child: Icon(Icons.done,
-                  color: Color(CommonUtil().getMyPrimaryColor())),
+                  color: mAppThemeProvider.primaryColor),
               onPressed: //snapshot.hasData ? bloc.submit : null,
                   () {
                 String otp = controller1.text +
@@ -687,7 +688,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         fontFamily: variable.font_poppins,
         fontSize: 14.0.sp);
     TextStyle linkStyle = TextStyle(
-        color: Color(CommonUtil().getMyPrimaryColor()),
+        color: mAppThemeProvider.primaryColor,
         fontFamily: variable.font_poppins,
         fontSize: 14.0.sp);
     return Padding(

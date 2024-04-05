@@ -11,6 +11,8 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 
+import '../../../main.dart';
+
 class QurhomePatientDashboard extends StatefulWidget {
   CareGiverPatientListResult? careGiverPatientListResult;
 
@@ -101,7 +103,7 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
                 decoration: BoxDecoration(
                     border: Border(
                         bottom: BorderSide(
-                  color: Color(CommonUtil().getQurhomePrimaryColor()),
+                  color: mAppThemeProvider.qurHomePrimaryColor,
                   width: 1.3,
                 ))),
                 height: 50,
@@ -110,15 +112,15 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
                     .width, //to extend the background width
                 margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
                 child: TabBar(
-                  indicatorColor: Color(CommonUtil().getQurhomePrimaryColor()),
+                  indicatorColor: mAppThemeProvider.qurHomePrimaryColor,
                   labelColor: Colors.white,
                   indicatorSize: TabBarIndicatorSize.tab,
                   indicatorWeight: 1,
                   indicator: BoxDecoration(
-                    color: Color(CommonUtil().getQurhomePrimaryColor()),
+                    color: mAppThemeProvider.qurHomePrimaryColor,
                     border: Border.all(
                         color:
-                            Color(CommonUtil().getQurhomePrimaryColor())),
+                            mAppThemeProvider.qurHomePrimaryColor),
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(15.0),
                         topRight: Radius.circular(15.0)),
@@ -161,7 +163,7 @@ class _QurhomePatientDashboardState extends State<QurhomePatientDashboard>
           fontWeight: FontWeight.bold,
           color: selectedAlertList
               ? Colors.white
-              : Color(CommonUtil().getQurhomePrimaryColor()),
+              : mAppThemeProvider.qurHomePrimaryColor,
         ),
       ),
     ));

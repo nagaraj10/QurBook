@@ -13,6 +13,7 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../constants/fhb_constants.dart';
+import '../../../../main.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
   final String? videoURL;
@@ -115,7 +116,7 @@ class _VideoPlayerState extends State<VideoPlayerScreen> {
               ? Center(child: buildVideo())
               : Center(
                   child: CircularProgressIndicator(
-                      color: Color(CommonUtil().getMyPrimaryColor())))),
+                      color: mAppThemeProvider.primaryColor))),
     );
   }
 

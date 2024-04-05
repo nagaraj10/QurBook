@@ -44,6 +44,7 @@ import 'package:open_filex/open_filex.dart';
 import 'package:provider/provider.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as tckConstants;
+import '../../main.dart';
 import '../../widgets/GradientAppBar.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'my_tickets_screen.dart';
@@ -134,7 +135,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       builder: (context,child) => Theme(
         data: ThemeData.light().copyWith(
           colorScheme: ColorScheme.light().copyWith(
-            primary:Color(CommonUtil().getMyPrimaryColor()),
+            primary:mAppThemeProvider.primaryColor,
           ),
         ),
         child: child!,
@@ -217,7 +218,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     return Scaffold(
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          backgroundColor: mAppThemeProvider.primaryColor,
           elevation: 0,
           leading: IconWidget(
             icon: Icons.arrow_back_ios,
@@ -573,8 +574,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                      Color(CommonUtil().getMyPrimaryColor()),
-                      Color(CommonUtil().getMyGredientColor()),
+                      mAppThemeProvider.primaryColor,
+                      mAppThemeProvider.gradientColor,
                     ])),
             child: Text(
               tckConstants.strSubmitNewTicket,
@@ -612,13 +613,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                      Color(CommonUtil().getMyPrimaryColor()),
-                      Color(CommonUtil().getMyGredientColor())
+                      mAppThemeProvider.primaryColor,
+                      mAppThemeProvider.gradientColor
                     ]).createShader(bounds);
               },
               child: Image.asset(
                 'assets/icons/05.png',
-                // color: Color(CommonUtil().getMyPrimaryColor())
+                // color: mAppThemeProvider.primaryColor
               ),
             ),
           ),
@@ -682,7 +683,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide(
-            color: Color(CommonUtil().getMyPrimaryColor()),
+            color: mAppThemeProvider.primaryColor,
           ),
         ),
       ),
@@ -722,7 +723,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide(
-            color: Color(CommonUtil().getMyPrimaryColor()),
+            color: mAppThemeProvider.primaryColor,
           ),
         ),
       ),
@@ -1299,7 +1300,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
   Widget getIconButton() {
     return IconButton(
       icon: Icon(Icons.arrow_drop_down),
-      color: Color(CommonUtil().getMyPrimaryColor()),
+      color: mAppThemeProvider.primaryColor,
       iconSize: 40,
       onPressed: () {},
     );
@@ -1634,7 +1635,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                 child: IconButton(
           icon: Icon(
             Icons.photo_library,
-            color: Color(CommonUtil().getMyPrimaryColor()),
+            color: mAppThemeProvider.primaryColor,
             size: 32.0.sp,
           ),
           onPressed: () async {
@@ -1646,7 +1647,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                 child: IconButton(
           icon: ImageIcon(
             AssetImage(variable.icon_attach),
-            color: Color(CommonUtil().getMyPrimaryColor()),
+            color: mAppThemeProvider.primaryColor,
             size: 32.0.sp,
           ),
           onPressed: () async {
@@ -1844,7 +1845,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                               },
                               child: Icon(
                                 Icons.close_sharp,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                               ),
                             ),
                           ),
@@ -2093,7 +2094,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
             fontSize: 16.0.sp,
           ),
         ),
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        backgroundColor: mAppThemeProvider.primaryColor,
       ));
     }
   }

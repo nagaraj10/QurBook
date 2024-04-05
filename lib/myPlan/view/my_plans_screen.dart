@@ -7,6 +7,7 @@ import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart';
 import '../../landing/view/landing_arguments.dart';
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/CartIconWithBadge.dart';
 import '../../widgets/GradientAppBar.dart';
@@ -34,7 +35,7 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          backgroundColor: mAppThemeProvider.primaryColor,
           elevation: 0,
           title: const Text(strMyPlans),
           leading: IconWidget(

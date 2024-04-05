@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import '../../../main.dart';
 import 'Device_Data.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
@@ -48,7 +49,7 @@ class _DeviceCardState extends State<DeviceCard> {
                       child: Icon(
                         Icons.check_circle,
                         size: 14,
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        color: mAppThemeProvider.primaryColor,
                       ),
                     )
                   else

@@ -19,6 +19,7 @@ import '../../../constants/fhb_constants.dart' as Constants;
 import '../../../constants/router_variable.dart' as router;
 import '../../../constants/variable_constant.dart' as variable;
 import '../../../exception/FetchException.dart';
+import '../../../main.dart';
 import '../../../widgets/GradientAppBar.dart';
 import '../../utils/screenutils/size_extensions.dart';
 import 'CropAndRotateScreen.dart';
@@ -147,7 +148,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                           ? 100
                           : 60, //Set width and height to maintain UI similar in tablet and mobile
 
-                      color: Color(new CommonUtil().getMyPrimaryColor()),
+                      color: mAppThemeProvider.primaryColor,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -302,7 +303,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                     )
                   : Container(
                       height: CommonUtil().isTablet! ? 100 : 60,
-                      color: Color(new CommonUtil().getMyPrimaryColor()),
+                      color: mAppThemeProvider.primaryColor,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[

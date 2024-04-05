@@ -4,6 +4,7 @@ import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart';
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'terms_and_conditon.dart';
 
@@ -59,7 +60,7 @@ class _MyFhbWebViewState extends State<VoiceCloningIntroducuton> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                   ),
                   child: Padding(
                       padding: EdgeInsets.only(

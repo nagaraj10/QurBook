@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'common/CommonUtil.dart';
 import 'constants/variable_constant.dart' as variable;
+import 'main.dart';
 
 class AppTheme {
   final ThemeData themeData = ThemeData(
     fontFamily: variable.font_poppins,
-    primaryColor: Color(CommonUtil().getMyPrimaryColor()),
+    primaryColor: mAppThemeProvider.primaryColor,
     progressIndicatorTheme: ProgressIndicatorThemeData(
-        color: Color(CommonUtil().getMyPrimaryColor())),
+        color: mAppThemeProvider.primaryColor),
     textSelectionTheme: TextSelectionThemeData(
-      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      cursorColor: mAppThemeProvider.primaryColor,
     ),
     appBarTheme: AppBarTheme().copyWith(
       systemOverlayStyle: SystemUiOverlayStyle.light,
     ),
     colorScheme: ColorScheme.light(
-      primary:Color(CommonUtil().getMyPrimaryColor()),
+      primary:mAppThemeProvider.primaryColor,
       secondary:Colors.white
     ),
     splashFactory: NoSplash.splashFactory,

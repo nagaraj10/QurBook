@@ -13,6 +13,7 @@ import '../../../common/common_circular_indicator.dart';
 import '../../../constants/fhb_constants.dart' as constants;
 import '../../../constants/router_variable.dart';
 import '../../../constants/variable_constant.dart' as variable;
+import '../../../main.dart';
 import '../../../plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../../../regiment/view_model/regiment_view_model.dart';
 import '../../../src/model/user/user_accounts_arguments.dart';
@@ -104,7 +105,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                 height: 80.0.h,
                 width: Get.size.width - 20.w,
                 decoration: BoxDecoration(
-                  gradient: CommonUtil().getQurhomeLinearGradient(),
+                  gradient: mAppThemeProvider.getQurhomeLinearGradient(),
                   borderRadius: BorderRadius.all(
                     Radius.circular(
                       20.0.sp,

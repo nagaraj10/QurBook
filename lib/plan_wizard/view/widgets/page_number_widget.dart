@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
+import '../../../main.dart';
+
 class PageNumberWidget extends StatelessWidget {
   const PageNumberWidget({
     this.isSelected = false,
@@ -31,11 +33,11 @@ class PageNumberWidget extends StatelessWidget {
               // or ClipRRect if you need to clip the content
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  color: mAppThemeProvider.primaryColor,
                 ),
                 shape: BoxShape.circle,
                 color: isSelected
-                    ? Color(CommonUtil().getMyPrimaryColor())
+                    ? mAppThemeProvider.primaryColor
                     : Colors.white, // inner circle color
               ),
               child: Center(
@@ -53,7 +55,7 @@ class PageNumberWidget extends StatelessWidget {
               Container(
                 width: 40.0.w,
                 height: 1.0.h,
-                color: Color(CommonUtil().getMyPrimaryColor()),
+                color: mAppThemeProvider.primaryColor,
                 margin: EdgeInsets.symmetric(
                   horizontal: 5.0.w,
                 ),
@@ -71,7 +73,7 @@ class PageNumberWidget extends StatelessWidget {
                   fontSize: 12.0.sp,
                   fontWeight: FontWeight.w500,
                   color: isSelected
-                      ? Color(CommonUtil().getMyPrimaryColor())
+                      ? mAppThemeProvider.primaryColor
                       : Colors.black,
                 ),
                 textAlign: TextAlign.center,

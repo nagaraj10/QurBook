@@ -10,6 +10,7 @@ import '../../common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/router_variable.dart' as router;
+import '../../main.dart';
 import '../../src/model/Category/catergory_data_list.dart';
 import '../../src/model/Category/catergory_result.dart';
 import '../../src/model/Health/asgard/health_record_list.dart';
@@ -99,7 +100,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
           controller: tabController,
           labelColor: Colors.white,
           indicatorSize: TabBarIndicatorSize.label,
-          indicatorColor: Color(CommonUtil().getMyPrimaryColor()),
+          indicatorColor: mAppThemeProvider.primaryColor,
         ),
       ),
       floatingActionButton: FloatingActionButton(

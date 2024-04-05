@@ -20,6 +20,7 @@ import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_parameters.dart' as parameters;
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart';
+import '../../main.dart';
 import '../../src/ui/SplashScreen.dart';
 import '../../src/utils/PageNavigator.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -800,7 +801,7 @@ class _CallPageState extends State<CallPage> {
                         child: Text(
                           _infoStrings[index],
                           style: TextStyle(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                             fontSize: 16.0.sp,
                           ),
                         ),
@@ -1080,7 +1081,7 @@ class _CallPageState extends State<CallPage> {
                 },
                 child: Text('Ok',
                     style: TextStyle(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      color: mAppThemeProvider.primaryColor,
                       fontSize: 18.0.sp,
                     )),
               ),

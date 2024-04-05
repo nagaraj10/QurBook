@@ -15,6 +15,7 @@ import '../../../constants/fhb_constants.dart' as Constants;
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/fhb_query.dart' as query;
 import '../../../constants/variable_constant.dart' as variable;
+import '../../../main.dart';
 import '../../../record_detail/screens/record_detail_screen.dart';
 import '../../blocs/health/HealthReportListForUserBlock.dart';
 import '../../model/Health/MediaMetaInfo.dart';
@@ -216,7 +217,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                               "",
                           mediaMetaInfoObj?.metadata?.doctor?.firstName ?? "",
                           mediaMetaInfoObj?.metadata?.doctor?.lastName ?? "",
-                          Color(CommonUtil().getMyPrimaryColor()),
+                          mAppThemeProvider.primaryColor,
                           CommonUtil().isTablet!
                               ? imageTabHeader
                               : Constants.imageMobileHeader,
@@ -232,9 +233,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                                       '',
                                   height: 30,
                                   width: 30,
-                                  color: Color(
-                                    CommonUtil().getMyPrimaryColor(),
-                                  ))),
+                                  color: mAppThemeProvider.primaryColor)),
                           width: CommonUtil().isTablet!
                               ? imageTabHeader
                               : Constants.imageMobileHeader,
@@ -311,7 +310,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                             ? ImageIcon(
                                 const AssetImage(
                                     variable.icon_record_fav_active),
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                                 size: CommonUtil().isTablet!
                                     ? tabHeader2
                                     : mobileHeader2,
@@ -338,7 +337,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                     widget.mediaMeta!.contains(mediaMetaInfoObj.id)
                         ? Icon(
                             Icons.done,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                           )
                         : const SizedBox(),
                   ],

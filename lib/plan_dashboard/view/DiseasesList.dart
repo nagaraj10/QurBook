@@ -5,6 +5,7 @@ import '../../common/CommonUtil.dart';
 import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../model/PlanListModel.dart';
 import 'categoryList.dart';
 import 'searchProviderList.dart';
@@ -121,7 +122,7 @@ class _DiseasesList extends State<DiseasesList> {
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                 width: 1.sw,
                 //margin: EdgeInsets.only(left: 16, right: 16, top: 8),
-                color: Color(CommonUtil().getMyPrimaryColor()),
+                color: mAppThemeProvider.primaryColor,
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                   child: Text(

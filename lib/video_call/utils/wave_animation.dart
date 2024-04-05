@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
+import '../../main.dart';
+
 class WaveAnimation extends StatefulWidget {
   final String? patName;
 
@@ -82,7 +84,7 @@ class _WaveAnimationState extends State<WaveAnimation>
         shape: BoxShape.circle,
         color: regController.isFromSOS.value
             ? Colors.red.withOpacity(1 - _controller.value)
-            : Color(CommonUtil().getMyPrimaryColor())
+            : mAppThemeProvider.primaryColor
                 .withOpacity(1 - _controller.value),
       ),
     );

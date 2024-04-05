@@ -5,6 +5,7 @@ import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart';
 import '../../landing/view/landing_arguments.dart';
+import '../../main.dart';
 import 'DiseasesList.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
@@ -15,7 +16,7 @@ class DiseasesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        backgroundColor: mAppThemeProvider.primaryColor,
         elevation: 0,
         title: Text(strHealthcon),
         leading: IconWidget(
