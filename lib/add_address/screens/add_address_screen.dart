@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
+import '../../main.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../models/AddAddressArguments.dart';
@@ -104,7 +105,7 @@ class AddAddressScreenState extends State<AddAddressScreen> {
         0.0.h,
       ),
       child: TextField(
-        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        cursorColor: mAppThemeProvider.primaryColor,
         controller: searchController,
         keyboardType: TextInputType.text,
         focusNode: searchFocus,

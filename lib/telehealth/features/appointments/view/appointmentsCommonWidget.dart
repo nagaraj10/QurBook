@@ -30,6 +30,8 @@ import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/p
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/fhb_constants.dart' as ConstantKey;
 
+import '../../../../main.dart';
+
 class AppointmentsCommonWidget {
   List<CategoryResult> filteredCategoryData = [];
   List<CategoryResult> categoryDataList = [];
@@ -61,7 +63,7 @@ class AppointmentsCommonWidget {
           Padding(
             padding: EdgeInsets.only(top: 4),
             child: IconWidget(
-                colors: Color(CommonUtil().getMyPrimaryColor()),
+                colors: mAppThemeProvider.primaryColor,
                 icon: Icons.info,
                 size: 12.0.sp,
                 onTap: () {}),
@@ -161,7 +163,7 @@ class AppointmentsCommonWidget {
       children: [
         iconWithText(
             Constants.Appointments_notesImage,
-            Color(CommonUtil().getMyPrimaryColor()),
+            mAppThemeProvider.primaryColor,
             TranslationConstants.notes.t(), () async {
           FocusManager.instance.primaryFocus!.unfocus();
           int position = await getCategoryPosition(AppConstants.notes);
@@ -215,7 +217,7 @@ class AppointmentsCommonWidget {
         SizedBoxWidget(width: 15.0.w),
         iconWithText(
             Constants.Appointments_voiceNotesImage,
-            Color(CommonUtil().getMyPrimaryColor()),
+            mAppThemeProvider.primaryColor,
             AppConstants.voiceNotes, () async {
           FocusManager.instance.primaryFocus!.unfocus();
           int position = await getCategoryPosition(AppConstants.voiceRecords);
@@ -269,7 +271,7 @@ class AppointmentsCommonWidget {
         SizedBoxWidget(width: 15.0.w),
         iconWithText(
             Constants.Appointments_recordsImage,
-            Color(CommonUtil().getMyPrimaryColor()),
+            mAppThemeProvider.primaryColor,
             TranslationConstants.records.t(), () async {
           if (rxCount != null /*&& isUpcoming*/) {
             FocusManager.instance.primaryFocus!.unfocus();
@@ -355,7 +357,7 @@ class AppointmentsCommonWidget {
               (count == null || count == 0 || count == '' || count == '0')
                   ? Container()
                   : BadgesBlue(
-                      backColor: Color(CommonUtil().getMyPrimaryColor()),
+                      backColor: mAppThemeProvider.primaryColor,
                       badgeValue: count,
                     )
             ],
@@ -407,13 +409,13 @@ class AppointmentsCommonWidget {
           style: OutlinedButton.styleFrom(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-            side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+            backgroundColor: mAppThemeProvider.primaryColor,
+            side: BorderSide(color: mAppThemeProvider.primaryColor),
           ),
           onPressed: () {},
           child: TextWidget(
             text: TranslationConstants.joinCall.t(),
-            colors: Color(CommonUtil().getMyPrimaryColor()),
+            colors: mAppThemeProvider.primaryColor,
             fontsize: 10.0.sp,
           ),
         ),
@@ -426,14 +428,14 @@ class AppointmentsCommonWidget {
       child: Container(
         decoration: BoxDecoration(
             border: Border.all(
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
               width: 3.0.w,
             ),
             borderRadius: BorderRadius.circular(50),
             gradient: LinearGradient(
               colors: <Color>[
-                Color(CommonUtil().getMyPrimaryColor()),
-                Color(CommonUtil().getMyGredientColor())
+                mAppThemeProvider.primaryColor,
+                mAppThemeProvider.gradientColor
               ],
             )),
         height: 40.0.h,
@@ -459,13 +461,13 @@ class AppointmentsCommonWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50),
           side: BorderSide(
-              width: 2.0.w, color: Color(CommonUtil().getMyPrimaryColor())),
+              width: 2.0.w, color: mAppThemeProvider.primaryColor),
         ),
         elevation: 0,
         onPressed: () {},
         child: IconWidget(
           icon: Icons.add,
-          colors: Color(CommonUtil().getMyPrimaryColor()),
+          colors: mAppThemeProvider.primaryColor,
           size: 24.0.sp,
           onTap: () {
             FocusManager.instance.primaryFocus!.unfocus();
@@ -486,7 +488,7 @@ class AppointmentsCommonWidget {
         padding: EdgeInsets.only(left: 5, right: 5),
         child: TextWidget(
           text: text,
-          colors: Color(CommonUtil().getMyPrimaryColor()),
+          colors: mAppThemeProvider.primaryColor,
           overflow: TextOverflow.visible,
           fontWeight: FontWeight.w500,
           fontsize: 16.0.sp,
@@ -610,7 +612,7 @@ class AppointmentsCommonWidget {
                       : '')
                   : '',
           style: TextStyle(
-            color: Color(CommonUtil().getMyPrimaryColor()),
+            color: mAppThemeProvider.primaryColor,
             fontSize: 16.0.sp,
             fontWeight: FontWeight.w400,
           ));
@@ -621,7 +623,7 @@ class AppointmentsCommonWidget {
         doc.doctor!.user!.firstName![0].toUpperCase() +
             doc.doctor!.user!.lastName![0].toUpperCase(),
         style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -630,7 +632,7 @@ class AppointmentsCommonWidget {
       return Text(
         doc.doctor!.user!.firstName![0].toUpperCase(),
         style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
@@ -639,7 +641,7 @@ class AppointmentsCommonWidget {
       return Text(
         '',
         style: TextStyle(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w200,
         ),
@@ -767,7 +769,7 @@ class AppointmentsCommonWidget {
     return Text(
       CommonUtil().getFirstAndLastName(strText),
       style: TextStyle(
-        color: Color(CommonUtil().getMyPrimaryColor()),
+        color: mAppThemeProvider.primaryColor,
         fontSize: 16.0.sp,
         fontWeight: FontWeight.w400,
       ),

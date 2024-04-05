@@ -22,6 +22,7 @@ import '../../../../constants/router_variable.dart';
 import '../../../../constants/variable_constant.dart' as variable;
 import '../../../../landing/model/qur_plan_dashboard_model.dart';
 import '../../../../landing/view/landing_arguments.dart';
+import '../../../../main.dart';
 import '../../../../src/model/user/MyProfileModel.dart';
 import '../../../../src/utils/screenutils/size_extensions.dart';
 import '../../../../widgets/GradientAppBar.dart';
@@ -469,8 +470,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                                           .toUpperCase()
                                                       : '',
                                                   style: TextStyle(
-                                                    color: Color(CommonUtil()
-                                                        .getMyPrimaryColor()),
+                                                    color: mAppThemeProvider.primaryColor,
                                                     fontSize: 16.0.sp,
                                                     fontWeight: FontWeight.w400,
                                                   ),
@@ -657,8 +657,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                                                         .docs
                                                                         .length >
                                                                     0)
-                                                            ? Color(CommonUtil()
-                                                                .getMyPrimaryColor())
+                                                            ? mAppThemeProvider.primaryColor
                                                             : Colors
                                                                 .transparent,
                                                         foregroundColor:

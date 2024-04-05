@@ -16,6 +16,7 @@ import '../../Qurhome/QurhomeDashboard/Controller/SheelaRemainderPopup.dart';
 import '../../Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import '../../add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
+import '../../app_theme_provider.dart';
 import '../../authentication/view/login_screen.dart';
 import '../../chat_socket/view/ChatDetail.dart';
 import '../../chat_socket/view/ChatUserList.dart';
@@ -36,6 +37,7 @@ import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_parameters.dart';
 import '../../constants/variable_constant.dart' as variable;
 import '../../constants/variable_constant.dart';
+import '../../main.dart';
 import '../../src/blocs/Category/CategoryListBlock.dart';
 import '../../src/model/GetDeviceSelectionModel.dart';
 import '../../src/model/user/MyProfileModel.dart';
@@ -118,6 +120,9 @@ class _LandingScreenState extends State<LandingScreen> {
       FABService.trackCurrentScreen(FBALandingScreen);
       Future.delayed(Duration.zero, () async {
         onInit();
+      });
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        profileData = getMyProfile();
       });
       SystemChannels.lifecycle.setMessageHandler((msg) async {
         if (msg != null) {
@@ -312,8 +317,8 @@ class _LandingScreenState extends State<LandingScreen> {
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
                                 colors: <Color>[
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                                  Color(CommonUtil().getMyGredientColor()),
+                                  mAppThemeProvider.primaryColor,
+                                  mAppThemeProvider.gradientColor,
                                 ],
                                 stops: [0.3, 1.0],
                               ),
@@ -450,12 +455,12 @@ class _LandingScreenState extends State<LandingScreen> {
                     selectedFontSize: 12.sp,
                     unselectedFontSize: 10.sp,
                     selectedLabelStyle: TextStyle(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      color: mAppThemeProvider.primaryColor,
                     ),
                     unselectedLabelStyle: const TextStyle(
                       color: Colors.black54,
                     ),
-                    selectedItemColor: Color(CommonUtil().getMyPrimaryColor()),
+                    selectedItemColor: mAppThemeProvider.primaryColor,
                     unselectedItemColor: Colors.black54,
                     items: [
                       BottomNavigationBarItem(
@@ -544,7 +549,7 @@ class _LandingScreenState extends State<LandingScreen> {
               child: ImageIcon(
                 const AssetImage(variable.icon_chat),
                 color: landingScreenController!.currentTabIndex.value == 1
-                    ? Color(CommonUtil().getMyPrimaryColor())
+                    ? mAppThemeProvider.primaryColor
                     : Colors.black54,
               ),
             ),
@@ -557,7 +562,7 @@ class _LandingScreenState extends State<LandingScreen> {
               child: ImageIcon(
                 const AssetImage(variable.icon_chat),
                 color: landingScreenController!.currentTabIndex.value == 1
-                    ? Color(CommonUtil().getMyPrimaryColor())
+                    ? mAppThemeProvider.primaryColor
                     : Colors.black54,
               ),
             ),
@@ -673,7 +678,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   ? selOption
                   : unSelOption,
           color: landingScreenController!.currentTabIndex.value == 1
-              ? Color(CommonUtil().getMyPrimaryColor())
+              ? mAppThemeProvider.primaryColor
               : Colors.black54,
         ),
       ),
@@ -952,21 +957,15 @@ class _LandingScreenState extends State<LandingScreen> {
             }
             if (selectionResult!.result![0].profileSetting!.preColor != null &&
                 selectionResult!.result![0].profileSetting!.greColor != null) {
-              PreferenceUtil.saveTheme(Constants.keyPriColor,
-                  selectionResult!.result![0].profileSetting!.preColor!);
-              PreferenceUtil.saveTheme(Constants.keyGreyColor,
-                  selectionResult!.result![0].profileSetting!.greColor!);
+              context.read<AppThemeProvider>().updatePrimaryColor(selectionResult!.result![0].profileSetting!.preColor!);
+              context.read<AppThemeProvider>().updateGradientColor(selectionResult!.result![0].profileSetting!.greColor!);
               //HomeScreen.of(context).refresh();
               //setState(() {});
             } else {
-              PreferenceUtil.saveTheme(
-                  Constants.keyPriColor,
-                  PreferenceUtil.getSavedTheme(Constants.keyPriColor) ??
-                      0xff5f0cf9);
-              PreferenceUtil.saveTheme(
-                  Constants.keyGreyColor,
-                  PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??
-                      0xff9929ea);
+              context.read<AppThemeProvider>().updatePrimaryColor(PreferenceUtil.getSavedTheme(Constants.keyPriColor) ??
+                  0xff5f0cf9);
+              context.read<AppThemeProvider>().updateGradientColor(PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??
+                  0xff9929ea);
             }
             sheelBadgeController?.isAllowSheelaLiveReminders = (selectionResult!
                             .result![0].profileSetting!.sheelaLiveReminders !=
@@ -982,14 +981,10 @@ class _LandingScreenState extends State<LandingScreen> {
                 (sheelBadgeController?.isAllowSheelaLiveReminders ?? true)
                     .toString());
           } else {
-            PreferenceUtil.saveTheme(
-                Constants.keyPriColor,
-                PreferenceUtil.getSavedTheme(Constants.keyPriColor) ??
-                    0xff5f0cf9);
-            PreferenceUtil.saveTheme(
-                Constants.keyGreyColor,
-                PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??
-                    0xff9929ea);
+            context.read<AppThemeProvider>().updatePrimaryColor(PreferenceUtil.getSavedTheme(Constants.keyPriColor) ??
+                0xff5f0cf9);
+            context.read<AppThemeProvider>().updateGradientColor(PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ??
+                0xff9929ea);
           }
         } else {
           bpMonitor = true;
@@ -1069,7 +1064,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   Widget getSwitchProfileWidget() {
     return FutureBuilder<MyProfileModel?>(
-        future: getMyProfile(),
+        future: profileData?.then((value) => value as MyProfileModel?),
         builder: (context, snapshot) {
           if (snapshot != null) if (snapshot.data != null && snapshot.hasData)
             PreferenceUtil.saveProfileData(

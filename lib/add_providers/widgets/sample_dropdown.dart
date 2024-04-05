@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import '../../common/CommonUtil.dart';
+import '../../main.dart';
 import '../../src/model/Media/media_result.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -64,10 +65,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return widget.mediaData!
         .map((e) => CheckboxListTile(
               value: e.isChecked,
-              checkColor: Color(CommonUtil().getMyPrimaryColor()),
+              checkColor: mAppThemeProvider.primaryColor,
               title: Text(e.name!,
                   style: TextStyle(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: mAppThemeProvider.primaryColor,
                   )),
               onChanged: (val) {
                 print(val);

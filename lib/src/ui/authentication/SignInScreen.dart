@@ -26,6 +26,8 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
+import '../../../main.dart';
+
 class SignInScreen extends StatefulWidget {
   @override
   _SignInScreenState createState() => _SignInScreenState();
@@ -67,7 +69,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   textAlign: TextAlign.start,
                   style: TextStyle(
                       //TODO chnage theme
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      color: mAppThemeProvider.primaryColor,
                       fontSize: 20.0.sp,
                       fontWeight: FontWeight.w500),
                 ),
@@ -87,7 +89,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 child: ImageIcon(
                   AssetImage(variable.icon_otp),
                   size: 70,
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  color: mAppThemeProvider.primaryColor,
                 ),
               ),
               Padding(
@@ -182,8 +184,8 @@ class _SignInScreenState extends State<SignInScreen> {
               gradient: LinearGradient(
                 colors: <Color>[
                   //TODO chnage theme
-                  Color(CommonUtil().getMyPrimaryColor()),
-                  Color(CommonUtil().getMyGredientColor()),
+                  mAppThemeProvider.primaryColor,
+                  mAppThemeProvider.gradientColor,
                 ],
               ),
               onPressed: () {

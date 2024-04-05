@@ -65,7 +65,7 @@ class PlanCard extends StatelessWidget {
                           //         '',
                           //     style: TextStyle(
                           //       fontSize: 25.0.sp,
-                          //       color: Color(CommonUtil().getMyPrimaryColor()),
+                          //       color: mAppThemeProvider.primaryColor,
                           //     ),
                           //   ),
                           // )),

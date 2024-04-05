@@ -9,6 +9,7 @@ import '../../../../common/common_circular_indicator.dart';
 import '../../../../common/errors_widget.dart';
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/variable_constant.dart' as variable;
+import '../../../../main.dart';
 import '../../../../plan_dashboard/model/PlanListModel.dart';
 import '../../../../src/utils/screenutils/size_extensions.dart';
 import '../../../../telehealth/features/SearchWidget/view/SearchWidget.dart';
@@ -342,7 +343,7 @@ class _FreeCarePlans extends State<FreeCarePlans> {
                       });
                       Get.back();
                     },
-                    activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                    activeColor: mAppThemeProvider.primaryColor,
                   );
                 },
               ),

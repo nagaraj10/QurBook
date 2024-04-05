@@ -8,6 +8,7 @@ import '../../common/CommonUtil.dart';
 import '../../common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../plan_wizard/view/widgets/Rounded_CheckBox.dart';
 import '../../src/ui/loader_class.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -69,7 +70,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
 
     return Scaffold(
         appBar: AppBar(
-            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            backgroundColor: mAppThemeProvider.primaryColor,
             leading: GestureDetector(
               onTap: () => Get.back(),
               child: Icon(
@@ -117,7 +118,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         width: 100.0.w,
         height: 40.0.h,
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           borderRadius: BorderRadius.all(Radius.circular(25)),
           boxShadow: <BoxShadow>[
             BoxShadow(
@@ -244,7 +245,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                     Text(
                       "Select All",
                       style: TextStyle(
-                          color: Color(CommonUtil().getMyPrimaryColor())),
+                          color: mAppThemeProvider.primaryColor),
                     ),
                     SizedBox(
                       width: 25,
@@ -326,9 +327,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                       ? planList.name![0].toUpperCase()
                       : ''),
                   style: TextStyle(
-                    color: Color(
-                      CommonUtil().getMyPrimaryColor(),
-                    ),
+                    color: mAppThemeProvider.primaryColor,
                   ),
                 ),
               ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/service/regiment_service.dart';
+import '../../../main.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../models/regiment_data_model.dart';
 import '../../../constants/fhb_constants.dart';
@@ -224,8 +225,7 @@ class RegimentActivitiesCard extends StatelessWidget {
                             hintText: strReasonDiablingHint,
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Color(
-                                      CommonUtil().getQurhomePrimaryColor())),
+                                  color: mAppThemeProvider.qurHomePrimaryColor),
                             ),
                             border: OutlineInputBorder(
                                 // borderSide: BorderSide(color: Colors.teal)
@@ -245,8 +245,7 @@ class RegimentActivitiesCard extends StatelessWidget {
                         children: [
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  primary: Color(
-                                      CommonUtil().getQurhomePrimaryColor())),
+                                  primary: mAppThemeProvider.qurHomePrimaryColor),
                               onPressed: () {
                                 Provider.of<RegimentViewModel>(
                                   context,
@@ -275,8 +274,7 @@ class RegimentActivitiesCard extends StatelessWidget {
                           ),
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  primary: Color(
-                                      CommonUtil().getQurhomePrimaryColor())),
+                                  primary: mAppThemeProvider.qurHomePrimaryColor),
                               onPressed: () {
                                 try {
                                   Navigator.pop(context);

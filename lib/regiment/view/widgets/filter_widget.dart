@@ -5,6 +5,8 @@ import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:provider/provider.dart';
 
+import '../../../main.dart';
+
 class FilterWidget extends StatelessWidget {
   const FilterWidget({
     this.title,
@@ -19,14 +21,14 @@ class FilterWidget extends StatelessWidget {
         children: [
           Theme(
             data: Theme.of(context).copyWith(
-              unselectedWidgetColor: Color(CommonUtil().getMyPrimaryColor()),
+              unselectedWidgetColor: mAppThemeProvider.primaryColor,
             ),
             child: Radio<RegimentFilter?>(
               groupValue:
                   Provider.of<RegimentViewModel>(context).regimentFilter,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               value: value,
-              activeColor: Color(CommonUtil().getMyPrimaryColor()),
+              activeColor: mAppThemeProvider.primaryColor,
               onChanged: (RegimentFilter? regimenFilter) {
                 if (Provider.of<RegimentViewModel>(context, listen: false)
                         .regimentFilter !=
@@ -42,7 +44,7 @@ class FilterWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 12.0.sp,
               fontWeight: FontWeight.w500,
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
             ),
           ),
         ],

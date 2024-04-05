@@ -3,6 +3,8 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
+import '../../../main.dart';
+
 class CareDietAppBar extends StatelessWidget implements PreferredSizeWidget {
   TabController? tabController;
 
@@ -29,9 +31,9 @@ class CareDietAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
         controller: tabController,
-        labelColor: Color(CommonUtil().getMyPrimaryColor()),
+        labelColor: mAppThemeProvider.primaryColor,
         indicatorSize: TabBarIndicatorSize.label,
-        indicatorColor: Color(CommonUtil().getMyPrimaryColor()),
+        indicatorColor: mAppThemeProvider.primaryColor,
       ),
       /*   title: Container(
         height: 0,

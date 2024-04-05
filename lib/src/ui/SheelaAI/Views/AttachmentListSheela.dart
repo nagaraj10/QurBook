@@ -78,12 +78,12 @@ class _AttachmentListSheelaState extends State<AttachmentListSheela> {
               style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 14,
-                  color: Color(CommonUtil().getMyPrimaryColor())),
+                  color: mAppThemeProvider.primaryColor),
             ),
             style: OutlinedButton.styleFrom(
                 shape: StadiumBorder(),
                 side:
-                    BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
+                    BorderSide(color: mAppThemeProvider.primaryColor)),
           ),
         )*/
     );

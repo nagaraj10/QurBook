@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:myfhb/common/common_circular_indicator.dart';
 
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -895,7 +896,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         Padding(
                           padding: EdgeInsets.only(bottom: circleRadius / 2.0),
                           child: Container(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: mAppThemeProvider.primaryColor,
                             height: 160.0.h,
                             child: Stack(
                                 clipBehavior: Clip.none,
@@ -914,7 +915,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             height: circleRadius,
                             decoration: ShapeDecoration(
                                 shape: CircleBorder(),
-                                color: Color(CommonUtil().getMyPrimaryColor())),
+                                color: mAppThemeProvider.primaryColor),
                             child: Padding(
                               padding: EdgeInsets.all(circleBorderWidth),
                               child: InkWell(
@@ -997,7 +998,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
           enabled: false,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: mobileNoController,
           enableInteractiveSelection: false,
           keyboardType: TextInputType.text,
@@ -1034,7 +1035,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: nameController,
           enabled: (widget.arguments!.fromClass == CommonConstants.my_family ||
                   widget.arguments!.fromClass == CommonConstants.user_update)
@@ -1090,7 +1091,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             ? Container()
                             : _showRelationShipTextField(), */
           },
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: relationShipController,
           enabled: widget.arguments!.fromClass == CommonConstants.my_family
               ? true
@@ -1132,7 +1133,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         children: <Widget>[
           TextField(
             textCapitalization: TextCapitalization.sentences,
-            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+            cursorColor: mAppThemeProvider.primaryColor,
             controller: emailController,
             enabled: widget.arguments!.fromClass == CommonConstants.user_update
                 ? true
@@ -1177,7 +1178,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           //                     fontSize: 15.0.sp,
           //                     fontWeight: FontWeight.w400,
           //                     color:
-          //                         Color(CommonUtil().getMyPrimaryColor()))),
+          //                         mAppThemeProvider.primaryColor)),
           //             onTap: () {
           //               FHBUtils().check().then((intenet) {
           //                 if (intenet != null && intenet) {
@@ -1202,7 +1203,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: genderController,
           keyboardType: TextInputType.text,
           focusNode: genderFocus,
@@ -1238,7 +1239,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: bloodGroupController,
           keyboardType: TextInputType.text,
           focusNode: bloodGroupFocus,
@@ -1276,7 +1277,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           padding: EdgeInsets.only(left: 20, right: 20, top: 5),
           child: TextField(
             textCapitalization: TextCapitalization.sentences,
-            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+            cursorColor: mAppThemeProvider.primaryColor,
             controller: dateOfBirthController,
             readOnly: true,
             keyboardType: TextInputType.text,
@@ -1499,7 +1500,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             width: 150.0.w,
             height: 40.0.h,
             decoration: BoxDecoration(
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: mAppThemeProvider.primaryColor,
               borderRadius: BorderRadius.all(Radius.circular(10)),
               boxShadow: <BoxShadow>[
                 BoxShadow(
@@ -1845,7 +1846,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       builder: (context,child) => Theme(
         data: ThemeData.light().copyWith(
           colorScheme: ColorScheme.light().copyWith(
-            primary:Color(CommonUtil().getQurhomePrimaryColor()),
+            primary:mAppThemeProvider.qurHomePrimaryColor,
           ),
         ),
         child: child!,
@@ -2463,7 +2464,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: firstNameController,
           enabled: (widget.arguments!.fromClass == CommonConstants.my_family ||
                   widget.arguments!.fromClass == CommonConstants.user_update)
@@ -2501,7 +2502,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: middleNameController,
           enabled: (widget.arguments!.fromClass == CommonConstants.my_family ||
                   widget.arguments!.fromClass == CommonConstants.user_update)
@@ -2539,7 +2540,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
           textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: lastNameController,
           enabled: (widget.arguments!.fromClass == CommonConstants.my_family ||
                   widget.arguments!.fromClass == CommonConstants.user_update)

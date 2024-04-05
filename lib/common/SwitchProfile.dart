@@ -25,6 +25,7 @@ import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import '../constants/fhb_constants.dart' as Constants;
+import '../main.dart';
 
 class SwitchProfile {
   FamilyListBloc? _familyListBloc;
@@ -111,8 +112,7 @@ class SwitchProfile {
                                                 fontSize: CommonUtil().isTablet!
                                                     ? Constants.tabHeader1
                                                     : mobileHeader1,
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor())),
+                                                color: mAppThemeProvider.primaryColor),
                                           ),
                                         ))
                                 : Container(
@@ -262,8 +262,7 @@ class SwitchProfile {
                                         .toUpperCase()
                                     : '',
                                 style: TextStyle(
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                               ),
                             ))
                     : Container(
@@ -390,8 +389,7 @@ class SwitchProfile {
                                                     .toUpperCase()
                                                 : '',
                                             style: TextStyle(
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor())),
+                                                color: mAppThemeProvider.primaryColor),
                                           ),
                                         ))
                                 : Container(

@@ -5,6 +5,7 @@ import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../more_menu/screens/more_menu_screen.dart';
 import '../../notifications/myfhb_notifications.dart';
 import '../model/home_screen_arguments.dart';
@@ -244,7 +245,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
           color: Colors.white,
           buttonBackgroundColor: widget.selectedPageIndex == 2
               ? Colors.white
-              : Color(CommonUtil().getMyPrimaryColor()),
+              : mAppThemeProvider.primaryColor,
           backgroundColor: Colors.transparent,
           animationCurve: Curves.linearToEaseOut,
           animationDuration: Duration(milliseconds: 450),

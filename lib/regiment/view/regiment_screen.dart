@@ -11,6 +11,7 @@ import '../../common/firestore_services.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart';
 import '../../landing/view/landing_arguments.dart';
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
 import '../models/regiment_arguments.dart';
@@ -31,7 +32,7 @@ class RegimentScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        backgroundColor: mAppThemeProvider.primaryColor,
         elevation: 0,
         title: Text(
           strRegimen,

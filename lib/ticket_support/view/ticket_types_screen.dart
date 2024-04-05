@@ -11,6 +11,7 @@ import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart' as constants;
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
 import '../controller/create_ticket_controller.dart';
@@ -39,7 +40,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        backgroundColor: mAppThemeProvider.primaryColor,
         elevation: 0,
         leading: IconWidget(
           icon: Icons.arrow_back_ios,
@@ -255,15 +256,15 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Color(CommonUtil().getMyPrimaryColor()),
-                    Color(CommonUtil().getMyGredientColor())
+                    mAppThemeProvider.primaryColor,
+                    mAppThemeProvider.gradientColor
                   ],
                 ),
                 borderRadius: const BorderRadius.all(
                   Radius.circular(12),
                 ),
                 border: Border.all(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  color: mAppThemeProvider.primaryColor,
                 ),
               ),
               padding: EdgeInsets.all(

@@ -10,6 +10,7 @@ import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart';
 import '../../constants/variable_constant.dart' as variable;
 import '../../constants/variable_constant.dart';
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
 
@@ -74,9 +75,7 @@ class _MyFhbWebViewState extends State<TermsAndConditonWebView> {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(
-                      CommonUtil().getMyPrimaryColor(),
-                    ),
+                    backgroundColor: mAppThemeProvider.primaryColor,
                   ),
                   onPressed: () {
                     Navigator.pushNamed(

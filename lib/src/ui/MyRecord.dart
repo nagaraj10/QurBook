@@ -27,6 +27,7 @@ import '../../global_search/model/Data.dart';
 import '../../global_search/model/GlobalSearch.dart';
 import '../../landing/controller/landing_screen_controller.dart';
 import '../../landing/view_model/landing_view_model.dart';
+import '../../main.dart';
 import '../../my_family/bloc/FamilyListBloc.dart';
 import '../../widgets/GradientAppBar.dart';
 import '../blocs/Category/CategoryListBlock.dart';
@@ -770,8 +771,8 @@ class _CustomTabsState extends State<CustomTabView>
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: <Color>[
-                Color(CommonUtil().getMyPrimaryColor()),
-                Color(CommonUtil().getMyGredientColor())
+                mAppThemeProvider.primaryColor,
+                mAppThemeProvider.gradientColor
               ],
               stops: const [
                 0.3,
@@ -815,7 +816,7 @@ class _CustomTabsState extends State<CustomTabView>
             margin: const EdgeInsets.only(right: 10, bottom: 10),
             constraints: BoxConstraints(maxHeight: 120.0.h),
             decoration: BoxDecoration(
-                color: Color(CommonUtil().getMyPrimaryColor()),
+                color: mAppThemeProvider.primaryColor,
                 borderRadius: BorderRadius.circular(30)),
             child: (widget.categoryData != null &&
                     widget.categoryData![controller!.index].categoryName ==
@@ -919,10 +920,10 @@ class _CustomTabsState extends State<CustomTabView>
                       }
                     },
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                      foregroundColor: mAppThemeProvider.primaryColor,
                       backgroundColor: Colors.white,
                       side: BorderSide(
-                          color: Color(CommonUtil().getMyPrimaryColor())),
+                          color: mAppThemeProvider.primaryColor),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30)),
                     ),

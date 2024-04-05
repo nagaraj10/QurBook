@@ -6,6 +6,7 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/search_providers/screens/doctor_filter_request_model.dart';
 
 import '../../constants/fhb_constants.dart';
+import '../../main.dart';
 import '../../src/ui/MyRecord.dart';
 import '../../src/ui/loader_class.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -217,7 +218,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                                 padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: Color(CommonUtil().getMyPrimaryColor()),
+                                    color: mAppThemeProvider.primaryColor,
                                   ),
                                   borderRadius: const BorderRadius.all(Radius.circular(50)),
                                 ),
@@ -225,7 +226,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                                   child: Text(
                                     DoctorFilterConstants.reset,
                                     style: TextStyle(
-                                      color: Color(CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                     ),
                                   ),
                                 ),
@@ -249,7 +250,7 @@ class _DoctorsFilterScreenState extends State<DoctorsFilterScreen> {
                                 padding: const EdgeInsets.all(10),
                                 decoration: ShapeDecoration(
                                   color: (!allListsEmpty)
-                                      ? Color(CommonUtil().getMyPrimaryColor())
+                                      ? mAppThemeProvider.primaryColor
                                       : Colors.grey.withOpacity(0.5),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(50),

@@ -5,6 +5,8 @@ import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 
+import '../../../../main.dart';
+
 class GridViewNew extends StatefulWidget {
 
   List<Slots> dateTimingsSlot;
@@ -82,7 +84,7 @@ class _GridViewNew extends State<GridViewNew> {
       ),
       borderRadius: BorderRadius.all(Radius.circular(15.0)),
       color: _selectedIndex != null && _selectedIndex == index && widget.rowPosition == widget.selectedRow
-          ? Color(CommonUtil().getMyPrimaryColor())
+          ? mAppThemeProvider.primaryColor
           : Colors.white,
     );
   }

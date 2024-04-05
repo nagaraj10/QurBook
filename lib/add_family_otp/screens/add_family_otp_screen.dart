@@ -3,6 +3,7 @@ import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import '../../main.dart';
 import '../bloc/add_family_otp_bloc.dart';
 import '../models/add_family_otp_arguments.dart';
 import '../models/add_family_otp_response.dart';
@@ -199,7 +200,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                 toBeginningOfSentenceCase(
                     '${widget.arguments!.enteredFirstName} ${widget.arguments!.enteredMiddleName} ${widget.arguments!.enteredLastName}')!,
                 style: TextStyle(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  color: mAppThemeProvider.primaryColor,
                   fontWeight: FontWeight.w500,
                   fontSize: 16.0.sp,
                 ),
@@ -261,7 +262,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                           widget.arguments!.enteredMobNumber);
                     },
                     title: variable.strResendCode,
-                    titleColor: Color(CommonUtil().getMyPrimaryColor()),
+                    titleColor: mAppThemeProvider.primaryColor,
                     fontWeight: FontWeight.w600,
                   ),
                   SizedBox(
@@ -377,7 +378,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                 child: Icon(
                                   Icons.backspace,
                                   color:
-                                      Color(CommonUtil().getMyPrimaryColor()),
+                                      mAppThemeProvider.primaryColor,
                                   size: 24.0.sp,
                                 )),
                             MaterialButton(
@@ -413,7 +414,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                               },
                               child: Icon(
                                 Icons.done,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                                 size: 24.0.sp,
                               ),
                             ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import '../../../main.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 
 class LandingCard extends StatelessWidget {
@@ -211,7 +212,7 @@ class LandingCard extends StatelessWidget {
                                 onPressed: onTicketPressed as void Function()? ?? () {},
                                 elevation: 2,
                                 backgroundColor:
-                                    Color(CommonUtil().getMyPrimaryColor()),
+                                    mAppThemeProvider.primaryColor,
                                 heroTag: title,
                                 child: Stack(
                                   children: <Widget>[

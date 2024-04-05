@@ -22,6 +22,7 @@ import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../my_family_detail/models/my_family_detail_arguments.dart';
 import '../../src/model/user/MyProfileModel.dart';
 import '../../src/resources/network/ApiResponse.dart';
@@ -118,7 +119,7 @@ class _MyFamilyState extends State<MyFamily> {
           onPressed: () {
             saveMediaDialog(context);
           },
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          backgroundColor: mAppThemeProvider.primaryColor,
           child: Icon(
             Icons.add,
             color: Colors.white,
@@ -220,7 +221,7 @@ class _MyFamilyState extends State<MyFamily> {
                             child: SizedBox(
                           child: CircularProgressIndicator(
                             backgroundColor:
-                                Color(CommonUtil().getMyPrimaryColor()),
+                                mAppThemeProvider.primaryColor,
                           ),
                           width: 30.0.h,
                           height: 30.0.h,
@@ -395,8 +396,7 @@ class _MyFamilyState extends State<MyFamily> {
                                     : '',
                                 style: TextStyle(
                                     fontSize: 22.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                               ),
                             ),
                           )
@@ -414,7 +414,7 @@ class _MyFamilyState extends State<MyFamily> {
                               return Container(
                                 height: 60.0.h,
                                 width: 60.0.h,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: mAppThemeProvider.primaryColor,
                                 child: Center(
                                     child: Text(
                                   data.child?.firstName != null &&
@@ -463,8 +463,7 @@ class _MyFamilyState extends State<MyFamily> {
                                             : '',
                                         style: TextStyle(
                                             fontSize: 22.0.sp,
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
+                                            color: mAppThemeProvider.primaryColor),
                                       ),
                                     ),
                                   )
@@ -479,8 +478,7 @@ class _MyFamilyState extends State<MyFamily> {
                                         : '',
                                     style: TextStyle(
                                         fontSize: 22.0.sp,
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor())),
+                                        color: mAppThemeProvider.primaryColor),
                                   ),
                                 ),
                               )
@@ -495,8 +493,7 @@ class _MyFamilyState extends State<MyFamily> {
                                     : '',
                                 style: TextStyle(
                                     fontSize: 22.0.sp,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                               ),
                             ),
                           ),
@@ -572,7 +569,7 @@ class _MyFamilyState extends State<MyFamily> {
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 16.0.sp,
-                          color: Color(CommonUtil().getMyPrimaryColor())),
+                          color: mAppThemeProvider.primaryColor),
                     ),
                   ],
                 ),
@@ -632,15 +629,13 @@ class _MyFamilyState extends State<MyFamily> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(5),
                                   border: Border.all(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()))),
+                                      color: mAppThemeProvider.primaryColor)),
                               child: Text(
                                 variable.DeLink,
                                 style: TextStyle(
                                     fontSize: 16.0.sp,
                                     fontWeight: FontWeight.w500,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
+                                    color: mAppThemeProvider.primaryColor),
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -802,8 +797,7 @@ class _MyFamilyState extends State<MyFamily> {
                                         ? Icons.radio_button_checked
                                         : Icons.radio_button_unchecked,
                                     color: isPrimaryNoSelected == true
-                                        ? Color(
-                                            CommonUtil().getMyPrimaryColor())
+                                        ? mAppThemeProvider.primaryColor
                                         : ColorUtils.myFamilyGreyColor,
                                     size: 24.0.sp,
                                   ),
@@ -963,7 +957,7 @@ class _MyFamilyState extends State<MyFamily> {
     return Expanded(
       child: TextField(
           textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: mobileNoController,
           enabled: isPrimaryNoSelected ? false : true,
           keyboardType: TextInputType.text,
@@ -997,7 +991,7 @@ class _MyFamilyState extends State<MyFamily> {
     return Expanded(
       child: TextField(
           textCapitalization: TextCapitalization.sentences,
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+          cursorColor: mAppThemeProvider.primaryColor,
           controller: nameController,
           keyboardType: TextInputType.text,
           focusNode: nameFocus,
@@ -1030,7 +1024,7 @@ class _MyFamilyState extends State<MyFamily> {
     return Expanded(
         child: TextField(
       textCapitalization: TextCapitalization.sentences,
-      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      cursorColor: mAppThemeProvider.primaryColor,
       controller: firstNameController,
       keyboardType: TextInputType.text,
       focusNode: firstNameFocus,
@@ -1064,7 +1058,7 @@ class _MyFamilyState extends State<MyFamily> {
     return Expanded(
         child: TextField(
       textCapitalization: TextCapitalization.sentences,
-      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      cursorColor: mAppThemeProvider.primaryColor,
       controller: middleNameController,
       keyboardType: TextInputType.text,
       focusNode: middleNameFocus,
@@ -1098,7 +1092,7 @@ class _MyFamilyState extends State<MyFamily> {
     return Expanded(
         child: TextField(
       textCapitalization: TextCapitalization.sentences,
-      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      cursorColor: mAppThemeProvider.primaryColor,
       controller: lastNameController,
       keyboardType: TextInputType.text,
       focusNode: lastNameFocus,
@@ -1135,7 +1129,7 @@ class _MyFamilyState extends State<MyFamily> {
         width: 220.0.w,
         height: 40.0.h,
         decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
+          color: mAppThemeProvider.primaryColor,
           borderRadius: BorderRadius.all(Radius.circular(2)),
           boxShadow: <BoxShadow>[
             BoxShadow(

@@ -11,6 +11,7 @@ import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
 import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart' as strConstants;
 import '../../constants/variable_constant.dart' as variable;
+import '../../main.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 
 class TicketsList extends StatefulWidget {
@@ -328,10 +329,8 @@ class _TicketsList extends State<TicketsList> {
                                       gradient: LinearGradient(
                                           end: Alignment.centerRight,
                                           colors: [
-                                            Color(CommonUtil()
-                                                .getMyPrimaryColor()),
-                                            Color(CommonUtil()
-                                                .getMyGredientColor())
+                                            mAppThemeProvider.primaryColor,
+                                            mAppThemeProvider.gradientColor
                                             /*getColorFromHex('#5428ef'),
                                                 getColorFromHex('#5428ef'),*/
                                           ])),

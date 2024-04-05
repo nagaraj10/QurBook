@@ -5,6 +5,8 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
+import '../../../main.dart';
+
 class HealthApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -57,8 +59,8 @@ class HealthApp extends StatelessWidget {
                 ),
                 gradient: LinearGradient(
                   colors: <Color>[
-                    Color(CommonUtil().getMyPrimaryColor()),
-                    Color(CommonUtil().getMyGredientColor()),
+                    mAppThemeProvider.primaryColor,
+                    mAppThemeProvider.gradientColor,
                   ],
                 ),
               ),

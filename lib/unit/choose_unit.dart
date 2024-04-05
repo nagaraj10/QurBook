@@ -18,6 +18,8 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/user/Tags.dart';
 
+import '../main.dart';
+
 class ChooseUnit extends StatefulWidget {
   @override
   _ChooseUnitState createState() => _ChooseUnitState();
@@ -196,7 +198,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                                     ? Icon(
                                         Icons.check,
                                         size: 30.0,
-                                        color:Color(CommonUtil().getMyPrimaryColor()),
+                                        color:mAppThemeProvider.primaryColor,
                                       )
                                     : SizedBox(),
                               ),
@@ -220,7 +222,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                                   ? Icon(
                                       Icons.check,
                                       size: 30.0,
-                                      color: Color(CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                     )
                                   : SizedBox(),
                             ),
@@ -281,7 +283,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                                   ? Icon(
                                       Icons.check,
                                       size: 30.0,
-                                      color: Color(CommonUtil().getMyPrimaryColor()),
+                                      color: mAppThemeProvider.primaryColor,
                                     )
                                   : SizedBox(),
                             ),
@@ -304,7 +306,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                                     ? Icon(
                                         Icons.check,
                                         size: 30.0,
-                                        color:Color(CommonUtil().getMyPrimaryColor()),
+                                        color:mAppThemeProvider.primaryColor,
                                       )
                                     : SizedBox(),
                               ),
@@ -366,7 +368,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                                   ? Icon(
                                       Icons.check,
                                       size: 30.0,
-                                      color:Color(CommonUtil().getMyPrimaryColor()),
+                                      color:mAppThemeProvider.primaryColor,
                                     )
                                   : SizedBox(),
                             ),
@@ -389,7 +391,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                                   ? Icon(
                                       Icons.check,
                                       size: 30.0,
-                                      color:Color(CommonUtil().getMyPrimaryColor()),
+                                      color:mAppThemeProvider.primaryColor,
                                     )
                                   : SizedBox(),
                             ),

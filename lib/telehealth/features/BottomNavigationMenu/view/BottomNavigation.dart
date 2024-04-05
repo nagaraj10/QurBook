@@ -9,6 +9,8 @@ import 'package:myfhb/telehealth/features/BottomNavigationMenu/viewModel/BottomN
     as bottomNavigationVModel;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
+import '../../../../main.dart';
+
 class BottomNavigationWidget extends StatefulWidget {
   BottomNavigationWidget(
       {this.selectedPageIndex,
@@ -40,7 +42,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
           color: Colors.white,
           buttonBackgroundColor: widget.selectedPageIndex == 2
               ? Colors.white
-              : Color(CommonUtil().getMyPrimaryColor()),
+              : mAppThemeProvider.primaryColor,
           backgroundColor: Colors.transparent,
           animationCurve: Curves.linearToEaseOut,
           animationDuration: Duration(milliseconds: 450),

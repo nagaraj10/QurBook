@@ -18,6 +18,8 @@ import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../main.dart';
+
 class ProviderCarePlans extends StatefulWidget {
   @override
   _ProviderCarePlans createState() => _ProviderCarePlans();
@@ -249,7 +251,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
             .planWizardProviderCount;
 
     TextStyle linkStyle = TextStyle(
-        color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18.sp);
+        color: mAppThemeProvider.primaryColor, fontSize: 18.sp);
 
     if (Provider.of<PlanWizardViewModel>(context, listen: false)
                 .providerHosCount ==
@@ -473,7 +475,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
                       });
                       Get.back();
                     },
-                    activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                    activeColor: mAppThemeProvider.primaryColor,
                   );
                 },
               ),

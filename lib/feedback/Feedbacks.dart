@@ -11,6 +11,7 @@ import '../common/CommonUtil.dart';
 // TODO: multi_image_picker deprecated so need to FIX
 // import 'package:multi_image_picker/multi_image_picker.dart';
 import 'dart:typed_data';
+import '../main.dart';
 import '../src/utils/screenutils/size_extensions.dart';
 import '../common/FHBBasicWidget.dart';
 import '../common/PreferenceUtil.dart';
@@ -144,7 +145,7 @@ class _FeedbacksState extends State<Feedbacks> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(CommonUtil().getMyGredientColor()),
+        backgroundColor: mAppThemeProvider.gradientColor,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
@@ -177,7 +178,7 @@ class _FeedbacksState extends State<Feedbacks> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Container(
-                                color: Color(CommonUtil().getMyGredientColor()),
+                                color: mAppThemeProvider.gradientColor,
                                 child: Padding(
                                   padding: EdgeInsets.all(10),
                                   child: Column(
@@ -240,8 +241,7 @@ class _FeedbacksState extends State<Feedbacks> {
                                     child: IconButton(
                                       icon: ImageIcon(
                                         AssetImage(variable.icon_attach),
-                                        color: Color(
-                                            CommonUtil().getMyPrimaryColor()),
+                                        color: mAppThemeProvider.primaryColor,
                                         size: 32.0.sp,
                                       ),
                                       onPressed: loadAssets,
@@ -560,7 +560,7 @@ class _FeedbacksState extends State<Feedbacks> {
       ),
       child: TextFormField(
         textCapitalization: TextCapitalization.sentences,
-        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        cursorColor: mAppThemeProvider.primaryColor,
         controller: feedbackController,
         keyboardType: TextInputType.text,
         focusNode: feedbackFocus,
