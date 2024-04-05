@@ -97,6 +97,7 @@ class Data {
   String? diastolic;
   String? weight;
   String? bgl;
+  String? unit;
 
   Data({
     this.sPO2,
@@ -105,6 +106,7 @@ class Data {
     this.diastolic,
     this.weight,
     this.bgl,
+    this.unit,
   });
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -129,6 +131,7 @@ class Data {
       data['Diastolic'] = this.diastolic;
       data['Weight'] = this.weight;
       data['BGL'] = this.bgl;
+      data['unit'] = this.unit;
     } catch (e,stackTrace) {
       CommonUtil().appLogs(message: e,stackTrace:stackTrace);
     }

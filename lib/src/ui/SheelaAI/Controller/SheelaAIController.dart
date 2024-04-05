@@ -45,6 +45,7 @@ import 'package:uuid/uuid.dart';
 import 'package:video_thumbnail/video_thumbnail.dart' as thumbnail;
 import 'package:youtube_player_flutter/youtube_player_flutter.dart' as youtube;
 
+import '../../../../Qurhome/BleConnect/Models/ble_data_model.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../../common/keysofmodel.dart';
 import '../../../../constants/fhb_constants.dart';
@@ -166,9 +167,6 @@ class SheelaAIController extends GetxController {
 // Initialized with a boolean value `false` and converted into an observable using `.obs`.
   Rx<bool> isDeviceConnectSheelaScreen = false.obs;
 
-// Declaration of a nullable boolean variable `isLastActivityDevice` initialized with `true`.
-  bool? isLastActivityDevice = true;
-
 // Declaration of a nullable boolean variable `isSameVitalDevice` initialized with `false`.
   bool? isSameVitalDevice = false;
 
@@ -191,6 +189,9 @@ class SheelaAIController extends GetxController {
   Rx<bool> micDisableReconnect = false.obs;
 
   String? latestRemindEid = '';
+
+
+  var deviceResponseEid = '';
 
   @override
   void onInit() {
@@ -445,7 +446,7 @@ class SheelaAIController extends GetxController {
   }
 
   getAIAPIResponseFor(String? message, Buttons? buttonsList,
-      {bool? isFromImageUpload = false, String? requestFileType, bool? restartSheelaDevice = false}) async {
+      {bool? isFromImageUpload = false, String? requestFileType,Data? deviceReadingsRuleSheela}) async {
     try {
       isCallStartFromSheela = false;
       isLoading.value = true;
@@ -466,7 +467,11 @@ class SheelaAIController extends GetxController {
         // If true, it indicates that it's an image upload.
 
         // Update additionalInfo with the file URL and request type by setting isSkipReminderCount to true.
-        additionalInfo?[isSkipRemiderCount] = true;
+        additionalInfo?[isSaveDeviceReading] = true;
+
+        // for deviceReadingsRuleSheela after racodring the values from devices
+        additionalInfo?[deviceReadingValues] =
+            deviceReadingsRuleSheela ?? Data();
 
         // Reset isDeviceConnectSheelaScreen value to false after processing.
         isDeviceConnectSheelaScreen.value = false;
@@ -474,13 +479,11 @@ class SheelaAIController extends GetxController {
         // disable the mic button while say reconnect
         micDisableReconnect.value = false;
 
-        // Reset isLastActivityDevice to true.
-        isLastActivityDevice = true;
       } else {
         // If the value of isDeviceConnectSheelaScreen is false, it means it's not an image upload.
 
         // Update additionalInfo with isSkipReminderCount set to false.
-        additionalInfo?[isSkipRemiderCount] = false;
+        additionalInfo?[isSaveDeviceReading] = false;
       }
 
       // for latest eid to pass api
@@ -529,12 +532,17 @@ class SheelaAIController extends GetxController {
             KIOSK_task: (arguments?.isRetakeSurvey ?? false)
                 ? KIOSK_retakeSurvey
                 : KIOSK_survey,
-            KIOSK_eid: arguments!.eId
+            KIOSK_eid: arguments!.eId,
+            KIOSK_ISTAP_REGIMEN: (arguments?.fromRegimenByTap ?? false), // for new flag reg flow only from regimen on tap sheela
           };
           sheelaRequest.message = KIOSK_SHEELA;
           arguments!.eId = null;
         } else {
-          reqJson = {KIOSK_task: KIOSK_remind, KIOSK_eid: arguments!.eId};
+          reqJson = {
+            KIOSK_task: KIOSK_remind,
+            KIOSK_eid: arguments!.eId,
+            KIOSK_ISTAP_REGIMEN: (arguments?.fromRegimenByTap ?? false) // for new flag reg flow only from regimen on tap sheela
+          };
           sheelaRequest.message = KIOSK_SHEELA;
           arguments!.eId = null;
         }
@@ -552,7 +560,8 @@ class SheelaAIController extends GetxController {
       } else if (arguments?.sheelReminder ?? false) {
         reqJson = {
           KIOSK_task: KIOSK_messages,
-          KIOSK_chatId: arguments!.chatMessageIdSocket
+          KIOSK_chatId: arguments!.chatMessageIdSocket,
+          KIOSK_ISTAP_REGIMEN: (arguments?.fromRegimenByTap ?? false), // for new flag reg flow only from regimen on tap sheela
         };
         sheelaRequest.message = KIOSK_SHEELA;
         arguments!.sheelReminder = false;
@@ -636,15 +645,14 @@ class SheelaAIController extends GetxController {
           if ((conversations.last.redirectTo ?? '') == strDeviceConnection) {
             // If redirectTo is equal to strDeviceConnection:
 
-            // Update isLastActivityDevice with the value of isLastActivity from the additionalInfoSheelaResponse,
-            // or set it to true if additionalInfoSheelaResponse or isLastActivity is null.
-            isLastActivityDevice = (conversations.last?.additionalInfoSheelaResponse?.isLastActivity ?? true);
-
             // Set the value of isDeviceConnectSheelaScreen to true, indicating a device connection.
             isDeviceConnectSheelaScreen.value = true;
 
             // disable the mic button while say reconnect
             micDisableReconnect.value = true;
+
+            // for getting the eid from payload api
+            deviceResponseEid = (conversations.last?.additionalInfoSheelaResponse?.eid ?? '').toString();
 
             // for getting the eid from payload api
             hubListViewController.eid = (conversations.last?.additionalInfoSheelaResponse?.eid ?? '').toString();

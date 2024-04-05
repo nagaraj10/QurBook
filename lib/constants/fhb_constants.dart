@@ -1079,8 +1079,11 @@ const String strPleaseFill = 'Please fill';
 const String strPleaseSelect = 'Please select';
 const String strAddressLine = 'address_line_1';
 
-// isLast activity continue means call this isSkipReminderCount to api in payload
-const String isSkipRemiderCount = 'isSkipReminderCount';
+// isLast activity continue means call this isSaveDeviceReading to api in payload
+const String isSaveDeviceReading = 'isSaveDeviceReading';
+
+// for device reading flow
+const String deviceReadingValues = 'deviceReading';
 
 // Define a constant string for storing the current notification ID.
 const String strCurrentNotificationId = 'currentNotificationId';

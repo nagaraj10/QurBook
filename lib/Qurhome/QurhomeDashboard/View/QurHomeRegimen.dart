@@ -2454,31 +2454,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           }
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
-          CommonUtil().dialogForScanDevices(
-            Get.context!,
-            onPressManual: () {
-              Get.back();
-              _sheelaBLEController.stopTTS();
-              _sheelaBLEController.stopScanning();
-              redirectToSheelaScreen(regimen);
-            },
-            onPressCancel: () async {
-              Get.back();
-              hubController.eid = null;
-              hubController.uid = null;
-              _sheelaBLEController.stopTTS();
-              _sheelaBLEController.stopScanning();
-            },
-            title: strConnectPulseMeter,
-            // Determine the value for 'isVitalsManualRecordingRestricted' based on region
-            isVitalsManualRecordingRestricted: CommonUtil.isUSRegion()
-                ? PreferenceUtil.getBool(
-                    KEY_IS_Vitals_ManualRecording_Restricted)
-                : false,
-          );
-          _sheelaBLEController.isFromRegiment = true;
-          _sheelaBLEController.filteredDeviceType = 'spo2';
-          _sheelaBLEController.setupListenerForReadings();
+          redirectToSheelaScreen(regimen);
         } else {
           onErrorMessage(regimen);
         }
@@ -2509,31 +2485,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           }
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
-          CommonUtil().dialogForScanDevices(
-            Get.context!,
-            onPressManual: () {
-              Get.back();
-              _sheelaBLEController.stopTTS();
-              _sheelaBLEController.stopScanning();
-              redirectToSheelaScreen(regimen);
-            },
-            onPressCancel: () async {
-              Get.back();
-              hubController.eid = null;
-              hubController.uid = null;
-              _sheelaBLEController.stopTTS();
-              _sheelaBLEController.stopScanning();
-            },
-            title: strConnectBpMeter,
-            // Determine the value for 'isVitalsManualRecordingRestricted' based on region
-            isVitalsManualRecordingRestricted: CommonUtil.isUSRegion()
-                ? PreferenceUtil.getBool(
-                    KEY_IS_Vitals_ManualRecording_Restricted)
-                : false,
-          );
-          _sheelaBLEController.isFromRegiment = true;
-          _sheelaBLEController.filteredDeviceType = 'bp';
-          _sheelaBLEController.setupListenerForReadings();
+          redirectToSheelaScreen(regimen);
         } else {
           onErrorMessage(regimen);
         }
@@ -2561,31 +2513,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           }
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
-          CommonUtil().dialogForScanDevices(
-            Get.context!,
-            onPressManual: () {
-              Get.back();
-              _sheelaBLEController.stopTTS();
-              _sheelaBLEController.stopScanning();
-              redirectToSheelaScreen(regimen);
-            },
-            onPressCancel: () async {
-              Get.back();
-              hubController.eid = null;
-              hubController.uid = null;
-              _sheelaBLEController.stopTTS();
-              _sheelaBLEController.stopScanning();
-            },
-            title: strConnectWeighingScale,
-            // Determine the value for 'isVitalsManualRecordingRestricted' based on region
-            isVitalsManualRecordingRestricted: CommonUtil.isUSRegion()
-                ? PreferenceUtil.getBool(
-                    KEY_IS_Vitals_ManualRecording_Restricted)
-                : false,
-          );
-          _sheelaBLEController.isFromRegiment = true;
-          _sheelaBLEController.filteredDeviceType = 'weight';
-          _sheelaBLEController.setupListenerForReadings();
+          redirectToSheelaScreen(regimen);
         } else {
           onErrorMessage(regimen);
         }
@@ -2616,31 +2544,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           }
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
-          CommonUtil().dialogForScanDevices(
-            Get.context!,
-            onPressManual: () {
-              Get.back();
-              _sheelaBLEController.stopTTS();
-              _sheelaBLEController.stopScanning();
-              redirectToSheelaScreen(regimen);
-            },
-            onPressCancel: () async {
-              Get.back();
-              hubController.eid = null;
-              hubController.uid = null;
-              _sheelaBLEController.stopTTS();
-              _sheelaBLEController.stopScanning();
-            },
-            title: strConnectBGL,
-            // Determine the value for 'isVitalsManualRecordingRestricted' based on region
-            isVitalsManualRecordingRestricted: CommonUtil.isUSRegion()
-                ? PreferenceUtil.getBool(
-                    KEY_IS_Vitals_ManualRecording_Restricted)
-                : false,
-          );
-          _sheelaBLEController.isFromRegiment = true;
-          _sheelaBLEController.filteredDeviceType = 'bgl';
-          _sheelaBLEController.setupListenerForReadings();
+          redirectToSheelaScreen(regimen);
         } else {
           onErrorMessage(regimen);
         }
@@ -3297,6 +3201,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       arguments: SheelaArgument(
           eId: regimen.eid ?? "",
           isSurvey: isSurvey,
+          fromRegimenByTap: true, // for this is from regimen while tap on card or sheela icon
           isRetakeSurvey: isRetakeSurvey),
     )?.then((value) => {controller.showCurrLoggedRegimen(regimen)});
   }

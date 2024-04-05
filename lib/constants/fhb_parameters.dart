@@ -114,6 +114,7 @@ const String KIOSK_audio_url = 'audioUrl';
 const String KIOSK_appointment_avail = 'availability';
 const String KIOSK_AUTO_READ = 'autoRead';
 const String KIOSK_eid = 'eid';
+const String KIOSK_ISTAP_REGIMEN = 'fromRegimenByTap'; // for new flag sheela redirect tap from regimen
 const String KIOSK_chatId = 'chatId';
 const String KIOSK_appoint_id = 'appointmentId';
 const String KIOSK_say_text = 'text';
