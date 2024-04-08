@@ -14,11 +14,6 @@ import AVFoundation
 
 extension AppDelegate : AVSpeechSynthesizerDelegate {
     
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        TTS_Result!(1);
-    }
-    
-    
     func setupTTSMethodChannels(){
         // 2 a)
         // Speech to Text
@@ -27,34 +22,13 @@ extension AppDelegate : AVSpeechSynthesizerDelegate {
         sttChannel.setMethodCallHandler({
             [weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
             // Note: this method is invoked on the UI thread.
-            if call.method == self?.STT_METHOD  {
-                print(Constants.speechToText)
-                print(Constants.STT, result)
-                if let argu = call.arguments as? NSDictionary,let langCode = argu["langcode"] as? String {
-                    let locale = Language().checkIfTheLocaleIsSupported(locale: langCode)
-                    self?.speechRecognizer = SFSpeechRecognizer(locale: locale)!
-                }
-                self?.startLoadingVC()
-                self?.STT_Result = result;
-                do{
-                    try self?.startRecording();
-                }catch(let error){
-                    print("\(Constants.errorIs) \(error.localizedDescription)")
-                }
-            }else if call.method == self?.STT_MicavailablityMethod{
+            if call.method == self?.STT_MicavailablityMethod {
                 let audioSession = AVAudioSession.sharedInstance()
                 result(!audioSession.isOtherAudioPlaying)
-            }else if call.method == Constants.closeSheelaDialog{
-                Loading.sharedInstance.hideLoader()
-                self?.stopRecording()
-                if let viewControllers = self?.navigationController?.visibleViewController as? SheelaAIVC {
-                    viewControllers.dismiss(animated: true, completion: nil)
-                }
             }else{
                 result(FlutterMethodNotImplemented)
                 return
             }
-            
         })
         
         // 2  b)
@@ -78,142 +52,6 @@ extension AppDelegate : AVSpeechSynthesizerDelegate {
         })
     }
     
-    @objc func myTapActions(recognizer: UITapGestureRecognizer) {
-        STT_Result?("");
-        stopRecording()
-        if let controller = self.navigationController?.children.first as? FlutterViewController{
-            let notificationChannel = FlutterMethodChannel.init(name: Constants.TTS_CHANNEL, binaryMessenger: controller.binaryMessenger)
-            notificationChannel.invokeMethod(Constants.closeMicMethod,arguments: nil)
-        }
-        if let viewControllers = navigationController?.visibleViewController as? SheelaAIVC {
-            viewControllers.dismiss(animated: true, completion: nil)
-        }
-        if let viewControllers = navigationController?.visibleViewController as? LoaderVC {
-            viewControllers.dismiss(animated: false, completion: nil)
-        }
-    }
-    
-    // 2 a)
-    // Speech to Text
-    func startRecording() throws {
-        // Reset
-        audioEngine.reset()
-        recognitionTask?.cancel()
-        self.recognitionTask = nil
-        // Initialization
-        audioEngine = AVAudioEngine()
-        recognitionTask = SFSpeechRecognitionTask()
-        
-        let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setCategory(.record, mode: .measurement, options: .mixWithOthers)
-        try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
-        let inputNode = audioEngine.inputNode
-        inputNode.removeTap(onBus: 0)
-        let recordingFormat = inputNode.outputFormat(forBus: 0)
-        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
-            self.recognitionRequest?.append(buffer)
-        }
-        audioEngine.prepare()
-        try audioEngine.start()
-        recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
-        guard let recognitionRequest = recognitionRequest else { fatalError(Constants.unableToRecognition) }
-        recognitionRequest.shouldReportPartialResults = true
-        
-        if #available(iOS 13, *) {
-            if speechRecognizer.supportsOnDeviceRecognition {
-                recognitionRequest.requiresOnDeviceRecognition = true
-            }
-        }
-        print(recognitionRequest)
-        print(Constants.recogEntered)
-        Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { time in
-            if(self.message.count == 0){
-                if let controller = self.navigationController?.children.first as? FlutterViewController{
-                    let notificationChannel = FlutterMethodChannel.init(name: Constants.TTS_CHANNEL, binaryMessenger: controller.binaryMessenger)
-                    notificationChannel.invokeMethod(Constants.closeMicMethod,arguments: nil)
-                }
-                Loading.sharedInstance.hideLoader()
-                self.stopRecording()
-                self.detectionTimer?.invalidate()
-                self.STT_Result!("")
-            }else{
-                Loading.sharedInstance.showLoader()
-            }
-        }
-        
-        recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { result, error in
-            if let result = result {
-                var bestTranscription = result.bestTranscription.formattedString
-                self.message = self.prefixListFiltering(bestTranscription: bestTranscription)
-                self.detectionTimer?.invalidate()
-                if let viewControllers = self.navigationController?.visibleViewController as? LoaderVC {
-                    viewControllers.dismiss(animated: false, completion: nil)
-                    Loading.sharedInstance.showLoader()
-                }
-                print(result.bestTranscription.formattedString as Any)
-                print(result.isFinal)
-                if let timer = self.detectionTimer, timer.isValid, result.isFinal {
-                    // pull out the best transcription...
-                    print(result.bestTranscription.formattedString as Any)
-                    print(result.isFinal)
-                    timer.invalidate()
-                    self.stopRecording()
-                    if(self.message.count > 0){
-                        if let controller = self.navigationController?.children.first as? FlutterViewController{
-                            let notificationChannel = FlutterMethodChannel.init(name: Constants.TTS_CHANNEL, binaryMessenger: controller.binaryMessenger)
-                            notificationChannel.invokeMethod(Constants.closeMicMethod, arguments: nil)
-                        }
-                        self.startTheVC(currentmessage: self.message)
-                    }
-                    self.message = "";
-                }
-                else {
-                    self.detectionTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { (timer) in
-                        //                    isFinal = true
-                        Loading.sharedInstance.hideLoader()
-                        print(self.message)
-                        timer.invalidate()
-                        self.stopRecording()
-                        if(self.message.count > 0){
-                            if let controller = self.navigationController?.children.first as? FlutterViewController{
-                                let notificationChannel = FlutterMethodChannel.init(name: Constants.TTS_CHANNEL, binaryMessenger: controller.binaryMessenger)
-                                notificationChannel.invokeMethod(Constants.closeMicMethod,arguments: nil)
-                            }
-                            self.startTheVC(currentmessage: self.message)
-                        }
-                        self.message = "";
-                        
-                    })
-                }
-            }
-            
-            if (error != nil){
-                print(error?.localizedDescription as Any);
-            }
-        }
-    }
-    
-    func startTheVC(currentmessage:String){
-        let storyboard = UIStoryboard(name: "SheelaAI", bundle: nil)
-        if let container = storyboard.instantiateViewController(withIdentifier: "SheelaAIVC") as? SheelaAIVC {
-            container.message = currentmessage
-            container.callback = { message in
-                self.STT_Result!(message)
-            }
-            container.modalPresentationStyle = .overFullScreen
-            navigationController?.present(container, animated: false)
-        }
-    }
-    func startLoadingVC(){
-        let storyboard = UIStoryboard(name: "SheelaAI", bundle: nil)
-        if let container = storyboard.instantiateViewController(withIdentifier: "LoaderVC") as? LoaderVC {
-            container.modalPresentationStyle = .overFullScreen
-            let mytapGestureRecog = UITapGestureRecognizer(target: self, action: #selector(myTapActions))
-            mytapGestureRecog.numberOfTapsRequired = 1
-            container.view.addGestureRecognizer(mytapGestureRecog)
-            navigationController?.present(container, animated: false)
-        }
-    }
     // 2  b)
     // Text to Speech
     func textToSpeech(messageToSpeak: String, isClose:Bool){
@@ -233,67 +71,6 @@ extension AppDelegate : AVSpeechSynthesizerDelegate {
             speechSynthesizer.stopSpeaking(at: AVSpeechBoundary.immediate)
         }else{
             speechSynthesizer.speak(speechUtterance)
-        }
-    }
-    
-    // 3
-    // Stop Recording
-    func stopRecording(){
-        self.audioEngine.inputNode.removeTap(onBus: 0)
-        self.audioEngine.stop()
-        self.recognitionRequest?.endAudio()
-        self.recognitionRequest = nil
-        self.recognitionTask = nil
-        do{
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playAndRecord, mode: .default, options: .defaultToSpeaker)
-            try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
-            
-        }catch(let error){
-            print("\(Constants.errorIs) \(error.localizedDescription)")
-        }
-    }
-}
-extension AppDelegate {
-    var sheelaTTSWordList: [String] {
-        return [
-            "sheela",
-            "sheila",
-            "sila",
-            "shila",
-            "shiela"
-        ]
-    }
-    
-    var replacementWordSheelaTTS: String {
-        return "Sheela"
-    }
-    
-    func prefixListFiltering(bestTranscription: String) -> String {
-        let words = convertToFormattedMinutes(bestTranscription.lowercased()).split(separator: " ").map(String.init)
-        
-        let modifiedWords = words.enumerated().map { (index, word) in
-            return sheelaTTSWordList.contains(word) ? replacementWordSheelaTTS : (index == 0 ? word.capitalized : word)
-        }
-        return modifiedWords.joined(separator: " ")
-    }
-    
-    
-    ///   Converts a string representation of minutes in words to a formatted string with numeric value and the word "minutes."
-    /// - Parameter input: A string representing minutes in words (e.g., "one minutes", "five mins", "three minutes").
-    /// - Returns: A formatted string with the numeric value followed by the word "minutes," or the original input string if the conversion is not possible.
-    /// - Example:
-    /// ```swift
-    ///       let result = convertToFormattedMinutes("two minutes")
-    /// ```
-    /// Result: "2 minutes"
-    func convertToFormattedMinutes(_ input: String) -> String {
-        let numberWords: [String: Int] = ["one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9]
-        let words = input.components(separatedBy: " ")
-        
-        if words.count == 2, let number = numberWords[words.first ?? ""], ["minute", "minutes", "mins", "min"].contains(words[1]) {
-            return "\(number) \(words[1])"
-        } else {
-            return input
         }
     }
 }
