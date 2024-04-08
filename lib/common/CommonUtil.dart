@@ -7694,6 +7694,34 @@ class CommonUtil {
     // Retrieve the instance of VitalListController
     return Get.find<VitalListController>();
   }
+
+  Future<bool?> checkDevicePaired() async {
+    bool isDevicePaired = false;
+    var _hubController = onInitHubListViewController();
+    try {
+      await _hubController.getHubList();
+      if ((_hubController.hubListResponse?.result ?? []).length > 0) {
+        isDevicePaired = true;
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+    return isDevicePaired;
+  }
+
+  Future<bool?> checkRestrictManualRecord() async {
+    bool isRestrictManualRecord = false;
+    try {
+      await onInitVitalListController().getDeviceSelection();
+      if (PreferenceUtil.getBool(
+          KEY_IS_Vitals_ManualRecording_Restricted)) {
+        isRestrictManualRecord = true;
+      }
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+    return isRestrictManualRecord;
+  }
 }
 
 extension CapExtension on String {

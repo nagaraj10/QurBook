@@ -19,9 +19,11 @@ import '../../../constants/fhb_parameters.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
 import '../../../constants/router_variable.dart' as router;
 import '../../../constants/variable_constant.dart' as variable;
+import '../../../constants/variable_constant.dart';
 import '../../../device_integration/model/LastMeasureSync.dart';
 import '../../../device_integration/view/screens/Device_Data.dart';
 import '../../../devices/device_dashboard_arguments.dart';
+import '../../../main.dart';
 import '../../../src/model/GetDeviceSelectionModel.dart';
 import '../../../src/model/user/MyProfileModel.dart';
 import '../../../src/resources/repository/health/HealthReportListForUserRepository.dart';
@@ -118,6 +120,8 @@ class _VitalsListState extends State<VitalsList> {
 
   var qurhomeDashboardController =
       CommonUtil().onInitQurhomeDashboardController();
+
+  var _hubController = CommonUtil().onInitHubListViewController();
 
   @override
   void initState() {
@@ -2586,26 +2590,34 @@ class _VitalsListState extends State<VitalsList> {
                   ],
                 ),
               ),
-              /*Align(
-                alignment: Alignment.bottomRight,
-                child: MaterialButton(
-                  height: 35.0.h,
-                  minWidth: 55.0.w,
-                  onPressed: () {
-                    toast.getToast('More devices coming soon!', Colors.red);
-                  },
-                  color: mAppThemeProvider.primaryColor,
-                  textColor: Colors.white,
-                  padding: EdgeInsets.all(
-                    2.0.sp,
-                  ),
-                  shape: CircleBorder(),
-                  child: Icon(
-                    Icons.add,
-                    size: 16.0.sp,
+              SizedBoxWidget(
+                height: 15.0.h,
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: SizedBox(
+                  width: CommonUtil().isTablet! ? 260.w : 200.w,
+                  height: 38.0.h,
+                  child: ElevatedButton(
+                    child: Text(strRecordValueBtn,
+                        style: TextStyle(
+                            fontSize: CommonUtil().isTablet! ? 15.sp : 14.sp)),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        mAppThemeProvider.qurhomeGradientColor,
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      validateDevicePairManualRestrict();
+                    },
                   ),
                 ),
-              ),*/
+              )
             ],
           ),
         ],
@@ -2622,6 +2634,35 @@ class _VitalsListState extends State<VitalsList> {
 
     return deviceCards;
   }*/
+
+  validateDevicePairManualRestrict() async {
+    final _sheelaBLEController = CommonUtil().onInitSheelaBLEController();
+    bool? isDevicePaired = await CommonUtil().checkDevicePaired();
+    bool? isRestrictManual = await CommonUtil().checkRestrictManualRecord();
+
+    if ((isDevicePaired ?? false) && !(isRestrictManual ?? false)) {
+      CommonUtil().dialogForScanDevices(
+        Get.context!,
+        onPressManual: () {
+          Get.back();
+          _sheelaBLEController.stopTTS();
+          _sheelaBLEController.stopScanning();
+          //redirectToSheelaScreen(regimen);
+        },
+        onPressCancel: () async {
+          Get.back();
+          _sheelaBLEController.stopTTS();
+          _sheelaBLEController.stopScanning();
+        },
+        title: strDeviceScan,
+        // Determine the value for 'isVitalsManualRecordingRestricted' based on region
+        isVitalsManualRecordingRestricted: CommonUtil.isUSRegion()
+            ? PreferenceUtil.getBool(KEY_IS_Vitals_ManualRecording_Restricted)
+            : false,
+      );
+      _sheelaBLEController.setupListenerForReadings();
+    }
+  }
 
   Color hexToColor(String hexString, {String alphaChannel = 'FF'}) {
     return Color(int.parse(hexString.replaceFirst('#', '0x$alphaChannel')));
