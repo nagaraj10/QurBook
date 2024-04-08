@@ -2594,25 +2594,38 @@ class _VitalsListState extends State<VitalsList> {
                 height: 15.0.h,
               ),
               Align(
+                // Center align the button
                 alignment: Alignment.center,
                 child: SizedBox(
+                  // Set the width based on whether the device is a tablet or not
                   width: CommonUtil().isTablet! ? 260.w : 200.w,
+                  // Set a fixed height for the button
                   height: 38.0.h,
                   child: ElevatedButton(
-                    child: Text(strRecordValueBtn,
-                        style: TextStyle(
-                            fontSize: CommonUtil().isTablet! ? 15.sp : 14.sp)),
+                    // Button text
+                    child: Text(
+                      strRecordValueBtn,
+                      style: TextStyle(
+                        // Set font size based on whether the device is a tablet or not
+                        fontSize: CommonUtil().isTablet! ? 15.sp : 14.sp,
+                      ),
+                    ),
+                    // Button style
                     style: ButtonStyle(
+                      // Set background color using QurHome gradient color
                       backgroundColor: MaterialStateProperty.all<Color>(
                         mAppThemeProvider.qurhomeGradientColor,
                       ),
+                      // Set button shape with rounded corners
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
                     ),
+                    // Action to take on button press
                     onPressed: () {
+                      // Call function to validate device pair and manual restrict
                       validateDevicePairManualRestrict();
                     },
                   ),
@@ -2635,20 +2648,30 @@ class _VitalsListState extends State<VitalsList> {
     return deviceCards;
   }*/
 
+  // This function is responsible for validating device pairing manually restricted record.
   validateDevicePairManualRestrict() async {
+    // Initialize Sheela BLE controller
     final _sheelaBLEController = CommonUtil().onInitSheelaBLEController();
+
+    // Check if the device is paired
     bool? isDevicePaired = await CommonUtil().checkDevicePaired();
+
+    // Check if manual recording is restricted
     bool? isRestrictManual = await CommonUtil().checkRestrictManualRecord();
 
+    // If device is paired and manual recording is not restricted
     if ((isDevicePaired ?? false) && !(isRestrictManual ?? false)) {
+      // Show dialog for scanning devices
       CommonUtil().dialogForScanDevices(
         Get.context!,
+        // Action to take on manual button press
         onPressManual: () {
           Get.back();
           _sheelaBLEController.stopTTS();
           _sheelaBLEController.stopScanning();
           //redirectToSheelaScreen(regimen);
         },
+        // Action to take on cancel button press
         onPressCancel: () async {
           Get.back();
           _sheelaBLEController.stopTTS();
@@ -2660,9 +2683,11 @@ class _VitalsListState extends State<VitalsList> {
             ? PreferenceUtil.getBool(KEY_IS_Vitals_ManualRecording_Restricted)
             : false,
       );
+      // Setup listener for readings
       _sheelaBLEController.setupListenerForReadings();
     }
   }
+
 
   Color hexToColor(String hexString, {String alphaChannel = 'FF'}) {
     return Color(int.parse(hexString.replaceFirst('#', '0x$alphaChannel')));
