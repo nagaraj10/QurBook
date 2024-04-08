@@ -885,11 +885,6 @@ class SheelaAIController extends GetxController {
     // Invoking a method from the CommonUtil class to close Sheela's dialog
     CommonUtil().closeSheelaDialog();
 
-    /*if (Platform.isIOS) {
-      voice_platform.invokeMethod(strCloseSheelaDialog);
-    } else {
-      CommonUtil().closeSheelaDialog();
-    }*/
     if (currentPlayingConversation != null) {
       currentPlayingConversation!.isPlaying.value = false;
       currentPlayingConversation!.currentButtonPlayingIndex = null;
