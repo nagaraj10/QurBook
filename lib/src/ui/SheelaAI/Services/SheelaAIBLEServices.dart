@@ -68,27 +68,15 @@ class SheelaBLEController extends GetxController {
           if ((playConversations).isNotEmpty) {
             await playTTS();
           } else if (isCompleted) {
-            // Check if isDeviceConnectSheelaScreen's value is true and isLastActivityDevice is false or null.
-            if ((SheelaController.isDeviceConnectSheelaScreen.value) && (!(SheelaController.isLastActivityDevice ?? true))) {
-              // If isDeviceConnectSheelaScreen is true and isLastActivityDevice is false or null:
 
-              // Delay execution of the subsequent code block by 2 seconds.
-              Future.delayed(const Duration(seconds: 2)).then((value) {
-                // After 2 seconds, call getAIAPIResponseFor with sheelaQueueShowRemind as the parameter.
-                SheelaController.getAIAPIResponseFor(sheelaQueueShowRemind, null);
-              });
-            } else {
-              // If isDeviceConnectSheelaScreen is false or isLastActivityDevice is true:
+            // Delay execution of the subsequent code block by 4 seconds.
+            await Future.delayed(const Duration(seconds: 4));
 
-              // Delay execution of the subsequent code block by 4 seconds.
-              await Future.delayed(const Duration(seconds: 4));
+            // Stop Text-to-Speech functionality.
+            stopTTS();
 
-              // Stop Text-to-Speech functionality.
-              stopTTS();
-
-              // Check if Sheela screen is active and if true, navigate back.
-              if (SheelaController.isSheelaScreenActive) Get.back();
-            }
+            // Check if Sheela screen is active and if true, navigate back.
+            if (SheelaController.isSheelaScreenActive) Get.back();
 
           }
         }
@@ -338,9 +326,9 @@ class SheelaBLEController extends GetxController {
                   (hublistController.bleDeviceType ?? '').isNotEmpty &&
                   (hublistController.manufacturer ?? '').isNotEmpty) {
                 receivedData = true;
-                updateUserData(
-                  data: receivedValues.last,
-                );
+                 updateUserData(
+                   data: receivedValues.last,
+                 );
               }
 
               break;
@@ -662,113 +650,157 @@ class SheelaBLEController extends GetxController {
         model.ackLocal = actualDateTime;
         hublistController.eid = null;
         hublistController.uid = null;
-        final response =
-            await BleConnectApiProvider().uploadBleDataReadings(
-          model,
-        );
-        final bleDataModel = BleDataModel.fromJson(response['result']);
-        if (!response['isSuccess']) {
-          receivedData = false;
-          showFailure();
-        } else if (bleDataModel.deviceType == "SPO2") {
-          if ((bleDataModel.data!.sPO2 ?? '').isNotEmpty &&
-              (bleDataModel.data!.pulse ?? '').isNotEmpty) {
-            String? strTextMsg = await SheelaController.getTextTranslate(
-                "Completed reading values. Please take your finger from the device");
-            addToConversationAndPlay(
-              SheelaResponse(
-                recipientId: conversationType,
-                text: strTextMsg,
-              ),
-            );
-           // Added the success message for spo2 with current time and values
-            final currentTime = DateFormat('hh:mm a').format(DateTime.now());
-            final spo2SuccessMsg = 'Your oxygen level ${bleDataModel.data!.sPO2} and '
-                'heart rate ${bleDataModel.data!.pulse} has been recorded at '
-                '$currentTime.${getFinalResultMsg(bleDataModel)}';
-            final strTextMsgTwo = await SheelaController.getTextTranslate(spo2SuccessMsg);
+        // Check if Sheela screen is active and device is connected to Sheela screen
+        if (SheelaController.isSheelaScreenActive &&
+            (SheelaController.isDeviceConnectSheelaScreen.value) &&
+            (SheelaController.deviceResponseEid != '')) {
+          // change weight unit to kilograms and punds if unit is in kg and lb based on env
+          final weightUnitResult = weightUnit == STR_VAL_WEIGHT_IND? 'kilograms':
+          weightUnit == STR_VAL_WEIGHT_US? 'pounds':'';
+          model.data?.unit = weightUnitResult??'';
+          // Check if device type is SPO2
+          if (model.deviceType == "SPO2") {
+            // Check if SPO2 and pulse data are not empty
+            if ((model.data!.sPO2 ?? '').isNotEmpty &&
+                (model.data!.pulse ?? '').isNotEmpty) {
+              // Get translated text message
+              String? strTextMsg = await SheelaController.getTextTranslate(
+                  "Completed reading values. Please take your finger from the device");
 
-            playConversations.add(
-              SheelaResponse(
-                recipientId: conversationType,
-                text: strTextMsgTwo,
-              ),
-            );
-            await Future.delayed(const Duration(seconds: 2));
+              // Add translated text message to conversation and play
+              addToConversationAndPlay(
+                SheelaResponse(
+                  recipientId: conversationType,
+                  text: strTextMsg,
+                ),
+              );
+
+              // Delay execution of the subsequent code block by 4 seconds.
+              Future.delayed(const Duration(seconds: 4)).then((value) {
+                // After 4 seconds, call getAIAPIResponseFor to process dynamic response
+                SheelaController.getAIAPIResponseFor(STR_YES, null,
+                    deviceReadingsRuleSheela: model.data ?? Data());
+              });
+            }
           } else {
-            receivedData = false;
-            showFailure();
+            // Delay execution of the subsequent code block by 1 second.
+            Future.delayed(const Duration(seconds: 1)).then((value) {
+              // After 1 second, call getAIAPIResponseFor to process dynamic response
+              SheelaController.getAIAPIResponseFor(STR_YES, null,
+                  deviceReadingsRuleSheela: model.data ?? Data());
+            });
           }
-        } else if (bleDataModel.deviceType?.toLowerCase() == "bgl") {
-          if ((bleDataModel.data?.bgl ?? '').isNotEmpty) {
-            //Added the success message for bgl with current time and values
-            final currentTime = DateFormat('hh:mm a').format(DateTime.now());
-            final bglSuccessMsg = 'Your blood glucose when taken randomly is '
-                '${bleDataModel.data!.bgl} has been recorded at $currentTime.${getFinalResultMsg(bleDataModel)}';
-
-            final strTextMsg = await SheelaController.getTextTranslate(bglSuccessMsg);
-
-            addToConversationAndPlay(
-              SheelaResponse(
-                recipientId: conversationType,
-                text: strTextMsg,
-              ),
-            );
-            await Future.delayed(const Duration(seconds: 2));
-          } else {
+        } else {
+          final response = await BleConnectApiProvider().uploadBleDataReadings(
+            model,
+          );
+          final bleDataModel = BleDataModel.fromJson(response['result']);
+          if (!response['isSuccess']) {
             receivedData = false;
             showFailure();
-          }
-        } else if (bleDataModel.deviceType == "BP") {
-          if ((bleDataModel.data!.systolic ?? '').isNotEmpty &&
-              (bleDataModel.data!.diastolic ?? '').isNotEmpty &&
-              (bleDataModel.data!.pulse ?? '').isNotEmpty) {
+          } else if (bleDataModel.deviceType == "SPO2") {
+            if ((bleDataModel.data!.sPO2 ?? '').isNotEmpty &&
+                (bleDataModel.data!.pulse ?? '').isNotEmpty) {
+              String? strTextMsg = await SheelaController.getTextTranslate(
+                  "Completed reading values. Please take your finger from the device");
+              addToConversationAndPlay(
+                SheelaResponse(
+                  recipientId: conversationType,
+                  text: strTextMsg,
+                ),
+              );
+              // Added the success message for spo2 with current time and values
+              final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+              final spo2SuccessMsg =
+                  'Your oxygen level ${bleDataModel.data!.sPO2} and '
+                  'heart rate ${bleDataModel.data!.pulse} has been recorded at '
+                  '$currentTime.${getFinalResultMsg(bleDataModel)}';
+              final strTextMsgTwo =
+                  await SheelaController.getTextTranslate(spo2SuccessMsg);
 
-            //Added the success message for BP with current time and values
+              playConversations.add(
+                SheelaResponse(
+                  recipientId: conversationType,
+                  text: strTextMsgTwo,
+                ),
+              );
+              await Future.delayed(const Duration(seconds: 2));
+            } else {
+              receivedData = false;
+              showFailure();
+            }
+          } else if (bleDataModel.deviceType?.toLowerCase() == "bgl") {
+            if ((bleDataModel.data?.bgl ?? '').isNotEmpty) {
+              //Added the success message for bgl with current time and values
+              final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+              final bglSuccessMsg = 'Your blood glucose when taken randomly is '
+                  '${bleDataModel.data!.bgl} has been recorded at $currentTime.${getFinalResultMsg(bleDataModel)}';
 
-            final currentTime = DateFormat('hh:mm a').format(DateTime.now());
-            final bpSuccessMsg = 'Your blood pressure ${bleDataModel.data!.systolic} '
-                'over ${bleDataModel.data!.diastolic} and heart rate '
-                '${bleDataModel.data!.pulse} has been recorded at $currentTime.${getFinalResultMsg(bleDataModel)}';
+              final strTextMsg =
+                  await SheelaController.getTextTranslate(bglSuccessMsg);
 
-            final strTextMsg = await SheelaController.getTextTranslate(bpSuccessMsg);
+              addToConversationAndPlay(
+                SheelaResponse(
+                  recipientId: conversationType,
+                  text: strTextMsg,
+                ),
+              );
+              await Future.delayed(const Duration(seconds: 2));
+            } else {
+              receivedData = false;
+              showFailure();
+            }
+          } else if (bleDataModel.deviceType == "BP") {
+            if ((bleDataModel.data!.systolic ?? '').isNotEmpty &&
+                (bleDataModel.data!.diastolic ?? '').isNotEmpty &&
+                (bleDataModel.data!.pulse ?? '').isNotEmpty) {
+              //Added the success message for BP with current time and values
 
-            addToConversationAndPlay(
-              SheelaResponse(
-                recipientId: conversationType,
-                text: strTextMsg,
-              ),
-            );
-            await Future.delayed(const Duration(seconds: 2));
-          } else {
-            receivedData = false;
-            showFailure();
-          }
-        } else if (bleDataModel.deviceType?.toLowerCase() == "weight") {
-          if ((bleDataModel.data!.weight ?? '').isNotEmpty) {
+              final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+              final bpSuccessMsg =
+                  'Your blood pressure ${bleDataModel.data!.systolic} '
+                  'over ${bleDataModel.data!.diastolic} and heart rate '
+                  '${bleDataModel.data!.pulse} has been recorded at $currentTime.${getFinalResultMsg(bleDataModel)}';
 
-            // If the weightUnit value is kg means set unit as kilograms
-            // If the weightUnit value is lb means set unit as pounds
-            final weightUnitResult = weightUnit == STR_VAL_WEIGHT_IND? 'kilograms':
-            weightUnit == STR_VAL_WEIGHT_US? 'pounds':'';
+              final strTextMsg =
+                  await SheelaController.getTextTranslate(bpSuccessMsg);
 
-            //Added the success message for weight with current time and values
-            final currentTime = DateFormat('hh:mm a').format(DateTime.now());
-            final weightSuccessMsg = 'Your weight has been recorded as '
-                '${bleDataModel.data!.weight} $weightUnitResult at $currentTime.${getFinalResultMsg(bleDataModel)}';
+              addToConversationAndPlay(
+                SheelaResponse(
+                  recipientId: conversationType,
+                  text: strTextMsg,
+                ),
+              );
+              await Future.delayed(const Duration(seconds: 2));
+            } else {
+              receivedData = false;
+              showFailure();
+            }
+          } else if (bleDataModel.deviceType?.toLowerCase() == "weight") {
+            if ((bleDataModel.data!.weight ?? '').isNotEmpty) {
+              // If the weightUnit value is kg means set unit as kilograms
+              // If the weightUnit value is lb means set unit as pounds
+              final weightUnitResult = weightUnit == STR_VAL_WEIGHT_IND? 'kilograms':
+              weightUnit == STR_VAL_WEIGHT_US? 'pounds':'';
 
-            final strTextMsg = await SheelaController.getTextTranslate(weightSuccessMsg);
+              //Added the success message for weight with current time and values
+              final currentTime = DateFormat('hh:mm a').format(DateTime.now());
+              final weightSuccessMsg = 'Your weight has been recorded as '
+                  '${bleDataModel.data!.weight} $weightUnitResult at $currentTime.${getFinalResultMsg(bleDataModel)}';
 
-            addToConversationAndPlay(
-              SheelaResponse(
-                recipientId: conversationType,
-                text: strTextMsg,
-              ),
-            );
-            await Future.delayed(const Duration(seconds: 2));
-          } else {
-            receivedData = false;
-            showFailure();
+              final strTextMsg = await SheelaController.getTextTranslate(weightSuccessMsg);
+
+              addToConversationAndPlay(
+                SheelaResponse(
+                  recipientId: conversationType,
+                  text: strTextMsg,
+                ),
+              );
+              await Future.delayed(const Duration(seconds: 2));
+            } else {
+              receivedData = false;
+              showFailure();
+            }
           }
         }
         isCompleted = true;
