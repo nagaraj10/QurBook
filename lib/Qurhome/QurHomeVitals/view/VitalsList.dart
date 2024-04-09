@@ -2662,17 +2662,19 @@ class _VitalsListState extends State<VitalsList> {
       callScanDialogOverlayScreen();
     } else if (!(isDevicePaired ?? false) && !(isRestrictManual ?? false)) {
       await Get.toNamed(
-        rt_Sheela,
-        arguments: SheelaArgument(forceManualRecord: true),
-      );
+          rt_Sheela,
+          arguments: SheelaArgument(forceManualRecord: true,
+          rawMessage: strRecordVitalMsg),
+    );
     } else if ((isDevicePaired ?? false) && (isRestrictManual ?? false)) {
       callScanDialogOverlayScreen();
     } else if (!(isDevicePaired ?? false) && (isRestrictManual ?? false)) {
       await Get.toNamed(
         rt_Sheela,
         arguments: SheelaArgument(
-          isSheelaAskForLang: false,
-          rawMessage: strSheelaBothDisableMsg,
+          textSpeechSheela: strSheelaBothDisableMsg,
+          isNeedPreferredLangauge: true,
+          hideMicButton: true
         ),
       );
     }

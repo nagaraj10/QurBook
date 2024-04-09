@@ -34,6 +34,8 @@ class SheelaArgument {
 
   bool forceManualRecord = false;
 
+  bool hideMicButton = false;
+
   SheelaArgument({
     this.isSheelaAskForLang,
     this.langCode,
@@ -66,5 +68,6 @@ class SheelaArgument {
     this.isNeedPreferredLangauge = false,
     this.fromRegimenByTap = false,
     this.forceManualRecord = false,
+    this.hideMicButton = false,
   });
 }

@@ -491,7 +491,7 @@ class SheelaAIController extends GetxController {
 
       if (arguments?.forceManualRecord ?? false) {
         additionalInfo?[strforceManualRecord] = true;
-        message = strRecordVitalMsg;
+        //message = strRecordVitalMsg;
       } else {
         additionalInfo?[strforceManualRecord] = false;
       }
