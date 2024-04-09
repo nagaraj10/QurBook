@@ -140,7 +140,7 @@ class QurhomeDashboardController extends GetxController {
 
 //Function to check qur home is ideal for 5 minutes
   Future<void> checkScreenIdle() async {
-    _idleTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
+    _idleTimer = Timer.periodic(const Duration(minutes: 5), (timer) {
       try {
         if (!isScreenNotIdle.value) {
           isScreenNotIdle.value = true;
