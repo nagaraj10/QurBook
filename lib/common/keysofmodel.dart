@@ -50,7 +50,6 @@ const String c_yMd = 'yyyy-MM-dd';
 const String c_dMy = 'dd-MM-yyyy';
 const String c_yMd_Hms = 'yyyy-MM-dd HH:mm:ss';
 const String c_tts_platform = 'flutter.native/textToSpeech';
-const String c_vi_platform = 'flutter.native/voiceIntent';
 const String c_av_path = 'goFHB/Audio';
 const String c_my_secret = 'secrets.json';
 const String c_phno = 'phoneNumber';

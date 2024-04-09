@@ -8,17 +8,10 @@ struct Constants {
     static let STT_CHANNEL = "flutter.native/voiceIntent"
     static let TTS_CHANNEL = "flutter.native/textToSpeech"
     
-    static let STT_METHOD = "speakWithVoiceAssistant"
     static let TTS_METHOD = "textToSpeech"
     
     static let enUS = "en-US"
-    static let Listening = "Listening..."
-    
-    static let speechToText = "Speech to Text channel entered";
     static let textToSpeech = "Text to Speech channel entered";
-    static let unableToRecognition = "Unable to create a SFSpeechAudioBufferRecognitionRequest object";
-    static let recogEntered = "recognitionRequest Entered";
-    static let STT = "STT : ";
     static let TSS = "TTS : ";
     static let errorIs = "error is";
     static let reponseToRemoteNotificationMethodChannel =
@@ -59,7 +52,6 @@ struct Constants {
         static let isClose = "isClose"
     }
     
-    static let closeMicMethod = "CloseMic";
     static let poServiceCBUUID = CBUUID(string: "49535343-fe7d-4ae5-8fa9-9fafd205e455")
     static let poMeasurementCharacteristicCBUUID = CBUUID(string: "49535343-1e4d-4bd9-ba61-23c647249616")
     static let BIT_PULSE:UInt8 = 0x40 //1 = pulse beep
@@ -84,7 +76,6 @@ struct Constants {
     static let WOWGOWT3 = "0202B-0001";
     static let scanForAllDevices = "scanAll"
     static let scanForSingleDevices = "scanSingle"
-    static let closeSheelaDialog = "closeSheelaDialog"
     static let deviceInformationServiceUUID = CBUUID(string: "180a")
     static let deviceSerialNumberServiceUUID = CBUUID(string: "2A25")
     static let TransteckBGLDeviceType = LSDeviceType.bloodGlucoseMeter.rawValue

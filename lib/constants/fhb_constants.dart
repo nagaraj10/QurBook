@@ -1235,6 +1235,9 @@ const String strProviderBasedPatientsHaveViewOnlyAccess =
 // Default language set to English (India)
 const String strDefaultLanguage = 'en-IN';
 
+// new button widget text Record Value
+const String strRecordValueBtn = 'Record Value';
+
 class DoctorFilterConstants {
   static List<String> yearOfExperienceList = [
     "0 to 5 years",
