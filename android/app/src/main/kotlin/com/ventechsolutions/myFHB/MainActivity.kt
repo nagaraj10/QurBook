@@ -2105,10 +2105,10 @@ class MainActivity : FlutterFragmentActivity(),
 //                    }
                     selectedBle = ""
                     //Initialize Scan for all BLE devices
-                    scanAllBleDevices()
+                   // scanAllBleDevices()
 
                     // resolved reconneting issues
-                    startScanWowGoDevices()
+                   // startScanWowGoDevices()
                 }
             }
         )
