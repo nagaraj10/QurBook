@@ -83,6 +83,7 @@ class QurHomeApiProvider {
     }
   }
 
+  // Method to get dynamic content from API
   Future<dynamic> getDynamicContent() async {
     http.Response responseJson;
     try {

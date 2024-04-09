@@ -137,6 +137,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         CommonUtil().requestQurhomeDialog();
       }
       getProfileApi();
+      //Api call for get the dynamic content for
+      //Qur home ideal for more than 5 minutes
       await controller.getDynamicContent();
       if (CommonUtil().isTablet!) {
         CommonUtil().initQurHomePortraitLandScapeMode();

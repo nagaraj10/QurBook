@@ -140,7 +140,7 @@ class QurhomeDashboardController extends GetxController {
 
 //Function to check qur home is ideal for 5 minutes
   Future<void> checkScreenIdle() async {
-    _idleTimer = Timer.periodic(const Duration(minutes: 5), (timer) {
+    _idleTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
       try {
         if (!isScreenNotIdle.value) {
           isScreenNotIdle.value = true;
@@ -278,17 +278,25 @@ class QurhomeDashboardController extends GetxController {
     }
   }
 
+// Method to get dynamic content from API
   Future<List<dynamic>> getDynamicContent() async {
+    // Make API call to get dynamic content
     try {
       final response = await _apiProvider.getDynamicContent();
-       if(response['isSuccess'] && response['result'] != null) {
-         idealDialogDynamicContent = response['result'];
-       } else {
-         idealDialogDynamicContent = [];
-       }
-       return idealDialogDynamicContent;
+      // Check if API call succeeded and result is not null
+      if(response['isSuccess'] && response['result'] != null) {
+        // Save dynamic content to variable
+        idealDialogDynamicContent = response['result'];
+      } else {
+        // Set to empty list if API call failed
+        idealDialogDynamicContent = [];
+      }
+      // Return dynamic content
+      return idealDialogDynamicContent;
     } catch(e){
+      // Log any errors
       debugPrint(e.toString());
+      // Return empty list on exception
       return [];
     }
   }

@@ -1199,13 +1199,17 @@ class SheelaAIController extends GetxController {
   }
   
 // Function to get a random string from the list
-  String getRandomString() {
+  String getRandomQurhomeIdealDialogNotes() {
     final qurHomeController = CommonUtil().onInitQurhomeDashboardController();
-    sheelaIdealDialog.Random random = sheelaIdealDialog.Random();
+    final random = sheelaIdealDialog.Random();
     // Generate a random index within the range of the list
+    if(qurHomeController.idealDialogDynamicContent.isNotEmpty){
     final index = random.nextInt(qurHomeController.idealDialogDynamicContent.length);
     // Return the string at the random index
     return qurHomeController.idealDialogDynamicContent[index];
+    } else{
+      return '';
+    }
   }
 
 /*
@@ -1297,11 +1301,11 @@ makeApiRequest is used to update the data with latest data
         // Update sheelaIconBadgeCount with the queue count from the result
         sheelaIconBadgeCount.value = _sheelaBadgeModel?.result?.queueCount ?? 0;
         if (isNeedSheelaDialog &&
-            !qurhomeDashboardController.isShowScreenIdleDialog.value&& !isSheelaScreenActive) {
+            !qurhomeDashboardController.isShowScreenIdleDialog.value) {
           await playAudioPlayer().then((value) {
             qurhomeDashboardController.isShowScreenIdleDialog.value = true;
             showDialogForSheelaBox(
-                sheelaIdealDialogNote: getRandomString(),
+                sheelaIdealDialogNote: getRandomQurhomeIdealDialogNotes(),
                 isFromQurHomeRegimen: isFromQurHomeRegimen,
                 isScreenIdealDialog: true);
           });

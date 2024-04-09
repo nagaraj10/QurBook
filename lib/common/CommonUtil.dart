@@ -5765,7 +5765,7 @@ class CommonUtil {
                           Padding(
                             padding:  EdgeInsets.only(left: 50.sp, right: 50.sp,bottom: 20.sp),
                             child: Text(
-                              'Touch anywhere on the grey area to dismiss this information.',
+                              strQurhomeIdealDialogTitle,
                               style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
@@ -5798,7 +5798,7 @@ class CommonUtil {
                             ),
                           ),
                           Visibility(
-                            visible: (unReadMsgCount ?? 0) > 0,
+                            visible: (unReadMsgCount ?? 0) > 0 && !isScreenIdealDialog,
                             child: Column(
                               children: [
                                 Container(
@@ -5851,7 +5851,7 @@ class CommonUtil {
                             visible: isScreenIdealDialog &&
                                 sheelaAIController.sheelaIconBadgeCount.value==0,
                             child: Padding(
-                              padding: const EdgeInsets.only(top:50),
+                              padding: const EdgeInsets.only(top:30),
                               child: Text(
                                 'Quick Tips:',
                                 style: TextStyle(
@@ -5872,7 +5872,7 @@ class CommonUtil {
                                     child: Text(
                                       isScreenIdealDialog?
                                       sheelaAIController.sheelaIconBadgeCount.value>0?
-                                          "Touch the Sheela icon above to access the reminders":
+                                      strQurhomeIdealDialogDescription:
                                       sheelaIdealDialogNote??"":strSheelaDialogNote,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
