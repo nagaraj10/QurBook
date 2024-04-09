@@ -819,6 +819,10 @@ const String strConnectWeighingScale =
 const String strConnectBGL =
     'Please connect your Blood Glucose test strips to the meter and start taking the readings';
 
+// normal scan for all paired devices message
+const String strDeviceScan =
+    'Please turn on your device and start taking the readings';
+
 //sheel live remiders
 const String strSheelaLiveReminders = 'Sheela live reminders';
 
