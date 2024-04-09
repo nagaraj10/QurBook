@@ -5719,7 +5719,8 @@ class CommonUtil {
       {int? unReadMsgCount,
       Function(bool)? onTapSheelaRemainders,
       Function(bool)? onTapHideSheelaDialog,
-
+        String? sheelaIdealDialogNote,
+        bool isScreenIdealDialog = false,
       /// Checks if the user came from the Qurhome regimen flow and returns
       /// the fromQurhomeRegimen value if it exists.
       bool? fromQurhomeRegimen}) async {
@@ -5760,9 +5761,21 @@ class CommonUtil {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            strRemainders,
-                            style: TextStyle(
+                          isScreenIdealDialog  ?
+                          Padding(
+                            padding:  EdgeInsets.only(left: 50.sp, right: 50.sp,bottom: 20.sp),
+                            child: Text(
+                              'Touch anywhere on the grey area to dismiss this information.',
+                              style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                            : Text(
+                             strRemainders,
+                             style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white),
@@ -5833,7 +5846,21 @@ class CommonUtil {
                               ],
                             ),
                           ),
-
+                           //Quick Tips:
+                          Visibility(
+                            visible: isScreenIdealDialog &&
+                                sheelaAIController.sheelaIconBadgeCount.value==0,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top:50),
+                              child: Text(
+                                'Quick Tips:',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20.0.sp,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
                           /// Conditionally renders a Text widget if 'fromQurhomeRegimen' is true, otherwise renders an empty SizedBox.
                           /// This allows showing a note text only when relevant.
                           (fromQurhomeRegimen == true &&
@@ -5843,7 +5870,10 @@ class CommonUtil {
                                   child: Padding(
                                     padding: const EdgeInsets.all(10.0),
                                     child: Text(
-                                      strSheelaDialogNote,
+                                      isScreenIdealDialog?
+                                      sheelaAIController.sheelaIconBadgeCount.value>0?
+                                          "Touch the Sheela icon above to access the reminders":
+                                      sheelaIdealDialogNote??"":strSheelaDialogNote,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize:

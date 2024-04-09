@@ -83,6 +83,28 @@ class QurHomeApiProvider {
     }
   }
 
+  Future<dynamic> getDynamicContent() async {
+    http.Response responseJson;
+    try {
+      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      responseJson = (await ApiServices.get(
+        '${BASE_URL}user-app-tips/patient-sheela-tips',
+        headers: header,
+      ))!;
+      if (responseJson.statusCode == 200) {
+        return jsonDecode(responseJson.body);
+      } else {
+        return null;
+      }
+    } on SocketException {
+      throw FetchDataException(strNoInternet);
+    } catch (e, stackTrace) {
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+
+      return null;
+    }
+  }
+
   /// Gets the user activities history for the given event ID.
   ///
   /// Fetches the activities history for the user related to the provided

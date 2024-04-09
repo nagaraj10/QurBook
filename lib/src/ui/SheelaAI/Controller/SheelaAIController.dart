@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:math' as sheelaIdealDialog;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
@@ -1196,6 +1197,16 @@ class SheelaAIController extends GetxController {
           isNeedSheelaDialog: isNeedSheelaDialog);
     }
   }
+  
+// Function to get a random string from the list
+  String getRandomString() {
+    final qurHomeController = CommonUtil().onInitQurhomeDashboardController();
+    sheelaIdealDialog.Random random = sheelaIdealDialog.Random();
+    // Generate a random index within the range of the list
+    final index = random.nextInt(qurHomeController.idealDialogDynamicContent.length);
+    // Return the string at the random index
+    return qurHomeController.idealDialogDynamicContent[index];
+  }
 
 /*
 getSheelaBadgeCount is used to get the latest Sheela Queue badge count.
@@ -1285,12 +1296,12 @@ makeApiRequest is used to update the data with latest data
           _sheelaBadgeModel?.result != null) {
         // Update sheelaIconBadgeCount with the queue count from the result
         sheelaIconBadgeCount.value = _sheelaBadgeModel?.result?.queueCount ?? 0;
-
         if (isNeedSheelaDialog &&
-            !qurhomeDashboardController.isShowScreenIdleDialog.value) {
+            !qurhomeDashboardController.isShowScreenIdleDialog.value&& !isSheelaScreenActive) {
           await playAudioPlayer().then((value) {
             qurhomeDashboardController.isShowScreenIdleDialog.value = true;
             showDialogForSheelaBox(
+                sheelaIdealDialogNote: getRandomString(),
                 isFromQurHomeRegimen: isFromQurHomeRegimen,
                 isScreenIdealDialog: true);
           });
@@ -1626,6 +1637,7 @@ makeApiRequest is used to update the data with latest data
   void showDialogForSheelaBox(
       {bool isNeedSheelaDialog = false,
       bool isFromQurHomeRegimen = false,
+      String? sheelaIdealDialogNote,
       bool isScreenIdealDialog = false}) {
     final qurhomeDashboardController =
         CommonUtil().onInitQurhomeDashboardController();
@@ -1637,6 +1649,8 @@ makeApiRequest is used to update the data with latest data
             Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
                 .chatTotalCount,
         fromQurhomeRegimen: isFromQurHomeRegimen,
+        isScreenIdealDialog: isScreenIdealDialog,
+        sheelaIdealDialogNote: sheelaIdealDialogNote,
         onTapHideSheelaDialog: (value) {
       if (value) {
         //Update qur home ideal timer
