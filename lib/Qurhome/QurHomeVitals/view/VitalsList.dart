@@ -18,15 +18,18 @@ import '../../../constants/fhb_constants.dart' as Constants;
 import '../../../constants/fhb_parameters.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
 import '../../../constants/router_variable.dart' as router;
+import '../../../constants/router_variable.dart';
 import '../../../constants/variable_constant.dart' as variable;
 import '../../../constants/variable_constant.dart';
 import '../../../device_integration/model/LastMeasureSync.dart';
 import '../../../device_integration/view/screens/Device_Data.dart';
 import '../../../devices/device_dashboard_arguments.dart';
 import '../../../main.dart';
+import '../../../regiment/models/regiment_data_model.dart';
 import '../../../src/model/GetDeviceSelectionModel.dart';
 import '../../../src/model/user/MyProfileModel.dart';
 import '../../../src/resources/repository/health/HealthReportListForUserRepository.dart';
+import '../../../src/ui/SheelaAI/Models/sheela_arguments.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import 'VitalsDetails.dart';
 
@@ -120,8 +123,6 @@ class _VitalsListState extends State<VitalsList> {
 
   var qurhomeDashboardController =
       CommonUtil().onInitQurhomeDashboardController();
-
-  var _hubController = CommonUtil().onInitHubListViewController();
 
   @override
   void initState() {
@@ -2650,9 +2651,6 @@ class _VitalsListState extends State<VitalsList> {
 
   // This function is responsible for validating device pairing manually restricted record.
   validateDevicePairManualRestrict() async {
-    // Initialize Sheela BLE controller
-    final _sheelaBLEController = CommonUtil().onInitSheelaBLEController();
-
     // Check if the device is paired
     bool? isDevicePaired = await CommonUtil().checkDevicePaired();
 
@@ -2661,33 +2659,24 @@ class _VitalsListState extends State<VitalsList> {
 
     // If device is paired and manual recording is not restricted
     if ((isDevicePaired ?? false) && !(isRestrictManual ?? false)) {
-      // Show dialog for scanning devices
-      CommonUtil().dialogForScanDevices(
-        Get.context!,
-        // Action to take on manual button press
-        onPressManual: () {
-          Get.back();
-          _sheelaBLEController.stopTTS();
-          _sheelaBLEController.stopScanning();
-          //redirectToSheelaScreen(regimen);
-        },
-        // Action to take on cancel button press
-        onPressCancel: () async {
-          Get.back();
-          _sheelaBLEController.stopTTS();
-          _sheelaBLEController.stopScanning();
-        },
-        title: strDeviceScan,
-        // Determine the value for 'isVitalsManualRecordingRestricted' based on region
-        isVitalsManualRecordingRestricted: CommonUtil.isUSRegion()
-            ? PreferenceUtil.getBool(KEY_IS_Vitals_ManualRecording_Restricted)
-            : false,
+      callScanDialogOverlayScreen();
+    } else if (!(isDevicePaired ?? false) && !(isRestrictManual ?? false)) {
+      await Get.toNamed(
+        rt_Sheela,
+        arguments: SheelaArgument(forceManualRecord: true),
       );
-      // Setup listener for readings
-      _sheelaBLEController.setupListenerForReadings();
+    } else if ((isDevicePaired ?? false) && (isRestrictManual ?? false)) {
+      callScanDialogOverlayScreen();
+    } else if (!(isDevicePaired ?? false) && (isRestrictManual ?? false)) {
+      await Get.toNamed(
+        rt_Sheela,
+        arguments: SheelaArgument(
+          isSheelaAskForLang: false,
+          rawMessage: strSheelaBothDisableMsg,
+        ),
+      );
     }
   }
-
 
   Color hexToColor(String hexString, {String alphaChannel = 'FF'}) {
     return Color(int.parse(hexString.replaceFirst('#', '0x$alphaChannel')));
@@ -2702,6 +2691,33 @@ class _VitalsListState extends State<VitalsList> {
       setState(() {});
     });
   }
+}
+
+void callScanDialogOverlayScreen(){
+  // Initialize Sheela BLE controller
+  final _sheelaBLEController = CommonUtil().onInitSheelaBLEController();
+  // Show dialog for scanning devices
+  CommonUtil().dialogForScanDevices(
+    Get.context!,
+    // Action to take on manual button press
+    onPressManual: () {
+      Get.back();
+      _sheelaBLEController.stopTTS();
+      _sheelaBLEController.stopScanning();
+      //redirectToSheelaScreen(regimen);
+    },
+    // Action to take on cancel button press
+    onPressCancel: () async {
+      Get.back();
+      _sheelaBLEController.stopTTS();
+      _sheelaBLEController.stopScanning();
+    },
+    title: strDeviceScan,
+    // Determine the value for 'isVitalsManualRecordingRestricted' based on region
+    isVitalsManualRecordingRestricted: PreferenceUtil.getBool(KEY_IS_Vitals_ManualRecording_Restricted),
+  );
+  // Setup listener for readings
+  _sheelaBLEController.setupListenerForReadings();
 }
 
 class Responsive {

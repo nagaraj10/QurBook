@@ -32,6 +32,8 @@ class SheelaArgument {
 
   bool fromRegimenByTap = false;
 
+  bool forceManualRecord = false;
+
   SheelaArgument({
     this.isSheelaAskForLang,
     this.langCode,
@@ -63,5 +65,6 @@ class SheelaArgument {
     this.allowBackBtnPress = false,
     this.isNeedPreferredLangauge = false,
     this.fromRegimenByTap = false,
+    this.forceManualRecord = false,
   });
 }

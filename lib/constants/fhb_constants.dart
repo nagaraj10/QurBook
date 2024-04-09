@@ -1092,6 +1092,13 @@ const String strCurrentNotificationId = 'currentNotificationId';
 // for latest eid sheela during conversation
 const String strLatestRemindEid = 'latestRemindEid';
 
+const String strforceManualRecord = 'forceManualRecord';
+
+const String strRecordVitalMsg = 'Record Vital';
+
+const String strSheelaBothDisableMsg =
+    'Your provider allows vital data only from connected devices. Please contact your care coordinator.';
+
 // Define constant strings for various actions
 const String strAction = 'action'; // General action string
 const String strCallback = 'Callback'; // Callback action string
