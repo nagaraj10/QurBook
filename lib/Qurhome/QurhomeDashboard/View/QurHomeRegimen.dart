@@ -3195,13 +3195,15 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }
 
   redirectToSheelaScreen(RegimentDataModel regimen,
-      {bool isSurvey = false, bool isRetakeSurvey = false}) {
+      {bool isSurvey = false,
+      bool isRetakeSurvey = false,
+      bool fromRegimenByTap = true}) {
     Get.toNamed(
       rt_Sheela,
       arguments: SheelaArgument(
           eId: regimen.eid ?? "",
           isSurvey: isSurvey,
-          fromRegimenByTap: true, // for this is from regimen while tap on card or sheela icon
+          fromRegimenByTap: fromRegimenByTap, // for this is from regimen while tap on card or sheela icon
           isRetakeSurvey: isRetakeSurvey),
     )?.then((value) => {controller.showCurrLoggedRegimen(regimen)});
   }
@@ -3222,9 +3224,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               if (checkCanEdit(regimen)) {
                 Navigator.pop(context);
                 if (regimen.activityOrgin == strSurvey) {
-                  redirectToSheelaScreen(regimen, isSurvey: true);
+                  redirectToSheelaScreen(regimen,
+                      isSurvey: true, fromRegimenByTap: false);
                 } else {
-                  redirectToSheelaScreen(regimen);
+                  redirectToSheelaScreen(regimen, fromRegimenByTap: false);
                 }
               } else {
                 onErrorMessage(regimen);
