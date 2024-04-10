@@ -491,13 +491,7 @@ class SheelaAIController extends GetxController {
 
       // Check if forceManualRecord argument is provided and assign its value to additionalInfo[strforceManualRecord]
       // If forceManualRecord is not provided, default to false
-      if (arguments?.forceManualRecord ?? false) {
-        // If forceManualRecord is true, set additionalInfo[strforceManualRecord] to true
-        additionalInfo?[strforceManualRecord] = true;
-      } else {
-        // If forceManualRecord is false or not provided, set additionalInfo[strforceManualRecord] to false
-        additionalInfo?[strforceManualRecord] = false;
-      }
+      additionalInfo?[strforceManualRecord] = arguments?.forceManualRecord ?? false;
 
       final sheelaRequest = SheelaRequestModel(
         sender: userId,
