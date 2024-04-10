@@ -1092,6 +1092,16 @@ const String strCurrentNotificationId = 'currentNotificationId';
 // for latest eid sheela during conversation
 const String strLatestRemindEid = 'latestRemindEid';
 
+// for enter manually flow from record value button tap
+const String strforceManualRecord = 'forceManualRecord';
+
+// for message passing in payload to sheel wrapper
+const String strRecordVitalMsg = 'Record Vital';
+
+// for showing message flow both are restricted
+const String strSheelaBothDisableMsg =
+    'Your provider allows vital data only from connected devices. Please contact your care coordinator.';
+
 // Define constant strings for various actions
 const String strAction = 'action'; // General action string
 const String strCallback = 'Callback'; // Callback action string
@@ -1236,7 +1246,7 @@ const String strProviderBasedPatientsHaveViewOnlyAccess =
 const String strDefaultLanguage = 'en-IN';
 
 // new button widget text Record Value
-const String strRecordValueBtn = 'Record Value';
+const String strRecordValueBtn = ' Record value ';
 
 class DoctorFilterConstants {
   static List<String> yearOfExperienceList = [

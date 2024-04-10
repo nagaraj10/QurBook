@@ -489,6 +489,10 @@ class SheelaAIController extends GetxController {
       // for latest eid to pass api
       additionalInfo?[strLatestRemindEid] = latestRemindEid??'';
 
+      // Check if forceManualRecord argument is provided and assign its value to additionalInfo[strforceManualRecord]
+      // If forceManualRecord is not provided, default to false
+      additionalInfo?[strforceManualRecord] = arguments?.forceManualRecord ?? false;
+
       final sheelaRequest = SheelaRequestModel(
         sender: userId,
         name: userName,
