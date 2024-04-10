@@ -276,6 +276,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                 ? null
                 : Visibility(
                     // micDisableReconnect if false only visible the icon
+                    // hideMicButton if false only visible the icon
               visible: (!controller.micDisableReconnect.value) &&
                         (!(controller.arguments?.hideMicButton ?? false)),
                     child: AnimatedBuilder(

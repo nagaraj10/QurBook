@@ -32,9 +32,9 @@ class SheelaArgument {
 
   bool fromRegimenByTap = false;
 
-  bool forceManualRecord = false;
+  bool forceManualRecord = false; // for manual record sheela new payload
 
-  bool hideMicButton = false;
+  bool hideMicButton = false; // hide mic button due to restrcit the sheela conversation
 
   SheelaArgument({
     this.isSheelaAskForLang,

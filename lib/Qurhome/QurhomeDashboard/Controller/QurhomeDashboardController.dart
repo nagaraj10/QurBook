@@ -69,6 +69,7 @@ class QurhomeDashboardController extends GetxController {
   //Define a variable to hold the current selected index for the patient dashboard
   var patientDashboardCurSelectedIndex = 0.obs;
 
+  // record value button loader
   Rx<bool> isBtnLoading = false.obs;
 
   @override
