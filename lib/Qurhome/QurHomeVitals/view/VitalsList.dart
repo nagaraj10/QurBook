@@ -384,7 +384,7 @@ class _VitalsListState extends State<VitalsList> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   // Text label for the button
-                  Text(' Record value ',
+                  Text(strRecordValueBtn,
                       // Set text style
                       style: TextStyle(color: Colors.white, fontSize: 10.sp),
                       textAlign: TextAlign.center),
