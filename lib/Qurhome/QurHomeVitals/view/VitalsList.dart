@@ -343,56 +343,73 @@ class _VitalsListState extends State<VitalsList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Set the body of the Scaffold using a function call
         body: getDeviceVisibleValues(context),
+        // Define a floating action button, which is a Stack of widgets
         floatingActionButton: Stack(
           children: [
+            // Conditionally render a large FloatingActionButton based on device type (tablet or not)
             CommonUtil().isTablet!
                 ? FloatingActionButton.large(
-                    onPressed: () {
-                      validateDevicePairManualRestrict();
-                    },
-                    backgroundColor: mAppThemeProvider.qurhomeGradientColor,
-                    child: Column(
-                      // Column to stack text and icon vertically
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(strRecordValueBtn,
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 10.sp),
-                            textAlign:
-                                TextAlign.center), // Text label for the button
-                      ],
-                    ),
-                  )
+              // Callback function when the button is pressed
+              onPressed: () {
+                validateDevicePairManualRestrict();
+              },
+              // Set background color of the button using a theme color
+              backgroundColor: mAppThemeProvider.qurhomeGradientColor,
+              // Define the content of the button using a Column
+              child: Column(
+                // Align the content at the center vertically
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  // Text label for the button
+                  Text(strRecordValueBtn,
+                      // Set text style
+                      style: TextStyle(color: Colors.white, fontSize: 10.sp),
+                      textAlign: TextAlign.center),
+                ],
+              ),
+            )
+            // If not a tablet, render a regular sized FloatingActionButton
                 : FloatingActionButton(
-                    onPressed: () {
-                      validateDevicePairManualRestrict();
-                    },
-                    backgroundColor: mAppThemeProvider.qurhomeGradientColor,
-                    child: Column(
-                      // Column to stack text and icon vertically
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(' Record value ',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 10.sp),
-                            textAlign:
-                                TextAlign.center), // Text label for the button
-                      ],
-                    ),
-                  ),
+              // Callback function when the button is pressed
+              onPressed: () {
+                validateDevicePairManualRestrict();
+              },
+              // Set background color of the button using a theme color
+              backgroundColor: mAppThemeProvider.qurhomeGradientColor,
+              // Define the content of the button using a Column
+              child: Column(
+                // Align the content at the center vertically
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  // Text label for the button
+                  Text(' Record value ',
+                      // Set text style
+                      style: TextStyle(color: Colors.white, fontSize: 10.sp),
+                      textAlign: TextAlign.center),
+                ],
+              ),
+            ),
+            // Obx widget to observe and react to changes in a Rx variable
             Obx(() => Visibility(
-                  visible: qurhomeDashboardController.isBtnLoading.value,
-                  child: Positioned(
-                      right: CommonUtil().isTablet! ? 28.0 : 16.0,
-                      top: CommonUtil().isTablet! ? 28.0 : 16.0,
-                      child: SizedBox(
-                          height: CommonUtil().isTablet! ? 24.h : 24.h,
-                          width: CommonUtil().isTablet! ? 24.w : 24.h,
-                          child: CommonCircularQurHome())),
-                ))
+              // Set the visibility of the child widget based on a boolean value
+              visible: qurhomeDashboardController.isBtnLoading.value,
+              // Positioned widget to position its child widget within the Stack
+              child: Positioned(
+                // Set the position of the child widget
+                  right: CommonUtil().isTablet! ? 28.0 : 16.0,
+                  top: CommonUtil().isTablet! ? 28.0 : 16.0,
+                  // Define the size of the child widget
+                  child: SizedBox(
+                      height: CommonUtil().isTablet! ? 24.h : 24.h,
+                      width: CommonUtil().isTablet! ? 24.w : 24.h,
+                      // Child widget to show a circular loading indicator
+                      child: CommonCircularQurHome())),
+            ))
           ],
-        ));
+        )
+    );
   }
 
   Widget getBody(BuildContext context) {
