@@ -342,7 +342,57 @@ class _VitalsListState extends State<VitalsList> {
 
   @override
   Widget build(BuildContext context) {
-    return getDeviceVisibleValues(context);
+    return Scaffold(
+        body: getDeviceVisibleValues(context),
+        floatingActionButton: Stack(
+          children: [
+            CommonUtil().isTablet!
+                ? FloatingActionButton.large(
+                    onPressed: () {
+                      validateDevicePairManualRestrict();
+                    },
+                    backgroundColor: mAppThemeProvider.qurhomeGradientColor,
+                    child: Column(
+                      // Column to stack text and icon vertically
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(' Record value ',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 10.sp),
+                            textAlign:
+                                TextAlign.center), // Text label for the button
+                      ],
+                    ),
+                  )
+                : FloatingActionButton(
+                    onPressed: () {
+                      validateDevicePairManualRestrict();
+                    },
+                    backgroundColor: mAppThemeProvider.qurhomeGradientColor,
+                    child: Column(
+                      // Column to stack text and icon vertically
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(' Record value ',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 10.sp),
+                            textAlign:
+                                TextAlign.center), // Text label for the button
+                      ],
+                    ),
+                  ),
+            Obx(() => Visibility(
+                  visible: qurhomeDashboardController.isBtnLoading.value,
+                  child: Positioned(
+                      right: CommonUtil().isTablet! ? 28.0 : 16.0,
+                      top: CommonUtil().isTablet! ? 28.0 : 16.0,
+                      child: SizedBox(
+                          height: CommonUtil().isTablet! ? 24.h : 24.h,
+                          width: CommonUtil().isTablet! ? 24.w : 24.h,
+                          child: CommonCircularQurHome())),
+                ))
+          ],
+        ));
   }
 
   Widget getBody(BuildContext context) {
@@ -819,361 +869,9 @@ class _VitalsListState extends State<VitalsList> {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          SizedBox(height: 15.h),
-          Visibility(
-            visible: bpMonitor!,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 12.0.w,
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => VitalsDetails(
-                              sheelaRequestString: variable.requestSheelaForbp,
-                              device_name: strDataTypeBP,
-                              device_icon: Devices_BP_Tool,
-                              deviceNameForAdding: Constants.STR_BP_MONITOR,
-                            )),
-                  ).then((value) {
-                    setState(() {});
-                  });
-                },
-                child: Container(
-                  // height: 170.0.h,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(
-                        12.0.sp,
-                      ),
-                      topRight: Radius.circular(
-                        12.0.sp,
-                      ),
-                    ),
-                    color: Colors.white,
-                  ),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(
-                          12.0.sp,
-                        ),
-                        child: IntrinsicHeight(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBoxWidget(
-                                width: 10.0.w,
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          dateForBp != null && dateForBp != ''
-                                              ? dateForBp + ', '
-                                              : '',
-                                          style: TextStyle(
-                                            fontSize: 10.0.sp,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        Text(
-                                          timeForBp != null && timeForBp != ''
-                                              ? timeForBp
-                                              : '',
-                                          style: TextStyle(
-                                            fontSize: 10.0.sp,
-                                            color: Colors.black,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBoxWidget(
-                                      height: 5.0.h,
-                                    ),
-                                    Image.asset(
-                                      'assets/devices/bp_dashboard.png',
-                                      height: 48.0.h,
-                                      width: 40.0.w,
-                                      color: hexToColor('#059192'),
-                                    ),
-                                    SizedBoxWidget(
-                                      height: 5.0.h,
-                                    ),
-                                    Center(
-                                      child: Text(
-                                        'Blood Pressure',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 15.0.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: hexToColor('#059192'),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBoxWidget(
-                                width: 10.0.w,
-                              ),
-                              Center(
-                                child: Container(
-                                  child: VerticalDivider(
-                                    color: hexToColor('#059192'),
-                                    indent: 20.0.h,
-                                    endIndent: 10.0.h,
-                                    width: 2.0.w,
-                                  ),
-                                ),
-                              ),
-                              SizedBoxWidget(
-                                width: 20.0.w,
-                              ),
-                              Expanded(
-                                flex: 3,
-                                child: Column(
-                                  children: [
-                                    SizedBoxWidget(
-                                      height: 10.0.h,
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Text(
-                                              'Sys',
-                                              style: TextStyle(
-                                                fontSize: 16.0.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: hexToColor('#39c5c2'),
-                                              ),
-                                            ),
-                                            Text(
-                                              value1ForBp != ''
-                                                  ? value1ForBp.toString()
-                                                  : '-',
-                                              style: TextStyle(
-                                                fontSize: 18.0.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: hexToColor('#059192'),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBoxWidget(
-                                          width: 15.0.w,
-                                        ),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              'Dia',
-                                              style: TextStyle(
-                                                fontSize: 16.0.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: hexToColor('#39c5c2'),
-                                              ),
-                                            ),
-                                            Text(
-                                              value2ForBp != ''
-                                                  ? value2ForBp.toString()
-                                                  : '-',
-                                              style: TextStyle(
-                                                fontSize: 18.0.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: hexToColor('#059192'),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBoxWidget(
-                                          width: 15.0.w,
-                                        ),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              'Pul',
-                                              style: TextStyle(
-                                                fontSize: 16.0.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: hexToColor('#39c5c2'),
-                                              ),
-                                            ),
-                                            Text(
-                                              pulseBp != '' && pulseBp != null
-                                                  ? pulseBp.toString()
-                                                  : '-',
-                                              style: TextStyle(
-                                                fontSize: 18.0.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: hexToColor('#059192'),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBoxWidget(
-                                      height: 10.0.h,
-                                    ),
-                                    Row(
-                                      children: [
-                                        SizedBoxWidget(width: 2.0.w),
-                                        Text(
-                                          '7 Days Avg',
-                                          style: TextStyle(
-                                            fontSize: 10.0.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: hexToColor('#afafaf'),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Text(
-                                              'Sys',
-                                              style: TextStyle(
-                                                fontSize: 12.0.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: hexToColor('#afafaf'),
-                                              ),
-                                            ),
-                                            Text(
-                                              averageForSys != '' &&
-                                                      averageForSys != null
-                                                  ? averageForSys.toString()
-                                                  : '-',
-                                              style: TextStyle(
-                                                fontSize: 16.0.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: hexToColor('#afafaf'),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBoxWidget(
-                                          width: 15.0.w,
-                                        ),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              'Dia',
-                                              style: TextStyle(
-                                                fontSize: 12.0.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: hexToColor('#afafaf'),
-                                              ),
-                                            ),
-                                            Text(
-                                              averageForDia != '' &&
-                                                      averageForDia != null
-                                                  ? averageForDia.toString()
-                                                  : '-',
-                                              style: TextStyle(
-                                                fontSize: 16.0.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: hexToColor('#afafaf'),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBoxWidget(
-                                          width: 15.0.w,
-                                        ),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              'Pul',
-                                              style: TextStyle(
-                                                fontSize: 12.0.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: hexToColor('#afafaf'),
-                                              ),
-                                            ),
-                                            Text(
-                                              averageForPulForBp != '' &&
-                                                      averageForPulForBp != null
-                                                  ? averageForPulForBp
-                                                      .toString()
-                                                  : '-',
-                                              style: TextStyle(
-                                                fontSize: 16.0.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: hexToColor('#afafaf'),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  if (sourceForBp != '' && sourceForBp != null)
-                                    TypeIcon(
-                                      sourceForBp,
-                                      hexToColor('#059192'),
-                                    )
-                                  else
-                                    SizedBox(),
-                                  /*MaterialButton(
-                                    height: 25.0.h,
-                                    minWidth: 45.0.w,
-                                    onPressed: () {
-                                      navigateToDeviceDashboardScreen(
-                                          Constants.STR_BP_MONITOR);
-                                    },
-                                    color: hexToColor('#059192'),
-                                    textColor: Colors.white,
-                                    child: Icon(
-                                      Icons.add,
-                                      size: 16.0.sp,
-                                    ),
-                                    padding: EdgeInsets.all(
-                                      2.0.sp,
-                                    ),
-                                    shape: CircleBorder(),
-                                  ),*/
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Divider(
-                        color: hexToColor('#059192'),
-                        thickness: 2.0.h,
-                        height: 2.0.h,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          SizedBoxWidget(
-            height: 12.0.h,
-          ),
           Column(
             children: [
+              SizedBox(height: 15.h),
               Container(
                 child: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.start,
@@ -2592,57 +2290,360 @@ class _VitalsListState extends State<VitalsList> {
                   ],
                 ),
               ),
-              SizedBoxWidget(
-                height: 15.0.h,
+            ],
+          ),
+          SizedBox(height: 15.h),
+          Visibility(
+            visible: bpMonitor!,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 12.0.w,
               ),
-              Obx(() => Align(
-                    // Center align the button
-                    alignment: Alignment.center,
-                    child: SizedBox(
-                      // Set the width based on whether the device is a tablet or not
-                      width: CommonUtil().isTablet == true ? 260.w : 200.w,
-                      // Set a fixed height for the button
-                      height: 38.0.h,
-                      child: ElevatedButton(
-                        onPressed: qurhomeDashboardController.isBtnLoading.value
-                            ? null // Disable button when loading
-                            : () => validateDevicePairManualRestrict(),
-                        // Call validation function on press
-                        // Button content
-                        child: qurhomeDashboardController.isBtnLoading.value
-                            ? SizedBox(
-                                width: 25.w,
-                                height: 25.h,
-                                child:
-                                    CommonCircularQurHome(), // Show loading indicator
-                              )
-                            : Text(
-                                strRecordValueBtn,
-                                style: TextStyle(
-                                  // Adjust font size for tablet
-                                  fontSize: CommonUtil().isTablet == true
-                                      ? 15.sp
-                                      : 14.sp,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => VitalsDetails(
+                          sheelaRequestString: variable.requestSheelaForbp,
+                          device_name: strDataTypeBP,
+                          device_icon: Devices_BP_Tool,
+                          deviceNameForAdding: Constants.STR_BP_MONITOR,
+                        )),
+                  ).then((value) {
+                    setState(() {});
+                  });
+                },
+                child: Container(
+                  // height: 170.0.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(
+                        12.0.sp,
+                      ),
+                      topRight: Radius.circular(
+                        12.0.sp,
+                      ),
+                    ),
+                    color: Colors.white,
+                  ),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(
+                          12.0.sp,
+                        ),
+                        child: IntrinsicHeight(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBoxWidget(
+                                width: 10.0.w,
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          dateForBp != null && dateForBp != ''
+                                              ? dateForBp + ', '
+                                              : '',
+                                          style: TextStyle(
+                                            fontSize: 10.0.sp,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        Text(
+                                          timeForBp != null && timeForBp != ''
+                                              ? timeForBp
+                                              : '',
+                                          style: TextStyle(
+                                            fontSize: 10.0.sp,
+                                            color: Colors.black,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBoxWidget(
+                                      height: 5.0.h,
+                                    ),
+                                    Image.asset(
+                                      'assets/devices/bp_dashboard.png',
+                                      height: 48.0.h,
+                                      width: 40.0.w,
+                                      color: hexToColor('#059192'),
+                                    ),
+                                    SizedBoxWidget(
+                                      height: 5.0.h,
+                                    ),
+                                    Center(
+                                      child: Text(
+                                        'Blood Pressure',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 15.0.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: hexToColor('#059192'),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                        // Button styling
-                        style: ButtonStyle(
-                          // Apply a gradient background color
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            mAppThemeProvider.qurhomeGradientColor,
-                          ),
-                          // Rounded corners for the button
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
+                              SizedBoxWidget(
+                                width: 10.0.w,
+                              ),
+                              Center(
+                                child: Container(
+                                  child: VerticalDivider(
+                                    color: hexToColor('#059192'),
+                                    indent: 20.0.h,
+                                    endIndent: 10.0.h,
+                                    width: 2.0.w,
+                                  ),
+                                ),
+                              ),
+                              SizedBoxWidget(
+                                width: 20.0.w,
+                              ),
+                              Expanded(
+                                flex: 3,
+                                child: Column(
+                                  children: [
+                                    SizedBoxWidget(
+                                      height: 10.0.h,
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Sys',
+                                              style: TextStyle(
+                                                fontSize: 16.0.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: hexToColor('#39c5c2'),
+                                              ),
+                                            ),
+                                            Text(
+                                              value1ForBp != ''
+                                                  ? value1ForBp.toString()
+                                                  : '-',
+                                              style: TextStyle(
+                                                fontSize: 18.0.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: hexToColor('#059192'),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBoxWidget(
+                                          width: 15.0.w,
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Dia',
+                                              style: TextStyle(
+                                                fontSize: 16.0.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: hexToColor('#39c5c2'),
+                                              ),
+                                            ),
+                                            Text(
+                                              value2ForBp != ''
+                                                  ? value2ForBp.toString()
+                                                  : '-',
+                                              style: TextStyle(
+                                                fontSize: 18.0.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: hexToColor('#059192'),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBoxWidget(
+                                          width: 15.0.w,
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Pul',
+                                              style: TextStyle(
+                                                fontSize: 16.0.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: hexToColor('#39c5c2'),
+                                              ),
+                                            ),
+                                            Text(
+                                              pulseBp != '' && pulseBp != null
+                                                  ? pulseBp.toString()
+                                                  : '-',
+                                              style: TextStyle(
+                                                fontSize: 18.0.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: hexToColor('#059192'),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBoxWidget(
+                                      height: 10.0.h,
+                                    ),
+                                    Row(
+                                      children: [
+                                        SizedBoxWidget(width: 2.0.w),
+                                        Text(
+                                          '7 Days Avg',
+                                          style: TextStyle(
+                                            fontSize: 10.0.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: hexToColor('#afafaf'),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Sys',
+                                              style: TextStyle(
+                                                fontSize: 12.0.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: hexToColor('#afafaf'),
+                                              ),
+                                            ),
+                                            Text(
+                                              averageForSys != '' &&
+                                                  averageForSys != null
+                                                  ? averageForSys.toString()
+                                                  : '-',
+                                              style: TextStyle(
+                                                fontSize: 16.0.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: hexToColor('#afafaf'),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBoxWidget(
+                                          width: 15.0.w,
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Dia',
+                                              style: TextStyle(
+                                                fontSize: 12.0.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: hexToColor('#afafaf'),
+                                              ),
+                                            ),
+                                            Text(
+                                              averageForDia != '' &&
+                                                  averageForDia != null
+                                                  ? averageForDia.toString()
+                                                  : '-',
+                                              style: TextStyle(
+                                                fontSize: 16.0.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: hexToColor('#afafaf'),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBoxWidget(
+                                          width: 15.0.w,
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Pul',
+                                              style: TextStyle(
+                                                fontSize: 12.0.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: hexToColor('#afafaf'),
+                                              ),
+                                            ),
+                                            Text(
+                                              averageForPulForBp != '' &&
+                                                  averageForPulForBp != null
+                                                  ? averageForPulForBp
+                                                  .toString()
+                                                  : '-',
+                                              style: TextStyle(
+                                                fontSize: 16.0.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: hexToColor('#afafaf'),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  if (sourceForBp != '' && sourceForBp != null)
+                                    TypeIcon(
+                                      sourceForBp,
+                                      hexToColor('#059192'),
+                                    )
+                                  else
+                                    SizedBox(),
+                                  /*MaterialButton(
+                                    height: 25.0.h,
+                                    minWidth: 45.0.w,
+                                    onPressed: () {
+                                      navigateToDeviceDashboardScreen(
+                                          Constants.STR_BP_MONITOR);
+                                    },
+                                    color: hexToColor('#059192'),
+                                    textColor: Colors.white,
+                                    child: Icon(
+                                      Icons.add,
+                                      size: 16.0.sp,
+                                    ),
+                                    padding: EdgeInsets.all(
+                                      2.0.sp,
+                                    ),
+                                    shape: CircleBorder(),
+                                  ),*/
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ),
-                  ))
-            ],
+                      Divider(
+                        color: hexToColor('#059192'),
+                        thickness: 2.0.h,
+                        height: 2.0.h,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBoxWidget(
+            height: 12.0.h,
           ),
         ],
       ),
