@@ -129,6 +129,7 @@ class _VitalsListState extends State<VitalsList> {
     try {
       deviceValues = null;
       FocusManager.instance.primaryFocus!.unfocus();
+      qurhomeDashboardController.isBtnLoading.value = false;
 
       if (Platform.isAndroid &&
           !qurhomeDashboardController.forPatientList.value) {
@@ -2594,44 +2595,53 @@ class _VitalsListState extends State<VitalsList> {
               SizedBoxWidget(
                 height: 15.0.h,
               ),
-              Align(
-                // Center align the button
-                alignment: Alignment.center,
-                child: SizedBox(
-                  // Set the width based on whether the device is a tablet or not
-                  width: CommonUtil().isTablet! ? 260.w : 200.w,
-                  // Set a fixed height for the button
-                  height: 38.0.h,
-                  child: ElevatedButton(
-                    // Button text
-                    child: Text(
-                      strRecordValueBtn,
-                      style: TextStyle(
-                        // Set font size based on whether the device is a tablet or not
-                        fontSize: CommonUtil().isTablet! ? 15.sp : 14.sp,
-                      ),
-                    ),
-                    // Button style
-                    style: ButtonStyle(
-                      // Set background color using QurHome gradient color
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                        mAppThemeProvider.qurhomeGradientColor,
-                      ),
-                      // Set button shape with rounded corners
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
+              Obx(() => Align(
+                    // Center align the button
+                    alignment: Alignment.center,
+                    child: SizedBox(
+                      // Set the width based on whether the device is a tablet or not
+                      width: CommonUtil().isTablet! ? 260.w : 200.w,
+                      // Set a fixed height for the button
+                      height: 38.0.h,
+                      child: ElevatedButton(
+                        // Button text
+                         child: qurhomeDashboardController.isBtnLoading.value
+                            ? SizedBox(
+                                width: 25.w,
+                                height: 25.h,
+                                child: CommonCircularQurHome())
+                            : Text(
+                                strRecordValueBtn,
+                                style: TextStyle(
+                                  // Set font size based on whether the device is a tablet or not
+                                  fontSize:
+                                      CommonUtil().isTablet! ? 15.sp : 14.sp,
+                                ),
+                              ),
+                        // Button style
+                        style: ButtonStyle(
+                          // Set background color using QurHome gradient color
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            mAppThemeProvider.qurhomeGradientColor,
+                          ),
+                          // Set button shape with rounded corners
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
                         ),
+                        // Action to take on button press
+                        onPressed: () {
+                          // Call function to validate device pair and manual restrict
+                          qurhomeDashboardController.isBtnLoading.value
+                              ? null
+                              : validateDevicePairManualRestrict();
+                        },
                       ),
                     ),
-                    // Action to take on button press
-                    onPressed: () {
-                      // Call function to validate device pair and manual restrict
-                      validateDevicePairManualRestrict();
-                    },
-                  ),
-                ),
-              )
+                  ))
             ],
           ),
         ],
@@ -2651,32 +2661,40 @@ class _VitalsListState extends State<VitalsList> {
 
   // This function is responsible for validating device pairing manually restricted record.
   validateDevicePairManualRestrict() async {
-    // Check if the device is paired
-    bool? isDevicePaired = await CommonUtil().checkDevicePaired();
+    qurhomeDashboardController.isBtnLoading.value = true;
+    try {
+      // Check if the device is paired
+      bool? isDevicePaired = await CommonUtil().checkDevicePaired();
 
-    // Check if manual recording is restricted
-    bool? isRestrictManual = await CommonUtil().checkRestrictManualRecord();
+      // Check if manual recording is restricted
+      bool? isRestrictManual = await CommonUtil().checkRestrictManualRecord();
 
-    // If device is paired and manual recording is not restricted
-    if ((isDevicePaired ?? false) && !(isRestrictManual ?? false)) {
-      callScanDialogOverlayScreen();
-    } else if (!(isDevicePaired ?? false) && !(isRestrictManual ?? false)) {
-      await Get.toNamed(
+      qurhomeDashboardController.isBtnLoading.value = false;
+      
+      // If device is paired and manual recording is not restricted
+      if ((isDevicePaired ?? false) && !(isRestrictManual ?? false)) {
+        callScanDialogOverlayScreen();
+      } else if (!(isDevicePaired ?? false) && !(isRestrictManual ?? false)) {
+        await Get.toNamed(
           rt_Sheela,
-          arguments: SheelaArgument(forceManualRecord: true,
-          rawMessage: strRecordVitalMsg),
-    );
-    } else if ((isDevicePaired ?? false) && (isRestrictManual ?? false)) {
-      callScanDialogOverlayScreen();
-    } else if (!(isDevicePaired ?? false) && (isRestrictManual ?? false)) {
-      await Get.toNamed(
-        rt_Sheela,
-        arguments: SheelaArgument(
-          textSpeechSheela: strSheelaBothDisableMsg,
-          isNeedPreferredLangauge: true,
-          hideMicButton: true
-        ),
-      );
+          arguments: SheelaArgument(
+              forceManualRecord: true, rawMessage: strRecordVitalMsg),
+        );
+      } else if ((isDevicePaired ?? false) && (isRestrictManual ?? false)) {
+        callScanDialogOverlayScreen();
+      } else if (!(isDevicePaired ?? false) && (isRestrictManual ?? false)) {
+        await Get.toNamed(
+          rt_Sheela,
+          arguments: SheelaArgument(
+              textSpeechSheela: strSheelaBothDisableMsg,
+              isNeedPreferredLangauge: true,
+              hideMicButton: true),
+        );
+      }
+      
+    } catch (e,stackTrace) {
+      qurhomeDashboardController.isBtnLoading.value = false;
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
   }
 
