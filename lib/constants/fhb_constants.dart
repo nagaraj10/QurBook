@@ -1246,7 +1246,7 @@ const String strProviderBasedPatientsHaveViewOnlyAccess =
 const String strDefaultLanguage = 'en-IN';
 
 // new button widget text Record Value
-const String strRecordValueBtn = 'Record Value';
+const String strRecordValueBtn = ' Record value ';
 
 class DoctorFilterConstants {
   static List<String> yearOfExperienceList = [

@@ -356,7 +356,7 @@ class _VitalsListState extends State<VitalsList> {
                       // Column to stack text and icon vertically
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text(' Record value ',
+                        Text(strRecordValueBtn,
                             style:
                                 TextStyle(color: Colors.white, fontSize: 10.sp),
                             textAlign:
