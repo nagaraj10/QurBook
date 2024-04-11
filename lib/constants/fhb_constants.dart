@@ -957,6 +957,7 @@ const String activity_completed_regimen =
 const String StrExit = 'Exit';
 const String str_Undo = 'Undo';
 const String StrUndoAll = 'Undo all';
+const String StrAccountCreatedSucessfullyPleaseLogin = 'Account created successfully. Please log in to continue.';
 
 const String StrSheelaErrorMsg =
     'There is some issue with Sheela,\n Please try after some time';

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:myfhb/constants/fhb_constants.dart'as fhbConstant;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -631,44 +631,15 @@ class _VerifyPatientState extends State<VerifyPatient>
       CommonUtil().appLogs(message: e, stackTrace: stackTrace);
     }
     if (widget.from == strFromSignUp) {
-      if (widget.userConfirm!) {
-        userId = widget.userId;
-      } else {
-        userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
-      }
-
-      saveuser.userId = userId;
-      print(userId);
-      await PreferenceUtil.saveString(Constants.MOB_NUM, widget.PhoneNumber!)
-          .then((onValue) {});
-      await PreferenceUtil.saveString(Constants.KEY_USERID, userId!)
-          .then((onValue) {});
-      PreferenceUtil.save(strUserDetails, saveuser);
-      authToken = decodesstring;
-      final _firebaseMessaging = FirebaseMessaging.instance;
-      var token = await _firebaseMessaging.getToken();
-      CommonUtil().OnInitAction();
-      TimezoneServices().checkUpdateTimezone();
-      await CommonUtil()
-          .sendDeviceToken(
-              userId, widget.emailId, widget.PhoneNumber, token, true)
-          .then((value) {
-        if (widget.fromSignUp != null && widget.fromSignUp!) {
-          PreferenceUtil.isCorpUserWelcomeMessageDialogShown(false);
-        } else {
-          PreferenceUtil.isCorpUserWelcomeMessageDialogShown(true);
-        }
-        if (value != null) {
-          Future.delayed(Duration(seconds: 3), () {
-            LoaderClass.hideLoadingDialog(context);
-            PageNavigator.goToPermanent(context, router.rt_Landing);
-          });
-        } else {
-          LoaderClass.hideLoadingDialog(context);
-          FHBBasicWidget().showDialogWithTwoButtons(context, () {
-            PageNavigator.goToPermanent(context, router.rt_Landing);
-          }, value.message!, strConfirmDialog);
-        }
+      FlutterToast().getToast(fhbConstant.StrAccountCreatedSucessfullyPleaseLogin, Colors.green);
+      Future.delayed(Duration(seconds: 2), () {
+        LoaderClass.hideLoadingDialog(context);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    PatientSignInScreen()),
+                (route) => false);
       });
     } else {
       final String userId =
