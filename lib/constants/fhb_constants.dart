@@ -1244,7 +1244,7 @@ const String strProviderBasedPatientsHaveViewOnlyAccess =
     'This activity is provider-based. Patients have view-only access.';
 
 // Default language set to English (India)
-const String strDefaultLanguage = 'en-IN';
+String strDefaultLanguage = CommonUtil.isUSRegion() ? 'en-US' : 'en-IN';
 
 // new button widget text Record Value
 const String strRecordValueBtn = ' Record value ';
