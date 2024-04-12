@@ -664,6 +664,8 @@ class SheelaBLEController extends GetxController {
             // Check if SPO2 and pulse data are not empty
             if ((model.data!.sPO2 ?? '').isNotEmpty &&
                 (model.data!.pulse ?? '').isNotEmpty) {
+              //Delayed 3 seconds before reading the value
+              await Future.delayed(const Duration(seconds: 3));
               // Get translated text message
               String? strTextMsg = await SheelaController.getTextTranslate(
                   "Completed reading values. Please take your finger from the device");
