@@ -3036,7 +3036,7 @@ class CommonUtil {
     'telugu': 'te',
   };
 
-  static const Map<String, String> langaugeCodes = {
+  static Map<String, String> langaugeCodes = {
     'en': strDefaultLanguage,
     'ta': 'ta-IN',
     'te': 'te-IN',
