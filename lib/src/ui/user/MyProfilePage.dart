@@ -132,7 +132,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         final langCode = lan!.split("-").first;
         currentLanguage = langCode;
       } else {
-        currentLanguage = 'en';
+        currentLanguage = strDefaultLanguage;
         PreferenceUtil.saveString(SHEELA_LANG, strDefaultLanguage);
       }
       if (currentLanguage.isNotEmpty) {

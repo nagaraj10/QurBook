@@ -34,7 +34,7 @@ class SymptomService {
         var langCode = lan!.split('-').first;
         currentLanguage = langCode;
       } else {
-        currentLanguage = 'en';
+        currentLanguage = strDefaultLanguage;
       }
       response = await ApiServices.post(
         urlForRegiment,
