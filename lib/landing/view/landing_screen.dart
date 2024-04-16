@@ -950,7 +950,7 @@ class _LandingScreenState extends State<LandingScreen> {
               if (preferredLanguage != 'undef') {
                 currentLanguage = preferredLanguage!.split('-').first;
               } else {
-                currentLanguage = 'en';
+                currentLanguage = strDefaultLanguage;
               }
               PreferenceUtil.saveString(Constants.SHEELA_LANG,
                   CommonUtil.langaugeCodes[currentLanguage] ?? strDefaultLanguage);
