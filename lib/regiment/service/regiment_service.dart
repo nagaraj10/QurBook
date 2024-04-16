@@ -50,7 +50,8 @@ class RegimentService {
         var langCode = lan!.split('-').first;
         currentLanguage = langCode;
       } else {
-        currentLanguage = strDefaultLanguage;
+        var langCode = strDefaultLanguage.split('-').first;
+        currentLanguage = langCode;
       }
       if (isForMasterData) {
         response = await ApiServices.post(

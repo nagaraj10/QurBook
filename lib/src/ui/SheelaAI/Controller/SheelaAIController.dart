@@ -144,7 +144,7 @@ class SheelaAIController extends GetxController {
   SpeechToText? speechToText = SpeechToText();
 
 // Represents the current language code using Rx (reactive programming)
-  var currentLanguageCode = 'en_US'.obs;
+  var currentLanguageCode = strDefaultLanguage.obs;
 
 // Represents a reactive boolean indicating whether the countdown dialog is currently showing
   Rx<bool> isCountDownDialogShowing = false.obs;
@@ -1003,7 +1003,7 @@ class SheelaAIController extends GetxController {
         if (isMicListening.isFalse) {
           isMicListening.value = true;
 
-          currentLanguageCode.value = getCurrentLanCode() ?? '';
+          currentLanguageCode.value = getCurrentLanCode() ?? strDefaultLanguage;
 
           initiateVoiceAssistantInteraction();
         }
