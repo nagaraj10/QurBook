@@ -275,7 +275,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       if (preferredLanguage != 'undef') {
         currentLanguage = preferredLanguage!.split('-').first;
       } else {
-        currentLanguage = 'en';
+        currentLanguage = strDefaultLanguage;
       }
       await PreferenceUtil.saveString(SHEELA_LANG,
           CommonUtil.langaugeCodes[currentLanguage] ?? strDefaultLanguage);

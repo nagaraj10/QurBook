@@ -88,7 +88,7 @@ class EventListWidget extends StatelessWidget {
                     var langCode = lan!.split('-').first;
                     currentLanguage = langCode;
                   } else {
-                    currentLanguage = 'en';
+                    currentLanguage = strDefaultLanguage;
                   }
                   var schedules = '&Language=$currentLanguage';
                   saveMap.forEach((key, value) {
