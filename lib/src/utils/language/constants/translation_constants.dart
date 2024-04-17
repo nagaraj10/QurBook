@@ -671,7 +671,6 @@ class TranslationConstants {
   static const String requestSheelaForglucose = 'record my glucose';
   static const String requestSheelaForpo = 'record my po';
   static const String requestSheelaForweight = 'record my weight';
-  static const String strspeakAssistant = 'speakWithVoiceAssistant';
   static const String strdevice = 'device';
 
   static const String strIntromaya =

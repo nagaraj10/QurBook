@@ -20,6 +20,7 @@ import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/HeaderRequest.dart';
 import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_query.dart' as variable;
 import '../models/field_response_model.dart';
 import '../models/profile_response_model.dart';
@@ -49,7 +50,8 @@ class RegimentService {
         var langCode = lan!.split('-').first;
         currentLanguage = langCode;
       } else {
-        currentLanguage = 'en';
+        var langCode = strDefaultLanguage.split('-').first;
+        currentLanguage = langCode;
       }
       if (isForMasterData) {
         response = await ApiServices.post(

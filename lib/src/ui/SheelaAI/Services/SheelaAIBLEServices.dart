@@ -76,8 +76,9 @@ class SheelaBLEController extends GetxController {
             stopTTS();
 
             // Check if Sheela screen is active and if true, navigate back.
-            if (SheelaController.isSheelaScreenActive) Get.back();
-
+            if (SheelaController.isSheelaScreenActive) {
+              Get.back();
+            }
           }
         }
       },
@@ -536,7 +537,7 @@ class SheelaBLEController extends GetxController {
     }
   }
 
-  addToConversationAndPlay(SheelaResponse conv,{bool playButtons = false}) {
+  Future<void> addToConversationAndPlay(SheelaResponse conv,{bool playButtons = false}) async {
     playConversations.add(conv);
     //if(playButtons){
       SheelaController.isLoading.value = false;
@@ -663,6 +664,8 @@ class SheelaBLEController extends GetxController {
             // Check if SPO2 and pulse data are not empty
             if ((model.data!.sPO2 ?? '').isNotEmpty &&
                 (model.data!.pulse ?? '').isNotEmpty) {
+              //Delayed 3 seconds before reading the value
+              await Future.delayed(const Duration(seconds: 3));
               // Get translated text message
               String? strTextMsg = await SheelaController.getTextTranslate(
                   "Completed reading values. Please take your finger from the device");
@@ -673,13 +676,13 @@ class SheelaBLEController extends GetxController {
                   recipientId: conversationType,
                   text: strTextMsg,
                 ),
-              );
-
-              // Delay execution of the subsequent code block by 4 seconds.
-              Future.delayed(const Duration(seconds: 4)).then((value) {
-                // After 4 seconds, call getAIAPIResponseFor to process dynamic response
-                SheelaController.getAIAPIResponseFor(STR_YES, null,
-                    deviceReadingsRuleSheela: model.data ?? Data());
+              ).then((value) {
+                // Delay execution of the subsequent code block by 4 seconds.
+                Future.delayed(const Duration(seconds: 10)).then((value) {
+                  // After 10 seconds, call getAIAPIResponseFor to process dynamic response
+                  SheelaController.getAIAPIResponseFor(STR_YES, null,
+                      deviceReadingsRuleSheela: model.data ?? Data());
+                });
               });
             }
           } else {
@@ -802,8 +805,8 @@ class SheelaBLEController extends GetxController {
               showFailure();
             }
           }
+          isCompleted = true;
         }
-        isCompleted = true;
         SheelaController.isRetryScanFailure.value = false;
         // this is for disable the isSameVitalDevice for other device try to connect
         SheelaController.isSameVitalDevice = false;

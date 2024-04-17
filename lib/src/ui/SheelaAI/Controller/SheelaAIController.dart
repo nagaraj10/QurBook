@@ -145,7 +145,7 @@ class SheelaAIController extends GetxController {
   SpeechToText? speechToText = SpeechToText();
 
 // Represents the current language code using Rx (reactive programming)
-  var currentLanguageCode = 'en_US'.obs;
+  var currentLanguageCode = strDefaultLanguage.obs;
 
 // Represents a reactive boolean indicating whether the countdown dialog is currently showing
   Rx<bool> isCountDownDialogShowing = false.obs;
@@ -489,6 +489,10 @@ class SheelaAIController extends GetxController {
 
       // for latest eid to pass api
       additionalInfo?[strLatestRemindEid] = latestRemindEid??'';
+
+      // Check if forceManualRecord argument is provided and assign its value to additionalInfo[strforceManualRecord]
+      // If forceManualRecord is not provided, default to false
+      additionalInfo?[strforceManualRecord] = arguments?.forceManualRecord ?? false;
 
       final sheelaRequest = SheelaRequestModel(
         sender: userId,
@@ -886,11 +890,6 @@ class SheelaAIController extends GetxController {
     // Invoking a method from the CommonUtil class to close Sheela's dialog
     CommonUtil().closeSheelaDialog();
 
-    /*if (Platform.isIOS) {
-      voice_platform.invokeMethod(strCloseSheelaDialog);
-    } else {
-      CommonUtil().closeSheelaDialog();
-    }*/
     if (currentPlayingConversation != null) {
       currentPlayingConversation!.isPlaying.value = false;
       currentPlayingConversation!.currentButtonPlayingIndex = null;
@@ -1005,7 +1004,7 @@ class SheelaAIController extends GetxController {
         if (isMicListening.isFalse) {
           isMicListening.value = true;
 
-          currentLanguageCode.value = getCurrentLanCode() ?? '';
+          currentLanguageCode.value = getCurrentLanCode() ?? strDefaultLanguage;
 
           initiateVoiceAssistantInteraction();
         }

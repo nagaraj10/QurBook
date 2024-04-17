@@ -3036,7 +3036,7 @@ class CommonUtil {
     'telugu': 'te',
   };
 
-  static const Map<String, String> langaugeCodes = {
+  static Map<String, String> langaugeCodes = {
     'en': strDefaultLanguage,
     'ta': 'ta-IN',
     'te': 'te-IN',
@@ -5463,9 +5463,6 @@ class CommonUtil {
   // This method is responsible for closing the Sheela dialog and performing related actions
   closeSheelaDialog() async {
     try {
-      /*const platform = MethodChannel(strCloseSheelaDialog);
-      platform.invokeMethod(strCloseSheelaDialog);*/
-
       // Initializing SheelaAIController for additional actions
       SheelaAIController? sheelaAIController =
           CommonUtil().onInitSheelaAIController();
@@ -7724,6 +7721,54 @@ class CommonUtil {
     // Retrieve the instance of VitalListController
     return Get.find<VitalListController>();
   }
+
+  Future<bool?> checkDevicePaired() async {
+    // Initialize a variable to track device pairing status
+    bool isDevicePaired = false;
+
+    // Initialize the hub controller
+    var _hubController = onInitHubListViewController();
+
+    try {
+      // Get the list of hubs
+      await _hubController.getHubList();
+
+      // Check if there are hubs available
+      if ((_hubController.hubListResponse?.result ?? []).length > 0) {
+        // If there are hubs, set device pairing status to true
+        isDevicePaired = true;
+      }
+    } catch (e, stackTrace) {
+      // Handle any errors and log them
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+
+    // Return the device pairing status
+    return isDevicePaired;
+  }
+
+  Future<bool?> checkRestrictManualRecord() async {
+    // Initialize a variable to track manual record restriction status
+    bool isRestrictManualRecord = false;
+
+    try {
+      // Get device selection for vitals
+      await onInitVitalListController().getDeviceSelection();
+
+      // Check if manual recording is restricted
+      if (PreferenceUtil.getBool(KEY_IS_Vitals_ManualRecording_Restricted)) {
+        // If manual recording is restricted, set the status to true
+        isRestrictManualRecord = true;
+      }
+    } catch (e, stackTrace) {
+      // Handle any errors and log them
+      CommonUtil().appLogs(message: e, stackTrace: stackTrace);
+    }
+
+    // Return the manual record restriction status
+    return isRestrictManualRecord;
+  }
+
 }
 
 extension CapExtension on String {

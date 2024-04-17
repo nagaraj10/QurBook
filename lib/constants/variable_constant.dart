@@ -669,7 +669,6 @@ const String strEnterLastName = 'Enter LastName';
 const voice_platform = MethodChannel('flutter.native/voiceIntent');
 const version_platform = MethodChannel('flutter.native/versioncode');
 const tts_platform = MethodChannel('flutter.native/textToSpeech');
-const tts_platform_closeMic = 'CloseMic';
 const String strWaitLoading = 'wait! Its loading';
 
 const String _wordsFromMaya = 'waiting for maya to speak';
@@ -681,11 +680,9 @@ const String requestSheelaFortemperature = 'Record my Temperature';
 const String requestSheelaForglucose = 'Record my Glucometer readings';
 const String requestSheelaForpo = 'Record my Pulse oximeter readings';
 const String requestSheelaForweight = 'Record my Weight';
-const String strspeakAssistant = 'speakWithVoiceAssistant';
 const String strvalidateMicAvailablity = 'validateMicAvailability';
 const String strQurbookSheela =
     'SHEELA'; // For lex to be done for seperation lex and rasa
-const String strCloseSheelaDialog = 'closeSheelaDialog';
 
 const String strIntromaya = 'Hi, I am Sheela your voice health assistant.';
 const String strTapMaya = 'Tap me and invoke. Lets converse';
@@ -823,6 +820,10 @@ const String strConnectWeighingScale =
     'Please connect your weighing scale and start recording';
 const String strConnectBGL =
     'Please connect your Blood Glucose test strips to the meter and start taking the readings';
+
+// normal scan for all paired devices message
+const String strDeviceScan =
+    'Please turn on your device and start taking the readings';
 
 //sheel live remiders
 const String strSheelaLiveReminders = 'Sheela live reminders';
