@@ -1207,7 +1207,8 @@ class SheelaAIController extends GetxController {
     // Return the string at the random index
     return qurHomeController.idealDialogDynamicContent[index];
     } else{
-      return '';
+      // If list is empty, return a default string
+      return strQurhomeIdealDialogDescription;
     }
   }
 
@@ -1301,13 +1302,11 @@ makeApiRequest is used to update the data with latest data
         sheelaIconBadgeCount.value = _sheelaBadgeModel?.result?.queueCount ?? 0;
         if (isNeedSheelaDialog &&
             !qurhomeDashboardController.isShowScreenIdleDialog.value) {
-          await playAudioPlayer().then((value) {
             qurhomeDashboardController.isShowScreenIdleDialog.value = true;
             showDialogForSheelaBox(
                 sheelaIdealDialogNote: getRandomQurhomeIdealDialogNotes(),
                 isFromQurHomeRegimen: isFromQurHomeRegimen,
                 isScreenIdealDialog: true);
-          });
         }
       } else {
         // If response is not successful or result is null,
