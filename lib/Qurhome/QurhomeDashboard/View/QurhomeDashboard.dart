@@ -10,6 +10,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/view/SymptomListScreen.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/view/VitalsList.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomePatientAlert.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomePatientRegimenList.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/CareGiverPatientList.dart';
@@ -136,7 +137,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
         CommonUtil().requestQurhomeDialog();
       }
       getProfileApi();
-
+      //Api call for get the dynamic content for
+      //Qur home ideal for more than 5 minutes
+      await controller.getDynamicContent();
       if (CommonUtil().isTablet!) {
         CommonUtil().initQurHomePortraitLandScapeMode();
         buttonSize = buttonSize.h;
