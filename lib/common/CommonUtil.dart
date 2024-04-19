@@ -2793,6 +2793,7 @@ class CommonUtil {
                   ),
                   actions: <Widget>[
                     FlatButtonWidget(
+                      width: 115,
                       bgColor: Colors.transparent,
                       isSelected: true,
                       onPress: () => launchURL(PLAY_STORE_URL),
