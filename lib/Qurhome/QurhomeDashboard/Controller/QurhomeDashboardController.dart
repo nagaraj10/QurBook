@@ -65,6 +65,7 @@ class QurhomeDashboardController extends GetxController {
   var isShowScreenIdleDialog = false.obs;
   // Observable variable to track the current notification id
   var currentNotificationId = ' '.obs;
+  List idealDialogDynamicContent = [].obs;
 
   //Define a variable to hold the current selected index for the patient dashboard
   var patientDashboardCurSelectedIndex = 0.obs;
@@ -137,6 +138,7 @@ class QurhomeDashboardController extends GetxController {
       checkScreenIdle(); // Restart the timer
     }
   }
+
 
 
 //Function to check qur home is ideal for 5 minutes
@@ -276,6 +278,29 @@ class QurhomeDashboardController extends GetxController {
     if (CommonUtil.isUSRegion()) {
       isVitalModuleDisable.value = true;
       isSymptomModuleDisable.value = true;
+    }
+  }
+
+// Method to get dynamic content from API
+  Future<List<dynamic>> getDynamicContent() async {
+    // Make API call to get dynamic content
+    try {
+      final response = await _apiProvider.getDynamicContent();
+      // Check if API call succeeded and result is not null
+      if(response['isSuccess'] && response['result'] != null) {
+        // Save dynamic content to variable
+        idealDialogDynamicContent = response['result'];
+      } else {
+        // Set to empty list if API call failed
+        idealDialogDynamicContent = [];
+      }
+      // Return dynamic content
+      return idealDialogDynamicContent;
+    } catch(e){
+      // Log any errors
+      debugPrint(e.toString());
+      // Return empty list on exception
+      return [];
     }
   }
 

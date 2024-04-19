@@ -568,6 +568,8 @@ const String dateFormatMMY = 'E d MMM, yyyy';
 //for my schedules
 const String strAppointments = 'Appointments';
 const String strRemainders = 'Reminders';
+const String strQurhomeIdealDialogTitle = 'Touch anywhere on the grey area to dismiss this information.';
+const String strQurhomeIdealDialogDescription = 'Touch the Sheela icon above to access the reminders';
 
 //string added to set not on the remainder sheela dialog
 const String strSheelaDialogNote =
