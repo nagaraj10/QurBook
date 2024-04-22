@@ -971,6 +971,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                       Navigator.pop(context);
                       controller.patientDashboardCurSelectedIndex.value = 0;
                       controller.forPatientList.value = false;
+                      sheelBadgeController.isSwitchedToOtherUsers.value=false; //set the bool false when no patient list is selected
                       controller.isPatientClicked.value = false;
                       controller.careGiverPatientListResult = null;
                       PreferenceUtil.saveString(
@@ -981,6 +982,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
                       if (controller.careGiverPatientListResult?.childId !=
                           result?.childId) {
                         controller.forPatientList.value = true;
+                        sheelBadgeController.isSwitchedToOtherUsers.value=true;//set the bool true when  patient list is selected
                         controller.careGiverPatientListResult = null;
                         controller.careGiverPatientListResult = result;
                         controller.patientDashboardCurSelectedIndex.value = 0;
@@ -1131,6 +1133,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> with RouteAware {
       if (permissionValue == strYesValue) {
         if (childId != null && childId != "") {
           controller.forPatientList.value = true;
+          sheelBadgeController.isSwitchedToOtherUsers.value=true;//set value to true if the user is switched to patient caregiver list
           CareGiverPatientListResult? response =
               await PreferenceUtil.getCareGiver(strKeyCareGiver);
           if (response != null) {
