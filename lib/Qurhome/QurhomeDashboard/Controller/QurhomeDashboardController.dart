@@ -122,6 +122,8 @@ class QurhomeDashboardController extends GetxController {
         }
         _sheelaBLEController.stopScanning();
         await Future.delayed(const Duration(seconds: 2));
+        //Restrict to take device reading when swutch to caregivers patient list
+        if(sheelaAIController?.isSwitchedToOtherUsers.value==false)
         _sheelaBLEController.setupListenerForReadings();
       });
     } else {

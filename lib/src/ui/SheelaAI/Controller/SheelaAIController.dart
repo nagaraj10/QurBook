@@ -183,6 +183,9 @@ class SheelaAIController extends GetxController {
   // Define a reactive boolean variable to track internet connection status
   Rx<bool> isInternetConnection = true.obs;
 
+  //Define a reactive boolean to check if the patient list is switch
+  Rx<bool> isSwitchedToOtherUsers = false.obs;
+
   // this is for get the onInitHubListViewController
   final hubListViewController = CommonUtil().onInitHubListViewController();
 
