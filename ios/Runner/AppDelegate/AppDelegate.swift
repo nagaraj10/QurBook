@@ -92,7 +92,7 @@ import flutter_local_notifications
         } else {
             let settings: UIUserNotificationSettings =
             UIUserNotificationSettings(types: [.alert,  .sound], categories: nil)
-            application.registerUserNotificationSettings(settings)
+            application.git UserNotificationSettings(settings)
         }
         application.registerForRemoteNotifications()
         
