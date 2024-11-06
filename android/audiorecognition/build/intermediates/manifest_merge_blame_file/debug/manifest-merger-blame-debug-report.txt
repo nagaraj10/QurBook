@@ -1,0 +1,23 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.nyumaya.audiorecognition" >
+4
+5    <uses-sdk
+6        android:minSdkVersion="16"
+6-->C:\Users\NagarajKumaravel\QurHealth-Poc\NyuMaya-analysis\nyumaya_audio_recognition-master\nyumaya_audio_recognition-master\examples\android\audiorecognition\src\main\AndroidManifest.xml
+7        android:targetSdkVersion="30" />
+7-->C:\Users\NagarajKumaravel\QurHealth-Poc\NyuMaya-analysis\nyumaya_audio_recognition-master\nyumaya_audio_recognition-master\examples\android\audiorecognition\src\main\AndroidManifest.xml
+8
+9    <application>
+9-->C:\Users\NagarajKumaravel\QurHealth-Poc\NyuMaya-analysis\nyumaya_audio_recognition-master\nyumaya_audio_recognition-master\examples\android\audiorecognition\src\main\AndroidManifest.xml:5:5-10:19
+10        <service
+10-->C:\Users\NagarajKumaravel\QurHealth-Poc\NyuMaya-analysis\nyumaya_audio_recognition-master\nyumaya_audio_recognition-master\examples\android\audiorecognition\src\main\AndroidManifest.xml:6:9-9:47
+11            android:name="com.nyumaya.audiorecognition.nyumaya_listener"
+11-->C:\Users\NagarajKumaravel\QurHealth-Poc\NyuMaya-analysis\nyumaya_audio_recognition-master\nyumaya_audio_recognition-master\examples\android\audiorecognition\src\main\AndroidManifest.xml:7:13-45
+12            android:enabled="true"
+12-->C:\Users\NagarajKumaravel\QurHealth-Poc\NyuMaya-analysis\nyumaya_audio_recognition-master\nyumaya_audio_recognition-master\examples\android\audiorecognition\src\main\AndroidManifest.xml:8:13-35
+13            android:exported="true" />
+13-->C:\Users\NagarajKumaravel\QurHealth-Poc\NyuMaya-analysis\nyumaya_audio_recognition-master\nyumaya_audio_recognition-master\examples\android\audiorecognition\src\main\AndroidManifest.xml:9:13-36
+14    </application>
+15
+16</manifest>
